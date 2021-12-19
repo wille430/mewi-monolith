@@ -1,0 +1,11 @@
+name: api
+labels:
+  app: api
+command: ["bash"]
+forward:
+  - 3001:3001
+  - 9229:9229
+sync:
+  - .:/app
+persistentVolume:
+  enabled: false
