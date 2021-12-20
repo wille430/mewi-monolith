@@ -1,7 +1,7 @@
+import axios from "axios"
 import useParam from "common/hooks/useParam"
 import { useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router"
-import fetchWithTimeout from "utils/fetchWithTimeout"
 
 interface ItemStateProps {
     body?: string,
@@ -33,9 +33,8 @@ const useItem = () => {
         const itemId = param
         if (!itemId) return
 
-        const url = process.env.NX_API_URL + "/items/id/" + itemId
         try {
-            const response = await fetchWithTimeout(url).then(res => res.json())
+            const response = await axios.get('/items/id/' + itemId).then(res => res.data)
             setItem(response.body._source)
         } catch (e) {
             console.log(e)

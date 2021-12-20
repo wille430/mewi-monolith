@@ -1,6 +1,6 @@
 import missingImage from 'assets/missingImage.png'
 import { ItemData } from 'models/types'
-import { DateUtils } from 'utils'
+import { toDateObj } from '@mewi/util'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { ReactNode } from 'react'
@@ -19,7 +19,7 @@ const ArticleItem = ({ props, id, onClick }: Props) => {
     let dateComponent: ReactNode
 
     if (props.date) {
-        dateComponent = <span className="block text-gray-500">{formatDistance(DateUtils.toDateObj(props.date), new Date(), { addSuffix: true, locale: sv }).replace("ungefär", "ca.")}</span>
+        dateComponent = <span className="block text-gray-500">{formatDistance(toDateObj(props.date), new Date(), { addSuffix: true, locale: sv }).replace("ungefär", "ca.")}</span>
     } else if (props.endDate) {
         dateComponent = <TimeUntilDate endDate={props.endDate} />
     }
