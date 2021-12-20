@@ -4,7 +4,7 @@ import { UserContext } from 'common/context/UserContext';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from 'common/components/Layout';
-import { APIError, AuthErrorCodes } from 'types/api';
+import { APIError, APIResponseError, AuthErrorCodes } from '@mewi/types';
 import { SnackbarContext } from 'common/context/SnackbarContext';
 
 const Register = () => {
@@ -32,7 +32,7 @@ const Register = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         register({ email, password, repassword })
-            .catch((e: APIError) => {
+            .catch((e: APIResponseError) => {
                 console.log(e)
                 setErrors(initErrors)
 

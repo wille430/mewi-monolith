@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElasticQuery, WatcherMetadata } from 'types/types'
+import { ElasticQuery, WatcherMetadata } from '@mewi/types'
 
 const { NX_API_URL } = process.env
 

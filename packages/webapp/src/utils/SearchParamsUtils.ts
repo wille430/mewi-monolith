@@ -1,4 +1,4 @@
-import { ElasticSearchBody } from 'types/types'
+import { ElasticSearchBody } from '@mewi/types'
 import config from 'config'
 import { PriceRangeUtils } from 'utils'
 

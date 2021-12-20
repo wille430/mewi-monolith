@@ -1,5 +1,5 @@
 import UserAPI from "api/UserAPI"
-import { WatcherMetadata } from "types/types"
+import { WatcherMetadata } from "@mewi/types"
 import { UserContext } from "common/context/UserContext"
 import { ButtonHTMLAttributes, useContext, useState } from "react"
 import { SearchParamsUtils } from "utils"
@@ -7,7 +7,7 @@ import { PriceRangeUtils } from "utils"
 import { WatcherContext } from "Routes/Bevakningar/WatcherContext"
 import AsyncButton from "common/components/AsyncButton"
 import { FilterFormDataProps } from "."
-import { APIError, DatabaseErrorCodes } from "types/api"
+import { APIError, DatabaseErrorCodes } from "@mewi/types"
 import { SnackbarContext } from "common/context/SnackbarContext"
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {

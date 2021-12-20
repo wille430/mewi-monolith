@@ -1,4 +1,4 @@
-import { WatcherMetadata } from "types/types"
+import { WatcherMetadata } from "@mewi/types"
 
 const { NX_API_URL } = process.env
 

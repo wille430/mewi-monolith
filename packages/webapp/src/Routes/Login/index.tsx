@@ -4,7 +4,7 @@ import { UserContext } from 'common/context/UserContext';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from 'common/components/Layout';
-import { APIError, AuthErrorCodes } from 'types/api';
+import { APIResponseError, AuthErrorCodes } from '@mewi/types';
 
 const Login = () => {
 
@@ -23,7 +23,7 @@ const Login = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        logIn(email, password).catch((e: APIError) => {
+        logIn(email, password).catch((e: APIResponseError) => {
             setErrors(initErrors)
             switch (e.error.type) {
                 case AuthErrorCodes.INVALID_EMAIL:
