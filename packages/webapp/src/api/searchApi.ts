@@ -1,7 +1,14 @@
 import axios from "axios"
 
-export const search = async () => {
-    // to-do
+export const getSearchResults = async (keyword: string, page?: string) => {
+
+    let urlPath = '/search/' + keyword
+    if (page) {
+        urlPath += '?page=' + page
+    }
+
+    const searchResult = await axios.get(urlPath).then(res => res.data)
+    return searchResult
 }
 export const autocomplete = async (keyword: string) => {
     if (keyword === "") return []

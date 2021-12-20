@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from 'react'
 import Search from './index'
 import { useLocation } from "react-router-dom"
 import { SearchContext } from 'common/context/SearchContext'
-import fetchWithTimeout from 'utils/fetchWithTimeout'
 import useSearchQuery from 'common/hooks/useSearchQuery'
+import { getSearchResults } from 'api'
 
 const SearchContainer = () => {
 
@@ -33,15 +33,9 @@ const SearchContainer = () => {
             { range: { endDate: { lte: Date.now() - 10 * 60 * 1000 } } }
         ]
 
-        let response = {}
+        let searchResults = {}
         try {
-            response = await fetchWithTimeout(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json())
+            searchResults = await getSearchResults(query)
         } catch (e) {
             console.log(e)
         }
@@ -49,8 +43,8 @@ const SearchContainer = () => {
         setLoading(false)
         setSearch(prevState => ({
             ...prevState,
-            totalHits: response.totalHits || 0,
-            hits: response.hits || []
+            totalHits: searchResults.totalHits || 0,
+            hits: searchResults.hits || []
         }))
     }
 

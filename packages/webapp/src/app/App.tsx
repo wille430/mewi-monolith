@@ -51,13 +51,13 @@ function App() {
       },
       async err => {
         const config = err.config
-        if (err.response.status === 401 && !config._retry) {
+        if (err.response?.status === 401 && !config._retry) {
           config._retry = true
           await renewJwt()
           return instance(config)
-        } else if (err.response.status === 403) {
+        } else if (err.response?.status === 403) {
           logOut()
-        } else if (err.response.status === 401 && config._retry) {
+        } else if (err.response?.status === 401 && config._retry) {
           logOut()
         }
 
