@@ -1,4 +1,3 @@
-import UserAPI from "api/UserAPI"
 import { WatcherMetadata } from "@mewi/types"
 import { UserContext } from "common/context/UserContext"
 import { ButtonHTMLAttributes, useContext, useState } from "react"
@@ -7,8 +6,9 @@ import { PriceRangeUtils } from "utils"
 import { WatcherContext } from "Routes/Bevakningar/WatcherContext"
 import AsyncButton from "common/components/AsyncButton"
 import { FilterFormDataProps } from "."
-import { APIError, DatabaseErrorCodes } from "@mewi/types"
+import { DatabaseErrorCodes } from "@mewi/types"
 import { SnackbarContext } from "common/context/SnackbarContext"
+import { createWatcher } from "api/"
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
     formData: FilterFormDataProps,
@@ -70,17 +70,18 @@ const AddWatcherButton = ({ formData, onClick, ...rest }: Props) => {
         const queryObj = SearchParamsUtils.searchToElasticQuery(searchObj).query
         queryObj.bool.must.push({ match: { title: metadata.keyword } })
 
-        try {
-            await UserAPI.addWatcher(token, queryObj, metadata).then(res => {
-                dispatch({ type: 'add', newWatcher: res })
+        await createWatcher({ metadata: metadata, query: queryObj })
+            .then(newWatcher => {
+                dispatch({ type: 'add', newWatcher: newWatcher })
                 setSnackbar({
                     title: 'Bevakning lades till',
                     body: 'Du kommer nu få notiser på mejlen när nya föremål som stämmer överens med filteret läggs till'
                 })
+
             })
-        } catch (e: any) {
-            if (Boolean(e.error)) {
-                switch (e.error.type) {
+            .catch(err => {
+                console.log(err)
+                switch (err.error?.type) {
                     case DatabaseErrorCodes.CONFLICTING_RESOURCE:
                         setResponseMsg({
                             msg: "Bevakningen finns redan",
@@ -94,13 +95,7 @@ const AddWatcherButton = ({ formData, onClick, ...rest }: Props) => {
                         })
                         break
                 }
-            } else {
-                setResponseMsg({
-                    msg: "Ett fel inträffade",
-                    color: "text-red-400"
-                })
-            }
-        }
+            })
 
         onClick && onClick()
     }

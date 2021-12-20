@@ -7,8 +7,6 @@ import { WatcherContext } from "../WatcherContext"
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
 
-    const { token } = useContext(UserContext)
-
     const { dispatch } = useContext(WatcherContext)
 
     return (
@@ -18,7 +16,7 @@ const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
             active:bg-green"
             data-testid="removeWatcherButton"
             onClick={async () => {
-                await dispatch({ type: 'remove', id: watcherId, token: token || '' })
+                await dispatch({ type: 'remove', id: watcherId })
             }}
         >
             <FiTrash color="white" />

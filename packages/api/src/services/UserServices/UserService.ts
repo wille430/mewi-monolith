@@ -1,5 +1,5 @@
 import UserModel from "models/UserModel"
-import { APIError, AuthErrorCodes } from "types/errorCodes"
+import { APIError, AuthErrorCodes } from "@mewi/types"
 
 export default class UserService {
 

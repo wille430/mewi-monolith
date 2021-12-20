@@ -1,3 +1,4 @@
+import { PublicWatcher } from '@mewi/types'
 import { ObjectId } from 'bson'
 import { models, Schema, model } from 'mongoose'
 
@@ -17,22 +18,6 @@ import { models, Schema, model } from 'mongoose'
 //     }
 // }
 
-export interface PublicWatcher {
-    _id: ObjectId,
-    query: any,
-    metadata: {
-        keyword: string,
-        category?: string,
-        regions?: string[],
-        isAuction?: boolean,
-        priceRange?: {
-            gte: string,
-            lte: string
-        }
-    },
-    users: ObjectId[],
-    createdAt: string
-}
 
 const WatcherSchema = new Schema<PublicWatcher>({
     query: { type: Object, unique: true },

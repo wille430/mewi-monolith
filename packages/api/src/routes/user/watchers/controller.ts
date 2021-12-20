@@ -1,7 +1,7 @@
 import WatcherService from 'services/WatcherService'
 import { UserWatcherService } from 'services/UserServices'
 import SearchService from 'services/SearchService'
-import { APIError, ValidationErrorCodes } from 'types/errorCodes'
+import { APIError, ValidationErrorCodes } from '@mewi/types'
 import { WatcherErrorCodes } from 'types/watcher'
 
 export const getAll = async (req, res, next) => {

@@ -4,8 +4,9 @@
  */
 
 import { ObjectId } from "bson"
-import { APIError, DatabaseErrorCodes } from "types/errorCodes"
-import WatcherModel, { PublicWatcher } from "models/WatcherModel"
+import { APIError, DatabaseErrorCodes } from "@mewi/types"
+import WatcherModel from "models/WatcherModel"
+import { PublicWatcher } from "@mewi/types"
 import WatcherService from "services/WatcherService"
 import { UserService } from "./index"
 

@@ -1,13 +1,13 @@
 import { PasswordService } from "./index";
 import UserModel from "models/UserModel";
-import { APIError, AuthErrorCodes, JWT } from "types/errorCodes";
+import { APIError, AuthErrorCodes, JWT } from "@mewi/types";
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from "./UserEmailService";
 import bcrypt from 'bcryptjs'
 
 class AuthService {
 
-    static async login(email: string, password: string): Promise<JWT> {
+    static async login(email: string, password: string) {
         const user = await UserModel.findOne({ email })
         email = email.toLowerCase()
 
@@ -18,9 +18,13 @@ class AuthService {
 
         if (!correctPassword) throw new APIError(401, AuthErrorCodes.INVALID_PASSWORD)
 
-        const token = await this.signJWT(userId, email)
+        const token = await this.createJWT(userId, email)
+        const refreshToken = await this.createRefreshToken(userId, email)
 
-        return token
+        return {
+            token,
+            refreshToken
+        }
     }
 
     /**
@@ -30,7 +34,7 @@ class AuthService {
      * @param repassword Should be the same as password
      * @returns a JWT-token
      */
-    static async signUp(email: string, password: string, repassword: string): Promise<JWT> {
+    static async signUp(email: string, password: string, repassword: string) {
         if (password !== repassword) throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_MATCHING)
         email = email.toLowerCase()
 
@@ -53,13 +57,17 @@ class AuthService {
             password: encryptedPassword
         })
 
-        const token: JWT = await AuthService.signJWT(newUser._id, email)
+        const token: JWT = await AuthService.createJWT(newUser._id, email)
+        const refreshToken = await AuthService.createRefreshToken(newUser._id, email)
 
-        return token
+        return {
+            token,
+            refreshToken
+        }
     }
 
-    static async signJWT(userId: string, email: string): Promise<JWT> {
-        
+    static async signJWT(userId: string, email: string, options?: jwt.SignOptions): Promise<JWT> {
+
         const payload: jwt.JwtPayload = {
             user_id: userId,
             email: email
@@ -68,8 +76,8 @@ class AuthService {
         const secretKey = process.env.TOKEN_KEY
 
 
-        const options = {
-            expiresIn: "2h"
+        options = options || {
+            expiresIn: "1h"
         }
 
         const token = jwt.sign(payload, secretKey, options)
@@ -77,6 +85,17 @@ class AuthService {
         return token
     }
 
+    static async createRefreshToken(userId: string, email: string): Promise<JWT> {
+        return await AuthService.signJWT(userId, email, {
+            expiresIn: '14d'
+        })
+    }
+
+    static async createJWT(userId: string, email: string) {
+        return await AuthService.signJWT(userId, email, {
+            expiresIn: '1h'
+        })
+    }
 }
 
 export default AuthService

@@ -24,8 +24,9 @@ const Login = () => {
         e.preventDefault()
 
         logIn(email, password).catch((e: APIResponseError) => {
+            console.log(e)
             setErrors(initErrors)
-            switch (e.error.type) {
+            switch (e.error?.type) {
                 case AuthErrorCodes.INVALID_EMAIL:
                 case AuthErrorCodes.INVALID_PASSWORD:
                 case AuthErrorCodes.MISSING_USER:

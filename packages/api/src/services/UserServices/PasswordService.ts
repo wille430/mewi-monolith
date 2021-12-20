@@ -6,7 +6,7 @@
 
 import { UserService } from "./index"
 import bcrypt from 'bcryptjs'
-import { APIError, AuthErrorCodes } from 'types/errorCodes'
+import { APIError, AuthErrorCodes } from '@mewi/types'
 
 class PasswordService {
 

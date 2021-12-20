@@ -2,7 +2,7 @@ import WatcherModel from "models/WatcherModel"
 import { WatcherErrorCodes } from "types/watcher"
 import SearchService from "./SearchService"
 import { UserService } from "./UserServices"
-import { APIError, DatabaseErrorCodes } from "types/errorCodes"
+import { APIError, DatabaseErrorCodes } from "@mewi/types"
 
 export default class WatcherService {
     watcher_id: string

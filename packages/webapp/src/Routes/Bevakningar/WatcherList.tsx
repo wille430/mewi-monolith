@@ -1,18 +1,16 @@
 import WatcherCard from './WatcherCard';
-import UserAPI from 'api/UserAPI';
-import { UserContext } from 'common/context/UserContext';
 import * as React from 'react';
 import StyledLoader from 'common/components/StyledLoader';
 import WatcherPopUpButton from './WatcherPopUpButton';
 import { WatcherContext } from './WatcherContext';
 import { Link } from 'react-router-dom';
+import { getWatchers } from 'api';
 
 
 
 const WatcherList = () => {
 
     const [loading, setLoading] = React.useState(false)
-    const { token } = React.useContext(UserContext)
     const { watchers, dispatch } = React.useContext(WatcherContext)
 
     const renderItems = () => {
@@ -53,9 +51,9 @@ const WatcherList = () => {
             try {
                 setLoading(true)
 
-                const watcherObjs = await UserAPI.getWatchers(token)
+                const watchers = await getWatchers()
                 
-                dispatch({ type: 'replaceAll', newWatchers: watcherObjs })
+                dispatch({ type: 'replaceAll', newWatchers: watchers })
 
                 setLoading(false)
             } catch (e) {

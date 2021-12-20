@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { APIError } from "types/errorCodes"
+import { APIError } from "@mewi/types"
 
 const router = Router()
 

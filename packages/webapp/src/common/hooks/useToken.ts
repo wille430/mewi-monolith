@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react"
 
-const useToken = () => {
+const useToken = (name = 'token') => {
 
     const getToken = async (): Promise<void> => {
-        const tokenString = sessionStorage.getItem('token')
+        const tokenString = localStorage.getItem(name)
         const userToken = tokenString
-
-        setToken(userToken)
+        
+        userToken ? setToken(userToken) : setToken(undefined)
     }
 
-    const saveToken = (userToken: string | null): void => {
+    const saveToken = (userToken?: string): void => {
         if (!userToken) {
-            sessionStorage.removeItem('token')
-            setToken(null)
+            localStorage.removeItem(name)
+            setToken(undefined)
             return
         }
-        console.log({userToken})
-        sessionStorage.setItem('token', userToken)
+        console.log({ userToken })
+        localStorage.setItem(name, userToken)
         setToken(userToken)
     }
-    
-    const [token, setToken] = useState<string | null>(null)
+
+    const [token, setToken] = useState<string | undefined>()
 
     useEffect(() => {
         getToken()

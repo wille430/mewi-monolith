@@ -24,6 +24,7 @@ export const AuthErrorCodes = {
     PASSWORD_TOO_LONG: 'auth/password_too_long',
     INVALID_JWT: 'auth/invalid_token',
     MISSING_JWT: 'auth/missing_jwt',
+    INVALID_REFRESH_TOKEN: 'auth/invalid_refresh_token',
     USER_ALREADY_EXISTS: 'auth/user_already_exists'
 }
 

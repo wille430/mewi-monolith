@@ -1,4 +1,4 @@
-import UserAPI from "api/UserAPI";
+import { deleteWatcher } from "api";
 import { SnackbarContext } from "common/context/SnackbarContext";
 import { createContext, ReactNode, useContext, useReducer } from "react";
 
@@ -22,14 +22,13 @@ export const WatcherContext = createContext<WatcherContextProps>({
 })
 
 type Action =
-    | { type: 'remove', id: string, token: string }
+    | { type: 'remove', id: string }
     | { type: 'add', newWatcher: WatcherState }
     | { type: 'replaceAll', newWatchers: WatcherState[] }
 
 const reducer = (watchers: WatcherState[], action: Action): WatcherState[] => {
     switch (action.type) {
         case 'remove':
-            UserAPI.removeWatcherById(action.token, action.id)
             return watchers.filter((x: WatcherState) => x._id !== action.id)
         case 'add':
             return watchers.concat(action.newWatcher)
@@ -50,8 +49,8 @@ export const WatcherProvider = ({ children }: ProviderProps) => {
     const asyncDispatch = async (action: Action) => {
         switch (action.type) {
             case 'remove':
-                await UserAPI.removeWatcherById(action.token, action.id).then(() => {
-                    dispatch({ type: 'remove', id: action.id, token: action.token })
+                await deleteWatcher(action.id).then(() => {
+                    dispatch({ type: 'remove', id: action.id })
                     setSnackbar({
                         title: 'Bevakningen togs bort!'
                     })

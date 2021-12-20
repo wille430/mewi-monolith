@@ -1,4 +1,4 @@
-import { AuthErrorCodes } from 'types/errorCodes'
+import { AuthErrorCodes } from '@mewi/types'
 import request from 'supertest'
 import app from '../app'
 import { AuthService } from '../../services/UserServices'
