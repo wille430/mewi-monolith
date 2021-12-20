@@ -109,7 +109,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                                         label="Auktion"
                                         name="isAuction"
                                         checked={formData.isAuction}
-                                        onChange={(val) => {
+                                        onClick={(val) => {
                                             setFormData({
                                                 ...formData,
                                                 isAuction: val || false

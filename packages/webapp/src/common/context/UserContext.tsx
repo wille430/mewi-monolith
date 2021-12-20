@@ -1,8 +1,6 @@
 import useToken from "common/hooks/useToken";
-import { apiEndpoints } from "config/config";
-import React, { createContext, useEffect } from "react";
-import axios from 'axios'
-import { login, signUp } from "api";
+import React, { createContext } from "react";
+import { login, refreshJwtToken, signUp } from "api";
 
 interface Props {
     children: React.ReactNode
@@ -12,6 +10,7 @@ interface State {
     logIn: Function,
     logOut: Function,
     register: Function,
+    renewJwt: () => Promise<void>,
     token?: string,
     refreshToken?: string
 }
@@ -20,6 +19,7 @@ const initialState: State = {
     logIn: (username: string, password: string) => { },
     logOut: () => { },
     register: () => { },
+    renewJwt: async () => {}
 }
 
 export const UserContext = createContext(initialState)
@@ -57,13 +57,23 @@ export const UserProvider = ({ children }: Props): any | null => {
         }
     }
 
+    const renewJwt = async (): Promise<void> => {
+        console.log(`Renewing token ${token} with refresh token ${refreshToken}`)
+        if (!refreshToken) return
+
+        const newTokens = await refreshJwtToken(refreshToken)
+        setToken(newTokens.token)
+        setRefreshToken(newTokens.refreshToken)
+    }
+
     return (
         <UserContext.Provider value={{
             logIn,
             logOut,
             register,
             token,
-            refreshToken
+            refreshToken,
+            renewJwt
         }}>
             {children}
         </UserContext.Provider>

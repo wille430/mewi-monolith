@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import useParam from "./useParam"
 
 const useFilterState = (paramName: string) => {
-    const { param } = useParam(paramName)
+    const [ param, ] = useParam(paramName)
 
 
     const getState = () => {

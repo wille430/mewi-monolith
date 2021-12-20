@@ -5,7 +5,7 @@ import useParam from "common/hooks/useParam";
 const ResultText = () => {
 
     const { search } = useContext(SearchContext)
-    const query = useParam("q").param
+    const query = useParam("q")[0]
 
     let resultString = ""
 

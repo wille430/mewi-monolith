@@ -25,7 +25,7 @@ const useItem = () => {
 
     const location = useLocation()
     const history = useHistory()
-    const { param } = useParam(searchParam)
+    const [ param, ] = useParam(searchParam)
 
     const [item, setItem] = useState<ItemStateProps | null>()
 

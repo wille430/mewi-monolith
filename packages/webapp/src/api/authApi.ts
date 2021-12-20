@@ -1,8 +1,11 @@
 import axios from "axios"
+import useToken from "common/hooks/useToken"
 
 export const login = async (email: string, password: string) => {
     const { token, refreshToken } = await axios.post('/auth/login', { email, password })
         .then(res => res.data)
+
+    console.log({ token, refreshToken })
     return {
         token,
         refreshToken

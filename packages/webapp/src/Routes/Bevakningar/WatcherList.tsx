@@ -48,17 +48,15 @@ const WatcherList = () => {
 
     React.useEffect(() => {
         const fetchWatchers = async () => {
-            try {
-                setLoading(true)
-
-                const watchers = await getWatchers()
-                
-                dispatch({ type: 'replaceAll', newWatchers: watchers })
-
-                setLoading(false)
-            } catch (e) {
-                setLoading(false)
-            }
+            setLoading(true)
+            await getWatchers()
+                .then(watchers => {
+                    dispatch({ type: 'replaceAll', newWatchers: watchers })
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            setLoading(false)
         }
 
         fetchWatchers()

@@ -2,7 +2,9 @@ import { ElasticQuery, PublicWatcher, WatcherMetadata } from '@mewi/types'
 import axios from 'axios'
 
 export const getWatchers = async () => {
-    const watchers: PublicWatcher[] = await axios.get('/user/watchers').then(res => res.data.watchers).catch(e => console.log('ERROR BODY: ', e.data))
+    const watchers: PublicWatcher[] = await axios.get('/user/watchers')
+        .then(res => res.data.watchers)
+        .catch(err => {throw err})
     return watchers
 }
 

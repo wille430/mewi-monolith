@@ -45,8 +45,8 @@ export const refreshToken = async (req, res, next) => {
             return
         }
 
-        const token = await AuthService.createRefreshToken(user.user_id, user.email)
-        const refreshToken = await AuthService.createJWT(user.user_id, user.email)
+        const token = await AuthService.createJWT(user.user_id, user.email)
+        const refreshToken = await AuthService.createRefreshToken(user.user_id, user.email)
 
         res.status(201).json({
             token: token,

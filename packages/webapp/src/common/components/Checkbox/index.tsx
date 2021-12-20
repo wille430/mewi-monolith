@@ -1,19 +1,26 @@
 import { Override } from 'types/types';
-import React, { createRef, HTMLAttributes } from 'react';
+import React, { createRef, HTMLAttributes, useState } from 'react';
 
 export type CheckboxProps = Override<HTMLAttributes<HTMLInputElement>, {
     label?: string,
     name?: string,
     checked?: boolean,
-    onChange?: (val?: boolean) => void
+    onClick?: (newVal: boolean) => void
 }>
 
-const Checkbox = ({ onChange, label, name, checked }: CheckboxProps) => {
+const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => {
+
+    // const [_checked, _setChecked] = useState(checked)
 
     const inputRef = createRef<HTMLInputElement>()
 
-    const setChecked = (checked: boolean) => {
-        onChange && onChange(checked)
+    const onChange = (newVal?: boolean | string) => {
+        if (typeof newVal === 'boolean') {
+            onClick && onClick(newVal)
+        } else {
+
+            onClick && onClick(newVal === "true" ? true : false)
+        }
     }
 
     return (
@@ -25,16 +32,13 @@ const Checkbox = ({ onChange, label, name, checked }: CheckboxProps) => {
                 data-testid="checkbox"
                 ref={inputRef}
                 className="cursor-pointer"
-                onClick={e => {
-                    setChecked(e.currentTarget.checked)
-                }}
+                onClick={e => onChange(e.currentTarget.value)}
+                {...rest}
             />
             <label
                 htmlFor={name}
                 className="cursor-pointer select-none"
-                onClick={e => {
-                    setChecked(!inputRef.current?.checked)
-                }}
+                onClick={() => onChange(inputRef.current?.value)}
             >
                 {label}
             </label>

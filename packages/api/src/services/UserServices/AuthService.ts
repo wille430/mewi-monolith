@@ -75,10 +75,13 @@ class AuthService {
 
         const secretKey = process.env.TOKEN_KEY
 
-
-        options = options || {
-            expiresIn: "1h"
+        if (!options) {
+            options = {
+                expiresIn: "1h"
+            }
         }
+
+        console.log('Creating JWT with expiresIn:', options.expiresIn)
 
         const token = jwt.sign(payload, secretKey, options)
 

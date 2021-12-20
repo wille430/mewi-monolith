@@ -10,6 +10,7 @@ import ProtectedRoutes from 'Routes/ProtectedRoutes'
 import { UserContext } from 'common/context/UserContext'
 import axios from 'axios'
 import { data } from 'autoprefixer'
+import { instance } from 'api'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -30,16 +31,16 @@ if (!window.console) {
 }
 
 function App() {
-  const userToken = useContext(UserContext).token
-  const isAuthenticated = !!userToken
+  const { token, logOut, renewJwt } = useContext(UserContext)
+  const isAuthenticated = !!token
 
   useEffect(() => {
 
     axios.defaults.baseURL = process.env.NX_API_URL
 
     axios.interceptors.request.use(request => {
-      if (request.headers && userToken) {
-        request.headers['Authorization'] = 'Bearer ' + userToken
+      if (request.headers && token) {
+        request.headers['Authorization'] = 'Bearer ' + token
       }
       return request
     })
@@ -48,13 +49,24 @@ function App() {
       response => {
         return response
       },
-      err => {
+      async err => {
+        const config = err.config
+        if (err.response.status === 401 && !config._retry) {
+          config._retry = true
+          await renewJwt()
+          return instance(config)
+        } else if (err.response.status === 403) {
+          logOut()
+        } else if (err.response.status === 401 && config._retry) {
+          logOut()
+        }
+
         if (err.response?.data) {
           throw err.response?.data
         }
         throw err
       })
-  }, [userToken])
+  }, [token])
 
   return (
     <div className="w-full min-h-screen">

@@ -31,10 +31,9 @@ const useParam = (name: string) => {
         })
     }
 
-    return {
-        param,
-        setParam: saveParam
-    }
+    const returnValue: [string, (val: any) => void] = [param, saveParam]
+
+    return returnValue
 }
 
 export default useParam

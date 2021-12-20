@@ -24,6 +24,10 @@ const useToken = (name = 'token') => {
 
     useEffect(() => {
         getToken()
+
+        window.addEventListener('storage', () => {
+            getToken()
+        })
     }, [])
 
     return {

@@ -1,3 +1,4 @@
+import { APIError, AuthErrorCodes } from '@mewi/types'
 import * as jwt from 'jsonwebtoken'
 
 export default class Authentication {
@@ -34,7 +35,13 @@ export default class Authentication {
             // Check if token is valid
             jwt.verify(token, process.env.TOKEN_KEY, (err, user) => {
                 if (err) {
-                    return res.sendStatus(403)
+                    switch (err.name) {
+                        case 'TokenExpiredError':
+                            console.log('EXPIRED TOKEN!!!')
+                            throw new APIError(401, AuthErrorCodes.INVALID_JWT)
+                        default:
+                            return res.sendStatus(403)
+                    }
                 }
                 req.user = user
                 next()

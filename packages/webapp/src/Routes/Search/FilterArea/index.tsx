@@ -1,7 +1,6 @@
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import { SearchContext } from 'common/context/SearchContext'
 import PriceRangeFilter from './PriceRangeFilter'
-import FilterCheckbox from './FilterCheckbox'
 import FilterDropdown from 'common/components/LabeledDropdown'
 import ResetButton from './ResetButton'
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
@@ -15,6 +14,7 @@ import { Link } from 'react-router-dom'
 import useParam from 'common/hooks/useParam'
 import { PriceRangeUtils } from 'utils'
 import { PriceRangeProps } from 'types/types'
+import Checkbox from 'common/components/Checkbox'
 
 export interface FilterFormDataProps {
     regions: string[],
@@ -28,13 +28,13 @@ const FilterArea = () => {
     const { setSearch } = useContext(SearchContext)
     const { token } = useContext(UserContext)
     const { setQuery } = useQuery()
-    const query = useParam("q").param
+    const query = useParam("q")[ 0]
 
     const initFormData: FilterFormDataProps = {
-        regions: useParam("region").param.split(','),
-        category: useParam("category").param,
-        isAuction: useParam("isAuction").param === "true" ? true : false,
-        priceRange: PriceRangeUtils.toObject(useParam("price").param),
+        regions: useParam("region")[ 0].split(','),
+        category: useParam("category")[ 0],
+        isAuction: useParam("isAuction")[ 0] === "true" ? true : false,
+        priceRange: PriceRangeUtils.toObject(useParam("price")[ 0]),
         keyword: query
     }
 
@@ -66,7 +66,7 @@ const FilterArea = () => {
     const handleReset = () => {
         setFormData(initFormData)
     }
-    
+
     return (
         <section className="bg-blue rounded-md p-4 text-white shadow-md">
             <div className="block sm:hidden">
@@ -124,7 +124,17 @@ const FilterArea = () => {
                                 }}
                             />
                             <div className="p-4">
-                                <FilterCheckbox label="Auktion" name="isAuction" />
+                                <Checkbox
+                                    label="Auktion"
+                                    name="isAuction"
+                                    onClick={val => {
+                                        setFormData({
+                                            ...formData,
+                                            isAuction: val
+                                        })
+                                    }}
+                                    checked={formData.isAuction}
+                                />
                             </div>
                         </div>
                     </div>

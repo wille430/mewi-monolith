@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useParam from 'common/hooks/useParam';
 
 const SortButton = () => {
-    const { param, setParam } = useParam("sort")
+    const [ param, setParam ] = useParam("sort")
 
     const options = [
         { label: "Relevans", name: "relevans", default: { selected: true } },

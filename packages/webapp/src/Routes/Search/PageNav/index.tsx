@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { SearchContext } from 'common/context/SearchContext';
 import NavEndButton from './NavEndButton';
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
-import usePage from 'common/hooks/usePage';
 import config from 'config';
+import useParam from 'common/hooks/useParam';
 
 interface Props {
     label: number,
@@ -15,7 +15,8 @@ const PageNav = () => {
 
     const { search } = useContext(SearchContext)
 
-    const { page, setPage } = usePage()
+    const [pageString, setPage] = useParam("page")
+    const page = parseInt(pageString)
     const totalPages = Math.ceil(search.totalHits / config.searchLimit) || 1
 
     const RenderButtons = () => {
