@@ -1,4 +1,4 @@
-import { ElasticSearchBody } from '@mewi/types'
+import { ElasticQuery, ElasticSearchBody, PriceRangeProps, SearchFilterDataProps } from '@mewi/types'
 import config from 'config'
 import { PriceRangeUtils } from 'utils'
 
@@ -17,6 +17,7 @@ const SearchParamsUtils = {
         SearchParamsUtils.searchParams.forEach(key => {
             const searchParam = new URLSearchParams(search).get(key)
             if (searchParam) {
+                // @ts-ignore
                 queryObj[key] = searchParam?.split(',').map(value => SearchParamsUtils.keyToObject(key, value))
             }
         })
@@ -59,8 +60,8 @@ const SearchParamsUtils = {
 
         return (queryObjToReturn)
     },
-    keyToObject: (key: string, value: any) => {
-        if (!value) return null
+    keyToObject: (key: ('region' | 'category' | 'isAuction' | 'price' | 'sort'), value: (boolean | string | number | PriceRangeProps)) => {
+        if (!value) return
         switch (key) {
             case 'region':
                 return { span_term: { [key]: value } }
@@ -68,13 +69,11 @@ const SearchParamsUtils = {
             case 'isAuction':
                 return { term: { [key]: value } }
             case 'price':
-                const priceObj = PriceRangeUtils.toObject(value)
-                if (!priceObj) return null
-                return { range: { 'price.value': PriceRangeUtils.toObject(value) } }
+                return { range: { 'price.value': value } }
             case 'sort':
                 switch (value) {
                     case 'relevans':
-                        return null
+                        return
                     case 'pris_fallande':
                         return { "price.value": "desc" }
                     case 'pris_stigande':
@@ -84,10 +83,10 @@ const SearchParamsUtils = {
                     case 'datum_stigande':
                         return { "date": "asc" }
                     default:
-                        return null
+                        return
                 }
             default:
-                return null
+                return
 
         }
     },

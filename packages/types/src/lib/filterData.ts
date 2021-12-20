@@ -343,3 +343,14 @@ export const regions = [
     { value: "blekinge", label: "Blekinge" },
     { value: "skåne", label: "Skåne" }
 ]
+
+export interface SearchFilterDataProps {
+    keyword: string,
+    regions?: string[],
+    category?: string,
+    priceRange?: {
+        gte?: string,
+        lte?: string
+    },
+    auction?: boolean
+}

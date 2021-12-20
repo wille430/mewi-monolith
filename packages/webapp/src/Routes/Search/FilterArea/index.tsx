@@ -1,7 +1,7 @@
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import { SearchContext } from 'common/context/SearchContext'
 import PriceRangeFilter from './PriceRangeFilter'
-import FilterDropdown from 'common/components/LabeledDropdown'
+import LabeledDropdown from 'common/components/LabeledDropdown'
 import ResetButton from './ResetButton'
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
 import { useWindowWidth } from '@react-hook/window-size'
@@ -83,7 +83,7 @@ const FilterArea = () => {
                         }}>
                             <input type="hidden" name="q" value={query} />
 
-                            <FilterDropdown
+                            <LabeledDropdown
                                 value={formData.regions}
                                 onChange={val => {
                                     setFormData({
@@ -97,7 +97,7 @@ const FilterArea = () => {
                                 isMulti
                             />
 
-                            <FilterDropdown
+                            <LabeledDropdown
                                 value={formData.category}
                                 onChange={val => {
                                     setFormData({
@@ -146,7 +146,7 @@ const FilterArea = () => {
                     </div>
                 </div>
             </form>
-            {token ? <AddWatcherButton formData={formData} /> : <Link to="/login">Bevaka sökning</Link>}
+            {/* {token ? <AddWatcherButton formData={formData} /> : <Link to="/login">Bevaka sökning</Link>} */}
         </section>
     )
 }

@@ -5,7 +5,7 @@ import { createContext, ReactNode, useContext, useReducer } from "react";
 
 interface WatcherContextProps {
     watchers: PublicWatcher[],
-    dispatch: Function
+    dispatch: (action: Action) => void
 }
 
 interface ProviderProps {

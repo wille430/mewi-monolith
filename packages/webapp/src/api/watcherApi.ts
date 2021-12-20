@@ -1,5 +1,6 @@
-import { ElasticQuery, PublicWatcher, WatcherMetadata } from '@mewi/types'
+import { ElasticQuery, PublicWatcher, SearchFilterDataProps, WatcherMetadata } from '@mewi/types'
 import axios from 'axios'
+import { SearchParamsUtils } from 'utils'
 
 export const getWatchers = async () => {
     const watchers: PublicWatcher[] = await axios.get('/user/watchers')
@@ -17,23 +18,24 @@ export const deleteWatcher = async (watcherId: string) => {
     await axios.delete('/user/watchers/' + watcherId)
 }
 
-interface createWatcherProps {
-    metadata: WatcherMetadata,
-    query: ElasticQuery
-}
+export const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
 
-export const createWatcher = async ({ metadata, query }: createWatcherProps) => {
-    const newWatcher: PublicWatcher = await axios.post('/user/watchers', { metadata, query })
+    const body = {
+        searchFilters: searchFilterData
+    }
+
+    const newWatcher: PublicWatcher = await axios.post('/user/watchers', body)
         .then(res => res.data.watcher)
         .catch(err => {throw err})
     return newWatcher
 }
 
-interface updateWatcherProps extends createWatcherProps {
+export const updateWatcher = async (watcherId: string, newSearchFilterData: SearchFilterDataProps) => {
 
-}
+    const body = {
+        searchFilters: newSearchFilterData
+    }
 
-export const updateWatcher = async (watcherId: string, { metadata, query }: updateWatcherProps) => {
-    const newWatcher = await axios.patch('/user/watchers' + watcherId, { metadata, query }).then(res => res.data.watcher)
+    const newWatcher = await axios.patch('/user/watchers' + watcherId, body).then(res => res.data.watcher)
     return newWatcher
 }

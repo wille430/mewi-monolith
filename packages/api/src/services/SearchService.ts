@@ -1,3 +1,4 @@
+import { ElasticQuery, SearchFilterDataProps } from "@mewi/types";
 import Elasticsearch, { elasticClient } from "../config/elasticsearch";
 const axios = require('axios')
 
@@ -41,5 +42,38 @@ export default class SearchService {
         })
 
         return response
+    }
+
+    static createElasticQuery(searchFilterData: SearchFilterDataProps): ElasticQuery {
+
+        const query: ElasticQuery = {
+            bool: {
+                must: []
+            }
+        }
+
+        Object.keys(searchFilterData).map(key => {
+
+            switch (key) {
+                case 'keyword':
+                    query.bool.must.push({ match: { title: searchFilterData[key] } })
+                case 'regions':
+                    const clauses = []
+                    searchFilterData.regions.forEach(region => {
+                        clauses.push(
+                            { span_term: { region: region } }
+                        )
+                    })
+                    query.bool.must.push({ span_or: { clauses: clauses } })
+                case 'category':
+                    query.bool.filter.push({ term: { [key]: searchFilterData[key] } })
+                case 'auction':
+                    query.bool.filter.push({ term: { isAuction: searchFilterData[key] } })
+                case 'priceRange':
+                    query.bool.filter.push({ range: { 'price.value': searchFilterData[key] } })
+            }
+        })
+
+        return query
     }
 }

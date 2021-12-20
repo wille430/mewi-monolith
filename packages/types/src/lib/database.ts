@@ -1,4 +1,5 @@
 import { ObjectId } from 'bson'
+import { SearchFilterDataProps } from '..'
 
 /**
  * Models
@@ -18,15 +19,8 @@ export interface UserData {
     watchers: [UserWatcherData]
 }
 
-export interface WatcherMetadata {
-    keyword: string,
-    regions?: string[] | null,
-    category?: string | null,
-    isAuction?: boolean | null,
-    priceRange?: {
-        gte?: string,
-        lte?: string
-    }
+export interface WatcherMetadata extends SearchFilterDataProps {
+    keyword: string
 }
 
 export interface PublicWatcher {
@@ -63,7 +57,7 @@ export interface PriceRangeProps {
 
 export interface ElasticQuery {
     bool: {
-        must: any[],
+        must: ({ span_or: { clauses: any[] } } | { match: { [key: string]: any } })[],
         filter?: { [key: string]: any }[],
         must_not?: any[]
     }

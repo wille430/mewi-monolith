@@ -4,11 +4,12 @@
  */
 
 import { ObjectId } from "bson"
-import { APIError, DatabaseErrorCodes } from "@mewi/types"
+import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from "@mewi/types"
 import WatcherModel from "models/WatcherModel"
 import { PublicWatcher } from "@mewi/types"
 import WatcherService from "services/WatcherService"
 import { UserService } from "./index"
+import SearchService from "services/SearchService"
 
 class UserWatcherService {
 
@@ -53,9 +54,10 @@ class UserWatcherService {
         }
     }
 
-    static async addWatcher(userId: string, { metadata, query }: PublicWatcher["metadata"] & PublicWatcher["query"]) {
+    static async addWatcher(userId: string, searchFilters: SearchFilterDataProps) {
 
         const user = await UserService.user(userId)
+        const query = SearchService.createElasticQuery(searchFilters)
 
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
 
@@ -65,7 +67,7 @@ class UserWatcherService {
             watcher = similarWatcher
         } else {
             console.log('No similar watcher found. Creating a new watcher...')
-            watcher = await WatcherService.create(metadata, query)
+            watcher = await WatcherService.create(searchFilters, query)
         }
 
         const watcherInUser = user.watchers.find(userWatcher => userWatcher._id.toString() === watcher._id.toString())
@@ -106,8 +108,9 @@ class UserWatcherService {
 
     }
 
-    static async updateWatcher(userId: string, watcherId: string, { query, metadata }) {
+    static async updateWatcher(userId: string, watcherId: string, searchFilters: SearchFilterDataProps) {
 
+        const query = SearchService.createElasticQuery(searchFilters)
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
 
         let watcher: typeof similarWatcher
@@ -116,7 +119,7 @@ class UserWatcherService {
             watcher = similarWatcher
         } else {
             console.log('No similar watcher found. Creating a new watcher...')
-            watcher = await WatcherService.create(metadata, query)
+            watcher = await WatcherService.create(searchFilters, query)
         }
 
         if (!watcher) throw new APIError(404, DatabaseErrorCodes.MISSING_DOCUMENT)
@@ -136,7 +139,7 @@ class UserWatcherService {
         watcher.users = [
             ...watcher.users,
             new ObjectId(user._id)
-        ] 
+        ]
 
         // save
         await user.save()

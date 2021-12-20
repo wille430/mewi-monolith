@@ -1,7 +1,7 @@
 
 export interface PriceRangeFilterProps {
-    gte: string | null,
-    lte: string | null,
+    gte?: string,
+    lte?: string,
     onChange?: (value: string, field: 'gte' | 'lte') => void
 }
 

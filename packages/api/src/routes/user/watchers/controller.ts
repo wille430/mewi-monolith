@@ -1,7 +1,7 @@
 import WatcherService from 'services/WatcherService'
 import { UserWatcherService } from 'services/UserServices'
 import SearchService from 'services/SearchService'
-import { APIError, ValidationErrorCodes } from '@mewi/types'
+import { APIError, SearchFilterDataProps, ValidationErrorCodes } from '@mewi/types'
 import { WatcherErrorCodes } from 'types/watcher'
 
 export const getAll = async (req, res, next) => {
@@ -16,29 +16,24 @@ export const getAll = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
     const { user_id } = req.user
-    const { query, metadata } = req.body
+    const searchFilters: SearchFilterDataProps | undefined = req.body.searchFilters
 
     try {
-        if (!query || !metadata) {
-
-            let missingVariables: string[] = []
-
-            if (!query) missingVariables.push('query')
-            if (!metadata) missingVariables.push('metadata')
-
-            const errorMessage = 'Missing request parameters. Missing: ' + missingVariables.join(', ')
-
-            throw new APIError(422, ValidationErrorCodes.MISSING_FIELDS, errorMessage)
+        if (!searchFilters) {
+            throw new APIError(421, ValidationErrorCodes.MISSING_FIELDS, 'You must provide search filters to create a new watcher.')
+        } else {
+            const query = SearchService.createElasticQuery(searchFilters)
+            const validQuery = await SearchService.validateQuery(query)
+            if (!validQuery) {
+                throw new APIError(400, WatcherErrorCodes.INVALID_QUERY, 'The search filters provided were not valid.')
+            } else {
+                // Create watcher
+                const newWatcher = await WatcherService.create(searchFilters, query)
+                res.status(201).json({
+                    watcher: newWatcher
+                })
+            }
         }
-
-        if (!await SearchService.validateQuery(query)) {
-            throw new APIError(421, ValidationErrorCodes.INVALID_INPUT, 'Invalid query.')
-        }
-
-        const watcher = await UserWatcherService.addWatcher(user_id, { metadata, query })
-        res.status(201).json({
-            watcher: watcher
-        })
     } catch (e) {
         next(e)
         return
@@ -63,20 +58,32 @@ export const update = async (req, res, next) => {
     // get watcher id
     const { user_id } = req.user
     const { watcher_id } = req.params
-    const { metadata, query } = req.body
-    
-    if (!query || !metadata) {
-        next(new APIError(422, ValidationErrorCodes.INVALID_INPUT, 'Invalid query or metadata.'))
-        return
-    }
-
-    if (!await SearchService.validateQuery(query)) {
-        next(new APIError(422, WatcherErrorCodes.INVALID_QUERY, 'The query provided is invalid.'))
-        return
-    }
+    const { searchFilters } = req.body
 
     try {
-        const updatedWatcher = await UserWatcherService.updateWatcher(user_id, watcher_id, { query, metadata })
+        if (!searchFilters) {
+            throw new APIError(421, ValidationErrorCodes.MISSING_FIELDS, 'You must provide search filters to update a new watcher.')
+        } else {
+            const query = SearchService.createElasticQuery(searchFilters)
+            const validQuery = await SearchService.validateQuery(query)
+            if (!validQuery) {
+                throw new APIError(400, WatcherErrorCodes.INVALID_QUERY, 'The search filters provided were not valid.')
+            } else {
+                // Update watcher
+                const newWatcher = await UserWatcherService.updateWatcher(user_id, watcher_id, searchFilters)
+                res.status(201).json({
+                    watcher: newWatcher
+                })
+            }
+        }
+    } catch (e) {
+        next(e)
+        return
+    }
+
+
+    try {
+        const updatedWatcher = await UserWatcherService.updateWatcher(user_id, watcher_id, searchFilters)
         res.status(200).json({
             watcher: updatedWatcher
         })

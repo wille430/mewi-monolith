@@ -1,14 +1,15 @@
 import DropdownMenu, { DropDownMenuProps } from 'common/components/DropdownMenu/index'
 import { Override } from 'types/types'
 
-export type FilterDropdownProps = Override<DropDownMenuProps, {
+export type LabeledDropdownProps = Override<DropDownMenuProps, {
     onChange?: (val: any) => void,
     value?: string[] | string | null,
     closeMenuOnSelect?: boolean,
-    isMulti?: boolean
+    isMulti?: boolean,
+    label?: string
 }>
 
-const FilterDropdown = (props: FilterDropdownProps) => {
+const LabeledDropdown = (props: LabeledDropdownProps) => {
 
     const { closeMenuOnSelect, isMulti, label } = props
 
@@ -25,4 +26,4 @@ const FilterDropdown = (props: FilterDropdownProps) => {
     )
 }
 
-export default FilterDropdown
+export default LabeledDropdown

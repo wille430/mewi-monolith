@@ -1,7 +1,6 @@
 import PopUp from "common/components/PopUp"
-import { useEffect, useState } from "react"
-import FilterDropdown from "common/components/LabeledDropdown"
-import { filters as staticFilters } from 'data'
+import { useState } from "react"
+import LabeledDropdown from "common/components/LabeledDropdown"
 import { categoriesOptions, regions } from "@mewi/types"
 import ResetButton from "Routes/Search/FilterArea/ResetButton"
 import AddWatcherButton from "Routes/Search/FilterArea/AddWatcherButton"
@@ -64,7 +63,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                                     />
                                 </div>
 
-                                <FilterDropdown
+                                <LabeledDropdown
                                     onChange={val => {
                                         setFormData({
                                             ...formData,
@@ -78,7 +77,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                                     isMulti
                                 />
 
-                                <FilterDropdown
+                                <LabeledDropdown
                                     onChange={(val: string) => setFormData({
                                         ...formData,
                                         category: val
@@ -122,7 +121,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                     </div>
                     <ResetButton />
                     <AddWatcherButton
-                        formData={formData}
+                        searchFilters={formData}
                         onClick={clearInputs}
                         data-testid="sendButton"
                     />
