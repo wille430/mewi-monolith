@@ -25,6 +25,7 @@ const useQuery = () => {
        
         Object.keys(newParams).forEach(key => {
             const value = newParams[key]
+            console.log({key, value})
             if (!value || value === '' || value === 'null') {
                 searchParams.delete(key)
             } else {

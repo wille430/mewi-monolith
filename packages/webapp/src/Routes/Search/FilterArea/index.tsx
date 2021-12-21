@@ -13,14 +13,16 @@ const FilterArea = () => {
     const { isLoggedIn } = useContext(UserContext)
     const { filters, setFilters } = useContext(SearchContext)
     const { setQuery } = useQuery()
-    const keyword = useParam("q")[0]
 
-    const [formData, setFormData] = useState<SearchFilterDataProps>({ keyword })
+    const [formData, setFormData] = useState<SearchFilterDataProps>({
+        keyword: filters.keyword
+    })
 
     const handleSubmit = () => {
 
         // Set queries
         setQuery({
+            q: filters.keyword,
             regions: formData.regions?.join(','),
             category: formData.category,
             auction: formData.auction ? "true" : undefined,

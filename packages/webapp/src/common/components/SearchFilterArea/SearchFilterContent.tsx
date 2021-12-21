@@ -91,6 +91,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             <input
                                                 className="input"
                                                 placeholder="Sökord"
+                                                name="q"
                                                 onChange={e => handleChange('keyword', e.target.value)}
                                                 value={searchFilterData.keyword}
                                                 data-testid="keywordInput"

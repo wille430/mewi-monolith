@@ -95,10 +95,11 @@ const SearchParamsUtils = {
         let params = URLSearchParams
         let searchFilters: SearchFilterDataProps = {}
 
-        console.log({params})
         params.forEach((value, key) => {
-            console.log(key)
             switch (key) {
+                case 'q':
+                    searchFilters['keyword'] = value
+                    break
                 case 'category':
                     searchFilters[key] = value
                     break

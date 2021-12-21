@@ -1,6 +1,7 @@
-import { useState, createRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SearchSuggestions from './SearchSuggestions';
 import SearchButton from './SearchButton'
+import { useHistory } from 'react-router';
 
 export interface SearchFormProps {
     size?: "large" | "small",
@@ -14,13 +15,11 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
         blur: false,
     })
 
-    const [query, setQuery] = useState("")
-
-    const formRef = createRef<HTMLFormElement>()
-    const searchButtonRef = createRef<HTMLButtonElement>()
+    const history = useHistory()
+    const [keyword, setKeyword] = useState('')
 
     const handleInputChange = (e: any) => {
-        setQuery(e.target?.value || "")
+        setKeyword(e.target?.value)
     }
 
     // Wait a certain amount of time before closing the auto complete window
@@ -42,16 +41,25 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
         waitAndHideAutoComplete()
     }, [state.blur])
 
+    const handleSubmit = () => {
+        history.push('/search?q=' + keyword)
+    }
+
     return (
-        <form ref={formRef} className={`relative w-full ${size === "small" && 'max-w-2xl'}`}>
+        <form
+            onSubmit={e => {
+                e.preventDefault()
+                handleSubmit()
+            }}
+            className={`relative w-full ${size === "small" && 'max-w-2xl'}`}
+        >
             <div className={`outline-none flex flex-row relative ${size === "small" ? "h-8" : "h-12"}`}>
                 <input
                     className="absoluteh-full w-full outline-none rounded-xl pl-4 pr-12 border border-black"
                     placeholder="Sök efter en vara..."
-                    onKeyDown={e => e.keyCode === 13 && searchButtonRef.current?.click()}
+                    onKeyDown={e => e.keyCode === 13 && handleSubmit()}
                     onChange={handleInputChange}
-                    name="q"
-                    value={query}
+                    value={keyword}
                     autoComplete="off"
                     onFocus={e => setState(prevState => ({
                         ...prevState,
@@ -67,15 +75,16 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
                 {
                     showSearchIcon &&
                     <SearchButton
-                        ref={searchButtonRef}
-                        query={query}
                         data-testid="searchButton"
                     />
                 }
             </div>
             <SearchSuggestions
-                query={query}
+                query={keyword}
                 show={state.showAutoComplete}
+                onAutoCompleteClick={(newKeyword) => {
+                    setKeyword(newKeyword)
+                }}
                 data-testid="searchSuggestions"
             />
         </form>

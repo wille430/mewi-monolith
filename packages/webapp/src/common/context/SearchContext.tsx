@@ -5,6 +5,7 @@ import { SearchFilterDataProps } from "@mewi/types"
 import { getSearchResults } from "api"
 import { useLocation } from "react-router"
 import { SearchParamsUtils } from "utils"
+import useParam from "common/hooks/useParam"
 
 const initialState: SearchState = {
     searchId: '',
@@ -37,12 +38,13 @@ export const SearchProvider = ({ children }: Props) => {
     const [filters, setFilters] = useState<SearchFilterDataProps>({})
 
     const location = useLocation()
-    const page: number = parseInt(new URLSearchParams(location.search).get('page') || '1')
+    const page: number = parseInt(useParam('page')[0] || '1')
+    const keyword = useParam('q')[0]
 
     useEffect(() => {
-        console.log('Getting initial search filters from parameters...')
         const urlSearchParams = new URLSearchParams(location.search)
         const newSearchFilters = SearchParamsUtils.searchParamsToObj(urlSearchParams)
+
         console.log('Search filters from params: ', newSearchFilters)
         setFilters(newSearchFilters)
     }, [])
@@ -62,6 +64,13 @@ export const SearchProvider = ({ children }: Props) => {
                 setIsLoading(false)
             })
     }, [filters, page])
+
+    useEffect(() => {
+        setFilters({
+            ...filters,
+            keyword: keyword
+        })
+    }, [keyword])
 
     return (
         <SearchContext.Provider value={{
