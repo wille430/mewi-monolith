@@ -1,5 +1,4 @@
 import { useWindowWidth } from '@react-hook/window-size'
-import useToken from 'common/hooks/useToken'
 import { ReactNode, useEffect, useState } from 'react'
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
 import SearchFilterContent, { SearchFilterContentProps } from './SearchFilterContent'

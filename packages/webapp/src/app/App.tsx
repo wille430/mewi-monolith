@@ -1,5 +1,5 @@
 import './App.css'
-import { lazy, Suspense, useContext, useEffect } from 'react'
+import { lazy, Suspense, useContext } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Nav from 'common/components/Nav/index'
 import { SearchProvider } from 'common/context/SearchContext'
@@ -8,9 +8,6 @@ import PrivateRoute from 'common/components/PrivateRoute'
 import PublicRoute from 'common/components/PublicRoute'
 import ProtectedRoutes from 'Routes/ProtectedRoutes'
 import { UserContext } from 'common/context/UserContext'
-import axios from 'axios'
-import { data } from 'autoprefixer'
-import { instance } from 'api'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -31,42 +28,8 @@ if (!window.console) {
 }
 
 function App() {
-  const { token, logOut, renewJwt } = useContext(UserContext)
-  const isAuthenticated = !!token
 
-  useEffect(() => {
-
-    axios.defaults.baseURL = process.env.NX_API_URL
-
-    axios.interceptors.request.use(request => {
-      if (request.headers && token) {
-        request.headers['Authorization'] = 'Bearer ' + token
-      }
-      return request
-    })
-
-    axios.interceptors.response.use(
-      response => {
-        return response
-      },
-      async err => {
-        const config = err.config
-        if (err.response?.status === 401 && !config._retry) {
-          config._retry = true
-          await renewJwt()
-          return instance(config)
-        } else if (err.response?.status === 403) {
-          logOut()
-        } else if (err.response?.status === 401 && config._retry) {
-          logOut()
-        }
-
-        if (err.response?.data) {
-          throw err.response?.data
-        }
-        throw err
-      })
-  }, [token])
+  const isAuthenticated = useContext(UserContext).isLoggedIn
 
   return (
     <div className="w-full min-h-screen">

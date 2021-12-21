@@ -2,15 +2,15 @@ import { useContext, useEffect, useState } from 'react'
 import { SearchContext } from 'common/context/SearchContext'
 import { SearchFilterDataProps } from '@mewi/types'
 import useQuery from 'common/hooks/useQuery'
-import { UserContext } from 'common/context/UserContext'
 import useParam from 'common/hooks/useParam'
 import { PriceRangeUtils } from 'utils'
 import AddWatcherButton from '../../../common/components/SearchFilterArea/AddWatcherButton'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import SearchFilterArea from 'common/components/SearchFilterArea'
+import { UserContext } from 'common/context/UserContext'
 
 const FilterArea = () => {
-    const { token } = useContext(UserContext)
+    const { isLoggedIn } = useContext(UserContext)
     const { filters, setFilters } = useContext(SearchContext)
     const { setQuery } = useQuery()
     const keyword = useParam("q")[0]
@@ -44,7 +44,7 @@ const FilterArea = () => {
             showResetButton={true}
             isCollapsable={true}
             onSubmit={handleSubmit}
-            footer={token
+            footer={isLoggedIn
                 ? (
                     <AddWatcherButton searchFilters={formData} />
                 ) : (

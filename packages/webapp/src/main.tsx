@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'styles.css'
 import App from './app/App';
-import { UserProvider } from 'common/context/UserContext';
 import SnackbarProvider from 'common/context/SnackbarContext';
+import UserProvider from 'common/context/UserContext';
 // import { loadStripe } from '@stripe/stripe-js'
 // import { Elements } from '@stripe/react-stripe-js'
 

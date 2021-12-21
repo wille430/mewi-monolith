@@ -3,10 +3,10 @@ import { useContext } from "react"
 
 const LogOutButton = () => {
 
-    const { logOut } = useContext(UserContext)
+    const { userDispatch } = useContext(UserContext)
 
     return (
-        <button onClick={e => logOut()}>Logga ut</button>
+        <button onClick={e => userDispatch({ type: 'logout' })}>Logga ut</button>
     )
 }
 

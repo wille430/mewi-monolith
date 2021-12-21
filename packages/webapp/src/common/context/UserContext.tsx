@@ -1,82 +1,83 @@
-import useToken from "common/hooks/useToken";
-import React, { createContext } from "react";
-import { login, refreshJwtToken, signUp } from "api";
+import { AuthErrorCodes } from "@mewi/types";
+import { instance } from "api";
+import axios from "axios";
+import useAuthTokens from "common/hooks/useAuthTokens";
+import userReducer, { UserReducerAction } from "common/reducers/userReducer";
+import e from "cors";
+import { createContext, ReactNode, useEffect } from "react";
 
-interface Props {
-    children: React.ReactNode
+interface UserContextProps {
+    isLoggedIn: boolean,
+    isLoading: boolean,
+    userDispatch: (action: UserReducerAction) => any
 }
 
-interface State {
-    logIn: Function,
-    logOut: Function,
-    register: Function,
-    renewJwt: () => Promise<void>,
-    token?: string,
-    refreshToken?: string
+export const UserContext = createContext<UserContextProps>({
+    isLoggedIn: false,
+    isLoading: false,
+    userDispatch: (action: UserReducerAction) => { }
+})
+
+interface UserProviderProps {
+    children: ReactNode
 }
 
-const initialState: State = {
-    logIn: (username: string, password: string) => { },
-    logOut: () => { },
-    register: () => { },
-    renewJwt: async () => {}
-}
+const UserProvider = ({ children }: UserProviderProps) => {
+    const { authTokens, setAuthTokens } = useAuthTokens()
+    const { userState, userDispatch } = userReducer({ authTokens, setAuthTokens })
 
-export const UserContext = createContext(initialState)
+    useEffect(() => {
 
-export const UserProvider = ({ children }: Props): any | null => {
+        console.log('Auth token changed!')
 
-    const { token, setToken } = useToken()
-    const refreshTokenHook = useToken('refreshToken')
-    const [refreshToken, setRefreshToken] = [refreshTokenHook.token, refreshTokenHook.setToken]
+        axios.defaults.baseURL = process.env.NX_API_URL
 
-    const logIn = async (email: string, password: string): Promise<void> => {
-        const { token, refreshToken } = await login(email, password).catch(e => { throw e })
+        axios.interceptors.request.use(request => {
+            if (request.headers && authTokens.jwt) {
+                request.headers['Authorization'] = 'Bearer ' + authTokens.jwt
+            }
+            return request
+        })
 
-        if (token) {
-            setToken(token)
-        }
-        if (refreshToken) {
-            setRefreshToken(refreshToken)
-        }
-    }
+        axios.interceptors.response.use(
+            response => {
+                return response
+            },
+            async err => {
+                const config = err.config
 
-    const logOut = () => {
-        setToken()
-        setRefreshToken()
-    }
+                if (config.url !== '/auth/login' && err.response) {
+                    // jwt was expired
+                    if (err.response.status === 401 && !config._retry) {
+                        config._retry = true
 
-    const register = async ({ email, password, repassword }: { [key: string]: string }) => {
-        const { token, refreshToken } = await signUp(email, password, repassword)
+                        try {
+                            return await new Promise((resolve) => {
+                                const handleCallback = () => {
+                                    resolve(instance(config))
+                                }
+                                userDispatch({ type: 'refreshTokens', callback: handleCallback })
+                            })
+                        } catch (e: any) {
+                            throw e.reponse?.data
+                        }
+                    } else {
+                        throw err.response?.data
+                    }
+                }
+            })
 
-        if (token) {
-            setToken(token)
-        }
-        if (refreshToken) {
-            setRefreshToken(refreshToken)
-        }
-    }
-
-    const renewJwt = async (): Promise<void> => {
-        console.log(`Renewing token ${token} with refresh token ${refreshToken}`)
-        if (!refreshToken) return
-
-        const newTokens = await refreshJwtToken(refreshToken)
-        setToken(newTokens.token)
-        setRefreshToken(newTokens.refreshToken)
-    }
+    }, [authTokens])
 
     return (
         <UserContext.Provider value={{
-            logIn,
-            logOut,
-            register,
-            token,
-            refreshToken,
-            renewJwt
+            isLoggedIn: Boolean(authTokens.jwt),
+            isLoading: userState.isLoading,
+            userDispatch: userDispatch
         }}>
             {children}
         </UserContext.Provider>
     )
 }
 
+export default UserProvider

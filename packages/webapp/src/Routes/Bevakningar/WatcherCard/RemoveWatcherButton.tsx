@@ -1,5 +1,4 @@
 import AsyncButton from "common/components/AsyncButton"
-import { UserContext } from "common/context/UserContext"
 import { useContext } from "react"
 import { FiTrash } from "react-icons/fi"
 import { WatcherContext } from "../WatcherContext"

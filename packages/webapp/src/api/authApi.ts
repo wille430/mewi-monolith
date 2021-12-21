@@ -1,32 +1,22 @@
 import axios from "axios"
-import useToken from "common/hooks/useToken"
+import { AuthTokens } from '@mewi/types'
 
-export const login = async (email: string, password: string) => {
-    const { token, refreshToken } = await axios.post('/auth/login', { email, password })
+export const login = async (email: string, password: string): Promise<AuthTokens> => {
+    const authTokens: AuthTokens = await axios.post('/auth/login', { email, password })
         .then(res => res.data)
-
-    console.log({ token, refreshToken })
-    return {
-        token,
-        refreshToken
-    }
+    console.log(authTokens)
+    return authTokens
 }
 
-export const signUp = async (email: string, password: string, repassword: string) => {
-    const { token, refreshToken } = await axios.post('/auth/signup', { email, password, repassword })
+export const signUp = async (email: string, password: string, repassword: string): Promise<AuthTokens> => {
+    const authTokens: AuthTokens = await axios.post('/auth/signup', { email, password, repassword })
         .then(res => res.data)
-    return {
-        token,
-        refreshToken
-    }
+    return authTokens
 }
 
-export const refreshJwtToken = async (oldRefreshToken: string) => {
-    const { token, refreshToken } = await axios.post('/auth/refreshtoken', { refreshToken: oldRefreshToken })
+export const refreshJwtToken = async (oldRefreshToken: string): Promise<AuthTokens> => {
+    const authTokens = await axios.post('/auth/refreshtoken', { refreshToken: oldRefreshToken })
         .then(res => res.data)
 
-    return {
-        token,
-        refreshToken
-    }
+    return authTokens
 }

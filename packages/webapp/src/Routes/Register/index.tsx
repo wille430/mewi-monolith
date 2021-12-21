@@ -1,16 +1,17 @@
 import Form from 'common/components/Form';
 import FormInput from 'common/components/FormInput';
-import { UserContext } from 'common/context/UserContext';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from 'common/components/Layout';
-import { APIError, APIResponseError, AuthErrorCodes } from '@mewi/types';
+import { AuthErrorCodes } from '@mewi/types';
 import { SnackbarContext } from 'common/context/SnackbarContext';
+import _ from 'lodash'
+import { UserContext } from 'common/context/UserContext';
 
 const Register = () => {
 
-    const { register } = useContext(UserContext)
     const { setSnackbar } = useContext(SnackbarContext)
+    const { userDispatch } = useContext(UserContext)
 
     // const [username, setUsername] = React.useState('')
     const initFormData = {
@@ -31,11 +32,19 @@ const Register = () => {
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        register({ email, password, repassword })
-            .catch((e: APIResponseError) => {
-                console.log(e)
-                setErrors(initErrors)
 
+        try {
+            userDispatch({
+                type: 'signup',
+                signUpCredentials: _.omit(formData, 'all')
+            })
+            setSnackbar({
+                title: 'Ditt konto skapades!'
+            })
+        } catch (e: any) {
+            console.log(e)
+            setErrors(initErrors)
+            if (e.error) {
                 switch (e.error.type) {
                     case AuthErrorCodes.INVALID_EMAIL:
                         setErrors({
@@ -74,14 +83,8 @@ const Register = () => {
                         })
                         break
                 }
-
-            })
-            .then(() => {
-                setSnackbar({
-                    title: 'Ditt konto skapades!'
-                })
-            })
-
+            }
+        }
     }
 
     return (

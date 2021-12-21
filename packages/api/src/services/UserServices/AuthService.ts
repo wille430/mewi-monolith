@@ -1,13 +1,13 @@
 import { PasswordService } from "./index";
 import UserModel from "models/UserModel";
-import { APIError, AuthErrorCodes, JWT } from "@mewi/types";
+import { APIError, AuthErrorCodes, AuthTokens, JWT } from "@mewi/types";
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from "./UserEmailService";
 import bcrypt from 'bcryptjs'
 
 class AuthService {
 
-    static async login(email: string, password: string) {
+    static async login(email: string, password: string): Promise<AuthTokens> {
         const user = await UserModel.findOne({ email })
         email = email.toLowerCase()
 
@@ -18,13 +18,7 @@ class AuthService {
 
         if (!correctPassword) throw new APIError(401, AuthErrorCodes.INVALID_PASSWORD)
 
-        const token = await this.createJWT(userId, email)
-        const refreshToken = await this.createRefreshToken(userId, email)
-
-        return {
-            token,
-            refreshToken
-        }
+        return await this.createNewAuthTokens(userId, email)
     }
 
     /**
@@ -34,7 +28,7 @@ class AuthService {
      * @param repassword Should be the same as password
      * @returns a JWT-token
      */
-    static async signUp(email: string, password: string, repassword: string) {
+    static async signUp(email: string, password: string, repassword: string): Promise<AuthTokens> {
         if (password !== repassword) throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_MATCHING)
         email = email.toLowerCase()
 
@@ -57,12 +51,14 @@ class AuthService {
             password: encryptedPassword
         })
 
-        const token: JWT = await AuthService.createJWT(newUser._id, email)
-        const refreshToken = await AuthService.createRefreshToken(newUser._id, email)
 
+        return await this.createNewAuthTokens(newUser._id, email)
+    }
+
+    static async createNewAuthTokens(userId: string, email: string): Promise<AuthTokens> {
         return {
-            token,
-            refreshToken
+            jwt: await AuthService.createJWT(userId, email),
+            refreshToken: await AuthService.createRefreshToken(userId, email)
         }
     }
 

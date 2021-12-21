@@ -1,15 +1,16 @@
 import Form from 'common/components/Form';
 import FormInput from 'common/components/FormInput';
-import { UserContext } from 'common/context/UserContext';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from 'common/components/Layout';
-import { APIResponseError, AuthErrorCodes } from '@mewi/types';
+import { AuthErrorCodes } from '@mewi/types';
+import _ from 'lodash';
+import { UserContext } from 'common/context/UserContext';
+import { useContext } from 'react';
 
 const Login = () => {
 
-    const { logIn } = React.useContext(UserContext)
-
+    const { userDispatch } = useContext(UserContext)
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
 
@@ -23,8 +24,9 @@ const Login = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        logIn(email, password).catch((e: APIResponseError) => {
-            console.log(e)
+        try {
+            userDispatch({ type: 'login', userCredentials: { email, password } })
+        } catch (e: any) {
             setErrors(initErrors)
             switch (e.error?.type) {
                 case AuthErrorCodes.INVALID_EMAIL:
@@ -43,7 +45,7 @@ const Login = () => {
                     })
                     break
             }
-        })
+        }
     }
 
     return (

@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson'
-import { SearchFilterDataProps } from '..'
+import { JWT, SearchFilterDataProps } from '..'
 
 /**
  * Models
@@ -95,4 +95,9 @@ export interface ItemData {
         value: string
     }[],
     origin: string
+}
+
+export interface AuthTokens {
+    jwt?: JWT,
+    refreshToken?: string
 }

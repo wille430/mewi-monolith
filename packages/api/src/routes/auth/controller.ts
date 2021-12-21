@@ -5,8 +5,8 @@ import { APIError, AuthErrorCodes } from '@mewi/types'
 export const signUp = async (req, res, next) => {
     const { email, password, repassword } = req.body
     try {
-        const { token, refreshToken } = await AuthService.signUp(email, password, repassword)
-        res.status(201).json({ token, refreshToken })
+        const authTokens = await AuthService.signUp(email, password, repassword)
+        res.status(201).json(authTokens)
     } catch (e) {
         next(e)
     }
@@ -15,8 +15,8 @@ export const signUp = async (req, res, next) => {
 export const login = async (req, res, next) => {
     const { email, password } = req.body
     try {
-        const { token, refreshToken } = await AuthService.login(email, password)
-        res.status(200).json({ token, refreshToken })
+        const authTokens = await AuthService.login(email, password)
+        res.status(200).json(authTokens)
     } catch (e) {
         next(e)
     }
@@ -45,12 +45,8 @@ export const refreshToken = async (req, res, next) => {
             return
         }
 
-        const token = await AuthService.createJWT(user.user_id, user.email)
-        const refreshToken = await AuthService.createRefreshToken(user.user_id, user.email)
+        const authTokens = await AuthService.createNewAuthTokens(user.user_id, user.email)
 
-        res.status(201).json({
-            token: token,
-            refreshToken: refreshToken
-        })
+        res.status(201).json(authTokens)
     })
 }
