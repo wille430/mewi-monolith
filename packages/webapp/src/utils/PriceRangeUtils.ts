@@ -1,21 +1,18 @@
-import { PriceRangeProps } from "types/types"
+import { PriceRange } from "@mewi/types"
 
 const PriceRangeUtils = {
-    toString: (obj: PriceRangeProps) => {
-        if (!obj || (!obj.gte && !obj.lte)) return null
+    toString: (obj?: PriceRange) => {
+        if (!obj || (!obj.gte && !obj.lte)) return undefined
         return `${obj.gte || ''}-${obj.lte || ''}`
     },
-    toObject: (string: string | null): PriceRangeProps => {
-        const defaultPriceRangeObject = {
-            gte: "",
-            lte: ""
-        }
+    toObject: (string: string | null): PriceRange => {
+        const defaultPriceRangeObject = {}
 
         if (!string) return defaultPriceRangeObject
         const arr = string.split('-')
-        const returnObj: PriceRangeProps = defaultPriceRangeObject
-        if (arr[0]) returnObj.gte = arr[0]
-        if (arr[1]) returnObj.lte = arr[1]
+        const returnObj: PriceRange = defaultPriceRangeObject
+        if (arr[0]) returnObj.gte = parseInt(arr[0])
+        if (arr[1]) returnObj.lte = parseInt(arr[1])
         return returnObj
     }
 }

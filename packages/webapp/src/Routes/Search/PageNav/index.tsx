@@ -5,7 +5,7 @@ import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config';
 import useParam from 'common/hooks/useParam';
 
-interface Props {
+interface NavButtonProps {
     label: number,
     selected: boolean,
     onClick: Function
@@ -70,7 +70,7 @@ const PageNav = () => {
     );
 }
 
-const NavButton = ({ label, selected, onClick }: Props) => {
+const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
 
     return (
         <button className={`w-12 h-12 shadow mx-2 transform hover:shadow-md hover:scale-110 ${selected && 'border-b-2 border-black'}`} onClick={e => onClick(e, label)}>

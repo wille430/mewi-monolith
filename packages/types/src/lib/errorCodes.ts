@@ -37,3 +37,7 @@ export const ValidationErrorCodes = {
     MISSING_FIELDS: 'validation/missing_fields',
     INVALID_INPUT: 'validation/failed'
 }
+
+export const WatcherErrorCodes = {
+    INVALID_QUERY: 'watcher/invalid_query'
+}

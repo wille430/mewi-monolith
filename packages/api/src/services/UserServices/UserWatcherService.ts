@@ -4,7 +4,7 @@
  */
 
 import { ObjectId } from "bson"
-import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from "@mewi/types"
+import { APIError, DatabaseErrorCodes, ElasticQuery, SearchFilterDataProps } from "@mewi/types"
 import WatcherModel from "models/WatcherModel"
 import { PublicWatcher } from "@mewi/types"
 import WatcherService from "services/WatcherService"
@@ -54,10 +54,9 @@ class UserWatcherService {
         }
     }
 
-    static async addWatcher(userId: string, searchFilters: SearchFilterDataProps) {
+    static async addWatcher(userId: string, { metadata, query }: { metadata: SearchFilterDataProps, query: ElasticQuery }) {
 
         const user = await UserService.user(userId)
-        const query = SearchService.createElasticQuery(searchFilters)
 
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
 
@@ -67,7 +66,7 @@ class UserWatcherService {
             watcher = similarWatcher
         } else {
             console.log('No similar watcher found. Creating a new watcher...')
-            watcher = await WatcherService.create(searchFilters, query)
+            watcher = await WatcherService.create(metadata, query)
         }
 
         const watcherInUser = user.watchers.find(userWatcher => userWatcher._id.toString() === watcher._id.toString())

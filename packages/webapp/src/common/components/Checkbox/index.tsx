@@ -10,17 +10,10 @@ export type CheckboxProps = Override<HTMLAttributes<HTMLInputElement>, {
 
 const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => {
 
-    // const [_checked, _setChecked] = useState(checked)
-
     const inputRef = createRef<HTMLInputElement>()
 
-    const onChange = (newVal?: boolean | string) => {
-        if (typeof newVal === 'boolean') {
-            onClick && onClick(newVal)
-        } else {
-
-            onClick && onClick(newVal === "true" ? true : false)
-        }
+    const handleClick = () => {
+        onClick && onClick(!checked)
     }
 
     return (
@@ -28,17 +21,17 @@ const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => 
             <input
                 type="checkbox"
                 name={name}
-                checked={checked}
-                data-testid="checkbox"
                 ref={inputRef}
+                data-testid="checkbox"
                 className="cursor-pointer"
-                onClick={e => onChange(e.currentTarget.value)}
+                checked={checked}
+                onChange={handleClick}
                 {...rest}
             />
             <label
                 htmlFor={name}
                 className="cursor-pointer select-none"
-                onClick={() => onChange(inputRef.current?.value)}
+                onClick={handleClick}
             >
                 {label}
             </label>

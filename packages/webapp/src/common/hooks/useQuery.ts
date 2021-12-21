@@ -18,11 +18,11 @@ const useQuery = () => {
     }, [location.search])
 
     const saveQuery = (newParams: {
-        [key: string]: string | null | undefined
+        [key: string]: string | undefined
     }): void => {
 
         const searchParams = getQuery()
-        
+       
         Object.keys(newParams).forEach(key => {
             const value = newParams[key]
             if (!value || value === '' || value === 'null') {

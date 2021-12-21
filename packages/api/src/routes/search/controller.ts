@@ -1,3 +1,4 @@
+import { SearchPostRequestBody } from "@mewi/types"
 import { elasticClient } from "../../config/elasticsearch"
 import SearchService from "../../services/SearchService"
 const index = 'items'
@@ -67,4 +68,32 @@ export const findById = async (req, res) => {
     const response = await SearchService.findById(item_id)
 
     res.status(200).json(response)
+}
+
+export const getSearchResults = async (req, res) => {
+    const options: SearchPostRequestBody = req.body
+
+    let results
+    if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
+        console.log('Searching with filters:', options.searchFilters)
+        const query = SearchService.createElasticQuery(options.searchFilters)
+        results = await elasticClient.search({
+            index: index,
+            body: {
+                query: query
+            }
+        })
+    } else {
+        results = await elasticClient.search({
+            index: index,
+            body: {}
+        })
+    }
+
+
+    res.status(200).json({
+        options: options,
+        totalHits: results.body.hits?.total?.value || 0,
+        hits: results.body.hits?.hits || []
+    })
 }

@@ -1,5 +1,5 @@
 export const categoriesOptions = [
-   {value: "fordon", label: "Fordon"} 
+    { value: "fordon", label: "Fordon" }
 ]
 
 export const categories = [
@@ -345,12 +345,19 @@ export const regions = [
 ]
 
 export interface SearchFilterDataProps {
-    keyword: string,
+    keyword?: string,
     regions?: string[],
     category?: string,
-    priceRange?: {
-        gte?: string,
-        lte?: string
-    },
+    priceRange?: PriceRange,
     auction?: boolean
+}
+
+export interface PriceRange {
+    gte?: number,
+    lte?: number
+}
+
+export interface SearchPostRequestBody {
+    page?: number,
+    searchFilters?: SearchFilterDataProps,
 }

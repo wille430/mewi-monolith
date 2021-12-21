@@ -5,17 +5,13 @@ import { SearchContext } from 'common/context/SearchContext';
 import ItemPopUp from './ItemPopUp';
 import { SelectedItemContext } from './ItemPopUp/SelectedItemContext';
 
-interface PropState {
-    isLoading: boolean
-}
+const ItemGrid = () => {
+    const { search, isLoading } = useContext(SearchContext)
 
-const ItemGrid = ({ isLoading }: PropState) => {
-    const { search }: any = useContext(SearchContext)
     const [popUpState, setPopUpState] = useState({
         show: false,
         id: ''
     })
-
     const { item, setItem } = useContext(SelectedItemContext)
 
     useEffect(() => {

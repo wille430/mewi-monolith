@@ -14,7 +14,7 @@ import { instance } from 'api'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
-const SearchContainer = lazy(() => import('Routes/Search/SearchContainer'))
+const Search = lazy(() => import('Routes/Search'))
 const Register = lazy(() => import('Routes/Register'))
 const Categories = lazy(() => import('Routes/Categories'))
 const CategorySearch = lazy(() => import('Routes/CategorySearch'))
@@ -85,7 +85,7 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route exact path="/search">
               <SearchProvider>
-                <SearchContainer />
+                <Search />
               </SearchProvider>
             </Route>
             <PrivateRoute

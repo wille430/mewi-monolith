@@ -1,21 +1,44 @@
+import { useWindowWidth } from '@react-hook/window-size'
 import useToken from 'common/hooks/useToken'
-import { Link } from 'react-router-dom'
-import AddWatcherButton from 'Routes/Search/FilterArea/AddWatcherButton'
+import { ReactNode, useEffect, useState } from 'react'
+import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
 import SearchFilterContent, { SearchFilterContentProps } from './SearchFilterContent'
 
 export interface SearchFilterAreaProps extends SearchFilterContentProps {
-    collapse?: boolean
+    children?: ReactNode,
+    isCollapsable?: boolean
 }
 
-const SearchFilterArea = ({ collapse, ...rest }: SearchFilterAreaProps) => {
+const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterAreaProps) => {
 
-    const { token } = useToken()
+    const [hidden, setHidden] = useState(false)
+    const windowWidth = useWindowWidth()
+
+    useEffect(() => {
+        if (windowWidth > 640) {
+            setHidden(false)
+        }
+    }, [windowWidth])
 
     return (
         <section className="bg-blue rounded-md p-4 text-white shadow-md">
-            <SearchFilterContent {...rest} />
-            {token ? <AddWatcherButton searchFilters={rest.searchFilterData} /> : <Link to="/login">Bevaka sökning</Link>}
-        </section>
+            <div className="block sm:hidden">
+                {isCollapsable && (hidden ? (
+                    <FiArrowUp
+                        onClick={e => setHidden(false)}
+                    />
+                ) : (
+                    <FiArrowDown
+                        onClick={e => setHidden(true)}
+                    />
+                ))}
+            </div>
+            <SearchFilterContent
+                {...rest}
+                collapse={hidden}
+            />
+            {children}
+        </section >
     )
 }
 

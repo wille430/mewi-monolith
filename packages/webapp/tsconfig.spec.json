@@ -3,7 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "paths": {
+      "@mewi/types": ["../../types/src/index.ts"],
+      "@mewi/util": ["../../util/src/index.ts"]
+    }
   },
   "include": [
     "**/*.test.ts",

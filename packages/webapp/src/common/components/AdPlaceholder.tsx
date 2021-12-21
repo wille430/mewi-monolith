@@ -2,8 +2,8 @@ import { useWindowWidth } from '@react-hook/window-size';
 import * as React from 'react';
 
 interface IAdPlaceHolderProps {
-    size: 'sm' | 'md' | 'lg' | null,
-    className: string
+    size?: 'sm' | 'md' | 'lg',
+    className?: string
 }
 
 const AdPlaceholder = (props: IAdPlaceHolderProps) => {

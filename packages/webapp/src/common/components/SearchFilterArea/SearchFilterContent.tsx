@@ -1,28 +1,49 @@
 import { categories, categoriesOptions, regions, SearchFilterDataProps } from "@mewi/types"
-import PriceRangeFilter from "Routes/Search/FilterArea/PriceRangeFilter"
-import ResetButton from "Routes/Search/FilterArea/ResetButton"
+import { FormEvent, ReactNode } from "react"
+import PriceRangeFilter from "common/components/SearchFilterArea/PriceRangeFilter"
+import ResetButton from "./ResetButton"
 import Checkbox from "../Checkbox"
 import LabeledDropdown from "../LabeledDropdown"
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps,
     onSubmit?: Function,
-    setSearchFilterData: (newData: SearchFilterDataProps) => void
+    setSearchFilterData: (newData: SearchFilterDataProps) => void,
+    children?: ReactNode,
+    showKeywordField?: boolean,
+    heading?: string,
+    showResetButton?: boolean,
+    showSubmitButton?: boolean,
+    collapse?: boolean,
+    footer?: ReactNode
 }
 
-const SearchFilterContent = ({ searchFilterData, onSubmit, setSearchFilterData }: SearchFilterContentProps) => {
+const SearchFilterContent = (props: SearchFilterContentProps) => {
 
-    const handleSubmit = () => {
+    const {
+        searchFilterData,
+        onSubmit,
+        setSearchFilterData,
+        children,
+        showKeywordField,
+        heading,
+        showResetButton,
+        showSubmitButton,
+        collapse,
+        footer
+    } = props
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
         onSubmit && onSubmit()
     }
 
     const handleChange = (field: string, newValue: any) => {
-        onChange: () => {
-            setSearchFilterData({
-                ...searchFilterData,
-                [field]: newValue
-            })
-        }
+        console.log(`Setting ${field} to ${newValue}`)
+        setSearchFilterData({
+            ...searchFilterData,
+            [field]: newValue
+        })
     }
 
     const handleReset = () => {
@@ -34,7 +55,7 @@ const SearchFilterContent = ({ searchFilterData, onSubmit, setSearchFilterData }
     const Dropdowns = [
         {
             label: 'Välj region:',
-            name: 'region',
+            name: 'regions',
             value: searchFilterData.regions,
             onChange: (val: any) => handleChange('regions', val),
             isMulti: true,
@@ -50,47 +71,83 @@ const SearchFilterContent = ({ searchFilterData, onSubmit, setSearchFilterData }
         }
     ]
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <div className="flex flex-col lg:flex-row">
-                <div className="flex-grow">
-                    <h2 className="pb-2 text-2xl">Filtrera:</h2>
-                    <div className="grid gap-x-4 gap-y-6" style={{
-                        gridTemplateColumns: "repeat(auto-fit, minmax(100px, 200px)",
-                    }}>
-                        <input type="hidden" name="q" value={searchFilterData.keyword} />
+    if (!collapse) {
+        return (
+            <div>
+                <form
+                    onSubmit={handleSubmit}
+                >
+                    <div className="flex flex-col lg:flex-row">
+                        <div className="flex-grow">
+                            <h2 className="pb-2 text-2xl">{heading}</h2>
+                            <div className="grid gap-x-4 gap-y-6" style={{
+                                gridTemplateColumns: "repeat(auto-fit, minmax(100px, 200px)",
+                            }}>
 
-                        {Dropdowns.map(dropdown => <LabeledDropdown {...dropdown} />)}
+                                {showKeywordField
+                                    ? (
+                                        <div className="flex flex-col">
+                                            <label className="inline-block h-10">Sök</label>
+                                            <input
+                                                className="input"
+                                                placeholder="Sökord"
+                                                onChange={e => handleChange('keyword', e.target.value)}
+                                                value={searchFilterData.keyword}
+                                                data-testid="keywordInput"
+                                            />
+                                        </div>
+                                    )
+                                    : (
+                                        <input type="hidden" name="q" value={searchFilterData.keyword} />
+                                    )
+                                }
 
-                        <PriceRangeFilter
-                            gte={searchFilterData.priceRange?.gte}
-                            lte={searchFilterData.priceRange?.lte}
-                            onChange={(val, field) => {
-                                handleChange('priceRange', {
-                                    ...searchFilterData.priceRange,
-                                    [field]: val
-                                })
-                            }
-                            }
-                        />
-                        <div className="p-4">
-                            <Checkbox
-                                label="Auktion"
-                                name="auction"
-                                onClick={newVal => handleChange('auction', newVal)}
-                                checked={searchFilterData.auction}
-                            />
+                                {Dropdowns.map(dropdown => <LabeledDropdown {...dropdown} />)}
+
+                                <PriceRangeFilter
+                                    gte={searchFilterData.priceRange?.gte}
+                                    lte={searchFilterData.priceRange?.lte}
+                                    onChange={(field, val) => {
+                                        handleChange('priceRange', {
+                                            ...searchFilterData.priceRange,
+                                            [field]: val
+                                        })
+                                    }
+                                    }
+                                />
+
+                                <div className="p-4">
+                                    <Checkbox
+                                        label="Auktion"
+                                        name="auction"
+                                        onClick={newVal => handleChange('auction', newVal)}
+                                        checked={searchFilterData.auction || false}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-end justify-end flex-none">
+                            <div className="flex flex-col">
+                                {children}
+                                {showSubmitButton && (
+                                    <button className="button px-4" type="submit">Filtrera</button>
+                                )}
+                                {showResetButton && (
+                                    <ResetButton
+                                        onClick={handleReset}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="flex items-end justify-end flex-none">
-                    <div className="flex flex-col">
-                        <button className="button px-4" type="submit">Filtrera</button>
-                        <ResetButton onClick={handleReset} />
-                    </div>
-                </div>
+                </form>
+                {footer}
             </div>
-        </form>
+        )
+    }
+
+    return (
+        <div></div>
     )
 }
 

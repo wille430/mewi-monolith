@@ -1,6 +1,4 @@
-import { useContext } from 'react';
 import PageNav from './PageNav/index';
-import { SearchContext } from 'common/context/SearchContext';
 import FilterArea from './FilterArea';
 import SortButton from './SortButton';
 import ItemGrid from './ItemGrid';
@@ -9,10 +7,7 @@ import { SelectedItemProvider } from './ItemGrid/ItemPopUp/SelectedItemContext';
 import ResultText from './ResultText'
 import Layout from 'common/components/Layout';
 
-const Search = ({ loading }) => {
-    const { search } = useContext(SearchContext)
-
-
+const Search = () => {
     return (
         <Layout>
             <aside className="side-col">
@@ -30,10 +25,10 @@ const Search = ({ loading }) => {
                     </div>
 
                     <SelectedItemProvider>
-                        <ItemGrid isLoading={loading} />
+                        <ItemGrid />
                     </SelectedItemProvider>
 
-                    <PageNav pageNum={search.pageNum} />
+                    <PageNav />
 
                 </section>
             </main>

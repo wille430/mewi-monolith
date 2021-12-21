@@ -1,13 +1,13 @@
-import { createContext, ProviderProps, ReactElement } from 'react'
+import { createContext, ProviderProps, ReactElement, ReactNode } from 'react'
 import useItem from './useItem'
 
 export const SelectedItemContext = createContext<any | null>(null)
 
-interface Props {
-    children: ProviderProps<ReactElement>
+interface SelectedItemProviderProps {
+    children: ReactNode
 }
 
-export const SelectedItemProvider = ({ children }: Props) => {
+export const SelectedItemProvider = ({ children }: SelectedItemProviderProps) => {
 
     const { item, setItem } = useItem()
 

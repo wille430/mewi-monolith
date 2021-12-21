@@ -25,8 +25,3 @@ export interface FilterStates {
     priceRangeState: { state: string, setState: any },
     queryState?: { state: string, setState: any }
 }
-
-export interface PriceRangeProps {
-    lte: string,
-    gte: string
-}

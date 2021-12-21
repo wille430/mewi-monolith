@@ -1,153 +1,57 @@
-import { FormEvent, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { SearchContext } from 'common/context/SearchContext'
-import PriceRangeFilter from './PriceRangeFilter'
-import LabeledDropdown from 'common/components/LabeledDropdown'
-import ResetButton from './ResetButton'
-import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
-import { useWindowWidth } from '@react-hook/window-size'
-import AddWatcherButton from './AddWatcherButton'
-import { categoriesOptions as categories, regions } from '@mewi/types'
+import { SearchFilterDataProps } from '@mewi/types'
 import useQuery from 'common/hooks/useQuery'
 import { UserContext } from 'common/context/UserContext'
-import { v4 } from 'uuid'
-import { Link } from 'react-router-dom'
 import useParam from 'common/hooks/useParam'
 import { PriceRangeUtils } from 'utils'
-import { PriceRangeProps } from 'types/types'
-import Checkbox from 'common/components/Checkbox'
-
-export interface FilterFormDataProps {
-    regions: string[],
-    category: string,
-    isAuction: boolean,
-    priceRange: PriceRangeProps,
-    keyword: string
-}
+import AddWatcherButton from '../../../common/components/SearchFilterArea/AddWatcherButton'
+import { Link, useLocation } from 'react-router-dom'
+import SearchFilterArea from 'common/components/SearchFilterArea'
 
 const FilterArea = () => {
-    const { setSearch } = useContext(SearchContext)
     const { token } = useContext(UserContext)
+    const { filters, setFilters } = useContext(SearchContext)
     const { setQuery } = useQuery()
-    const query = useParam("q")[ 0]
+    const keyword = useParam("q")[0]
 
-    const initFormData: FilterFormDataProps = {
-        regions: useParam("region")[ 0].split(','),
-        category: useParam("category")[ 0],
-        isAuction: useParam("isAuction")[ 0] === "true" ? true : false,
-        priceRange: PriceRangeUtils.toObject(useParam("price")[ 0]),
-        keyword: query
-    }
+    const [formData, setFormData] = useState<SearchFilterDataProps>({ keyword })
 
-    const [formData, setFormData] = useState<FilterFormDataProps>(initFormData)
-
-    // FilterData state for categories and regions
-
-    const [hidden, setHidden] = useState(true)
-    const windowWidth = useWindowWidth()
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = () => {
 
         // Set queries
         setQuery({
-            region: formData.regions.join(','),
+            regions: formData.regions?.join(','),
             category: formData.category,
-            isAuction: formData.isAuction ? "true" : "false",
-            price: PriceRangeUtils.toString(formData.priceRange),
+            auction: formData.auction ? "true" : undefined,
+            priceRange: PriceRangeUtils.toString(formData.priceRange),
             page: '1'
         })
 
-        setSearch((prevState: any) => ({
-            ...prevState,
-            searchId: v4()
-        }))
+        setFilters(formData)
     }
 
-    const handleReset = () => {
-        setFormData(initFormData)
-    }
+    useEffect(() => {
+        setFormData(filters)
+    }, [])
 
     return (
-        <section className="bg-blue rounded-md p-4 text-white shadow-md">
-            <div className="block sm:hidden">
-                {hidden ? <FiArrowDown onClick={e => setHidden(false)} /> : <FiArrowUp onClick={e => setHidden(true)} />}
-            </div>
-            <form onSubmit={handleSubmit} style={{
-                display: (hidden && windowWidth < 625) ? 'none' : 'block'
-            }}>
-                <div className="flex flex-col lg:flex-row">
-                    <div className="flex-grow">
-                        <h2 className="pb-2 text-2xl">Filtrera:</h2>
-                        <div className="grid gap-x-4 gap-y-6" style={{
-                            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 200px)",
-                        }}>
-                            <input type="hidden" name="q" value={query} />
-
-                            <LabeledDropdown
-                                value={formData.regions}
-                                onChange={val => {
-                                    setFormData({
-                                        ...formData,
-                                        regions: val || []
-                                    })
-                                }}
-                                label="Välj region:"
-                                name="region"
-                                options={regions}
-                                isMulti
-                            />
-
-                            <LabeledDropdown
-                                value={formData.category}
-                                onChange={val => {
-                                    setFormData({
-                                        ...formData,
-                                        category: val || ""
-                                    })
-                                }}
-                                label="Välj kategorier:"
-                                name="category"
-                                options={categories || []}
-                            />
-
-                            <PriceRangeFilter
-                                gte={formData.priceRange.gte}
-                                lte={formData.priceRange.lte}
-                                onChange={(val, field) => {
-                                    setFormData({
-                                        ...formData,
-                                        priceRange: {
-                                            ...formData.priceRange,
-                                            [field]: val
-                                        }
-                                    })
-                                }}
-                            />
-                            <div className="p-4">
-                                <Checkbox
-                                    label="Auktion"
-                                    name="isAuction"
-                                    onClick={val => {
-                                        setFormData({
-                                            ...formData,
-                                            isAuction: val
-                                        })
-                                    }}
-                                    checked={formData.isAuction}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex items-end justify-end flex-none">
-                        <div className="flex flex-col">
-                            <button className="button px-4" type="submit">Filtrera</button>
-                            <ResetButton onClick={handleReset} />
-                        </div>
-                    </div>
-                </div>
-            </form>
-            {/* {token ? <AddWatcherButton formData={formData} /> : <Link to="/login">Bevaka sökning</Link>} */}
-        </section>
+        <SearchFilterArea
+            searchFilterData={formData}
+            setSearchFilterData={newVal => setFormData(newVal)}
+            heading='Filtrera sökning'
+            showSubmitButton={true}
+            showResetButton={true}
+            isCollapsable={true}
+            onSubmit={handleSubmit}
+            footer={token
+                ? (
+                    <AddWatcherButton searchFilters={formData} />
+                ) : (
+                    <Link to="/login">Bevaka sökning</Link>
+                )
+            }
+        />
     )
 }
 

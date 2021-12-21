@@ -1,12 +1,7 @@
 import { SearchFilterDataProps, WatcherMetadata } from "@mewi/types"
-import { UserContext } from "common/context/UserContext"
 import { ButtonHTMLAttributes, useContext, useState } from "react"
-import { SearchParamsUtils } from "utils"
-import { PriceRangeUtils } from "utils"
 import { WatcherContext } from "Routes/Bevakningar/WatcherContext"
 import AsyncButton from "common/components/AsyncButton"
-import { FilterFormDataProps } from "."
-import { DatabaseErrorCodes } from "@mewi/types"
 import { SnackbarContext } from "common/context/SnackbarContext"
 import { createWatcher } from "api/"
 

@@ -52,27 +52,37 @@ export default class SearchService {
             }
         }
 
-        Object.keys(searchFilterData).map(key => {
-
+        Object.keys(searchFilterData).forEach(key => {
             switch (key) {
                 case 'keyword':
                     query.bool.must.push({ match: { title: searchFilterData[key] } })
+                    break
                 case 'regions':
-                    const clauses = []
-                    searchFilterData.regions.forEach(region => {
-                        clauses.push(
-                            { span_term: { region: region } }
-                        )
-                    })
-                    query.bool.must.push({ span_or: { clauses: clauses } })
+                    // const clauses = []
+                    // searchFilterData.regions?.forEach(region => {
+                    //     clauses.push(
+                    //         { span_term: { region: region } }
+                    //     )
+                    // })
+                    // query.bool.must.push({ span_or: { clauses: clauses } })
+                    query.bool.must.push({ match: { 'region': searchFilterData[key].join(', ') } })
+                    break
                 case 'category':
+                    if (!query.bool.filter) query.bool.filter = []
                     query.bool.filter.push({ term: { [key]: searchFilterData[key] } })
+                    break
                 case 'auction':
+                    if (!query.bool.filter) query.bool.filter = []
                     query.bool.filter.push({ term: { isAuction: searchFilterData[key] } })
+                    break
                 case 'priceRange':
+                    if (!query.bool.filter) query.bool.filter = []
                     query.bool.filter.push({ range: { 'price.value': searchFilterData[key] } })
+                    break
             }
         })
+
+        console.log('Created query:', JSON.stringify(query))
 
         return query
     }

@@ -1,4 +1,4 @@
-import { ElasticQuery, ElasticSearchBody, PriceRangeProps, SearchFilterDataProps } from '@mewi/types'
+import { ElasticSearchBody, PriceRangeProps, SearchFilterDataProps } from '@mewi/types'
 import config from 'config'
 import { PriceRangeUtils } from 'utils'
 
@@ -90,15 +90,30 @@ const SearchParamsUtils = {
 
         }
     },
-    searchParams: ['category', 'region', 'isAuction', 'price', 'sort', 'page'],
-    searchParamsToObj: (URLSearchParams: URLSearchParams): string => {
+    searchParams: ['category', 'regions', 'auction', 'priceRange'],
+    searchParamsToObj: (URLSearchParams: URLSearchParams): SearchFilterDataProps => {
         let params = URLSearchParams
-        params.forEach((key, param) => {
-            if (!SearchParamsUtils.searchParams.includes(param)) {
-                params.delete(param)
+        let searchFilters: SearchFilterDataProps = {}
+
+        console.log({params})
+        params.forEach((value, key) => {
+            console.log(key)
+            switch (key) {
+                case 'category':
+                    searchFilters[key] = value
+                    break
+                case 'auction':
+                    searchFilters[key] = value === "true" ? true : false
+                    break
+                case 'regions':
+                    searchFilters[key] = value.split(',')
+                    break
+                case 'priceRange':
+                    searchFilters[key] = PriceRangeUtils.toObject(value)
+                    break
             }
         })
-        return params.toString()
+        return searchFilters
     }
 }
 

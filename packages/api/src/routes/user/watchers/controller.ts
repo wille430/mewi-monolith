@@ -2,7 +2,7 @@ import WatcherService from 'services/WatcherService'
 import { UserWatcherService } from 'services/UserServices'
 import SearchService from 'services/SearchService'
 import { APIError, SearchFilterDataProps, ValidationErrorCodes } from '@mewi/types'
-import { WatcherErrorCodes } from 'types/watcher'
+import { WatcherErrorCodes } from '@mewi/types'
 
 export const getAll = async (req, res, next) => {
     // Get user_id
@@ -18,17 +18,21 @@ export const create = async (req, res, next) => {
     const { user_id } = req.user
     const searchFilters: SearchFilterDataProps | undefined = req.body.searchFilters
 
+    console.log('Creating watcher from', searchFilters)
+
     try {
         if (!searchFilters) {
             throw new APIError(421, ValidationErrorCodes.MISSING_FIELDS, 'You must provide search filters to create a new watcher.')
         } else {
             const query = SearchService.createElasticQuery(searchFilters)
+            console.log('Converted search filters to elastic query:', JSON.stringify(query))
             const validQuery = await SearchService.validateQuery(query)
             if (!validQuery) {
                 throw new APIError(400, WatcherErrorCodes.INVALID_QUERY, 'The search filters provided were not valid.')
             } else {
                 // Create watcher
-                const newWatcher = await WatcherService.create(searchFilters, query)
+                console.log('Creating watcher...', searchFilters, query)
+                const newWatcher = await UserWatcherService.addWatcher(user_id, { metadata: searchFilters, query: query })
                 res.status(201).json({
                     watcher: newWatcher
                 })
