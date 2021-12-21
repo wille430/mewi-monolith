@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { HTMLAttributes, useEffect, useState } from "react"
 import { FiX } from "react-icons/fi"
 import { TransitionStatus } from "react-transition-group"
@@ -45,9 +46,6 @@ const Snackbar = ({ title, body, timeout = 5000, onClose, onDelete, open = true,
             in={show}
             duration={animationDuration}
             render={(state) => {
-
-                console.log('Transition event:', state)
-
                 if (state === 'exited' && priorEvent !== undefined && priorEvent === 'exiting') {
                     setTimeout(() => {
                         onDelete && onDelete()

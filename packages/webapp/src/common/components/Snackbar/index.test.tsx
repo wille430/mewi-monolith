@@ -1,7 +1,7 @@
 import Snackbar from "./index";
 import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render } from "@testing-library/react";
-import { stringUtils } from "@mewi/util";
+import { randomString } from "@mewi/util";
 
 const testIds = {
     snackbar: 'snackbarContainer',
@@ -17,8 +17,8 @@ describe('Snackbar', () => {
     let body = ""
 
     beforeEach(() => {
-        title = stringUtils.randomString(8)
-        body = stringUtils.randomString(8)
+        title = randomString(8)
+        body = randomString(8)
         jest.useFakeTimers()
         cleanup()
     })
@@ -84,7 +84,7 @@ describe('Snackbar', () => {
 
             fireEvent.click(button)
 
-            expect(callback).toHaveBeenCalledTimes(1)
+            expect(callback).toHaveBeenCalled()
         })
 
         it('it times out', async () => {
