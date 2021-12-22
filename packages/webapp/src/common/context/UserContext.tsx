@@ -45,9 +45,9 @@ const UserProvider = ({ children }: UserProviderProps) => {
             async (err) => {
                 const config = err.config
 
-                if (config.url !== '/auth/login' && err.response) {
+                if (err.response) {
                     // jwt was expired
-                    if (err.response.status === 401 && !config._retry) {
+                    if (err.response.status === 401 && config.url !== '/auth/login' && !config._retry) {
                         config._retry = true
 
                         try {
@@ -58,11 +58,13 @@ const UserProvider = ({ children }: UserProviderProps) => {
                                 userDispatch({ type: 'refreshTokens', callback: handleCallback })
                             })
                         } catch (e: any) {
-                            return Promise.reject(e)
+                            return Promise.reject(err.response.data)
                         }
+                    } else {
+                        return Promise.reject(err.response.data)
                     }
                 }
-                return Promise.reject(err.response.data)
+                return Promise.reject(err)
             }
         )
     }, [authTokens])

@@ -5,7 +5,6 @@ export const login = async (email: string, password: string): Promise<AuthTokens
     const authTokens: AuthTokens = await axios
         .post('/auth/login', { email, password })
         .then((res) => res.data)
-        .catch(e => console.log('ERROR WHEN LOGGIN ING', e))
     return authTokens
 }
 

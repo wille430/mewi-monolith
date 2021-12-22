@@ -1,15 +1,14 @@
-import { PasswordService } from "./index";
-import UserModel from "models/UserModel";
-import { APIError, AuthErrorCodes, AuthTokens, JWT } from "@mewi/types";
+import { PasswordService } from './index'
+import UserModel from 'models/UserModel'
+import { APIError, AuthErrorCodes, AuthTokens, JWT } from '@mewi/types'
 import * as jwt from 'jsonwebtoken'
-import UserEmailService from "./UserEmailService";
+import UserEmailService from './UserEmailService'
 import bcrypt from 'bcryptjs'
 
 class AuthService {
-
     static async login(email: string, password: string): Promise<AuthTokens> {
-        const user = await UserModel.findOne({ email })
         email = email.toLowerCase()
+        const user = await UserModel.findOne({ email })
 
         if (!user) throw new APIError(404, AuthErrorCodes.INVALID_EMAIL)
 
@@ -48,9 +47,8 @@ class AuthService {
 
         const newUser = await UserModel.create({
             email: email,
-            password: encryptedPassword
+            password: encryptedPassword,
         })
-
 
         return await this.createNewAuthTokens(newUser._id, email)
     }
@@ -58,22 +56,21 @@ class AuthService {
     static async createNewAuthTokens(userId: string, email: string): Promise<AuthTokens> {
         return {
             jwt: await AuthService.createJWT(userId, email),
-            refreshToken: await AuthService.createRefreshToken(userId, email)
+            refreshToken: await AuthService.createRefreshToken(userId, email),
         }
     }
 
     static async signJWT(userId: string, email: string, options?: jwt.SignOptions): Promise<JWT> {
-
         const payload: jwt.JwtPayload = {
             user_id: userId,
-            email: email
+            email: email,
         }
 
         const secretKey = process.env.TOKEN_KEY
 
         if (!options) {
             options = {
-                expiresIn: "1h"
+                expiresIn: '1h',
             }
         }
 
@@ -86,13 +83,13 @@ class AuthService {
 
     static async createRefreshToken(userId: string, email: string): Promise<JWT> {
         return await AuthService.signJWT(userId, email, {
-            expiresIn: '14d'
+            expiresIn: '14d',
         })
     }
 
     static async createJWT(userId: string, email: string) {
         return await AuthService.signJWT(userId, email, {
-            expiresIn: '1h'
+            expiresIn: '1h',
         })
     }
 }

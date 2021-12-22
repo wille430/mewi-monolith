@@ -1,6 +1,6 @@
 import { login, refreshJwtToken, signUp } from 'api'
 import { useReducer } from 'react'
-import { AuthTokens } from '@mewi/types'
+import { APIResponseError, AuthTokens } from '@mewi/types'
 
 interface UserState {
     isLoading: boolean
@@ -8,7 +8,11 @@ interface UserState {
 
 export type UserReducerAction =
     | { type: 'refreshTokens'; callback?: (newAuthTokens: AuthTokens) => void }
-    | { type: 'login'; userCredentials: { email: string; password: string } }
+    | {
+          type: 'login'
+          userCredentials: { email: string; password: string }
+          callback: (err: APIResponseError) => void
+      }
     | { type: 'signup'; signUpCredentials: { email: string; password: string; repassword: string } }
     | { type: 'logout' }
 
@@ -29,8 +33,8 @@ const userReducer = ({ authTokens, setAuthTokens }: userReducerProps) => {
                 refreshJwtToken(authTokens.refreshToken).then(setAuthTokens)
                 break
             case 'login':
-                let { email, password } = action.userCredentials
-                login(email, password).then(setAuthTokens)
+                const { email, password } = action.userCredentials
+                login(email, password).then(setAuthTokens).catch(action.callback)
                 break
             case 'signup':
                 const signUpFields = action.signUpCredentials

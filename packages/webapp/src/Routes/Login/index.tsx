@@ -23,29 +23,30 @@ const Login = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        try {
-            userDispatch({ type: 'login', userCredentials: { email, password } })
-        } catch (e: any) {
-            setErrors(initErrors)
-            console.log('ERROR WHEN LOGGING IN ', e)
-            switch (e.error?.type) {
-                case AuthErrorCodes.INVALID_EMAIL:
-                case AuthErrorCodes.INVALID_PASSWORD:
-                case AuthErrorCodes.MISSING_USER:
-                    setErrors({
-                        email: 'Felaktig epostaddress eller lösenord',
-                        password: 'Felaktig epostaddress eller lösenord',
-                        all: '',
-                    })
-                    break
-                default:
-                    setErrors({
-                        ...initErrors,
-                        all: 'Ett fel inträffade. Försök igen.',
-                    })
-                    break
-            }
-        }
+        userDispatch({
+            type: 'login',
+            userCredentials: { email, password },
+            callback: (err) => {
+                setErrors(initErrors)
+                switch (err.error.type) {
+                    case AuthErrorCodes.INVALID_EMAIL:
+                    case AuthErrorCodes.INVALID_PASSWORD:
+                    case AuthErrorCodes.MISSING_USER:
+                        setErrors({
+                            email: 'Felaktig epostaddress eller lösenord',
+                            password: 'Felaktig epostaddress eller lösenord',
+                            all: '',
+                        })
+                        break
+                    default:
+                        setErrors({
+                            ...initErrors,
+                            all: 'Ett fel inträffade. Försök igen.',
+                        })
+                        break
+                }
+            },
+        })
     }
 
     return (
