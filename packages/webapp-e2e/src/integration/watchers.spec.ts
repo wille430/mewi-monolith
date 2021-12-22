@@ -1,7 +1,5 @@
 
 describe('watchers', () => {
-    cy.fixture('api').as('apiData')
-
     let accessToken
 
     beforeEach(() => {
