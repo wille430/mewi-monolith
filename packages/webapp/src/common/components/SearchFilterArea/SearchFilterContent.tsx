@@ -76,33 +76,33 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         return (
             <div>
                 <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col lg:flex-row">
-                        <div className="flex-grow">
-                            <h2 className="pb-2 text-2xl">{heading}</h2>
+                    <div className='flex flex-col lg:flex-row'>
+                        <div className='flex-grow'>
+                            <h2 className='pb-2 text-2xl'>{heading}</h2>
                             <div
-                                className="grid gap-x-4 gap-y-6"
+                                className='grid gap-x-4 gap-y-6'
                                 style={{
                                     gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px)',
                                 }}
                             >
                                 {showKeywordField ? (
-                                    <div className="flex flex-col">
-                                        <label className="inline-block h-10">Sök</label>
+                                    <div className='flex flex-col'>
+                                        <label className='inline-block h-10'>Sök</label>
                                         <input
-                                            className="input"
-                                            placeholder="Sökord"
-                                            name="q"
+                                            className='input'
+                                            placeholder='Sökord'
+                                            name='q'
                                             onChange={(e) =>
                                                 handleChange('keyword', e.target.value)
                                             }
                                             value={searchFilterData.keyword}
-                                            data-testid="keywordInput"
+                                            data-testid='keywordInput'
                                         />
                                     </div>
                                 ) : (
                                     <input
-                                        type="hidden"
-                                        name="q"
+                                        type='hidden'
+                                        name='q'
                                         value={searchFilterData.keyword}
                                     />
                                 )}
@@ -120,25 +120,25 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             [field]: val,
                                         })
                                     }}
-                                    data-testid="priceRangeSlider"
+                                    data-testid='priceRangeSlider'
                                 />
 
-                                <div className="p-4">
+                                <div className='p-4'>
                                     <Checkbox
-                                        label="Auktion"
-                                        name="auction"
+                                        label='Auktion'
+                                        name='auction'
                                         onClick={(newVal) => handleChange('auction', newVal)}
                                         checked={searchFilterData.auction || false}
-                                        data-testid="auctionCheckbox"
+                                        data-testid='auctionCheckbox'
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-end justify-end flex-none">
-                            <div className="flex flex-col">
+                        <div className='flex items-end justify-end flex-none'>
+                            <div className='flex flex-col'>
                                 {children}
                                 {showSubmitButton && (
-                                    <button className="button px-4" type="submit">
+                                    <button className='button px-4' type='submit'>
                                         Filtrera
                                     </button>
                                 )}

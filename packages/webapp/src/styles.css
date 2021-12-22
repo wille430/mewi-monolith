@@ -3,70 +3,68 @@
 @tailwind utilities;
 
 @layer base {
-  h1 {
-    @apply text-2xl
-  }
-  h2 {
-    @apply text-xl
-  }
-  h3 {
-    @apply text-lg
-  }
-  .input {
-    @apply rounded-sm px-2 py-2.5 leading-tight text-black
-  }
-  .label {
-    @apply text-gray-400 mr-2
-  }
-  .button {
-    @apply rounded-sm bg-green p-2 text-black
-  }
-  .layout {
-    @apply w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap justify-center
-  }
-  .side-col {
-    @apply w-full flex-grow px-4 hidden lg:block
-  }
-  .main {
-    @apply main-css p-2 md:p-0
-  }
+    h1 {
+        @apply text-2xl;
+    }
+    h2 {
+        @apply text-xl;
+    }
+    h3 {
+        @apply text-lg;
+    }
+    .input {
+        @apply rounded-sm px-2 py-2.5 leading-tight text-black;
+    }
+    .label {
+        @apply text-gray-400 mr-2;
+    }
+    .button {
+        @apply rounded-sm bg-green p-2 text-black;
+    }
+    .layout {
+        @apply w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap justify-center;
+    }
+    .side-col {
+        @apply w-full flex-grow px-4 hidden lg:block;
+    }
+    .main {
+        @apply main-css p-2 md:p-0;
+    }
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: local('Inter'), url(./fonts/Inter/Inter-VariableFont_slnt,wght.ttf);
+    font-family: 'Inter';
+    src: local('Inter'), url(./fonts/Inter/Inter-VariableFont_slnt,wght.ttf);
 }
 
-*{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: 'Inter', 'Urbanist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: 'Inter', 'Urbanist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .main-css {
-  min-height: calc(100vh - 200px);
-  flex: none;
-  max-width: 960px;
-  width: 100%;
+    min-height: calc(100vh - 200px);
+    flex: none;
+    max-width: 960px;
+    width: 100%;
 }
 
 @media (min-width: 640px) {
-  .w-fixed {
-    flex: 0 1 230px;
-    min-width: 230px;
-  }
+    .w-fixed {
+        flex: 0 1 230px;
+        min-width: 230px;
+    }
 }

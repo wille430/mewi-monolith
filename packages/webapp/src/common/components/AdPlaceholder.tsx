@@ -1,8 +1,8 @@
-import { useWindowWidth } from '@react-hook/window-size';
-import * as React from 'react';
+import { useWindowWidth } from '@react-hook/window-size'
+import * as React from 'react'
 
 interface IAdPlaceHolderProps {
-    size?: 'sm' | 'md' | 'lg',
+    size?: 'sm' | 'md' | 'lg'
     className?: string
 }
 
@@ -11,33 +11,33 @@ const AdPlaceholder = (props: IAdPlaceHolderProps) => {
         height: '240px',
         width: '960px',
         minWidth: 'auto',
-        maxHeight: 'auto'
+        maxHeight: 'auto',
     }
 
     const windowWidth = useWindowWidth() - 32
 
     switch (props.size) {
-        case "lg":
+        case 'lg':
             style = {
                 ...style,
-                height: `${240 * windowWidth / 960}px`,
+                height: `${(240 * windowWidth) / 960}px`,
                 maxHeight: '240px',
-                width: '100%'
+                width: '100%',
             }
             break
-        case "md":
+        case 'md':
         default:
             style = {
                 ...style,
                 height: '600px',
-                width: '130px'
+                width: '130px',
             }
             break
-        case "sm":
+        case 'sm':
             style = {
                 ...style,
                 height: '240px',
-                width: '960px'
+                width: '960px',
             }
             break
     }

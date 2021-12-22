@@ -1,12 +1,11 @@
-import { ButtonHTMLAttributes, MouseEvent, ReactNode, useState } from "react"
-import Loader from "react-loader-spinner"
+import { ButtonHTMLAttributes, MouseEvent, ReactNode, useState } from 'react'
+import Loader from 'react-loader-spinner'
 
 export type AsyncButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: ReactNode
 }
 
 const AsyncButton = ({ children, onClick, ...props }: AsyncButtonProps) => {
-
     const [loading, setLoading] = useState(false)
 
     const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -22,14 +21,13 @@ const AsyncButton = ({ children, onClick, ...props }: AsyncButtonProps) => {
 
     return (
         <button onClick={handleClick} {...props}>
-            {loading ? <div>
-                <Loader
-                    type="TailSpin"
-                    height="15px"
-                    width="15px"
-                    color="white"
-                />
-            </div> : children}
+            {loading ? (
+                <div>
+                    <Loader type='TailSpin' height='15px' width='15px' color='white' />
+                </div>
+            ) : (
+                children
+            )}
         </button>
     )
 }

@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react"
-import useParam from "./useParam"
+import { useEffect, useState } from 'react'
+import useParam from './useParam'
 
 const useFilterState = (paramName: string) => {
-    const [ param, ] = useParam(paramName)
-
+    const [param] = useParam(paramName)
 
     const getState = () => {
         return param || ''
@@ -18,7 +17,7 @@ const useFilterState = (paramName: string) => {
 
     return {
         state,
-        setState
+        setState,
     }
 }
 

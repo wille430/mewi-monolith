@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { useHistory, useLocation } from "react-router"
+import { useState, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router'
 
 const useParam = (name: string) => {
     const history = useHistory()
@@ -20,14 +20,19 @@ const useParam = (name: string) => {
     const saveParam = (value: any): void => {
         setParam(value)
         const searchParams = new URLSearchParams(location.search)
-        if (!value || value === '' || value === 'null' || (Array.isArray(value) && value.length <= 0)) {
+        if (
+            !value ||
+            value === '' ||
+            value === 'null' ||
+            (Array.isArray(value) && value.length <= 0)
+        ) {
             searchParams.delete(name)
         } else {
             searchParams.set(name, value)
         }
         history.replace({
             pathname: location.pathname,
-            search: new URLSearchParams(searchParams).toString()
+            search: new URLSearchParams(searchParams).toString(),
         })
     }
 

@@ -1,7 +1,7 @@
-import React from "react"
-import { render, fireEvent } from "@testing-library/react"
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
 import SearchForm from './index'
-import { act } from "react-dom/test-utils"
+import { act } from 'react-dom/test-utils'
 
 const mockHistoryPush = jest.fn()
 const mockAutoComplete = jest.fn(() => [])
@@ -9,24 +9,24 @@ const mockAutoComplete = jest.fn(() => [])
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useHistory: () => ({
-        push: mockHistoryPush
-    })
+        push: mockHistoryPush,
+    }),
 }))
 
 jest.mock('api/SearchAPI', () => {
     return {
         __esModule: true,
         default: {
-            autocomplete: async () => mockAutoComplete
-        }
+            autocomplete: async () => mockAutoComplete,
+        },
     }
 })
 
 it('renders correctly', () => {
     const { queryByTestId, queryByPlaceholderText } = render(<SearchForm />)
 
-    expect(queryByTestId("searchButton")).toBeTruthy()
-    expect(queryByPlaceholderText("Sök efter en vara...")).toBeTruthy()
+    expect(queryByTestId('searchButton')).toBeTruthy()
+    expect(queryByPlaceholderText('Sök efter en vara...')).toBeTruthy()
 })
 
 describe('Input value', () => {
@@ -38,13 +38,13 @@ describe('Input value', () => {
         expect(searchInput).toBeTruthy()
         if (!searchInput) return
 
-        const inputText = "test"
+        const inputText = 'test'
 
         act(() => {
             fireEvent.change(searchInput, {
                 target: {
-                    value: inputText
-                }
+                    value: inputText,
+                },
             })
         })
 
@@ -71,7 +71,6 @@ describe('Search button', () => {
 describe('Search Suggestions', () => {
     describe('with no query', () => {
         it('does not trigger autocomplete api function', () => {
-
             const { queryByTestId } = render(<SearchForm />)
 
             const searchSuggestions = queryByTestId('searchSuggestions')
@@ -85,18 +84,16 @@ describe('Search Suggestions', () => {
 
             fireEvent.change(searchInput, {
                 target: {
-                    value: ""
-                }
+                    value: '',
+                },
             })
 
             expect(mockAutoComplete).toHaveBeenCalledTimes(1)
-
         })
     })
 
     describe('with query', () => {
         it('triggers autocomplete api function', () => {
-
             const { queryByTestId } = render(<SearchForm />)
 
             const searchSuggestions = queryByTestId('searchSuggestions')
@@ -110,8 +107,8 @@ describe('Search Suggestions', () => {
 
             fireEvent.change(searchInput, {
                 target: {
-                    value: "volvo"
-                }
+                    value: 'volvo',
+                },
             })
 
             new Promise<void>((resolve, reject) => {
@@ -120,7 +117,6 @@ describe('Search Suggestions', () => {
                     resolve()
                 }, 5000)
             })
-
         })
     })
 })

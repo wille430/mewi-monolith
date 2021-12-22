@@ -1,10 +1,9 @@
-
-export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+export type Override<T1, T2> = Omit<T1, keyof T2> & T2
 
 export interface ValidatorMessage {
-    "location": string,
-    "msg": string,
-    "param": string
+    location: string
+    msg: string
+    param: string
 }
 
 // export interface WatcherMetadata {
@@ -19,9 +18,9 @@ export interface ValidatorMessage {
 // }
 
 export interface FilterStates {
-    regionState: { state: string, setState: any },
-    categoryState: { state: string, setState: any },
-    auctionState: { state: string, setState: any },
-    priceRangeState: { state: string, setState: any },
-    queryState?: { state: string, setState: any }
+    regionState: { state: string; setState: any }
+    categoryState: { state: string; setState: any }
+    auctionState: { state: string; setState: any }
+    priceRangeState: { state: string; setState: any }
+    queryState?: { state: string; setState: any }
 }

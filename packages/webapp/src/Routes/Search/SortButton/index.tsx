@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import useParam from 'common/hooks/useParam';
+import { useEffect, useState } from 'react'
+import useParam from 'common/hooks/useParam'
 
 const SortButton = () => {
-    const [ param, setParam ] = useParam("sort")
+    const [param, setParam] = useParam('sort')
 
     const options = [
-        { label: "Relevans", name: "relevans", default: { selected: true } },
-        { label: "Pris fallande", name: "pris_fallande", default: { selected: false } },
-        { label: "Pris stigande", name: "pris_stigande", default: { selected: false } },
-        { label: "Datum stigande", name: "datum_stigande", default: { selected: false } },
-        { label: "Datum fallande", name: "datum_fallande", default: { selected: false } },
+        { label: 'Relevans', name: 'relevans', default: { selected: true } },
+        { label: 'Pris fallande', name: 'pris_fallande', default: { selected: false } },
+        { label: 'Pris stigande', name: 'pris_stigande', default: { selected: false } },
+        { label: 'Datum stigande', name: 'datum_stigande', default: { selected: false } },
+        { label: 'Datum fallande', name: 'datum_fallande', default: { selected: false } },
     ]
 
     const [selectedOption, setSelectedOption] = useState(options[0].name)
@@ -35,11 +35,13 @@ const SortButton = () => {
 
     return (
         <select onChange={onSortChange} value={selectedOption}>
-            {
-                options.map((obj, i) => <option key={i} value={obj.name}>{obj.label}</option>)
-            }
+            {options.map((obj, i) => (
+                <option key={i} value={obj.name}>
+                    {obj.label}
+                </option>
+            ))}
         </select>
     )
 }
 
-export default SortButton;
+export default SortButton

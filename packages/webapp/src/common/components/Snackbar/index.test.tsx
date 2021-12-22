@@ -1,20 +1,18 @@
-import Snackbar from "./index";
-import '@testing-library/jest-dom';
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import { randomString } from "@mewi/util";
+import Snackbar from './index'
+import '@testing-library/jest-dom'
+import { cleanup, fireEvent, render } from '@testing-library/react'
+import { randomString } from '@mewi/util'
 
 const testIds = {
     snackbar: 'snackbarContainer',
     closeButton: 'closeSnackbar',
     title: 'snackbarTitle',
-    body: 'snackbarText'
+    body: 'snackbarText',
 }
 
-
 describe('Snackbar', () => {
-
-    let title = ""
-    let body = ""
+    let title = ''
+    let body = ''
 
     beforeEach(() => {
         title = randomString(8)
@@ -32,9 +30,10 @@ describe('Snackbar', () => {
         expect(queryByTestId(testIds.body)).toBeTruthy()
     })
 
-
     describe('displays content', () => {
-        const { queryByTestId, queryAllByText } = render(<Snackbar open={true} title={title} body={body} />)
+        const { queryByTestId, queryAllByText } = render(
+            <Snackbar open={true} title={title} body={body} />
+        )
         const snackbar = queryByTestId(testIds.snackbar)
 
         expect(queryAllByText(title)).toBeTruthy()
@@ -43,7 +42,6 @@ describe('Snackbar', () => {
 
     describe('is hidden when', () => {
         it('open is false', () => {
-
             const { queryByTestId } = render(<Snackbar open={false} />)
             const snackbar = queryByTestId(testIds.snackbar)
 
@@ -51,12 +49,10 @@ describe('Snackbar', () => {
                 expect(snackbar).not.toBeVisible()
             }, 100)
         })
-
     })
 
     describe('is not hidden when', () => {
         it('open is true', () => {
-
             const { queryByTestId } = render(<Snackbar open={true} />)
             const snackbar = queryByTestId(testIds.snackbar)
 
@@ -69,7 +65,6 @@ describe('Snackbar', () => {
     })
 
     describe('callbacks when', () => {
-
         let callback: jest.Mock
 
         beforeEach(() => {
@@ -77,7 +72,9 @@ describe('Snackbar', () => {
         })
 
         it('close button is pressed', () => {
-            const { queryByTestId } = render(<Snackbar open={true} title={title} onClose={callback} />)
+            const { queryByTestId } = render(
+                <Snackbar open={true} title={title} onClose={callback} />
+            )
 
             const button = queryByTestId(testIds.closeButton)
             if (!button) fail()
@@ -89,19 +86,22 @@ describe('Snackbar', () => {
 
         it('it times out', async () => {
             const timeout = 5000
-            const { } = render(<Snackbar open={true} title={title} timeout={timeout} onClose={callback} />)
+            const {} = render(
+                <Snackbar open={true} title={title} timeout={timeout} onClose={callback} />
+            )
 
-            new Promise((resolve) => setTimeout(() => {
-                expect(callback).toHaveBeenCalledTimes(1)
-                resolve
-            }, timeout + 100))
+            new Promise((resolve) =>
+                setTimeout(() => {
+                    expect(callback).toHaveBeenCalledTimes(1)
+                    resolve
+                }, timeout + 100)
+            )
 
             jest.runAllTimers()
         })
     })
 
     describe('hides when', () => {
-
         it('callback is called', () => {
             let open = true
             const animationDuration = 0
@@ -110,13 +110,22 @@ describe('Snackbar', () => {
                 open = false
             })
 
-            const { queryByTestId, rerender } = render(<Snackbar open={open} title={title} onClose={callback} animationDuration={animationDuration} />)
+            const { queryByTestId, rerender } = render(
+                <Snackbar
+                    open={open}
+                    title={title}
+                    onClose={callback}
+                    animationDuration={animationDuration}
+                />
+            )
             const snackbar = queryByTestId(testIds.snackbar)
 
-            new Promise((resolve) => setTimeout(() => {
-                expect(snackbar).toBeVisible()
-                resolve
-            }, 0))
+            new Promise((resolve) =>
+                setTimeout(() => {
+                    expect(snackbar).toBeVisible()
+                    resolve
+                }, 0)
+            )
 
             jest.runAllTimers()
 
@@ -125,13 +134,22 @@ describe('Snackbar', () => {
 
             fireEvent.click(button)
 
-            rerender(<Snackbar open={open} title={title} onClose={callback} animationDuration={animationDuration} />)
+            rerender(
+                <Snackbar
+                    open={open}
+                    title={title}
+                    onClose={callback}
+                    animationDuration={animationDuration}
+                />
+            )
             expect(snackbar).toBeVisible()
 
-            new Promise((resolve) => setTimeout(() => {
-                expect(snackbar).not.toBeVisible()
-                resolve
-            }, animationDuration))
+            new Promise((resolve) =>
+                setTimeout(() => {
+                    expect(snackbar).not.toBeVisible()
+                    resolve
+                }, animationDuration)
+            )
 
             jest.runAllTimers()
         })

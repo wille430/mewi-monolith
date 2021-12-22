@@ -1,10 +1,9 @@
-import React from "react"
+import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import Checkbox from './index'
-import { randomString } from "@mewi/util"
+import { randomString } from '@mewi/util'
 
 it('renders correctly', () => {
-
     const mockLabel = randomString(5)
 
     const { queryByTestId, queryByText } = render(<Checkbox label={mockLabel} />)

@@ -1,5 +1,5 @@
-import { login, refreshJwtToken, signUp } from "api";
-import { useReducer } from "react";
+import { login, refreshJwtToken, signUp } from 'api'
+import { useReducer } from 'react'
 import { AuthTokens } from '@mewi/types'
 
 interface UserState {
@@ -7,39 +7,36 @@ interface UserState {
 }
 
 export type UserReducerAction =
-    | { type: 'refreshTokens', callback?: (newAuthTokens: AuthTokens) => void }
-    | { type: 'login', userCredentials: { email: string, password: string } }
-    | { type: 'signup', signUpCredentials: { email: string, password: string, repassword: string } }
+    | { type: 'refreshTokens'; callback?: (newAuthTokens: AuthTokens) => void }
+    | { type: 'login'; userCredentials: { email: string; password: string } }
+    | { type: 'signup'; signUpCredentials: { email: string; password: string; repassword: string } }
     | { type: 'logout' }
 
-
 interface userReducerProps {
-    authTokens: AuthTokens,
+    authTokens: AuthTokens
     setAuthTokens: (newVal: AuthTokens) => void
 }
 
 const userReducer = ({ authTokens, setAuthTokens }: userReducerProps) => {
-
     const initState: UserState = {
-        isLoading: true
+        isLoading: true,
     }
 
     const reducer = (state: UserState, action: UserReducerAction): UserState => {
         switch (action.type) {
             case 'refreshTokens':
                 if (!authTokens.refreshToken) break
-                refreshJwtToken(authTokens.refreshToken)
-                    .then(setAuthTokens)
+                refreshJwtToken(authTokens.refreshToken).then(setAuthTokens)
                 break
             case 'login':
                 let { email, password } = action.userCredentials
-                login(email, password)
-                    .then(setAuthTokens)
+                login(email, password).then(setAuthTokens)
                 break
             case 'signup':
                 const signUpFields = action.signUpCredentials
-                signUp(signUpFields.email, signUpFields.password, signUpFields.repassword)
-                    .then(setAuthTokens)
+                signUp(signUpFields.email, signUpFields.password, signUpFields.repassword).then(
+                    setAuthTokens
+                )
                 break
             case 'logout':
                 setAuthTokens({})

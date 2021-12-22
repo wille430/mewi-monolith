@@ -15,19 +15,18 @@ const FilterArea = () => {
     const { setQuery } = useQuery()
 
     const [formData, setFormData] = useState<SearchFilterDataProps>({
-        keyword: filters.keyword
+        keyword: filters.keyword,
     })
 
     const handleSubmit = () => {
-
         // Set queries
         setQuery({
             q: filters.keyword,
             regions: formData.regions?.join(','),
             category: formData.category,
-            auction: formData.auction ? "true" : undefined,
+            auction: formData.auction ? 'true' : undefined,
             priceRange: PriceRangeUtils.toString(formData.priceRange),
-            page: '1'
+            page: '1',
         })
 
         setFilters(formData)
@@ -40,17 +39,17 @@ const FilterArea = () => {
     return (
         <SearchFilterArea
             searchFilterData={formData}
-            setSearchFilterData={newVal => setFormData(newVal)}
+            setSearchFilterData={(newVal) => setFormData(newVal)}
             heading='Filtrera sökning'
             showSubmitButton={true}
             showResetButton={true}
             isCollapsable={true}
             onSubmit={handleSubmit}
-            footer={isLoggedIn
-                ? (
+            footer={
+                isLoggedIn ? (
                     <AddWatcherButton searchFilters={formData} />
                 ) : (
-                    <Link to="/login">Bevaka sökning</Link>
+                    <Link to='/login'>Bevaka sökning</Link>
                 )
             }
         />

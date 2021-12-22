@@ -1,13 +1,13 @@
-import Snackbar, { SnackbarProps } from "common/components/Snackbar";
-import { createContext, ReactNode, useState } from "react";
-import { v4 } from "uuid";
+import Snackbar, { SnackbarProps } from 'common/components/Snackbar'
+import { createContext, ReactNode, useState } from 'react'
+import { v4 } from 'uuid'
 
 interface SnackbarContextProps {
     setSnackbar: (val: SnackbarProps) => void
 }
 
 export const SnackbarContext = createContext<SnackbarContextProps>({
-    setSnackbar: () => { }
+    setSnackbar: () => {},
 })
 
 interface SnackbarProviderProps {
@@ -15,7 +15,6 @@ interface SnackbarProviderProps {
 }
 
 const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
-
     const [snackbars, setSnackbars] = useState<{ [key: string]: SnackbarProps }>({})
 
     const updateSnackbar = (newVal: SnackbarProps) => {
@@ -26,8 +25,8 @@ const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
                 ...newVal,
                 open: true,
                 onClose: () => handleClose(id),
-                onDelete: () => handleDelete(id)
-            }
+                onDelete: () => handleDelete(id),
+            },
         })
     }
 
@@ -38,27 +37,25 @@ const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
     }
 
     const handleClose = async (id: string) => {
-        setSnackbars(prevState => ({
+        setSnackbars((prevState) => ({
             ...prevState,
             [id]: {
                 ...prevState[id],
-                open: false
-            }
+                open: false,
+            },
         }))
     }
 
     return (
-        <SnackbarContext.Provider value={{
-            setSnackbar: updateSnackbar
-        }}>
+        <SnackbarContext.Provider
+            value={{
+                setSnackbar: updateSnackbar,
+            }}
+        >
             {children}
-            <div
-                className="fixed max-h-screen bottom-4 left-4"
-            >
-                <div
-                    className="flex flex-col gap-2"
-                >
-                    {Object.keys(snackbars).map(key => (
+            <div className='fixed max-h-screen bottom-4 left-4'>
+                <div className='flex flex-col gap-2'>
+                    {Object.keys(snackbars).map((key) => (
                         <Snackbar key={key} {...snackbars[key]} />
                     ))}
                 </div>

@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import theme, { dimensions } from "../../themes/theme";
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import theme, { dimensions } from '../../themes/theme'
 
 export const NavContainer = styled.div`
     height: ${dimensions.navBarHeight};
     width: 100%;
     /* background-color: ${theme.accent1} */
-    background-color: ${props => props.color || theme.main3};
+    background-color: ${(props) => props.color || theme.main3};
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -67,7 +67,7 @@ export const NavLinkItem = styled(Link)`
     list-style: none;
     font-size: 0.875em;
     font-weight: 600;
-    float: ${props => props.float || "left"};
+    float: ${(props) => props.float || 'left'};
     margin: auto 15px;
     text-decoration: none;
 `
@@ -76,7 +76,7 @@ export const NavLinkButton = styled.button`
     list-style: none;
     font-size: 0.875em;
     font-weight: 600;
-    float: ${props => props.float || "left"};
+    float: ${(props) => props.float || 'left'};
     margin: auto 15px;
     text-decoration: none;
 `

@@ -87,7 +87,7 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                     <span>{new Date(watcher.createdAt).toLocaleDateString('se-SV')}</span>
                 </div>
                 <div className='flex space-x-2'>
-                    <Link className='button bg-blue px-4 text-white' to={linkUrl}>
+                    <Link className='button bg-blue px-4 text-white' to={linkUrl} data-testid='watcherSearchButton'>
                         Sök
                     </Link>
                     <RemoveButton watcherId={watcher._id.toString()} />

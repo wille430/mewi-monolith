@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import theme from "themes/theme";
+import styled from 'styled-components'
+import theme from 'themes/theme'
 
 export const Wrapper = styled.div`
     height: 100%;
@@ -43,7 +43,7 @@ export const SearchContainer = styled.div`
     color: white;
     padding: 30px 30px;
     border-radius: 20px;
-    
+
     @media (max-width: 1000px) {
         background-color: transparent;
         height: auto;
@@ -72,7 +72,7 @@ export const LogoWrapper = styled.div`
 export const LogoInnerWrapper = styled.div`
     height: 180px;
 
-    @media (max-width: 1000px){
+    @media (max-width: 1000px) {
         height: 125px;
     }
 `

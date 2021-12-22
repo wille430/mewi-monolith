@@ -1,31 +1,30 @@
-import axios from "axios"
-import useParam from "common/hooks/useParam"
-import { useEffect, useState } from "react"
-import { useHistory, useLocation } from "react-router"
+import axios from 'axios'
+import useParam from 'common/hooks/useParam'
+import { useEffect, useState } from 'react'
+import { useHistory, useLocation } from 'react-router'
 
 interface ItemStateProps {
-    body?: string,
-    category?: string[],
-    date?: number,
-    imageUrl?: string[],
-    origin?: string,
-    parameters?: any,
+    body?: string
+    category?: string[]
+    date?: number
+    imageUrl?: string[]
+    origin?: string
+    parameters?: any
     price?: {
-        value?: number,
+        value?: number
         currency?: string
-    },
-    redirectUrl?: string,
-    region?: string,
+    }
+    redirectUrl?: string
+    region?: string
     title?: string
 }
 
 const searchParam = 'selectedItem'
 
 const useItem = () => {
-
     const location = useLocation()
     const history = useHistory()
-    const [ param, ] = useParam(searchParam)
+    const [param] = useParam(searchParam)
 
     const [item, setItem] = useState<ItemStateProps | null>()
 
@@ -34,7 +33,7 @@ const useItem = () => {
         if (!itemId) return
 
         try {
-            const response = await axios.get('/items/id/' + itemId).then(res => res.data)
+            const response = await axios.get('/items/id/' + itemId).then((res) => res.data)
             setItem(response.body._source)
         } catch (e) {
             console.log(e)
@@ -51,7 +50,7 @@ const useItem = () => {
         }
         history.replace({
             pathname: location.pathname,
-            search: new URLSearchParams(searchParams).toString()
+            search: new URLSearchParams(searchParams).toString(),
         })
     }
 
@@ -62,7 +61,7 @@ const useItem = () => {
 
     return {
         item,
-        setItem: saveItem
+        setItem: saveItem,
     }
 }
 

@@ -1,21 +1,21 @@
 // @ts-ignore
-import makeAnimated from 'react-select/animated';
+import makeAnimated from 'react-select/animated'
 // @ts-ignore
-import Select from 'react-select';
-import { HTMLAttributes } from 'react';
+import Select from 'react-select'
+import { HTMLAttributes } from 'react'
 
 export interface DropDownMenuProps extends HTMLAttributes<HTMLDivElement> {
-    label?: string;
-    name: string;
+    label?: string
+    name: string
     options: {
-        value: string;
-        label: string;
-        [key: string]: any;
-    }[];
-    isMulti?: boolean;
-    closeMenuOnSelect?: boolean;
-    onChange?: (value: any) => void;
-    value?: string | string[] | null;
+        value: string
+        label: string
+        [key: string]: any
+    }[]
+    isMulti?: boolean
+    closeMenuOnSelect?: boolean
+    onChange?: (value: any) => void
+    value?: string | string[] | null
 }
 
 const DropdownMenu = ({
@@ -28,7 +28,7 @@ const DropdownMenu = ({
     value,
     ...rest
 }: DropDownMenuProps) => {
-    const animatedComponents = makeAnimated();
+    const animatedComponents = makeAnimated()
 
     const onDropdownChange = (
         value: { value: string; label: string } | { value: string; label: string }[],
@@ -38,33 +38,33 @@ const DropdownMenu = ({
             switch (action) {
                 case 'remove-value':
                 case 'pop-value':
-                    const values = value.map((option) => option.value);
+                    const values = value.map((option) => option.value)
                     if (Boolean(value) || Array.isArray(value)) {
-                        const arrayOfSelectedValues = values.filter((val) => values?.includes(val));
-                        onChange && onChange(arrayOfSelectedValues);
+                        const arrayOfSelectedValues = values.filter((val) => values?.includes(val))
+                        onChange && onChange(arrayOfSelectedValues)
                     }
-                    break;
+                    break
                 case 'clear':
-                    onChange && onChange([]);
-                    break;
+                    onChange && onChange([])
+                    break
                 default:
             }
-            onChange && onChange(value.map((x) => x.value));
+            onChange && onChange(value.map((x) => x.value))
         } else {
             switch (action) {
                 case 'remove-value':
                 case 'pop-value':
                 case 'clear':
-                    onChange && onChange(null);
-                    break;
+                    onChange && onChange(null)
+                    break
                 default:
             }
-            onChange && onChange(value.value);
+            onChange && onChange(value.value)
         }
-    };
+    }
 
     return (
-        <div className="text-black" {...rest}>
+        <div className='text-black' {...rest}>
             <Select
                 value={options.filter((option) => value?.includes(option.value))}
                 classNamePrefix={'Select'}
@@ -75,10 +75,10 @@ const DropdownMenu = ({
                 components={animatedComponents}
                 // @ts-ignore
                 onChange={onDropdownChange}
-                palceholder={<span className="select-placeholder-text">{label}</span>}
+                palceholder={<span className='select-placeholder-text'>{label}</span>}
             />
         </div>
-    );
-};
+    )
+}
 
-export default DropdownMenu;
+export default DropdownMenu

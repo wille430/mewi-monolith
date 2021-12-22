@@ -1,27 +1,21 @@
-import { render } from "@testing-library/react"
+import { render } from '@testing-library/react'
 import LabeledDropdown from './index'
-import { randomString } from "@mewi/util"
-
+import { randomString } from '@mewi/util'
 
 it('renders correctly', () => {
-
     const mockOptions = []
     const mockLabel = randomString(10)
     for (let i = 0; i < 10; i++) {
         const label = randomString(10)
-        
+
         mockOptions.push({
             value: label,
-            label: label
+            label: label,
         })
     }
 
     const { queryByTestId, queryByText } = render(
-        <LabeledDropdown
-            options={mockOptions}
-            label={mockLabel}
-            name={mockLabel}
-        />
+        <LabeledDropdown options={mockOptions} label={mockLabel} name={mockLabel} />
     )
 
     const filterLabel = queryByText(mockLabel)

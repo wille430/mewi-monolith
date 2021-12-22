@@ -1,16 +1,16 @@
-import { createContext, ReactNode, useEffect, useState } from "react"
-import React from "react"
+import { createContext, ReactNode, useEffect, useState } from 'react'
+import React from 'react'
 import { SearchState } from 'models/types'
-import { SearchFilterDataProps } from "@mewi/types"
-import { getSearchResults } from "api"
-import { useLocation } from "react-router"
-import { SearchParamsUtils } from "utils"
-import useParam from "common/hooks/useParam"
+import { SearchFilterDataProps } from '@mewi/types'
+import { getSearchResults } from 'api'
+import { useLocation } from 'react-router'
+import { SearchParamsUtils } from 'utils'
+import useParam from 'common/hooks/useParam'
 
 const initialState: SearchState = {
     searchId: '',
     totalHits: 0,
-    hits: []
+    hits: [],
 }
 
 interface Props {
@@ -18,21 +18,20 @@ interface Props {
 }
 
 interface SearchContextProps {
-    search: SearchState,
-    filters: SearchFilterDataProps,
-    setFilters: Function,
+    search: SearchState
+    filters: SearchFilterDataProps
+    setFilters: Function
     isLoading: boolean
 }
 
 export const SearchContext = createContext<SearchContextProps>({
     search: initialState,
     filters: {},
-    setFilters: () => { },
-    isLoading: false
+    setFilters: () => {},
+    isLoading: false,
 })
 
 export const SearchProvider = ({ children }: Props) => {
-
     const [search, setSearch] = useState(initialState)
     const [isLoading, setIsLoading] = useState(false)
     const [filters, setFilters] = useState<SearchFilterDataProps>({})
@@ -56,11 +55,11 @@ export const SearchProvider = ({ children }: Props) => {
             searchFilters: filters,
             page: page,
         })
-            .then(results => {
+            .then((results) => {
                 setSearch(results)
                 setIsLoading(false)
             })
-            .catch(e => {
+            .catch((e) => {
                 setIsLoading(false)
             })
     }, [filters, page])
@@ -68,17 +67,19 @@ export const SearchProvider = ({ children }: Props) => {
     useEffect(() => {
         setFilters({
             ...filters,
-            keyword: keyword
+            keyword: keyword,
         })
     }, [keyword])
 
     return (
-        <SearchContext.Provider value={{
-            search,
-            filters,
-            setFilters,
-            isLoading
-        }}>
+        <SearchContext.Provider
+            value={{
+                search,
+                filters,
+                setFilters,
+                isLoading,
+            }}
+        >
             {children}
         </SearchContext.Provider>
     )

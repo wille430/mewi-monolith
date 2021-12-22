@@ -1,4 +1,4 @@
-import { PriceRange } from "@mewi/types"
+import { PriceRange } from '@mewi/types'
 
 const PriceRangeUtils = {
     toString: (obj?: PriceRange) => {
@@ -14,7 +14,7 @@ const PriceRangeUtils = {
         if (arr[0]) returnObj.gte = parseInt(arr[0])
         if (arr[1]) returnObj.lte = parseInt(arr[1])
         return returnObj
-    }
+    },
 }
 
 export default PriceRangeUtils

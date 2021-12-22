@@ -4,12 +4,11 @@ import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
 import SearchFilterContent, { SearchFilterContentProps } from './SearchFilterContent'
 
 export interface SearchFilterAreaProps extends SearchFilterContentProps {
-    children?: ReactNode,
+    children?: ReactNode
     isCollapsable?: boolean
 }
 
 const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterAreaProps) => {
-
     const [hidden, setHidden] = useState(false)
     const windowWidth = useWindowWidth()
 
@@ -20,24 +19,18 @@ const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterArea
     }, [windowWidth])
 
     return (
-        <section className="bg-blue rounded-md p-4 text-white shadow-md">
-            <div className="block sm:hidden">
-                {isCollapsable && (hidden ? (
-                    <FiArrowUp
-                        onClick={e => setHidden(false)}
-                    />
-                ) : (
-                    <FiArrowDown
-                        onClick={e => setHidden(true)}
-                    />
-                ))}
+        <section className='bg-blue rounded-md p-4 text-white shadow-md'>
+            <div className='block sm:hidden'>
+                {isCollapsable &&
+                    (hidden ? (
+                        <FiArrowUp onClick={(e) => setHidden(false)} />
+                    ) : (
+                        <FiArrowDown onClick={(e) => setHidden(true)} />
+                    ))}
             </div>
-            <SearchFilterContent
-                {...rest}
-                collapse={hidden}
-            />
+            <SearchFilterContent {...rest} collapse={hidden} />
             {children}
-        </section >
+        </section>
     )
 }
 

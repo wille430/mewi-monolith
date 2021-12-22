@@ -1,10 +1,9 @@
-import { SmallButton } from 'common/components/Button.style';
-import React from 'react';
-import { useHistory } from 'react-router';
-import styled from 'styled-components';
+import { SmallButton } from 'common/components/Button.style'
+import React from 'react'
+import { useHistory } from 'react-router'
+import styled from 'styled-components'
 
 const ReturnButton = () => {
-
     const history = useHistory()
 
     const onClick = () => {
@@ -17,9 +16,7 @@ const ReturnButton = () => {
         background-color: transparent;
     `
 
-    return (
-        <StyledButton onClick={onClick}>{"<< Tillbaka"}</StyledButton>
-    );
+    return <StyledButton onClick={onClick}>{'<< Tillbaka'}</StyledButton>
 }
- 
-export default ReturnButton;
+
+export default ReturnButton

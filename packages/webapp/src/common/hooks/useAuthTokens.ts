@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import { AuthTokens } from '@mewi/types'
 
 interface useAuthTokensProps {
-    authTokens: AuthTokens,
+    authTokens: AuthTokens
     setAuthTokens: (authTokens: AuthTokens) => void
 }
 
 const useAuthTokens = (): useAuthTokensProps => {
-
     const getAuthTokens = () => {
         console.log('Updating tokens...')
         const jwt = localStorage.getItem('jwt') || undefined
@@ -41,7 +40,7 @@ const useAuthTokens = (): useAuthTokensProps => {
 
     return {
         authTokens: authTokens,
-        setAuthTokens: saveAuthTokens
+        setAuthTokens: saveAuthTokens,
     }
 }
 

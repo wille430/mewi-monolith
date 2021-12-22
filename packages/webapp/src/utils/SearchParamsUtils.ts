@@ -4,21 +4,22 @@ import { PriceRangeUtils } from 'utils'
 
 const SearchParamsUtils = {
     searchToElasticQuery: (search: string) => {
-
-        const keyword = new URLSearchParams(search).get("q")
+        const keyword = new URLSearchParams(search).get('q')
 
         const must = []
-        let queryObj: {
+        const queryObj: {
             [key: string]: any
         } = {}
 
-        const page = parseInt(new URLSearchParams(search).get("page") || "1")
+        const page = parseInt(new URLSearchParams(search).get('page') || '1')
 
-        SearchParamsUtils.searchParams.forEach(key => {
+        SearchParamsUtils.searchParams.forEach((key) => {
             const searchParam = new URLSearchParams(search).get(key)
             if (searchParam) {
-                // @ts-ignore
-                queryObj[key] = searchParam?.split(',').map(value => SearchParamsUtils.keyToObject(key, value))
+                queryObj[key] = searchParam
+                    ?.split(',')
+                    // @ts-ignore
+                    .map((value) => SearchParamsUtils.keyToObject(key, value))
             }
         })
 
@@ -29,38 +30,38 @@ const SearchParamsUtils = {
         if (queryObj.region?.length >= 1) {
             must.push({
                 span_or: {
-                    clauses: [
-                        ...queryObj.region
-                    ]
-                }
+                    clauses: [...queryObj.region],
+                },
             })
         }
 
-        let queryObjToReturn: ElasticSearchBody = {
+        const queryObjToReturn: ElasticSearchBody = {
             query: {
                 bool: {
                     must: must,
                     filter: [
                         ...(queryObj.category || []),
                         ...(queryObj.price || []),
-                        ...(queryObj.isAuction || [])
-                    ]
-                }
+                        ...(queryObj.isAuction || []),
+                    ],
+                },
             },
-            sort: [
-                ...(queryObj.sort || [])
-            ],
+            sort: [...(queryObj.sort || [])],
             size: config.searchLimit,
-            from: (page - 1) * config.searchLimit
+            from: (page - 1) * config.searchLimit,
         }
 
         // Remove unnecessary keys
-        if (queryObjToReturn.query.bool.filter && queryObjToReturn.query.bool.filter.length <= 0) delete queryObjToReturn.query.bool.filter
+        if (queryObjToReturn.query.bool.filter && queryObjToReturn.query.bool.filter.length <= 0)
+            delete queryObjToReturn.query.bool.filter
         if (queryObjToReturn.sort && queryObjToReturn.sort.length <= 0) delete queryObjToReturn.sort
 
-        return (queryObjToReturn)
+        return queryObjToReturn
     },
-    keyToObject: (key: ('region' | 'category' | 'isAuction' | 'price' | 'sort'), value: (boolean | string | number | PriceRangeProps)) => {
+    keyToObject: (
+        key: 'region' | 'category' | 'isAuction' | 'price' | 'sort',
+        value: boolean | string | number | PriceRangeProps
+    ) => {
         if (!value) return
         switch (key) {
             case 'region':
@@ -75,25 +76,24 @@ const SearchParamsUtils = {
                     case 'relevans':
                         return
                     case 'pris_fallande':
-                        return { "price.value": "desc" }
+                        return { 'price.value': 'desc' }
                     case 'pris_stigande':
-                        return { "price.value": "asc" }
+                        return { 'price.value': 'asc' }
                     case 'datum_fallande':
-                        return { "date": "desc" }
+                        return { date: 'desc' }
                     case 'datum_stigande':
-                        return { "date": "asc" }
+                        return { date: 'asc' }
                     default:
                         return
                 }
             default:
                 return
-
         }
     },
     searchParams: ['category', 'regions', 'auction', 'priceRange'],
     searchParamsToObj: (URLSearchParams: URLSearchParams): SearchFilterDataProps => {
-        let params = URLSearchParams
-        let searchFilters: SearchFilterDataProps = {}
+        const params = URLSearchParams
+        const searchFilters: SearchFilterDataProps = {}
 
         params.forEach((value, key) => {
             switch (key) {
@@ -104,7 +104,7 @@ const SearchParamsUtils = {
                     searchFilters[key] = value
                     break
                 case 'auction':
-                    searchFilters[key] = value === "true" ? true : false
+                    searchFilters[key] = value === 'true' ? true : false
                     break
                 case 'regions':
                     searchFilters[key] = value.split(',')
@@ -115,7 +115,7 @@ const SearchParamsUtils = {
             }
         })
         return searchFilters
-    }
+    },
 }
 
 export default SearchParamsUtils

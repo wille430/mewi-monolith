@@ -6,5 +6,5 @@ export * from './authApi'
 export * from './watcherApi'
 
 export const instance = axios.create({
-    baseURL: process.env.NX_API_URL
+    baseURL: process.env.NX_API_URL,
 })

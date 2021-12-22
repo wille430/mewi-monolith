@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { useHistory, useLocation } from "react-router"
+import { useState, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router'
 
 const useQuery = () => {
     const history = useHistory()
@@ -17,15 +17,12 @@ const useQuery = () => {
         // eslint-disable-next-line
     }, [location.search])
 
-    const saveQuery = (newParams: {
-        [key: string]: string | undefined
-    }): void => {
-
+    const saveQuery = (newParams: { [key: string]: string | undefined }): void => {
         const searchParams = getQuery()
-       
-        Object.keys(newParams).forEach(key => {
+
+        Object.keys(newParams).forEach((key) => {
             const value = newParams[key]
-            console.log({key, value})
+            console.log({ key, value })
             if (!value || value === '' || value === 'null') {
                 searchParams.delete(key)
             } else {
@@ -37,13 +34,13 @@ const useQuery = () => {
 
         history.replace({
             pathname: location.pathname,
-            search: new URLSearchParams(searchParams).toString()
+            search: new URLSearchParams(searchParams).toString(),
         })
     }
 
     return {
         query,
-        setQuery: saveQuery
+        setQuery: saveQuery,
     }
 }
 

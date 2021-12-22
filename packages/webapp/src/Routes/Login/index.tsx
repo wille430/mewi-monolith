@@ -1,15 +1,14 @@
-import Form from 'common/components/Form';
-import FormInput from 'common/components/FormInput';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Layout from 'common/components/Layout';
-import { AuthErrorCodes } from '@mewi/types';
-import _ from 'lodash';
-import { UserContext } from 'common/context/UserContext';
-import { useContext } from 'react';
+import Form from 'common/components/Form'
+import FormInput from 'common/components/FormInput'
+import * as React from 'react'
+import { Link } from 'react-router-dom'
+import Layout from 'common/components/Layout'
+import { AuthErrorCodes } from '@mewi/types'
+import _ from 'lodash'
+import { UserContext } from 'common/context/UserContext'
+import { useContext } from 'react'
 
 const Login = () => {
-
     const { userDispatch } = useContext(UserContext)
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
@@ -17,7 +16,7 @@ const Login = () => {
     const initErrors = {
         email: '',
         password: '',
-        all: ''
+        all: '',
     }
     const [errors, setErrors] = React.useState(initErrors)
 
@@ -28,6 +27,7 @@ const Login = () => {
             userDispatch({ type: 'login', userCredentials: { email, password } })
         } catch (e: any) {
             setErrors(initErrors)
+            console.log('ERROR WHEN LOGGING IN ', e)
             switch (e.error?.type) {
                 case AuthErrorCodes.INVALID_EMAIL:
                 case AuthErrorCodes.INVALID_PASSWORD:
@@ -35,13 +35,13 @@ const Login = () => {
                     setErrors({
                         email: 'Felaktig epostaddress eller lösenord',
                         password: 'Felaktig epostaddress eller lösenord',
-                        all: ''
+                        all: '',
                     })
                     break
                 default:
                     setErrors({
                         ...initErrors,
-                        all: 'Ett fel inträffade. Försök igen.'
+                        all: 'Ett fel inträffade. Försök igen.',
                     })
                     break
             }
@@ -50,31 +50,42 @@ const Login = () => {
 
     return (
         <Layout>
-            <aside className="side-col"></aside>
-            <main className="main">
-                <section className="w-full flex justify-center">
-                    <Form onFormSubmit={onFormSubmit} title="Logga in" buttonLabel="Logga in" footer={[
-                        <Link to="/register" className="text-sm inline-block py-2">Skapa ett konto</Link>
-                    ]}>
+            <aside className='side-col'></aside>
+            <main className='main'>
+                <section className='w-full flex justify-center'>
+                    <Form
+                        onFormSubmit={onFormSubmit}
+                        title='Logga in'
+                        buttonLabel='Logga in'
+                        footer={[
+                            <Link to='/register' className='text-sm inline-block py-2'>
+                                Skapa ett konto
+                            </Link>,
+                        ]}
+                    >
                         <FormInput
-                            onChange={(e: { currentTarget: HTMLInputElement }) => setEmail(e.currentTarget?.value)}
+                            onChange={(e: { currentTarget: HTMLInputElement }) =>
+                                setEmail(e.currentTarget?.value)
+                            }
                             errorMessage={errors.email}
-                            name="email"
-                            label="E-postadress"
-                            data-testid="emailInput"
+                            name='email'
+                            label='E-postadress'
+                            data-testid='emailInput'
                         />
                         <FormInput
-                            onChange={(e: { currentTarget: HTMLInputElement }) => setPassword(e.currentTarget?.value)}
+                            onChange={(e: { currentTarget: HTMLInputElement }) =>
+                                setPassword(e.currentTarget?.value)
+                            }
                             errorMessage={errors.password}
-                            name="password"
-                            label="Lösenord"
-                            type="password"
-                            data-testid="passwordInput"
+                            name='password'
+                            label='Lösenord'
+                            type='password'
+                            data-testid='passwordInput'
                         />
                     </Form>
                 </section>
             </main>
-            <aside className="side-col"></aside>
+            <aside className='side-col'></aside>
         </Layout>
     )
 }

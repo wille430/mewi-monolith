@@ -1,21 +1,20 @@
-import { useContext } from 'react';
-import { SearchContext } from 'common/context/SearchContext';
-import NavEndButton from './NavEndButton';
+import { useContext } from 'react'
+import { SearchContext } from 'common/context/SearchContext'
+import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
-import config from 'config';
-import useParam from 'common/hooks/useParam';
+import config from 'config'
+import useParam from 'common/hooks/useParam'
 
 interface NavButtonProps {
-    label: number,
-    selected: boolean,
+    label: number
+    selected: boolean
     onClick: Function
 }
 
 const PageNav = () => {
-
     const { search } = useContext(SearchContext)
 
-    const [pageString, setPage] = useParam("page")
+    const [pageString, setPage] = useParam('page')
     const page = parseInt(pageString)
     const totalPages = Math.ceil(search.totalHits / config.searchLimit) || 1
 
@@ -36,7 +35,6 @@ const PageNav = () => {
             startNum = page - 2
         }
 
-
         for (let i = 0; i < totalNumButtons; i++) {
             let label = startNum + i
             if (totalNumButtons === maxNumButtons) {
@@ -47,7 +45,12 @@ const PageNav = () => {
                 }
             }
             buttonList.push(
-                <NavButton key={startNum + i} label={label} selected={startNum + i === page} onClick={handleClick} />
+                <NavButton
+                    key={startNum + i}
+                    label={label}
+                    selected={startNum + i === page}
+                    onClick={handleClick}
+                />
             )
         }
         return buttonList
@@ -61,24 +64,25 @@ const PageNav = () => {
     }
 
     return (
-
-        <div className="w-full flex justify-center py-6 max-w-full flex-wrap">
+        <div className='w-full flex justify-center py-6 max-w-full flex-wrap'>
             <NavEndButton onClick={() => changePage(-1)} icon={FiArrowLeft} />
             {RenderButtons()}
             <NavEndButton onClick={() => changePage(1)} icon={FiArrowRight} />
         </div>
-    );
+    )
 }
 
 const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
-
     return (
-        <button className={`w-12 h-12 shadow mx-2 transform hover:shadow-md hover:scale-110 ${selected && 'border-b-2 border-black'}`} onClick={e => onClick(e, label)}>
-            <span className="font-bold">
-                {label}
-            </span>
+        <button
+            className={`w-12 h-12 shadow mx-2 transform hover:shadow-md hover:scale-110 ${
+                selected && 'border-b-2 border-black'
+            }`}
+            onClick={(e) => onClick(e, label)}
+        >
+            <span className='font-bold'>{label}</span>
         </button>
     )
 }
 
-export default PageNav;
+export default PageNav

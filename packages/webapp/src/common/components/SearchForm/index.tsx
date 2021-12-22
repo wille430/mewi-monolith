@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react';
-import SearchSuggestions from './SearchSuggestions';
+import { useState, useEffect } from 'react'
+import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router'
 
 export interface SearchFormProps {
-    size?: "large" | "small",
+    size?: 'large' | 'small'
     showSearchIcon?: boolean
 }
 
-const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) => {
-
+const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) => {
     const [state, setState] = useState({
         showAutoComplete: false,
         blur: false,
@@ -31,7 +30,7 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
                         resolve(0)
                     }, 250)
                 })
-                setState(prevState => ({
+                setState((prevState) => ({
                     ...prevState,
                     showAutoComplete: false,
                     blur: false,
@@ -47,37 +46,40 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
 
     return (
         <form
-            onSubmit={e => {
+            onSubmit={(e) => {
                 e.preventDefault()
                 handleSubmit()
             }}
-            className={`relative w-full ${size === "small" && 'max-w-2xl'}`}
+            className={`relative w-full ${size === 'small' && 'max-w-2xl'}`}
         >
-            <div className={`outline-none flex flex-row relative ${size === "small" ? "h-8" : "h-12"}`}>
+            <div
+                className={`outline-none flex flex-row relative ${
+                    size === 'small' ? 'h-8' : 'h-12'
+                }`}
+            >
                 <input
-                    className="absoluteh-full w-full outline-none rounded-xl pl-4 pr-12 border border-black"
-                    placeholder="Sök efter en vara..."
-                    onKeyDown={e => e.keyCode === 13 && handleSubmit()}
+                    className='absoluteh-full w-full outline-none rounded-xl pl-4 pr-12 border border-black'
+                    placeholder='Sök efter en vara...'
+                    onKeyDown={(e) => e.keyCode === 13 && handleSubmit()}
                     onChange={handleInputChange}
                     value={keyword}
-                    autoComplete="off"
-                    onFocus={e => setState(prevState => ({
-                        ...prevState,
-                        showAutoComplete: true,
-                        blur: false,
-                    }))}
-                    onBlur={e => setState(prevState => ({
-                        ...prevState,
-                        blur: true
-                    }))}
-                    data-testid="searchInput"
+                    autoComplete='off'
+                    onFocus={(e) =>
+                        setState((prevState) => ({
+                            ...prevState,
+                            showAutoComplete: true,
+                            blur: false,
+                        }))
+                    }
+                    onBlur={(e) =>
+                        setState((prevState) => ({
+                            ...prevState,
+                            blur: true,
+                        }))
+                    }
+                    data-testid='searchInput'
                 />
-                {
-                    showSearchIcon &&
-                    <SearchButton
-                        data-testid="searchButton"
-                    />
-                }
+                {showSearchIcon && <SearchButton data-testid='searchButton' />}
             </div>
             <SearchSuggestions
                 query={keyword}
@@ -85,10 +87,10 @@ const SearchForm = ({ size = "large", showSearchIcon = true }: SearchFormProps) 
                 onAutoCompleteClick={(newKeyword) => {
                     setKeyword(newKeyword)
                 }}
-                data-testid="searchSuggestions"
+                data-testid='searchSuggestions'
             />
         </form>
-    );
+    )
 }
 
-export default SearchForm;
+export default SearchForm

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Button = styled.button`
     height: 50px;
@@ -19,6 +19,6 @@ export const Button = styled.button`
         background-color: lightgray;
     }
     &:active {
-        background-color: rgb(230,230,230);
+        background-color: rgb(230, 230, 230);
     }
 `

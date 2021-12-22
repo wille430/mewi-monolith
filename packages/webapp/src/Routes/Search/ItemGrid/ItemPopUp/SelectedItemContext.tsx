@@ -8,7 +8,6 @@ interface SelectedItemProviderProps {
 }
 
 export const SelectedItemProvider = ({ children }: SelectedItemProviderProps) => {
-
     const { item, setItem } = useItem()
 
     return (

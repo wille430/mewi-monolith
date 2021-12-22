@@ -15,15 +15,17 @@ describe('watchers', () => {
     before(() => {
         cy.request('post', 'http://localhost:3001/test/user').then((res) => {
             accessTokens = res.body
-
-            window.localStorage.setItem('jwt', accessTokens.jwt)
-            window.localStorage.setItem('refreshToken', accessTokens?.refreshToken)
-
-            cy.visit('/minabevakningar')
         })
     })
 
-    it('it can create a new watcher and display it', () => {
+    beforeEach(() => {
+        window.localStorage.setItem('jwt', accessTokens.jwt)
+        window.localStorage.setItem('refreshToken', accessTokens?.refreshToken)
+
+        cy.visit('/minabevakningar')
+    })
+
+    it('can create a new watcher and display it', () => {
         cy.get('[data-testid=createNewWatcherButton]').click()
 
         cy.get('[data-testid=keywordInput]').type(formData.keyword)
@@ -37,6 +39,7 @@ describe('watchers', () => {
         if (formData.isAuction) cy.get('[data-testid=auctionCheckbox]').click()
 
         cy.get('[data-testid=sendButton]').click()
+        cy.get('[data-testid=addWatcherPopUp]').should('not.be.visible')
 
         Object.keys(formData).forEach((key) => {
             switch (key) {
@@ -66,5 +69,24 @@ describe('watchers', () => {
                         .contains(formData[key], { matchCase: false })
             }
         })
+    })
+
+    it('can redirect to search page with correct filters', () => {
+        cy.get('[data-testid=watcherCard]')
+            .first()
+            .children()
+            .get('[data-testid=watcherSearchButton]')
+            .click()
+
+        cy.url().should('contain', '/search')
+    })
+
+    it('can delete watchers and shows notification', () => {
+        cy.get('[data-testid=removeWatcherButton]').each((el) => {
+            cy.wrap(el).click()
+        })
+
+        cy.get('[data-testid=watcherCard]').should('not.exist')
+        cy.get('[data-testid=snackbarContainer]').should('exist')
     })
 })

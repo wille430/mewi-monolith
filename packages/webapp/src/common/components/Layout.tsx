@@ -1,14 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 interface Props {
-    children: ReactNode,
+    children: ReactNode
     ads?: boolean
 }
 
-const Layout = ({ children, ads = false }: Props) => (
-    <div className="layout">
-        {children}
-    </div>
-)
+const Layout = ({ children, ads = false }: Props) => <div className='layout'>{children}</div>
 
 export default Layout

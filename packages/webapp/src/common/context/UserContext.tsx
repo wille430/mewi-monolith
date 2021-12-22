@@ -1,21 +1,21 @@
-import { AuthErrorCodes } from "@mewi/types";
-import { instance } from "api";
-import axios from "axios";
-import useAuthTokens from "common/hooks/useAuthTokens";
-import userReducer, { UserReducerAction } from "common/reducers/userReducer";
-import e from "cors";
-import { createContext, ReactNode, useEffect } from "react";
+import { AuthErrorCodes } from '@mewi/types'
+import { instance } from 'api'
+import axios from 'axios'
+import useAuthTokens from 'common/hooks/useAuthTokens'
+import userReducer, { UserReducerAction } from 'common/reducers/userReducer'
+import e from 'cors'
+import { createContext, ReactNode, useEffect } from 'react'
 
 interface UserContextProps {
-    isLoggedIn: boolean,
-    isLoading: boolean,
+    isLoggedIn: boolean
+    isLoading: boolean
     userDispatch: (action: UserReducerAction) => any
 }
 
 export const UserContext = createContext<UserContextProps>({
     isLoggedIn: false,
     isLoading: false,
-    userDispatch: (action: UserReducerAction) => { }
+    userDispatch: (action: UserReducerAction) => {},
 })
 
 interface UserProviderProps {
@@ -27,12 +27,11 @@ const UserProvider = ({ children }: UserProviderProps) => {
     const { userState, userDispatch } = userReducer({ authTokens, setAuthTokens })
 
     useEffect(() => {
-
         console.log('Auth token changed!')
 
         axios.defaults.baseURL = process.env.NX_API_URL
 
-        axios.interceptors.request.use(request => {
+        axios.interceptors.request.use((request) => {
             if (request.headers && authTokens.jwt) {
                 request.headers['Authorization'] = 'Bearer ' + authTokens.jwt
             }
@@ -40,10 +39,10 @@ const UserProvider = ({ children }: UserProviderProps) => {
         })
 
         axios.interceptors.response.use(
-            response => {
+            (response) => {
                 return response
             },
-            async err => {
+            async (err) => {
                 const config = err.config
 
                 if (config.url !== '/auth/login' && err.response) {
@@ -59,22 +58,23 @@ const UserProvider = ({ children }: UserProviderProps) => {
                                 userDispatch({ type: 'refreshTokens', callback: handleCallback })
                             })
                         } catch (e: any) {
-                            throw e.reponse?.data
+                            return Promise.reject(e)
                         }
-                    } else {
-                        throw err.response?.data
                     }
                 }
-            })
-
+                return Promise.reject(err.response.data)
+            }
+        )
     }, [authTokens])
 
     return (
-        <UserContext.Provider value={{
-            isLoggedIn: Boolean(authTokens.jwt),
-            isLoading: userState.isLoading,
-            userDispatch: userDispatch
-        }}>
+        <UserContext.Provider
+            value={{
+                isLoggedIn: Boolean(authTokens.jwt),
+                isLoading: userState.isLoading,
+                userDispatch: userDispatch,
+            }}
+        >
             {children}
         </UserContext.Provider>
     )

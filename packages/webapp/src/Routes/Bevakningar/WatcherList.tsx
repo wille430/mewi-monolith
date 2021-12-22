@@ -1,44 +1,39 @@
-import WatcherCard from './WatcherCard';
-import * as React from 'react';
-import StyledLoader from 'common/components/StyledLoader';
-import WatcherPopUpButton from './WatcherPopUpButton';
-import { WatcherContext } from './WatcherContext';
-import { Link } from 'react-router-dom';
-import { getWatchers } from 'api';
-
-
+import WatcherCard from './WatcherCard'
+import * as React from 'react'
+import StyledLoader from 'common/components/StyledLoader'
+import WatcherPopUpButton from './WatcherPopUpButton'
+import { WatcherContext } from './WatcherContext'
+import { Link } from 'react-router-dom'
+import { getWatchers } from 'api'
 
 const WatcherList = () => {
-
     const [loading, setLoading] = React.useState(false)
     const { watchers, dispatch } = React.useContext(WatcherContext)
 
     const renderItems = () => {
         if (loading) {
             return (
-                <div className="flex-grow flex justify-center items-center">
-                    <div className="h-32">
+                <div className='flex-grow flex justify-center items-center'>
+                    <div className='h-32'>
                         <StyledLoader />
                     </div>
-                </div >
+                </div>
             )
         } else {
             if (watchers.length > 0) {
                 return (
-                    <div className="w-full grid space-y-8">
-                        {watchers.map((watcherObj, i) => (
-                            watcherObj && <WatcherCard
-                                key={i}
-                                watcher={watcherObj}
-                            />
-                        ))}
+                    <div className='w-full grid space-y-8'>
+                        {watchers.map(
+                            (watcherObj, i) =>
+                                watcherObj && <WatcherCard key={i} watcher={watcherObj} />
+                        )}
                     </div>
                 )
             } else {
                 return (
-                    <div className="flex-grow flex justify-center items-center">
-                        <div className="h-32">
-                            <span className="text-white text-sm">Du har inga bevakningar ännu</span>
+                    <div className='flex-grow flex justify-center items-center'>
+                        <div className='h-32'>
+                            <span className='text-white text-sm'>Du har inga bevakningar ännu</span>
                         </div>
                     </div>
                 )
@@ -50,10 +45,10 @@ const WatcherList = () => {
         const fetchWatchers = async () => {
             setLoading(true)
             await getWatchers()
-                .then(watchers => {
+                .then((watchers) => {
                     dispatch({ type: 'replaceAll', newWatchers: watchers })
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log(e)
                 })
             setLoading(false)
@@ -65,26 +60,27 @@ const WatcherList = () => {
     }, [])
 
     return (
-        <section className="flex bg-blue rounded-lg mx-auto" style={{
-            maxWidth: '875px',
-            minHeight: '60vh'
-        }}>
-            <div className="flex flex-col items-center w-full p-6">
-                <header className="pb-6">
-                    <h1 className="text-2xl text-white pt-2">Mina bevakningar</h1>
-                    <Link className="block w-full text-green-dark text-center" to="/premium">Uppgradera</Link>
+        <section
+            className='flex bg-blue rounded-lg mx-auto'
+            style={{
+                maxWidth: '875px',
+                minHeight: '60vh',
+            }}
+        >
+            <div className='flex flex-col items-center w-full p-6'>
+                <header className='pb-6'>
+                    <h1 className='text-2xl text-white pt-2'>Mina bevakningar</h1>
+                    <Link className='block w-full text-green-dark text-center' to='/premium'>
+                        Uppgradera
+                    </Link>
                 </header>
-                <div className={"w-full flex flex-col space-y-2 flex-grow items-stretch"}>
-                    {
-                        renderItems()
-                    }
+                <div className={'w-full flex flex-col space-y-2 flex-grow items-stretch'}>
+                    {renderItems()}
                 </div>
-                <footer className="w-full flex justify-end mt-6">
-                    <WatcherPopUpButton
-                        data-testid="createNewWatcherButton"
-                    />
+                <footer className='w-full flex justify-end mt-6'>
+                    <WatcherPopUpButton data-testid='createNewWatcherButton' />
                 </footer>
-            </div >
+            </div>
         </section>
     )
 }

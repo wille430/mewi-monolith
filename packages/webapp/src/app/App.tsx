@@ -17,54 +17,53 @@ const Categories = lazy(() => import('Routes/Categories'))
 const CategorySearch = lazy(() => import('Routes/CategorySearch'))
 
 if (!window.console) {
-  var noOp = function () { } // no-op function
-  // eslint-disable-next-line
-  console = {
-    ...console,
-    log: noOp,
-    warn: noOp,
-    error: noOp
-  }
+    var noOp = function () {} // no-op function
+    // eslint-disable-next-line
+    console = {
+        ...console,
+        log: noOp,
+        warn: noOp,
+        error: noOp,
+    }
 }
 
 function App() {
+    const isAuthenticated = useContext(UserContext).isLoggedIn
 
-  const isAuthenticated = useContext(UserContext).isLoggedIn
-
-  return (
-    <div className="w-full min-h-screen">
-      <Router>
-        <Nav />
-        <Suspense fallback={<div></div>}>
-          <Switch>
-            <PublicRoute path="/login" isAuthenticated={isAuthenticated}>
-              <Login />
-            </PublicRoute>
-            <PublicRoute path="/register" isAuthenticated={isAuthenticated} >
-              <Register />
-            </PublicRoute>
-            <Route path={["/kategorier/:category_id/*", "/kategorier/:category_id"]} component={CategorySearch} />
-            <Route path="/kategorier" component={Categories} />
-            <Route exact path="/" component={Home} />
-            <Route exact path="/search">
-              <SearchProvider>
-                <Search />
-              </SearchProvider>
-            </Route>
-            <PrivateRoute
-              path="/"
-              isAuthenticated={isAuthenticated}
-            >
-              <ProtectedRoutes />
-            </PrivateRoute>
-            <Route path="*">
-              <Redirect to={{ pathname: "/" }} />
-            </Route>
-          </Switch>
-        </Suspense>
-      </Router>
-    </div>
-  )
+    return (
+        <div className='w-full min-h-screen'>
+            <Router>
+                <Nav />
+                <Suspense fallback={<div></div>}>
+                    <Switch>
+                        <PublicRoute path='/login' isAuthenticated={isAuthenticated}>
+                            <Login />
+                        </PublicRoute>
+                        <PublicRoute path='/register' isAuthenticated={isAuthenticated}>
+                            <Register />
+                        </PublicRoute>
+                        <Route
+                            path={['/kategorier/:category_id/*', '/kategorier/:category_id']}
+                            component={CategorySearch}
+                        />
+                        <Route path='/kategorier' component={Categories} />
+                        <Route exact path='/' component={Home} />
+                        <Route exact path='/search'>
+                            <SearchProvider>
+                                <Search />
+                            </SearchProvider>
+                        </Route>
+                        <PrivateRoute path='/' isAuthenticated={isAuthenticated}>
+                            <ProtectedRoutes />
+                        </PrivateRoute>
+                        <Route path='*'>
+                            <Redirect to={{ pathname: '/' }} />
+                        </Route>
+                    </Switch>
+                </Suspense>
+            </Router>
+        </div>
+    )
 }
 
 export default App
