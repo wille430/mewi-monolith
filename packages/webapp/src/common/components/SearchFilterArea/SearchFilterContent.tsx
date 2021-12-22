@@ -1,25 +1,24 @@
-import { categories, categoriesOptions, regions, SearchFilterDataProps } from "@mewi/types"
-import { FormEvent, ReactNode } from "react"
-import PriceRangeFilter from "common/components/SearchFilterArea/PriceRangeFilter"
-import ResetButton from "./ResetButton"
-import Checkbox from "../Checkbox"
-import LabeledDropdown from "../LabeledDropdown"
+import { categoriesOptions, PriceRange, regions, SearchFilterDataProps } from '@mewi/types'
+import { FormEvent, ReactNode } from 'react'
+import PriceRangeFilter from 'common/components/SearchFilterArea/PriceRangeFilter'
+import ResetButton from './ResetButton'
+import Checkbox from '../Checkbox'
+import LabeledDropdown from '../LabeledDropdown'
 
 export interface SearchFilterContentProps {
-    searchFilterData: SearchFilterDataProps,
-    onSubmit?: Function,
-    setSearchFilterData: (newData: SearchFilterDataProps) => void,
-    children?: ReactNode,
-    showKeywordField?: boolean,
-    heading?: string,
-    showResetButton?: boolean,
-    showSubmitButton?: boolean,
-    collapse?: boolean,
+    searchFilterData: SearchFilterDataProps
+    onSubmit?: () => void
+    setSearchFilterData: (newData: SearchFilterDataProps) => void
+    children?: ReactNode
+    showKeywordField?: boolean
+    heading?: string
+    showResetButton?: boolean
+    showSubmitButton?: boolean
+    collapse?: boolean
     footer?: ReactNode
 }
 
 const SearchFilterContent = (props: SearchFilterContentProps) => {
-
     const {
         searchFilterData,
         onSubmit,
@@ -30,7 +29,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         showResetButton,
         showSubmitButton,
         collapse,
-        footer
+        footer,
     } = props
 
     const handleSubmit = (e: FormEvent) => {
@@ -38,17 +37,17 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         onSubmit && onSubmit()
     }
 
-    const handleChange = (field: string, newValue: any) => {
+    const handleChange = (field: string, newValue: string | string[] | boolean | PriceRange) => {
         console.log(`Setting ${field} to ${newValue}`)
         setSearchFilterData({
             ...searchFilterData,
-            [field]: newValue
+            [field]: newValue,
         })
     }
 
     const handleReset = () => {
         setSearchFilterData({
-            keyword: searchFilterData.keyword
+            keyword: searchFilterData.keyword,
         })
     }
 
@@ -57,53 +56,60 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             label: 'Välj region:',
             name: 'regions',
             value: searchFilterData.regions,
-            onChange: (val: any) => handleChange('regions', val),
+            onChange: (val: string[]) => handleChange('regions', val),
             isMulti: true,
-            options: regions
+            options: regions,
+            'data-testid': 'regionsSelect',
         },
         {
             label: 'Välj kategori:',
             name: 'category',
             value: searchFilterData.category,
-            onChange: (val: any) => handleChange('category', val),
+            onChange: (val: string) => handleChange('category', val),
             isMulti: false,
-            options: categoriesOptions
-        }
+            options: categoriesOptions,
+            'data-testid': 'categorySelect',
+        },
     ]
 
     if (!collapse) {
         return (
             <div>
-                <form
-                    onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
                     <div className="flex flex-col lg:flex-row">
                         <div className="flex-grow">
                             <h2 className="pb-2 text-2xl">{heading}</h2>
-                            <div className="grid gap-x-4 gap-y-6" style={{
-                                gridTemplateColumns: "repeat(auto-fit, minmax(100px, 200px)",
-                            }}>
+                            <div
+                                className="grid gap-x-4 gap-y-6"
+                                style={{
+                                    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px)',
+                                }}
+                            >
+                                {showKeywordField ? (
+                                    <div className="flex flex-col">
+                                        <label className="inline-block h-10">Sök</label>
+                                        <input
+                                            className="input"
+                                            placeholder="Sökord"
+                                            name="q"
+                                            onChange={(e) =>
+                                                handleChange('keyword', e.target.value)
+                                            }
+                                            value={searchFilterData.keyword}
+                                            data-testid="keywordInput"
+                                        />
+                                    </div>
+                                ) : (
+                                    <input
+                                        type="hidden"
+                                        name="q"
+                                        value={searchFilterData.keyword}
+                                    />
+                                )}
 
-                                {showKeywordField
-                                    ? (
-                                        <div className="flex flex-col">
-                                            <label className="inline-block h-10">Sök</label>
-                                            <input
-                                                className="input"
-                                                placeholder="Sökord"
-                                                name="q"
-                                                onChange={e => handleChange('keyword', e.target.value)}
-                                                value={searchFilterData.keyword}
-                                                data-testid="keywordInput"
-                                            />
-                                        </div>
-                                    )
-                                    : (
-                                        <input type="hidden" name="q" value={searchFilterData.keyword} />
-                                    )
-                                }
-
-                                {Dropdowns.map(dropdown => <LabeledDropdown {...dropdown} />)}
+                                {Dropdowns.map((dropdown) => (
+                                    <LabeledDropdown {...dropdown} />
+                                ))}
 
                                 <PriceRangeFilter
                                     gte={searchFilterData.priceRange?.gte}
@@ -111,18 +117,19 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                     onChange={(field, val) => {
                                         handleChange('priceRange', {
                                             ...searchFilterData.priceRange,
-                                            [field]: val
+                                            [field]: val,
                                         })
-                                    }
-                                    }
+                                    }}
+                                    data-testid="priceRangeSlider"
                                 />
 
                                 <div className="p-4">
                                     <Checkbox
                                         label="Auktion"
                                         name="auction"
-                                        onClick={newVal => handleChange('auction', newVal)}
+                                        onClick={(newVal) => handleChange('auction', newVal)}
                                         checked={searchFilterData.auction || false}
+                                        data-testid="auctionCheckbox"
                                     />
                                 </div>
                             </div>
@@ -131,13 +138,11 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                             <div className="flex flex-col">
                                 {children}
                                 {showSubmitButton && (
-                                    <button className="button px-4" type="submit">Filtrera</button>
+                                    <button className="button px-4" type="submit">
+                                        Filtrera
+                                    </button>
                                 )}
-                                {showResetButton && (
-                                    <ResetButton
-                                        onClick={handleReset}
-                                    />
-                                )}
+                                {showResetButton && <ResetButton onClick={handleReset} />}
                             </div>
                         </div>
                     </div>
@@ -147,9 +152,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         )
     }
 
-    return (
-        <div></div>
-    )
+    return <div></div>
 }
 
 export default SearchFilterContent

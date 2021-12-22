@@ -1,6 +1,7 @@
 import { PublicWatcher } from '@mewi/types'
 import { ObjectId } from 'bson'
 import { models, Schema, model } from 'mongoose'
+import { SearchFilterDataProps } from '@mewi/types'
 
 // export interface WatcherQuery {
 //     bool: {
@@ -18,26 +19,19 @@ import { models, Schema, model } from 'mongoose'
 //     }
 // }
 
-
-const WatcherSchema = new Schema<PublicWatcher>({
-    query: { type: Object, unique: true },
-    metadata: {
-        keyword: { type: String },
-        category: { type: String },
-        regions: [String],
-        isAuction: { type: Boolean },
-        priceRange: {
-            gte: { type: String },
-            lte: { type: String }
-        }
+const WatcherSchema = new Schema<PublicWatcher>(
+    {
+        query: { type: Object, unique: true },
+        metadata: { type: Object, default: {
+            keyword: ''
+        } },
+        users: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     },
-    users: [
-        { type: Schema.Types.ObjectId, ref: 'user' }
-    ]
-}, {
-    timestamps: true
-})
+    {
+        timestamps: true,
+    }
+)
 
-const WatcherModel = model<PublicWatcher>("watchers", WatcherSchema)
+const WatcherModel = model<PublicWatcher>('watchers', WatcherSchema)
 
 export default WatcherModel

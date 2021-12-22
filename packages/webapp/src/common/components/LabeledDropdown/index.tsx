@@ -1,29 +1,32 @@
-import DropdownMenu, { DropDownMenuProps } from 'common/components/DropdownMenu/index'
-import { Override } from 'types/types'
+import DropdownMenu, { DropDownMenuProps } from 'common/components/DropdownMenu/index';
+import { HTMLAttributes } from 'react';
+import { Override } from 'types/types';
 
-export type LabeledDropdownProps = Override<DropDownMenuProps, {
-    onChange?: (val: any) => void,
-    value?: string[] | string | null,
-    closeMenuOnSelect?: boolean,
-    isMulti?: boolean,
-    label?: string
-}>
+export type LabeledDropdownProps = Override<
+    DropDownMenuProps,
+    {
+        onChange?: (val: any) => void;
+        value?: string[] | string | null;
+        closeMenuOnSelect?: boolean;
+        isMulti?: boolean;
+        label?: string;
+    }
+> &
+    Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>;
 
 const LabeledDropdown = (props: LabeledDropdownProps) => {
-
-    const { closeMenuOnSelect, isMulti, label } = props
+    const { closeMenuOnSelect, isMulti, label } = props;
 
     return (
         <div className="flex flex-col">
             <label className="text-white h-10 inline-block">{label}</label>
-            {/* @ts-ignore */}
             <DropdownMenu
-                {...props}
                 data-testid="dropdownMenu"
+                {...props}
                 closeMenuOnSelect={closeMenuOnSelect || !isMulti}
             />
         </div>
-    )
-}
+    );
+};
 
-export default LabeledDropdown
+export default LabeledDropdown;
