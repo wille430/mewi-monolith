@@ -26,24 +26,26 @@ const Login = () => {
         userDispatch({
             type: 'login',
             userCredentials: { email, password },
-            callback: (err) => {
-                setErrors(initErrors)
-                switch (err.error.type) {
-                    case AuthErrorCodes.INVALID_EMAIL:
-                    case AuthErrorCodes.INVALID_PASSWORD:
-                    case AuthErrorCodes.MISSING_USER:
-                        setErrors({
-                            email: 'Felaktig epostaddress eller lösenord',
-                            password: 'Felaktig epostaddress eller lösenord',
-                            all: '',
-                        })
-                        break
-                    default:
-                        setErrors({
-                            ...initErrors,
-                            all: 'Ett fel inträffade. Försök igen.',
-                        })
-                        break
+            callback: (authTokens, err) => {
+                if (err) {
+                    setErrors(initErrors)
+                    switch (err.error.type) {
+                        case AuthErrorCodes.INVALID_EMAIL:
+                        case AuthErrorCodes.INVALID_PASSWORD:
+                        case AuthErrorCodes.MISSING_USER:
+                            setErrors({
+                                email: 'Felaktig epostaddress eller lösenord',
+                                password: 'Felaktig epostaddress eller lösenord',
+                                all: '',
+                            })
+                            break
+                        default:
+                            setErrors({
+                                ...initErrors,
+                                all: 'Ett fel inträffade. Försök igen.',
+                            })
+                            break
+                    }
                 }
             },
         })

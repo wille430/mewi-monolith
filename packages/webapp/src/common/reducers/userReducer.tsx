@@ -11,9 +11,13 @@ export type UserReducerAction =
     | {
           type: 'login'
           userCredentials: { email: string; password: string }
-          callback: (err: APIResponseError) => void
+          callback?: (authTokens: AuthTokens | undefined, err?: APIResponseError) => void
       }
-    | { type: 'signup'; signUpCredentials: { email: string; password: string; repassword: string } }
+    | {
+          type: 'signup'
+          signUpCredentials: { email: string; password: string; repassword: string }
+          callback?: (authTokens: AuthTokens | undefined, err?: APIResponseError) => void
+      }
     | { type: 'logout' }
 
 interface userReducerProps {
@@ -34,13 +38,25 @@ const userReducer = ({ authTokens, setAuthTokens }: userReducerProps) => {
                 break
             case 'login':
                 const { email, password } = action.userCredentials
-                login(email, password).then(setAuthTokens).catch(action.callback)
+                login(email, password)
+                    .then((tokens) => {
+                        setAuthTokens(tokens)
+                        action.callback && action.callback(tokens)
+                    })
+                    .catch((e) => {
+                        action.callback && action.callback(undefined, e)
+                    })
                 break
             case 'signup':
                 const signUpFields = action.signUpCredentials
-                signUp(signUpFields.email, signUpFields.password, signUpFields.repassword).then(
-                    setAuthTokens
-                )
+                signUp(signUpFields.email, signUpFields.password, signUpFields.repassword)
+                    .then((tokens) => {
+                        setAuthTokens(tokens)
+                        action.callback && action.callback(tokens)
+                    })
+                    .catch((e) => {
+                        action.callback && action.callback(undefined, e)
+                    })
                 break
             case 'logout':
                 setAuthTokens({})

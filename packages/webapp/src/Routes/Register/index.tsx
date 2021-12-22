@@ -3,7 +3,7 @@ import FormInput from 'common/components/FormInput'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'common/components/Layout'
-import { AuthErrorCodes } from '@mewi/types'
+import { APIResponseError, AuthErrorCodes } from '@mewi/types'
 import { SnackbarContext } from 'common/context/SnackbarContext'
 import _ from 'lodash'
 import { UserContext } from 'common/context/UserContext'
@@ -28,63 +28,67 @@ const Register = () => {
     }
     const [errors, setErrors] = React.useState(initErrors)
 
+    const handleError = (err: APIResponseError) => {
+        switch (err.error.type) {
+            case AuthErrorCodes.INVALID_EMAIL:
+                setErrors({
+                    ...initErrors,
+                    email: 'Felaktig epostaddress',
+                })
+                break
+            case AuthErrorCodes.USER_ALREADY_EXISTS:
+                setErrors({
+                    ...initErrors,
+                    email: 'Epostaddressen är upptagen',
+                })
+                break
+            case AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH:
+                setErrors({
+                    ...initErrors,
+                    password:
+                        'Lösenordet är för svagt. Använd minst 8 bokstäver, special tecken, stor bokstav och siffror',
+                })
+                break
+            case AuthErrorCodes.PASSWORD_TOO_LONG:
+                setErrors({
+                    ...initErrors,
+                    password:
+                        'Lösenordet är för långt. Använd minst 8 bokstäver och max 30 bokstäver',
+                })
+                break
+            case AuthErrorCodes.PASSWORD_NOT_MATCHING:
+                setErrors({
+                    ...initErrors,
+                    repassword: 'Lösenorden måste matcha',
+                })
+                break
+            default:
+                setErrors({
+                    ...initErrors,
+                    all: 'Ett fel inträffade. Försök igen',
+                })
+                break
+        }
+    }
+
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        try {
-            userDispatch({
-                type: 'signup',
-                signUpCredentials: _.omit(formData, 'all'),
-            })
-            setSnackbar({
-                title: 'Ditt konto skapades!',
-            })
-        } catch (e: any) {
-            console.log(e)
-            setErrors(initErrors)
-            if (e.error) {
-                switch (e.error.type) {
-                    case AuthErrorCodes.INVALID_EMAIL:
-                        setErrors({
-                            ...initErrors,
-                            email: 'Felaktig epostaddress',
-                        })
-                        break
-                    case AuthErrorCodes.USER_ALREADY_EXISTS:
-                        setErrors({
-                            ...initErrors,
-                            email: 'Epostaddressen är upptagen',
-                        })
-                        break
-                    case AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH:
-                        setErrors({
-                            ...initErrors,
-                            password:
-                                'Lösenordet är för svakt. Använd minst 8 bokstäver, special tecken, stor bokstav och siffror',
-                        })
-                        break
-                    case AuthErrorCodes.PASSWORD_TOO_LONG:
-                        setErrors({
-                            ...initErrors,
-                            password:
-                                'Lösenordet är för långt. Använd minst 8 bokstäver och max 30 bokstäver',
-                        })
-                        break
-                    case AuthErrorCodes.PASSWORD_NOT_MATCHING:
-                        setErrors({
-                            ...initErrors,
-                            repassword: 'Lösenorden måste matcha',
-                        })
-                        break
-                    default:
-                        setErrors({
-                            ...initErrors,
-                            all: 'Ett fel inträffade. Försök igen',
-                        })
-                        break
+        userDispatch({
+            type: 'signup',
+            signUpCredentials: _.omit(formData, 'all'),
+            callback: (authTokens, err) => {
+                setErrors(initErrors)
+                console.log('REGISTER ERROR:', err)
+                if (!err) {
+                    setSnackbar({
+                        title: 'Ditt konto skapades!',
+                    })
+                } else {
+                    handleError(err)
                 }
-            }
-        }
+            },
+        })
     }
 
     return (
@@ -138,7 +142,7 @@ const Register = () => {
                         name='repassword'
                         label='Bekräfta lösenord'
                         type='password'
-                        data-testid='repasswordId'
+                        data-testid='repasswordInput'
                     />
                 </Form>
             </main>
