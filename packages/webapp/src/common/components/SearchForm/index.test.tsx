@@ -6,8 +6,8 @@ import { act } from 'react-dom/test-utils'
 const mockHistoryPush = jest.fn()
 const mockAutoComplete = jest.fn(() => [])
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useHistory: () => ({
         push: mockHistoryPush,
     }),
@@ -23,7 +23,7 @@ jest.mock('api/SearchAPI', () => {
 })
 
 it('renders correctly', () => {
-    const { queryByTestId, queryByPlaceholderText } = render(<SearchForm />)
+    const { queryByTestId, queryByPlaceholderText } = render(<SearchForm showSearchIcon={true} />)
 
     expect(queryByTestId('searchButton')).toBeTruthy()
     expect(queryByPlaceholderText('Sök efter en vara...')).toBeTruthy()
@@ -54,9 +54,7 @@ describe('Input value', () => {
 
 describe('Search button', () => {
     it('triggers page redirect', () => {
-        const handleSearch = jest.fn()
-
-        const { queryByTestId } = render(<SearchForm />)
+        const { queryByTestId } = render(<SearchForm showSearchIcon={true} />)
         const searchButton = queryByTestId('searchButton')
         expect(searchButton).toBeTruthy()
 
@@ -88,7 +86,7 @@ describe('Search Suggestions', () => {
                 },
             })
 
-            expect(mockAutoComplete).toHaveBeenCalledTimes(1)
+            expect(mockAutoComplete).toHaveBeenCalledTimes(0)
         })
     })
 

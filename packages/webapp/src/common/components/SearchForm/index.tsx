@@ -79,7 +79,7 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
                     }
                     data-testid='searchInput'
                 />
-                {showSearchIcon && <SearchButton data-testid='searchButton' />}
+                {showSearchIcon && <SearchButton />}
             </div>
             <SearchSuggestions
                 query={keyword}
