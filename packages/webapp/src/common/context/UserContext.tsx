@@ -58,6 +58,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
                                 userDispatch({ type: 'refreshTokens', callback: handleCallback })
                             })
                         } catch (e: any) {
+                            alert(e)
                             return Promise.reject(err.response.data)
                         }
                     } else {

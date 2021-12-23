@@ -39,7 +39,9 @@ const FilterArea = () => {
     return (
         <SearchFilterArea
             searchFilterData={formData}
-            setSearchFilterData={(newVal) => setFormData(newVal)}
+            setSearchFilterData={(newVal) => {
+                setFormData(newVal)
+            }}
             heading='Filtrera sökning'
             showSubmitButton={true}
             showResetButton={true}
@@ -47,7 +49,7 @@ const FilterArea = () => {
             onSubmit={handleSubmit}
             footer={
                 isLoggedIn ? (
-                    <AddWatcherButton searchFilters={formData} />
+                    <AddWatcherButton searchFilters={formData} data-testid='addWatcherButton' />
                 ) : (
                     <Link to='/login'>Bevaka sökning</Link>
                 )

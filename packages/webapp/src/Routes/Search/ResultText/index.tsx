@@ -9,9 +9,9 @@ const ResultText = () => {
     let resultString = ''
 
     if (search.totalHits >= 10000) {
-        resultString += `Hittade över ${search.totalHits} resultat`
+        resultString += `Hittade över ${search.totalHits || 0} resultat`
     } else {
-        resultString += `Hittade ${search.totalHits} resultat`
+        resultString += `Hittade ${search.totalHits || 0} resultat`
     }
     if (query) {
         resultString += ` för "${query}"`

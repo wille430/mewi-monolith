@@ -138,7 +138,11 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                             <div className='flex flex-col'>
                                 {children}
                                 {showSubmitButton && (
-                                    <button className='button px-4' type='submit'>
+                                    <button
+                                        className='button px-4'
+                                        type='submit'
+                                        data-testid='searchFilterSubmitButton'
+                                    >
                                         Filtrera
                                     </button>
                                 )}

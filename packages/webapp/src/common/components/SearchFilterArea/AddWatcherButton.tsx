@@ -1,4 +1,9 @@
-import { SearchFilterDataProps, WatcherMetadata } from '@mewi/types'
+import {
+    APIResponseError,
+    DatabaseErrorCodes,
+    SearchFilterDataProps,
+    WatcherMetadata,
+} from '@mewi/types'
 import { ButtonHTMLAttributes, useContext, useState } from 'react'
 import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
 import AsyncButton from 'common/components/AsyncButton'
@@ -27,10 +32,30 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
 
     // Add watcher
     const handleClick = async () => {
-        createWatcher(searchFilters).then((newWatcher) => {
-            dispatch({ type: 'add', newWatcher: newWatcher })
-            onClick && onClick()
-        })
+        createWatcher(searchFilters)
+            .then((newWatcher) => {
+                dispatch({ type: 'add', newWatcher: newWatcher })
+                onClick && onClick()
+                setResponseMsg({
+                    msg: 'Bevakningen lades till',
+                    color: 'text-green-400'
+                })
+            })
+            .catch((e: APIResponseError) => {
+                switch (e.error.type) {
+                    case DatabaseErrorCodes.CONFLICTING_RESOURCE:
+                        setResponseMsg({
+                            msg: 'En bevakning med samma sökning existerar redan',
+                            color: 'text-red-400',
+                        })
+                        break
+                    default:
+                        setResponseMsg({
+                            msg: 'Ett fel inträffade',
+                            color: 'text-red-400',
+                        })
+                }
+            })
     }
 
     return (
