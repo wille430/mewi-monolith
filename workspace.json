@@ -1,10 +1,10 @@
 {
-  "version": 2,
-  "projects": {
-    "api": "packages/api",
-    "types": "packages/types",
-    "util": "packages/util",
-    "webapp": "packages/webapp",
-    "webapp-e2e": "packages/webapp-e2e"
-  }
+    "version": 2,
+    "projects": {
+        "api": "packages/api",
+        "types": "packages/types",
+        "util": "packages/util",
+        "webapp": "packages/webapp",
+        "webapp-e2e": "packages/webapp-e2e"
+    }
 }

@@ -1,35 +1,35 @@
 {
-  "extends": "@nrwl/workspace/presets/npm.json",
-  "npmScope": "mewi",
-  "affected": {
-    "defaultBase": "main"
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/react"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
-    }
-  },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "style": "css",
-        "linter": "eslint",
-        "babel": true
-      },
-      "component": {
-        "style": "css"
-      },
-      "library": {
-        "style": "css",
-        "linter": "eslint"
-      }
-    }
-  },
-  "defaultProject": "webapp"
+    "extends": "@nrwl/workspace/presets/npm.json",
+    "npmScope": "mewi",
+    "affected": {
+        "defaultBase": "main"
+    },
+    "cli": {
+        "defaultCollection": "@nrwl/react"
+    },
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "@nrwl/workspace/tasks-runners/default",
+            "options": {
+                "cacheableOperations": ["build", "lint", "test", "e2e", "build-storybook"]
+            }
+        }
+    },
+    "generators": {
+        "@nrwl/react": {
+            "application": {
+                "style": "css",
+                "linter": "eslint",
+                "babel": true
+            },
+            "component": {
+                "style": "css"
+            },
+            "library": {
+                "style": "css",
+                "linter": "eslint"
+            }
+        }
+    },
+    "defaultProject": "webapp"
 }

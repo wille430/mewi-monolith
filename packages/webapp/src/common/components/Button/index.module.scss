@@ -1,0 +1,41 @@
+@import '../colors.scss';
+
+.button {
+    background-color: $primary;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+    &:active {
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        background-color: $primary-lighter;
+    }
+
+    &:hover {
+        background-color: $primary-light;
+        box-shadow: rgba(0, 0, 0, 0.20) 0px 3px 8px;
+    }
+
+    &:focused {
+        background-color: $primary-lighter;
+    }
+
+    &--outlined {
+        @extend .button;
+        background-color: transparent;
+        color: $primary;
+        border: 1px solid gray;
+    }
+
+    &--contained {
+        @extend .button;
+        background-color: $primary;
+        color: white;
+    }
+
+    &--text {
+        @extend .button;
+        background-color: transparent;
+        color: $primary;
+    }
+}
