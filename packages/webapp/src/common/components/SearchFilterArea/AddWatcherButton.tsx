@@ -4,7 +4,7 @@ import {
     SearchFilterDataProps,
     WatcherMetadata,
 } from '@mewi/types'
-import { ButtonHTMLAttributes, useContext, useState } from 'react'
+import { ButtonHTMLAttributes, useContext, useEffect, useState } from 'react'
 import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
 import AsyncButton from 'common/components/AsyncButton'
 import { SnackbarContext } from 'common/context/SnackbarContext'
@@ -25,21 +25,23 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
     }
     const [responseMsg, setResponseMsg] = useState<any>(initState)
 
-    // Hide message when user clicks
-    document
-        .getElementById('root')
-        ?.addEventListener('click', () => responseMsg.msg !== null && setResponseMsg(initState))
+    useEffect(() => {
+        // Hide message when user clicks
+        document
+            .getElementById('root')
+            ?.addEventListener('click', () => responseMsg.msg !== null && setResponseMsg(initState))
+    }, [])
 
     // Add watcher
     const handleClick = async () => {
         createWatcher(searchFilters)
             .then((newWatcher) => {
                 dispatch({ type: 'add', newWatcher: newWatcher })
-                onClick && onClick()
-                setResponseMsg({
-                    msg: 'Bevakningen lades till',
-                    color: 'text-green-400'
+                setSnackbar({
+                    title: 'Bevaknigen lades till',
+                    body: 'Du kommer få notiser på mejlen när nya föremål läggs till som stämmer överens med bevakningens filter',
                 })
+                onClick && onClick()
             })
             .catch((e: APIResponseError) => {
                 switch (e.error.type) {

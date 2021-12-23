@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Transition, TransitionStatus } from 'react-transition-group'
 
 const transitions = {
@@ -24,17 +24,54 @@ export interface SlideTransitionProps {
     in: boolean
     duration?: number
     render: (state: TransitionStatus) => ReactNode
+    onExited?: () => void
+    onEntered?: () => void
+    onEntering?: () => void
+    onExiting?: () => void
+    runOnStart?: boolean
 }
 
-const SlideTransition = ({ in: inProp, duration = 500, render }: SlideTransitionProps) => {
+const SlideTransition = ({
+    in: inProp,
+    duration = 500,
+    render,
+    onEntering,
+    onEntered,
+    onExiting,
+    onExited,
+    runOnStart,
+}: SlideTransitionProps) => {
     const defaultStyling = {
         transition: `all ${duration}ms ease-in-out`,
     }
 
+    const [show, setShow] = useState(false)
+    const [isExiting, setIsExiting] = useState(false)
+
+    const onExitedTimerRef = useRef<any | null>()
+
+    useEffect(() => {
+        setShow(inProp)
+    }, [inProp])
+
     return (
         // @ts-ignore
-        <Transition in={inProp} duration={duration}>
+        <Transition in={runOnStart ? show : inProp} duration={duration}>
             {(state) => {
+                if (state === 'entering') {
+                    onEntering && onEntering()
+                } else if (state === 'entered') {
+                    onEntered && onEntered()
+                } else if (state === 'exiting') {
+                    setIsExiting(true)
+                    onExiting && onExiting()
+                } else if (state === 'exited' && isExiting) {
+                    clearTimeout(onExitedTimerRef.current)
+                    onExitedTimerRef.current = setTimeout(() => {
+                        onExited && onExited()
+                    }, duration)
+                }
+
                 return (
                     <div
                         style={{

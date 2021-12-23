@@ -73,7 +73,7 @@ describe('Snackbar', () => {
 
         it('close button is pressed', () => {
             const { queryByTestId } = render(
-                <Snackbar open={true} title={title} onClose={callback} />
+                <Snackbar open={true} title={title} handleClose={callback} />
             )
 
             const button = queryByTestId(testIds.closeButton)
@@ -86,14 +86,13 @@ describe('Snackbar', () => {
 
         it('it times out', async () => {
             const timeout = 5000
-            const {} = render(
-                <Snackbar open={true} title={title} timeout={timeout} onClose={callback} />
-            )
 
-            new Promise((resolve) =>
+            render(<Snackbar open={true} title={title} autoHideDuration={timeout} handleClose={callback} />)
+
+            new Promise<void>((resolve) =>
                 setTimeout(() => {
                     expect(callback).toHaveBeenCalledTimes(1)
-                    resolve
+                    resolve()
                 }, timeout + 100)
             )
 
@@ -114,16 +113,16 @@ describe('Snackbar', () => {
                 <Snackbar
                     open={open}
                     title={title}
-                    onClose={callback}
+                    handleClose={callback}
                     animationDuration={animationDuration}
                 />
             )
             const snackbar = queryByTestId(testIds.snackbar)
 
-            new Promise((resolve) =>
+            new Promise<void>((resolve) =>
                 setTimeout(() => {
                     expect(snackbar).toBeVisible()
-                    resolve
+                    resolve()
                 }, 0)
             )
 
@@ -138,16 +137,16 @@ describe('Snackbar', () => {
                 <Snackbar
                     open={open}
                     title={title}
-                    onClose={callback}
+                    handleClose={callback}
                     animationDuration={animationDuration}
                 />
             )
             expect(snackbar).toBeVisible()
 
-            new Promise((resolve) =>
+            new Promise<void>((resolve) =>
                 setTimeout(() => {
                     expect(snackbar).not.toBeVisible()
-                    resolve
+                    resolve()
                 }, animationDuration)
             )
 

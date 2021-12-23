@@ -4,6 +4,7 @@ import PriceRangeFilter from 'common/components/SearchFilterArea/PriceRangeFilte
 import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
 import LabeledDropdown from '../LabeledDropdown'
+import { v4 } from 'uuid'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
@@ -108,7 +109,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                 )}
 
                                 {Dropdowns.map((dropdown) => (
-                                    <LabeledDropdown {...dropdown} />
+                                    <LabeledDropdown key={v4()} {...dropdown} />
                                 ))}
 
                                 <PriceRangeFilter

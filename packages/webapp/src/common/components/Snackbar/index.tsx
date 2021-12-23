@@ -1,76 +1,90 @@
 import _ from 'lodash'
-import { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes, useEffect, useRef, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { TransitionStatus } from 'react-transition-group'
 import SlideTransition from '../SlideTransition'
 
 export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     title?: string
     body?: string
-    timeout?: number
-    onClose?: () => void
-    onDelete?: () => void
+    autoHideDuration?: number
+    handleClose?: () => void
     open?: boolean
     animationDuration?: number
+    onExited?: () => void
 }
 
 const Snackbar = ({
     title,
     body,
-    timeout = 5000,
-    onClose,
-    onDelete,
+    handleClose,
     open = true,
+    autoHideDuration = 6000,
     animationDuration = 500,
-    ...rest
+    onExited,
 }: SnackbarProps) => {
-    const [priorEvent, setPriorEvent] = useState<TransitionStatus | undefined>()
-    const [show, setShow] = useState(false)
+    const timerAutoHide = useRef<NodeJS.Timeout | null>()
+    const shouldCloseSnackbar = useRef(false)
+    const isInteractedWith = useRef(false)
 
-    const close = () => {
-        onClose && onClose()
+    const closeSnackbar = () => {
+        handleClose && handleClose()
     }
 
-    const handleClick = () => {
-        console.log('Closing snackbox with close button...')
-        close()
+    const handleClick = () => closeSnackbar()
+
+    const handleExited = () => onExited && onExited()
+
+    const handleMouseEnter = () => {
+        isInteractedWith.current = true
+    }
+
+    const handleMouseLeave = () => {
+        isInteractedWith.current = false
+        if (shouldCloseSnackbar.current) {
+            closeSnackbar()
+        }
+    }
+
+    const setAutoHideTimeout = () => {
+        if (autoHideDuration == null) {
+            return
+        }
+
+        if (timerAutoHide.current) {
+            clearTimeout(timerAutoHide.current)
+        }
+
+        timerAutoHide.current = setTimeout(() => {
+            if (!isInteractedWith.current) {
+                closeSnackbar()
+            } else {
+                shouldCloseSnackbar.current = true
+            }
+        }, autoHideDuration)
     }
 
     useEffect(() => {
-        setShow(open)
-        setTimeout(() => {
-            console.log('Timed out. Exiting transition...')
-            close()
-        }, timeout)
-        // eslint-disable-next-line
+        setAutoHideTimeout()
     }, [])
-
-    useEffect(() => {
-        setShow(open)
-    }, [open])
 
     return (
         <SlideTransition
-            in={show}
+            runOnStart
+            in={open}
             duration={animationDuration}
+            onExited={handleExited}
             render={(state) => {
-                if (state === 'exited' && priorEvent !== undefined && priorEvent === 'exiting') {
-                    setTimeout(() => {
-                        onDelete && onDelete()
-                    }, animationDuration)
-                } else if (state !== 'exited') {
-                    setPriorEvent(state)
-                }
-
                 return (
                     <div
                         style={{
-                            width: 'clamp(20rem, 50vw, 100%)',
+                            width: 'clamp(20rem, 500px, 100%)',
                             minHeight: '2rem',
                         }}
                         className='flex flex-row z-50 rounded-md bg-blue z-100 text-white justify-between shadow-lg cursor-pointer select-none'
                         data-testid='snackbarContainer'
                         onClick={handleClick}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
                     >
                         <div className='flex flex-col flex-grow divide-y divide-blue-dark h-auto w-full'>
                             <header className='flex-0 flex p-2 px-3'>

@@ -13,7 +13,7 @@ const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
             active:bg-green'
             data-testid='removeWatcherButton'
             onClick={async () => {
-                await dispatch({ type: 'remove', id: watcherId })
+                dispatch({ type: 'remove', id: watcherId })
             }}
         >
             <FiTrash color='white' />
