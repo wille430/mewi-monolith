@@ -21,8 +21,7 @@ describe('login', () => {
         cy.get('[data-testid=formSubmitButton]').click()
 
         cy.url().should('equal', Cypress.config('baseUrl') + 'minabevakningar')
-        cy.clearLocalStorage('jwt')
-        cy.clearLocalStorage('refreshToken')
+        cy.wait(500)
     })
 
     it('should display invalid password message', () => {
