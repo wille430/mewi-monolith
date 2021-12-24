@@ -1,7 +1,8 @@
-import { HTMLAttributes, ReactNode, useState } from 'react'
+import { HTMLAttributes, ReactNode, useEffect, useState } from 'react'
 import Loader from 'react-loader-spinner'
 import { Override } from 'types/types'
 import styles from './index.module.scss'
+import utilities from '../utilities.module.scss'
 
 type ButtonProps = Override<
     HTMLAttributes<HTMLButtonElement>,
@@ -25,6 +26,7 @@ const Button = (props: ButtonProps) => {
         icon,
         defaultCasing,
         fullWidth,
+        disabled,
         ...rest
     } = props
     const [isLoading, setLoading] = useState(false)
@@ -38,24 +40,24 @@ const Button = (props: ButtonProps) => {
     }
 
     // Styling
-    const classNames = [styles['button--' + type]]
-
-    console.log(styles)
+    let className = styles[`button--${type}${(isLoading || disabled) ? '--disabled' : ''}`]
 
     return (
         <button
-            className={classNames.join(' ')}
+            className={className}
             data-testid='button'
             onClick={handleClick}
             {...rest}
         >
             <div className='flex flex-row justify-center items-center space-x-2'>
                 {icon}
-                {!isLoading ? (
-                    <span>{defaultCasing ? label : label?.toUpperCase()}</span>
-                ) : (
-                    <Loader type='TailSpin' color='white' />
-                )}
+                <div className={`${utilities.stack} ${utilities.center}`}>
+                    <span className={utilities.hide}>{defaultCasing ? label : label?.toUpperCase()}</span>
+                    <span className={`${utilities.stackChild} ${isLoading ? utilities.hide : ''}`}>{defaultCasing ? label : label?.toUpperCase()}</span>
+                    <div className={`${utilities.stackChild} ${isLoading ? '' : utilities.hide}`}>
+                        <Loader type='TailSpin' color='white' height="1rem" width="1rem" />
+                    </div>
+                </div>
             </div>
         </button>
     )

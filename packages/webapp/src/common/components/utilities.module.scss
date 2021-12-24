@@ -1,0 +1,22 @@
+
+.stack {
+    position: relative;
+
+    & > .stackChild {
+        position: absolute;
+    }
+}
+
+.stackChild {
+
+}
+
+.hide {
+    opacity: 0;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
