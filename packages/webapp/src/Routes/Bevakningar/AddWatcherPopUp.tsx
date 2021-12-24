@@ -29,7 +29,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
         <PopUp onOutsideClick={hidePopUp} show={show}>
             <div className='p-2 sm:mt-32'>
                 <section
-                    className='bg-blue rounded-md p-4 text-white shadow-md sm:mx-auto'
+                    className='bg-white rounded-md p-4 text-black shadow-md sm:mx-auto'
                     style={{
                         maxWidth: '1000px',
                     }}

@@ -2,11 +2,10 @@ import {
     APIResponseError,
     DatabaseErrorCodes,
     SearchFilterDataProps,
-    WatcherMetadata,
 } from '@mewi/types'
 import { ButtonHTMLAttributes, useContext, useEffect, useState } from 'react'
 import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
-import AsyncButton from 'common/components/AsyncButton'
+import Button from 'common/components/Button'
 import { SnackbarContext } from 'common/context/SnackbarContext'
 import { createWatcher } from 'api/'
 
@@ -62,9 +61,7 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
 
     return (
         <div>
-            <AsyncButton {...rest} onClick={handleClick}>
-                <span>Bevaka sökning</span>
-            </AsyncButton>
+            <Button {...rest} onClick={handleClick} label={'Lägg till'} />
             <span className={'text-sm pl-2 ' + responseMsg.color}>{responseMsg.msg}</span>
         </div>
     )

@@ -19,7 +19,7 @@ const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterArea
     }, [windowWidth])
 
     return (
-        <section className='bg-blue rounded-md p-4 text-white shadow-md' data-testid='searchFilters'>
+        <section className='bg-white rounded-md p-4 text-white shadow-md' data-testid='searchFilters'>
             <div className='block sm:hidden'>
                 {isCollapsable &&
                     (hidden ? (

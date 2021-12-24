@@ -33,36 +33,36 @@ Async.args = {
 
 export const Text = Template.bind({})
 Text.args = {
-    type: 'text',
+    variant: 'text',
 }
 export const TextWithIcon = Template.bind({})
 TextWithIcon.args = {
     icon: <FiPlus />,
-    type: 'text',
+    variant: 'text',
 }
 
 export const TextDisabled = Template.bind({})
 TextDisabled.args = {
     icon: <FiPlus />,
-    type: 'text',
+    variant: 'text',
     disabled: true
 }
 
 export const Outlined = Template.bind({})
 Outlined.args = {
-    type: 'outlined',
+    variant: 'outlined',
 }
 
 export const OutlinedWithIcon = Template.bind({})
 OutlinedWithIcon.args = {
     icon: <FiPlus />,
-    type: 'outlined',
+    variant: 'outlined',
 }
 
 export const OutlinedDisabled = Template.bind({})
 OutlinedDisabled.args = {
     icon: <FiPlus />,
-    type: 'outlined',
+    variant: 'outlined',
     disabled: true
 }
 

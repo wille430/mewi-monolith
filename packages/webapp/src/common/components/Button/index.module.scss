@@ -7,6 +7,7 @@
     border-radius: 0.2rem;
     padding: 0.25rem 0.75rem;
     z-index: 2;
+    overflow: hidden;
 
     &--outlined {
         @extend .button;

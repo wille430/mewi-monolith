@@ -9,7 +9,7 @@ type ButtonProps = Override<
     {
         onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void> | void
         label?: string
-        type?: 'text' | 'outlined' | 'contained'
+        variant?: 'text' | 'outlined' | 'contained'
         icon?: ReactNode
         defaultCasing?: boolean
         fullWidth?: boolean
@@ -22,7 +22,7 @@ const Button = (props: ButtonProps) => {
         onClick,
         children,
         label,
-        type = 'contained',
+        variant = 'contained',
         icon,
         defaultCasing,
         fullWidth,
@@ -40,7 +40,7 @@ const Button = (props: ButtonProps) => {
     }
 
     // Styling
-    let className = styles[`button--${type}${(isLoading || disabled) ? '--disabled' : ''}`]
+    let className = styles[`button--${variant}${(isLoading || disabled) ? '--disabled' : ''}`]
 
     return (
         <button
