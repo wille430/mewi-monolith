@@ -1,0 +1,58 @@
+@import '../colors.scss';
+@import '../utilities.module.scss';
+@import '../animation.scss';
+
+.input {
+    outline: none;
+    width: 100%;
+    background-color: transparent;
+    flex-grow: 1;
+}
+
+.container {
+    background-color: $paper;
+    width: clamp(8rem, 10rem, 100%);
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    transition: all ease-in-out 250ms;
+    position: relative;
+    display: flex;
+
+    &.isActive {
+        border: 1px solid $primary;
+    }
+}
+
+.clearButton {
+    color: gray;
+
+    &:hover > * {
+        transition: all 500ms ease;
+        transform: rotateZ(90deg);
+    }
+}
+
+.label {
+    position: absolute;
+    top: -10px;
+    font-size: 0.75rem;
+    z-index: 1;
+    transition: all ease 2s;
+
+    &.hide {
+        opacity: none;
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        position: relative;
+        z-index: -1;
+        height: 0.5rem;
+        width: calc(100% + 0.5rem);
+        top: -1rem;
+        left: -0.25rem;
+        background-color: rgb(255, 255, 255);
+    }
+}
