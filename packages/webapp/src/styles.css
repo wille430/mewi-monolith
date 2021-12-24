@@ -12,9 +12,6 @@
     h3 {
         @apply text-lg;
     }
-    .input {
-        @apply rounded-sm px-2 py-2.5 leading-tight text-black;
-    }
     .label {
         @apply text-gray-400 mr-2;
     }

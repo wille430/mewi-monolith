@@ -5,6 +5,7 @@ import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
 import LabeledDropdown from '../LabeledDropdown'
 import { v4 } from 'uuid'
+import TextField from '../TextField'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
@@ -81,27 +82,23 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                         <div className='flex-grow'>
                             <h2 className='pb-2 text-2xl'>{heading}</h2>
                             <div
-                                className='grid gap-x-4 gap-y-6'
-                                style={{
-                                    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px)',
-                                }}
+                                className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'
                             >
                                 {showKeywordField ? (
                                     <div className='flex flex-col'>
-                                        <label className='inline-block h-10'>Sök</label>
-                                        <input
+                                        <label className='inline-block h-10'></label>
+                                        <TextField
                                             className='input'
                                             placeholder='Sökord'
                                             name='q'
-                                            onChange={(e) =>
-                                                handleChange('keyword', e.target.value)
-                                            }
+                                            onChange={(value) => handleChange('keyword', value)}
                                             value={searchFilterData.keyword}
                                             data-testid='keywordInput'
+                                            fullWidth={true}
                                         />
                                     </div>
                                 ) : (
-                                    <input
+                                    <TextField
                                         type='hidden'
                                         name='q'
                                         value={searchFilterData.keyword}

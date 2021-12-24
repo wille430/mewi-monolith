@@ -1,5 +1,6 @@
 import { PriceRange } from '@mewi/types'
 import { HTMLAttributes } from 'react'
+import TextField from '../TextField'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
     gte?: PriceRange['gte']
@@ -8,9 +9,8 @@ export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElemen
 }
 
 const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps) => {
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'gte' | 'lte') => {
-        if (e.target.value) {
-            const value = parseInt(e.target.value).toString()
+    const onInputChange = (value: string, field: 'gte' | 'lte') => {
+        if (value) {
             onChange && onChange(field, value)
         } else {
             onChange && onChange(field)
@@ -19,22 +19,26 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
 
     return (
         <div {...rest}>
-            <label className='text-white h-10 inline-block'>Välj prisintervall:</label>
+            <label className='h-10 inline-block'>Välj prisintervall:</label>
             <div className='flex flex-col space-y-3 text-black'>
-                <input
+                <TextField
                     className='input'
-                    value={gte}
+                    value={gte?.toString() || ''}
                     placeholder='Från (kr)'
-                    onChange={(e) => onInputChange(e, 'gte')}
+                    onChange={(value) => onInputChange(value, 'gte')}
                     data-testid='priceGte'
-                ></input>
-                <input
+                    showClearButton={true}
+                    fullWidth={true}
+                ></TextField>
+                <TextField
                     className='input'
-                    value={lte}
+                    value={lte?.toString() || ''}
                     placeholder='Till (kr)'
-                    onChange={(e) => onInputChange(e, 'lte')}
+                    onChange={(value) => onInputChange(value, 'lte')}
                     data-testid='priceLte'
-                ></input>
+                    showClearButton={true}
+                    fullWidth={true}
+                ></TextField>
             </div>
         </div>
     )

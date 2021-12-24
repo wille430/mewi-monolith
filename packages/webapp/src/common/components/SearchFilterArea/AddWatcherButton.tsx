@@ -1,8 +1,4 @@
-import {
-    APIResponseError,
-    DatabaseErrorCodes,
-    SearchFilterDataProps,
-} from '@mewi/types'
+import { APIResponseError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
 import { ButtonHTMLAttributes, useContext, useEffect, useState } from 'react'
 import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
 import Button from 'common/components/Button'
@@ -33,7 +29,7 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
 
     // Add watcher
     const handleClick = async () => {
-        createWatcher(searchFilters)
+        await createWatcher(searchFilters)
             .then((newWatcher) => {
                 dispatch({ type: 'add', newWatcher: newWatcher })
                 setSnackbar({
@@ -60,9 +56,9 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
     }
 
     return (
-        <div>
-            <Button {...rest} onClick={handleClick} label={'Lägg till'} />
+        <div className='flex flex-col-reverse'>
             <span className={'text-sm pl-2 ' + responseMsg.color}>{responseMsg.msg}</span>
+            <Button {...rest} onClick={handleClick} label={'Lägg till bevakning'} defaultCasing />
         </div>
     )
 }

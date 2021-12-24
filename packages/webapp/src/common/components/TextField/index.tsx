@@ -1,26 +1,41 @@
 import { placeholder } from '@babel/types'
-import React, { HTMLAttributes, useEffect, useState } from 'react'
+import react from 'react'
+import React, { DetailedHTMLProps, HTMLAttributes, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from 'types/types'
 import styles from './index.module.scss'
 
 type InputProps = Override<
-    HTMLAttributes<HTMLInputElement>,
+    DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     {
         showClearButton?: boolean
         onReset?: () => void
-        value?: number | string
-        onChange?: (value: InputProps['value']) => void
+        value?: string
+        onChange?: (value: string) => void
+        fullWidth?: boolean
     }
 >
 
-const TextField = ({ onChange, className, onReset, placeholder, showClearButton, value, ...rest }: InputProps) => {
+const TextField = ({
+    onChange,
+    className,
+    onReset,
+    placeholder,
+    showClearButton,
+    value,
+    fullWidth,
+    ...rest
+}: InputProps) => {
     const [isActive, setIsActive] = useState(false)
-    const [inputValue, setInputValue] = useState(value)
+    const [inputValue, setInputValue] = useState(value || '')
 
     useEffect(() => {
         onChange && onChange(inputValue)
     }, [inputValue])
+
+    useEffect(() => {
+        setInputValue(value || '')
+    }, [value])
 
     const ClearButton = () => {
         const handleClick = () => {
@@ -47,7 +62,11 @@ const TextField = ({ onChange, className, onReset, placeholder, showClearButton,
     const Label = () => {
         return (
             <header>
-                <label className={`${styles.label} ${(inputValue || isActive) ? styles.isActive : ''}`}>{placeholder}</label>
+                <label
+                    className={`${styles.label} ${inputValue || isActive ? styles.isActive : ''}`}
+                >
+                    {placeholder}
+                </label>
             </header>
         )
     }
@@ -67,18 +86,20 @@ const TextField = ({ onChange, className, onReset, placeholder, showClearButton,
     }
 
     return (
-        <div className={`${styles.container} ${(isActive || inputValue) ? styles.isActive : ''}`}>
-            <Label />
-            <input
-                {...rest}
-                className={`${styles.input} ${className}`}
-                onChange={handleChange}
-                onClick={handleClick}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                value={inputValue}
-            />
-            <ClearButton />
+        <div className={styles.wrapper}>
+            <div className={`${styles.container} ${isActive || inputValue ? styles.isActive : ''} ${fullWidth && styles.fullWidth}`}>
+                <Label />
+                <input
+                    {...rest}
+                    className={`${styles.input} ${className}`}
+                    onChange={handleChange}
+                    onClick={handleClick}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    value={inputValue}
+                />
+                <ClearButton />
+            </div>
         </div>
     )
 }

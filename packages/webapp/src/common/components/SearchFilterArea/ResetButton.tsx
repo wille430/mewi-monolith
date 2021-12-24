@@ -1,5 +1,6 @@
 import { useHistory, useLocation } from 'react-router'
 import { SearchParamsUtils } from 'utils'
+import Button from '../Button'
 
 export interface ResetButtonProps {
     onClick?: () => void
@@ -20,16 +21,16 @@ const ResetButton = ({ onClick }: ResetButtonProps) => {
     }
 
     return (
-        <button
-            className='h-full text-xs text-right py-2'
+        <Button
             type='reset'
+            variant='text'
             onClick={() => {
                 clearFilters()
                 onClick && onClick()
             }}
-        >
-            Ta bort filter
-        </button>
+            label='Ta bort filter'
+            defaultCasing
+        />
     )
 }
 

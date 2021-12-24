@@ -43,15 +43,19 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                         showKeywordField={true}
                         heading='Lägg till en bevakning:'
                     />
-                    <ResetButton onClick={clearInputs} />
-                    <AddWatcherButton
-                        searchFilters={formData}
-                        onClick={() => {
-                            setShow(false)
-                            clearInputs()
-                        }}
-                        data-testid='sendButton'
-                    />
+                    <footer className='flex justify-end pt-4'>
+                        <div className='flex gap-2 flex-col-reverse sm:flex-row'>
+                            <ResetButton onClick={clearInputs} />
+                            <AddWatcherButton
+                                searchFilters={formData}
+                                onClick={() => {
+                                    setShow(false)
+                                    clearInputs()
+                                }}
+                                data-testid='sendButton'
+                            />
+                        </div>
+                    </footer>
                 </section>
             </div>
         </PopUp>

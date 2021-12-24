@@ -23,10 +23,15 @@
     &.isActive {
         border: 2px solid $primary;
     }
+
+    &.fullWidth {
+        width: 100%;
+    }
 }
 
 .clearButton {
     color: gray;
+    pointer-events: inherit;
 
     &:hover > * {
         transition: all 500ms ease;
@@ -60,4 +65,10 @@
         left: -0.25rem;
         background-color: rgb(255, 255, 255);
     }
+}
+
+.wrapper {
+    height: max-content;
+    padding: 0;
+    margin: 0;
 }

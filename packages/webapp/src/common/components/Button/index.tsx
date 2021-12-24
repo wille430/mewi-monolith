@@ -14,6 +14,8 @@ type ButtonProps = Override<
         defaultCasing?: boolean
         fullWidth?: boolean
         disabled?: boolean
+        className?: string
+        type?: 'button' | 'submit' | 'reset'
     }
 >
 
@@ -27,6 +29,7 @@ const Button = (props: ButtonProps) => {
         defaultCasing,
         fullWidth,
         disabled,
+        className,
         ...rest
     } = props
     const [isLoading, setLoading] = useState(false)
@@ -34,17 +37,22 @@ const Button = (props: ButtonProps) => {
     const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (onClick) {
             setLoading(true)
-            await onClick(e)
-            setLoading(false)
+            try {
+                await onClick(e)
+            } catch (e) {
+                setLoading(false)
+            } finally {
+                setLoading(false)
+            }
         }
     }
 
     // Styling
-    let className = styles[`button--${variant}${(isLoading || disabled) ? '--disabled' : ''}`]
+    let defaultStyling = styles[`button--${variant}${isLoading || disabled ? '--disabled' : ''}`]
 
     return (
         <button
-            className={className}
+            className={`${defaultStyling} ${className}`}
             data-testid='button'
             onClick={handleClick}
             {...rest}
@@ -52,10 +60,14 @@ const Button = (props: ButtonProps) => {
             <div className='flex flex-row justify-center items-center space-x-2'>
                 {icon}
                 <div className={`${utilities.stack} ${utilities.center}`}>
-                    <span className={utilities.hide}>{defaultCasing ? label : label?.toUpperCase()}</span>
-                    <span className={`${utilities.stackChild} ${isLoading ? utilities.hide : ''}`}>{defaultCasing ? label : label?.toUpperCase()}</span>
+                    <span className={utilities.hide}>
+                        {defaultCasing ? label : label?.toUpperCase()}
+                    </span>
+                    <span className={`${utilities.stackChild} ${isLoading ? utilities.hide : ''}`}>
+                        {defaultCasing ? label : label?.toUpperCase()}
+                    </span>
                     <div className={`${utilities.stackChild} ${isLoading ? '' : utilities.hide}`}>
-                        <Loader type='TailSpin' color='white' height="1rem" width="1rem" />
+                        <Loader type='TailSpin' color='white' height='1rem' width='1rem' />
                     </div>
                 </div>
             </div>
