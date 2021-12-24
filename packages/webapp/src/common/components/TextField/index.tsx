@@ -14,7 +14,7 @@ type InputProps = Override<
     }
 >
 
-const TextField = ({ onChange, className, onReset, value, ...rest }: InputProps) => {
+const TextField = ({ onChange, className, onReset, placeholder, showClearButton, value, ...rest }: InputProps) => {
     const [isActive, setIsActive] = useState(false)
     const [inputValue, setInputValue] = useState(value)
 
@@ -28,7 +28,7 @@ const TextField = ({ onChange, className, onReset, value, ...rest }: InputProps)
             onReset && onReset()
         }
 
-        if (rest.showClearButton) {
+        if (showClearButton) {
             return (
                 <button
                     type='reset'
@@ -47,7 +47,7 @@ const TextField = ({ onChange, className, onReset, value, ...rest }: InputProps)
     const Label = () => {
         return (
             <header>
-                <label className={`${styles.label} ${inputValue ? '' : styles.hide}`}>{rest.placeholder}</label>
+                <label className={`${styles.label} ${(inputValue || isActive) ? styles.isActive : ''}`}>{placeholder}</label>
             </header>
         )
     }
