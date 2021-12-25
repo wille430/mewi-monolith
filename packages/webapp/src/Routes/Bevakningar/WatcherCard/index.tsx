@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { PriceRangeUtils } from 'utils'
 import { capitalize } from '@mewi/util'
 import RemoveButton from './RemoveWatcherButton'
 import { PublicWatcher } from '@mewi/types'
+import Button from 'common/components/Button'
 
 const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
+    const history = useHistory()
+
     const queryParams = [
         ['q', watcher.metadata.keyword],
         ['region', watcher.metadata.regions],
@@ -22,6 +25,10 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
             })
             .filter((x) => x !== '')
             .join('&')
+
+    const handleSearchButtonClick = () => {
+        history.push(linkUrl)
+    }
 
     return (
         <article
@@ -87,9 +94,11 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                     <span>{new Date(watcher.createdAt).toLocaleDateString('se-SV')}</span>
                 </div>
                 <div className='flex space-x-2'>
-                    <Link className='button bg-blue px-4 text-white' to={linkUrl} data-testid='watcherSearchButton'>
-                        Sök
-                    </Link>
+                    <Button
+                        onClick={handleSearchButtonClick}
+                        label='Sök'
+                        data-testid='watcherSearchButton'
+                    />
                     <RemoveButton watcherId={watcher._id.toString()} />
                 </div>
             </footer>
