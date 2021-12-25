@@ -58,29 +58,29 @@ code {
 }
 
 h1 {
-    font-size: 93;
+    font-size: 93px;
 }
 h2 {
-    font-size: 58;
+    font-size: 2rem;
 }
 h3 {
-    font-size: 47;
+    font-size: 1.5rem;
 }
 h4 {
-    font-size: 33;
+    font-size: 1rem;
 }
 h5 {
-    font-size: 23;
+    font-size: 0.75rem;
 }
 h6 {
-    font-size: 19;
+    font-size: 0.5rem;
 }
 p {
-    font-size: 16;
+    font-size: 1rem;
 }
 p.body2 {
-    font-size: 14;
+    font-size: 0.875rem;
 }
 caption {
-    font-size: 12;
+    font-size: 0.75rem;
 }

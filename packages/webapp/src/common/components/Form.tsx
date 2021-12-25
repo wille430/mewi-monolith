@@ -16,7 +16,7 @@ const Form = ({ onFormSubmit, buttonLabel, title, children, footer }: Props) => 
                 maxWidth: '400px',
             }}
         >
-            <h2 className='text-center text-xl'>{title}</h2>
+            <h3 className='text-center'>{title}</h3>
             <div>
                 <form
                     className='flex flex-col mx-auto p-4'

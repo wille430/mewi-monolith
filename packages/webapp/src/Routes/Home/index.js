@@ -18,7 +18,7 @@ const Home = () => {
                         }}
                     >
                         <div
-                            className='w-full flex flex-col lg:flex-row lg:items-center lg:justify-between'
+                            className='w-full flex flex-col items-center lg:flex-row lg:items-center lg:justify-between px-8'
                             style={{
                                 maxWidth: '1200px',
                             }}
@@ -28,11 +28,11 @@ const Home = () => {
                                     <MewiLogo src={logo} size='large' />
                                 </figure>
                             </div>
-                            <div className='pb-6 flex-shrink'>
-                                <div className='bg-transparent lg:bg-white px-6 py-12 pb-24 rounded-xl'>
-                                    <h1 className='text-white lg:text-black text-2xl w-full text-center inline-block pb-6'>
+                            <div className='pb-6 flex-shrink max-w-xl'>
+                                <div className='bg-transparent lg:bg-white px-6 py-12 pb-16 rounded-xl flex flex-col-reverse lg:flex-col'>
+                                    <h2 className='text-center text-white lg:text-primary pb-4'>
                                         Hitta begagnade produkter på ett enda ställe
-                                    </h1>
+                                    </h2>
                                     <styles.SearchBarWrapper>
                                         <SearchForm />
                                     </styles.SearchBarWrapper>

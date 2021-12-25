@@ -12,7 +12,7 @@ const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
             <span className='text-sm font-light'>{article.origin || ''}</span>
             <div className='flex justify-between'>
                 <div>
-                    <h1 className='text-xl'>{article.title}</h1>
+                    <h2>{article.title}</h2>
                     <span className='text-sm font-light'>{article.region || ''}</span>
                 </div>
                 <div className='flex flex-col'>
@@ -26,7 +26,7 @@ const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
 
     const Description = () => (
         <article className='px-2 flex-grow pb-12'>
-            <h2 className='pb-1 font-light'>Beskrivning</h2>
+            <h3 className='pb-1 font-light'>Beskrivning</h3>
             <div className='flex flex-col sm:flex-row space-x-10'>
                 <div className='flex-grow'>
                     {article.body && (

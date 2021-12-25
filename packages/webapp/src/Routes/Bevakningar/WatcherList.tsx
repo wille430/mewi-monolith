@@ -69,10 +69,7 @@ const WatcherList = () => {
         >
             <div className='flex flex-col items-center w-full p-6'>
                 <header className='pb-6'>
-                    <h1 className='text-2xl text-white pt-2'>Mina bevakningar</h1>
-                    <Link className='block w-full text-green-dark text-center' to='/premium'>
-                        Uppgradera
-                    </Link>
+                    <h3 className='text-white'>Mina bevakningar</h3>
                 </header>
                 <div className={'w-full flex flex-col space-y-2 flex-grow items-stretch'}>
                     {renderItems()}

@@ -33,7 +33,7 @@ const useItem = () => {
         if (!itemId) return
 
         try {
-            const response = await axios.get('/items/id/' + itemId).then((res) => res.data)
+            const response = await axios.get('/items/' + itemId).then((res) => res.data)
             setItem(response.body._source)
         } catch (e) {
             console.log(e)
