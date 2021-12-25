@@ -3,15 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-    h1 {
-        @apply text-2xl;
-    }
-    h2 {
-        @apply text-xl;
-    }
-    h3 {
-        @apply text-lg;
-    }
     .label {
         @apply text-gray-400 mr-2;
     }
@@ -64,4 +55,32 @@ code {
         flex: 0 1 230px;
         min-width: 230px;
     }
+}
+
+h1 {
+    font-size: 93;
+}
+h2 {
+    font-size: 58;
+}
+h3 {
+    font-size: 47;
+}
+h4 {
+    font-size: 33;
+}
+h5 {
+    font-size: 23;
+}
+h6 {
+    font-size: 19;
+}
+p {
+    font-size: 16;
+}
+p.body2 {
+    font-size: 14;
+}
+caption {
+    font-size: 12;
 }
