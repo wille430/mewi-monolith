@@ -1,6 +1,7 @@
 import { useWindowWidth } from '@react-hook/window-size'
 import { ReactNode, useEffect, useState } from 'react'
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
+import Container from '../Container'
 import SearchFilterContent, { SearchFilterContentProps } from './SearchFilterContent'
 
 export interface SearchFilterAreaProps extends SearchFilterContentProps {
@@ -19,7 +20,7 @@ const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterArea
     }, [windowWidth])
 
     return (
-        <section className='bg-white rounded-md p-4 text-black shadow-md' data-testid='searchFilters'>
+        <Container data-testid='searchFilters'>
             <div className='block sm:hidden'>
                 {isCollapsable &&
                     (hidden ? (
@@ -30,7 +31,7 @@ const SearchFilterArea = ({ children, isCollapsable, ...rest }: SearchFilterArea
             </div>
             <SearchFilterContent {...rest} collapse={hidden} />
             {children}
-        </section>
+        </Container>
     )
 }
 

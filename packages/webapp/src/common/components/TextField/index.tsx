@@ -1,9 +1,11 @@
-import { placeholder } from '@babel/types'
 import react from 'react'
-import React, { DetailedHTMLProps, HTMLAttributes, useEffect, useState } from 'react'
+import React, { DetailedHTMLProps, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from 'types/types'
 import styles from './index.module.scss'
+import classNames from 'classnames'
+
+const cx = classNames.bind(styles)
 
 type InputProps = Override<
     DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
@@ -24,6 +26,7 @@ const TextField = ({
     showClearButton,
     value,
     fullWidth,
+    type,
     ...rest
 }: InputProps) => {
     const [isActive, setIsActive] = useState(false)
@@ -63,7 +66,10 @@ const TextField = ({
         return (
             <header>
                 <label
-                    className={`${styles.label} ${inputValue || isActive ? styles.isActive : ''}`}
+                    className={cx({
+                        [styles.label]: true,
+                        [styles.isActive]: inputValue || isActive,
+                    })}
                 >
                     {placeholder}
                 </label>
@@ -86,20 +92,25 @@ const TextField = ({
     }
 
     return (
-        <div className={styles.wrapper}>
-            <div className={`${styles.container} ${isActive || inputValue ? styles.isActive : ''} ${fullWidth && styles.fullWidth}`}>
-                <Label />
-                <input
-                    {...rest}
-                    className={`${styles.input} ${className}`}
-                    onChange={handleChange}
-                    onClick={handleClick}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    value={inputValue}
-                />
-                <ClearButton />
-            </div>
+        <div
+            className={cx({
+                [styles.container]: true,
+                [styles.isActive]: isActive || inputValue,
+                [styles.fullWidth]: fullWidth,
+                [styles.hidden]: type === 'hidden',
+            })}
+        >
+            <Label />
+            <input
+                {...rest}
+                className={`${styles.input} ${className}`}
+                onChange={handleChange}
+                onClick={handleClick}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                value={inputValue}
+            />
+            <ClearButton />
         </div>
     )
 }

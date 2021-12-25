@@ -47,7 +47,7 @@ const FilterArea = () => {
             showResetButton={true}
             isCollapsable={true}
             onSubmit={handleSubmit}
-            footer={
+            actions={
                 isLoggedIn ? (
                     <AddWatcherButton searchFilters={formData} data-testid='addWatcherButton' />
                 ) : (

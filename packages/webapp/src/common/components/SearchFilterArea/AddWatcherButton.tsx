@@ -56,9 +56,9 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
     }
 
     return (
-        <div className='flex flex-col-reverse'>
-            <span className={'text-sm pl-2 ' + responseMsg.color}>{responseMsg.msg}</span>
+        <div>
             <Button {...rest} onClick={handleClick} label={'Lägg till bevakning'} defaultCasing />
+            <span className={'text-sm pl-2 ' + responseMsg.color}>{responseMsg.msg}</span>
         </div>
     )
 }

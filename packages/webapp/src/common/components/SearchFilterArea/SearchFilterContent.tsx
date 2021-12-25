@@ -6,6 +6,8 @@ import Checkbox from '../Checkbox'
 import LabeledDropdown from '../LabeledDropdown'
 import { v4 } from 'uuid'
 import TextField from '../TextField'
+import Button from '../Button'
+import HorizontalLine from '../HorizontalLine'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
@@ -17,7 +19,7 @@ export interface SearchFilterContentProps {
     showResetButton?: boolean
     showSubmitButton?: boolean
     collapse?: boolean
-    footer?: ReactNode
+    actions?: ReactNode
 }
 
 const SearchFilterContent = (props: SearchFilterContentProps) => {
@@ -31,7 +33,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         showResetButton,
         showSubmitButton,
         collapse,
-        footer,
+        actions,
     } = props
 
     const handleSubmit = (e: FormEvent) => {
@@ -78,12 +80,11 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         return (
             <div>
                 <form onSubmit={handleSubmit}>
-                    <div className='flex flex-col lg:flex-row'>
+                    <div className='flex flex-col'>
                         <div className='flex-grow'>
-                            <h2 className='pb-2 text-2xl'>{heading}</h2>
-                            <div
-                                className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'
-                            >
+                            <h2>{heading}</h2>
+                            <HorizontalLine />
+                            <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
                                 {showKeywordField ? (
                                     <div className='flex flex-col'>
                                         <label className='inline-block h-10'></label>
@@ -132,24 +133,24 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex items-end justify-end flex-none'>
-                            <div className='flex flex-col'>
+                        <HorizontalLine />
+                        <div className='flex items-end justify-between flex-none'>
+                            <div className='flex'>{actions}</div>
+                            <div className='flex flex-row-reverse gap-2'>
                                 {children}
                                 {showSubmitButton && (
-                                    <button
-                                        className='button px-4'
+                                    <Button
                                         type='submit'
                                         data-testid='searchFilterSubmitButton'
-                                    >
-                                        Filtrera
-                                    </button>
+                                        label='Filtrera'
+                                        className='bg-primary'
+                                    />
                                 )}
                                 {showResetButton && <ResetButton onClick={handleReset} />}
                             </div>
                         </div>
                     </div>
                 </form>
-                {footer}
             </div>
         )
     }
