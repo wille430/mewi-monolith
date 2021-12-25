@@ -1,19 +1,56 @@
-import { HTMLAttributes } from 'react'
+import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import styles from './index.module.scss'
+import classNames from 'classnames'
 
-interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
+const cx = classNames.bind(styles)
 
-}
+interface ContainerProps extends HTMLAttributes<HTMLDivElement> {}
 
 const Container = ({ className, children, ...rest }: ContainerProps) => {
     return (
-        <section
-            className={`${styles.container} ${className || ''}`}
-            {...rest}
-        >
+        <section className={`${styles.container} ${className || ''}`} {...rest}>
             {children}
         </section>
     )
 }
+
+export const ContainerHeader = (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+) => (
+    <header
+        className={cx({
+            [styles.header]: true,
+        })}
+        {...props}
+    >
+        {props.children}
+    </header>
+)
+
+export const ContainerContent = (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+) => (
+    <section
+        className={cx({
+            [styles.content]: true,
+        })}
+        {...props}
+    >
+        {props.children}
+    </section>
+)
+
+export const ContainerFooter = (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+) => (
+    <footer
+        className={cx({
+            [styles.footer]: true,
+        })}
+        {...props}
+    >
+        {props.children}
+    </footer>
+)
 
 export default Container

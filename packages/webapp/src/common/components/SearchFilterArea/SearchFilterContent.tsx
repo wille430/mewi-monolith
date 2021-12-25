@@ -82,7 +82,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-col'>
                         <div className='flex-grow'>
-                            <h2>{heading}</h2>
+                            <h3>{heading}</h3>
                             <HorizontalLine />
                             <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
                                 {showKeywordField ? (

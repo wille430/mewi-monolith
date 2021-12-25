@@ -125,11 +125,10 @@ export interface ItemData {
     isAuction: boolean
     redirectUrl: string
     price:
-        | {
-              value: number
-              currency: string
-          }
-        | {}
+    {
+        value: number
+        currency: string
+    }
     region: string
     zipcode?: string
     parameters?: {
@@ -137,7 +136,7 @@ export interface ItemData {
         label: string
         value: string
     }[]
-    origin: string
+    origin: 'Blocket' | 'Tradera' | 'Sellpy'
 }
 
 export interface AuthTokens {

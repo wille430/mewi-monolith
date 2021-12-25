@@ -4,6 +4,7 @@ import StyledLoader from 'common/components/StyledLoader'
 import ItemInfo from './ItemInfo'
 import ItemHeader from './ItemHeader'
 import { SelectedItemContext } from './SelectedItemContext'
+import ArticleItemDetails from 'common/components/ArticleItemDetails'
 
 const ItemPopUp = ({ usePopUpState }: { usePopUpState: [any, Function] }) => {
     const [popUpState, setPopUpState] = usePopUpState
@@ -39,7 +40,7 @@ const ItemPopUp = ({ usePopUpState }: { usePopUpState: [any, Function] }) => {
     return (
         <PopUp show={popUpState.show} onOutsideClick={hidePopUp}>
             <div
-                className='h-full w-full bg-white sm:rounded-md mx-auto overflow-y-hidden'
+                className='mx-auto'
                 style={{
                     maxWidth: '800px',
                 }}
@@ -49,10 +50,7 @@ const ItemPopUp = ({ usePopUpState }: { usePopUpState: [any, Function] }) => {
                         <StyledLoader />
                     </div>
                 ) : (
-                    <section className='h-full overflow-y-scroll relative'>
-                        <ItemHeader closePopUp={closePopUp} />
-                        <ItemInfo article={item} />
-                    </section>
+                    <ArticleItemDetails {...item} />
                 )}
             </div>
         </PopUp>

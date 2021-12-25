@@ -1,5 +1,5 @@
 import RedirectButton from './RedirectButton'
-import ImageDisplay from './ImageDisplay'
+import ImageDisplay from '../../../../../common/components/ImageDisplay'
 import ParamInfo from './ParamInfo'
 import { ItemData } from 'models/types'
 import CategoryString from './CategoryString'
