@@ -11,11 +11,9 @@ select opt in linux windows; do
                 sudo systemctl stop mongodb
             }
 
-            echo Starting mongodb service...
+            cd ../
             sudo systemctl start mongodb
-
-            echo starting elasticsearch...
-            ./elasticsearch-7.16.1/bin/elasticsearch
+            (trap 'kill 0' SIGINT; npx nx serve webapp & npx nx serve api  & ./elasticsearch-7.16.1/bin/elasticsearch )
 
             trap cleanup EXIT
             ;;
