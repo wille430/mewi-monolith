@@ -1,6 +1,3 @@
-export const categoriesOptions = [
-    { value: "fordon", label: "Fordon" }
-]
 
 export const categories = [
     {
@@ -315,6 +312,213 @@ export const categories = [
         "cat": "Övrigt",
         "subcat": [],
         "value": "övrigt"
+    }
+]
+
+export const categoriesOptions = [
+    {
+        "value": "fordon",
+        "label": "Fordon"
+    },
+    {
+        "value": "bilar",
+        "label": " - Bilar"
+    },
+    {
+        "value": "båtar",
+        "label": " - Båtar"
+    },
+    {
+        "value": "bildelar_biltillbehör",
+        "label": " - Bildelar & biltillbehör"
+    },
+    {
+        "value": "mopeder",
+        "label": " - Mopeder"
+    },
+    {
+        "value": "båtdelar_tillbehör",
+        "label": " - Båtdelar & tillbehör"
+    },
+    {
+        "value": "husvagnar_husbilar",
+        "label": " - Husvagnar & husbilar"
+    },
+    {
+        "value": "mc-delar",
+        "label": " - MC-delar"
+    },
+    {
+        "value": "a-traktor",
+        "label": " - A-traktor"
+    },
+    {
+        "value": "lastbil_truck_entreprenad",
+        "label": " - Lastbil, truck & entreprenad"
+    },
+    {
+        "value": "motorcyklar",
+        "label": " - Motorcyklar"
+    },
+    {
+        "value": "snöskotrar",
+        "label": " - Snöskotrar"
+    },
+    {
+        "value": "snöskoterdelar",
+        "label": " - Snöskoterdelar"
+    },
+    {
+        "value": "för_hemmet",
+        "label": "För hemmet"
+    },
+    {
+        "value": "bygg_trädgård",
+        "label": " - Bygg & trädgård"
+    },
+    {
+        "value": "husgeråd_vitvaror",
+        "label": " - Husgeråd & vitvaror"
+    },
+    {
+        "value": "möbler_hemindredning",
+        "label": " - Möbler & hemindredning"
+    },
+    {
+        "value": "verktyg",
+        "label": " - Verktyg"
+    },
+    {
+        "value": "bostad",
+        "label": "Bostad"
+    },
+    {
+        "value": "lägenheter",
+        "label": " - Lägenheter"
+    },
+    {
+        "value": "villor",
+        "label": " - Villor"
+    },
+    {
+        "value": "radhus",
+        "label": " - Radhus"
+    },
+    {
+        "value": "tomter",
+        "label": " - Tomter"
+    },
+    {
+        "value": "gårdar",
+        "label": " - Gårdar"
+    },
+    {
+        "value": "fritidsboende",
+        "label": " - Fritidsboende"
+    },
+    {
+        "value": "utland",
+        "label": " - Utland"
+    },
+    {
+        "value": "personligt",
+        "label": "Personligt"
+    },
+    {
+        "value": "kläder_skor",
+        "label": " - Kläder & skor"
+    },
+    {
+        "value": "accessoarer_klockor",
+        "label": " - Accessoarer & klockor"
+    },
+    {
+        "value": "barnartiklar_leksaker",
+        "label": " - Barnartiklar & leksaker"
+    },
+    {
+        "value": "barnkläder_skor",
+        "label": " - Barnkläder & skor"
+    },
+    {
+        "value": "elektronik",
+        "label": "Elektronik"
+    },
+    {
+        "value": "datorer_tv-spel",
+        "label": " - Datorer & TV-spel"
+    },
+    {
+        "value": "ljud_bild",
+        "label": " - Ljud & bild"
+    },
+    {
+        "value": "telefoner_tillbehör",
+        "label": " - Telefoner & tillbehör"
+    },
+    {
+        "value": "fritid_hobby",
+        "label": "Fritid & hobby"
+    },
+    {
+        "value": "upplevelser_nöje",
+        "label": " - Upplevelser & nöje"
+    },
+    {
+        "value": "böcker_studentlitteratur",
+        "label": " - Böcker & studentlitteratur"
+    },
+    {
+        "value": "cyklar",
+        "label": " - Cyklar"
+    },
+    {
+        "value": "djur",
+        "label": " - Djur"
+    },
+    {
+        "value": "hobby_samlarprylar",
+        "label": " - Hobby & samlarprylar"
+    },
+    {
+        "value": "hästar_ridsport",
+        "label": " - Hästar & ridsport"
+    },
+    {
+        "value": "jakt_fiske",
+        "label": " - Jakt & fiske"
+    },
+    {
+        "value": "musikutrustning",
+        "label": " - Musikutrustning"
+    },
+    {
+        "value": "sport-_fritidsutrustning",
+        "label": " - Sport- & fritidsutrustning"
+    },
+    {
+        "value": "affärsverksamhet",
+        "label": "Affärsverksamhet"
+    },
+    {
+        "value": "affärsöverlåtelser",
+        "label": " - Affärsöverlåtelser"
+    },
+    {
+        "value": "inventarier_maskiner",
+        "label": " - Inventarier & maskiner"
+    },
+    {
+        "value": "lokaler_fastigheter",
+        "label": " - Lokaler & fastigheter"
+    },
+    {
+        "value": "tjänster",
+        "label": " - Tjänster"
+    },
+    {
+        "value": "övrigt",
+        "label": "Övrigt"
     }
 ]
 
