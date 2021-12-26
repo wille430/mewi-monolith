@@ -1,20 +1,19 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["node", "express"],
-    "baseUrl": "src",
-    "paths": {
-      "@mewi/types": ["../../types/src/index.ts"],
-      "@mewi/util": ["../../util/src/index.ts"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../dist/out-tsc",
+        "module": "commonjs",
+        "types": ["node", "express"],
+        "baseUrl": "src",
+        "paths": {
+            "@mewi/types": ["../../types/src/index.ts"],
+            "@mewi/util": ["../../util/src/index.ts"]
+        },
+        "lib": ["es2019"],
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx"
     },
-    "lib": [
-      "es2019"
-    ],
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
-  },
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"],
-  "include": ["**/*.ts", "../util/src/lib/ArrayUtils.ts"]
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"],
+    "include": ["**/*.ts", "../util/src/lib/ArrayUtils.ts"]
 }
