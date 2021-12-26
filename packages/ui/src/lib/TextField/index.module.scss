@@ -27,6 +27,7 @@ input:-webkit-autofill:active {
     position: relative;
     display: flex;
     box-sizing: border-box;
+    background-color: white;
 
     &.isActive {
         border: 2px solid $primary;
