@@ -3,6 +3,7 @@
     "projects": {
         "api": "packages/api",
         "types": "packages/types",
+        "ui": "packages/ui",
         "util": "packages/util",
         "webapp": "packages/webapp",
         "webapp-e2e": "packages/webapp-e2e"

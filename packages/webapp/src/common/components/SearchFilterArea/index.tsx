@@ -1,7 +1,7 @@
+import { Container } from '@mewi/ui'
 import { useWindowWidth } from '@react-hook/window-size'
 import { ReactNode, useEffect, useState } from 'react'
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
-import Container from '../Container'
 import SearchFilterContent, { SearchFilterContentProps } from './SearchFilterContent'
 
 export interface SearchFilterAreaProps extends SearchFilterContentProps {

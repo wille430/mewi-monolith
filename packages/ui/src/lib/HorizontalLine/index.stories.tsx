@@ -1,5 +1,5 @@
 import { Story, Meta } from '@storybook/react'
-import HorizontalLine from './index'
+import { HorizontalLine } from './index'
 
 export default {
     component: HorizontalLine,

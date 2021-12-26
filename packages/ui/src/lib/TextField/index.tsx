@@ -1,7 +1,7 @@
 import react from 'react'
 import React, { DetailedHTMLProps, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Override } from 'types/types'
+import { Override } from '../types'
 import styles from './index.module.scss'
 import classNames from 'classnames'
 
@@ -18,7 +18,7 @@ type InputProps = Override<
     }
 >
 
-const TextField = ({
+export const TextField = ({
     onChange,
     className,
     onReset,
@@ -50,7 +50,7 @@ const TextField = ({
             return (
                 <button
                     type='reset'
-                    className={styles.clearButton}
+                    className={styles['clearButton']}
                     data-testid='clearTextFieldButton'
                     onClick={handleClick}
                 >
@@ -67,8 +67,8 @@ const TextField = ({
             <header>
                 <label
                     className={cx({
-                        [styles.label]: true,
-                        [styles.isActive]: inputValue || isActive,
+                        [styles['label']]: true,
+                        [styles['isActive']]: inputValue || isActive,
                     })}
                 >
                     {placeholder}
@@ -94,16 +94,16 @@ const TextField = ({
     return (
         <div
             className={cx({
-                [styles.container]: true,
-                [styles.isActive]: isActive || inputValue,
-                [styles.fullWidth]: fullWidth,
-                [styles.hidden]: type === 'hidden',
+                [styles['container']]: true,
+                [styles['isActive']]: isActive || inputValue,
+                [styles['fullWidth']]: fullWidth,
+                [styles['hidden']]: type === 'hidden',
             })}
         >
             <Label />
             <input
                 {...rest}
-                className={`${styles.input} ${className}`}
+                className={`${styles['input']} ${className}`}
                 onChange={handleChange}
                 onClick={handleClick}
                 onFocus={handleFocus}
@@ -114,5 +114,3 @@ const TextField = ({
         </div>
     )
 }
-
-export default TextField

@@ -4,12 +4,13 @@ import 'styles.css'
 import App from './app/App'
 import SnackbarProvider from 'common/context/SnackbarContext'
 import UserProvider from 'common/context/UserContext'
+
+import { BrowserRouter } from 'react-router-dom'
 // import { loadStripe } from '@stripe/stripe-js'
 // import { Elements } from '@stripe/react-stripe-js'
 
 console.log('ENV VARIABLES: ')
 console.log(process.env)
-
 ;(async () => {
     // const stripe = loadStripe('pk_test_51HkomQLTeDsRddXB98y0CDMDz7ZQZR1j2lEU0X0ooM8gPgJweFj3UD4NKnfxFh4YtVtKGWFuwhRjpukScJd0oOhJ00sfbhtE9e')
 
@@ -18,7 +19,9 @@ console.log(process.env)
             <SnackbarProvider>
                 <UserProvider>
                     {/* <Elements stripe={stripe}> */}
-                    <App />
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
                     {/* </Elements> */}
                 </UserProvider>
             </SnackbarProvider>

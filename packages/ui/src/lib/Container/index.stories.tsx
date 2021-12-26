@@ -1,5 +1,5 @@
 import { Story, Meta } from '@storybook/react'
-import Container  from './index'
+import { Container } from './index'
 
 export default {
     component: Container,

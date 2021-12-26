@@ -3,7 +3,7 @@ import { PriceRangeUtils } from 'utils'
 import { capitalize } from '@mewi/util'
 import RemoveButton from './RemoveWatcherButton'
 import { PublicWatcher } from '@mewi/types'
-import Button from 'common/components/Button'
+import { Button } from '@mewi/ui'
 
 const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
     const history = useHistory()

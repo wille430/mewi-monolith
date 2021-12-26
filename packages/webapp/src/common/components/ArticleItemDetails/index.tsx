@@ -2,11 +2,11 @@ import { ItemData } from '@mewi/types'
 import { capitalize } from '@mewi/util'
 import styles from './index.module.scss'
 import classNames from 'classnames'
-import Container, { ContainerContent, ContainerFooter, ContainerHeader } from '../Container'
+import {Container, ContainerContent, ContainerFooter, ContainerHeader } from '@mewi/ui'
 import ImageDisplay from '../ImageDisplay'
-import HorizontalLine from '../HorizontalLine'
-import Button from '../Button'
+import { HorizontalLine } from '@mewi/ui'
 import OriginLabel from '../ArticleItem/OriginLabel'
+import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
 
 const cx = classNames.bind(styles)
@@ -49,7 +49,7 @@ const ArticleItemDetails = ({
                     {categoryPathString}
                 </span>
                 <span>
-                    <Button onClick={handleClose}  variant="text" icon={<FiX />} />
+                    <Button onClick={handleClose} variant='text' icon={<FiX />} />
                 </span>
             </ContainerHeader>
             <ContainerContent>
@@ -66,7 +66,11 @@ const ArticleItemDetails = ({
                             <h4 className={styles.originLabel}>
                                 <OriginLabel {...{ origin }} />
                             </h4>
-                            <Button variant='text' label='Gå till artikeln >>' onClick={handleRedirect} />
+                            <Button
+                                variant='text'
+                                label='Gå till artikeln >>'
+                                onClick={handleRedirect}
+                            />
                         </div>
                     </header>
                     <HorizontalLine />

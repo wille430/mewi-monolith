@@ -1,5 +1,5 @@
 import { Story, Meta } from '@storybook/react'
-import Button from './index'
+import { Button } from './index'
 import { FiPlus } from 'react-icons/fi'
 
 export default {
@@ -16,8 +16,6 @@ export const ContainedWithIcon = Template.bind({})
 ContainedWithIcon.args = {
     icon: <FiPlus />,
 }
-
-
 
 export const Async = Template.bind({})
 Async.args = {
@@ -45,7 +43,7 @@ export const TextDisabled = Template.bind({})
 TextDisabled.args = {
     icon: <FiPlus />,
     variant: 'text',
-    disabled: true
+    disabled: true,
 }
 
 export const Outlined = Template.bind({})
@@ -63,18 +61,15 @@ export const OutlinedDisabled = Template.bind({})
 OutlinedDisabled.args = {
     icon: <FiPlus />,
     variant: 'outlined',
-    disabled: true
+    disabled: true,
 }
-
-
-
 
 export const FullWidth = Template.bind({})
 FullWidth.args = {
-    fullWidth: true
+    fullWidth: true,
 }
 
 export const SecondaryColor = Template.bind({})
 SecondaryColor.args = {
-    color: 'secondary'
+    color: 'secondary',
 }

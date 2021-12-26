@@ -8,16 +8,14 @@ interface HorizontalLineProps {
     color?: string
 }
 
-const HorizontalLine = (props: HorizontalLineProps) => {
+export const HorizontalLine = (props: HorizontalLineProps) => {
     return (
         <hr
             color={props.color || 'lightgray'}
             className={cx({
-                [styles.hr]: true,
-                [styles.fullWidth]: props.fullWidth,
+                [styles['hr']]: true,
+                [styles['fullWidth']]: props.fullWidth,
             })}
         />
     )
 }
-
-export default HorizontalLine

@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router'
 import { SearchParamsUtils } from 'utils'
-import Button from '../Button'
+import { Button } from '@mewi/ui'
 
 export interface ResetButtonProps {
     onClick?: () => void

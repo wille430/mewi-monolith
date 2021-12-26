@@ -5,9 +5,8 @@ import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
 import LabeledDropdown from '../LabeledDropdown'
 import { v4 } from 'uuid'
-import TextField from '../TextField'
-import Button from '../Button'
-import HorizontalLine from '../HorizontalLine'
+import { TextField, HorizontalLine } from '@mewi/ui'
+import { Button } from '@mewi/ui'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps

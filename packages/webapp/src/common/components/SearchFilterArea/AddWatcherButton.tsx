@@ -1,9 +1,9 @@
 import { APIResponseError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
 import { ButtonHTMLAttributes, useContext, useEffect, useState } from 'react'
 import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
-import Button from 'common/components/Button'
 import { SnackbarContext } from 'common/context/SnackbarContext'
 import { createWatcher } from 'api/'
+import { Button } from '@mewi/ui'
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
     searchFilters: SearchFilterDataProps

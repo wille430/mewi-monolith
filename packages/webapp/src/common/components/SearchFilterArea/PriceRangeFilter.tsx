@@ -1,6 +1,6 @@
 import { PriceRange } from '@mewi/types'
+import { TextField } from '@mewi/ui'
 import { HTMLAttributes } from 'react'
-import TextField from '../TextField'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
     gte?: PriceRange['gte']

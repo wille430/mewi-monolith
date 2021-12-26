@@ -14,10 +14,7 @@
         "**/*.spec.js",
         "**/*.test.jsx",
         "**/*.spec.jsx",
-        "**/*.d.ts"
-    ],
-    "files": [
-        "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
-        "../../node_modules/@nrwl/react/typings/image.d.ts"
+        "**/*.d.ts",
+        "src/types.ts"
     ]
 }

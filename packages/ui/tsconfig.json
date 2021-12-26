@@ -8,26 +8,18 @@
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": false,
+        "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "baseUrl": "src",
-        "paths": {
-            "@mewi/types": ["../../types/src/index.ts"],
-            "@mewi/util": ["../../util/src/index.ts"],
-            "@mewi/ui": ["../../ui/src/index.ts"]
-        }
+        "noFallthroughCasesInSwitch": true
     },
     "files": [],
     "include": [],
     "references": [
         {
-            "path": "./tsconfig.app.json",
-            "composite": true
+            "path": "./tsconfig.lib.json"
         },
         {
-            "path": "./tsconfig.spec.json",
-            "composite": true
+            "path": "./tsconfig.spec.json"
         },
         {
             "path": "./.storybook/tsconfig.json"

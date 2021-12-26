@@ -6,9 +6,9 @@ const cx = classNames.bind(styles)
 
 interface ContainerProps extends HTMLAttributes<HTMLDivElement> {}
 
-const Container = ({ className, children, ...rest }: ContainerProps) => {
+export const Container = ({ className, children, ...rest }: ContainerProps) => {
     return (
-        <section className={`${styles.container} ${className || ''}`} {...rest}>
+        <section className={`${styles['container']} ${className || ''}`} {...rest}>
             {children}
         </section>
     )
@@ -19,7 +19,7 @@ export const ContainerHeader = (
 ) => (
     <header
         className={cx({
-            [styles.header]: true,
+            [styles['header']]: true,
         })}
         {...props}
     >
@@ -32,7 +32,7 @@ export const ContainerContent = (
 ) => (
     <section
         className={cx({
-            [styles.content]: true,
+            [styles['content']]: true,
         })}
         {...props}
     >
@@ -45,12 +45,10 @@ export const ContainerFooter = (
 ) => (
     <footer
         className={cx({
-            [styles.footer]: true,
+            [styles['footer']]: true,
         })}
         {...props}
     >
         {props.children}
     </footer>
 )
-
-export default Container

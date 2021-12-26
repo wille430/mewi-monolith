@@ -1,9 +1,9 @@
 import { HTMLAttributes, ReactNode, useEffect, useState } from 'react'
 import Loader from 'react-loader-spinner'
-import { Override } from 'types/types'
 import styles from './index.module.scss'
 import utilities from '../utilities.module.scss'
 import classNames from 'classnames'
+import { Override } from '../types'
 
 const cx = classNames.bind(styles)
 
@@ -22,7 +22,7 @@ type ButtonProps = Override<
     }
 >
 
-const Button = (props: ButtonProps) => {
+export const Button = (props: ButtonProps) => {
     const {
         onClick,
         children,
@@ -61,25 +61,25 @@ const Button = (props: ButtonProps) => {
                 {icon}
                 <div
                     className={cx({
-                        [utilities.stack]: true,
-                        [utilities.center]: true,
+                        [utilities['stack']]: true,
+                        [utilities['center']]: true,
                     })}
                 >
-                    <span className={utilities.hide}>
+                    <span className={utilities['hide']}>
                         {defaultCasing ? label : label?.toUpperCase()}
                     </span>
                     <span
                         className={cx({
-                            [utilities.stackChild]: true,
-                            [utilities.hide]: isLoading,
+                            [utilities['stackChild']]: true,
+                            [utilities['hide']]: isLoading,
                         })}
                     >
                         {defaultCasing ? label : label?.toUpperCase()}
                     </span>
                     <div
                         className={cx({
-                            [utilities.stackChild]: true,
-                            [utilities.hide]: !isLoading,
+                            [utilities['stackChild']]: true,
+                            [utilities['hide']]: !isLoading,
                         })}
                     >
                         <Loader type='TailSpin' color='white' height='1rem' width='1rem' />
@@ -89,5 +89,3 @@ const Button = (props: ButtonProps) => {
         </button>
     )
 }
-
-export default Button
