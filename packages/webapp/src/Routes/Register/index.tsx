@@ -30,7 +30,7 @@ const Register = () => {
     const [errors, setErrors] = React.useState(initErrors)
 
     const handleError = (err: APIResponseError) => {
-        switch (err.error.type) {
+        switch (err?.error?.type) {
             case AuthErrorCodes.INVALID_EMAIL:
                 setErrors({
                     ...initErrors,
@@ -163,6 +163,7 @@ const Register = () => {
                                 <span className='text-red-400'>{errors.repassword}</span>
                             </div>
                             <Button label='Registrera dig' type='submit' />
+                            <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>
                     <Container.Footer>

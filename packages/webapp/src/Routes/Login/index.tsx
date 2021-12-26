@@ -1,5 +1,3 @@
-import Form from 'common/components/Form'
-import FormInput from 'common/components/FormInput'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'common/components/Layout'
@@ -30,7 +28,7 @@ const Login = () => {
             callback: (authTokens, err) => {
                 if (err) {
                     setErrors(initErrors)
-                    switch (err.error.type) {
+                    switch (err?.error?.type) {
                         case AuthErrorCodes.INVALID_EMAIL:
                         case AuthErrorCodes.INVALID_PASSWORD:
                         case AuthErrorCodes.MISSING_USER:
@@ -98,6 +96,7 @@ const Login = () => {
                             </div>
 
                             <Button label='Logga in' type='submit' />
+                            <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>
                     <Container.Footer>
