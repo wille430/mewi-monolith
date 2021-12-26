@@ -75,20 +75,23 @@ const Register = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        userDispatch({
-            type: 'signup',
-            signUpCredentials: _.omit(formData, 'all'),
-            callback: (authTokens, err) => {
-                setErrors(initErrors)
-                console.log('REGISTER ERROR:', err)
-                if (!err) {
-                    setSnackbar({
-                        title: 'Ditt konto skapades!',
-                    })
-                } else {
-                    handleError(err)
-                }
-            },
+        await new Promise<void>((resolve, reject) => {
+            userDispatch({
+                type: 'signup',
+                signUpCredentials: _.omit(formData, 'all'),
+                callback: (authTokens, err) => {
+                    setErrors(initErrors)
+                    console.log('REGISTER ERROR:', err)
+                    if (!err) {
+                        setSnackbar({
+                            title: 'Ditt konto skapades!',
+                        })
+                    } else {
+                        handleError(err)
+                    }
+                    resolve()
+                },
+            })
         })
     }
 
@@ -111,10 +114,7 @@ const Register = () => {
                         ]}
                     > */}
                     <Container.Content>
-                        <form
-                            onSubmit={onFormSubmit}
-                            className='flex flex-col items-center space-y-4'
-                        >
+                        <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
@@ -162,7 +162,7 @@ const Register = () => {
                                 />
                                 <span className='text-red-400'>{errors.repassword}</span>
                             </div>
-                            <Button label='Registrera dig' type='submit' />
+                            <Button label='Registrera dig' onClick={onFormSubmit} />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>

@@ -22,31 +22,34 @@ const Login = () => {
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        userDispatch({
-            type: 'login',
-            userCredentials: { email, password },
-            callback: (authTokens, err) => {
-                if (err) {
-                    setErrors(initErrors)
-                    switch (err?.error?.type) {
-                        case AuthErrorCodes.INVALID_EMAIL:
-                        case AuthErrorCodes.INVALID_PASSWORD:
-                        case AuthErrorCodes.MISSING_USER:
-                            setErrors({
-                                email: 'Felaktig epostaddress eller lösenord',
-                                password: 'Felaktig epostaddress eller lösenord',
-                                all: '',
-                            })
-                            break
-                        default:
-                            setErrors({
-                                ...initErrors,
-                                all: 'Ett fel inträffade. Försök igen.',
-                            })
-                            break
+        await new Promise<void>((resolve, reject) => {
+            userDispatch({
+                type: 'login',
+                userCredentials: { email, password },
+                callback: (authTokens, err) => {
+                    if (err) {
+                        setErrors(initErrors)
+                        switch (err?.error?.type) {
+                            case AuthErrorCodes.INVALID_EMAIL:
+                            case AuthErrorCodes.INVALID_PASSWORD:
+                            case AuthErrorCodes.MISSING_USER:
+                                setErrors({
+                                    email: 'Felaktig epostaddress eller lösenord',
+                                    password: 'Felaktig epostaddress eller lösenord',
+                                    all: '',
+                                })
+                                break
+                            default:
+                                setErrors({
+                                    ...initErrors,
+                                    all: 'Ett fel inträffade. Försök igen.',
+                                })
+                                break
+                        }
                     }
-                }
-            },
+                    resolve()
+                },
+            })
         })
     }
 
@@ -69,10 +72,7 @@ const Login = () => {
                         ]}
                     > */}
                     <Container.Content>
-                        <form
-                            onSubmit={onFormSubmit}
-                            className='flex flex-col items-center space-y-4'
-                        >
+                        <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
                                     onChange={setEmail}
@@ -95,7 +95,7 @@ const Login = () => {
                                 <span className='text-red-400'>{errors.password}</span>
                             </div>
 
-                            <Button label='Logga in' type='submit' />
+                            <Button label='Logga in' onClick={onFormSubmit} />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>
