@@ -14,7 +14,7 @@ export const Container = ({ className, children, ...rest }: ContainerProps) => {
     )
 }
 
-export const ContainerHeader = (
+const Header = (
     props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => (
     <header
@@ -27,7 +27,7 @@ export const ContainerHeader = (
     </header>
 )
 
-export const ContainerContent = (
+const Content = (
     props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => (
     <section
@@ -40,7 +40,7 @@ export const ContainerContent = (
     </section>
 )
 
-export const ContainerFooter = (
+const Footer = (
     props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => (
     <footer
@@ -52,3 +52,7 @@ export const ContainerFooter = (
         {props.children}
     </footer>
 )
+
+Container.Header = Header
+Container.Content = Content
+Container.Footer = Footer

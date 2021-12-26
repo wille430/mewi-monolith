@@ -7,6 +7,7 @@ import { AuthErrorCodes } from '@mewi/types'
 import _ from 'lodash'
 import { UserContext } from 'common/context/UserContext'
 import { useContext } from 'react'
+import { Button, Container, TextField } from '@mewi/ui'
 
 const Login = () => {
     const { userDispatch } = useContext(UserContext)
@@ -55,8 +56,11 @@ const Login = () => {
         <Layout>
             <aside className='side-col'></aside>
             <main className='main'>
-                <section className='w-full flex justify-center'>
-                    <Form
+                <Container className='max-w-lg mx-auto'>
+                    <Container.Header>
+                        <h3 className='text-center pb-6 pt-4'>Logga in</h3>
+                    </Container.Header>
+                    {/* <Form
                         onFormSubmit={onFormSubmit}
                         title='Logga in'
                         buttonLabel='Logga in'
@@ -65,28 +69,45 @@ const Login = () => {
                                 Skapa ett konto
                             </Link>,
                         ]}
-                    >
-                        <FormInput
-                            onChange={(e: { currentTarget: HTMLInputElement }) =>
-                                setEmail(e.currentTarget?.value)
-                            }
-                            errorMessage={errors.email}
-                            name='email'
-                            label='E-postadress'
-                            data-testid='emailInput'
-                        />
-                        <FormInput
-                            onChange={(e: { currentTarget: HTMLInputElement }) =>
-                                setPassword(e.currentTarget?.value)
-                            }
-                            errorMessage={errors.password}
-                            name='password'
-                            label='Lösenord'
-                            type='password'
-                            data-testid='passwordInput'
-                        />
-                    </Form>
-                </section>
+                    > */}
+                    <Container.Content>
+                        <form
+                            onSubmit={onFormSubmit}
+                            className='flex flex-col items-center space-y-4'
+                        >
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={setEmail}
+                                    name='email'
+                                    placeholder='E-postadress'
+                                    data-testid='emailInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.email}</span>
+                            </div>
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={setPassword}
+                                    name='password'
+                                    placeholder='Lösenord'
+                                    type='password'
+                                    data-testid='passwordInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.password}</span>
+                            </div>
+
+                            <Button label='Logga in' type='submit' />
+                        </form>
+                    </Container.Content>
+                    <Container.Footer>
+                        <div className='pt-6'>
+                            <Link to='/register' className='text-center'>
+                                Har du inte ett konto? Skapa ett här
+                            </Link>
+                        </div>
+                    </Container.Footer>
+                </Container>
             </main>
             <aside className='side-col'></aside>
         </Layout>

@@ -9,6 +9,14 @@
     flex-grow: 1;
 }
 
+// remove auto complete bg color
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 .container {
     background-color: $paper;
     width: clamp(8rem, 10rem, 100%);
@@ -22,6 +30,7 @@
 
     &.isActive {
         border: 2px solid $primary;
+        border-top: none;
     }
 
     &.fullWidth {
@@ -44,30 +53,75 @@
 }
 
 .label {
-    position: absolute;
     transition: translate 1s linear;
     pointer-events: none;
     font-size: 1rem;
-    transform: translateY(0);
     color: gray;
+    flex: none;
 
     &.isActive {
         font-size: 0.75rem;
         color: $primary;
         transform: translateY(-1.1rem);
         transition: none;
+
+        // &:after {
+        //     content: '';
+        //     display: block;
+        //     position: absolute;
+        //     z-index: -1;
+        //     height: 0.5rem;
+        //     width: 100%;
+        //     left: 0px;
+        //     background-color: red;
+        // }
+
+        // &:after {
+        //     content: '';
+        //     height: 1px;
+        //     position: absolute;
+        //     width: 100%;
+        //     background-color: $primary;
+        //     top: 0.5rem;
+        //     right: 0px;
+        // }
+    }
+}
+
+.header {
+    position: absolute;
+    width: 100%;
+    display: block;
+    pointer-events: none;
+
+    & hr {
+        display: none;
+        background-color: transparent;
+        border: none;
     }
 
-    &:after {
-        content: '';
-        display: block;
-        position: relative;
-        z-index: -1;
-        height: 0.5rem;
-        width: calc(100% + 0.5rem);
-        top: -1rem;
-        left: -0.25rem;
-        background-color: rgb(255, 255, 255);
+    &.isActive {
+        display: flex;
+        & hr {
+            display: block;
+            position: relative;
+            height: 2px;
+            width: 100%;
+            flex-grow: 1;
+            transform: translateY(-0.5rem);
+            pointer-events: none;
+            color: transparent;
+            background-color: transparent;
+
+            &:after {
+                content: '';
+                width: calc(100% - 1rem);
+                height: 2px;
+                right: 0.5rem;
+                background-color: $primary;
+                position: absolute;
+            }
+        }
     }
 }
 

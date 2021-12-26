@@ -2,7 +2,7 @@ import { ItemData } from '@mewi/types'
 import { capitalize } from '@mewi/util'
 import styles from './index.module.scss'
 import classNames from 'classnames'
-import {Container, ContainerContent, ContainerFooter, ContainerHeader } from '@mewi/ui'
+import { Container } from '@mewi/ui'
 import ImageDisplay from '../ImageDisplay'
 import { HorizontalLine } from '@mewi/ui'
 import OriginLabel from '../ArticleItem/OriginLabel'
@@ -40,7 +40,7 @@ const ArticleItemDetails = ({
 
     return (
         <Container>
-            <ContainerHeader className={styles.header}>
+            <Container.Header className={styles.header}>
                 <span
                     className={cx({
                         [styles.categoryPath]: true,
@@ -51,8 +51,8 @@ const ArticleItemDetails = ({
                 <span>
                     <Button onClick={handleClose} variant='text' icon={<FiX />} />
                 </span>
-            </ContainerHeader>
-            <ContainerContent>
+            </Container.Header>
+            <Container.Content>
                 <ImageDisplay imageUrls={imageUrl} />
                 <HorizontalLine />
                 <article>
@@ -87,8 +87,8 @@ const ArticleItemDetails = ({
                     </div>
                     <footer></footer>
                 </article>
-            </ContainerContent>
-            <ContainerFooter />
+            </Container.Content>
+            <Container.Footer />
         </Container>
     )
 }

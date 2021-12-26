@@ -64,7 +64,12 @@ export const TextField = ({
 
     const Label = () => {
         return (
-            <header>
+            <header
+                className={cx({
+                    [styles['header']]: true,
+                    [styles['isActive']]: inputValue || isActive
+                })}
+            >
                 <label
                     className={cx({
                         [styles['label']]: true,
@@ -73,6 +78,7 @@ export const TextField = ({
                 >
                     {placeholder}
                 </label>
+                <hr />
             </header>
         )
     }
@@ -109,6 +115,7 @@ export const TextField = ({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 value={inputValue}
+                type={type}
             />
             <ClearButton />
         </div>

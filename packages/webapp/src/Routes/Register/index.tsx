@@ -7,6 +7,7 @@ import { APIResponseError, AuthErrorCodes } from '@mewi/types'
 import { SnackbarContext } from 'common/context/SnackbarContext'
 import _ from 'lodash'
 import { UserContext } from 'common/context/UserContext'
+import { Button, Container, TextField } from '@mewi/ui'
 
 const Register = () => {
     const { setSnackbar } = useContext(SnackbarContext)
@@ -94,57 +95,84 @@ const Register = () => {
     return (
         <Layout>
             <aside className='side-col'></aside>
-            <main className='w-full flex justify-center'>
-                <Form
-                    onFormSubmit={onFormSubmit}
-                    title='Skapa konto'
-                    buttonLabel='Registrera dig'
-                    footer={[
-                        <Link to='/login' className='text-sm inline-block py-2'>
-                            Jag har redan ett konto
-                        </Link>,
-                    ]}
-                >
-                    <FormInput
-                        onChange={(e: { currentTarget: HTMLInputElement }) => {
-                            setFormData({
-                                ...formData,
-                                email: e.currentTarget?.value,
-                            })
-                        }}
-                        errorMessage={errors.email}
-                        name='email'
-                        label='E-postadress'
-                        data-testid='emailInput'
-                    />
-                    <FormInput
-                        onChange={(e: { currentTarget: HTMLInputElement }) => {
-                            setFormData({
-                                ...formData,
-                                password: e.currentTarget?.value,
-                            })
-                        }}
-                        errorMessage={errors.password}
-                        name='password'
-                        label='Lösenord'
-                        type='password'
-                        data-testid='passwordInput'
-                    />
-
-                    <FormInput
-                        onChange={(e: { currentTarget: HTMLInputElement }) => {
-                            setFormData({
-                                ...formData,
-                                repassword: e.currentTarget?.value,
-                            })
-                        }}
-                        errorMessage={errors.repassword}
-                        name='repassword'
-                        label='Bekräfta lösenord'
-                        type='password'
-                        data-testid='repasswordInput'
-                    />
-                </Form>
+            <main className='main'>
+                <Container className='max-w-lg mx-auto'>
+                    <Container.Header>
+                        <h3 className='text-center pb-6 pt-4'>Skapa ett konto</h3>
+                    </Container.Header>
+                    {/* <Form
+                        onFormSubmit={onFormSubmit}
+                        title='Logga in'
+                        buttonLabel='Logga in'
+                        footer={[
+                            <Link to='/register' className='text-sm inline-block py-2'>
+                                Skapa ett konto
+                            </Link>,
+                        ]}
+                    > */}
+                    <Container.Content>
+                        <form
+                            onSubmit={onFormSubmit}
+                            className='flex flex-col items-center space-y-4'
+                        >
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={(value) => {
+                                        setFormData({
+                                            ...formData,
+                                            email: value,
+                                        })
+                                    }}
+                                    name='email'
+                                    placeholder='E-postadress'
+                                    data-testid='emailInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.email}</span>
+                            </div>
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={(value) => {
+                                        setFormData({
+                                            ...formData,
+                                            password: value,
+                                        })
+                                    }}
+                                    name='password'
+                                    placeholder='Lösenord'
+                                    type='password'
+                                    data-testid='passwordInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.password}</span>
+                            </div>
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={(value) => {
+                                        setFormData({
+                                            ...formData,
+                                            repassword: value,
+                                        })
+                                    }}
+                                    name='repassword'
+                                    placeholder='Bekräfta lösenord'
+                                    type='password'
+                                    data-testid='repasswordInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.repassword}</span>
+                            </div>
+                            <Button label='Registrera dig' type='submit' />
+                        </form>
+                    </Container.Content>
+                    <Container.Footer>
+                        <div className='pt-6'>
+                            <Link to='/login' className='text-center'>
+                                Har du redan ett konto?
+                            </Link>
+                        </div>
+                    </Container.Footer>
+                </Container>
             </main>
             <aside className='side-col'></aside>
         </Layout>
