@@ -5,23 +5,35 @@ import useQuery from 'common/hooks/useQuery'
 import useParam from 'common/hooks/useParam'
 import { PriceRangeUtils } from 'utils'
 import AddWatcherButton from '../../../common/components/SearchFilterArea/AddWatcherButton'
-import { Link } from 'react-router-dom'
-import SearchFilterArea from 'common/components/SearchFilterArea'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import SearchFilterArea, { SearchFilterAreaProps } from 'common/components/SearchFilterArea'
 import { UserContext } from 'common/context/UserContext'
 
-const FilterArea = () => {
-    const { isLoggedIn } = useContext(UserContext)
-    const { filters, setFilters } = useContext(SearchContext)
-    const { setQuery } = useQuery()
+type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
+    defaultValues?: SearchFilterDataProps
+}
 
-    const [formData, setFormData] = useState<SearchFilterDataProps>({
-        keyword: filters.keyword,
-    })
+const FilterArea = ({ defaultValues, ...rest }: FilterAreaProps) => {
+    const { isLoggedIn } = useContext(UserContext)
+    const { setFilters } = useContext(SearchContext)
+    const { setQuery } = useQuery()
+    const location = useLocation()
+
+    const initFormData = {
+        keyword: useParam('q')[0],
+        ...defaultValues,
+    }
+    const [formData, setFormData] = useState<SearchFilterDataProps>(initFormData)
+
+    // On re-render, clear filters
+    useEffect(() => {
+        setFormData(initFormData)
+    }, [location])
 
     const handleSubmit = () => {
         // Set queries
         setQuery({
-            q: filters.keyword,
+            q: formData.keyword,
             regions: formData.regions?.join(','),
             category: formData.category,
             auction: formData.auction ? 'true' : undefined,
@@ -32,12 +44,9 @@ const FilterArea = () => {
         setFilters(formData)
     }
 
-    useEffect(() => {
-        setFormData(filters)
-    }, [])
-
     return (
         <SearchFilterArea
+            {...rest}
             searchFilterData={formData}
             setSearchFilterData={(newVal) => {
                 setFormData(newVal)

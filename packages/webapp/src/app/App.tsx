@@ -43,9 +43,15 @@ function App() {
                             <Register />
                         </PublicRoute>
                         <Route
-                            path={['/kategorier/:category_id/*', '/kategorier/:category_id']}
-                            component={CategorySearch}
-                        />
+                            path={[
+                                '/kategorier/:category_id/:subcat_id',
+                                '/kategorier/:category_id',
+                            ]}
+                        >
+                            <SearchProvider>
+                                <CategorySearch />
+                            </SearchProvider>
+                        </Route>
                         <Route path='/kategorier' component={Categories} />
                         <Route exact path='/' component={Home} />
                         <Route exact path='/search'>

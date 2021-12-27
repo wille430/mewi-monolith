@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson'
-import { JWT, PriceRange, SearchFilterDataProps } from '..'
+import { JWT, PriceRange, SearchFilterDataProps, Category } from '..'
 
 /**
  * Models
@@ -59,66 +59,15 @@ export interface ElasticSearchBody {
     from: number
 }
 
-export type Category = (
-    | 'fordon'
-    | 'för_hemmet'
-    | 'bostad'
-    | 'personligt'
-    | 'elektronik'
-    | 'fritid_hobby'
-    | 'affärsverksamhet'
-    | 'övrigt'
-    | 'bilar'
-    | 'båtar'
-    | 'bildelar_biltillbehör'
-    | 'mopeder'
-    | 'båtdelar_tillbehör'
-    | 'husvagnar_husbilar'
-    | 'mc-delar'
-    | 'a-traktor'
-    | 'lastbil_truck_entreprenad'
-    | 'motorcyklar'
-    | 'snöskotrar'
-    | 'snöskoterdelar'
-    | 'bygg_trädgård'
-    | 'husgeråd_vitvaror'
-    | 'möbler_hemindredning'
-    | 'verktyg'
-    | 'lägenheter'
-    | 'villor'
-    | 'radhus'
-    | 'tomter'
-    | 'gårdar'
-    | 'fritidsboende'
-    | 'utland'
-    | 'kläder_skor'
-    | 'accessoarer_klockor'
-    | 'barnartiklar_leksaker'
-    | 'barnkläder_skor'
-    | 'datorer_tv-spel'
-    | 'ljud_bild'
-    | 'telefoner_tillbehör'
-    | 'upplevelser_nöje'
-    | 'böcker_studentlitteratur'
-    | 'cyklar'
-    | 'djur'
-    | 'hobby_samlarprylar'
-    | 'hästar_ridsport'
-    | 'jakt_fiske'
-    | 'musikutrustning'
-    | 'sport-_fritidsutrustning'
-    | 'affärsöverlåtelser'
-    | 'inventarier_maskiner'
-    | 'lokaler_fastigheter'
-    | 'tjänster'
-    | 'övrigt'
-)[]
+export type CategoryType = {
+    [key: number]: string
+}
 
 export interface ItemData {
     id: string
     title: string
     body?: string
-    category: Category
+    category: CategoryType
     date?: number
     endDate?: number
     imageUrl: string[]

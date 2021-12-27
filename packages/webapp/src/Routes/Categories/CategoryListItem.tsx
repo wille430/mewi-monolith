@@ -1,25 +1,31 @@
-import { CategoryData } from 'models/types'
 import { Link } from 'react-router-dom'
-import { toSnakeCase } from '@mewi/util'
+import { Category } from '@mewi/types'
 
 interface Props {
-    categoryData: CategoryData
+    categoryValue: string
+    categoryData: Category
     subCatIndex?: number
     parentTo?: string
 }
 
-const CategoryListItem = ({ categoryData, subCatIndex = 0, parentTo = '/kategorier' }: Props) => {
-    const redirectUrl = `${parentTo}/${toSnakeCase(categoryData.cat)}`
+const CategoryListItem = ({
+    categoryValue,
+    categoryData,
+    subCatIndex = 0,
+    parentTo = '/kategorier',
+}: Props) => {
+    const redirectUrl = `${parentTo}/${categoryValue}`
 
     return (
         <div>
             <Link to={redirectUrl} className={`${subCatIndex === 0 ? 'text-lg font-bold' : ''}`}>
-                {categoryData.cat}
+                {categoryData.label}
             </Link>
             <div className=''>
-                {categoryData.subcat.map((subcat) => (
+                {Object.keys(categoryData.subcat).map((key) => (
                     <CategoryListItem
-                        categoryData={subcat}
+                        categoryValue={key}
+                        categoryData={categoryData.subcat[key]}
                         subCatIndex={subCatIndex + 1}
                         parentTo={redirectUrl}
                     />

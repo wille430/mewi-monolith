@@ -22,6 +22,7 @@ interface SearchContextProps {
     filters: SearchFilterDataProps
     setFilters: Function
     isLoading: boolean
+    getFiltersFromParams: () => void
 }
 
 export const SearchContext = createContext<SearchContextProps>({
@@ -29,6 +30,7 @@ export const SearchContext = createContext<SearchContextProps>({
     filters: {},
     setFilters: () => {},
     isLoading: false,
+    getFiltersFromParams: () => {},
 })
 
 export const SearchProvider = ({ children }: Props) => {
@@ -40,12 +42,16 @@ export const SearchProvider = ({ children }: Props) => {
     const page: number = parseInt(useParam('page')[0] || '1')
     const keyword = useParam('q')[0]
 
-    useEffect(() => {
+    const getFiltersFromParams = () => {
         const urlSearchParams = new URLSearchParams(location.search)
         const newSearchFilters = SearchParamsUtils.searchParamsToObj(urlSearchParams)
 
         console.log('Search filters from params: ', newSearchFilters)
         setFilters(newSearchFilters)
+    }
+
+    useEffect(() => {
+        getFiltersFromParams()
     }, [])
 
     useEffect(() => {
@@ -78,6 +84,7 @@ export const SearchProvider = ({ children }: Props) => {
                 filters,
                 setFilters,
                 isLoading,
+                getFiltersFromParams,
             }}
         >
             {children}

@@ -55,16 +55,10 @@ export default class SearchService {
         Object.keys(searchFilterData).forEach(key => {
             switch (key) {
                 case 'keyword':
+                    if (!searchFilterData[key]) break
                     query.bool.must.push({ match: { title: searchFilterData[key] } })
                     break
                 case 'regions':
-                    // const clauses = []
-                    // searchFilterData.regions?.forEach(region => {
-                    //     clauses.push(
-                    //         { span_term: { region: region } }
-                    //     )
-                    // })
-                    // query.bool.must.push({ span_or: { clauses: clauses } })
                     query.bool.must.push({ match: { 'region': searchFilterData[key].join(', ') } })
                     break
                 case 'category':

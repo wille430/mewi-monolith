@@ -1,4 +1,10 @@
-import { categoriesOptions, PriceRange, regions, SearchFilterDataProps } from '@mewi/types'
+import {
+    categoriesOptions,
+    Category,
+    PriceRange,
+    regions,
+    SearchFilterDataProps,
+} from '@mewi/types'
 import { FormEvent, ReactNode } from 'react'
 import PriceRangeFilter from 'common/components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
@@ -19,6 +25,8 @@ export interface SearchFilterContentProps {
     showSubmitButton?: boolean
     collapse?: boolean
     actions?: ReactNode
+    categoryOptions?: {value: string, label: string}[]
+    exclude?: { [key: string]: boolean }
 }
 
 const SearchFilterContent = (props: SearchFilterContentProps) => {
@@ -33,6 +41,8 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         showSubmitButton,
         collapse,
         actions,
+        categoryOptions,
+        exclude = {},
     } = props
 
     const handleSubmit = (e: FormEvent) => {
@@ -70,7 +80,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             value: searchFilterData.category,
             onChange: (val: string) => handleChange('category', val),
             isMulti: false,
-            options: categoriesOptions,
+            options: categoryOptions || categoriesOptions,
             'data-testid': 'categorySelect',
         },
     ]
@@ -105,21 +115,25 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                     />
                                 )}
 
-                                {Dropdowns.map((dropdown) => (
-                                    <LabeledDropdown key={v4()} {...dropdown} />
-                                ))}
+                                {Dropdowns.map((dropdown) => {
+                                    if (exclude[dropdown.name]) return
 
-                                <PriceRangeFilter
-                                    gte={searchFilterData.priceRange?.gte}
-                                    lte={searchFilterData.priceRange?.lte}
-                                    onChange={(field, val) => {
-                                        handleChange('priceRange', {
-                                            ...searchFilterData.priceRange,
-                                            [field]: val,
-                                        })
-                                    }}
-                                    data-testid='priceRangeSlider'
-                                />
+                                    return <LabeledDropdown key={v4()} {...dropdown} />
+                                })}
+
+                                {!exclude['price'] && (
+                                    <PriceRangeFilter
+                                        gte={searchFilterData.priceRange?.gte}
+                                        lte={searchFilterData.priceRange?.lte}
+                                        onChange={(field, val) => {
+                                            handleChange('priceRange', {
+                                                ...searchFilterData.priceRange,
+                                                [field]: val,
+                                            })
+                                        }}
+                                        data-testid='priceRangeSlider'
+                                    />
+                                )}
 
                                 <div className='p-4'>
                                     <Checkbox

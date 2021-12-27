@@ -6,8 +6,16 @@ import AdPlaceholder from 'common/components/AdPlaceholder'
 import { SelectedItemProvider } from './ItemGrid/ItemPopUp/SelectedItemContext'
 import ResultText from './ResultText'
 import Layout from 'common/components/Layout'
+import { useContext, useEffect } from 'react'
+import { SearchContext } from 'common/context/SearchContext'
 
 const Search = () => {
+    const { getFiltersFromParams } = useContext(SearchContext)
+
+    useEffect(() => {
+        getFiltersFromParams()
+    }, [])
+
     return (
         <Layout>
             <aside className='side-col'></aside>

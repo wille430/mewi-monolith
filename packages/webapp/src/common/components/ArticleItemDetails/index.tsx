@@ -28,7 +28,9 @@ const ArticleItemDetails = ({
     onClose,
     ...rest
 }: ArticleItemDetails) => {
-    const categoryPathString = category.map((string) => capitalize(string)).join(' > ')
+    const categoryPathString = Object.values(category)
+        .map((value) => capitalize(value))
+        .join(' > ')
 
     const handleClose = () => {
         onClose && onClose()
