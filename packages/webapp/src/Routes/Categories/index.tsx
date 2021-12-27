@@ -1,9 +1,10 @@
+import { Container } from '@mewi/ui'
 import CategoryList from './CategoryList'
 
 const Categories = () => {
     return (
         <div className='layout'>
-            <main className='main'>
+            <main className='main pb-32'>
                 <section>
                     <h3 className='pb-6'>Kategorier</h3>
                     <CategoryList />
