@@ -39,17 +39,18 @@ export const createUser = createAsyncThunk(
 
 export const logOut = createAction(AuthActionTypes.AUTH_LOGOUT, () => ({ payload: {} }))
 
-export const refreshAccessToken = createAsyncThunk<AuthTokens | undefined, void, { state: RootState }>(
-    AuthActionTypes.AUTH_REFRESH,
-    async (args, thunkAPI) => {
-        try {
-            args
-            const oldAccessToken = localStorage.getItem('refreshToken')
+export const refreshAccessToken = createAsyncThunk<
+    AuthTokens | undefined,
+    void,
+    { state: RootState }
+>(AuthActionTypes.AUTH_REFRESH, async (args, thunkAPI) => {
+    try {
+        args
+        const oldAccessToken = localStorage.getItem('refreshToken')
 
-            const authTokens = await refreshJwtToken(oldAccessToken)
-            return authTokens
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e)
-        }
+        const authTokens = await refreshJwtToken(oldAccessToken)
+        return authTokens
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e)
     }
-)
+})

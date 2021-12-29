@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { getAll, query, queryWithFilters, suggest, getSearchResults } from './controller';
+import { Router } from 'express'
+import { getAll, query, queryWithFilters, suggest, getSearchResults } from './controller'
 
-const router = Router();
+const router = Router()
 
 router.get('/', getAll)
 router.post('/', getSearchResults)

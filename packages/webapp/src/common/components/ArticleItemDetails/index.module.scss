@@ -24,7 +24,6 @@
 }
 
 .infoBody {
-
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
@@ -38,7 +37,7 @@
             max-width: 20rem;
         }
 
-        & div >  h4 {
+        & div > h4 {
             padding-bottom: 0.75rem;
         }
 
@@ -46,7 +45,6 @@
             display: none;
         }
     }
-
 }
 
 .originLabel {

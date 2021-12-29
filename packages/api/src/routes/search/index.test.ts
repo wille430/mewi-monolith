@@ -2,9 +2,7 @@ import request from 'supertest'
 import app from '../app'
 
 describe('search', () => {
-
     describe('GET /search', () => {
-
         describe('when database is up', () => {
             let response
             let body
@@ -31,7 +29,6 @@ describe('search', () => {
             })
         })
 
-
         // describe('when database is down', () => {
         //     let response
         //     let body
@@ -49,10 +46,9 @@ describe('search', () => {
     })
 
     describe('GET /search/:query', () => {
-
         let response
         let body
-        const query = "volvo"
+        const query = 'volvo'
 
         beforeEach(async () => {
             response = await request(app).get(`/search/${query}`)
@@ -78,6 +74,5 @@ describe('search', () => {
         it('should return object with query', () => {
             expect(body.query).toEqual(query)
         })
-
     })
 })

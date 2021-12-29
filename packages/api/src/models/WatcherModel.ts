@@ -22,9 +22,12 @@ import { SearchFilterDataProps } from '@mewi/types'
 const WatcherSchema = new Schema<PublicWatcher>(
     {
         query: { type: Object, unique: true },
-        metadata: { type: Object, default: {
-            keyword: ''
-        } },
+        metadata: {
+            type: Object,
+            default: {
+                keyword: '',
+            },
+        },
         users: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     },
     {

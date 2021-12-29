@@ -1,7 +1,7 @@
-import Scraper from "./Scraper"
-import { toUnixTime } from "@mewi/util"
-import CategoryService from "../CategoryService"
-import { BlocketItemData, ItemData } from "types/types"
+import Scraper from './Scraper'
+import { toUnixTime } from '@mewi/util'
+import CategoryService from '../CategoryService'
+import { BlocketItemData, ItemData } from 'types/types'
 
 const { JSDOM } = require('jsdom')
 const axios = require('axios')
@@ -10,12 +10,11 @@ export default class BlocketScraper extends Scraper {
     baseUrl = 'https://www.blocket.se'
     page = 1
 
-
     constructor(maxEntries?: number) {
         super({
             maxEntries,
-            name: "blocket",
-            limit: 40
+            name: 'blocket',
+            limit: 40,
         })
     }
 
@@ -24,13 +23,13 @@ export default class BlocketScraper extends Scraper {
             const url = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
             let authToken: string = await this.getBearerToken()
-            if (!authToken) throw Error("Missing authentication token")
+            if (!authToken) throw Error('Missing authentication token')
 
             const dom = await axios.get(url, {
                 baseURL: this.baseUrl,
                 headers: {
-                    'authorization': 'Bearer ' + authToken,
-                }
+                    authorization: 'Bearer ' + authToken,
+                },
             })
 
             const data = dom.data.data
@@ -39,24 +38,30 @@ export default class BlocketScraper extends Scraper {
             //     return await this.getFullDataFrom(item.ad_id)
             // }))
 
-            let items: ItemData[] = data.map((item: BlocketItemData): ItemData => ({
-                id: item.ad_id,
-                title: item.subject,
-                body: item.body,
-                category: CategoryService.parseBlocketCategories(item.category),
-                date: toUnixTime(new Date(item.list_time)),
-                imageUrl: item.images ? item.images.map(img => img.url + '?type=mob_iphone_vi_normal_retina') : [],
-                redirectUrl: item.share_url,
-                isAuction: false,
-                price: item.price ? ({
-                    value: item.price.value,
-                    currency: item.price.suffix
-                }) : {},
-                region: item.location[0].name,
-                zipcode: item.zipcode,
-                parameters: this.parseParameterGroup(item.parameter_groups),
-                origin: 'Blocket'
-            }))
+            let items: ItemData[] = data.map(
+                (item: BlocketItemData): ItemData => ({
+                    id: item.ad_id,
+                    title: item.subject,
+                    body: item.body,
+                    category: CategoryService.parseBlocketCategories(item.category),
+                    date: toUnixTime(new Date(item.list_time)),
+                    imageUrl: item.images
+                        ? item.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
+                        : [],
+                    redirectUrl: item.share_url,
+                    isAuction: false,
+                    price: item.price
+                        ? {
+                              value: item.price.value,
+                              currency: item.price.suffix,
+                          }
+                        : {},
+                    region: item.location[0].name,
+                    zipcode: item.zipcode,
+                    parameters: this.parseParameterGroup(item.parameter_groups),
+                    origin: 'Blocket',
+                })
+            )
 
             this.page += 1
             return items
@@ -72,8 +77,8 @@ export default class BlocketScraper extends Scraper {
         const dom = await axios.get(url, {
             baseURL: this.baseUrl,
             headers: {
-                'authorization': 'Bearer ' + authToken,
-            }
+                authorization: 'Bearer ' + authToken,
+            },
         })
 
         const itemData = dom.data.data
@@ -81,7 +86,9 @@ export default class BlocketScraper extends Scraper {
         // Get item parameters/detailed info
         let params = null
         if (itemData.parameter_groups) {
-            const paramGroup = itemData.parameter_groups.find(x => x.label === "Allmän information")
+            const paramGroup = itemData.parameter_groups.find(
+                (x) => x.label === 'Allmän information'
+            )
             if (paramGroup && paramGroup.parameters) {
                 params = paramGroup.parameters
             }
@@ -91,19 +98,23 @@ export default class BlocketScraper extends Scraper {
             id: itemData.ad_id,
             title: itemData.subject,
             body: itemData.body,
-            category: itemData.category.map(cat => cat.name) || [],
+            category: itemData.category.map((cat) => cat.name) || [],
             date: toUnixTime(new Date(itemData.list_time)),
-            imageUrl: itemData.images ? itemData.images.map(img => img.url + '?type=mob_iphone_vi_normal_retina') : [],
+            imageUrl: itemData.images
+                ? itemData.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
+                : [],
             redirectUrl: itemData.share_url,
-            price: itemData.price ? ({
-                value: itemData.price.value,
-                currency: itemData.price.suffix
-            }) : {},
+            price: itemData.price
+                ? {
+                      value: itemData.price.value,
+                      currency: itemData.price.suffix,
+                  }
+                : {},
             isAuction: false,
             region: itemData.location[0].name,
             zipcode: itemData.zipcode,
             parameters: params,
-            origin: 'Blocket'
+            origin: 'Blocket',
         }
 
         return item
@@ -118,8 +129,11 @@ export default class BlocketScraper extends Scraper {
 
                 const dom = new JSDOM(data)
                 const { document } = dom.window
-                const bearerNode = document.querySelector('script#__NEXT_DATA__[type="application/json"]')
-                const token = JSON.parse(bearerNode.textContent).props.initialReduxState.authentication.bearerToken
+                const bearerNode = document.querySelector(
+                    'script#__NEXT_DATA__[type="application/json"]'
+                )
+                const token = JSON.parse(bearerNode.textContent).props.initialReduxState
+                    .authentication.bearerToken
 
                 return token
             } catch (e) {
@@ -129,10 +143,12 @@ export default class BlocketScraper extends Scraper {
         }
     }
 
-    parseParameterGroup(parameter_groups: BlocketItemData['parameter_groups']): ItemData['parameters'] {
+    parseParameterGroup(
+        parameter_groups: BlocketItemData['parameter_groups']
+    ): ItemData['parameters'] {
         let params = null
         if (parameter_groups) {
-            const paramGroup = parameter_groups.find(x => x.label === "Allmän information")
+            const paramGroup = parameter_groups.find((x) => x.label === 'Allmän information')
             if (paramGroup && paramGroup.parameters) {
                 params = paramGroup.parameters
             }

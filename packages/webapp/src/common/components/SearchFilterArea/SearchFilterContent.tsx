@@ -25,7 +25,7 @@ export interface SearchFilterContentProps {
     showSubmitButton?: boolean
     collapse?: boolean
     actions?: ReactNode
-    categoryOptions?: {value: string, label: string}[]
+    categoryOptions?: { value: string; label: string }[]
     exclude?: { [key: string]: boolean }
 }
 

@@ -2,19 +2,17 @@ import request from 'supertest'
 import app from '../../app'
 
 describe('user watchers', () => {
-
-
     let headers
 
     beforeAll(async () => {
-        const token = await request(app).post('/test/user').then(res => res.text)
-        headers = { 'Authorization': 'Bearer ' + token }
+        const token = await request(app)
+            .post('/test/user')
+            .then((res) => res.text)
+        headers = { Authorization: 'Bearer ' + token }
     })
 
     describe('POST /user/watchers', () => {
-
         describe('with invalid body', () => {
-
             let response
 
             beforeAll(async () => {
@@ -24,33 +22,28 @@ describe('user watchers', () => {
             it('should return with 422 status code', () => {
                 expect(response.statusCode).toBe(422)
             })
-
         })
 
         describe('with valid body', () => {
-
             let response
 
             beforeAll(async () => {
-
                 const reqBody = {
                     query: {
                         bool: {
                             must: {
                                 match: {
-                                    title: 'BMW'
-                                }
-                            }
-                        }
+                                    title: 'BMW',
+                                },
+                            },
+                        },
                     },
                     metadata: {
-                        keyword: 'BMW'
-                    }
+                        keyword: 'BMW',
+                    },
                 }
 
-                response = await request(app).post('/user/watchers')
-                    .send(reqBody)
-                    .set(headers)
+                response = await request(app).post('/user/watchers').send(reqBody).set(headers)
             })
 
             it('should return with 201 status code', () => {
@@ -60,12 +53,10 @@ describe('user watchers', () => {
             it('should return with the new watcher', () => {
                 expect(response.body.watcher).toBeTruthy()
             })
-
         })
     })
 
     describe('GET /user/watchers', () => {
-
         let response
 
         beforeAll(async () => {
@@ -79,34 +70,32 @@ describe('user watchers', () => {
         it('should return with array in body', () => {
             expect(Array.isArray(response.body.watchers)).toBe(true)
         })
-
     })
 
     describe('PATCH /user/watchers', () => {
-
         let response
 
         beforeAll(async () => {
-
             const reqBody = {
                 query: {
                     bool: {
                         must: {
                             match: {
-                                title: 'Volvo'
-                            }
-                        }
-                    }
+                                title: 'Volvo',
+                            },
+                        },
+                    },
                 },
                 metadata: {
-                    keyword: 'Volvo'
-                }
+                    keyword: 'Volvo',
+                },
             }
 
-            const watcher = await request(app).post('/user/watchers')
+            const watcher = await request(app)
+                .post('/user/watchers')
                 .send(reqBody)
                 .set(headers)
-                .then(res => res.body.watcher)
+                .then((res) => res.body.watcher)
 
             const watcherId = watcher._id
 
@@ -115,17 +104,18 @@ describe('user watchers', () => {
                     bool: {
                         must: {
                             match: {
-                                title: 'BMW'
-                            }
-                        }
-                    }
+                                title: 'BMW',
+                            },
+                        },
+                    },
                 },
                 metadata: {
-                    keyword: 'BMW'
-                }
+                    keyword: 'BMW',
+                },
             }
 
-            response = await request(app).patch('/user/watchers/' + watcherId)
+            response = await request(app)
+                .patch('/user/watchers/' + watcherId)
                 .send(updateReqBody)
                 .set(headers)
 
@@ -142,7 +132,7 @@ describe('user watchers', () => {
 
         it('should return updated watcher', () => {
             expect(response.body.watcher.metadata).toEqual({
-                keyword: 'BMW'
+                keyword: 'BMW',
             })
         })
     })
@@ -156,7 +146,4 @@ describe('user watchers', () => {
     //     })
 
     // })
-
-
-
 })

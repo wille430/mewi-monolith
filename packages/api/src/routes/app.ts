@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const cors = require('cors')
 import notFound from './404'
 import * as dotenv from 'dotenv'
@@ -28,7 +28,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 app.use(express.static('public'))
 
-
 // Routes
 app.use('/items', items)
 app.use('/user', user)
@@ -40,7 +39,7 @@ app.use('/test', test)
 app.use('/', (req, res) => {
     res.json({
         message: 'Mewi API',
-        type: "info"
+        type: 'info',
     })
 })
 

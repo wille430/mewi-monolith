@@ -26,22 +26,24 @@ interface ParamTypes {
 
 const CategorySearch = () => {
     const params = useParams<ParamTypes>()
-    const {filters, setFilters} = useContext(SearchContext)
+    const { filters, setFilters } = useContext(SearchContext)
 
     useEffect(() => {
         setFilters({
             ...filters,
-            category: params.subcat_id || params.category_id
+            category: params.subcat_id || params.category_id,
         })
     }, [params])
 
     return (
         <Layout>
             <aside className='side-col'></aside>
-            <main className={cx({
-                ['main']: true,
-                [styles.main]: true
-            })}>
+            <main
+                className={cx({
+                    ['main']: true,
+                    [styles.main]: true,
+                })}
+            >
                 <AdPlaceholder size='lg' className='mb-12' />
                 <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
                     <CategorySelectionList

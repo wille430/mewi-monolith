@@ -1,4 +1,4 @@
-import { elasticClient } from "../config/elasticsearch"
+import { elasticClient } from '../config/elasticsearch'
 const index = 'items'
 
 const SavedItemsController = {
@@ -18,7 +18,7 @@ const SavedItemsController = {
                 try {
                     await elasticClient.index({
                         index: index,
-                        body: item
+                        body: item,
                     })
                     addedItems.push(item)
                 } catch (e) {
@@ -31,14 +31,13 @@ const SavedItemsController = {
 
             res.status(200).json({
                 status: 200,
-                message: "Successfully added items to database!",
-                items: addedItems
+                message: 'Successfully added items to database!',
+                items: addedItems,
             })
-
         } catch (e) {
             res.json({
                 status: 400,
-                message: e
+                message: e,
             })
         }
     },
@@ -48,9 +47,8 @@ const SavedItemsController = {
         try {
             const response = await elasticClient.get({
                 id: id,
-                index: index
+                index: index,
             })
-
 
             res.json(response)
         } catch (e) {
@@ -61,7 +59,7 @@ const SavedItemsController = {
                 res.send()
             }
         }
-    }
+    },
 }
 
 export default SavedItemsController

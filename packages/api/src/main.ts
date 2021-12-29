@@ -9,7 +9,7 @@ import app from './routes/app'
 // Scheduled jobs
 
 // Update elasticsearch index
-schedule.scheduleJob("30 * * * *", async () => {
+schedule.scheduleJob('30 * * * *', async () => {
     const scraper = new ScrapeService()
     scraper.start().then(async () => {
         await ItemsService.deleteOld()
@@ -19,8 +19,8 @@ schedule.scheduleJob("30 * * * *", async () => {
     })
 })
 
-const lastScan = EndDate.getEndDateFor("blocket")
-if ((Date.now() - toUnixTime(lastScan)) > 30 * 60 * 1000) {
+const lastScan = EndDate.getEndDateFor('blocket')
+if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
     const scraper = new ScrapeService()
     scraper.start().then(async () => {
         await ItemsService.deleteOld()
@@ -44,7 +44,6 @@ if ((Date.now() - toUnixTime(lastScan)) > 30 * 60 * 1000) {
 // }
 
 // sendEmail()
-
 
 // Start app by listening on port
 app.listen(3001, () => console.log('Listening on port 3001...'))

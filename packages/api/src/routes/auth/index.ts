@@ -1,5 +1,5 @@
-import { Router } from "express"
-import { login, refreshToken, signUp, validateToken } from "./controller"
+import { Router } from 'express'
+import { login, refreshToken, signUp, validateToken } from './controller'
 
 const router = Router()
 

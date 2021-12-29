@@ -19,13 +19,11 @@ const categories = {
     // "Skogs- & lantbruksmaskiner": "temp",
     // "Snöskotrar": "temp",
     // "Snöskoterdelar": "temp",
-
     // // "För hemmet": "temp",
     // "Bygg & trädgård": "temp",
     // "Möbler & hemindredning": "temp",
     // "Husgeråd & vitvaror": "temp",
     // "Verktyg": "temp",
-
     // // "Bostad": "temp",
     // "Lägenheter": "temp",
     // "Villor": "temp",
@@ -34,18 +32,15 @@ const categories = {
     // "Gårdar": "temp",
     // "Fritidsboende": "temp",
     // "Utland": "temp",
-
     // // "Personligt": "temp",
     // "Kläder & skor": "temp",
     // "Accessoarer & klockor": "temp",
     // "Barnkläder & skor": "temp",
     // "Barnartiklar & leksaker": "temp",
-
     // // "Elektronik": "temp",
     // "Datorer & TV-spel": "temp",
     // "Ljud & bild": "temp",
     // "Telefoner & tillbehör": "temp",
-
     // // "Fritid & hobby": "temp",
     // "Upplevelser & nöje": "temp",
     // "Böcker & studentlitteratur": "temp",
@@ -56,13 +51,11 @@ const categories = {
     // "Jakt & fiske": "temp",
     // "Musikutrustning": "temp",
     // "Sport- & fritidsutrustning": "temp",
-
     // // "Affärsverksamhet": "temp",
     // "Affärsöverlåtelser": "temp",
     // "Inventarier & maskiner": "temp",
     // "Lokaler & fastigheter": "temp",
     // "Tjänster": "temp",
-
     // "Övrigt": "temp",
 }
 
@@ -72,11 +65,14 @@ const main = async () => {
     const collection = db.collection('categories')
 
     for (const key in categories) {
-        collection.updateOne({"cat": "Affärsverksamhet"}, {
-            $push: {
-                subcat: {_id: ObjectId(), "cat": key, subcat: []}
+        collection.updateOne(
+            { cat: 'Affärsverksamhet' },
+            {
+                $push: {
+                    subcat: { _id: ObjectId(), cat: key, subcat: [] },
+                },
             }
-        })
+        )
     }
     return
 }

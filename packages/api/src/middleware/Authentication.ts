@@ -16,7 +16,10 @@ export default class Authentication {
 
             console.log({ decryptedToken, username, password })
 
-            if (username === process.env.API_ADMIN_USERNAME && password === process.env.API_ADMIN_PASSWORD) {
+            if (
+                username === process.env.API_ADMIN_USERNAME &&
+                password === process.env.API_ADMIN_PASSWORD
+            ) {
                 return next()
             } else {
                 res.sendStatus(401)

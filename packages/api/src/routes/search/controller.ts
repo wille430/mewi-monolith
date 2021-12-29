@@ -1,6 +1,6 @@
-import { SearchPostRequestBody } from "@mewi/types"
-import { elasticClient } from "../../config/elasticsearch"
-import SearchService from "../../services/SearchService"
+import { SearchPostRequestBody } from '@mewi/types'
+import { elasticClient } from '../../config/elasticsearch'
+import SearchService from '../../services/SearchService'
 const index = 'items'
 
 export const getAll = async (req, res, next) => {
@@ -8,51 +8,53 @@ export const getAll = async (req, res, next) => {
 
     res.status(200).json({
         totalHits: search.body.hits.total.value || 0,
-        hits: search.body.hits.hits
+        hits: search.body.hits.hits,
     })
 }
 
 export const queryWithFilters = async (req, res, next) => {
-    const query = req.params.query || ""
+    const query = req.params.query || ''
     let queryObj = req.body
 
     queryObj.query.bool.must.push({ match: { title: query } })
 
-    const search = await elasticClient.search({
-        index: index,
-        body: queryObj
-    }).catch(next)
+    const search = await elasticClient
+        .search({
+            index: index,
+            body: queryObj,
+        })
+        .catch(next)
 
     res.json({
         query: query,
         filters: queryObj,
         totalHits: search.body.hits.total.value || 0,
-        hits: search.body.hits.hits
+        hits: search.body.hits.hits,
     })
 }
 
 export const query = async (req, res, next) => {
-    const query = req.params.query || ""
+    const query = req.params.query || ''
 
     let queryObj = {
         query: {
             bool: {
-                must: [
-                    { match: { title: query } }
-                ]
-            }
-        }
+                must: [{ match: { title: query } }],
+            },
+        },
     }
 
-    const search = await elasticClient.search({
-        index: index,
-        body: queryObj
-    }).catch(next)
+    const search = await elasticClient
+        .search({
+            index: index,
+            body: queryObj,
+        })
+        .catch(next)
 
     res.json({
         query: query,
         totalHits: search.body.hits.total.value || 0,
-        hits: search.body.hits.hits
+        hits: search.body.hits.hits,
     })
 }
 
@@ -80,20 +82,19 @@ export const getSearchResults = async (req, res) => {
         results = await elasticClient.search({
             index: index,
             body: {
-                query: query
-            }
+                query: query,
+            },
         })
     } else {
         results = await elasticClient.search({
             index: index,
-            body: {}
+            body: {},
         })
     }
-
 
     res.status(200).json({
         options: options,
         totalHits: results.body.hits?.total?.value || 0,
-        hits: results.body.hits?.hits || []
+        hits: results.body.hits?.hits || [],
     })
 }

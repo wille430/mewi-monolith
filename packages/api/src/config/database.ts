@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
 
-let url;
+let url
 
 if (!MONGO_USERNAME || !MONGO_PASSWORD) {
-    url = "mongodb://" + MONGO_URI
+    url = 'mongodb://' + MONGO_URI
 } else {
-    url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URI}`;
+    url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URI}`
 }
 
 const database = {
@@ -19,14 +19,14 @@ const database = {
                 useUnifiedTopology: true,
             })
             .then(() => {
-                console.log("Successfully connected to database");
+                console.log('Successfully connected to database')
             })
             .catch((error) => {
-                console.log("database connection failed. exiting now...");
-                console.error(error);
-                process.exit(1);
-            });
-    }
+                console.log('database connection failed. exiting now...')
+                console.error(error)
+                process.exit(1)
+            })
+    },
 }
 
 export default database

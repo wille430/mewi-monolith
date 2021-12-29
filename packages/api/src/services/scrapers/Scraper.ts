@@ -9,11 +9,7 @@ export default class Scraper {
     limit: number
     endDate: number
 
-    constructor({
-        maxEntries = 50,
-        name,
-        limit = 20
-    }) {
+    constructor({ maxEntries = 50, name, limit = 20 }) {
         this.maxEntries = maxEntries
         this.name = name
         this.limit = limit
@@ -32,7 +28,7 @@ export default class Scraper {
 
             // Filter out old articles
             if (this.endDate) {
-                items = items.filter(item => {
+                items = items.filter((item) => {
                     const differenceMs = item.date - this.endDate
                     return differenceMs > 0
                 })
@@ -51,7 +47,6 @@ export default class Scraper {
                 console.log(e)
                 return 0
             })
-            
         }
 
         console.log(`Added ${itemCount} items from ${this.name}`)
@@ -65,7 +60,7 @@ export default class Scraper {
         return {
             itemsAdded: items.length,
             firstDate: items[0]?.date ? toDateObj(items[0].date) : toDateObj(Date.now()),
-            continue: !(items.length < this.limit)
+            continue: !(items.length < this.limit),
         }
     }
 }

@@ -1,5 +1,5 @@
-import Stripe from "stripe"
-import StripeService from "../services/StripeService"
+import Stripe from 'stripe'
+import StripeService from '../services/StripeService'
 
 const PaymentController = {
     createSession: async (req, res) => {
@@ -8,15 +8,18 @@ const PaymentController = {
         res.redirect(303, session.url)
     },
     webhook: async (req, res) => {
+        const signature = req.headers['stripe-signature'] as string
 
-        const signature = req.headers["stripe-signature"] as string
-
-        const endpointSecret = "whsec_..."
+        const endpointSecret = 'whsec_...'
 
         let event: Stripe.Event
 
         try {
-            event = StripeService.stripe.webhooks.constructEvent(req.body.rawBody, signature, endpointSecret)
+            event = StripeService.stripe.webhooks.constructEvent(
+                req.body.rawBody,
+                signature,
+                endpointSecret
+            )
         } catch (e) {
             res.status(400).end()
             return
@@ -29,7 +32,7 @@ const PaymentController = {
             res.status(400).end()
             return
         }
-    }
+    },
 }
 
 export default PaymentController

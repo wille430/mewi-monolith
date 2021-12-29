@@ -1,4 +1,3 @@
-
 class PriceRange {
     lte = null
     gte = null
@@ -8,7 +7,7 @@ class PriceRange {
         this.gte = gte
     }
 
-    /** 
+    /**
      * @param toObject Turn PriceRange to object that ElasticSearch can understand
      */
     toObject() {
@@ -18,11 +17,11 @@ class PriceRange {
         return returnObj
     }
 
-    /** 
+    /**
      * @param toString Turn PriceRange to readable string
      */
     toString() {
-        let returnString = ""
+        let returnString = ''
 
         this.lte && returnString.concat(this.lte)
         returnString.concat('-')

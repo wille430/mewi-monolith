@@ -10,17 +10,16 @@ import UserWatcherService from './UserServices/UserWatcherService'
 const EmailTemplate = require('email-templates')
 
 interface InfoObject {
-    from: string,
-    to: string,
-    subject: string,
+    from: string
+    to: string
+    subject: string
     text: string
 }
 
 export default class EmailService {
-
     static googleAuth = {
         email: process.env.GMAIL_MAIL,
-        pass: process.env.GMAIL_PASS
+        pass: process.env.GMAIL_PASS,
     }
 
     static async notifyWatchers() {
@@ -32,12 +31,12 @@ export default class EmailService {
 
         watchers.forEach(async (watcher) => {
             // Get users with corresponding watcher
-            const arrayOfUids = watcher.users.map(x => x.toString())
+            const arrayOfUids = watcher.users.map((x) => x.toString())
             const users = await UserService.usersInIds(arrayOfUids)
 
-            users.forEach(async user => {
+            users.forEach(async (user) => {
                 // console.log(`Emailing ${user.username} about ${response.body.hits.hits.length} new products`)
-                
+
                 const watcherInUser = await UserWatcherService.get(user._id, watcher._id)
                 if (!watcherInUser) {
                     await new WatcherService(watcher._id).delete(user._id)
@@ -47,7 +46,9 @@ export default class EmailService {
 
                 const dateAdded = Date.parse(watcherInUser.createdAt)
 
-                const lastNotificationDate = watcherInUser.notifiedAt ? toUnixTime(watcherInUser.notifiedAt) : null
+                const lastNotificationDate = watcherInUser.notifiedAt
+                    ? toUnixTime(watcherInUser.notifiedAt)
+                    : null
 
                 let comparationDate = dateAdded
                 if (lastNotificationDate) comparationDate = lastNotificationDate
@@ -56,27 +57,33 @@ export default class EmailService {
                 const userWatcher = watcher
                 userWatcher.query.bool.must.push({ range: { date: { gte: comparationDate } } })
 
-
                 // Get new items for since date
                 const response = await elasticClient.search({
                     index: Elasticsearch.defaultIndex,
                     body: {
                         query: userWatcher.query,
                         size: 5,
-                        sort: [
-                            { date: "asc" }
-                        ]
-                    }
+                        sort: [{ date: 'asc' }],
+                    },
                 })
 
-                const newItems: ItemData[] = response.body.hits.hits.map(x => x._source)
+                const newItems: ItemData[] = response.body.hits.hits.map((x) => x._source)
                 if (newItems.length <= 0) return
 
-                console.log(`Found ${newItems.length} new items for user ${user.email} since ${toDateObj(comparationDate).toDateString()} (watcher_id: ${watcherInUser._id})`)
+                console.log(
+                    `Found ${newItems.length} new items for user ${user.email} since ${toDateObj(
+                        comparationDate
+                    ).toDateString()} (watcher_id: ${watcherInUser._id})`
+                )
 
                 // Return if no new items were found since last notice
 
-                await this.sendEmailWithItems(user._id, watcher, newItems, response.body.hits.total.value)
+                await this.sendEmailWithItems(
+                    user._id,
+                    watcher,
+                    newItems,
+                    response.body.hits.total.value
+                )
                 mailSent += 1
 
                 // Update date when last notified in user watcher
@@ -97,12 +104,12 @@ export default class EmailService {
         const locals = {
             newItemCount: totalCount || items.length,
             keyword: watcher.metadata.keyword,
-            items: items
+            items: items,
         }
 
         const info = await this.sendEmail(user.email, 'newItems', locals)
 
-        console.log("Preview URL: %s", NodeMailer.getTestMessageUrl(info))
+        console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
 
     static async sendEmail(to, template, locals) {
@@ -112,30 +119,28 @@ export default class EmailService {
             // host: "smtp.ethereal.email",
             // port: 587,
             // secure: false,
-            service: "gmail",
+            service: 'gmail',
             auth: {
                 // user: testAccount.user,
                 // pass: testAccount.pass
                 user: this.googleAuth.email,
-                pass: this.googleAuth.pass
-            }
+                pass: this.googleAuth.pass,
+            },
         })
 
         const email = new EmailTemplate({
             message: {
-                from: this.googleAuth.email
+                from: this.googleAuth.email,
             },
             transport: transporter,
         })
 
-
-
         const emailInfo = await email.send({
             template: template,
             message: {
-                to: to
+                to: to,
             },
-            locals: locals
+            locals: locals,
         })
 
         let info = await transporter.sendMail(emailInfo.originalMessage)
@@ -147,9 +152,8 @@ export default class EmailService {
         if (!lastNotificationDate) return true
 
         const ms = toUnixTime(lastNotificationDate)
-        if ((Date.now() - ms) > 24 * 60 * 60 * 1000) return true
+        if (Date.now() - ms > 24 * 60 * 60 * 1000) return true
 
         return false
     }
-
 }

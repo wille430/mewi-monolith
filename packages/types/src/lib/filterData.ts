@@ -1,4 +1,4 @@
-import { CategoryType } from ".."
+import { CategoryType } from '..'
 
 export interface Category {
     _id: string
@@ -10,7 +10,7 @@ export interface CategoryHash {
     [key: string]: Category
 }
 
-export const categories: CategoryHash  = {
+export const categories: CategoryHash = {
     fordon: {
         _id: '61366a5106116ee385a56b17',
         label: 'Fordon',

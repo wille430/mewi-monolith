@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'common/hooks/hooks'
 
 const WatcherList = () => {
-    const { isLoading, watchers } = useAppSelector(state => state.watchers)
+    const { isLoading, watchers } = useAppSelector((state) => state.watchers)
 
     const dispatch = useDispatch()
 
@@ -43,7 +43,7 @@ const WatcherList = () => {
     }
 
     React.useEffect(() => {
-            dispatch(getAllWatchers())
+        dispatch(getAllWatchers())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

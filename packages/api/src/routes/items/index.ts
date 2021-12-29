@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { findById } from '../search/controller';
+import { Router } from 'express'
+import { findById } from '../search/controller'
 
-const router = Router();
+const router = Router()
 
 router.get('/:item_id', findById)
 
-export default router;
+export default router

@@ -25,4 +25,4 @@ export interface FilterStates {
     queryState?: { state: string; setState: any }
 }
 
-export type Parameters<T> = T extends (... args: infer T) => any ? T : never
+export type Parameters<T> = T extends (...args: infer T) => any ? T : never

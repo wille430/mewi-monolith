@@ -1,8 +1,7 @@
-
 export interface AuthState {
-    isLoggedIn: boolean,
+    isLoggedIn: boolean
     isLoading: boolean
-    error: string,
+    error: string
 }
 
 export enum AuthActionTypes {
@@ -10,5 +9,5 @@ export enum AuthActionTypes {
     AUTH_LOAD = 'auth/load',
     AUTH_LOGOUT = 'auth/logout',
     AUTH_SIGNUP = 'auth/signup',
-    AUTH_REFRESH = 'auth/refreshToken'
+    AUTH_REFRESH = 'auth/refreshToken',
 }

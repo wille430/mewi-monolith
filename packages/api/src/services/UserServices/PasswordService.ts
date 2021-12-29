@@ -1,15 +1,13 @@
-
 /**
  * @module PasswordService
  * Password specific business logic
  */
 
-import { UserService } from "./index"
+import { UserService } from './index'
 import bcrypt from 'bcryptjs'
 import { APIError, AuthErrorCodes } from '@mewi/types'
 
 class PasswordService {
-
     static async correctPassword(userId: string, password: string): Promise<boolean> {
         const user = await UserService.user(userId)
         const encryptedPassword = user.password
@@ -20,11 +18,12 @@ class PasswordService {
     }
 
     static validate(password: string): boolean {
-        const re = new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-\?;,.\{}|\":<>\[\]\\\' ~_]).{8,}/gm)
+        const re = new RegExp(
+            /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-\?;,.\{}|\":<>\[\]\\\' ~_]).{8,}/gm
+        )
 
         return re.test(password)
     }
-
 }
 
 export default PasswordService

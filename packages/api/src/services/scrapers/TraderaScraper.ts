@@ -1,17 +1,17 @@
-import { ItemData, TraderaItemData } from "types/types"
-import { toUnixTime } from "@mewi/util"
-import CategoryService from "../CategoryService"
-import Scraper from "./Scraper"
+import { ItemData, TraderaItemData } from 'types/types'
+import { toUnixTime } from '@mewi/util'
+import CategoryService from '../CategoryService'
+import Scraper from './Scraper'
 const axios = require('axios')
 
 interface TraderaCategory {
-    id: number,
-    title: string,
-    href?: string,
+    id: number
+    title: string
+    href?: string
     categoryNodes: {
-        title: string,
-        href?: string,
-        isTopLevel: boolean,
+        title: string
+        href?: string
+        isTopLevel: boolean
         isSpaRoute: boolean
     }[]
 }
@@ -25,40 +25,51 @@ export default class TraderaScraper extends Scraper {
     constructor(maxEntries?) {
         super({
             maxEntries,
-            name: "tradera",
-            limit: 1
+            name: 'tradera',
+            limit: 1,
         })
     }
 
     async getNextArticles(): Promise<ItemData[]> {
         if (!this.categories) this.categories = await this.getCategories()
-        if (!(this.categories[this.catIndex].href)) return []
+        if (!this.categories[this.catIndex].href) return []
 
-        if (!this.itemsPerCategory) this.itemsPerCategory = Math.round(this.maxEntries / this.categories.length)
+        if (!this.itemsPerCategory)
+            this.itemsPerCategory = Math.round(this.maxEntries / this.categories.length)
 
-        const url = 'https://www.tradera.com' + this.categories[this.catIndex].href + '.json' + '?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=1'
+        const url =
+            'https://www.tradera.com' +
+            this.categories[this.catIndex].href +
+            '.json' +
+            '?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=1'
 
         try {
-            let itemData: TraderaItemData[] = await axios.get(url).then(res => res.data.items)
+            let itemData: TraderaItemData[] = await axios.get(url).then((res) => res.data.items)
 
             itemData = itemData.slice(0, this.itemsPerCategory)
 
-            let items: ItemData[] = itemData.map((item): ItemData => ({
-                id: item.itemId.toString(),
-                title: item.shortDescription,
-                category: CategoryService.parseTraderaCategories(this.categories[this.catIndex].title), // WIP
-                date: item.startDate ? toUnixTime(new Date(item.startDate)) : Date.now(),
-                endDate: toUnixTime(new Date(item.endDate)),
-                imageUrl: [item.imageUrl],
-                isAuction: !!item.endDate || item.itemType === "auction",
-                redirectUrl: this.baseUrl + item.itemUrl,
-                price: item.price ? ({
-                    value: item.price,
-                    currency: "kr"
-                }) : {},
-                region: null,
-                origin: 'Tradera'
-            }))
+            let items: ItemData[] = itemData.map(
+                (item): ItemData => ({
+                    id: item.itemId.toString(),
+                    title: item.shortDescription,
+                    category: CategoryService.parseTraderaCategories(
+                        this.categories[this.catIndex].title
+                    ), // WIP
+                    date: item.startDate ? toUnixTime(new Date(item.startDate)) : Date.now(),
+                    endDate: toUnixTime(new Date(item.endDate)),
+                    imageUrl: [item.imageUrl],
+                    isAuction: !!item.endDate || item.itemType === 'auction',
+                    redirectUrl: this.baseUrl + item.itemUrl,
+                    price: item.price
+                        ? {
+                              value: item.price,
+                              currency: 'kr',
+                          }
+                        : {},
+                    region: null,
+                    origin: 'Tradera',
+                })
+            )
 
             this.catIndex += 1
             return items
@@ -69,44 +80,44 @@ export default class TraderaScraper extends Scraper {
 
     async getCategories() {
         const url = 'https://www.tradera.com/categories'
-        const categoriesData: TraderaCategory[] = await axios.get(url).then(res => res.data)
+        const categoriesData: TraderaCategory[] = await axios.get(url).then((res) => res.data)
 
         return categoriesData
     }
 
     translateCategory(traderaCat: string): string[] {
         const cats = {
-            "Accessoarer": ["personligt", "accessoarer_klockor"],
-            "Antikt & Design": ["för_hemmet", "möbler_hemindredning"],
-            "Barnkläder & Barnskor": ["personligt", "barnkläder_skor"],
-            "Biljetter & Resor": ["fritid_hobby", "upplevelser_nöje"],
-            "Bygg & Verktyg": ["för_hemmet", "bygg_trädgård", "Verktyg"],
-            "Böcker & Tidningar": ["fritid_hobby", "böcker_studentlitteratur"],
-            "Datorer & Tillbehör": ["elektronik", "datorer_tv-spel"],
-            "DVD & Videofilmer": ["elektronik", "ljud_bild"],
-            "Fordon: , Båtar & Delar": ["fordon", "båtar", "båtdelar_tillbehör"],
-            "Foto: , Kameror & Optik": ["elektronik", "ljud_bild"],
-            "Frimärken": ["fritid_hobby", "hobby_samlarprylar"],
-            "Handgjort & Konsthantverk": ["för_hemmet"],
-            "Hem & Hushåll": ["för_hemmet", "möbler_hemindredning"],
-            "Hemelektronik": ["elektronik"],
-            "Hobby": ["fritid_hobby"],
-            "Klockor": ["personligt", "accessoarer_klockor"],
-            "Kläder": ["personligt", "kläder_skor"],
-            "Konst": ["för_hemmet", "möbler_hemindredning"],
-            "Leksaker & Barnartiklar": ["personligt", "barnartiklar_leksaker"],
-            "Mobiltelefoni & Tele": ["elektronik", "telefoner_tillbehör"],
-            "Musik": ["elektronik", "ljud_bild"],
-            "Mynt & Sedlar": ["fritid_hobby", "hobby_samlarprylar"],
-            "Samlarsaker": ["fritid_hobby", "hobby_samlarprylar"],
-            "Skor": ["personligt", "kläder_skor"],
-            "Skönhetsvård": ["personligt"],
-            "Smycken & Ädelstenar": ["personligt", "accessoarer_klockor"],
-            "Sport & Fritid": ["fritid_hobby", "sport-_fritidsutrustning"],
-            "Trädgård & Växter": ["för_hemmet", "bygg_trädgård"],
-            "TV-spel & Datorspel": ["elektronik", "datorer_tv-spel"],
-            "Vykort & Bilder": ["fritid_hobby"],
-            "Övrigt": ["övrigt"]
+            Accessoarer: ['personligt', 'accessoarer_klockor'],
+            'Antikt & Design': ['för_hemmet', 'möbler_hemindredning'],
+            'Barnkläder & Barnskor': ['personligt', 'barnkläder_skor'],
+            'Biljetter & Resor': ['fritid_hobby', 'upplevelser_nöje'],
+            'Bygg & Verktyg': ['för_hemmet', 'bygg_trädgård', 'Verktyg'],
+            'Böcker & Tidningar': ['fritid_hobby', 'böcker_studentlitteratur'],
+            'Datorer & Tillbehör': ['elektronik', 'datorer_tv-spel'],
+            'DVD & Videofilmer': ['elektronik', 'ljud_bild'],
+            'Fordon: , Båtar & Delar': ['fordon', 'båtar', 'båtdelar_tillbehör'],
+            'Foto: , Kameror & Optik': ['elektronik', 'ljud_bild'],
+            Frimärken: ['fritid_hobby', 'hobby_samlarprylar'],
+            'Handgjort & Konsthantverk': ['för_hemmet'],
+            'Hem & Hushåll': ['för_hemmet', 'möbler_hemindredning'],
+            Hemelektronik: ['elektronik'],
+            Hobby: ['fritid_hobby'],
+            Klockor: ['personligt', 'accessoarer_klockor'],
+            Kläder: ['personligt', 'kläder_skor'],
+            Konst: ['för_hemmet', 'möbler_hemindredning'],
+            'Leksaker & Barnartiklar': ['personligt', 'barnartiklar_leksaker'],
+            'Mobiltelefoni & Tele': ['elektronik', 'telefoner_tillbehör'],
+            Musik: ['elektronik', 'ljud_bild'],
+            'Mynt & Sedlar': ['fritid_hobby', 'hobby_samlarprylar'],
+            Samlarsaker: ['fritid_hobby', 'hobby_samlarprylar'],
+            Skor: ['personligt', 'kläder_skor'],
+            Skönhetsvård: ['personligt'],
+            'Smycken & Ädelstenar': ['personligt', 'accessoarer_klockor'],
+            'Sport & Fritid': ['fritid_hobby', 'sport-_fritidsutrustning'],
+            'Trädgård & Växter': ['för_hemmet', 'bygg_trädgård'],
+            'TV-spel & Datorspel': ['elektronik', 'datorer_tv-spel'],
+            'Vykort & Bilder': ['fritid_hobby'],
+            Övrigt: ['övrigt'],
 
             // "Allt inom Accessoarer": ["Personligt", "Accessoarer & klockor"],
             // "Bröllopsaccessoarer": ["Personligt", "Accessoarer & klockor"],
@@ -124,8 +135,6 @@ export default class TraderaScraper extends Scraper {
             // "Väskor": ["Personligt", "Accessoarer & klockor"],
             // // "Övrigt": null,
             // "Accessoarer": ["Personligt", "Accessoarer & klockor"],
-
-
 
             // "Allt inom Antikt & Design": ["För hemmet", "Möbler & heminredning"],
             // "Allmoge": ["För hemmet", "Möbler & heminredning"],
@@ -158,8 +167,6 @@ export default class TraderaScraper extends Scraper {
             // "Övrig konst & design": ["För hemmet", "Möbler & heminredning"],
             // "Antikt & Design": ["För hemmet", "Möbler & heminredning"],
 
-
-
             // "Allt inom Barnkläder & Barnskor": ["Personligt", "Barnkläder & skor"],
             // "Barnskor": ["Personligt", "Barnkläder & skor"],
             // "Maskeradkläder": ["Personligt", "Barnkläder & skor"],
@@ -180,8 +187,6 @@ export default class TraderaScraper extends Scraper {
             // "Övriga barnkläder": ["Personligt", "Barnkläder & skor"],
             // "Barnkläder & Barnskor": ["Personligt", "Barnkläder & skor"],
 
-
-
             // "Allt inom Biljetter & Resor": ["Fritid & hobby", "Upplevelser & nöje"],
             // "Bio & Teater": ["Fritid & hobby", "Upplevelser & nöje"],
             // "Bussbiljetter": ["Fritid & hobby", "Upplevelser & nöje"],
@@ -197,8 +202,6 @@ export default class TraderaScraper extends Scraper {
             // "Upplevelser": ["Fritid & hobby", "Upplevelser & nöje"],
             // "Övriga presentkort": ["Fritid & hobby", "Upplevelser & nöje"],
             // "Biljetter & Resor": ["Fritid & hobby", "Upplevelser & nöje"],
-
-
 
             // "Allt inom Bygg & Verktyg": ["För hemmet", "Bygg & trädgård", "Verktyg"],
             // "Badrum": ["För hemmet", "Möbler & heminredning"],
@@ -223,8 +226,6 @@ export default class TraderaScraper extends Scraper {
             // "VVS": ["För hemmet", "Bygg & trädgård", "Verktyg"],
             // "Värme": ["För hemmet", "Bygg & trädgård", "Verktyg"],
             // "Bygg & Verktyg": ["För hemmet", "Bygg & trädgård", "Verktyg"],
-
-
 
             // "Allt inom Böcker & Tidningar": ["Fritid & hobby", "Böcker & studentlitteratur"],
             // "Almanackor & Kalendrar": ["Fritid & hobby", "Böcker & studentlitteratur"],

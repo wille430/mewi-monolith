@@ -10,7 +10,7 @@ const RenderSnackbar = (props: SnackbarProps) => {
 }
 
 interface SnackbarHandlerProps {
-    message: string,
+    message: string
     type: 'error' | 'info'
 }
 

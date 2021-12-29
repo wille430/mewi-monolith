@@ -17,9 +17,8 @@ export default class EndDate {
 
             // Return object with keys for each marketplace
             return dates
-
         } catch (e) {
-            console.log("Missing", this.filePath)
+            console.log('Missing', this.filePath)
             return {}
         }
     }
@@ -36,7 +35,9 @@ export default class EndDate {
     static getEndDateFor(marketplaceName: string): Date {
         try {
             const endDates = EndDate.getEndDates()
-            let endDate = endDates[marketplaceName] ? parseInt(endDates[marketplaceName]) : Date.now() - 14 * 24 * 60 * 60 * 1000
+            let endDate = endDates[marketplaceName]
+                ? parseInt(endDates[marketplaceName])
+                : Date.now() - 14 * 24 * 60 * 60 * 1000
             return new Date(endDate)
         } catch (e) {
             console.log(e.message)

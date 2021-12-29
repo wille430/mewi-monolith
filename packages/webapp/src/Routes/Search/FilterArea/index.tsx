@@ -14,7 +14,7 @@ type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSear
 }
 
 const FilterArea = ({ defaultValues, ...rest }: FilterAreaProps) => {
-    const { isLoggedIn } = useAppSelector(state => state.auth)
+    const { isLoggedIn } = useAppSelector((state) => state.auth)
     const { setFilters } = useContext(SearchContext)
     const { setQuery } = useQuery()
     const location = useLocation()

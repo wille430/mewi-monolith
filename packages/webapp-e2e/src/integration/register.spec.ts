@@ -52,10 +52,9 @@ describe('login', () => {
     })
 
     it('should display error when email is in use already', () => {
-
         cy.request('post', 'http://localhost:3001/auth/signup', {
             ...userInfo,
-            repassword: userInfo.password
+            repassword: userInfo.password,
         })
 
         cy.get('[data-testid=emailInput]').type(userInfo.email)

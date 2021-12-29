@@ -87,7 +87,14 @@ describe('Snackbar', () => {
         it('it times out', async () => {
             const timeout = 5000
 
-            render(<Snackbar open={true} title={title} autoHideDuration={timeout} handleClose={callback} />)
+            render(
+                <Snackbar
+                    open={true}
+                    title={title}
+                    autoHideDuration={timeout}
+                    handleClose={callback}
+                />
+            )
 
             new Promise<void>((resolve) =>
                 setTimeout(() => {

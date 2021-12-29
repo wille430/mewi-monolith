@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux'
 import { createUser } from 'store/auth/creators'
 
 const Register = () => {
-
     // const [username, setUsername] = React.useState('')
     const initFormData = {
         email: '',

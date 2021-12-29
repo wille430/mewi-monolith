@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import { create, getAll, getById, remove, update} from './controller'
+import { Router } from 'express'
+import { create, getAll, getById, remove, update } from './controller'
 
 const router = Router()
 

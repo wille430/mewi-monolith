@@ -67,7 +67,7 @@ export const TextField = ({
             <header
                 className={cx({
                     [styles['header']]: true,
-                    [styles['isActive']]: inputValue || isActive
+                    [styles['isActive']]: inputValue || isActive,
                 })}
             >
                 <label

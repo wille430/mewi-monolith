@@ -1,11 +1,11 @@
-import Elasticsearch, { elasticClient } from "../config/elasticsearch"
+import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import * as fs from 'fs'
-import EmailService from "./EmailService"
-import ScrapeService from "./scrapers/ScrapeService"
+import EmailService from './EmailService'
+import ScrapeService from './scrapers/ScrapeService'
 
 export default class ItemsService {
     static async deleteOld(daysOld = 2) {
-        console.log("Clearing old items...")
+        console.log('Clearing old items...')
 
         // Convert days into milliseconds
         const millisecondsOld = daysOld * 24 * 60 * 60 * 1000
@@ -20,11 +20,11 @@ export default class ItemsService {
                     bool: {
                         should: [
                             { range: { date: { lte: dateToRemove } } },
-                            { range: { endDate: { lte: Date.now() } } }
-                        ]
-                    }
-                }
-            }
+                            { range: { endDate: { lte: Date.now() } } },
+                        ],
+                    },
+                },
+            },
         })
 
         console.log('Successfully deleted', response.body.deleted, 'items')
@@ -33,7 +33,6 @@ export default class ItemsService {
     }
 
     static async addItems(items: any[], index = Elasticsearch.defaultIndex): Promise<number> {
-
         let addedItemsCount = items.length
 
         if (process.env.DEV_MODE) {
@@ -41,15 +40,14 @@ export default class ItemsService {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
         } else {
-
-            const body = items.flatMap(item => [{ index: { _index: index } }, item])
+            const body = items.flatMap((item) => [{ index: { _index: index } }, item])
 
             if (body.length === 0) return 0
 
             await elasticClient.bulk({
                 refresh: true,
                 index: index,
-                body: body
+                body: body,
             })
         }
 

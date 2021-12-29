@@ -1,9 +1,8 @@
-
 export class APIError {
     status?: number
     type?: string
     message?: string
-    
+
     constructor(status: number, type?: string, message?: string) {
         this.status = status
         this.type = type
@@ -25,19 +24,19 @@ export const AuthErrorCodes = {
     INVALID_JWT: 'auth/invalid_token',
     MISSING_JWT: 'auth/missing_jwt',
     INVALID_REFRESH_TOKEN: 'auth/invalid_refresh_token',
-    USER_ALREADY_EXISTS: 'auth/user_already_exists'
+    USER_ALREADY_EXISTS: 'auth/user_already_exists',
 }
 
 export const DatabaseErrorCodes = {
     CONFLICTING_RESOURCE: 'database/already_exists',
-    MISSING_DOCUMENT: 'database/not_found'
+    MISSING_DOCUMENT: 'database/not_found',
 }
 
 export const ValidationErrorCodes = {
     MISSING_FIELDS: 'validation/missing_fields',
-    INVALID_INPUT: 'validation/failed'
+    INVALID_INPUT: 'validation/failed',
 }
 
 export const WatcherErrorCodes = {
-    INVALID_QUERY: 'watcher/invalid_query'
+    INVALID_QUERY: 'watcher/invalid_query',
 }

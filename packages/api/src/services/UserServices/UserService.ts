@@ -1,8 +1,7 @@
-import UserModel from "models/UserModel"
-import { APIError, AuthErrorCodes } from "@mewi/types"
+import UserModel from 'models/UserModel'
+import { APIError, AuthErrorCodes } from '@mewi/types'
 
 export default class UserService {
-
     static async user(userId: string, projection?: any) {
         const user = await UserModel.findById(userId, projection)
 

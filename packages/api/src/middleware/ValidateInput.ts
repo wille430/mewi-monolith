@@ -1,6 +1,5 @@
-import { validationResult } from "express-validator"
-import InputError from "types/InputError"
-
+import { validationResult } from 'express-validator'
+import InputError from 'types/InputError'
 
 const ValidateInput = (req, res, next) => {
     const errors = validationResult(req)

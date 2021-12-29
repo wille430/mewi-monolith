@@ -5,9 +5,7 @@ import { AuthService } from '../../services/UserServices'
 
 describe('user', () => {
     describe('GET /user', () => {
-
         describe('when authorized', () => {
-
             let response
 
             beforeEach(async () => {
@@ -23,20 +21,19 @@ describe('user', () => {
                 expect(response.body.error).toBeTruthy()
                 expect(response.body.error.type).toBe(AuthErrorCodes.MISSING_JWT)
             })
-
         })
 
         describe('when authorized', () => {
-
             let response
 
             beforeEach(async () => {
-
-                const token = await request(app).post('/test/user').then(res => res.text)
+                const token = await request(app)
+                    .post('/test/user')
+                    .then((res) => res.text)
 
                 response = await request(app)
                     .post('/user')
-                    .set({ 'Authorization': 'Bearer ' + token })
+                    .set({ Authorization: 'Bearer ' + token })
             })
 
             it('should respond with 200 status code', () => {
@@ -46,8 +43,6 @@ describe('user', () => {
             it('should return with an object', () => {
                 expect(typeof response.body).toMatch('object')
             })
-
         })
-
     })
 })

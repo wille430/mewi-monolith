@@ -14,7 +14,6 @@ export const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-
         builder.addCase(loginUser.fulfilled, (state, action) => {
             const { jwt, refreshToken } = action.payload
 
@@ -67,11 +66,9 @@ export const userSlice = createSlice({
                 localStorage.removeItem('refreshToken')
             })
 
-        
         builder.addMatcher(isPending, (state, action) => {
             state.isLoading = true
         })
-
 
         builder.addMatcher(isFulfilled, (state, action) => {
             state.isLoading = false

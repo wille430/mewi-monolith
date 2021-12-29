@@ -14,9 +14,7 @@ export const Container = ({ className, children, ...rest }: ContainerProps) => {
     )
 }
 
-const Header = (
-    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
-) => (
+const Header = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => (
     <header
         className={cx({
             [styles['header']]: true,
@@ -27,9 +25,7 @@ const Header = (
     </header>
 )
 
-const Content = (
-    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
-) => (
+const Content = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => (
     <section
         className={cx({
             [styles['content']]: true,
@@ -40,9 +36,7 @@ const Content = (
     </section>
 )
 
-const Footer = (
-    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
-) => (
+const Footer = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => (
     <footer
         className={cx({
             [styles['footer']]: true,

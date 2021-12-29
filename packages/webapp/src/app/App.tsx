@@ -30,14 +30,12 @@ if (!window.console) {
 }
 
 function App() {
-    const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn) 
+    const isAuthenticated = useAppSelector((state) => state.auth.isLoggedIn)
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(onAuthLoad())
     }, [])
-
-    
 
     return (
         <div className='w-full min-h-screen'>

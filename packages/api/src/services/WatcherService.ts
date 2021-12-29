@@ -1,8 +1,8 @@
-import WatcherModel from "models/WatcherModel"
-import { WatcherErrorCodes } from "types/watcher"
-import SearchService from "./SearchService"
-import { UserService } from "./UserServices"
-import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from "@mewi/types"
+import WatcherModel from 'models/WatcherModel'
+import { WatcherErrorCodes } from 'types/watcher'
+import SearchService from './SearchService'
+import { UserService } from './UserServices'
+import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
 
 export default class WatcherService {
     watcher_id: string
@@ -29,7 +29,7 @@ export default class WatcherService {
         const watcher = await this.watcher()
         if (!watcher) return
 
-        watcher.users = watcher.users.filter(uid => uid.toString() !== userId)
+        watcher.users = watcher.users.filter((uid) => uid.toString() !== userId)
 
         console.log(watcher.users)
 
@@ -52,7 +52,6 @@ export default class WatcherService {
     }
 
     static async create(metadata: SearchFilterDataProps, query) {
-
         const isValidQuery = await SearchService.validateQuery(query)
 
         if (!isValidQuery) throw new APIError(422, WatcherErrorCodes.INVALID_QUERY)
@@ -60,21 +59,23 @@ export default class WatcherService {
         const similarWatcher = await this.findSimilarWatcher(query)
 
         if (!similarWatcher) {
-
             console.log(`No similar watcher found. Creating a new watcher...`)
 
             // Create new watcher
             const newWatcher = await WatcherModel.create({
                 metadata,
-                query
+                query,
             })
 
             return newWatcher
         } else {
             console.log(`Found similar watcher ${similarWatcher._id} returning existing watcher...`)
-            throw new APIError(409, DatabaseErrorCodes.CONFLICTING_RESOURCE, "The query already exists on a watcher. The query must be unique.")
+            throw new APIError(
+                409,
+                DatabaseErrorCodes.CONFLICTING_RESOURCE,
+                'The query already exists on a watcher. The query must be unique.'
+            )
         }
-
     }
 
     static async isUserInWatcherWithQuery(userId: string, query) {
@@ -82,7 +83,7 @@ export default class WatcherService {
 
         if (!similarWatcher) return false
 
-        const userInWatcher = similarWatcher.users.find(x => x.toString() === userId)
+        const userInWatcher = similarWatcher.users.find((x) => x.toString() === userId)
 
         return !!userInWatcher
     }

@@ -27,7 +27,11 @@ const Template: Story = (args) => (
         parameters={[
             { id: uniqueId(), label: 'Bränsle', value: 'Bensin' },
             { id: uniqueId(), label: 'Växellåda', value: 'Manuell' },
-            { id: uniqueId(), label: 'LONG STRING LONG STRING LONG STRING', value: 'ManuelldsadsasdassdadasdasdsdsadsadasdadasdasdsaVäxellådamanue;;amuiManuell' },
+            {
+                id: uniqueId(),
+                label: 'LONG STRING LONG STRING LONG STRING',
+                value: 'ManuelldsadsasdassdadasdasdsdsadsadasdadasdasdsaVäxellådamanue;;amuiManuell',
+            },
         ]}
         {...args}
     />

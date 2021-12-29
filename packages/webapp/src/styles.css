@@ -22,7 +22,7 @@
 
 @font-face {
     font-family: 'Inter';
-    src: local('Inter'), url(./fonts/Inter/Inter-VariableFont_slnt,wght.ttf);
+    src: local('Inter'), url(./fonts/Inter/Inter-VariableFont_slntwght.ttf);
 }
 
 * {

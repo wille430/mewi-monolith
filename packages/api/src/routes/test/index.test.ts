@@ -3,7 +3,6 @@ import app from '../app'
 
 describe('test', () => {
     describe('POST /test/user', () => {
-
         let response
 
         beforeEach(async () => {
@@ -17,6 +16,5 @@ describe('test', () => {
         it('should return token in body', () => {
             expect(response.text).toMatch(/([\w-]*\.[\w-]*\.[\w-]*)/g)
         })
-
     })
 })

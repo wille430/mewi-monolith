@@ -10,17 +10,21 @@ module.exports = {
         '../src/**/*.stories.mdx',
         '../src/**/*.stories.@(js|jsx|ts|tsx)',
     ],
-    addons: [...rootMain.addons, '@nrwl/react/plugins/storybook', {
-        name: '@storybook/addon-postcss',
-        options: {
-            cssLoaderOptions: {
-                importLoaders: 1,
+    addons: [
+        ...rootMain.addons,
+        '@nrwl/react/plugins/storybook',
+        {
+            name: '@storybook/addon-postcss',
+            options: {
+                cssLoaderOptions: {
+                    importLoaders: 1,
+                },
+                postcssLoaderOptions: {
+                    implementation: require('postcss'),
+                },
             },
-            postcssLoaderOptions: {
-                implementation: require('postcss')
-            }
-        }
-    }],
+        },
+    ],
     webpackFinal: async (config, { configType }) => {
         // apply any global webpack configs that might have been specified in .storybook/main.js
         if (rootMain.webpackFinal) {

@@ -1,4 +1,4 @@
-import { PriceRangeProps } from "@mewi/types"
+import { PriceRangeProps } from '@mewi/types'
 
 const PriceRangeUtils = {
     toString: (obj: PriceRangeProps) => {
@@ -7,8 +7,8 @@ const PriceRangeUtils = {
     },
     toObject: (string: string | null): PriceRangeProps => {
         const defaultPriceRangeObject = {
-            gte: "",
-            lte: ""
+            gte: '',
+            lte: '',
         }
 
         if (!string) return defaultPriceRangeObject
@@ -17,7 +17,7 @@ const PriceRangeUtils = {
         if (arr[0]) returnObj.gte = arr[0]
         if (arr[1]) returnObj.lte = arr[1]
         return returnObj
-    }
+    },
 }
 
 export default PriceRangeUtils

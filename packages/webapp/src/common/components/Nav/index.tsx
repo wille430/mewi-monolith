@@ -9,12 +9,11 @@ import InnerNav from './InnerNav'
 import SearchForm from 'common/components/SearchForm'
 import { useAppSelector } from 'common/hooks/hooks'
 
-
 const Nav = () => {
     const location = useLocation()
     const path = location.pathname
 
-    const { isLoggedIn } = useAppSelector(state => state.auth) 
+    const { isLoggedIn } = useAppSelector((state) => state.auth)
     const [showMenu, setShowMenu] = useState(false)
 
     return (
