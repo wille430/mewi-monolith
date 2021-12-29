@@ -47,12 +47,10 @@ export const Button = (props: ButtonProps) => {
 
     return (
         <button
-            className={
-                cx({
-                    [styles[`button--${variant}${isLoading || disabled ? '--disabled' : ''}`]]:
-                        true,
-                }) + ` ${className || ''}`
-            }
+            className={cx({
+                [styles[`button--${variant}${isLoading || disabled ? '--disabled' : ''}`]]: true,
+                [className || '']: true,
+            })}
             data-testid='button'
             onClick={handleClick}
             {...rest}

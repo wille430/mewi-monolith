@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom'
 import Layout from 'common/components/Layout'
 import { AuthErrorCodes } from '@mewi/types'
 import _ from 'lodash'
-import { UserContext } from 'common/context/UserContext'
-import { useContext } from 'react'
 import { Button, Container, TextField } from '@mewi/ui'
+import { useDispatch } from 'react-redux'
+import { loginUser } from 'store/auth/creators'
 
 const Login = () => {
-    const { userDispatch } = useContext(UserContext)
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
 
@@ -18,39 +17,45 @@ const Login = () => {
         all: '',
     }
     const [errors, setErrors] = React.useState(initErrors)
+    const dispatch = useDispatch()
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        await new Promise<void>((resolve, reject) => {
-            userDispatch({
-                type: 'login',
-                userCredentials: { email, password },
-                callback: (authTokens, err) => {
-                    if (err) {
-                        setErrors(initErrors)
-                        switch (err?.error?.type) {
-                            case AuthErrorCodes.INVALID_EMAIL:
-                            case AuthErrorCodes.INVALID_PASSWORD:
-                            case AuthErrorCodes.MISSING_USER:
-                                setErrors({
-                                    email: 'Felaktig epostaddress eller lösenord',
-                                    password: 'Felaktig epostaddress eller lösenord',
-                                    all: '',
-                                })
-                                break
-                            default:
-                                setErrors({
-                                    ...initErrors,
-                                    all: 'Ett fel inträffade. Försök igen.',
-                                })
-                                break
-                        }
-                    }
-                    resolve()
-                },
-            })
-        })
+        // await new Promise<void>((resolve, reject) => {
+        //     // userDispatch({
+        //     //     type: 'login',
+        //     //     userCredentials: { email, password },
+        //     //     callback: (authTokens, err) => {
+        //     //         if (err) {
+        //     //             setErrors(initErrors)
+        //     //             switch (err?.error?.type) {
+        //     //                 case AuthErrorCodes.INVALID_EMAIL:
+        //     //                 case AuthErrorCodes.INVALID_PASSWORD:
+        //     //                 case AuthErrorCodes.MISSING_USER:
+        //     //                     setErrors({
+        //     //                         email: 'Felaktig epostaddress eller lösenord',
+        //     //                         password: 'Felaktig epostaddress eller lösenord',
+        //     //                         all: '',
+        //     //                     })
+        //     //                     break
+        //     //                 default:
+        //     //                     setErrors({
+        //     //                         ...initErrors,
+        //     //                         all: 'Ett fel inträffade. Försök igen.',
+        //     //                     })
+        //     //                     break
+        //     //             }
+        //     //         }
+        //     //         resolve()
+        //     //     },
+        //     // })
+
+        //     // to-do
+
+        // })
+
+        dispatch(loginUser({ email, password }))
     }
 
     return (

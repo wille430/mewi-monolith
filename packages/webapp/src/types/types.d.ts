@@ -24,3 +24,5 @@ export interface FilterStates {
     priceRangeState: { state: string; setState: any }
     queryState?: { state: string; setState: any }
 }
+
+export type Parameters<T> = T extends (... args: infer T) => any ? T : never

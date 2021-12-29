@@ -1,5 +1,5 @@
 import './App.css'
-import { lazy, Suspense, useContext } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Nav from 'common/components/Nav/index'
 import { SearchProvider } from 'common/context/SearchContext'
@@ -7,7 +7,9 @@ import Login from 'Routes/Login'
 import PrivateRoute from 'common/components/PrivateRoute'
 import PublicRoute from 'common/components/PublicRoute'
 import ProtectedRoutes from 'Routes/ProtectedRoutes'
-import { UserContext } from 'common/context/UserContext'
+import { useAppSelector } from 'common/hooks/hooks'
+import { useDispatch } from 'react-redux'
+import { onAuthLoad } from 'store/auth/creators'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -28,7 +30,14 @@ if (!window.console) {
 }
 
 function App() {
-    const isAuthenticated = useContext(UserContext).isLoggedIn
+    const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn) 
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(onAuthLoad())
+    }, [])
+
+    
 
     return (
         <div className='w-full min-h-screen'>

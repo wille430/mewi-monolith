@@ -1,20 +1,18 @@
-
 /**
  * @module UserWatcherService
  */
 
-import { ObjectId } from "bson"
-import { APIError, DatabaseErrorCodes, ElasticQuery, SearchFilterDataProps } from "@mewi/types"
-import WatcherModel from "models/WatcherModel"
-import { PublicWatcher } from "@mewi/types"
-import WatcherService from "services/WatcherService"
-import { UserService } from "./index"
-import SearchService from "services/SearchService"
+import { ObjectId } from 'bson'
+import { APIError, DatabaseErrorCodes, ElasticQuery, SearchFilterDataProps } from '@mewi/types'
+import WatcherModel from 'models/WatcherModel'
+import { PublicWatcher } from '@mewi/types'
+import WatcherService from 'services/WatcherService'
+import { UserService } from './index'
+import SearchService from 'services/SearchService'
 
 class UserWatcherService {
-
     /**
-     * 
+     *
      * @param userId User ID
      * @returns Array of watchers
      */
@@ -22,15 +20,17 @@ class UserWatcherService {
         const user = await UserService.user(userId)
         const userWatchers = user.watchers
 
-        const watchers = await Promise.all(userWatchers.map(async (userWatcher) => {
-            return await WatcherModel.findById(userWatcher._id)
-        }))
+        const watchers = await Promise.all(
+            userWatchers.map(async (userWatcher) => {
+                return await WatcherModel.findById(userWatcher._id)
+            })
+        )
 
         return watchers
     }
 
     /**
-     * 
+     *
      * @param userId User ID
      * @param watcherId ID of watcher
      * @returns A user watcher
@@ -40,7 +40,6 @@ class UserWatcherService {
 
         return user.watchers.id(watcherId)
     }
-
 
     static async userEligable(userId: string) {
         const user = await UserService.user(userId)
@@ -54,8 +53,10 @@ class UserWatcherService {
         }
     }
 
-    static async addWatcher(userId: string, { metadata, query }: { metadata: SearchFilterDataProps, query: ElasticQuery }) {
-
+    static async addWatcher(
+        userId: string,
+        { metadata, query }: { metadata: SearchFilterDataProps; query: ElasticQuery }
+    ) {
         const user = await UserService.user(userId)
 
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
@@ -69,23 +70,22 @@ class UserWatcherService {
             watcher = await WatcherService.create(metadata, query)
         }
 
-        const watcherInUser = user.watchers.find(userWatcher => userWatcher._id.toString() === watcher._id.toString())
+        const watcherInUser = user.watchers.find(
+            (userWatcher) => userWatcher._id.toString() === watcher._id.toString()
+        )
 
         if (!watcherInUser) {
             console.log('User does not subscribe to the watcher. Adding it to user...')
 
             const userWatcher = user.watchers.create({
-                _id: watcher._id
+                _id: watcher._id,
             })
             user.watchers.push(userWatcher)
 
             const userIdObject = new ObjectId(userId)
 
             if (!watcher.users?.includes(userIdObject)) {
-                watcher.users = [
-                    ...(watcher.users || []),
-                    userIdObject
-                ]
+                watcher.users = [...(watcher.users || []), userIdObject]
             }
 
             await watcher.save()
@@ -94,23 +94,27 @@ class UserWatcherService {
             console.log('Done. Returning user...')
 
             return watcher
-
         } else {
-
             console.log('User is already subscribed to the watcher')
 
             await watcher.save()
             await user.save()
 
-            throw new APIError(409, DatabaseErrorCodes.CONFLICTING_RESOURCE, "The query must be unique.")
+            throw new APIError(
+                409,
+                DatabaseErrorCodes.CONFLICTING_RESOURCE,
+                'The query must be unique.'
+            )
         }
-
     }
 
-    static async updateWatcher(userId: string, watcherId: string, searchFilters: SearchFilterDataProps) {
-
+    static async updateWatcher(
+        userId: string,
+        watcherId: string,
+        searchFilters: SearchFilterDataProps
+    ) {
         const query = SearchService.createElasticQuery(searchFilters)
-        const similarWatcher = await WatcherService.findSimilarWatcher(query)
+        const similarWatcher = await WatcherService.findSimilarWatcher(searchFilters)
 
         let watcher: typeof similarWatcher
         if (similarWatcher) {
@@ -130,15 +134,12 @@ class UserWatcherService {
         user.watchers.pull({ _id: watcherId })
 
         const newUserWatcher = user.watchers.create({
-            _id: watcher._id
+            _id: watcher._id,
         })
         user.watchers.push(newUserWatcher)
 
         // Adding user to watcher
-        watcher.users = [
-            ...watcher.users,
-            new ObjectId(user._id)
-        ]
+        watcher.users = [...watcher.users, new ObjectId(user._id)]
 
         // save
         await user.save()

@@ -89,6 +89,6 @@ export interface ItemData {
 }
 
 export interface AuthTokens {
-    jwt?: JWT
-    refreshToken?: string
+    jwt: JWT
+    refreshToken: string
 }

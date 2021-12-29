@@ -7,13 +7,14 @@ import NavCurve from './NavCurve'
 import { FiMenu } from 'react-icons/fi'
 import InnerNav from './InnerNav'
 import SearchForm from 'common/components/SearchForm'
-import { UserContext } from 'common/context/UserContext'
+import { useAppSelector } from 'common/hooks/hooks'
+
 
 const Nav = () => {
     const location = useLocation()
     const path = location.pathname
 
-    const { isLoggedIn } = useContext(UserContext)
+    const { isLoggedIn } = useAppSelector(state => state.auth) 
     const [showMenu, setShowMenu] = useState(false)
 
     return (

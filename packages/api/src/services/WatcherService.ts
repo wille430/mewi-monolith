@@ -2,7 +2,7 @@ import WatcherModel from "models/WatcherModel"
 import { WatcherErrorCodes } from "types/watcher"
 import SearchService from "./SearchService"
 import { UserService } from "./UserServices"
-import { APIError, DatabaseErrorCodes } from "@mewi/types"
+import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from "@mewi/types"
 
 export default class WatcherService {
     watcher_id: string
@@ -51,7 +51,7 @@ export default class WatcherService {
         return await WatcherModel.findOne({ query }, projection)
     }
 
-    static async create(metadata, query) {
+    static async create(metadata: SearchFilterDataProps, query) {
 
         const isValidQuery = await SearchService.validateQuery(query)
 

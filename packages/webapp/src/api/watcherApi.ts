@@ -2,7 +2,7 @@ import { ElasticQuery, PublicWatcher, SearchFilterDataProps, WatcherMetadata } f
 import axios from 'axios'
 import { SearchParamsUtils } from 'utils'
 
-export const getWatchers = async () => {
+const getWatchers = async () => {
     const watchers: PublicWatcher[] = await axios
         .get('/user/watchers')
         .then((res) => res.data.watchers)
@@ -12,18 +12,18 @@ export const getWatchers = async () => {
     return watchers
 }
 
-export const getWatcher = async (watcherId: string) => {
+const getWatcher = async (watcherId: string) => {
     const watcher: PublicWatcher = await axios
         .get('/user/watchers/' + watcherId)
         .then((res) => res.data.watcher)
     return watcher
 }
 
-export const deleteWatcher = async (watcherId: string) => {
+const deleteWatcher = async (watcherId: string) => {
     await axios.delete('/user/watchers/' + watcherId)
 }
 
-export const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
+const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
     const body = {
         searchFilters: searchFilterData,
     }
@@ -37,10 +37,7 @@ export const createWatcher = async (searchFilterData: SearchFilterDataProps) => 
     return newWatcher
 }
 
-export const updateWatcher = async (
-    watcherId: string,
-    newSearchFilterData: SearchFilterDataProps
-) => {
+const updateWatcher = async (watcherId: string, newSearchFilterData: SearchFilterDataProps) => {
     const body = {
         searchFilters: newSearchFilterData,
     }
@@ -49,4 +46,12 @@ export const updateWatcher = async (
         .patch('/user/watchers' + watcherId, body)
         .then((res) => res.data.watcher)
     return newWatcher
+}
+
+export default {
+    getWatchers,
+    getWatcher,
+    deleteWatcher,
+    createWatcher,
+    updateWatcher,
 }

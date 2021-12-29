@@ -1,10 +1,15 @@
-import { UserContext } from 'common/context/UserContext'
+
 import { useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import { logOut } from 'store/auth/creators'
 
 const LogOutButton = () => {
-    const { userDispatch } = useContext(UserContext)
 
-    return <button onClick={(e) => userDispatch({ type: 'logout' })}>Logga ut</button>
+    const dispatch = useDispatch()
+
+    return <button onClick={(e) => {
+        dispatch(logOut())
+    }}>Logga ut</button>
 }
 
 export default LogOutButton

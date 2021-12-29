@@ -1,9 +1,9 @@
-import { APIResponseError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
-import { ButtonHTMLAttributes, useContext, useEffect, useState } from 'react'
-import { WatcherContext } from 'Routes/Bevakningar/WatcherContext'
-import { SnackbarContext } from 'common/context/SnackbarContext'
-import { createWatcher } from 'api/'
+import { SearchFilterDataProps } from '@mewi/types'
+import { ButtonHTMLAttributes } from 'react'
 import { Button } from '@mewi/ui'
+import { useDispatch } from 'react-redux'
+import { createWatcher } from 'store/watchers/creators'
+import { useAppSelector } from 'common/hooks/hooks'
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
     searchFilters: SearchFilterDataProps
@@ -11,56 +11,14 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
-    const { setSnackbar } = useContext(SnackbarContext)
-    const { dispatch } = useContext(WatcherContext)
-
-    const initState = {
-        msg: null,
-        color: 'text-red-400',
-    }
-    const [responseMsg, setResponseMsg] = useState<any>(initState)
-
-    useEffect(() => {
-        // Hide message when user clicks
-        document
-            .getElementById('root')
-            ?.addEventListener('click', () => responseMsg.msg !== null && setResponseMsg(initState))
-    }, [])
+    const dispatch = useDispatch()
 
     // Add watcher
     const handleClick = async () => {
-        await createWatcher(searchFilters)
-            .then((newWatcher) => {
-                dispatch({ type: 'add', newWatcher: newWatcher })
-                setSnackbar({
-                    title: 'Bevaknigen lades till',
-                    body: 'Du kommer få notiser på mejlen när nya föremål läggs till som stämmer överens med bevakningens filter',
-                })
-                onClick && onClick()
-            })
-            .catch((e: APIResponseError) => {
-                switch (e.error.type) {
-                    case DatabaseErrorCodes.CONFLICTING_RESOURCE:
-                        setResponseMsg({
-                            msg: 'En bevakning med samma sökning existerar redan',
-                            color: 'text-red-400',
-                        })
-                        break
-                    default:
-                        setResponseMsg({
-                            msg: 'Ett fel inträffade',
-                            color: 'text-red-400',
-                        })
-                }
-            })
+        dispatch(createWatcher(searchFilters))
     }
 
-    return (
-        <div>
-            <Button {...rest} onClick={handleClick} label={'Lägg till bevakning'} defaultCasing />
-            <span className={'text-sm pl-2 ' + responseMsg.color}>{responseMsg.msg}</span>
-        </div>
-    )
+    return <Button {...rest} onClick={handleClick} label={'Lägg till bevakning'} defaultCasing />
 }
 
 export default AddWatcherButton

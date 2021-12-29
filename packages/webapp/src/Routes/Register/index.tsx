@@ -4,14 +4,12 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'common/components/Layout'
 import { APIResponseError, AuthErrorCodes } from '@mewi/types'
-import { SnackbarContext } from 'common/context/SnackbarContext'
 import _ from 'lodash'
-import { UserContext } from 'common/context/UserContext'
 import { Button, Container, TextField } from '@mewi/ui'
+import { useDispatch } from 'react-redux'
+import { createUser } from 'store/auth/creators'
 
 const Register = () => {
-    const { setSnackbar } = useContext(SnackbarContext)
-    const { userDispatch } = useContext(UserContext)
 
     // const [username, setUsername] = React.useState('')
     const initFormData = {
@@ -22,6 +20,7 @@ const Register = () => {
     }
     const [formData, setFormData] = React.useState(initFormData)
     const { email, password, repassword } = formData
+    const dispatch = useDispatch()
 
     const initErrors = {
         ...initFormData,
@@ -74,25 +73,7 @@ const Register = () => {
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        await new Promise<void>((resolve, reject) => {
-            userDispatch({
-                type: 'signup',
-                signUpCredentials: _.omit(formData, 'all'),
-                callback: (authTokens, err) => {
-                    setErrors(initErrors)
-                    console.log('REGISTER ERROR:', err)
-                    if (!err) {
-                        setSnackbar({
-                            title: 'Ditt konto skapades!',
-                        })
-                    } else {
-                        handleError(err)
-                    }
-                    resolve()
-                },
-            })
-        })
+        dispatch(createUser([email, password, repassword]))
     }
 
     return (

@@ -11,6 +11,7 @@ export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     open?: boolean
     animationDuration?: number
     onExited?: () => void
+    type?: 'error' | 'info'
 }
 
 const Snackbar = ({
@@ -80,7 +81,7 @@ const Snackbar = ({
                             width: 'clamp(20rem, 500px, 100%)',
                             minHeight: '2rem',
                         }}
-                        className='flex flex-row z-50 rounded-md bg-blue z-100 text-white justify-between shadow-lg cursor-pointer select-none'
+                        className='flex flex-row z-50 rounded-md bg-white z-100 text-white justify-between shadow-lg cursor-pointer select-none'
                         data-testid='snackbarContainer'
                         onClick={handleClick}
                         onMouseEnter={handleMouseEnter}
@@ -88,9 +89,9 @@ const Snackbar = ({
                     >
                         <div className='flex flex-col flex-grow divide-y divide-blue-dark h-auto w-full'>
                             <header className='flex-0 flex p-2 px-3'>
-                                <h3 className='flex-grow' data-testid='snackbarTitle'>
+                                <h4 className='flex-grow' data-testid='snackbarTitle'>
                                     {title}
-                                </h3>
+                                </h4>
                                 <button data-testid='closeSnackbar' onClick={handleClick}>
                                     <FiX size='20' />
                                 </button>

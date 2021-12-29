@@ -6,12 +6,17 @@ import { WatcherErrorCodes } from '@mewi/types'
 
 export const getAll = async (req, res, next) => {
     // Get user_id
-    const { user_id } = req.user
-    const watchers = await UserWatcherService.getAll(user_id).catch(next)
 
-    res.status(200).json({
-        watchers: watchers
-    })
+    try {
+        const { user_id } = req.user
+        const watchers = await UserWatcherService.getAll(user_id)
+
+        res.status(200).json({
+            watchers: watchers,
+        })
+    } catch (e) {
+        next(e)
+    }
 }
 
 export const create = async (req, res, next) => {
@@ -22,19 +27,30 @@ export const create = async (req, res, next) => {
 
     try {
         if (!searchFilters) {
-            throw new APIError(421, ValidationErrorCodes.MISSING_FIELDS, 'You must provide search filters to create a new watcher.')
+            throw new APIError(
+                421,
+                ValidationErrorCodes.MISSING_FIELDS,
+                'You must provide search filters to create a new watcher.'
+            )
         } else {
             const query = SearchService.createElasticQuery(searchFilters)
             console.log('Converted search filters to elastic query:', JSON.stringify(query))
             const validQuery = await SearchService.validateQuery(query)
             if (!validQuery) {
-                throw new APIError(400, WatcherErrorCodes.INVALID_QUERY, 'The search filters provided were not valid.')
+                throw new APIError(
+                    400,
+                    WatcherErrorCodes.INVALID_QUERY,
+                    'The search filters provided were not valid.'
+                )
             } else {
                 // Create watcher
                 console.log('Creating watcher...', searchFilters, query)
-                const newWatcher = await UserWatcherService.addWatcher(user_id, { metadata: searchFilters, query: query })
+                const newWatcher = await UserWatcherService.addWatcher(user_id, {
+                    metadata: searchFilters,
+                    query: query,
+                })
                 res.status(201).json({
-                    watcher: newWatcher
+                    watcher: newWatcher,
                 })
             }
         }
@@ -51,8 +67,7 @@ export const remove = async (req, res, next) => {
     try {
         await new WatcherService(watcher_id).delete(user_id)
         res.sendStatus(200)
-    }
-    catch (e) {
+    } catch (e) {
         next(e)
         return
     }
@@ -66,17 +81,29 @@ export const update = async (req, res, next) => {
 
     try {
         if (!searchFilters) {
-            throw new APIError(421, ValidationErrorCodes.MISSING_FIELDS, 'You must provide search filters to update a new watcher.')
+            throw new APIError(
+                421,
+                ValidationErrorCodes.MISSING_FIELDS,
+                'You must provide search filters to update a new watcher.'
+            )
         } else {
             const query = SearchService.createElasticQuery(searchFilters)
             const validQuery = await SearchService.validateQuery(query)
             if (!validQuery) {
-                throw new APIError(400, WatcherErrorCodes.INVALID_QUERY, 'The search filters provided were not valid.')
+                throw new APIError(
+                    400,
+                    WatcherErrorCodes.INVALID_QUERY,
+                    'The search filters provided were not valid.'
+                )
             } else {
                 // Update watcher
-                const newWatcher = await UserWatcherService.updateWatcher(user_id, watcher_id, searchFilters)
+                const newWatcher = await UserWatcherService.updateWatcher(
+                    user_id,
+                    watcher_id,
+                    searchFilters
+                )
                 res.status(201).json({
-                    watcher: newWatcher
+                    watcher: newWatcher,
                 })
             }
         }
@@ -85,11 +112,14 @@ export const update = async (req, res, next) => {
         return
     }
 
-
     try {
-        const updatedWatcher = await UserWatcherService.updateWatcher(user_id, watcher_id, searchFilters)
+        const updatedWatcher = await UserWatcherService.updateWatcher(
+            user_id,
+            watcher_id,
+            searchFilters
+        )
         res.status(200).json({
-            watcher: updatedWatcher
+            watcher: updatedWatcher,
         })
     } catch (e) {
         next(e)
@@ -103,7 +133,7 @@ export const getById = async (req, res, next) => {
     try {
         const watcher = await new WatcherService(watcher_id).watcher()
         res.status(200).json({
-            watcher: watcher
+            watcher: watcher,
         })
     } catch (e) {
         next(e)

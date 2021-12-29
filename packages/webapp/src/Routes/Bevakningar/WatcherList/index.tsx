@@ -2,16 +2,17 @@ import WatcherCard from './WatcherCard'
 import * as React from 'react'
 import StyledLoader from 'common/components/StyledLoader'
 import WatcherPopUpButton from './WatcherPopUpButton'
-import { WatcherContext } from './WatcherContext'
-import { Link } from 'react-router-dom'
-import { getWatchers } from 'api'
+import { getAllWatchers } from 'store/watchers/creators'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'common/hooks/hooks'
 
 const WatcherList = () => {
-    const [loading, setLoading] = React.useState(false)
-    const { watchers, dispatch } = React.useContext(WatcherContext)
+    const { isLoading, watchers } = useAppSelector(state => state.watchers)
+
+    const dispatch = useDispatch()
 
     const renderItems = () => {
-        if (loading) {
+        if (isLoading) {
             return (
                 <div className='flex-grow flex justify-center items-center'>
                     <div className='h-32'>
@@ -42,20 +43,7 @@ const WatcherList = () => {
     }
 
     React.useEffect(() => {
-        const fetchWatchers = async () => {
-            setLoading(true)
-            await getWatchers()
-                .then((watchers) => {
-                    dispatch({ type: 'replaceAll', newWatchers: watchers })
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-            setLoading(false)
-        }
-
-        fetchWatchers()
-
+            dispatch(getAllWatchers())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

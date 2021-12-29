@@ -1,17 +1,17 @@
-import { useContext } from 'react'
 import { FiTrash } from 'react-icons/fi'
-import { WatcherContext } from '../WatcherContext'
 import { Button } from '@mewi/ui'
+import { useDispatch } from 'react-redux'
+import { removeWatcher } from 'store/watchers/creators'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
-    const { dispatch } = useContext(WatcherContext)
+    const dispatch = useDispatch()
 
     return (
         <Button
             className='bg-red-400 hover:bg-red-300'
             data-testid='removeWatcherButton'
             onClick={async () => {
-                dispatch({ type: 'remove', id: watcherId })
+                dispatch(removeWatcher(watcherId))
             }}
             icon={<FiTrash color='white' />}
         />

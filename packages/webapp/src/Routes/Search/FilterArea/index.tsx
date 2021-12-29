@@ -7,14 +7,14 @@ import { PriceRangeUtils } from 'utils'
 import AddWatcherButton from '../../../common/components/SearchFilterArea/AddWatcherButton'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'common/components/SearchFilterArea'
-import { UserContext } from 'common/context/UserContext'
+import { useAppSelector } from 'common/hooks/hooks'
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
     defaultValues?: SearchFilterDataProps
 }
 
 const FilterArea = ({ defaultValues, ...rest }: FilterAreaProps) => {
-    const { isLoggedIn } = useContext(UserContext)
+    const { isLoggedIn } = useAppSelector(state => state.auth)
     const { setFilters } = useContext(SearchContext)
     const { setQuery } = useQuery()
     const location = useLocation()
