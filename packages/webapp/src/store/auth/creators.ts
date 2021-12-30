@@ -1,7 +1,5 @@
-import { AuthTokens } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, refreshJwtToken, signUp } from 'api'
-import { RootState, store } from 'store'
 import { AuthActionTypes } from './types'
 
 export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, () => {

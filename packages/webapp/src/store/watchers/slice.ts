@@ -1,6 +1,5 @@
 import { DatabaseErrorCodes, WatcherErrorCodes } from '@mewi/types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { searchSlice } from 'store/search/slice'
 import { createWatcher, getAllWatchers, removeWatcher } from './creators'
 import { WatchersState } from './types'
 

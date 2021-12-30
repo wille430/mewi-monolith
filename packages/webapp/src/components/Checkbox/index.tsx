@@ -1,5 +1,5 @@
 import { Override } from 'types/types'
-import React, { createRef, HTMLAttributes, useState } from 'react'
+import React, { createRef, HTMLAttributes } from 'react'
 
 export type CheckboxProps = Override<
     HTMLAttributes<HTMLInputElement>,

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import MewiLogo from '../MewiLogo/index'
 import { useLocation } from 'react-router-dom'
 import NavLinkItem from './NavLinkItem'

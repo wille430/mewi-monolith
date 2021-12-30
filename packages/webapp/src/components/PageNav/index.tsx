@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'

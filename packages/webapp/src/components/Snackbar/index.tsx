@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import { HTMLAttributes, useEffect, useRef, useState } from 'react'
+import { HTMLAttributes, useEffect, useRef } from 'react'
 import { FiX } from 'react-icons/fi'
 import SlideTransition from '../SlideTransition'
 

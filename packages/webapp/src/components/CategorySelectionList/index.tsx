@@ -1,6 +1,5 @@
-import { CategoryHash, categories, Category, CategoryType } from '@mewi/types'
+import { categories, Category } from '@mewi/types'
 import classNames from 'classnames'
-import _ from 'lodash'
 import { Link } from 'react-router-dom'
 import styles from './index.module.scss'
 

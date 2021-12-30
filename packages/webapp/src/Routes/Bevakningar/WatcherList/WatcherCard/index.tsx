@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { PriceRangeUtils } from 'utils'
 import { capitalize } from '@mewi/util'
 import RemoveButton from './RemoveWatcherButton'

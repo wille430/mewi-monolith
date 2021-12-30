@@ -1,12 +1,11 @@
 import StyledLoader from 'components/StyledLoader'
 import ArticleItem from 'components/ArticleItem/index'
-import ItemPopUp from '../../../components/ItemPopUp'
+import ItemPopUp from '../ItemPopUp'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { getItem } from 'store/itemDisplay/creators'
 import { useEffect } from 'react'
 import { getSearchResults } from 'store/search/creators'
-import _ from 'lodash'
 
 const ItemGrid = () => {
     const { hits, isLoading, filters, sort } = useAppSelector((state) => state.search)

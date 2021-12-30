@@ -3,7 +3,7 @@ import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { getSearchResults, setFilters } from 'store/search/creators'
+import { setFilters } from 'store/search/creators'
 import queryString from 'query-string'
 
 export interface SearchFormProps {

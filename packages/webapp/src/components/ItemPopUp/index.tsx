@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React from 'react'
 import PopUp from 'components/PopUp'
 import StyledLoader from 'components/StyledLoader'
 import ArticleItemDetails from 'components/ArticleItemDetails'

@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { SearchFilterDataProps } from '@mewi/types'
-import AddWatcherButton from '../../../components/SearchFilterArea/AddWatcherButton'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
+import { Link, useHistory } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import queryString from 'query-string'
-import { getSearchResults, setFilters, updateFilters } from 'store/search/creators'
+import { setFilters, updateFilters } from 'store/search/creators'
 import _ from 'lodash'
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {

@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { logOut } from 'store/auth/creators'
 

@@ -1,4 +1,3 @@
-import { useHistory, useLocation } from 'react-router'
 import { Button } from '@mewi/ui'
 
 export interface ResetButtonProps {

@@ -3,7 +3,6 @@ import { ButtonHTMLAttributes } from 'react'
 import { Button } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createWatcher } from 'store/watchers/creators'
-import { useAppSelector } from 'hooks/hooks'
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
     searchFilters: SearchFilterDataProps

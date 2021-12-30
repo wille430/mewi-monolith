@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
-import { getSearchResults, setSort } from 'store/search/creators'
+import { setSort } from 'store/search/creators'
 import { SortData } from '@mewi/types'
 
 const SortButton = () => {

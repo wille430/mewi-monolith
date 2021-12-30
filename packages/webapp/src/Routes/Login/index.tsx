@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
-import { AuthErrorCodes } from '@mewi/types'
-import _ from 'lodash'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { loginUser } from 'store/auth/creators'

@@ -1,5 +1,4 @@
-import { categories, CategoryHash } from '@mewi/types'
-import _ from 'lodash'
+import { categories } from '@mewi/types'
 import CategoryListItem from './CategoryListItem'
 
 const CategoryList = () => {

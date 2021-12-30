@@ -1,6 +1,3 @@
-import { useContext } from 'react'
-import useParam from 'hooks/useParam'
-import { useStore } from 'react-redux'
 import { useAppSelector } from 'hooks/hooks'
 
 const ResultText = () => {

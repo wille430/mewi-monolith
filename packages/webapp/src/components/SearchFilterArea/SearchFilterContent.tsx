@@ -1,6 +1,5 @@
 import {
     categoriesOptions,
-    Category,
     PriceRange,
     regions,
     SearchFilterDataProps,

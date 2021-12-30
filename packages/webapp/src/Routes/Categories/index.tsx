@@ -1,4 +1,3 @@
-import { Container } from '@mewi/ui'
 import CategoryList from './CategoryList'
 
 const Categories = () => {

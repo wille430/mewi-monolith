@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from 'react'
+import { ReactNode } from 'react'
 import { useDispatch } from 'react-redux'
 import { setFilters } from 'store/search/creators'
 
