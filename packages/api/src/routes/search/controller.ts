@@ -1,4 +1,4 @@
-import { SearchPostRequestBody } from '@mewi/types'
+import { SearchPostRequestBody, SortData } from '@mewi/types'
 import { elasticClient } from '../../config/elasticsearch'
 import SearchService from '../../services/SearchService'
 const index = 'items'
@@ -7,52 +7,6 @@ export const getAll = async (req, res, next) => {
     const search = await SearchService.search(req.body).catch(next)
 
     res.status(200).json({
-        totalHits: search.body.hits.total.value || 0,
-        hits: search.body.hits.hits,
-    })
-}
-
-export const queryWithFilters = async (req, res, next) => {
-    const query = req.params.query || ''
-    let queryObj = req.body
-
-    queryObj.query.bool.must.push({ match: { title: query } })
-
-    const search = await elasticClient
-        .search({
-            index: index,
-            body: queryObj,
-        })
-        .catch(next)
-
-    res.json({
-        query: query,
-        filters: queryObj,
-        totalHits: search.body.hits.total.value || 0,
-        hits: search.body.hits.hits,
-    })
-}
-
-export const query = async (req, res, next) => {
-    const query = req.params.query || ''
-
-    let queryObj = {
-        query: {
-            bool: {
-                must: [{ match: { title: query } }],
-            },
-        },
-    }
-
-    const search = await elasticClient
-        .search({
-            index: index,
-            body: queryObj,
-        })
-        .catch(next)
-
-    res.json({
-        query: query,
         totalHits: search.body.hits.total.value || 0,
         hits: search.body.hits.hits,
     })
@@ -75,14 +29,35 @@ export const findById = async (req, res) => {
 export const getSearchResults = async (req, res) => {
     const options: SearchPostRequestBody = req.body
 
+    let sort: Record<string, 'asc' | 'desc'>
+
+    switch (options.sort) {
+        case SortData.DATE_ASC:
+            sort = { date: 'asc' }
+            break
+        case SortData.DATE_DESC:
+            sort = { date: 'desc' }
+            break
+        case SortData.PRICE_ASC:
+            sort = { 'price.value': 'asc' }
+            break
+        case SortData.PRICE_DESC:
+            sort = { 'price.value': 'desc' }
+            break
+    }
+
     let results
     if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
         console.log('Searching with filters:', options.searchFilters)
+        console.log('Sort:', sort)
+
+    
         const query = SearchService.createElasticQuery(options.searchFilters)
         results = await elasticClient.search({
             index: index,
             body: {
                 query: query,
+                sort: sort ? [sort] : [],
             },
         })
     } else {

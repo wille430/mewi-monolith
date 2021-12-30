@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux'
 import { clearFilters, setFilters } from 'store/search/creators'
 import { useLocation } from 'react-router'
 import queryString from 'query-string'
-import { useAppSelector } from 'hooks/hooks'
 
 const Search = () => {
     const dispatch = useDispatch()

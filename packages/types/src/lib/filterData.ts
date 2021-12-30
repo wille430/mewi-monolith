@@ -1,5 +1,3 @@
-import { CategoryType } from '..'
-
 export interface Category {
     _id: string
     label: string
@@ -524,4 +522,13 @@ export interface PriceRange {
 export interface SearchPostRequestBody {
     page?: number
     searchFilters?: SearchFilterDataProps
+    sort?: SortData
+}
+
+export enum SortData {
+    RELEVANCE = 'relevance',
+    PRICE_DESC = 'price_desc',
+    PRICE_ASC = 'price_asc',
+    DATE_ASC = 'date_asc',
+    DATE_DESC = 'date_desc',
 }

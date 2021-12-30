@@ -1,5 +1,6 @@
+import { SortData } from '@mewi/types'
 import { createSlice, isFulfilled, isPending } from '@reduxjs/toolkit'
-import { clearFilters, getSearchResults, setFilters, updateFilters } from './creators'
+import { clearFilters, getSearchResults, setFilters, setSort, updateFilters } from './creators'
 import { SearchState } from './type'
 
 const initialState: SearchState = {
@@ -7,6 +8,7 @@ const initialState: SearchState = {
     totalHits: 0,
     filters: {},
     isLoading: false,
+    sort: SortData.RELEVANCE,
 }
 
 export const searchSlice = createSlice({
@@ -34,6 +36,10 @@ export const searchSlice = createSlice({
                 ...state.filters,
                 ...action.payload,
             }
+        })
+
+        builder.addCase(setSort, (state, action) => {
+            state.sort = action.payload
         })
 
         builder

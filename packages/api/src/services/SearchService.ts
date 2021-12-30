@@ -35,7 +35,7 @@ export default class SearchService {
             },
         })
 
-        return suggestResponse.body.suggest.keywordSuggest[0].options
+        return suggestResponse.body.suggest.keywordSuggest[0]?.options
     }
 
     static async findById(id: string) {

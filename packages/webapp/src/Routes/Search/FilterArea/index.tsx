@@ -26,9 +26,6 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
             pathname: window.location.pathname,
             search: queryString.stringify(_.omit(search.filters, Object.keys(defaultValues || {}))),
         })
-
-        // set filters in search state
-        dispatch(getSearchResults())
     }
 
     const handleReset = () => {

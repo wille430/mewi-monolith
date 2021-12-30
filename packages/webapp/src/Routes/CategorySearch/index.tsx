@@ -46,8 +46,6 @@ const CategorySearch = () => {
     useEffect(() => {
         // when /category_id/subcat_id changes, set filters to default
         dispatch(setFilters(defaultValues))
-        // and get new results
-        dispatch(getSearchResults())
     }, [params.category_id, params.subcat_id])
 
     return (

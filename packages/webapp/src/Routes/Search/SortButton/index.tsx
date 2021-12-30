@@ -1,42 +1,29 @@
-import { useEffect, useState } from 'react'
-import useParam from 'hooks/useParam'
+import React from 'react'
+import { useAppSelector } from 'hooks/hooks'
+import { useDispatch } from 'react-redux'
+import { getSearchResults, setSort } from 'store/search/creators'
+import { SortData } from '@mewi/types'
 
 const SortButton = () => {
-    const [param, setParam] = useParam('sort')
+    const { sort } = useAppSelector((state) => state.search)
+    const dispatch = useDispatch()
 
     const options = [
-        { label: 'Relevans', name: 'relevans', default: { selected: true } },
-        { label: 'Pris fallande', name: 'pris_fallande', default: { selected: false } },
-        { label: 'Pris stigande', name: 'pris_stigande', default: { selected: false } },
-        { label: 'Datum stigande', name: 'datum_stigande', default: { selected: false } },
-        { label: 'Datum fallande', name: 'datum_fallande', default: { selected: false } },
+        { label: 'Relevans', value: SortData.RELEVANCE, default: { selected: true } },
+        { label: 'Pris fallande', value: SortData.PRICE_DESC, default: { selected: false } },
+        { label: 'Pris stigande', value: SortData.PRICE_ASC, default: { selected: false } },
+        { label: 'Datum stigande', value: SortData.DATE_ASC, default: { selected: false } },
+        { label: 'Datum fallande', value: SortData.DATE_DESC, default: { selected: false } },
     ]
 
-    const [selectedOption, setSelectedOption] = useState(options[0].name)
-
-    const onSortChange = (e: any) => {
-        setSelectedOption(e.target.value)
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        dispatch(setSort(e.target.value as SortData))
     }
 
-    useEffect(() => {
-        if (!param) return
-        setSelectedOption(param)
-        // eslint-disable-next-line
-    }, [])
-
-    useEffect(() => {
-        if (!selectedOption || selectedOption === options[0].name) {
-            setParam(null)
-        } else {
-            setParam(selectedOption)
-        }
-        // eslint-disable-next-line
-    }, [selectedOption])
-
     return (
-        <select onChange={onSortChange} value={selectedOption}>
+        <select onChange={handleChange} value={sort}>
             {options.map((obj, i) => (
-                <option key={i} value={obj.name}>
+                <option key={i} value={obj.value}>
                     {obj.label}
                 </option>
             ))}
