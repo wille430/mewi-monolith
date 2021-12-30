@@ -3,6 +3,8 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import searchApi from 'api/searchApi'
 import { RootState } from 'store'
 import { SearchActionTypes, SearchState } from './type'
+import queryString from 'query-string'
+import _ from 'lodash'
 
 export const clearFilters = createAction(SearchActionTypes.CLEAR_FILTERS)
 
@@ -31,7 +33,7 @@ export const getSearchResults = createAsyncThunk<
         const { filters, sort } = thunkApi.getState().search
         const results = await searchApi.getSearchResults({
             searchFilters: filters,
-            sort: sort
+            sort: sort,
         })
         return results
     } catch (e) {
@@ -42,3 +44,43 @@ export const getSearchResults = createAsyncThunk<
 export const setSort = createAction(SearchActionTypes.SORT, (sortData: SortData) => {
     return { payload: sortData }
 })
+
+export const getFiltersFromQueryParams = createAction(
+    SearchActionTypes.FILTERS_FROM_PARAMS,
+    (
+        defaultValues?: Partial<SearchFilterDataProps>
+    ): { payload: Pick<SearchState, 'filters' | 'sort'> } => {
+        const params = queryString.parse(window.location.search)
+
+        let filters = {}
+        let sort = SortData.RELEVANCE
+        Object.keys(params).forEach((key) => {
+            if (['keyword', 'regions', 'category', 'priceRange', 'auction'].includes(key)) {
+                filters = _.merge(filters, { [key]: params[key] })
+            } else if (key === 'sort') {
+                if (Object.values(SortData).includes(params[key] as SortData)) {
+                    sort = params[key] as SortData
+                }
+            }
+        })
+
+        if (defaultValues) {
+            return {
+                payload: {
+                    filters: {
+                        ...filters,
+                        ...defaultValues
+                    },
+                    sort,
+                },
+            }
+        } else {
+            return {
+                payload: {
+                    filters,
+                    sort,
+                },
+            }
+        }
+    }
+)

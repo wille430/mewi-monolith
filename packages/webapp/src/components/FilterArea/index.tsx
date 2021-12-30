@@ -18,7 +18,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
 
     const history = useHistory()
     const dispatch = useDispatch()
-    
+
     const handleSubmit = () => {
         // update url search params
         history.push({
@@ -46,7 +46,10 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
             onReset={handleReset}
             actions={
                 isLoggedIn ? (
-                    <AddWatcherButton searchFilters={search.filters} data-testid='addWatcherButton' />
+                    <AddWatcherButton
+                        searchFilters={search.filters}
+                        data-testid='addWatcherButton'
+                    />
                 ) : (
                     <Link to='/login'>Bevaka sökning</Link>
                 )

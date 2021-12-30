@@ -14,8 +14,7 @@ import styles from './index.module.scss'
 import _ from 'lodash'
 import classNames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { clearFilters, setFilters } from 'store/search/creators'
-import queryString from 'query-string'
+import { clearFilters, getFiltersFromQueryParams, setFilters } from 'store/search/creators'
 
 const cx = classNames.bind(styles)
 
@@ -27,15 +26,13 @@ interface ParamTypes {
 const CategorySearch = () => {
     const params = useParams<ParamTypes>()
     const dispatch = useDispatch()
-    const location = useLocation()
 
     const defaultValues = {
         category: params.subcat_id || params.category_id,
     }
 
     useEffect(() => {
-        const newFilters = _.merge(queryString.parse(location.search), defaultValues)
-        dispatch(setFilters(newFilters))
+        dispatch(getFiltersFromQueryParams(defaultValues))
 
         // clear filters on unmount
         return () => {
@@ -44,8 +41,7 @@ const CategorySearch = () => {
     }, [])
 
     useEffect(() => {
-        // when /category_id/subcat_id changes, set filters to default
-        dispatch(setFilters(defaultValues))
+        dispatch(getFiltersFromQueryParams(defaultValues))
     }, [params.category_id, params.subcat_id])
 
     return (

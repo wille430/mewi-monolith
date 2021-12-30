@@ -7,16 +7,12 @@ import ResultText from '../../components/ResultText'
 import Layout from 'components/Layout'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { clearFilters, setFilters } from 'store/search/creators'
-import { useLocation } from 'react-router'
-import queryString from 'query-string'
-
+import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
 const Search = () => {
     const dispatch = useDispatch()
-    const location = useLocation()
 
     useEffect(() => {
-        dispatch(setFilters(queryString.parse(location.search)))
+       dispatch(getFiltersFromQueryParams()) 
 
         // clear filters on unmount
         return () => {

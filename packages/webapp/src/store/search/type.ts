@@ -14,4 +14,5 @@ export enum SearchActionTypes {
     UPDATE_FILTERS = 'search/updateFilters',
     GET_RESULTS = 'search/get',
     SORT = 'search/sort',
+    FILTERS_FROM_PARAMS = 'search/filtersFromParams',
 }
