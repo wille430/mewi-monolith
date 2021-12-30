@@ -1,13 +1,10 @@
-import { categoriesOptions, categories, Category } from '@mewi/types'
+import { categories, Category } from '@mewi/types'
 import AdPlaceholder from 'common/components/AdPlaceholder'
 import CategorySelectionList from 'common/components/CategorySelectionList'
 import Layout from 'common/components/Layout'
-import { SearchContext } from 'common/context/SearchContext'
-import { contextsKey } from 'express-validator/src/base'
-import _ from 'lodash'
-import { ReactNode, useContext, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { useParams } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import FilterArea from 'Routes/Search/FilterArea'
 import ItemGrid from 'Routes/Search/ItemGrid'
 import { SelectedItemProvider } from 'Routes/Search/ItemGrid/ItemPopUp/SelectedItemContext'
@@ -15,7 +12,11 @@ import PageNav from 'Routes/Search/PageNav'
 import ResultText from 'Routes/Search/ResultText'
 import SortButton from 'Routes/Search/SortButton'
 import styles from './index.module.scss'
+import _ from 'lodash'
 import classNames from 'classnames'
+import { useDispatch } from 'react-redux'
+import { clearFilters, getSearchResults, setFilters } from 'store/search/creators'
+import queryString from 'query-string'
 
 const cx = classNames.bind(styles)
 
@@ -26,21 +27,36 @@ interface ParamTypes {
 
 const CategorySearch = () => {
     const params = useParams<ParamTypes>()
-    const { filters, setFilters } = useContext(SearchContext)
+    const dispatch = useDispatch()
+    const location = useLocation()
+
+    const defaultValues = {
+        category: params.subcat_id || params.category_id,
+    }
 
     useEffect(() => {
-        setFilters({
-            ...filters,
-            category: params.subcat_id || params.category_id,
-        })
-    }, [params])
+        const newFilters = _.merge(queryString.parse(location.search), defaultValues)
+        dispatch(setFilters(newFilters))
+
+        // clear filters on unmount
+        return () => {
+            dispatch(clearFilters())
+        }
+    }, [])
+
+    useEffect(() => {
+        // when /category_id/subcat_id changes, set filters to default
+        dispatch(setFilters(defaultValues))   
+        // and get new results
+        dispatch(getSearchResults())
+    }, [params.category_id, params.subcat_id])
 
     return (
         <Layout>
             <aside className='side-col'></aside>
             <main
                 className={cx({
-                    ['main']: true,
+                    'main': true,
                     [styles.main]: true,
                 })}
             >
@@ -55,9 +71,7 @@ const CategorySearch = () => {
                         <CategoryPathLabel categoryValues={params} />
                         <FilterArea
                             exclude={{ category: true }}
-                            defaultValues={{
-                                category: params.subcat_id || params.category_id,
-                            }}
+                            defaultValues={defaultValues}
                             showKeywordField
                         />
                         <div className='w-full flex justify-between py-2 pb-6'>

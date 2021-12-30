@@ -1,6 +1,5 @@
-import { ElasticQuery, PublicWatcher, SearchFilterDataProps, WatcherMetadata } from '@mewi/types'
+import { PublicWatcher, SearchFilterDataProps } from '@mewi/types'
 import axios from 'axios'
-import { SearchParamsUtils } from 'utils'
 
 const getWatchers = async () => {
     const watchers: PublicWatcher[] = await axios

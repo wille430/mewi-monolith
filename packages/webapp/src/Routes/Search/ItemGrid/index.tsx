@@ -1,18 +1,27 @@
 import { useContext, useEffect, useState } from 'react'
 import StyledLoader from 'common/components/StyledLoader'
 import ArticleItem from 'common/components/ArticleItem/index'
-import { SearchContext } from 'common/context/SearchContext'
 import ItemPopUp from './ItemPopUp'
 import { SelectedItemContext } from './ItemPopUp/SelectedItemContext'
+import { useAppSelector } from 'common/hooks/hooks'
+import { useDispatch } from 'react-redux'
+import { getSearchResults } from 'store/search/creators'
 
 const ItemGrid = () => {
-    const { search, isLoading } = useContext(SearchContext)
+    const hits = useAppSelector((state) => state.search.hits)
+    const isLoading = useAppSelector((state) => state.search.isLoading)
+
+    const dispatch = useDispatch()
 
     const [popUpState, setPopUpState] = useState({
         show: false,
         id: '',
     })
     const { item, setItem } = useContext(SelectedItemContext)
+
+    useEffect(() => {
+        dispatch(getSearchResults())
+    }, [])
 
     useEffect(() => {
         if (item) {
@@ -29,9 +38,7 @@ const ItemGrid = () => {
     }
 
     const renderItems = () => {
-        // return component with data from item param
-        if (search.hits === null || search.hits === undefined) return
-        return search.hits.map((item: any, i: number) => (
+        return hits.map((item: any, i: number) => (
             <ArticleItem
                 key={i}
                 props={item['_source']}

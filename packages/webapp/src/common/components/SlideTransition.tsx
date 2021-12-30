@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Transition, TransitionStatus } from 'react-transition-group'
 
-const transitions = {
+const transitions: Record<TransitionStatus, Record<string, string | number>> = {
     entering: {
         transform: 'translateX(-120%)',
         opacity: 1,
@@ -18,6 +18,9 @@ const transitions = {
         transform: 'translateX(-120%)',
         opacity: 0,
     },
+    unmounted: {
+
+    }
 }
 
 export interface SlideTransitionProps {
@@ -55,9 +58,8 @@ const SlideTransition = ({
     }, [inProp])
 
     return (
-        // @ts-ignore
-        <Transition in={runOnStart ? show : inProp} duration={duration}>
-            {(state) => {
+        <Transition in={runOnStart ? show : inProp} duration={duration} addEndListener={(node, done) => node.addEventListener('transitionend', (e) => undefined)}>
+            {(state: TransitionStatus) => {
                 if (state === 'entering') {
                     onEntering && onEntering()
                 } else if (state === 'entered') {
@@ -76,7 +78,6 @@ const SlideTransition = ({
                     <div
                         style={{
                             ...defaultStyling,
-                            // @ts-ignore
                             ...transitions[state],
                         }}
                     >

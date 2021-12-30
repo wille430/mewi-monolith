@@ -30,6 +30,12 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
         history.push(linkUrl)
     }
 
+    const regionsString = () => {
+        if (typeof watcher.metadata.regions === 'string') return watcher.metadata.regions
+
+        return watcher.metadata.regions?.map((x: string) => capitalize(x)).join(', ')
+    }
+
     return (
         <article
             className='shadow-md rounded-md bg-white p-4 flex flex-col'
@@ -46,11 +52,7 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                     {watcher.metadata.regions && watcher.metadata.regions.length >= 1 ? (
                         <div className='mr-6'>
                             <label className='label'>Regioner:</label>
-                            <span>
-                                {watcher.metadata.regions
-                                    .map((x: string) => capitalize(x))
-                                    .join(', ')}
-                            </span>
+                            <span>{regionsString()}</span>
                         </div>
                     ) : (
                         <div></div>

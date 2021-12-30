@@ -1,4 +1,4 @@
-import { autocomplete } from 'api'
+import searchApi from 'api/searchApi'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import AutoCompleteRow from './AutoCompleteRow'
 
@@ -24,7 +24,7 @@ const SearchSuggestions = ({
 
     useEffect(() => {
         if (!query) return
-        autocomplete(query).then((suggestions) => setSuggestions(suggestions))
+        searchApi.autocomplete(query).then((suggestions) => setSuggestions(suggestions))
     }, [query])
 
     return (

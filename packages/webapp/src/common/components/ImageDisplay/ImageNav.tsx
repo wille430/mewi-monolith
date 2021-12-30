@@ -1,7 +1,7 @@
 interface Props {
     imageUrls: string[]
     selectedIndex: number
-    setSelectedIndex: Function
+    setSelectedIndex: (index: number) => void
 }
 
 const ImageNav = ({ imageUrls, selectedIndex, setSelectedIndex }: Props) => {

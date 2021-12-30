@@ -6,7 +6,7 @@ import ItemHeader from './ItemHeader'
 import { SelectedItemContext } from './SelectedItemContext'
 import ArticleItemDetails from 'common/components/ArticleItemDetails'
 
-const ItemPopUp = ({ usePopUpState }: { usePopUpState: [any, Function] }) => {
+const ItemPopUp = ({ usePopUpState }: { usePopUpState: [any, (newState: any) => void] }) => {
     const [popUpState, setPopUpState] = usePopUpState
     const { item, setItem } = useContext(SelectedItemContext)
 

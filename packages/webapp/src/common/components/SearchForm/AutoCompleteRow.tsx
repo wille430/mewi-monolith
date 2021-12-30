@@ -1,6 +1,6 @@
-import { SearchContext } from 'common/context/SearchContext'
 import { ReactNode, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setFilters } from 'store/search/creators'
 
 interface AutoCompleteRowProps {
     children: ReactNode | string
@@ -9,13 +9,10 @@ interface AutoCompleteRowProps {
 }
 
 const AutoCompleteRow = ({ children, keyword, onClick }: AutoCompleteRowProps) => {
-    const { filters, setFilters } = useContext(SearchContext)
+    const dispatch = useDispatch()
 
     const handleClick = () => {
-        setFilters({
-            ...filters,
-            keyword: keyword,
-        })
+        dispatch(setFilters({ keyword }))
         onClick && onClick(keyword)
     }
 

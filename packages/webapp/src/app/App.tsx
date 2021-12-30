@@ -2,7 +2,6 @@ import './App.css'
 import { lazy, Suspense, useEffect } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Nav from 'common/components/Nav/index'
-import { SearchProvider } from 'common/context/SearchContext'
 import Login from 'Routes/Login'
 import PrivateRoute from 'common/components/PrivateRoute'
 import PublicRoute from 'common/components/PublicRoute'
@@ -18,16 +17,16 @@ const Register = lazy(() => import('Routes/Register'))
 const Categories = lazy(() => import('Routes/Categories'))
 const CategorySearch = lazy(() => import('Routes/CategorySearch'))
 
-if (!window.console) {
-    var noOp = function () {} // no-op function
-    // eslint-disable-next-line
-    console = {
-        ...console,
-        log: noOp,
-        warn: noOp,
-        error: noOp,
-    }
-}
+// if (!window.console) {
+//     // const noOp = function () {} // no-op function
+//     // eslint-disable-next-line
+//     console = {
+//         ...console,
+//         log: noOp,
+//         warn: noOp,
+//         error: noOp,
+//     }
+// }
 
 function App() {
     const isAuthenticated = useAppSelector((state) => state.auth.isLoggedIn)
@@ -55,16 +54,12 @@ function App() {
                                 '/kategorier/:category_id',
                             ]}
                         >
-                            <SearchProvider>
-                                <CategorySearch />
-                            </SearchProvider>
+                            <CategorySearch />
                         </Route>
                         <Route path='/kategorier' component={Categories} />
                         <Route exact path='/' component={Home} />
                         <Route exact path='/search'>
-                            <SearchProvider>
-                                <Search />
-                            </SearchProvider>
+                            <Search />
                         </Route>
                         <PrivateRoute path='/' isAuthenticated={isAuthenticated}>
                             <ProtectedRoutes />

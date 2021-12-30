@@ -1,8 +1,3 @@
-export interface SearchState {
-    searchId: string
-    totalHits: number
-    hits: Object[]
-}
 
 export interface ItemData {
     id: string

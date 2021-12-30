@@ -510,7 +510,7 @@ export const regions = [
 
 export interface SearchFilterDataProps {
     keyword?: string
-    regions?: string[]
+    regions?: string[] | string
     category?: string
     priceRange?: PriceRange
     auction?: boolean

@@ -6,7 +6,7 @@ const useParam = (name: string) => {
     const location = useLocation()
 
     const getParam = (): string => {
-        let filterQuery: string | null = new URLSearchParams(location.search).get(name)
+        const filterQuery: string | null = new URLSearchParams(location.search).get(name)
         return filterQuery || ''
     }
 

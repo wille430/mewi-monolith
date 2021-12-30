@@ -5,6 +5,7 @@ import WatcherPopUpButton from './WatcherPopUpButton'
 import { getAllWatchers } from 'store/watchers/creators'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'common/hooks/hooks'
+import { useEffect } from 'react'
 
 const WatcherList = () => {
     const { isLoading, watchers } = useAppSelector((state) => state.watchers)
@@ -42,7 +43,7 @@ const WatcherList = () => {
         }
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         dispatch(getAllWatchers())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

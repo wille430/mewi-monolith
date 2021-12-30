@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { setFilters } from 'store/search/creators'
+import queryString from 'query-string'
 
 export interface SearchFormProps {
     size?: 'large' | 'small'
@@ -13,6 +16,8 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
         showAutoComplete: false,
         blur: false,
     })
+
+    const dispatch = useDispatch()
 
     const history = useHistory()
     const [keyword, setKeyword] = useState('')
@@ -41,7 +46,11 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
     }, [state.blur])
 
     const handleSubmit = () => {
-        history.push('/search?q=' + keyword)
+        history.push({
+            pathname: 'search',
+            search: queryString.stringify({ keyword }),
+        })
+        dispatch(setFilters({ keyword }))
     }
 
     return (

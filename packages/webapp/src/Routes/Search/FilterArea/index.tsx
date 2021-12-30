@@ -1,64 +1,56 @@
-import { useContext, useEffect, useState } from 'react'
-import { SearchContext } from 'common/context/SearchContext'
+import { useState } from 'react'
 import { SearchFilterDataProps } from '@mewi/types'
-import useQuery from 'common/hooks/useQuery'
-import useParam from 'common/hooks/useParam'
-import { PriceRangeUtils } from 'utils'
 import AddWatcherButton from '../../../common/components/SearchFilterArea/AddWatcherButton'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'common/components/SearchFilterArea'
 import { useAppSelector } from 'common/hooks/hooks'
+import { useDispatch } from 'react-redux'
+import queryString from 'query-string'
+import { getSearchResults, setFilters, updateFilters } from 'store/search/creators'
+import _ from 'lodash'
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
     defaultValues?: SearchFilterDataProps
 }
 
-const FilterArea = ({ defaultValues, ...rest }: FilterAreaProps) => {
+const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const { isLoggedIn } = useAppSelector((state) => state.auth)
-    const { setFilters } = useContext(SearchContext)
-    const { setQuery } = useQuery()
-    const location = useLocation()
+    const search = useAppSelector((state) => state.search)
 
-    const initFormData = {
-        keyword: useParam('q')[0],
-        ...defaultValues,
-    }
-    const [formData, setFormData] = useState<SearchFilterDataProps>(initFormData)
-
-    // On re-render, clear filters
-    useEffect(() => {
-        setFormData(initFormData)
-    }, [location])
-
+    const history = useHistory()
+    const dispatch = useDispatch()
+    
     const handleSubmit = () => {
-        // Set queries
-        setQuery({
-            q: formData.keyword,
-            regions: formData.regions?.join(','),
-            category: formData.category,
-            auction: formData.auction ? 'true' : undefined,
-            priceRange: PriceRangeUtils.toString(formData.priceRange),
-            page: '1',
+        // update url search params
+        history.push({
+            pathname: window.location.pathname,
+            search: queryString.stringify(_.omit(search.filters, Object.keys(defaultValues || {}))),
         })
 
-        setFilters(formData)
+        // set filters in search state
+        dispatch(getSearchResults())
+    }
+
+    const handleReset = () => {
+        dispatch(setFilters(defaultValues))
     }
 
     return (
         <SearchFilterArea
             {...rest}
-            searchFilterData={formData}
+            searchFilterData={search.filters}
             setSearchFilterData={(newVal) => {
-                setFormData(newVal)
+                dispatch(updateFilters(newVal))
             }}
             heading='Filtrera sökning'
             showSubmitButton={true}
             showResetButton={true}
             isCollapsable={true}
             onSubmit={handleSubmit}
+            onReset={handleReset}
             actions={
                 isLoggedIn ? (
-                    <AddWatcherButton searchFilters={formData} data-testid='addWatcherButton' />
+                    <AddWatcherButton searchFilters={search.filters} data-testid='addWatcherButton' />
                 ) : (
                     <Link to='/login'>Bevaka sökning</Link>
                 )

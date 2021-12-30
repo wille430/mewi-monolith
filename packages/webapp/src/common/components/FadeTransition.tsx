@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import { Transition } from 'react-transition-group'
+import { Transition, TransitionStatus } from 'react-transition-group'
 
-const transitions = {
+const transitions: Record<TransitionStatus, Record<string, string | number>> = {
     entering: {
         opacity: 0,
     },
@@ -14,6 +14,7 @@ const transitions = {
     exited: {
         opacity: 0,
     },
+    unmounted: {},
 }
 
 export interface FadeTransitionProps {
@@ -29,14 +30,18 @@ const FadeTransition = ({ in: inProp, duration = 300, children }: FadeTransition
     }
 
     return (
-        // @ts-ignore
-        <Transition in={inProp} duration={duration}>
+        <Transition
+            in={inProp}
+            duration={duration}
+            addEndListener={(node, done) =>
+                node.addEventListener('transitionend', (e) => undefined)
+            }
+        >
             {(state) => {
                 return (
                     <div
                         style={{
                             ...defaultStyling,
-                            // @ts-ignore
                             ...transitions[state],
                         }}
                     >

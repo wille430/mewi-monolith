@@ -6,7 +6,7 @@ const useQuery = () => {
     const location = useLocation()
 
     const getQuery = () => {
-        let filterQuery = new URLSearchParams(location.search)
+        const filterQuery = new URLSearchParams(location.search)
         return filterQuery
     }
 

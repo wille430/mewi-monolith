@@ -13,6 +13,7 @@ import LabeledDropdown from '../LabeledDropdown'
 import { v4 } from 'uuid'
 import { TextField, HorizontalLine } from '@mewi/ui'
 import { Button } from '@mewi/ui'
+import _ from 'lodash'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
@@ -27,6 +28,7 @@ export interface SearchFilterContentProps {
     actions?: ReactNode
     categoryOptions?: { value: string; label: string }[]
     exclude?: { [key: string]: boolean }
+    onReset?: () => void
 }
 
 const SearchFilterContent = (props: SearchFilterContentProps) => {
@@ -43,6 +45,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         actions,
         categoryOptions,
         exclude = {},
+        onReset,
     } = props
 
     const handleSubmit = (e: FormEvent) => {
@@ -50,18 +53,24 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         onSubmit && onSubmit()
     }
 
-    const handleChange = (field: string, newValue: string | string[] | boolean | PriceRange) => {
+    const handleChange = (
+        field: string,
+        newValue: string | string[] | boolean | PriceRange | undefined
+    ) => {
         console.log(`Setting ${field} to ${newValue}`)
-        setSearchFilterData({
-            ...searchFilterData,
-            [field]: newValue,
-        })
+
+        if (!newValue) {
+            setSearchFilterData(_.omit(searchFilterData, [field]))
+        } else {
+            setSearchFilterData({
+                ...searchFilterData,
+                [field]: newValue,
+            })
+        }
     }
 
     const handleReset = () => {
-        setSearchFilterData({
-            keyword: searchFilterData.keyword,
-        })
+        onReset && onReset()
     }
 
     const Dropdowns = [
@@ -126,10 +135,21 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                         gte={searchFilterData.priceRange?.gte}
                                         lte={searchFilterData.priceRange?.lte}
                                         onChange={(field, val) => {
-                                            handleChange('priceRange', {
-                                                ...searchFilterData.priceRange,
-                                                [field]: val,
-                                            })
+                                            let newPriceRange = searchFilterData.priceRange
+                                            if (!val) {
+                                                newPriceRange = _.omit(newPriceRange, [field])
+                                            } else {
+                                                newPriceRange = {
+                                                    ...newPriceRange,
+                                                    [field]: val,
+                                                }
+                                            }
+
+                                            if (_.size(newPriceRange) === 0) {
+                                                handleChange('priceRange', undefined)
+                                            } else {
+                                                handleChange('priceRange', newPriceRange)
+                                            }
                                         }}
                                         data-testid='priceRangeSlider'
                                     />

@@ -1,32 +1,32 @@
-import { useContext } from 'react'
-import { SearchContext } from 'common/context/SearchContext'
+import React, { useContext } from 'react'
 import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'
 import useParam from 'common/hooks/useParam'
+import { useAppSelector } from 'common/hooks/hooks'
 
 interface NavButtonProps {
     label: number
     selected: boolean
-    onClick: Function
+    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
 }
 
 const PageNav = () => {
-    const { search } = useContext(SearchContext)
+    const { totalHits } = useAppSelector((state) => state.search)
 
     const [pageString, setPage] = useParam('page')
     const page = parseInt(pageString)
-    const totalPages = Math.ceil(search.totalHits / config.searchLimit) || 1
+    const totalPages = Math.ceil(totalHits / config.searchLimit) || 1
 
     const RenderButtons = () => {
         const buttonList = []
         const maxNumButtons = 5
 
-        const handleClick = (e: Event, pageNum: number) => {
-            setPage(pageNum)
+        const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
+            setPage(args[1])
         }
 
-        let totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
+        const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
         let startNum = 1
 
         if (page + 1 >= totalPages) {

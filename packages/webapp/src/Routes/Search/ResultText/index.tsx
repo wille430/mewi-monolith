@@ -1,20 +1,20 @@
 import { useContext } from 'react'
-import { SearchContext } from 'common/context/SearchContext'
 import useParam from 'common/hooks/useParam'
+import { useStore } from 'react-redux'
+import { useAppSelector } from 'common/hooks/hooks'
 
 const ResultText = () => {
-    const { search } = useContext(SearchContext)
-    const query = useParam('q')[0]
+    const { totalHits, filters } = useAppSelector((state) => state.search)
 
     let resultString = ''
 
-    if (search.totalHits >= 10000) {
-        resultString += `Hittade över ${search.totalHits || 0} resultat`
+    if (totalHits >= 10000) {
+        resultString += `Hittade över ${totalHits || 0} resultat`
     } else {
-        resultString += `Hittade ${search.totalHits || 0} resultat`
+        resultString += `Hittade ${totalHits || 0} resultat`
     }
-    if (query) {
-        resultString += ` för "${query}"`
+    if (filters.keyword) {
+        resultString += ` för "${filters.keyword}"`
     }
 
     return <span className='text-gray-600 text-sm w-full'>{resultString}</span>

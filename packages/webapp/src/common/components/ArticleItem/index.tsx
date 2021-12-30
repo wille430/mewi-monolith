@@ -10,7 +10,7 @@ import OriginLabel from './OriginLabel'
 interface Props {
     props: ItemData
     id: string
-    onClick: Function
+    onClick: () => void
 }
 
 const ArticleItem = ({ props, id, onClick }: Props) => {

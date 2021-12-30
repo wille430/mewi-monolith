@@ -6,14 +6,24 @@ import AdPlaceholder from 'common/components/AdPlaceholder'
 import { SelectedItemProvider } from './ItemGrid/ItemPopUp/SelectedItemContext'
 import ResultText from './ResultText'
 import Layout from 'common/components/Layout'
-import { useContext, useEffect } from 'react'
-import { SearchContext } from 'common/context/SearchContext'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { clearFilters, getSearchResults, setFilters } from 'store/search/creators'
+import { useLocation } from 'react-router'
+import queryString from 'query-string'
+import { useAppSelector } from 'common/hooks/hooks'
 
 const Search = () => {
-    const { getFiltersFromParams } = useContext(SearchContext)
+    const dispatch = useDispatch()
+    const location = useLocation()
 
     useEffect(() => {
-        getFiltersFromParams()
+        dispatch(setFilters(queryString.parse(location.search)))
+
+        // clear filters on unmount
+        return () => {
+            dispatch(clearFilters())
+        }
     }, [])
 
     return (

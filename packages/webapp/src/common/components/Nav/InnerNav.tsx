@@ -10,7 +10,7 @@ const InnerNav = ({
 }: {
     children: ReactNode
     show: boolean
-    closeMenu: Function
+    closeMenu: () => void
 }) => {
     const width = useWindowWidth()
     const history = useHistory()

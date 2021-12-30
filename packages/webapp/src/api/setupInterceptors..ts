@@ -28,9 +28,10 @@ const setupInterceptors = (store: typeof Store) => {
                 if (err.response.status === 401 && config.url !== '/auth/login' && !config._retry) {
                     config._retry = true
                     try {
-                        return await new Promise(async (resolve) => {
-                            await dispatch(refreshAccessToken())
-                            resolve(instance(config))
+                        return await new Promise((resolve) => {
+                            dispatch(refreshAccessToken()).then(() => {
+                                resolve(instance(config))
+                            })
                         })
                     } catch (e: any) {
                         return Promise.reject(err.response.data)

@@ -1,6 +1,6 @@
-// @ts-ignore
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-case-declarations */
 import makeAnimated from 'react-select/animated'
-// @ts-ignore
 import Select from 'react-select'
 import { HTMLAttributes } from 'react'
 
@@ -68,7 +68,6 @@ const DropdownMenu = ({
             <Select
                 value={options.filter((option) => value?.includes(option.value))}
                 classNamePrefix={'Select'}
-                // defaultValue={options.find(val => val.value === selectParam)}
                 options={options}
                 closeMenuOnSelect={closeMenuOnSelect}
                 isMulti={isMulti}
