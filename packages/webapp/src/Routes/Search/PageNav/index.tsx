@@ -2,8 +2,8 @@ import React, { useContext } from 'react'
 import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'
-import useParam from 'common/hooks/useParam'
-import { useAppSelector } from 'common/hooks/hooks'
+import useParam from 'hooks/useParam'
+import { useAppSelector } from 'hooks/hooks'
 
 interface NavButtonProps {
     label: number

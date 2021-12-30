@@ -1,5 +1,5 @@
 import axios from 'axios'
-import useParam from 'common/hooks/useParam'
+import useParam from 'hooks/useParam'
 import { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router'
 

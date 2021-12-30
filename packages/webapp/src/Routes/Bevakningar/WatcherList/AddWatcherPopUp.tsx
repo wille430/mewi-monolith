@@ -1,9 +1,9 @@
-import PopUp from 'common/components/PopUp'
+import PopUp from 'components/PopUp'
 import { useState } from 'react'
 import { SearchFilterDataProps } from '@mewi/types'
-import ResetButton from 'common/components/SearchFilterArea/ResetButton'
-import AddWatcherButton from 'common/components/SearchFilterArea/AddWatcherButton'
-import SearchFilterContent from 'common/components/SearchFilterArea/SearchFilterContent'
+import ResetButton from 'components/SearchFilterArea/ResetButton'
+import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
+import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
     const { show, setShow } = useShow

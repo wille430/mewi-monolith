@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useParam from 'common/hooks/useParam'
+import useParam from 'hooks/useParam'
 
 const SortButton = () => {
     const [param, setParam] = useParam('sort')

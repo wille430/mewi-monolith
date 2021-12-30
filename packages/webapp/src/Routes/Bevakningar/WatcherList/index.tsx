@@ -1,10 +1,10 @@
 import WatcherCard from './WatcherCard'
 import * as React from 'react'
-import StyledLoader from 'common/components/StyledLoader'
+import StyledLoader from 'components/StyledLoader'
 import WatcherPopUpButton from './WatcherPopUpButton'
 import { getAllWatchers } from 'store/watchers/creators'
 import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'common/hooks/hooks'
+import { useAppSelector } from 'hooks/hooks'
 import { useEffect } from 'react'
 
 const WatcherList = () => {

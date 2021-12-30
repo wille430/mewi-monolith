@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import useParam from 'common/hooks/useParam'
+import useParam from 'hooks/useParam'
 import { useStore } from 'react-redux'
-import { useAppSelector } from 'common/hooks/hooks'
+import { useAppSelector } from 'hooks/hooks'
 
 const ResultText = () => {
     const { totalHits, filters } = useAppSelector((state) => state.search)

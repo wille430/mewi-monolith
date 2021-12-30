@@ -1,10 +1,10 @@
-import SearchForm from 'common/components/SearchForm/index'
+import SearchForm from 'components/SearchForm/index'
 import logo from 'assets/logo.png'
 import BigWaves from './Waves/BigWaves'
 import SmallWaves from './Waves/SmallWaves'
 import * as styles from './style'
-import MewiLogo from 'common/components/MewiLogo'
-import Layout from 'common/components/Layout'
+import MewiLogo from 'components/MewiLogo'
+import Layout from 'components/Layout'
 
 const Home = () => {
     return (

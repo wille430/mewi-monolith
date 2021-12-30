@@ -2,15 +2,15 @@ import PageNav from './PageNav/index'
 import FilterArea from './FilterArea'
 import SortButton from './SortButton'
 import ItemGrid from './ItemGrid'
-import AdPlaceholder from 'common/components/AdPlaceholder'
+import AdPlaceholder from 'components/AdPlaceholder'
 import ResultText from './ResultText'
-import Layout from 'common/components/Layout'
+import Layout from 'components/Layout'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearFilters, setFilters } from 'store/search/creators'
 import { useLocation } from 'react-router'
 import queryString from 'query-string'
-import { useAppSelector } from 'common/hooks/hooks'
+import { useAppSelector } from 'hooks/hooks'
 
 const Search = () => {
     const dispatch = useDispatch()

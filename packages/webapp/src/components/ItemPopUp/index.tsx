@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from 'react'
-import PopUp from 'common/components/PopUp'
-import StyledLoader from 'common/components/StyledLoader'
-import ArticleItemDetails from 'common/components/ArticleItemDetails'
-import { useAppSelector } from 'common/hooks/hooks'
+import PopUp from 'components/PopUp'
+import StyledLoader from 'components/StyledLoader'
+import ArticleItemDetails from 'components/ArticleItemDetails'
+import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { clearItem } from 'store/itemDisplay/creators'
 

@@ -1,5 +1,5 @@
-import Layout from 'common/components/Layout'
-import StyledLoader from 'common/components/StyledLoader'
+import Layout from 'components/Layout'
+import StyledLoader from 'components/StyledLoader'
 import { createRef, useEffect } from 'react'
 
 const PaymentPage = () => {

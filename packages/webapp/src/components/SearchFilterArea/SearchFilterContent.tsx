@@ -6,7 +6,7 @@ import {
     SearchFilterDataProps,
 } from '@mewi/types'
 import { FormEvent, ReactNode } from 'react'
-import PriceRangeFilter from 'common/components/SearchFilterArea/PriceRangeFilter'
+import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
 import LabeledDropdown from '../LabeledDropdown'

@@ -1,6 +1,6 @@
-import Layout from 'common/components/Layout'
-import SnackbarHandler from 'common/components/SnackbarHandler'
-import { useAppSelector } from 'common/hooks/hooks'
+import Layout from 'components/Layout'
+import SnackbarHandler from 'components/SnackbarHandler'
+import { useAppSelector } from 'hooks/hooks'
 import WatcherList from './WatcherList'
 
 const Bevakningar = () => {

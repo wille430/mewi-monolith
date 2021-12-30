@@ -1,4 +1,4 @@
-import StyledLoader from 'common/components/StyledLoader'
+import StyledLoader from 'components/StyledLoader'
 import { Suspense } from 'react'
 import { Route, Switch } from 'react-router'
 import routes from './routes'

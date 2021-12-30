@@ -6,8 +6,8 @@ import LogOutButton from './LogOutButton'
 import NavCurve from './NavCurve'
 import { FiMenu } from 'react-icons/fi'
 import InnerNav from './InnerNav'
-import SearchForm from 'common/components/SearchForm'
-import { useAppSelector } from 'common/hooks/hooks'
+import SearchForm from 'components/SearchForm'
+import { useAppSelector } from 'hooks/hooks'
 
 const Nav = () => {
     const location = useLocation()
