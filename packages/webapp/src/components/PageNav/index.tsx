@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MutableRefObject } from 'react'
 import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'
@@ -6,13 +6,11 @@ import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { goToPage } from 'store/search/creators'
 
-interface NavButtonProps {
-    label: number
-    selected: boolean
-    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
+interface PageNavProps {
+    anchorEle?: MutableRefObject<HTMLDivElement | null>
 }
 
-const PageNav = () => {
+const PageNav = ({ anchorEle }: PageNavProps) => {
     const { totalHits, page } = useAppSelector((state) => state.search)
     const totalPages = Math.ceil(totalHits / config.searchLimit) || 1
     const dispatch = useDispatch()
@@ -23,6 +21,7 @@ const PageNav = () => {
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
             dispatch(goToPage(args[1]))
+            anchorEle?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
 
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
@@ -69,6 +68,12 @@ const PageNav = () => {
             <NavEndButton onClick={() => changePage(1)} icon={FiArrowRight} />
         </div>
     )
+}
+
+interface NavButtonProps {
+    label: number
+    selected: boolean
+    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
 }
 
 const NavButton = ({ label, selected, onClick }: NavButtonProps) => {

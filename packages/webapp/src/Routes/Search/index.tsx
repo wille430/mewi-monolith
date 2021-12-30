@@ -5,14 +5,15 @@ import ItemGrid from '../../components/ItemGrid'
 import AdPlaceholder from 'components/AdPlaceholder'
 import ResultText from '../../components/ResultText'
 import Layout from 'components/Layout'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
 const Search = () => {
     const dispatch = useDispatch()
+    const scrollEle = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-       dispatch(getFiltersFromQueryParams()) 
+        dispatch(getFiltersFromQueryParams())
 
         // clear filters on unmount
         return () => {
@@ -32,7 +33,11 @@ const Search = () => {
                 >
                     <AdPlaceholder size='lg' className='mb-12' />
 
-                    <FilterArea />
+                    <div ref={scrollEle}>
+                        <FilterArea />
+                    </div>
+                    
+                    <div ref={scrollEle}></div>
                     <div className='w-full flex justify-between py-2 pb-6'>
                         <ResultText />
                         <SortButton />
@@ -40,7 +45,7 @@ const Search = () => {
 
                     <ItemGrid />
 
-                    <PageNav />
+                    <PageNav anchorEle={scrollEle} />
                 </section>
             </main>
             <aside className='side-col space-y-16'>

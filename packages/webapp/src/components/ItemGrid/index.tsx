@@ -39,7 +39,7 @@ const ItemGrid = () => {
             }}
         >
             {isLoading ? (
-                <div className='flex justify-center items-center min-h-full'>
+                <div className='flex justify-center items-center min-h-screen'>
                     <StyledLoader />
                 </div>
             ) : (

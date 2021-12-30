@@ -2,7 +2,7 @@ import { categories, Category } from '@mewi/types'
 import AdPlaceholder from 'components/AdPlaceholder'
 import CategorySelectionList from 'components/CategorySelectionList'
 import Layout from 'components/Layout'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 import { Link, useLocation } from 'react-router-dom'
 import FilterArea from 'components/FilterArea'
@@ -26,6 +26,8 @@ interface ParamTypes {
 const CategorySearch = () => {
     const params = useParams<ParamTypes>()
     const dispatch = useDispatch()
+
+    const scrollEle = useRef<HTMLDivElement | null>(null)
 
     const defaultValues = {
         category: params.subcat_id || params.category_id,
@@ -60,11 +62,15 @@ const CategorySearch = () => {
                     />
                     <div className=''>
                         <CategoryPathLabel categoryValues={params} />
-                        <FilterArea
-                            exclude={{ category: true }}
-                            defaultValues={defaultValues}
-                            showKeywordField
-                        />
+
+                        <div ref={scrollEle}>
+                            <FilterArea
+                                exclude={{ category: true }}
+                                defaultValues={defaultValues}
+                                showKeywordField
+                            />
+                        </div>
+
                         <div className='w-full flex justify-between py-2 pb-6'>
                             <ResultText />
                             <SortButton />
@@ -72,7 +78,7 @@ const CategorySearch = () => {
 
                         <ItemGrid />
 
-                        <PageNav />
+                        <PageNav anchorEle={scrollEle} />
                     </div>
                 </div>
             </main>
