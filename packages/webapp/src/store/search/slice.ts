@@ -21,14 +21,13 @@ export const searchSlice = createSlice({
             state.totalHits = action.payload.totalHits
         })
 
-        builder.addCase(clearFilters, (state, action) => {
-            state.filters = {}
+        builder.addCase(clearFilters, (state) => {
+            state.filters = initialState.filters
+            state.sort = initialState.sort
         })
 
         builder.addCase(setFilters, (state, action) => {
-            console.log({ payload: action.payload })
             state.filters = action.payload
-            console.log({ state: state.filters })
         })
 
         builder.addCase(updateFilters, (state, action) => {
@@ -43,10 +42,10 @@ export const searchSlice = createSlice({
         })
 
         builder
-            .addMatcher(isPending, (state, action) => {
+            .addMatcher(isPending, (state) => {
                 state.isLoading = true
             })
-            .addMatcher(isFulfilled, (state, action) => {
+            .addMatcher(isFulfilled, (state) => {
                 state.isLoading = false
             })
     },
