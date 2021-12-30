@@ -1,4 +1,4 @@
-import PopUp from 'components/PopUp'
+import PopUp from 'components/PopUp/ index'
 import { useState } from 'react'
 import { SearchFilterDataProps } from '@mewi/types'
 import ResetButton from 'components/SearchFilterArea/ResetButton'
@@ -18,11 +18,8 @@ const AddWatcherPopUp = ({ useShow }: any) => {
         })
     }
 
-    const hidePopUp = (e: Event) => {
-        if (e.target === e.currentTarget) {
-            console.log('hide')
-            setShow(false)
-        }
+    const hidePopUp = () => {
+        setShow(false)
     }
 
     return (

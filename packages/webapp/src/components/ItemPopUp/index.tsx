@@ -1,5 +1,5 @@
 import React from 'react'
-import PopUp from 'components/PopUp'
+import PopUp from 'components/PopUp/ index'
 import StyledLoader from 'components/StyledLoader'
 import ArticleItemDetails from 'components/ArticleItemDetails'
 import { useAppSelector } from 'hooks/hooks'

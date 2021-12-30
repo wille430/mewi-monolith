@@ -1,33 +1,18 @@
 import { useHistory } from 'react-router-dom'
-import { PriceRangeUtils } from 'utils'
 import { capitalize } from '@mewi/util'
 import RemoveButton from './RemoveWatcherButton'
 import { PublicWatcher } from '@mewi/types'
 import { Button } from '@mewi/ui'
+import queryString from 'query-string'
 
 const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
     const history = useHistory()
 
-    const queryParams = [
-        ['q', watcher.metadata.keyword],
-        ['region', watcher.metadata.regions],
-        ['category', watcher.metadata.category],
-        ['isAuction', watcher.metadata.auction],
-        ['price', PriceRangeUtils.toString(watcher.metadata.priceRange)],
-    ]
-
-    const linkUrl =
-        '/search?' +
-        queryParams
-            .map((x) => {
-                if (!x[1]) return ''
-                return `${x[0]}=${x[1]}`
-            })
-            .filter((x) => x !== '')
-            .join('&')
-
     const handleSearchButtonClick = () => {
-        history.push(linkUrl)
+        history.push({
+            pathname: '/search',
+            search: queryString.stringify(watcher.metadata)
+        })
     }
 
     const regionsString = () => {

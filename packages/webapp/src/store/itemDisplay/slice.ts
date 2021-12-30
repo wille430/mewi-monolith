@@ -14,20 +14,20 @@ export const itemDisplaySlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getItem.fulfilled, (state, action) => {
-            console.log(action.payload)
             state.selectedItem = action.payload
             state.isLoading = false
         })
 
-        builder.addCase(clearItem, (state, action) => {
+        builder.addCase(clearItem, (state) => {
+            console.log('clearing item')
             state.selectedItem = null
         })
 
         builder
-            .addMatcher(isFulfilled, (state, action) => {
+            .addMatcher(isFulfilled, (state) => {
                 state.isLoading = false
             })
-            .addMatcher(isPending, (state, action) => {
+            .addMatcher(isPending, (state) => {
                 state.isLoading = true
             })
     },
