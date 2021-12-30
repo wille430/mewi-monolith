@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import StyledLoader from 'common/components/StyledLoader'
 import ArticleItem from 'common/components/ArticleItem/index'
-import ItemPopUp from './ItemPopUp'
-import { SelectedItemContext } from './ItemPopUp/SelectedItemContext'
+import ItemPopUp from '../../../common/components/ItemPopUp'
 import { useAppSelector } from 'common/hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { getSearchResults } from 'store/search/creators'
+import { getItem } from 'store/itemDisplay/creators'
 
 const ItemGrid = () => {
     const hits = useAppSelector((state) => state.search.hits)
@@ -13,28 +13,12 @@ const ItemGrid = () => {
 
     const dispatch = useDispatch()
 
-    const [popUpState, setPopUpState] = useState({
-        show: false,
-        id: '',
-    })
-    const { item, setItem } = useContext(SelectedItemContext)
-
     useEffect(() => {
         dispatch(getSearchResults())
     }, [])
 
-    useEffect(() => {
-        if (item) {
-            setPopUpState((prevState) => ({ ...prevState, show: true }))
-        }
-    }, [item])
-
     const handleItemClick = (id: string) => {
-        setPopUpState({
-            show: true,
-            id: id,
-        })
-        setItem(id)
+        dispatch(getItem(id))
     }
 
     const renderItems = () => {
@@ -43,7 +27,7 @@ const ItemGrid = () => {
                 key={i}
                 props={item['_source']}
                 id={item['_id']}
-                onClick={(e: Event) => handleItemClick(item['_id'])}
+                onClick={() => handleItemClick(item['_id'])}
             />
         ))
     }
@@ -62,7 +46,7 @@ const ItemGrid = () => {
             ) : (
                 <div className='flex flex-wrap gap-4 justify-center'>
                     {renderItems()}
-                    <ItemPopUp usePopUpState={[popUpState, setPopUpState]} />
+                    <ItemPopUp />
                 </div>
             )}
         </section>

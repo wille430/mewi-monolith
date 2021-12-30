@@ -3,12 +3,11 @@ import FilterArea from './FilterArea'
 import SortButton from './SortButton'
 import ItemGrid from './ItemGrid'
 import AdPlaceholder from 'common/components/AdPlaceholder'
-import { SelectedItemProvider } from './ItemGrid/ItemPopUp/SelectedItemContext'
 import ResultText from './ResultText'
 import Layout from 'common/components/Layout'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { clearFilters, getSearchResults, setFilters } from 'store/search/creators'
+import { clearFilters, setFilters } from 'store/search/creators'
 import { useLocation } from 'react-router'
 import queryString from 'query-string'
 import { useAppSelector } from 'common/hooks/hooks'
@@ -44,9 +43,7 @@ const Search = () => {
                         <SortButton />
                     </div>
 
-                    <SelectedItemProvider>
-                        <ItemGrid />
-                    </SelectedItemProvider>
+                    <ItemGrid />
 
                     <PageNav />
                 </section>

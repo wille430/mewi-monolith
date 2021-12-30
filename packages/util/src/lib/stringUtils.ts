@@ -1,6 +1,6 @@
 export const capitalize = (string: string) => {
     const newString = string.split('')
-    newString[0] = newString[0].toUpperCase()
+    newString[0] = newString[0]?.toUpperCase()
     return newString.join('')
 }
 export const toSnakeCase = (string: string) => {

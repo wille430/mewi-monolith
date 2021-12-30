@@ -7,7 +7,6 @@ import { useParams } from 'react-router'
 import { Link, useLocation } from 'react-router-dom'
 import FilterArea from 'Routes/Search/FilterArea'
 import ItemGrid from 'Routes/Search/ItemGrid'
-import { SelectedItemProvider } from 'Routes/Search/ItemGrid/ItemPopUp/SelectedItemContext'
 import PageNav from 'Routes/Search/PageNav'
 import ResultText from 'Routes/Search/ResultText'
 import SortButton from 'Routes/Search/SortButton'
@@ -46,7 +45,7 @@ const CategorySearch = () => {
 
     useEffect(() => {
         // when /category_id/subcat_id changes, set filters to default
-        dispatch(setFilters(defaultValues))   
+        dispatch(setFilters(defaultValues))
         // and get new results
         dispatch(getSearchResults())
     }, [params.category_id, params.subcat_id])
@@ -56,7 +55,7 @@ const CategorySearch = () => {
             <aside className='side-col'></aside>
             <main
                 className={cx({
-                    'main': true,
+                    main: true,
                     [styles.main]: true,
                 })}
             >
@@ -79,9 +78,7 @@ const CategorySearch = () => {
                             <SortButton />
                         </div>
 
-                        <SelectedItemProvider>
-                            <ItemGrid />
-                        </SelectedItemProvider>
+                        <ItemGrid />
 
                         <PageNav />
                     </div>

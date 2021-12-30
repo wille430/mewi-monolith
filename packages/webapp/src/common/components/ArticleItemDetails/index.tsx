@@ -29,7 +29,7 @@ const ArticleItemDetails = ({
     ...rest
 }: ArticleItemDetails) => {
     const categoryPathString = Object.values(category)
-        .map((value) => capitalize(value))
+        .map((value) => capitalize(value || ''))
         .join(' > ')
 
     const handleClose = () => {
