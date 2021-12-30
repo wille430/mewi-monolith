@@ -32,8 +32,6 @@ const CategorySearch = () => {
     }
 
     useEffect(() => {
-        dispatch(getFiltersFromQueryParams(defaultValues))
-
         // clear filters on unmount
         return () => {
             dispatch(clearFilters())

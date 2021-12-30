@@ -58,6 +58,7 @@ export const getSearchResults = async (req, res) => {
             body: {
                 query: query,
                 sort: sort ? [sort] : [],
+                ...SearchService.calculateFromAndSize(options.page)
             },
         })
     } else {

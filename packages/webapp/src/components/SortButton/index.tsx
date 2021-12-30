@@ -3,15 +3,10 @@ import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { setSort } from 'store/search/creators'
 import { SortData } from '@mewi/types'
-import { useHistory, useLocation } from 'react-router'
-import queryString from 'query-string'
 
 const SortButton = () => {
     const { sort } = useAppSelector((state) => state.search)
     const dispatch = useDispatch()
-
-    const history = useHistory()
-    const location = useLocation()
 
     const options = [
         { label: 'Relevans', value: SortData.RELEVANCE, default: { selected: true } },
@@ -23,13 +18,6 @@ const SortButton = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         dispatch(setSort(e.target.value as SortData))
-        history.push({
-            pathname: window.location.pathname,
-            search: queryString.stringify({
-                ...new URLSearchParams(location.search),
-                sort,
-            }),
-        })
     }
 
     return (

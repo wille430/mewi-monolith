@@ -87,8 +87,22 @@ export default class SearchService {
             }
         })
 
-        console.log('Created query:', JSON.stringify(query))
-
         return query
+    }
+
+    static calculateFromAndSize(page: number) {
+        const size = 21
+
+        if (page <= 0) {
+            return {
+                from: 0,
+                size: size,
+            }
+        } else {
+            return {
+                from: (page - 1)*size,
+                size: size,
+            }
+        }
     }
 }

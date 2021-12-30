@@ -6,6 +6,7 @@ export interface SearchState {
     filters: SearchFilterDataProps
     isLoading: boolean
     sort: SortData
+    page: number
 }
 
 export enum SearchActionTypes {
@@ -15,4 +16,5 @@ export enum SearchActionTypes {
     GET_RESULTS = 'search/get',
     SORT = 'search/sort',
     FILTERS_FROM_PARAMS = 'search/filtersFromParams',
+    SET_PAGE = 'search/setPage'
 }

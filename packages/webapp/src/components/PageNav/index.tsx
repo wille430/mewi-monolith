@@ -2,8 +2,9 @@ import React from 'react'
 import NavEndButton from './NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'
-import useParam from 'hooks/useParam'
 import { useAppSelector } from 'hooks/hooks'
+import { useDispatch } from 'react-redux'
+import { goToPage } from 'store/search/creators'
 
 interface NavButtonProps {
     label: number
@@ -12,18 +13,16 @@ interface NavButtonProps {
 }
 
 const PageNav = () => {
-    const { totalHits } = useAppSelector((state) => state.search)
-
-    const [pageString, setPage] = useParam('page')
-    const page = parseInt(pageString)
+    const { totalHits, page } = useAppSelector((state) => state.search)
     const totalPages = Math.ceil(totalHits / config.searchLimit) || 1
+    const dispatch = useDispatch()
 
     const RenderButtons = () => {
         const buttonList = []
         const maxNumButtons = 5
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
-            setPage(args[1])
+            dispatch(goToPage(args[1]))
         }
 
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
@@ -59,7 +58,7 @@ const PageNav = () => {
     const changePage = (increment: number) => {
         const newPage = page + increment
         if (newPage <= totalPages && newPage >= 1) {
-            setPage(newPage)
+            dispatch(goToPage(newPage))
         }
     }
 

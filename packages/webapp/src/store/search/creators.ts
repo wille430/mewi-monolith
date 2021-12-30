@@ -30,10 +30,11 @@ export const getSearchResults = createAsyncThunk<
     { state: RootState }
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
-        const { filters, sort } = thunkApi.getState().search
+        const { filters, sort, page } = thunkApi.getState().search
         const results = await searchApi.getSearchResults({
             searchFilters: filters,
             sort: sort,
+            page: page,
         })
         return results
     } catch (e) {
@@ -49,17 +50,23 @@ export const getFiltersFromQueryParams = createAction(
     SearchActionTypes.FILTERS_FROM_PARAMS,
     (
         defaultValues?: Partial<SearchFilterDataProps>
-    ): { payload: Pick<SearchState, 'filters' | 'sort'> } => {
+    ): { payload: Pick<SearchState, 'filters' | 'sort' | 'page'> } => {
         const params = queryString.parse(window.location.search)
-
+        
         let filters = {}
         let sort = SortData.RELEVANCE
+        let page = 1
         Object.keys(params).forEach((key) => {
             if (['keyword', 'regions', 'category', 'priceRange', 'auction'].includes(key)) {
                 filters = _.merge(filters, { [key]: params[key] })
             } else if (key === 'sort') {
                 if (Object.values(SortData).includes(params[key] as SortData)) {
                     sort = params[key] as SortData
+                }
+            } else if (key === 'page') {
+                page = parseInt(params[key] as string)
+                if (page <= 0) {
+                    page = 1
                 }
             }
         })
@@ -69,9 +76,10 @@ export const getFiltersFromQueryParams = createAction(
                 payload: {
                     filters: {
                         ...filters,
-                        ...defaultValues
+                        ...defaultValues,
                     },
                     sort,
+                    page,
                 },
             }
         } else {
@@ -79,8 +87,15 @@ export const getFiltersFromQueryParams = createAction(
                 payload: {
                     filters,
                     sort,
+                    page,
                 },
             }
         }
     }
 )
+
+export const goToPage = createAction(SearchActionTypes.SET_PAGE, (page: number) => {
+    return {
+        payload: page,
+    }
+})

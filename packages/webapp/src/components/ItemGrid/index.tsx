@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { getSearchResults } from 'store/search/creators'
 
 const ItemGrid = () => {
-    const { hits, isLoading, filters, sort } = useAppSelector((state) => state.search)
+    const { hits, isLoading, filters, sort, page } = useAppSelector((state) => state.search)
 
     const dispatch = useDispatch()
 
@@ -18,7 +18,7 @@ const ItemGrid = () => {
 
     useEffect(() => {
         dispatch(getSearchResults())
-    }, [filters, sort])
+    }, [filters, sort, page])
 
     const renderItems = () => {
         return hits.map((item: any, i: number) => (
