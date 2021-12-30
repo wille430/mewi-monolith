@@ -1,0 +1,29 @@
+apiVersion: skaffold/v2beta18
+kind: Config
+metadata:
+  name: kube-elastic-backend
+build:
+  artifacts:
+  - image: wille430/elastic-backend
+    context: backend
+    sync:
+      manual:
+      - src: "src/**/*.js"
+        dest: "."
+    docker:
+      dockerfile: Dockerfile
+profiles:
+  - name: dev
+    deploy:
+      kubectl:
+        manifests:
+        - k8s/backend/backend-deployment.yaml
+        - k8s/meilisearch/meilisearch-deployment.yaml
+        - k8s/meilisearch/meilisearch-configmap.yaml
+  - name: prod
+    deploy:
+      kubectl:
+        manifests:
+        - k8s/backend/backend-deployment.yaml
+        - k8s/meilisearch/meilisearch-deployment.yaml
+        - k8s/meilisearch/meilisearch-configmap.yaml

@@ -1,0 +1,7 @@
+type: kubernetes
+deploy:
+- okteto build -t okteto.dev/packages/api api
+- kubectl apply -f k8s --recursive
+devs:
+- api/okteto.yml
+- scheduler/okteto.yml

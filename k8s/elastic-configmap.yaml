@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elastic-configmap
+data: 
+  elastic_url: elasticsearch-service
+  elastic_port: '9200'
