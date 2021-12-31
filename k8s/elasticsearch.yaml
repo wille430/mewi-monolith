@@ -32,13 +32,13 @@ spec:
                   command: ['mkdir', '/usr/share/elasticsearch/data/nodes/']
                   volumeMounts:
                       - mountPath: /usr/share/elasticsearch/data
-                        name: elasticsearch-master
+                        name: elasticdata
                 - name: file-permissions
                   image: busybox:1.28
                   command: ['chown', '-R', '1000:1000', '/usr/share/elasticsearch/']
                   volumeMounts:
                       - mountPath: /usr/share/elasticsearch/data
-                        name: elasticsearch-master
+                        name: elasticdata
             volumes:
                 - name: elasticdata
                   persistentVolumeClaim:
