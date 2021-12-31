@@ -1,5 +1,5 @@
-const express = require('express')
-const cors = require('cors')
+import express from 'express'
+import cors from 'cors'
 import notFound from './404'
 import * as dotenv from 'dotenv'
 import checkEnv from 'config/check-env'

@@ -1,6 +1,5 @@
-FROM node:16.8
+FROM node:17.3.0
 WORKDIR /app
-COPY package*.json ./
-RUN npm i
-COPY . .
-CMD ["npm", "start"]
+COPY dist/packages/api .
+RUN npm i --production
+CMD node ./main.js

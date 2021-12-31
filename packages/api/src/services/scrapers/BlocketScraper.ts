@@ -3,8 +3,8 @@ import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
 import { BlocketItemData, ItemData } from 'types/types'
 
-const { JSDOM } = require('jsdom')
-const axios = require('axios')
+import { JSDOM } from 'jsdom'
+import axios from 'axios'
 
 export default class BlocketScraper extends Scraper {
     baseUrl = 'https://www.blocket.se'
