@@ -3,9 +3,18 @@
     "sourceRoot": "packages/webapp/src",
     "projectType": "application",
     "targets": {
+        "deploy": {
+            "builder": "@netlify-builder/deploy:deploy",
+            "options": {
+                "outputPath": "dist/packages/webapp",
+                "siteId": "09e54bfa-3c3b-4034-9e90-2372d737a51b"
+            }
+        },
         "build": {
             "executor": "@nrwl/web:webpack",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "defaultConfiguration": "production",
             "options": {
                 "compiler": "babel",
@@ -15,8 +24,13 @@
                 "main": "packages/webapp/src/main.tsx",
                 "polyfills": "packages/webapp/src/polyfills.ts",
                 "tsConfig": "packages/webapp/tsconfig.app.json",
-                "assets": ["packages/webapp/src/favicon.ico", "packages/webapp/src/assets"],
-                "styles": ["packages/webapp/src/styles.css"],
+                "assets": [
+                    "packages/webapp/src/favicon.ico",
+                    "packages/webapp/src/assets"
+                ],
+                "styles": [
+                    "packages/webapp/src/styles.css"
+                ],
                 "scripts": [],
                 "webpackConfig": "@nrwl/react/plugins/webpack"
             },
@@ -52,14 +66,20 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": ["{options.outputFile}"],
+            "outputs": [
+                "{options.outputFile}"
+            ],
             "options": {
-                "lintFilePatterns": ["packages/webapp/**/*.{ts,tsx,js,jsx}"]
+                "lintFilePatterns": [
+                    "packages/webapp/**/*.{ts,tsx,js,jsx}"
+                ]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": ["coverage/packages/webapp"],
+            "outputs": [
+                "coverage/packages/webapp"
+            ],
             "options": {
                 "jestConfig": "packages/webapp/jest.config.js",
                 "passWithNoTests": true
@@ -82,7 +102,9 @@
         },
         "build-storybook": {
             "executor": "@nrwl/storybook:build",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "uiFramework": "@storybook/react",
                 "outputPath": "dist/storybook/webapp",
