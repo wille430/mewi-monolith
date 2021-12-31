@@ -29,11 +29,7 @@ spec:
             initContainers:
               - name: init-elasticsearch
                 image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-                command:
-                - chown
-                - -R
-                - 1000:1000
-                - /usr/share/elasticsearch/data
+                command: ['sh', '-c', 'chown -R 1000:1000 /usr/share/elasticsearch/data',  'chown -R 1000:1000 /usr/share/elasticsearch/data/nodes']
             volumes:
                 - name: elasticdata
                   persistentVolumeClaim:
