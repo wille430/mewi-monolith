@@ -1,59 +1,57 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: elasticsearch
-  labels:
-    app: elasticsearch
-spec:
-  replicas: 1
-  serviceName: "elasticsearch"
-  selector:
-    matchLabels:
-      app: elasticsearch
-  template:
-    metadata:
-      labels:
+    name: elasticsearch
+    labels:
         app: elasticsearch
-    spec:
-      containers:
-      - name: elasticsearch
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-        command: ["chown -R 1000:1000 /usr/share/elasticsearch/data"]
-        volumeMounts:
-        - mountPath: '/data/db'
-          name: elasticdata
-        ports:
-        - containerPort: 9200
-        env:
-        - name: "cluster.initial_master_nodes"
-          value: "elasticsearch-0"
-        - name: "path.data"
-          value: "/data/db"
-      volumes:
-      - name: elasticdata
-        persistentVolumeClaim:
-          claimName: elasticsearch-pv-claim
+spec:
+    replicas: 1
+    serviceName: 'elasticsearch'
+    selector:
+        matchLabels:
+            app: elasticsearch
+    template:
+        metadata:
+            labels:
+                app: elasticsearch
+        spec:
+            containers:
+                - name: elasticsearch
+                  image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+                  command: ['chown -R 1000:1000 /usr/share/elasticsearch/data']
+                  volumeMounts:
+                      - mountPath: '/usr/share/elasticsearch/data'
+                        name: elasticdata
+                  ports:
+                      - containerPort: 9200
+                  env:
+                      - name: 'cluster.initial_master_nodes'
+                        value: 'elasticsearch-0'
+            volumes:
+                - name: elasticdata
+                  persistentVolumeClaim:
+                      claimName: elasticsearch-pv-claim
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: elasticsearch-service
+    name: elasticsearch-service
 spec:
-  selector:
-    app: elasticsearch
-  ports:
-  - protocol: TCP
-    port: 9200
-    targetPort: 9200
+    selector:
+        app: elasticsearch
+    ports:
+        - protocol: TCP
+          port: 9200
+          targetPort: 9200
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: elasticsearch-pv-claim
+    name: elasticsearch-pv-claim
 spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 500Mi
