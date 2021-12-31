@@ -26,7 +26,7 @@ spec:
                   env:
                       - name: 'cluster.initial_master_nodes'
                         value: 'elasticsearch-0'
-            extraInitContainers: |
+            initContainers: |
                 - name: create
                   image: busybox:1.28
                   command: ['mkdir', '/usr/share/elasticsearch/data/nodes/']  
