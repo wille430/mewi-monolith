@@ -27,12 +27,12 @@ spec:
                       - name: 'cluster.initial_master_nodes'
                         value: 'elasticsearch-0'
             initContainers:
-                - name: create
-                  image: busybox:1.28
-                  command: ['mkdir', '/usr/share/elasticsearch/data/nodes/']
-                  volumeMounts:
-                      - mountPath: /usr/share/elasticsearch/data
-                        name: elasticdata
+                # - name: create
+                #   image: busybox:1.28
+                #   command: ['mkdir', '/usr/share/elasticsearch/data/nodes/']
+                #   volumeMounts:
+                #       - mountPath: /usr/share/elasticsearch/data
+                #         name: elasticdata
                 - name: file-permissions
                   image: busybox:1.28
                   command: ['chown', '-R', '1000:1000', '/usr/share/elasticsearch/']
