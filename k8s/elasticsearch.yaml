@@ -18,7 +18,6 @@ spec:
             containers:
                 - name: elasticsearch
                   image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-                  command: ['chown -R 1000:1000 /usr/share/elasticsearch/data']
                   volumeMounts:
                       - mountPath: '/usr/share/elasticsearch/data'
                         name: elasticdata
@@ -27,6 +26,14 @@ spec:
                   env:
                       - name: 'cluster.initial_master_nodes'
                         value: 'elasticsearch-0'
+            initContainers:
+              - name: init-elasticsearch
+                image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+                command:
+                - chown
+                - -R
+                - 1000:1000
+                - /usr/share/elasticsearch/data
             volumes:
                 - name: elasticdata
                   persistentVolumeClaim:
