@@ -26,7 +26,8 @@
                 "tsConfig": "packages/webapp/tsconfig.app.json",
                 "assets": [
                     "packages/webapp/src/favicon.ico",
-                    "packages/webapp/src/assets"
+                    "packages/webapp/src/assets",
+                    "packages/webapp/src/_redirects"
                 ],
                 "styles": [
                     "packages/webapp/src/styles.css"
