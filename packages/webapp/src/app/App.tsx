@@ -57,11 +57,11 @@ function App() {
                             <CategorySearch />
                         </Route>
                         <Route path='/kategorier' component={Categories} />
-                        <Route exact path='/' component={Home} />
                         <Route exact path='/search'>
                             <Search />
                         </Route>
-                        <PrivateRoute path='/' isAuthenticated={isAuthenticated}>
+                        <Route exact path='/' component={Home} />
+                        <PrivateRoute exact path='/' isAuthenticated={isAuthenticated}>
                             <ProtectedRoutes />
                         </PrivateRoute>
                         <Route path='*'>
