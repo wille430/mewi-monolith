@@ -1,5 +1,6 @@
 import searchApi from 'api/searchApi'
-import { HTMLAttributes, useEffect, useState } from 'react'
+import _ from 'lodash'
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import AutoCompleteRow from './AutoCompleteRow'
 
 interface Suggestion {
@@ -22,9 +23,19 @@ const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([])
 
+    const getSuggestions = useCallback(
+        _.debounce(() => {
+            if (!query) return
+            searchApi.autocomplete(query).then((suggestions) => {
+                console.log(suggestions)
+                setSuggestions(suggestions)
+            })
+        }, 1000),
+        []
+    )
+
     useEffect(() => {
-        if (!query) return
-        searchApi.autocomplete(query).then((suggestions) => setSuggestions(suggestions))
+        getSuggestions()
     }, [query])
 
     return (

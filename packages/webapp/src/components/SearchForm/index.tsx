@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'

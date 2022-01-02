@@ -4,7 +4,7 @@ import {
     regions,
     SearchFilterDataProps,
 } from '@mewi/types'
-import { FormEvent, ReactNode } from 'react'
+import { FormEvent, ReactNode, useCallback } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
@@ -68,6 +68,8 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         }
     }
 
+    const debounceChange = useCallback(_.debounce(handleChange, 1000), [])
+
     const handleReset = () => {
         onReset && onReset()
     }
@@ -109,7 +111,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             className='input'
                                             placeholder='Sökord'
                                             name='q'
-                                            onChange={(value) => handleChange('keyword', value)}
+                                            onChange={(value) => debounceChange('keyword', value)}
                                             value={searchFilterData.keyword}
                                             data-testid='keywordInput'
                                             fullWidth={true}
