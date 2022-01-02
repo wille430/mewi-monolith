@@ -1,5 +1,5 @@
 deploy:
-- okteto build -t okteto.dev/api api
+- okteto build -t okteto.dev/api packages/api
 - kubectl apply -f k8s --recursive
 devs:
 - packages/api/okteto.yml
