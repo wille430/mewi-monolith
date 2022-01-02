@@ -3,7 +3,7 @@ import AdPlaceholder from 'components/AdPlaceholder'
 import CategorySelectionList from 'components/CategorySelectionList'
 import Layout from 'components/Layout'
 import { ReactNode, useEffect, useRef } from 'react'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { Link, useLocation } from 'react-router-dom'
 import FilterArea from 'components/FilterArea'
 import ItemGrid from 'components/ItemGrid'
@@ -95,6 +95,8 @@ interface CategoryPathLabelProps {
 }
 
 const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
+    const history = useHistory()
+
     const renderLinks = () => {
         const links: ReactNode[] = []
 
@@ -106,6 +108,12 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
                 parentCategory = categories[catVal]
             } else {
                 parentCategory = parentCategory.subcat[catVal]
+            }
+
+            if (!parentCategory) {
+                history.replace({
+                    pathname: '/404',
+                })
             }
 
             parentLinkPath = `${parentLinkPath}/${catVal}`

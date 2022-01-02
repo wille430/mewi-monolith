@@ -47,7 +47,7 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
 
     const handleSubmit = () => {
         history.push({
-            pathname: 'search',
+            pathname: '/search',
             search: queryString.stringify({ keyword }),
         })
         dispatch(setFilters({ keyword }))
