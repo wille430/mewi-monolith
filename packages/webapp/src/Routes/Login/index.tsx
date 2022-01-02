@@ -4,18 +4,14 @@ import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { loginUser } from 'store/auth/creators'
+import { useAppSelector } from 'hooks/hooks'
 
 const Login = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
 
-    const initErrors = {
-        email: '',
-        password: '',
-        all: '',
-    }
-    const [errors, setErrors] = React.useState(initErrors)
     const dispatch = useDispatch()
+    const errors = useAppSelector(state => state.auth.errors)
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

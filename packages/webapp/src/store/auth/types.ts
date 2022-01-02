@@ -1,7 +1,12 @@
 export interface AuthState {
     isLoggedIn: boolean
     isLoading: boolean
-    error: string
+    errors: {
+        email: string,
+        password: string,
+        repassword: string,
+        all: string
+    }
 }
 
 export enum AuthActionTypes {

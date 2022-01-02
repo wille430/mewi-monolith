@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { AuthErrorCodes } from '@mewi/types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { isFulfilled, isPending } from '@reduxjs/toolkit'
 import { createUser, loginUser, logOut, onAuthLoad, refreshAccessToken } from './creators'
 import { AuthState } from './types'
@@ -6,7 +7,12 @@ import { AuthState } from './types'
 const initialState: AuthState = {
     isLoggedIn: false,
     isLoading: false,
-    error: '',
+    errors: {
+        email: '',
+        password: '',
+        repassword: '',
+        all: ''
+    },
 }
 
 export const userSlice = createSlice({
@@ -14,16 +20,20 @@ export const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(loginUser.fulfilled, (state, action) => {
-            const { jwt, refreshToken } = action.payload
+        builder
+            .addCase(loginUser.fulfilled, (state, action) => {
+                const { jwt, refreshToken } = action.payload
 
-            if (jwt && refreshToken) {
-                localStorage.setItem('jwt', jwt)
-                localStorage.setItem('refreshToken', refreshToken)
+                if (jwt && refreshToken) {
+                    localStorage.setItem('jwt', jwt)
+                    localStorage.setItem('refreshToken', refreshToken)
 
-                state.isLoggedIn = true
-            }
-        })
+                    state.isLoggedIn = true
+                }
+            })
+            .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+                state.errors = action.payload
+            })
 
         builder.addCase(onAuthLoad, (state, action) => {
             const { jwt, refreshToken } = action.payload

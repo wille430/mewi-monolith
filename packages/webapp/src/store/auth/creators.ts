@@ -1,6 +1,7 @@
+import { AuthErrorCodes } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, refreshJwtToken, signUp } from 'api'
-import { AuthActionTypes } from './types'
+import { AuthActionTypes, AuthState } from './types'
 
 export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, () => {
     return {
@@ -18,7 +19,31 @@ export const loginUser = createAsyncThunk(
             const authTokens = await login(email, password)
             return authTokens
         } catch (e: any) {
-            return thunkAPI.rejectWithValue(e)
+            let errors: AuthState['errors'] = {
+                email: '',
+                password: '',
+                repassword: '',
+                all: '',
+            }
+            switch (e.error.type) {
+                case AuthErrorCodes.INVALID_EMAIL:
+                case AuthErrorCodes.INVALID_PASSWORD:
+                case AuthErrorCodes.MISSING_USER:
+                    errors = {
+                        ...errors,
+                        email: 'Felaktig epostaddress eller lösenord',
+                        password: 'Felaktig epostaddress eller lösenord',
+                    }
+                    break
+                default:
+                    errors = {
+                        ...errors,
+                        all: 'Ett fel inträffade. Försök igen.',
+                    }
+                    break
+            }
+
+            return thunkAPI.rejectWithValue(errors)
         }
     }
 )
