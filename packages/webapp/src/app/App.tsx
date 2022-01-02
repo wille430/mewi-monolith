@@ -61,7 +61,7 @@ function App() {
                             <Search />
                         </Route>
                         <Route exact path='/' component={Home} />
-                        <PrivateRoute exact path='/' isAuthenticated={isAuthenticated}>
+                        <PrivateRoute path='/' isAuthenticated={isAuthenticated}>
                             <ProtectedRoutes />
                         </PrivateRoute>
                         <Route path='*'>
