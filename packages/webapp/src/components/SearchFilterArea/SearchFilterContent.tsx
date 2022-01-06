@@ -147,9 +147,9 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             }
 
                                             if (_.size(newPriceRange) === 0) {
-                                                handleChange('priceRange', undefined)
+                                                debounceChange('priceRange', undefined)
                                             } else {
-                                                handleChange('priceRange', newPriceRange)
+                                                debounceChange('priceRange', newPriceRange)
                                             }
                                         }}
                                         data-testid='priceRangeSlider'

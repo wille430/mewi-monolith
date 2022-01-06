@@ -1,15 +1,20 @@
-import { categoriesOptions, regions, SearchFilterDataProps } from '@mewi/types'
+import { categories, categoriesOptions, regions, SearchFilterDataProps } from '@mewi/types'
 import { randomString } from '@mewi/util'
 import _ from 'lodash'
+import queryString from 'query-string'
+
+interface FormData extends SearchFilterDataProps {
+    regions?: string[]
+}
 
 describe('search', () => {
-    let formData: SearchFilterDataProps = {}
+    let formData: FormData = {}
 
     beforeEach(() => {
         cy.visit('/search')
 
         formData = {
-            category: _.sample(categoriesOptions).label,
+            category: _.sample(Object.keys(categories)),
             regions: _.sampleSize(regions, Math.random() * 3).map(
                 (regionOption) => regionOption.label
             ),
@@ -51,7 +56,12 @@ describe('search', () => {
             _.forOwn(formData, (value, key) => {
                 switch (key) {
                     case 'category':
-                        cy.get('[data-testid=categorySelect]').contains(formData[key])
+                        cy.get('[data-testid=categorySelect]').contains(
+                            categories[formData[key]].label,
+                            {
+                                matchCase: false,
+                            }
+                        )
                         break
                     case 'regions':
                         formData[key].forEach((region) => {
@@ -72,44 +82,13 @@ describe('search', () => {
                 }
             })
 
-            // Submit
-            cy.get('[data-testid=searchFilterSubmitButton]').click()
-            cy.contains(/^(Hittade )([0-9]*)( resultat)/gi)
+            _.forOwn(formData, (value, field) => {
+                if (!formData.auction) return
 
-            _.forOwn(formData, (value, key) => {
-                switch (key) {
-                    case 'category':
-                        if (formData.category) {
-                            cy.url({ decode: true }).should(
-                                'contain',
-                                'category=' + formData.category.toLocaleLowerCase()
-                            )
-                        }
-                        break
-                    case 'regions':
-                        if (formData.regions.length > 0) {
-                            cy.url({ decode: true }).should(
-                                'contain',
-                                'regions=' +
-                                    formData.regions.map((x) => x.toLocaleLowerCase()).join('%2C')
-                            )
-                        }
-                        break
-                    case 'price':
-                        if (formData.priceRange.gte || formData.priceRange.lte)
-                            cy.url().should(
-                                'contain',
-                                `price=${formData.priceRange.gte || ''}-${formData.priceRange.lte}`
-                            )
-                        break
-                    case 'auction':
-                        if (formData.auction) {
-                            cy.url().should('contain', 'auction=true')
-                        } else {
-                            cy.url().should('not.contain', 'auction')
-                        }
-                        break
-                }
+                cy.url({ decode: true }).should(
+                    'contain',
+                    queryString.stringify({ [field]: value }, { encode: false }).toLowerCase()
+                )
             })
         })
     })

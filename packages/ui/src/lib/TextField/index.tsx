@@ -33,7 +33,9 @@ export const TextField = ({
     const [inputValue, setInputValue] = useState(value || '')
 
     useEffect(() => {
-        onChange && onChange(inputValue)
+        if (value !== inputValue) {
+            onChange && onChange(inputValue)
+        }
     }, [inputValue])
 
     useEffect(() => {

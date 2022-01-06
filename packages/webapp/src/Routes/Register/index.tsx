@@ -5,67 +5,20 @@ import { APIResponseError, AuthErrorCodes } from '@mewi/types'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createUser } from 'store/auth/creators'
+import { useAppSelector } from 'hooks/hooks'
 
 const Register = () => {
-    // const [username, setUsername] = React.useState('')
     const initFormData = {
         email: '',
         password: '',
         repassword: '',
-        all: '',
     }
+
     const [formData, setFormData] = React.useState(initFormData)
     const { email, password, repassword } = formData
+
     const dispatch = useDispatch()
-
-    const initErrors = {
-        ...initFormData,
-        all: '',
-    }
-    const [errors, setErrors] = React.useState(initErrors)
-
-    const handleError = (err: APIResponseError) => {
-        switch (err?.error?.type) {
-            case AuthErrorCodes.INVALID_EMAIL:
-                setErrors({
-                    ...initErrors,
-                    email: 'Felaktig epostaddress',
-                })
-                break
-            case AuthErrorCodes.USER_ALREADY_EXISTS:
-                setErrors({
-                    ...initErrors,
-                    email: 'Epostaddressen är upptagen',
-                })
-                break
-            case AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH:
-                setErrors({
-                    ...initErrors,
-                    password:
-                        'Lösenordet är för svagt. Använd minst 8 bokstäver, special tecken, stor bokstav och siffror',
-                })
-                break
-            case AuthErrorCodes.PASSWORD_TOO_LONG:
-                setErrors({
-                    ...initErrors,
-                    password:
-                        'Lösenordet är för långt. Använd minst 8 bokstäver och max 30 bokstäver',
-                })
-                break
-            case AuthErrorCodes.PASSWORD_NOT_MATCHING:
-                setErrors({
-                    ...initErrors,
-                    repassword: 'Lösenorden måste matcha',
-                })
-                break
-            default:
-                setErrors({
-                    ...initErrors,
-                    all: 'Ett fel inträffade. Försök igen',
-                })
-                break
-        }
-    }
+    const errors = useAppSelector((state) => state.auth.errors)
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -80,16 +33,6 @@ const Register = () => {
                     <Container.Header>
                         <h3 className='text-center pb-6 pt-4'>Skapa ett konto</h3>
                     </Container.Header>
-                    {/* <Form
-                        onFormSubmit={onFormSubmit}
-                        title='Logga in'
-                        buttonLabel='Logga in'
-                        footer={[
-                            <Link to='/register' className='text-sm inline-block py-2'>
-                                Skapa ett konto
-                            </Link>,
-                        ]}
-                    > */}
                     <Container.Content>
                         <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
@@ -139,7 +82,11 @@ const Register = () => {
                                 />
                                 <span className='text-red-400'>{errors.repassword}</span>
                             </div>
-                            <Button label='Registrera dig' onClick={onFormSubmit} />
+                            <Button
+                                label='Registrera dig'
+                                onClick={onFormSubmit}
+                                data-testid='formSubmitButton'
+                            />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>

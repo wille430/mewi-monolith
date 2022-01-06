@@ -15,40 +15,6 @@ const Login = () => {
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        // await new Promise<void>((resolve, reject) => {
-        //     // userDispatch({
-        //     //     type: 'login',
-        //     //     userCredentials: { email, password },
-        //     //     callback: (authTokens, err) => {
-        //     //         if (err) {
-        //     //             setErrors(initErrors)
-        //     //             switch (err?.error?.type) {
-        //     //                 case AuthErrorCodes.INVALID_EMAIL:
-        //     //                 case AuthErrorCodes.INVALID_PASSWORD:
-        //     //                 case AuthErrorCodes.MISSING_USER:
-        //     //                     setErrors({
-        //     //                         email: 'Felaktig epostaddress eller lösenord',
-        //     //                         password: 'Felaktig epostaddress eller lösenord',
-        //     //                         all: '',
-        //     //                     })
-        //     //                     break
-        //     //                 default:
-        //     //                     setErrors({
-        //     //                         ...initErrors,
-        //     //                         all: 'Ett fel inträffade. Försök igen.',
-        //     //                     })
-        //     //                     break
-        //     //             }
-        //     //         }
-        //     //         resolve()
-        //     //     },
-        //     // })
-
-        //     // to-do
-
-        // })
-
         dispatch(loginUser({ email, password }))
     }
 
@@ -60,16 +26,6 @@ const Login = () => {
                     <Container.Header>
                         <h3 className='text-center pb-6 pt-4'>Logga in</h3>
                     </Container.Header>
-                    {/* <Form
-                        onFormSubmit={onFormSubmit}
-                        title='Logga in'
-                        buttonLabel='Logga in'
-                        footer={[
-                            <Link to='/register' className='text-sm inline-block py-2'>
-                                Skapa ett konto
-                            </Link>,
-                        ]}
-                    > */}
                     <Container.Content>
                         <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
@@ -94,7 +50,7 @@ const Login = () => {
                                 <span className='text-red-400'>{errors.password}</span>
                             </div>
 
-                            <Button label='Logga in' onClick={onFormSubmit} />
+                            <Button label='Logga in' onClick={onFormSubmit} data-testid='formSubmitButton'/>
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>

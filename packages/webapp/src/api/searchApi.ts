@@ -6,7 +6,7 @@ const getSearchResults = async (
     options?: SearchPostRequestBody
 ): Promise<Pick<SearchState, 'hits' | 'totalHits'>> => {
     const { hits, totalHits } = await axios
-        .post(process.env.NX_API_URL + '/search', {
+        .post('/search', {
             ...options,
         })
         .then((res) => res.data)

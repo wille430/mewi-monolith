@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { getItem } from 'store/itemDisplay/creators'
 import { useEffect } from 'react'
 import { getSearchResults } from 'store/search/creators'
+import _ from 'lodash'
 
 const ItemGrid = () => {
     const { hits, isLoading, filters, sort, page } = useAppSelector((state) => state.search)
@@ -17,7 +18,7 @@ const ItemGrid = () => {
     }
 
     useEffect(() => {
-        dispatch(getSearchResults())
+        console.log(filters, sort, page)
     }, [filters, sort, page])
 
     const renderItems = () => {

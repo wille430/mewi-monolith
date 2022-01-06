@@ -111,6 +111,7 @@ describe('Snackbar', () => {
         it('callback is called', () => {
             let open = true
             const animationDuration = 0
+            const autoHideDuration = 0
 
             const callback = jest.fn(() => {
                 open = false
@@ -146,6 +147,7 @@ describe('Snackbar', () => {
                     title={title}
                     handleClose={callback}
                     animationDuration={animationDuration}
+                    autoHideDuration={autoHideDuration}
                 />
             )
             expect(snackbar).toBeVisible()
@@ -154,7 +156,7 @@ describe('Snackbar', () => {
                 setTimeout(() => {
                     expect(snackbar).not.toBeVisible()
                     resolve()
-                }, animationDuration)
+                }, autoHideDuration)
             )
 
             jest.runAllTimers()

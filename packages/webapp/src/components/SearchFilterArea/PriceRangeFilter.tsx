@@ -6,20 +6,10 @@ import { HTMLAttributes, useCallback } from 'react'
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
     gte?: PriceRange['gte']
     lte?: PriceRange['lte']
-    onChange?: (field: 'gte' | 'lte', value?: string) => void
+    onChange: (field: 'gte' | 'lte', value?: string) => void
 }
 
 const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps) => {
-    const onInputChange = (value: string, field: 'gte' | 'lte') => {
-        if (value) {
-            onChange && onChange(field, value)
-        } else {
-            onChange && onChange(field)
-        }
-    }
-
-    const handleChange = useCallback(_.debounce(onInputChange, 1000), [])
-
     return (
         <div {...rest}>
             <label className='h-10 inline-block'>Välj prisintervall:</label>
@@ -28,7 +18,7 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
                     className='input'
                     value={gte?.toString() || ''}
                     placeholder='Från (kr)'
-                    onChange={(value) => handleChange(value, 'gte')}
+                    onChange={(value) => onChange('gte', value)}
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
@@ -37,7 +27,7 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
                     className='input'
                     value={lte?.toString() || ''}
                     placeholder='Till (kr)'
-                    onChange={(value) => handleChange(value, 'lte')}
+                    onChange={(value) => onChange('lte', value)}
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}

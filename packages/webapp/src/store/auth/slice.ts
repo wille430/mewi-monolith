@@ -11,7 +11,7 @@ const initialState: AuthState = {
         email: '',
         password: '',
         repassword: '',
-        all: ''
+        all: '',
     },
 }
 
@@ -49,15 +49,19 @@ export const userSlice = createSlice({
             localStorage.removeItem('refreshToken')
         })
 
-        builder.addCase(createUser.fulfilled, (state, action) => {
-            const { jwt, refreshToken } = action.payload
-            if (!jwt || !refreshToken) return
+        builder
+            .addCase(createUser.fulfilled, (state, action) => {
+                const { jwt, refreshToken } = action.payload
+                if (!jwt || !refreshToken) return
 
-            state.isLoggedIn = true
+                state.isLoggedIn = true
 
-            localStorage.setItem('jwt', jwt)
-            localStorage.setItem('refreshToken', refreshToken)
-        })
+                localStorage.setItem('jwt', jwt)
+                localStorage.setItem('refreshToken', refreshToken)
+            })
+            .addCase(createUser.rejected, (state, action: PayloadAction<any>) => {
+                state.errors = action.payload
+            })
 
         builder
             .addCase(refreshAccessToken.fulfilled, (state, action) => {

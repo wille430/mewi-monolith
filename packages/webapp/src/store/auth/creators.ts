@@ -19,12 +19,7 @@ export const loginUser = createAsyncThunk(
             const authTokens = await login(email, password)
             return authTokens
         } catch (e: any) {
-            let errors: AuthState['errors'] = {
-                email: '',
-                password: '',
-                repassword: '',
-                all: '',
-            }
+            let errors: AuthState['errors'] = {}
             switch (e.error.type) {
                 case AuthErrorCodes.INVALID_EMAIL:
                 case AuthErrorCodes.INVALID_PASSWORD:
@@ -55,7 +50,44 @@ export const createUser = createAsyncThunk(
             const authTokens = await signUp(...data)
             return authTokens
         } catch (e: any) {
-            return thunkAPI.rejectWithValue(e)
+            let errors: AuthState['errors'] = {}
+
+            switch (e.error?.type) {
+                case AuthErrorCodes.INVALID_EMAIL:
+                    errors = {
+                        email: 'Felaktig epostaddress',
+                    }
+                    break
+                case AuthErrorCodes.USER_ALREADY_EXISTS:
+                    errors = {
+                        email: 'Epostaddressen är upptagen',
+                    }
+                    break
+                case AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH:
+                    errors = {
+                        password:
+                            'Lösenordet är för svagt. Använd minst 8 bokstäver, special tecken, stor bokstav och siffror',
+                    }
+                    break
+                case AuthErrorCodes.PASSWORD_TOO_LONG:
+                    errors = {
+                        password:
+                            'Lösenordet är för långt. Använd minst 8 bokstäver och max 30 bokstäver',
+                    }
+                    break
+                case AuthErrorCodes.PASSWORD_NOT_MATCHING:
+                    errors = {
+                        repassword: 'Lösenorden måste matcha',
+                    }
+                    break
+                default:
+                    errors = {
+                        all: 'Ett fel inträffade. Försök igen',
+                    }
+                    break
+            }
+
+            return thunkAPI.rejectWithValue(errors)
         }
     }
 )
