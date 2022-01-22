@@ -8,11 +8,11 @@ const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
 
     return (
         <Button
-            className='bg-red-400 hover:bg-red-300'
             data-testid='removeWatcherButton'
             onClick={async () => {
                 dispatch(removeWatcher(watcherId))
             }}
+            color='error'
             icon={<FiTrash color='white' />}
         />
     )

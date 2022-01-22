@@ -3,7 +3,6 @@
 @import '../animation.scss';
 
 .button {
-    background-color: $primary;
     border-radius: 0.2rem;
     padding: 0.25rem 0.75rem;
     z-index: 1;
@@ -39,19 +38,16 @@
 
     &--contained {
         @extend .button;
-        background-color: $primary;
         color: white;
         box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
         &:hover {
-            background-color: $primary-light;
             box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px;
         }
 
         &:active {
             @extend .pressAnimation;
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            background-color: $primary-lighter;
         }
 
         &--disabled {
@@ -63,16 +59,35 @@
                 cursor: default;
             }
         }
+
+        &.primary {
+            background-color: $primary;
+            &:hover {
+                background-color: lighten($color: $primary, $amount: 0.65);
+            }
+        }
+
+        &.secondary {
+            background-color: $secondary;
+
+            &:hover {
+                background-color: lighten($color: $secondary, $amount: 0.65);
+            }
+        }
+
+        &.error {
+            background-color: $error;
+
+            &:hover {
+                background-color: lighten($color: $error, $amount: 0.65);
+            }
+        }
     }
 
     &--text {
         @extend .button;
         background-color: transparent;
         color: $primary;
-
-        &:hover {
-            background-color: lighten($primary, 65%);
-        }
 
         &:active {
             @extend .pressAnimation;
@@ -104,7 +119,7 @@
         border-radius: 0.2rem;
         transform: scale(1.05);
         background-color: saturate(
-            $color: transparentize($color: $primary, $amount: 0.75),
+            $color: transparentize($color: hsl(0, 0%, 0%), $amount: 0.75),
             $amount: 1
         );
         top: 0;

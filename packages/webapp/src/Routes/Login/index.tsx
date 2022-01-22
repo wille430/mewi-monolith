@@ -56,8 +56,9 @@ const Login = () => {
                     </Container.Content>
                     <Container.Footer>
                         <div className='pt-6'>
-                            <Link to='/register' className='text-center'>
-                                Har du inte ett konto? Skapa ett här
+                            <span className='pr-2'>Har du inte ett konto?</span>
+                            <Link to='/register' className='text-center text-secondary underline'>
+                                Skapa ett här
                             </Link>
                         </div>
                     </Container.Footer>

@@ -4,7 +4,7 @@ import { Button } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createWatcher } from 'store/watchers/creators'
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = {
     searchFilters: SearchFilterDataProps
     onClick?: () => void
 }

@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useEffect, useState } from 'react'
+import { HTMLAttributes, ReactNode, useState } from 'react'
 import Loader from 'react-loader-spinner'
 import styles from './index.module.scss'
 import utilities from '../utilities.module.scss'
@@ -19,6 +19,7 @@ type ButtonProps = Override<
         disabled?: boolean
         className?: string
         type?: 'button' | 'submit' | 'reset'
+        color?: 'primary' | 'secondary' | 'error'
     }
 >
 
@@ -33,6 +34,7 @@ export const Button = (props: ButtonProps) => {
         fullWidth,
         disabled,
         className,
+        color = 'primary',
         ...rest
     } = props
     const [isLoading, setLoading] = useState(false)
@@ -49,13 +51,14 @@ export const Button = (props: ButtonProps) => {
         <button
             className={cx({
                 [styles[`button--${variant}${isLoading || disabled ? '--disabled' : ''}`]]: true,
+                [styles[color]]: true,
                 [className || '']: true,
             })}
             data-testid='button'
             onClick={handleClick}
             {...rest}
         >
-            <div className='flex flex-row justify-center items-center space-x-2'>
+            <div className='flex flex-row justify-center items-center'>
                 {icon}
                 <div
                     className={cx({

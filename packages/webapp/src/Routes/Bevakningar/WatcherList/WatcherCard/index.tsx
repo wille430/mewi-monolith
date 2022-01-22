@@ -83,8 +83,9 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                 <div className='flex space-x-2'>
                     <Button
                         onClick={handleSearchButtonClick}
-                        label='Sök'
+                        label='Sök på min bevakning'
                         data-testid='watcherSearchButton'
+                        variant='text'
                     />
                     <RemoveButton watcherId={watcher._id.toString()} />
                 </div>
