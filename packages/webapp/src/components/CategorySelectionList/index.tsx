@@ -9,6 +9,7 @@ interface CategorySelectionListProps {
     currentCategories: {
         [key: number]: string
     }
+    keepFilters?: boolean
 }
 
 const CategorySelectionList = ({ currentCategories }: CategorySelectionListProps) => {

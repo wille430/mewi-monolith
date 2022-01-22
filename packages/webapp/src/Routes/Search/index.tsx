@@ -7,10 +7,13 @@ import Layout from 'components/Layout'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
+import CategorySelectionList from 'components/CategorySelectionList'
+import { useAppSelector } from 'hooks/hooks'
 
 const Search = () => {
     const dispatch = useDispatch()
     const scrollEle = useRef<HTMLDivElement | null>(null)
+    const { filters } = useAppSelector((state) => state.search)
 
     useEffect(() => {
         dispatch(getFiltersFromQueryParams())
@@ -25,28 +28,23 @@ const Search = () => {
         <Layout>
             <aside className='side-col'></aside>
             <main className='main pb-32'>
-                <section
-                    className='col-start-2 flex-none w-full'
-                    style={{
-                        maxWidth: '960px',
-                    }}
-                >
-                    {/* <AdPlaceholder size='lg' className='mb-12' /> */}
+                <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
+                    <CategorySelectionList currentCategories={{}} />
+                    <div className=''>
+                        <div ref={scrollEle}>
+                            <FilterArea exclude={{ category: true }} showKeywordField />
+                        </div>
 
-                    <div ref={scrollEle}>
-                        <FilterArea />
+                        <div className='w-full flex justify-between py-2 pb-6'>
+                            <ResultText />
+                            <SortButton />
+                        </div>
+
+                        <ItemGrid />
+
+                        <PageNav anchorEle={scrollEle} />
                     </div>
-                    
-                    <div ref={scrollEle}></div>
-                    <div className='w-full flex justify-between py-2 pb-6'>
-                        <ResultText />
-                        <SortButton />
-                    </div>
-
-                    <ItemGrid />
-
-                    <PageNav anchorEle={scrollEle} />
-                </section>
+                </div>
             </main>
             <aside className='side-col space-y-16'>
                 {/* <AdPlaceholder />
