@@ -53,7 +53,7 @@ const CategorySearch = () => {
                     [styles.main]: true,
                 })}
             >
-                <AdPlaceholder size='lg' className='mb-12' />
+                {/* <AdPlaceholder size='lg' className='mb-12' /> */}
                 <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
                     <CategorySelectionList
                         currentCategories={{
@@ -83,8 +83,8 @@ const CategorySearch = () => {
                 </div>
             </main>
             <aside className='side-col space-y-16'>
-                <AdPlaceholder />
-                <AdPlaceholder />
+                {/* <AdPlaceholder />
+                <AdPlaceholder /> */}
             </aside>
         </Layout>
     )

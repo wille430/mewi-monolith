@@ -2,12 +2,12 @@ import PageNav from '../../components/PageNav/index'
 import FilterArea from '../../components/FilterArea'
 import SortButton from 'components/SortButton'
 import ItemGrid from '../../components/ItemGrid'
-import AdPlaceholder from 'components/AdPlaceholder'
 import ResultText from '../../components/ResultText'
 import Layout from 'components/Layout'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
+
 const Search = () => {
     const dispatch = useDispatch()
     const scrollEle = useRef<HTMLDivElement | null>(null)
@@ -31,7 +31,7 @@ const Search = () => {
                         maxWidth: '960px',
                     }}
                 >
-                    <AdPlaceholder size='lg' className='mb-12' />
+                    {/* <AdPlaceholder size='lg' className='mb-12' /> */}
 
                     <div ref={scrollEle}>
                         <FilterArea />
@@ -49,8 +49,8 @@ const Search = () => {
                 </section>
             </main>
             <aside className='side-col space-y-16'>
-                <AdPlaceholder />
-                <AdPlaceholder />
+                {/* <AdPlaceholder />
+                <AdPlaceholder /> */}
             </aside>
         </Layout>
     )
