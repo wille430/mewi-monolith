@@ -1,4 +1,3 @@
-import { connect } from 'mongoose'
 import Elasticsearch, { elasticClient } from 'config/elasticsearch'
 import { UserService } from './UserServices'
 import NodeMailer from 'nodemailer'
@@ -6,21 +5,16 @@ import { toUnixTime, toDateObj } from '@mewi/util'
 import WatcherService from './WatcherService'
 import { ItemData } from 'types/types'
 import UserWatcherService from './UserServices/UserWatcherService'
-
-const EmailTemplate = require('email-templates')
-
-interface InfoObject {
-    from: string
-    to: string
-    subject: string
-    text: string
-}
+import EmailTemplate from 'email-templates'
+import path from 'path'
 
 export default class EmailService {
     static googleAuth = {
         email: process.env.GMAIL_MAIL,
         pass: process.env.GMAIL_PASS,
     }
+
+    static newWatchersTemplatePath = path.join(__dirname, '../emails/newItems')
 
     static async notifyWatchers() {
         // Iterate through every watcher in mongodb
@@ -78,7 +72,7 @@ export default class EmailService {
 
                 // Return if no new items were found since last notice
 
-                await this.sendEmailWithItems(
+                await EmailService.sendEmailWithItems(
                     user._id,
                     watcher,
                     newItems,
@@ -107,22 +101,17 @@ export default class EmailService {
             items: items,
         }
 
-        const info = await this.sendEmail(user.email, 'newItems', locals)
+        const info = await this.sendEmail(user.email, this.newWatchersTemplatePath, locals)
 
         console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
 
-    static async sendEmail(to, template, locals) {
+    static async sendEmail(to: string, template: string, locals) {
         // let testAccount = await NodeMailer.createTestAccount()
 
-        let transporter = NodeMailer.createTransport({
-            // host: "smtp.ethereal.email",
-            // port: 587,
-            // secure: false,
+        const transporter = NodeMailer.createTransport({
             service: 'gmail',
             auth: {
-                // user: testAccount.user,
-                // pass: testAccount.pass
                 user: this.googleAuth.email,
                 pass: this.googleAuth.pass,
             },
@@ -143,7 +132,7 @@ export default class EmailService {
             locals: locals,
         })
 
-        let info = await transporter.sendMail(emailInfo.originalMessage)
+        const info = await transporter.sendMail(emailInfo.originalMessage)
 
         return info
     }

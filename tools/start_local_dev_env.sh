@@ -14,7 +14,9 @@ select opt in linux windows; do
             ;;
         windows)
             echo "Starting dev env for windows..."
-            ./elasticsearch-7.16.2/bin/elasticsearch.bat
+            ./tools/elasticsearch-7.16.2/bin/elasticsearch.bat & cd ../ & npx nx serve api & npx nx serve webapp
+
+
             ;;
         *)
             echo "Invalid option $REPLY"

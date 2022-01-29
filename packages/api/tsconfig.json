@@ -11,7 +11,17 @@
         }
     ],
     "compilerOptions": {
+        "outDir": "../../dist/out-tsc",
+        "module": "commonjs",
+        "types": ["node", "express"],
+        "baseUrl": "src",
+        "paths": {
+            "@mewi/types": ["../../types/src/index.ts"],
+            "@mewi/util": ["../../util/src/index.ts"]
+        },
+        "lib": ["es2019"],
         "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "jsx": "react-jsx"
     }
 }
