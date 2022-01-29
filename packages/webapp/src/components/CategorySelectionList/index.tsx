@@ -1,39 +1,86 @@
-import { categories, Category } from '@mewi/types'
+import { categories } from '@mewi/types'
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
+import { ReactNode } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
 
-interface CategorySelectionListProps {
-    currentCategories: {
-        [key: number]: string
+/**
+ *
+ * @param categoryPath An array of keys nested in categories
+ * @returns null || {@link Category}
+ */
+const getNestedCategory = (categoryPath: string[]) => {
+    let category = null
+
+    for (const catKey of categoryPath) {
+        if (!category) {
+            category = categories[catKey]
+        } else {
+            category = category.subcat[catKey]
+        }
     }
-    keepFilters?: boolean
+
+    return category
 }
 
-const CategorySelectionList = ({ currentCategories }: CategorySelectionListProps) => {
-    const renderListItems = () => {
-        return Object.keys(categories).map((key) => {
-            const value = categories[key]
+const CategorySelectionList = () => {
+    // /kategorier/:category_id/:subcat_id
+    const { category_id, subcat_id } = useParams<any>()
+    const currentCategoryPath = [category_id, subcat_id].filter((x) => Boolean(x)) // <== remove all null values
 
-            let currentlySelected = false
-
-            if (currentCategories[0] === key) {
-                currentlySelected = true
+    /**
+     * Determine if a category is currently selected
+     */
+    const isCategorySelected = (categoryPath: string[]) => {
+        for (let i = 0; i < categoryPath.length; i++) {
+            if (categoryPath[i] !== currentCategoryPath[i]) {
+                // return false if the values doesn't match
+                return false
             }
+        }
 
-            return (
-                <CategorySelectionList.ListItem
-                    categoryKey={key}
-                    categoryValue={value}
-                    currentlySelected={currentlySelected}
-                    currentCategories={currentCategories}
-                    depth={0}
-                    parentLink='/kategorier'
-                />
-            )
-        })
+        return true
+    }
+
+    const renderListItems = (categoryPath: string[] = []) => {
+        if (categoryPath.length) {
+            // if not empty, find the category from the keys in categoryPath
+            const category = getNestedCategory(categoryPath)
+
+            // if null, exit
+            if (!category) return
+
+            return Object.keys(category?.subcat || {}).map((key) => {
+                const subcategoryPath = [...categoryPath, key]
+                const isSelected = isCategorySelected(subcategoryPath)
+
+                return (
+                    <CategorySelectionList.ListItem
+                        key={key}
+                        categoryPath={subcategoryPath}
+                        currentlySelected={isSelected}
+                    >
+                        {isSelected && renderListItems(subcategoryPath)}
+                    </CategorySelectionList.ListItem>
+                )
+            })
+        } else {
+            return Object.keys(categories).map((key) => {
+                const isSelected = isCategorySelected([key])
+
+                return (
+                    <CategorySelectionList.ListItem
+                        key={key}
+                        categoryPath={[key]}
+                        currentlySelected={isSelected}
+                    >
+                        {isSelected && renderListItems([key])}
+                    </CategorySelectionList.ListItem>
+                )
+            })
+        }
     }
 
     return (
@@ -43,58 +90,39 @@ const CategorySelectionList = ({ currentCategories }: CategorySelectionListProps
     )
 }
 
-interface ParentCategory {
-    categoryKey: string
-    categoryValue: Category
-    currentlySelected?: boolean
-    depth: number
-    currentCategories: CategorySelectionListProps['currentCategories']
-    parentLink: string
+interface ListItem {
+    currentlySelected: boolean
+    categoryPath: string[]
+    children: ReactNode
 }
 
-CategorySelectionList.ListItem = ({
-    categoryKey,
-    categoryValue,
-    currentlySelected = false,
-    currentCategories,
-    depth,
-    parentLink,
-}: ParentCategory) => {
-    const newLink = `${parentLink}/${categoryKey}`
+/**
+ *
+ * @param currentlySelected Whether category is selected
+ * @param categoryPath An array of keys to the category in {@link categories}
+ */
+const CategoryListItem = ({ categoryPath, children }: ListItem) => {
+    const getLink = () => {
+        return '/kategorier/' + categoryPath.join('/')
+    }
 
-    const renderChildListItems = () => {
-        return Object.keys(categoryValue.subcat).map((key) => {
-            const value = categoryValue.subcat[key]
-
-            let currentlySelected = false
-
-            if (currentCategories[depth + 1] === key) {
-                currentlySelected = true
-            }
-
-            return (
-                <CategorySelectionList.ListItem
-                    categoryKey={key}
-                    categoryValue={value}
-                    currentlySelected={currentlySelected}
-                    currentCategories={currentCategories}
-                    depth={depth + 1}
-                    parentLink={newLink}
-                />
-            )
-        })
+    const getLabel = () => {
+        return getNestedCategory(categoryPath)?.label
     }
 
     return (
         <li
             className={cx({
-                [styles.subcat]: depth >= 1,
+                [styles.subcat]: categoryPath.length > 1,
             })}
         >
-            <Link to={newLink}>{categoryValue.label}</Link>
-            {currentlySelected && <ul>{renderChildListItems()}</ul>}
+            {/* TODO: text of selected category should be bold */}
+            <Link to={getLink()}>{getLabel()}</Link>
+            {children}
         </li>
     )
 }
+
+CategorySelectionList.ListItem = CategoryListItem
 
 export default CategorySelectionList

@@ -1,20 +1,18 @@
 import { categories, Category } from '@mewi/types'
-import AdPlaceholder from 'components/AdPlaceholder'
 import CategorySelectionList from 'components/CategorySelectionList'
 import Layout from 'components/Layout'
 import { ReactNode, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import FilterArea from 'components/FilterArea'
 import ItemGrid from 'components/ItemGrid'
 import PageNav from 'components/PageNav'
 import ResultText from 'components/ResultText'
 import SortButton from 'components/SortButton'
 import styles from './index.module.scss'
-import _ from 'lodash'
 import classNames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { clearFilters, getFiltersFromQueryParams, setFilters } from 'store/search/creators'
+import { clearFilters } from 'store/search/creators'
 
 const cx = classNames.bind(styles)
 
@@ -29,21 +27,13 @@ const CategorySearch = () => {
 
     const scrollEle = useRef<HTMLDivElement | null>(null)
 
-    const defaultValues = {
-        category: params.subcat_id || params.category_id,
-    }
-
     useEffect(() => {
         // clear filters on unmount
         return () => {
             dispatch(clearFilters())
         }
     }, [])
-
-    useEffect(() => {
-        dispatch(getFiltersFromQueryParams(defaultValues))
-    }, [params.category_id, params.subcat_id])
-
+    
     return (
         <Layout>
             <aside className='side-col'></aside>
@@ -55,18 +45,13 @@ const CategorySearch = () => {
             >
                 {/* <AdPlaceholder size='lg' className='mb-12' /> */}
                 <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
-                    <CategorySelectionList
-                        currentCategories={{
-                            0: params.category_id,
-                        }}
-                    />
+                    <CategorySelectionList />
                     <div className=''>
                         <CategoryPathLabel categoryValues={params} />
 
                         <div ref={scrollEle}>
                             <FilterArea
                                 exclude={{ category: true }}
-                                defaultValues={defaultValues}
                                 showKeywordField
                             />
                         </div>

@@ -8,12 +8,10 @@ import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
 import CategorySelectionList from 'components/CategorySelectionList'
-import { useAppSelector } from 'hooks/hooks'
 
 const Search = () => {
     const dispatch = useDispatch()
     const scrollEle = useRef<HTMLDivElement | null>(null)
-    const { filters } = useAppSelector((state) => state.search)
 
     useEffect(() => {
         dispatch(getFiltersFromQueryParams())
@@ -29,7 +27,7 @@ const Search = () => {
             <aside className='side-col'></aside>
             <main className='main pb-32'>
                 <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
-                    <CategorySelectionList currentCategories={{}} />
+                    <CategorySelectionList />
                     <div className=''>
                         <div ref={scrollEle}>
                             <FilterArea exclude={{ category: true }} showKeywordField />
