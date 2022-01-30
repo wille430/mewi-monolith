@@ -8,6 +8,7 @@ import { HorizontalLine } from '@mewi/ui'
 import OriginLabel from '../ArticleItem/OriginLabel'
 import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
+import Description from './Description'
 
 const cx = classNames.bind(styles)
 
@@ -79,7 +80,7 @@ const ArticleItemDetails = ({
                     <div className={styles.infoBody}>
                         <div>
                             <h4>Beskrivning</h4>
-                            <p>{body}</p>
+                            <Description text={body || ''} />
                         </div>
                         <HorizontalLine />
                         <aside>

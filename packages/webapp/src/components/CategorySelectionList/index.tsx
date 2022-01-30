@@ -1,8 +1,10 @@
 import { categories } from '@mewi/types'
 import classNames from 'classnames'
+import { useAppDispatch } from 'hooks/hooks'
 import _ from 'lodash'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { updateFilters } from 'store/search/creators'
 import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
@@ -29,7 +31,27 @@ const getNestedCategory = (categoryPath: string[]) => {
 const CategorySelectionList = () => {
     // /kategorier/:category_id/:subcat_id
     const { category_id, subcat_id } = useParams<any>()
-    const currentCategoryPath = [category_id, subcat_id].filter((x) => Boolean(x)) as string[] // <== remove all null values
+
+    const currentCategoryPath = [category_id, subcat_id].filter((x) => x !== undefined) as string[] // <== remove all null values
+    const lastCategoryPath = useRef(currentCategoryPath)
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        // only update filters if category path changed
+        if (_.isEqual(lastCategoryPath.current, currentCategoryPath)) {
+            return
+        }
+
+        // one render, set category to current path
+        dispatch(
+            updateFilters({
+                category: currentCategoryPath[currentCategoryPath.length - 1],
+            })
+        )
+
+        lastCategoryPath.current = currentCategoryPath
+    }, [currentCategoryPath])
 
     /**
      * Determine if a category is currently selected

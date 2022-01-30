@@ -5,7 +5,7 @@ import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilter
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import queryString from 'query-string'
-import { setFilters, updateFilters } from 'store/search/creators'
+import { getSearchResults, setFilters, updateFilters } from 'store/search/creators'
 import _ from 'lodash'
 import { useEffect, useRef } from 'react'
 
@@ -33,9 +33,19 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         history.push({
             pathname: window.location.pathname,
             search: queryString.stringify(
-                _.omit({ ...search.filters, page: search.page, sort: search.sort !== SortData.RELEVANCE ? search.sort : undefined }, Object.keys(defaultValues || {}))
+                _.omit(
+                    {
+                        ...search.filters,
+                        page: search.page,
+                        sort: search.sort !== SortData.RELEVANCE ? search.sort : undefined,
+                    },
+                    Object.keys(defaultValues || {})
+                )
             ),
         })
+
+        // get new results
+        dispatch(getSearchResults())
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {

@@ -3,10 +3,10 @@ import ArticleItem from 'components/ArticleItem/index'
 import ItemPopUp from '../ItemPopUp'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getItem } from 'store/itemDisplay/creators'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const ItemGrid = () => {
-    const { hits, filters, sort, page } = useAppSelector((state) => state.search)
+    const { hits } = useAppSelector((state) => state.search)
     const [isLoading, setIsLoading] = useState(false)
 
     const dispatch = useAppDispatch()
@@ -22,10 +22,6 @@ const ItemGrid = () => {
                 setIsLoading(false)
             })
     }
-
-    useEffect(() => {
-        console.log(filters, sort, page)
-    }, [filters, sort, page])
 
     const renderItems = () => {
         return hits.map((item: any, i: number) => (
