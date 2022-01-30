@@ -1,5 +1,4 @@
 import { SearchFilterDataProps } from '@mewi/types'
-import { ButtonHTMLAttributes } from 'react'
 import { Button } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createWatcher } from 'store/watchers/creators'
@@ -14,6 +13,7 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
 
     // Add watcher
     const handleClick = async () => {
+        onClick && onClick()
         dispatch(createWatcher(searchFilters))
     }
 

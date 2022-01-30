@@ -2,6 +2,8 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import SearchForm from './index'
 import { act } from 'react-dom/test-utils'
+import { Provider } from 'react-redux'
+import { store } from 'store'
 
 const mockHistoryPush = jest.fn()
 const mockAutoComplete = jest.fn(() => [])
@@ -22,8 +24,14 @@ jest.mock('api/SearchAPI', () => {
     }
 })
 
+const MockSearchForm = () => (
+    <Provider store={store}>
+        <SearchForm showSearchIcon={true} />
+    </Provider>
+)
+
 it('renders correctly', () => {
-    const { queryByTestId, queryByPlaceholderText } = render(<SearchForm showSearchIcon={true} />)
+    const { queryByTestId, queryByPlaceholderText } = render(<MockSearchForm />)
 
     expect(queryByTestId('searchButton')).toBeTruthy()
     expect(queryByPlaceholderText('Sök efter en vara...')).toBeTruthy()
@@ -31,7 +39,7 @@ it('renders correctly', () => {
 
 describe('Input value', () => {
     it('updates on change', () => {
-        const { queryByTestId } = render(<SearchForm />)
+        const { queryByTestId } = render(<MockSearchForm />)
 
         const searchInput = queryByTestId('searchInput') as HTMLButtonElement
 
@@ -54,7 +62,7 @@ describe('Input value', () => {
 
 describe('Search button', () => {
     it('triggers page redirect', () => {
-        const { queryByTestId } = render(<SearchForm showSearchIcon={true} />)
+        const { queryByTestId } = render(<MockSearchForm />)
         const searchButton = queryByTestId('searchButton')
         expect(searchButton).toBeTruthy()
 
@@ -69,7 +77,7 @@ describe('Search button', () => {
 describe('Search Suggestions', () => {
     describe('with no query', () => {
         it('does not trigger autocomplete api function', () => {
-            const { queryByTestId } = render(<SearchForm />)
+            const { queryByTestId } = render(<MockSearchForm />)
 
             const searchSuggestions = queryByTestId('searchSuggestions')
             const searchInput = queryByTestId('searchInput')
@@ -92,7 +100,7 @@ describe('Search Suggestions', () => {
 
     describe('with query', () => {
         it('triggers autocomplete api function', () => {
-            const { queryByTestId } = render(<SearchForm />)
+            const { queryByTestId } = render(<MockSearchForm />)
 
             const searchSuggestions = queryByTestId('searchSuggestions')
             const searchInput = queryByTestId('searchInput')

@@ -1,4 +1,4 @@
-import { categories, categoriesOptions, regions, SearchFilterDataProps } from '@mewi/types'
+import { regions, SearchFilterDataProps } from '@mewi/types'
 import { randomString } from '@mewi/util'
 import _ from 'lodash'
 import queryString from 'query-string'
@@ -14,7 +14,7 @@ describe('search', () => {
         cy.visit('/search')
 
         formData = {
-            category: _.sample(Object.keys(categories)),
+            // category: _.sample(Object.keys(categories)),
             regions: _.sampleSize(regions, Math.random() * 3).map(
                 (regionOption) => regionOption.label
             ),
@@ -28,11 +28,11 @@ describe('search', () => {
 
     Cypress._.times(3, () => {
         it('can filter with randomized filters and search', () => {
-            // Inserts category
-            cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
+            // TODO: select category from category selection list
 
             // Inserts regions
             formData.regions.forEach((region) => {
+                // FIXME: fix detached from DOM error
                 cy.get('[data-testid=regionsSelect]').type(region + ' {enter}', { delay: 100 })
             })
 
@@ -56,12 +56,13 @@ describe('search', () => {
             _.forOwn(formData, (value, key) => {
                 switch (key) {
                     case 'category':
-                        cy.get('[data-testid=categorySelect]').contains(
-                            categories[formData[key]].label,
-                            {
-                                matchCase: false,
-                            }
-                        )
+                        // TODO: Expect category in selection list to be bold
+                        // cy.get('[data-testid=categorySelect]').contains(
+                        //     categories[formData[key]].label,
+                        //     {
+                        //         matchCase: false,
+                        //     }
+                        // )
                         break
                     case 'regions':
                         formData[key].forEach((region) => {
@@ -98,7 +99,7 @@ describe('search', () => {
 
         cy.get('[data-testid=searchInput]').type(keyword + '{enter}')
 
-        cy.url().should('contain', '/search?q=' + keyword)
+        cy.url().should('contain', '/search?keyword=' + keyword)
 
         cy.contains(/^(Hittade )([0-9]*)( resultat)/gi)
     })
@@ -115,7 +116,7 @@ describe('search', () => {
         })
 
         // Inserts category
-        cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
+        // cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
 
         // Inserts regions
         formData.regions.forEach((region) => {

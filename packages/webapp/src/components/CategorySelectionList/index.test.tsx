@@ -4,6 +4,8 @@ import CategorySelectionList from '.'
 import { categories } from '@mewi/types'
 import { MemoryRouter, Route } from 'react-router-dom'
 import _ from 'lodash'
+import { Provider } from 'react-redux'
+import { store } from 'store'
 
 describe('Category Selection List', () => {
     const mockCatKey = _.sample(Object.keys(categories))
@@ -11,11 +13,13 @@ describe('Category Selection List', () => {
 
     const MockCategorySelectionList = () => {
         return (
-            <MemoryRouter initialEntries={[`/kategorier/${mockCatKey}`]}>
-                <Route path={'/kategorier/:category_id'}>
-                    <CategorySelectionList />
-                </Route>
-            </MemoryRouter>
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/kategorier/${mockCatKey}`]}>
+                    <Route path={'/kategorier/:category_id'}>
+                        <CategorySelectionList />
+                    </Route>
+                </MemoryRouter>
+            </Provider>
         )
     }
 
@@ -39,8 +43,6 @@ describe('Category Selection List', () => {
 
     it('renders sub categories when a main category is selected', () => {
         const { queryByText } = render(<MockCategorySelectionList />)
-
-        console.log('Selected category:', mainCat)
 
         const subCats = Object.keys(mainCat.subcat)
 
