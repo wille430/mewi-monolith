@@ -57,12 +57,6 @@ const CategorySelectionList = () => {
                 const subcategoryPath = [...categoryPath, key]
                 const isSelected = isCategorySelected(subcategoryPath)
 
-                console.log({
-                    currentCategoryPath,
-                    subcategoryPath,
-                    equal: _.isEqual(subcategoryPath, currentCategoryPath),
-                })
-
                 return (
                     <CategorySelectionList.ListItem
                         key={key}
