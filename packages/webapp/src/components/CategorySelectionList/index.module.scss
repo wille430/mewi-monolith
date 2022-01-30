@@ -9,3 +9,11 @@
     color: hsl(0, 0, 30%);
     margin-left: 1rem;
 }
+
+.selected {
+    font-weight: 800;
+
+    & > ul > * {
+        font-weight: 400;
+    }
+}

@@ -1,5 +1,6 @@
 import { categories } from '@mewi/types'
 import classNames from 'classnames'
+import _ from 'lodash'
 import { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
@@ -28,7 +29,7 @@ const getNestedCategory = (categoryPath: string[]) => {
 const CategorySelectionList = () => {
     // /kategorier/:category_id/:subcat_id
     const { category_id, subcat_id } = useParams<any>()
-    const currentCategoryPath = [category_id, subcat_id].filter((x) => Boolean(x)) // <== remove all null values
+    const currentCategoryPath = [category_id, subcat_id].filter((x) => Boolean(x)) as string[] // <== remove all null values
 
     /**
      * Determine if a category is currently selected
@@ -56,11 +57,17 @@ const CategorySelectionList = () => {
                 const subcategoryPath = [...categoryPath, key]
                 const isSelected = isCategorySelected(subcategoryPath)
 
+                console.log({
+                    currentCategoryPath,
+                    subcategoryPath,
+                    equal: _.isEqual(subcategoryPath, currentCategoryPath),
+                })
+
                 return (
                     <CategorySelectionList.ListItem
                         key={key}
                         categoryPath={subcategoryPath}
-                        currentlySelected={isSelected}
+                        currentlySelected={_.isEqual(currentCategoryPath, subcategoryPath)}
                     >
                         {isSelected && renderListItems(subcategoryPath)}
                     </CategorySelectionList.ListItem>
@@ -74,7 +81,7 @@ const CategorySelectionList = () => {
                     <CategorySelectionList.ListItem
                         key={key}
                         categoryPath={[key]}
-                        currentlySelected={isSelected}
+                        currentlySelected={_.isEqual(currentCategoryPath, [key])}
                     >
                         {isSelected && renderListItems([key])}
                     </CategorySelectionList.ListItem>
@@ -101,24 +108,23 @@ interface ListItem {
  * @param currentlySelected Whether category is selected
  * @param categoryPath An array of keys to the category in {@link categories}
  */
-const CategoryListItem = ({ categoryPath, children }: ListItem) => {
+const CategoryListItem = ({ categoryPath, children, currentlySelected }: ListItem) => {
+    const category = getNestedCategory(categoryPath)
+
     const getLink = () => {
         return '/kategorier/' + categoryPath.join('/')
-    }
-
-    const getLabel = () => {
-        return getNestedCategory(categoryPath)?.label
     }
 
     return (
         <li
             className={cx({
                 [styles.subcat]: categoryPath.length > 1,
+                [styles.selected]: currentlySelected,
             })}
         >
             {/* TODO: text of selected category should be bold */}
-            <Link to={getLink()}>{getLabel()}</Link>
-            {children}
+            <Link to={getLink()}>{category?.label}</Link>
+            <ul>{children}</ul>
         </li>
     )
 }
