@@ -4,7 +4,6 @@ export interface SearchState {
     hits: ItemData[]
     totalHits: number
     filters: SearchFilterDataProps
-    isLoading: boolean
     sort: SortData
     page: number
 }

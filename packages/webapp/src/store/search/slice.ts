@@ -1,5 +1,5 @@
 import { SortData } from '@mewi/types'
-import { createSlice, isFulfilled, isPending } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import {
     clearFilters,
     getFiltersFromQueryParams,
@@ -15,7 +15,6 @@ const initialState: SearchState = {
     hits: [],
     totalHits: 0,
     filters: {},
-    isLoading: false,
     sort: SortData.RELEVANCE,
     page: 1,
 }
@@ -63,14 +62,6 @@ export const searchSlice = createSlice({
         builder.addCase(goToPage, (state, action) => {
             state.page = action.payload
         })
-
-        builder
-            .addMatcher(isPending, (state) => {
-                state.isLoading = true
-            })
-            .addMatcher(isFulfilled, (state) => {
-                state.isLoading = false
-            })
     },
 })
 

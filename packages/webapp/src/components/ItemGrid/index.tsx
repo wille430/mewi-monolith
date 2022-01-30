@@ -1,20 +1,26 @@
 import StyledLoader from 'components/StyledLoader'
 import ArticleItem from 'components/ArticleItem/index'
 import ItemPopUp from '../ItemPopUp'
-import { useAppSelector } from 'hooks/hooks'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getItem } from 'store/itemDisplay/creators'
-import { useEffect } from 'react'
-import { getSearchResults } from 'store/search/creators'
-import _ from 'lodash'
+import { useEffect, useState } from 'react'
 
 const ItemGrid = () => {
-    const { hits, isLoading, filters, sort, page } = useAppSelector((state) => state.search)
+    const { hits, filters, sort, page } = useAppSelector((state) => state.search)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const handleItemClick = (id: string) => {
+        setIsLoading(true)
+
         dispatch(getItem(id))
+            .then(() => {
+                setIsLoading(false)
+            })
+            .catch(() => {
+                setIsLoading(false)
+            })
     }
 
     useEffect(() => {
