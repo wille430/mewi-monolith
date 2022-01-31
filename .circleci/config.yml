@@ -28,16 +28,6 @@ jobs:
       - run:
           command: nx deploy webapp
           name: Deploy webapp to Netlify
-  build_api_image:
-    docker:
-     - image: 'docker:17.05.0-ce-git'
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: pwd
-      - run:
-          command: docker build -f ./packages/api/Dockerfile . -t api
-          name: Deploy API to Okteto
   deploy_to_okteto:
     machine:
       image: ubuntu-2004:202010-01
@@ -49,13 +39,17 @@ jobs:
           command: okteto login --token $OKTETO_TOKEN
           name: Login in to Okteto
       - checkout
-      - run: okteto pipeline deploy
+      - run:
+          command: okteto build ./packages/api
+          name: Build API image
+      - run:
+          command: okteto pipeline deploy
+          name: Deploy pipeline
           
 workflows:
     version: 2
     build_test_and_deploy:
       jobs:
-        - build_api_image
         - deploy_to_okteto
         # - build_and_test
         # - deploy:
