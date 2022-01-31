@@ -32,6 +32,7 @@ jobs:
     machine:
       image: ubuntu-2004:202010-01
     steps:
+      - run: pwd
       - run:
           command: curl https://get.okteto.com -sSfL | sh
           name: Install Okteto CLI
