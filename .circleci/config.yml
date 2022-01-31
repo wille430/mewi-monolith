@@ -39,6 +39,9 @@ jobs:
           command: okteto login --token $OKTETO_TOKEN
           name: Login in to Okteto
       - checkout
+      - run:
+          command: npx nx build api
+          name: Build API
       - run: pwd
       - run: ls
       - run:
