@@ -20,23 +20,31 @@ jobs:
           command: npx nx affected --target=test --base=$NX_BASE
           name: Run Unit Tests
   deploy:
-      docker:
-        - image: 'cimg/node:14.17-browsers'
-      steps:
-        - checkout
-        - run: npm install
-        - run:
-            command: npx nx deploy webapp
-            name: Deploy webapp to Netlify
-        - setup_remote_docker
-        - run:
-            command: npx nx deploy api
-            name: Deploy api to Okteto
+    docker:
+      - image: 'cimg/node:14.17-browsers'
+    steps:
+      - checkout
+      - run: npm install
+      - run:
+          command: npx nx deploy webapp
+          name: Deploy webapp to Netlify
+  deploy_backend:
+    docker:
+     - image: 'docker:17.05.0-ce-git'
+     steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: docker build -f ./packages/api/Dockerfile . -t api
+          name: Build Docker Image
 workflows:
     version: 2
     build_test_and_deploy:
       jobs:
         - build_and_test
         - deploy:
+            requires:
+              - build_and_test
+        - deploy_backend:
             requires:
               - build_and_test
