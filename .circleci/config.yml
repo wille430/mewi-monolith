@@ -32,7 +32,6 @@ jobs:
     machine:
       image: ubuntu-2004:202010-01
     steps:
-      - run: pwd
       - run:
           command: curl https://get.okteto.com -sSfL | sh
           name: Install Okteto CLI
@@ -40,6 +39,12 @@ jobs:
           command: okteto login --token $OKTETO_TOKEN
           name: Login in to Okteto
       - checkout
+      - run: npm install
+      - run:
+          command: npx nx build api
+          name: Build API
+      - run: pwd
+      - run: ls
       - run:
           command: okteto build --file ./packages/api/Dockerfile --tag okteto.dev/api
           name: Build API image
