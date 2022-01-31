@@ -26,7 +26,7 @@ jobs:
       - checkout
       - run: npm install
       - run:
-          command: npx nx deploy webapp
+          command: nx deploy webapp
           name: Deploy webapp to Netlify
   deploy_backend:
     docker:

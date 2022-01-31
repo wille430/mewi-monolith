@@ -7,7 +7,6 @@
             "builder": "@nrwl/workspace:run-commands",
             "options": {
                 "commands": [
-                    "nx build api",
                     "sudo docker build -f ./packages/api/Dockerfile . -t api"
                 ],
                 "parallel": false
