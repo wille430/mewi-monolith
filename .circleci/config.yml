@@ -41,7 +41,7 @@ jobs:
       - checkout
       - run: npm install
       - run:
-          command: nx build api
+          command: npx nx build api
           name: Build API
       - run: pwd
       - run: ls
