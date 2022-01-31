@@ -6,6 +6,8 @@ import ItemsService from './services/ItemsService'
 import EmailService from './services/EmailService'
 import app from './routes/app'
 
+console.log("NODE ENV:", process.env.NODE_ENV)
+
 // Scheduled jobs
 
 // Update elasticsearch index

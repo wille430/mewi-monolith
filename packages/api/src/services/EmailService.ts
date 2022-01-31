@@ -7,6 +7,7 @@ import { ItemData } from 'types/types'
 import UserWatcherService from './UserServices/UserWatcherService'
 import EmailTemplate from 'email-templates'
 import path from 'path'
+import fs from 'fs'
 
 export default class EmailService {
     static googleAuth = {
@@ -14,7 +15,18 @@ export default class EmailService {
         pass: process.env.GMAIL_PASS,
     }
 
-    static newWatchersTemplatePath = path.join(__dirname, '../emails/newItems')
+    static findTemplateDir() {
+        const templatePath = path.resolve('packages/api/src/emails/newItems')
+        if (fs.existsSync(templatePath)) {
+            // template path for non-compiled project
+            return templatePath
+        } else {
+            // template path in out-dir
+            return 'emails/newItems'
+        }
+    }
+
+    static newWatchersTemplatePath = EmailService.findTemplateDir()
 
     static async notifyWatchers() {
         // Iterate through every watcher in mongodb

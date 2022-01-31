@@ -7,7 +7,6 @@
             "builder": "@nrwl/workspace:run-commands",
             "options": {
                 "commands": [
-                    "nx build api",
                     "sudo docker build -f ./packages/api/Dockerfile . -t api"
                 ],
                 "parallel": false
@@ -23,7 +22,8 @@
                 "main": "packages/api/src/main.ts",
                 "tsConfig": "packages/api/tsconfig.app.json",
                 "assets": [
-                    "packages/api/src/assets"
+                    "packages/api/src/assets",
+                    "packages/api/src/emails"
                 ],
                 "generatePackageJson": true
             },
