@@ -34,7 +34,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: npx nx build api
+      - run: pwd
       - run:
           command: docker build -f ./packages/api/Dockerfile . -t api
           name: Deploy API to Okteto
