@@ -39,7 +39,7 @@ jobs:
           command: okteto login --token $OKTETO_TOKEN
           name: Login in to Okteto
       - checkout
-      - run: npm install --production
+      - run: npm install
       - run:
           command: nx build api
           name: Build API
