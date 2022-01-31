@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   nx: nrwl/nx@1.1.3
 jobs:
-  build_and_test:
+  test:
     docker:
       - image: 'cimg/node:14.17-browsers'
     steps:
@@ -19,16 +19,11 @@ jobs:
       - run:
           command: npx nx affected --target=test --base=$NX_BASE
           name: Run Unit Tests
-  deploy_netlify:
-    docker:
-      - image: 'cimg/node:14.17-browsers'
-    steps:
-      - checkout
-      - run: npm install
-      - run:
-          command: nx deploy webapp
-          name: Deploy webapp to Netlify
-  deploy_to_okteto:
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "*"
+  deploy:
     machine:
       image: ubuntu-2004:202010-01
     steps:
@@ -39,25 +34,16 @@ jobs:
           command: okteto login --token $OKTETO_TOKEN
           name: Login in to Okteto
       - checkout
-      - run: npm install
+      - attach_workspace:
+          at: .
       - run:
-          command: npx nx build api
-          name: Build API
-      - run: pwd
-      - run: ls
-      - run:
-          command: okteto build --file ./packages/api/Dockerfile --tag okteto.dev/api
-          name: Build API image
-      - run:
-          command: okteto pipeline deploy
-          name: Deploy pipeline
-          
+          command: npx nx affected --target=deploy --base=$NX_BASE
+          name: Deploy to apps
 workflows:
     version: 2
     build_test_and_deploy:
       jobs:
-        - deploy_to_okteto
-        # - build_and_test
-        # - deploy_netlify:
-        #     requires:
-        #       - build_and_test
+        - test
+        - deploy:
+            requires:
+              - test
