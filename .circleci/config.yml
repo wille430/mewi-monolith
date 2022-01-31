@@ -35,7 +35,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          command: npx nx deploy api
+          command: nx deploy api
           name: Deploy API to Okteto
 workflows:
     version: 2
