@@ -35,8 +35,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -f ./packages/api/Dockerfile . -t api
-          name: Build Docker Image
+          command: npx nx deploy api
+          name: Deploy API to Okteto
 workflows:
     version: 2
     build_test_and_deploy:
