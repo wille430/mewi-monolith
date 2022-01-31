@@ -31,7 +31,7 @@ jobs:
   deploy_backend:
     docker:
      - image: 'docker:17.05.0-ce-git'
-     steps:
+    steps:
       - checkout
       - setup_remote_docker
       - run:
