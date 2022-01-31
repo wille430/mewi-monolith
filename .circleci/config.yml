@@ -40,7 +40,7 @@ jobs:
           name: Login in to Okteto
       - checkout
       - run:
-          command: okteto build ./packages/api
+          command: okteto build --file .\packages\api\Dockerfile --tag okteto.dev/api
           name: Build API image
       - run:
           command: okteto pipeline deploy
