@@ -19,7 +19,7 @@ jobs:
       - run:
           command: npx nx affected --target=test --base=$NX_BASE
           name: Run Unit Tests
-  deploy:
+  deploy_netlify:
     docker:
       - image: 'cimg/node:14.17-browsers'
     steps:
@@ -40,7 +40,7 @@ jobs:
           name: Login in to Okteto
       - checkout
       - run:
-          command: okteto build --file .\packages\api\Dockerfile --tag okteto.dev/api
+          command: okteto build --file ./packages/api/Dockerfile --tag okteto.dev/api
           name: Build API image
       - run:
           command: okteto pipeline deploy
@@ -52,9 +52,6 @@ workflows:
       jobs:
         - deploy_to_okteto
         # - build_and_test
-        # - deploy:
-        #     requires:
-        #       - build_and_test
-        # - deploy_backend:
+        # - deploy_netlify:
         #     requires:
         #       - build_and_test
