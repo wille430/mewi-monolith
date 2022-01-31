@@ -28,6 +28,7 @@ jobs:
         - run:
             command: npx nx deploy webapp
             name: Deploy webapp to Netlify
+        - setup_remote_docker
         - run:
             command: npx nx deploy api
             name: Deploy api to Okteto
