@@ -3,8 +3,8 @@ import { toUnixTime } from '@mewi/util'
 import EndDate from './services/EndDate'
 import ScrapeService from './services/scrapers/ScrapeService'
 import ItemsService from './services/ItemsService'
-import EmailService from './services/EmailService'
 import app from './routes/app'
+import WatcherNotificationService from 'services/WatcherNotificationService'
 
 console.log("NODE ENV:", process.env.NODE_ENV)
 
@@ -17,7 +17,7 @@ schedule.scheduleJob('30 * * * *', async () => {
         await ItemsService.deleteOld()
 
         // Notify users of new items
-        await EmailService.notifyWatchers()
+        await WatcherNotificationService.notifyUsers()
     })
 })
 
@@ -28,7 +28,7 @@ if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
         await ItemsService.deleteOld()
 
         // Notify users of new items
-        await EmailService.notifyWatchers()
+        await WatcherNotificationService.notifyUsers()
     })
 }
 

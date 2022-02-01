@@ -16,92 +16,17 @@ export default class EmailService {
     }
 
     static findTemplateDir() {
-        const templatePath = path.resolve('packages/api/src/emails/newItems')
+        const templatePath = path.resolve('packages/api/src/emails')
         if (fs.existsSync(templatePath)) {
             // template path for non-compiled project
             return templatePath
         } else {
             // template path in out-dir
-            return 'emails/newItems'
+            return 'emails'
         }
     }
 
-    static newWatchersTemplatePath = EmailService.findTemplateDir()
-
-    static async notifyWatchers() {
-        // Iterate through every watcher in mongodb
-        const watchers = await WatcherService.getAll()
-
-        // Count emails sent to users
-        let mailSent = 0
-
-        watchers.forEach(async (watcher) => {
-            // Get users with corresponding watcher
-            const arrayOfUids = watcher.users.map((x) => x.toString())
-            const users = await UserService.usersInIds(arrayOfUids)
-
-            users.forEach(async (user) => {
-                // console.log(`Emailing ${user.username} about ${response.body.hits.hits.length} new products`)
-
-                const watcherInUser = await UserWatcherService.get(user._id, watcher._id)
-                if (!watcherInUser) {
-                    await new WatcherService(watcher._id).delete(user._id)
-                    return
-                }
-                if (!EmailService.userShouldBeNotified(watcherInUser.notifiedAt)) return
-
-                const dateAdded = Date.parse(watcherInUser.createdAt)
-
-                const lastNotificationDate = watcherInUser.notifiedAt
-                    ? toUnixTime(watcherInUser.notifiedAt)
-                    : null
-
-                let comparationDate = dateAdded
-                if (lastNotificationDate) comparationDate = lastNotificationDate
-
-                // Modify query to include range for date > comparationDate
-                const userWatcher = watcher
-                userWatcher.query.bool.must.push({ range: { date: { gte: comparationDate } } })
-
-                // Get new items for since date
-                const response = await elasticClient.search({
-                    index: Elasticsearch.defaultIndex,
-                    body: {
-                        query: userWatcher.query,
-                        size: 5,
-                        sort: [{ date: 'asc' }],
-                    },
-                })
-
-                const newItems: ItemData[] = response.body.hits.hits.map((x) => x._source)
-                if (newItems.length <= 0) return
-
-                console.log(
-                    `Found ${newItems.length} new items for user ${user.email} since ${toDateObj(
-                        comparationDate
-                    ).toDateString()} (watcher_id: ${watcherInUser._id})`
-                )
-
-                // Return if no new items were found since last notice
-
-                await EmailService.sendEmailWithItems(
-                    user._id,
-                    watcher,
-                    newItems,
-                    response.body.hits.total.value
-                )
-                mailSent += 1
-
-                // Update date when last notified in user watcher
-                const userDoc = await UserService.user(user._id)
-                userDoc.watchers.id(watcher._id).notifiedAt = new Date(Date.now())
-                console.log(userDoc.watchers.id(watcher._id))
-                await userDoc.save()
-            })
-        })
-
-        console.log(`${mailSent} emails were sent!`)
-    }
+    static newWatchersTemplatePath = EmailService.findTemplateDir() + '/newItems'
 
     /** @params sendEmailWithItems Notify user with {ItemData} */
     static async sendEmailWithItems(userId: string, watcher, items, totalCount?: number) {
@@ -118,16 +43,28 @@ export default class EmailService {
         console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
 
-    static async sendEmail(to: string, template: string, locals) {
-        // let testAccount = await NodeMailer.createTestAccount()
+    static async sendEmail(to: string, template: string, locals, test = false) {
+        let transporter
+        if (test) {
+            const account = await NodeMailer.createTestAccount()
 
-        const transporter = NodeMailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: this.googleAuth.email,
-                pass: this.googleAuth.pass,
-            },
-        })
+            transporter = NodeMailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                auth: {
+                    user: account.user,
+                    pass: account.pass,
+                },
+            })
+        } else {
+            transporter = NodeMailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: this.googleAuth.email,
+                    pass: this.googleAuth.pass,
+                },
+            })
+        }
 
         const email = new EmailTemplate({
             message: {
@@ -137,7 +74,7 @@ export default class EmailService {
         })
 
         const emailInfo = await email.send({
-            template: template,
+            template: this.findTemplateDir() + '/' + template,
             message: {
                 to: to,
             },
@@ -147,14 +84,5 @@ export default class EmailService {
         const info = await transporter.sendMail(emailInfo.originalMessage)
 
         return info
-    }
-
-    static userShouldBeNotified(lastNotificationDate: Date): boolean {
-        if (!lastNotificationDate) return true
-
-        const ms = toUnixTime(lastNotificationDate)
-        if (Date.now() - ms > 24 * 60 * 60 * 1000) return true
-
-        return false
     }
 }

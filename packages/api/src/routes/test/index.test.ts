@@ -13,8 +13,13 @@ describe('test', () => {
             expect(response.statusCode).toBe(201)
         })
 
-        it('should return token in body', () => {
-            expect(response.text).toMatch(/([\w-]*\.[\w-]*\.[\w-]*)/g)
+        // it('should return token in body', () => {
+        //     expect(response.text).toMatch(/([\w-]*\.[\w-]*\.[\w-]*)/g)
+        // })
+
+        it('should return email and password', () => {
+            expect(response.body).toHaveProperty('email')
+            expect(response.body).toHaveProperty('password')
         })
     })
 })
