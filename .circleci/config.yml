@@ -24,6 +24,10 @@ jobs:
           paths:
             - "*"
   deploy:
+    filters:
+      branches:
+        only:
+          - main
     machine:
       image: ubuntu-2004:202010-01
     steps:
