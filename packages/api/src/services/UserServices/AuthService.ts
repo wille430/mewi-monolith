@@ -74,8 +74,6 @@ class AuthService {
             }
         }
 
-        console.log('Creating JWT with expiresIn:', options.expiresIn)
-
         const token = jwt.sign(payload, secretKey, options)
 
         return token

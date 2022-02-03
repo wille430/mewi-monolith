@@ -5,19 +5,13 @@ describe('search', () => {
     describe('GET /search', () => {
         describe('when database is up', () => {
             let response
-            let body
 
             beforeEach(async () => {
                 response = await request(app).get('/search')
-                body = response.body
             })
 
             it('should respond with a 200 status code', async () => {
                 expect(response.statusCode).toBe(200)
-            })
-
-            it('should specify json in the content type header', async () => {
-                expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
             })
 
             it('should return arary with items', async () => {
@@ -28,30 +22,21 @@ describe('search', () => {
                 expect(typeof response.body.totalHits === 'number').toBe(true)
             })
         })
-
-        // describe('when database is down', () => {
-        //     let response
-        //     let body
-
-        //     beforeEach(async () => {
-        //         response = await request(app).get('/search')
-        //         body = response.body
-        //     })
-
-        //     it('should respond with a 500 status code', async () => {
-        //         expect(response.statusCode).toBe(500)
-        //     })
-
-        // })
     })
 
-    describe('GET /search/:query', () => {
+    describe('POST /search', () => {
         let response
         let body
         const query = 'volvo'
 
         beforeEach(async () => {
-            response = await request(app).get(`/search/${query}`)
+            response = await request(app)
+                .post(`/search`)
+                .send({
+                    searchFilters: {
+                        keyword: query,
+                    },
+                })
             body = response.body
         })
 
@@ -59,20 +44,12 @@ describe('search', () => {
             expect(response.statusCode).toBe(200)
         })
 
-        it('should specify json in the content type header', async () => {
-            expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
-        })
-
-        it('should return arary with items', async () => {
+        it('should return arary with items', () => {
             expect(Array.isArray(body.hits)).toBe(true)
         })
 
         it('should return total hits', () => {
             expect(typeof body.totalHits === 'number').toBe(true)
-        })
-
-        it('should return object with query', () => {
-            expect(body.query).toEqual(query)
         })
     })
 })

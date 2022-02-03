@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import Authentication from '../../middleware/Authentication'
-import app from '../app'
 import { getInfo } from './controller'
 import Watchers from './watchers'
 

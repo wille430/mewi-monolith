@@ -4,7 +4,7 @@ import app from '../app'
 
 describe('user', () => {
     describe('GET /user', () => {
-        describe('when authorized', () => {
+        describe('when not authorized', () => {
             let response
 
             beforeEach(async () => {

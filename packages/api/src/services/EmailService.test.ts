@@ -1,5 +1,4 @@
 import EmailService from './EmailService'
-import dotenv from 'dotenv'
 
 describe('Email Service', () => {
     it('should be able to send email',  async () => {
@@ -9,7 +8,7 @@ describe('Email Service', () => {
             items: [],
         }
 
-        const email = await EmailService.sendEmail('wille430@gmail.com', EmailService.newWatchersTemplatePath, locals, true)
+        const email = await EmailService.sendEmail('wille430@gmail.com', 'newItems', locals, true)
         expect(email.response).toBeTruthy()
     })
 })

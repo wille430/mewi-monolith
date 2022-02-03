@@ -48,17 +48,13 @@ export const getSearchResults = async (req, res) => {
 
     let results
     if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
-        console.log('Searching with filters:', options.searchFilters)
-        console.log('Sort:', sort)
-
-    
         const query = SearchService.createElasticQuery(options.searchFilters)
         results = await elasticClient.search({
             index: index,
             body: {
                 query: query,
                 sort: sort ? [sort] : [],
-                ...SearchService.calculateFromAndSize(options.page)
+                ...SearchService.calculateFromAndSize(options.page),
             },
         })
     } else {

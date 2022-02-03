@@ -1,5 +1,7 @@
 import request from 'supertest'
+import { SearchFilterDataProps } from '@mewi/types'
 import app from '../../app'
+import { randomString } from '@mewi/util'
 
 describe('user watchers', () => {
     let headers
@@ -7,7 +9,10 @@ describe('user watchers', () => {
     beforeAll(async () => {
         const token = await request(app)
             .post('/test/user')
-            .then((res) => res.text)
+            .then((res) => res.body.jwt)
+
+        console.log('Auth Token:', token)
+
         headers = { Authorization: 'Bearer ' + token }
     })
 
@@ -28,19 +33,12 @@ describe('user watchers', () => {
             let response
 
             beforeAll(async () => {
+                const searchFilters: SearchFilterDataProps = {
+                    keyword: 'BMW',
+                }
+
                 const reqBody = {
-                    query: {
-                        bool: {
-                            must: {
-                                match: {
-                                    title: 'BMW',
-                                },
-                            },
-                        },
-                    },
-                    metadata: {
-                        keyword: 'BMW',
-                    },
+                    searchFilters,
                 }
 
                 response = await request(app).post('/user/watchers').send(reqBody).set(headers)
@@ -76,19 +74,12 @@ describe('user watchers', () => {
         let response
 
         beforeAll(async () => {
+            const searchFilters: SearchFilterDataProps = {
+                keyword: randomString(10)
+            }
+            
             const reqBody = {
-                query: {
-                    bool: {
-                        must: {
-                            match: {
-                                title: 'Volvo',
-                            },
-                        },
-                    },
-                },
-                metadata: {
-                    keyword: 'Volvo',
-                },
+                searchFilters
             }
 
             const watcher = await request(app)

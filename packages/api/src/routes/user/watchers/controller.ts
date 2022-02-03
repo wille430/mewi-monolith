@@ -23,19 +23,17 @@ export const create = async (req, res, next) => {
     const { user_id } = req.user
     const searchFilters: SearchFilterDataProps | undefined = req.body.searchFilters
 
-    console.log('Creating watcher from', searchFilters)
-
     try {
         if (!searchFilters) {
             throw new APIError(
-                421,
+                422,
                 ValidationErrorCodes.MISSING_FIELDS,
                 'You must provide search filters to create a new watcher.'
             )
         } else {
             const query = SearchService.createElasticQuery(searchFilters)
-            console.log('Converted search filters to elastic query:', JSON.stringify(query))
             const validQuery = await SearchService.validateQuery(query)
+
             if (!validQuery) {
                 throw new APIError(
                     400,
@@ -44,7 +42,6 @@ export const create = async (req, res, next) => {
                 )
             } else {
                 // Create watcher
-                console.log('Creating watcher...', searchFilters, query)
                 const newWatcher = await UserWatcherService.addWatcher(user_id, {
                     metadata: searchFilters,
                     query: query,
@@ -82,7 +79,7 @@ export const update = async (req, res, next) => {
     try {
         if (!searchFilters) {
             throw new APIError(
-                421,
+                422,
                 ValidationErrorCodes.MISSING_FIELDS,
                 'You must provide search filters to update a new watcher.'
             )
