@@ -45,5 +45,9 @@ workflows:
       jobs:
         - test
         - deploy:
+            filters:
+              branches:
+                only:
+                  - main
             requires:
               - test
