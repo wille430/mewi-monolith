@@ -6,19 +6,19 @@ jobs:
         docker:
             - image: 'cimg/node:14.17-browsers'
               environment:
-                - MONGO_URI: localhost
-                - TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
-                - SEARCH_ENGINE_URL: localhost
-                - SEARCH_ENGINE_PORT: 9200
+                  - MONGO_URI: localhost
+                  - TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
+                  - SEARCH_ENGINE_URL: localhost
+                  - SEARCH_ENGINE_PORT: 9200
 
             - image: 'elasticsearch:7.17.0'
               environment:
-                - cluster.name: es-test-cluster
-                - xpack.security.enabled: false
-                - transport.host: localhost
-                - network.host: 127.0.0.1
-                - http.port: 9200
-                - discovery.type: single-node
+                  - cluster.name: es-test-cluster
+                  - xpack.security.enabled: false
+                  - transport.host: localhost
+                  - network.host: 127.0.0.1
+                  - http.port: 9200
+                  - discovery.type: single-node
 
             - image: 'mongo'
         steps:
@@ -30,14 +30,26 @@ jobs:
                   error-on-no-successful-workflow: true
                   main-branch-name: main
             - run:
-                command: sh ./tools/clear_elastic.sh
-                name: Prepare Elasticsearch
+                  command: sh ./tools/clear_elastic.sh
+                  name: Prepare Elasticsearch
             - run:
-                  command: npx nx affected --target=build --base=$NX_BASE
-                  name: Run Builds
+                  command: npx nx affected --target=build --base=$NX_BASE --exclude=api
+                  name: Run Builds (except API)
             - run:
                   command: npx nx affected --target=test --base=$NX_BASE
                   name: Run Unit Tests
+            - run:
+                  command: npm install pm2 -g
+                  name: Installing pm2
+            - run:
+                  command: npx nx build api
+                  name: Build API
+            - run:
+                  command: npx pm2 start dist/packages/api/main.js
+                  name: Start API in background
+            - run:
+                  command: npx nx e2e webapp
+                  name: E2E test client
             - persist_to_workspace:
                   root: .
                   paths:
@@ -62,7 +74,11 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
-            - test
+            - test:
+                  filters:
+                      branches:
+                          only:
+                              - main
             - deploy:
                   filters:
                       branches:
@@ -70,3 +86,10 @@ workflows:
                               - main
                   requires:
                       - test
+    build_and_test:
+        jobs:
+            - test:
+                  filters:
+                      branches:
+                          only:
+                              - dev
