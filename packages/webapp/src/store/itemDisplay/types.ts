@@ -8,5 +8,5 @@ export interface ItemDisplayState {
 
 export enum ItemDisplayActionTypes {
     GET_ITEM = 'itemDisplay/get',
-    CLEAR_ITEM = 'itemDisplay/clear'
+    CLEAR_ITEM = 'itemDisplay/clear',
 }

@@ -15,17 +15,12 @@
         },
         "build": {
             "executor": "@nrwl/node:build",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "outputPath": "dist/packages/api",
                 "main": "packages/api/src/main.ts",
                 "tsConfig": "packages/api/tsconfig.app.json",
-                "assets": [
-                    "packages/api/src/assets",
-                    "packages/api/src/emails"
-                ],
+                "assets": ["packages/api/src/assets", "packages/api/src/emails"],
                 "generatePackageJson": true
             },
             "configurations": {
@@ -50,20 +45,14 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": [
-                "{options.outputFile}"
-            ],
+            "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": [
-                    "packages/api/**/*.ts"
-                ]
+                "lintFilePatterns": ["packages/api/**/*.ts"]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": [
-                "coverage/packages/api"
-            ],
+            "outputs": ["coverage/packages/api"],
             "options": {
                 "jestConfig": "packages/api/jest.config.js",
                 "passWithNoTests": true

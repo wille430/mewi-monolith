@@ -27,7 +27,6 @@ const ArticleItemDetails = ({
     parameters,
     redirectUrl,
     onClose,
-    ...rest
 }: ArticleItemDetails) => {
     const categoryPathString = Object.values(category)
         .map((value) => capitalize(value || ''))

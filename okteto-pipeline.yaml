@@ -1,4 +1,4 @@
 deploy:
-- kubectl apply -f k8s --recursive
+    - kubectl apply -f k8s --recursive
 devs:
-- packages/api/okteto.yml
+    - packages/api/okteto.yml

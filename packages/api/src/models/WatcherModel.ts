@@ -1,7 +1,5 @@
 import { PublicWatcher } from '@mewi/types'
-import { ObjectId } from 'bson'
-import { models, Schema, model } from 'mongoose'
-import { SearchFilterDataProps } from '@mewi/types'
+import { Schema, model } from 'mongoose'
 
 // export interface WatcherQuery {
 //     bool: {

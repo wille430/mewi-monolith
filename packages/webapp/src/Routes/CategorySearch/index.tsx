@@ -33,7 +33,7 @@ const CategorySearch = () => {
             dispatch(clearFilters())
         }
     }, [])
-    
+
     return (
         <Layout>
             <aside className='side-col'></aside>
@@ -50,10 +50,7 @@ const CategorySearch = () => {
                         <CategoryPathLabel categoryValues={params} />
 
                         <div ref={scrollEle}>
-                            <FilterArea
-                                exclude={{ category: true }}
-                                showKeywordField
-                            />
+                            <FilterArea exclude={{ category: true }} showKeywordField />
                         </div>
 
                         <div className='w-full flex justify-between py-2 pb-6'>

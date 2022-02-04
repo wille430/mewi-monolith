@@ -19,7 +19,6 @@ class WatcherNotificationService {
             const users = await UserService.usersInIds(arrayOfUids)
 
             users.forEach(async (user) => {
-
                 const watcherInUser = await UserWatcherService.get(user._id, watcher._id)
                 if (!watcherInUser) {
                     await new WatcherService(watcher._id).delete(user._id)
@@ -62,7 +61,7 @@ class WatcherNotificationService {
                 const locals = {
                     newItemCount: response.body.hits.total.value,
                     keyword: watcher.metadata.keyword,
-                    items: newItems
+                    items: newItems,
                 }
 
                 // send email

@@ -1,6 +1,5 @@
 import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import * as fs from 'fs'
-import EmailService from './EmailService'
 import ScrapeService from './scrapers/ScrapeService'
 
 export default class ItemsService {
@@ -33,7 +32,7 @@ export default class ItemsService {
     }
 
     static async addItems(items: any[], index = Elasticsearch.defaultIndex): Promise<number> {
-        let addedItemsCount = items.length
+        const addedItemsCount = items.length
 
         if (process.env.DEV_MODE) {
             for (let i = 0; i < items.length; i++) {

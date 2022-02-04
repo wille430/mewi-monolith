@@ -11,7 +11,7 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
     const handleSearchButtonClick = () => {
         history.push({
             pathname: '/search',
-            search: queryString.stringify(watcher.metadata)
+            search: queryString.stringify(watcher.metadata),
         })
     }
 

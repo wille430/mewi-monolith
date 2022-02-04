@@ -1,9 +1,4 @@
-import {
-    categoriesOptions,
-    PriceRange,
-    regions,
-    SearchFilterDataProps,
-} from '@mewi/types'
+import { categoriesOptions, PriceRange, regions, SearchFilterDataProps } from '@mewi/types'
 import { FormEvent, ReactNode, useCallback } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'

@@ -2,7 +2,7 @@ import { ItemData, TraderaItemData } from 'types/types'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
 import Scraper from './Scraper'
-const axios = require('axios')
+import axios from 'axios'
 
 interface TraderaCategory {
     id: number
@@ -48,7 +48,7 @@ export default class TraderaScraper extends Scraper {
 
             itemData = itemData.slice(0, this.itemsPerCategory)
 
-            let items: ItemData[] = itemData.map(
+            const items: ItemData[] = itemData.map(
                 (item): ItemData => ({
                     id: item.itemId.toString(),
                     title: item.shortDescription,

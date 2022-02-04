@@ -1,11 +1,11 @@
-import missingImage from 'assets/missingImage.png'
-import { ItemData } from 'models/types'
 import { toDateObj } from '@mewi/util'
+import missingImage from 'assets/missingImage.png'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
+import { ItemData } from 'models/types'
 import { ReactNode } from 'react'
-import TimeUntilDate from './TimeUntilDate'
 import OriginLabel from './OriginLabel'
+import TimeUntilDate from './TimeUntilDate'
 
 interface Props {
     props: ItemData
@@ -13,7 +13,7 @@ interface Props {
     onClick: () => void
 }
 
-const ArticleItem = ({ props, id, onClick }: Props) => {
+const ArticleItem = ({ props, onClick }: Props) => {
     const currentImage = props.imageUrl[0]
 
     let dateComponent: ReactNode
@@ -35,7 +35,7 @@ const ArticleItem = ({ props, id, onClick }: Props) => {
         <div
             className='rounded-md border-2 border-gray-300 text-xs flex flex-col shadow cursor-pointer bg-white overflow-hidden'
             style={{ width: '270px', height: '270px' }}
-            onClick={(e) => onClick()}
+            onClick={() => onClick()}
         >
             <div className='bg-white h-2/3 border-b-2'>
                 <img

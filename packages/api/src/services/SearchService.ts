@@ -66,15 +66,16 @@ export default class SearchService {
                     query.bool.must.push({ match: { title: searchFilterData[key] } })
                     break
                 case 'regions':
-                    let regions = searchFilterData[key]
-
-                    if (typeof regions === 'string') {
-                        regions = [regions]
+                    if (Array.isArray(searchFilterData[key])) {
+                        query.bool.must.push({
+                            match: { region: (searchFilterData[key] as string[]).join(', ') },
+                        })
+                    } else {
+                        query.bool.must.push({
+                            match: { region: [searchFilterData[key] as string].join(', ') },
+                        })
                     }
 
-                    query.bool.must.push({
-                        match: { region: regions.join(', ') },
-                    })
                     break
                 case 'category':
                     if (!query.bool.filter) query.bool.filter = []

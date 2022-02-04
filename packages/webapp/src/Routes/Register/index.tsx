@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
-import { APIResponseError, AuthErrorCodes } from '@mewi/types'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createUser } from 'store/auth/creators'

@@ -1,7 +1,6 @@
 import { PriceRange } from '@mewi/types'
 import { TextField } from '@mewi/ui'
-import _ from 'lodash'
-import { HTMLAttributes, useCallback } from 'react'
+import { HTMLAttributes } from 'react'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
     gte?: PriceRange['gte']

@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = React.useState('')
 
     const dispatch = useDispatch()
-    const errors = useAppSelector(state => state.auth.errors)
+    const errors = useAppSelector((state) => state.auth.errors)
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -50,7 +50,11 @@ const Login = () => {
                                 <span className='text-red-400'>{errors.password}</span>
                             </div>
 
-                            <Button label='Logga in' onClick={onFormSubmit} data-testid='formSubmitButton'/>
+                            <Button
+                                label='Logga in'
+                                onClick={onFormSubmit}
+                                data-testid='formSubmitButton'
+                            />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>

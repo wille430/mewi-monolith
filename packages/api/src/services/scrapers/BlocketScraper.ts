@@ -22,7 +22,7 @@ export default class BlocketScraper extends Scraper {
         try {
             const url = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
-            let authToken: string = await this.getBearerToken()
+            const authToken: string = await this.getBearerToken()
             if (!authToken) throw Error('Missing authentication token')
 
             const dom = await axios.get(url, {
@@ -38,7 +38,7 @@ export default class BlocketScraper extends Scraper {
             //     return await this.getFullDataFrom(item.ad_id)
             // }))
 
-            let items: ItemData[] = data.map(
+            const items: ItemData[] = data.map(
                 (item: BlocketItemData): ItemData => ({
                     id: item.ad_id,
                     title: item.subject,
@@ -94,7 +94,7 @@ export default class BlocketScraper extends Scraper {
             }
         }
 
-        let item: ItemData = {
+        const item: ItemData = {
             id: itemData.ad_id,
             title: itemData.subject,
             body: itemData.body,
@@ -123,7 +123,7 @@ export default class BlocketScraper extends Scraper {
     async getBearerToken(): Promise<string> {
         let tries = 0
         const maxTries = 3
-        while (true) {
+        while (tries < maxTries) {
             try {
                 const { data } = await axios.get(this.baseUrl)
 

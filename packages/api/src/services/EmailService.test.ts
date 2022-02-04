@@ -1,7 +1,7 @@
 import EmailService from './EmailService'
 
 describe('Email Service', () => {
-    it('should be able to send email',  async () => {
+    it('should be able to send email', async () => {
         const locals = {
             newItemCount: 100,
             keyword: 'test',

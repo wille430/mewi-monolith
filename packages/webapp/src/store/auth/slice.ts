@@ -1,4 +1,3 @@
-import { AuthErrorCodes } from '@mewi/types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { isFulfilled, isPending } from '@reduxjs/toolkit'
 import { createUser, loginUser, logOut, onAuthLoad, refreshAccessToken } from './creators'

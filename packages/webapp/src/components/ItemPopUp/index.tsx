@@ -7,12 +7,11 @@ import { useDispatch } from 'react-redux'
 import { clearItem } from 'store/itemDisplay/creators'
 
 const ItemPopUp = () => {
-
-    const itemDisplay = useAppSelector(state => state.itemDisplay)
+    const itemDisplay = useAppSelector((state) => state.itemDisplay)
     const dispatch = useDispatch()
 
     const handleClose = () => {
-        dispatch(clearItem()) 
+        dispatch(clearItem())
     }
 
     return (

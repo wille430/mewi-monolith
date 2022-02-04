@@ -18,9 +18,7 @@ const transitions: Record<TransitionStatus, Record<string, string | number>> = {
         transform: 'translateX(-120%)',
         opacity: 0,
     },
-    unmounted: {
-
-    }
+    unmounted: {},
 }
 
 export interface SlideTransitionProps {
@@ -58,7 +56,13 @@ const SlideTransition = ({
     }, [inProp])
 
     return (
-        <Transition in={runOnStart ? show : inProp} duration={duration} addEndListener={(node, done) => node.addEventListener('transitionend', (e) => undefined)}>
+        <Transition
+            in={runOnStart ? show : inProp}
+            duration={duration}
+            addEndListener={(node, done) =>
+                node.addEventListener('transitionend', (e) => undefined)
+            }
+        >
             {(state: TransitionStatus) => {
                 if (state === 'entering') {
                     onEntering && onEntering()
