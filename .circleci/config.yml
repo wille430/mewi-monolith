@@ -48,7 +48,7 @@ jobs:
                   command: npx pm2 start dist/packages/api/main.js
                   name: Start API in background
             - run:
-                  command: npx nx e2e webapp
+                  command: npx nx e2e webapp-e2e
                   name: E2E test client
             - persist_to_workspace:
                   root: .
