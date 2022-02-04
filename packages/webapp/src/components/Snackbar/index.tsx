@@ -69,7 +69,7 @@ const Snackbar = ({
 
     return (
         <SlideTransition
-            runOnStart
+            runOnStart={!open}
             in={open}
             duration={animationDuration}
             onExited={handleExited}
@@ -78,9 +78,9 @@ const Snackbar = ({
                     <div
                         style={{
                             width: 'clamp(20rem, 500px, 100%)',
-                            minHeight: '2rem',
+                            minHeight: '2rem'
                         }}
-                        className='flex flex-row z-50 rounded-md bg-white z-100 text-white justify-between shadow-lg cursor-pointer select-none'
+                        className='flex flex-row z-50 rounded-md bg-white z-100 text-black justify-between shadow-lg cursor-pointer select-none'
                         data-testid='snackbarContainer'
                         onClick={handleClick}
                         onMouseEnter={handleMouseEnter}
@@ -97,7 +97,7 @@ const Snackbar = ({
                             </header>
 
                             <p
-                                className={`flex-grow text-sm break-words p-3 px-4 text-gray-100`}
+                                className={`flex-grow text-sm break-words p-3 px-4 text-gray-500`}
                                 style={{
                                     minHeight: '1.5rem',
                                 }}

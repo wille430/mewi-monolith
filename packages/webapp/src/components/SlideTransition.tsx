@@ -60,7 +60,7 @@ const SlideTransition = ({
             in={runOnStart ? show : inProp}
             duration={duration}
             addEndListener={(node, done) =>
-                node.addEventListener('transitionend', (e) => undefined)
+                node.addEventListener('transitionend', () => undefined)
             }
         >
             {(state: TransitionStatus) => {
