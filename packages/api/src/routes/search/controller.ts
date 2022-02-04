@@ -4,7 +4,7 @@ import SearchService from '../../services/SearchService'
 const index = 'items'
 
 export const getAll = async (req, res, next) => {
-    const search = await SearchService.search(req.body).catch(next)
+    const search = await SearchService.search().catch(next)
 
     res.status(200).json({
         totalHits: search.body.hits.total.value || 0,

@@ -1,7 +1,6 @@
 import { ElasticQuery, SearchFilterDataProps } from '@mewi/types'
 import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import _ from 'lodash'
-const axios = require('axios')
 
 export default class SearchService {
     static limit = 20
@@ -15,11 +14,17 @@ export default class SearchService {
             .then((x) => x.body.valid)
     }
 
-    static async search(query) {
-        return await elasticClient.search({
-            index: Elasticsearch.defaultIndex,
-            body: query,
-        })
+    static async search(query?: SearchFilterDataProps) {
+        if (query) {
+            return await elasticClient.search({
+                index: Elasticsearch.defaultIndex,
+                body: SearchService.createElasticQuery(query),
+            })
+        } else {
+            return await elasticClient.search({
+                index: Elasticsearch.defaultIndex,
+            })
+        }
     }
 
     static async autocomplete(keyword) {
@@ -90,7 +95,7 @@ export default class SearchService {
         return query
     }
 
-    static calculateFromAndSize(page: number) {
+    static calculateFromAndSize(page = 1) {
         const size = 21
 
         if (page <= 0) {
@@ -100,7 +105,7 @@ export default class SearchService {
             }
         } else {
             return {
-                from: (page - 1)*size,
+                from: (page - 1) * size,
                 size: size,
             }
         }

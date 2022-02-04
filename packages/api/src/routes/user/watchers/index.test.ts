@@ -72,6 +72,7 @@ describe('user watchers', () => {
 
     describe('PATCH /user/watchers', () => {
         let response
+        const newKeyword = randomString(20)
 
         beforeAll(async () => {
             const searchFilters: SearchFilterDataProps = {
@@ -90,31 +91,22 @@ describe('user watchers', () => {
 
             const watcherId = watcher._id
 
-            const updateReqBody = {
-                query: {
-                    bool: {
-                        must: {
-                            match: {
-                                title: 'BMW',
-                            },
-                        },
-                    },
-                },
-                metadata: {
-                    keyword: 'BMW',
-                },
+            const newSearchFilters: SearchFilterDataProps = {
+                keyword: newKeyword
             }
 
             response = await request(app)
                 .patch('/user/watchers/' + watcherId)
-                .send(updateReqBody)
+                .send({
+                    searchFilters: newSearchFilters
+                })
                 .set(headers)
 
             console.log(JSON.stringify(response.body))
         })
 
-        it('should return 200 status code', () => {
-            expect(response.statusCode).toBe(200)
+        it('should return 201 status code', () => {
+            expect(response.statusCode).toBe(201)
         })
 
         it('should return an object', () => {
@@ -123,7 +115,7 @@ describe('user watchers', () => {
 
         it('should return updated watcher', () => {
             expect(response.body.watcher.metadata).toEqual({
-                keyword: 'BMW',
+                keyword: newKeyword,
             })
         })
     })

@@ -41,16 +41,18 @@ export default class Authentication {
                     switch (err.name) {
                         case 'TokenExpiredError':
                             console.log('EXPIRED TOKEN!!!')
-                            throw new APIError(401, AuthErrorCodes.INVALID_JWT)
+                            next(new APIError(401, AuthErrorCodes.INVALID_JWT))
+                            break
                         default:
-                            return res.sendStatus(403)
+                            next(new APIError(401, AuthErrorCodes.INVALID_JWT))
+                            break
                     }
                 }
                 req.user = user
                 next()
             })
         } else {
-            res.sendStatus(401)
+            next(new APIError(401, AuthErrorCodes.MISSING_JWT))
         }
     }
 }

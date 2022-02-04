@@ -31,7 +31,7 @@ describe('search', () => {
 
         beforeEach(async () => {
             response = await request(app)
-                .post(`/search`)
+                .post('/search')
                 .send({
                     searchFilters: {
                         keyword: query,

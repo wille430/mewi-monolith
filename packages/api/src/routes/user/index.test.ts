@@ -28,7 +28,7 @@ describe('user', () => {
             beforeEach(async () => {
                 const token = await request(app)
                     .post('/test/user')
-                    .then((res) => res.text)
+                    .then((res) => res.body.jwt)
 
                 response = await request(app)
                     .post('/user')
