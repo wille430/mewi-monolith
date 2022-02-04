@@ -30,7 +30,7 @@ jobs:
                   error-on-no-successful-workflow: true
                   main-branch-name: main
             - run:
-                command: ./tools/clear_elastic.sh
+                command: sh ./tools/clear_elastic.sh
                 name: Prepare Elasticsearch
             - run:
                   command: npx nx affected --target=build --base=$NX_BASE
