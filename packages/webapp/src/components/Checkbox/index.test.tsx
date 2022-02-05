@@ -24,4 +24,18 @@ describe('Checkbox', () => {
 
         expect(mockOnChange).toHaveBeenCalled()
     })
+
+    it('can toggle', () => {
+        const { queryByTestId } = render(<Checkbox />)
+
+        const checkbox = queryByTestId('checkbox') as HTMLInputElement
+
+        // check
+        fireEvent.click(checkbox)
+        expect(checkbox.checked).toEqual(true)
+
+        // uncheck
+        fireEvent.click(checkbox)
+        expect(checkbox.checked).toEqual(false)
+    })
 })

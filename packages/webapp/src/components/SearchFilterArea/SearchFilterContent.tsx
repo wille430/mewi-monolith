@@ -53,7 +53,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
     ) => {
         console.log(`Setting ${field} to ${newValue || 'undefined'}`)
 
-        if (!newValue) {
+        if (typeof newValue === 'undefined') {
             setSearchFilterData(_.omit(searchFilterData, [field]))
         } else {
             setSearchFilterData({
@@ -138,7 +138,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                         label='Auktion'
                                         name='auction'
                                         onClick={(newVal) => handleChange('auction', newVal)}
-                                        checked={searchFilterData.auction || false}
+                                        checked={searchFilterData.auction}
                                         data-testid='auctionCheckbox'
                                     />
                                 </div>
