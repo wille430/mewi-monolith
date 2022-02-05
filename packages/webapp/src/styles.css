@@ -16,7 +16,7 @@
         @apply w-full flex-grow px-4 hidden lg:block;
     }
     .main {
-        @apply main-css p-2 md:p-0;
+        @apply main-css p-4 md:p-2;
     }
 }
 

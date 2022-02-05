@@ -5,7 +5,6 @@
 
 import { UserService } from './index'
 import bcrypt from 'bcryptjs'
-import { APIError, AuthErrorCodes } from '@mewi/types'
 
 class PasswordService {
     static async correctPassword(userId: string, password: string): Promise<boolean> {
@@ -19,7 +18,7 @@ class PasswordService {
 
     static validate(password: string): boolean {
         const re = new RegExp(
-            /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-\?;,.\{}|\":<>\[\]\\\' ~_]).{8,}/gm
+            /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-?;,.{}|":<>[\]\\' ~_]).{8,}/gm
         )
 
         return re.test(password)

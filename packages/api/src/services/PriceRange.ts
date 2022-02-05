@@ -21,7 +21,7 @@ class PriceRange {
      * @param toString Turn PriceRange to readable string
      */
     toString() {
-        let returnString = ''
+        const returnString = ''
 
         this.lte && returnString.concat(this.lte)
         returnString.concat('-')

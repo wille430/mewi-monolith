@@ -1,6 +1,6 @@
 import { Category, ItemData, SellpyItemData } from 'types/types'
 import Scraper from './Scraper'
-const axios = require('axios')
+import axios from 'axios'
 
 export default class SellpyScraper extends Scraper {
     page = 1
@@ -32,7 +32,7 @@ export default class SellpyScraper extends Scraper {
 
             const data = dom.data.results[0].hits
 
-            let items: ItemData[] = data.map(
+            const items: ItemData[] = data.map(
                 (item: SellpyItemData): ItemData => ({
                     id: item.objectID,
                     title: item.metadata.brand || item.metadata.type,
@@ -62,7 +62,7 @@ export default class SellpyScraper extends Scraper {
         }
     }
 
-    parseCategories(categoriesObj: Object): Category {
+    parseCategories(categoriesObj: Record<string, unknown>): Category {
         const catsArray: Category | any = {}
 
         Object.values(categoriesObj).forEach((cat) => {
@@ -78,6 +78,7 @@ export default class SellpyScraper extends Scraper {
                     break
                 case 'Accessories':
                     catsArray.push('accessoarer_klockor')
+                    break
                 case 'Beauty':
                     catsArray.push('personligt')
                     break

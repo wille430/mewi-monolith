@@ -3,28 +3,33 @@ import ArticleItem from 'components/ArticleItem/index'
 import ItemPopUp from '../ItemPopUp'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getItem } from 'store/itemDisplay/creators'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getSearchResults } from 'store/search/creators'
 
 const ItemGrid = () => {
-    const { hits } = useAppSelector((state) => state.search)
+    const search = useAppSelector((state) => state.search)
     const [isLoading, setIsLoading] = useState(false)
 
     const dispatch = useAppDispatch()
 
     const handleItemClick = (id: string) => {
-        setIsLoading(true)
-
         dispatch(getItem(id))
+    }
+
+    useEffect(() => {
+        setIsLoading(true)
+        // get new results
+        dispatch(getSearchResults())
             .then(() => {
                 setIsLoading(false)
             })
             .catch(() => {
                 setIsLoading(false)
             })
-    }
+    }, [search.filters, search.page, search.sort])
 
     const renderItems = () => {
-        return hits.map((item: any, i: number) => (
+        return search.hits.map((item: any, i: number) => (
             <ArticleItem
                 key={i}
                 props={item['_source']}

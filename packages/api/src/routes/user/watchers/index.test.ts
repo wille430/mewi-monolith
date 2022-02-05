@@ -76,11 +76,11 @@ describe('user watchers', () => {
 
         beforeAll(async () => {
             const searchFilters: SearchFilterDataProps = {
-                keyword: randomString(10)
+                keyword: randomString(10),
             }
-            
+
             const reqBody = {
-                searchFilters
+                searchFilters,
             }
 
             const watcher = await request(app)
@@ -92,13 +92,13 @@ describe('user watchers', () => {
             const watcherId = watcher._id
 
             const newSearchFilters: SearchFilterDataProps = {
-                keyword: newKeyword
+                keyword: newKeyword,
             }
 
             response = await request(app)
                 .patch('/user/watchers/' + watcherId)
                 .send({
-                    searchFilters: newSearchFilters
+                    searchFilters: newSearchFilters,
                 })
                 .set(headers)
 

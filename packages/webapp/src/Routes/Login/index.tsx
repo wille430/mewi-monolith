@@ -1,22 +1,26 @@
-import * as React from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
-import { loginUser } from 'store/auth/creators'
+import { loadPage, loginUser } from 'store/auth/creators'
 import { useAppSelector } from 'hooks/hooks'
+import { useEffect, useState } from 'react'
 
 const Login = () => {
-    const [email, setEmail] = React.useState('')
-    const [password, setPassword] = React.useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
-    const errors = useAppSelector(state => state.auth.errors)
+    const errors = useAppSelector((state) => state.auth.errors)
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         dispatch(loginUser({ email, password }))
     }
+
+    useEffect(() => {
+        dispatch(loadPage())
+    }, [])
 
     return (
         <Layout>
@@ -50,7 +54,11 @@ const Login = () => {
                                 <span className='text-red-400'>{errors.password}</span>
                             </div>
 
-                            <Button label='Logga in' onClick={onFormSubmit} data-testid='formSubmitButton'/>
+                            <Button
+                                label='Logga in'
+                                onClick={onFormSubmit}
+                                data-testid='formSubmitButton'
+                            />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>
                     </Container.Content>

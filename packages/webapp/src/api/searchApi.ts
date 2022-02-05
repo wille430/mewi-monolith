@@ -20,12 +20,12 @@ const autocomplete = async (keyword: string) => {
     return suggestions
 }
 const getItemById = async (itemId: string) => {
-    const item: ItemData = await axios.get('/items/' + itemId).then(res => res.data.body._source)
+    const item: ItemData = await axios.get('/items/' + itemId).then((res) => res.data.body._source)
     return item
 }
 
 export default {
     getSearchResults,
     autocomplete,
-    getItemById
+    getItemById,
 }

@@ -15,81 +15,77 @@ describe('search', () => {
 
         formData = {
             // category: _.sample(Object.keys(categories)),
-            regions: _.sampleSize(regions, Math.random() * 3).map(
-                (regionOption) => regionOption.label
-            ),
-            priceRange: {
-                gte: Math.round(Math.random() * 2000),
-                lte: Math.round((1 + Math.random()) * 2000),
-            },
+            regions: _.sampleSize(regions).map((regionOption) => regionOption.label),
+            priceRangeGte: Math.round(Math.random() * 2000),
+            priceRangeLte: Math.round((1 + Math.random()) * 2000),
             auction: Math.round(Math.random()) === 1 ? true : false,
         }
+
+        console.log('Filtering search with:', JSON.stringify(formData))
     })
 
     Cypress._.times(3, () => {
         it('can filter with randomized filters and search', () => {
             // TODO: select category from category selection list
 
-            // Inserts regions
-            formData.regions.forEach((region) => {
-                // FIXME: fix detached from DOM error
-                cy.get('[data-testid=regionsSelect]').type(region + ' {enter}', { delay: 100 })
-            })
+            cy.wait(2000)
 
-            // Inserts price range
-            _.forOwn(formData.priceRange, (value, key) => {
-                switch (key) {
-                    case 'gte':
-                        cy.get('[data-testid=priceGte]').type(value.toString() + '{enter}')
-                        break
-                    case 'lte':
-                        cy.get('[data-testid=priceLte]').type(value.toString() + '{enter}')
-                        break
-                }
+            // Insert regions
+            // FIXME: fix detached from DOM error
+            // TODO: insert multiple regions
+            cy.get('[data-testid=regionsSelect]').type(formData.regions[0] + ' {enter}', {
+                delay: 100,
             })
+            cy.get('[data-testid=regionsSelect]').should('have.text', formData.regions[0])
+
+            // Insert price range
+            cy.get('[data-testid=priceGte]').type(formData.priceRangeGte + '{enter}')
+            cy.get('[data-testid=priceGte]').should('have.value', formData.priceRangeGte)
+
+            cy.get('[data-testid=priceLte]').type(formData.priceRangeLte + '{enter}')
+            cy.get('[data-testid=priceLte]').should('have.value', formData.priceRangeLte)
 
             if (formData.auction) {
                 cy.get('[data-testid=auctionCheckbox]').click()
+                cy.get('[data-testid=auctionCheckbox]').should('be.checked')
+            } else {
+                cy.get('[data-testid=auctionCheckbox]').should('not.be.checked')
             }
 
-            // The input values should be displayed
-            _.forOwn(formData, (value, key) => {
-                switch (key) {
-                    case 'category':
-                        // TODO: Expect category in selection list to be bold
-                        // cy.get('[data-testid=categorySelect]').contains(
-                        //     categories[formData[key]].label,
-                        //     {
-                        //         matchCase: false,
-                        //     }
-                        // )
-                        break
-                    case 'regions':
-                        formData[key].forEach((region) => {
-                            cy.get('[data-testid=regionsSelect]').contains(region)
-                        })
-                        break
-                    case 'price':
-                        cy.get('[data-testid=priceGte]').contains(formData[key].gte)
-                        cy.get('[data-testid=priceLte]').contains(formData[key].lte)
-                        break
-                    case 'auction':
-                        if (formData.auction) {
-                            cy.get('[data-testid=auctionCheckbox]').should('be.checked')
-                        } else {
-                            cy.get('[data-testid=auctionCheckbox]').should('not.be.checked')
-                        }
-                        break
-                }
-            })
+            // validate url
+            cy.location().then((loc) => {
+                const parsedUrl: typeof formData = queryString.parse(loc.search)
+                console.log('PARSED URL:', parsedUrl)
 
-            _.forOwn(formData, (value, field) => {
-                if (!formData.auction) return
+                _.forOwn(formData, (value, key: keyof typeof formData) => {
+                    if (!value) {
+                        expect(parsedUrl[key]).to.be.an('undefined')
+                        return
+                    }
 
-                cy.url({ decode: true }).should(
-                    'contain',
-                    queryString.stringify({ [field]: value }, { encode: false }).toLowerCase()
-                )
+                    switch (key) {
+                        case 'regions':
+                            if (typeof parsedUrl.regions === 'string') {
+                                expect(formData.regions).to.have.lengthOf(1)
+                                expect(formData.regions[0].toLowerCase()).to.equal(parsedUrl[key])
+                            } else {
+                                // TODO: validate if parsed url contains an array of regions
+                            }
+                            break
+                        case 'priceRangeGte':
+                            expect(parsedUrl.priceRangeGte).to.equal(
+                                formData.priceRangeGte.toString()
+                            )
+                            break
+                        case 'priceRangeLte':
+                            expect(parsedUrl.priceRangeGte).to.equal(
+                                formData.priceRangeGte.toString()
+                            )
+                            break
+                        default:
+                            expect(parsedUrl[key]).to.equal(value.toString())
+                    }
+                })
             })
         })
     })
@@ -115,6 +111,8 @@ describe('search', () => {
             window.localStorage.setItem('refreshToken', res.body.refreshToken)
         })
 
+        cy.wait(2000)
+
         // Inserts category
         // cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
 
@@ -124,16 +122,8 @@ describe('search', () => {
         })
 
         // Inserts price range
-        _.forOwn(formData.priceRange, (value, key) => {
-            switch (key) {
-                case 'gte':
-                    cy.get('[data-testid=priceGte]').type(value.toString() + '{enter}')
-                    break
-                case 'lte':
-                    cy.get('[data-testid=priceLte]').type(value.toString() + '{enter}')
-                    break
-            }
-        })
+        cy.get('[data-testid=priceGte]').type(formData.priceRangeGte + '{enter}')
+        cy.get('[data-testid=priceLte]').type(formData.priceRangeLte + '{enter}')
 
         if (formData.auction) {
             cy.get('[data-testid=auctionCheckbox]').click()

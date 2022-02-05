@@ -510,13 +510,9 @@ export interface SearchFilterDataProps {
     keyword?: string
     regions?: string[] | string
     category?: string
-    priceRange?: PriceRange
+    priceRangeGte?: number
+    priceRangeLte?: number
     auction?: boolean
-}
-
-export interface PriceRange {
-    gte?: number
-    lte?: number
 }
 
 export interface SearchPostRequestBody {

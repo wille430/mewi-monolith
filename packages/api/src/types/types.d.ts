@@ -1,5 +1,3 @@
-import { Request, Response, NextFunction } from 'express'
-
 export type Category = (
     | 'fordon'
     | 'för_hemmet'
@@ -65,12 +63,10 @@ export interface ItemData {
     imageUrl: string[]
     isAuction: boolean
     redirectUrl: string
-    price:
-        | {
-              value: number
-              currency: string
-          }
-        | {}
+    price: {
+        value?: number
+        currency?: string
+    }
     region: string
     zipcode?: string
     parameters?: {

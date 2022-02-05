@@ -18,7 +18,7 @@ const Nav = () => {
 
     return (
         <div className='relative'>
-            <div className='flex justify-between w-full bg-blue items-center p-3 shadow-lg space-x-2'>
+            <div className='flex justify-between w-full bg-blue items-center p-3 space-x-2'>
                 {path !== '/' && (
                     <figure className='h-10 flex-none'>
                         <MewiLogo />

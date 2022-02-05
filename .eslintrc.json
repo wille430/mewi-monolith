@@ -16,7 +16,9 @@
                 "args": "after-used",
                 "argsIgnorePattern": "^_"
             }
-        ]
+        ],
+        "react-hooks/exhaustive-deps": "off",
+        "no-control-regex": "off"
     },
     "overrides": [
         {

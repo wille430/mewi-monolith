@@ -1,9 +1,9 @@
 import Stripe from 'stripe'
 
 class StripeService {
-    // @ts-ignore
     static stripe = new Stripe(
-        'sk_test_51HkomQLTeDsRddXB9z6cxhSb2Zn0wyK6rJjcxkV6qvtelzEIPza6C35MGUFcC9usBojUQaHIQR8LV6rnC8sZuxGN00A7Z3cczp'
+        'sk_test_51HkomQLTeDsRddXB9z6cxhSb2Zn0wyK6rJjcxkV6qvtelzEIPza6C35MGUFcC9usBojUQaHIQR8LV6rnC8sZuxGN00A7Z3cczp',
+        {} as Stripe.StripeConfig
     )
 
     static async createSession() {

@@ -31,10 +31,9 @@ describe('Snackbar', () => {
     })
 
     describe('displays content', () => {
-        const { queryByTestId, queryAllByText } = render(
+        const { queryAllByText } = render(
             <Snackbar open={true} title={title} body={body} />
         )
-        const snackbar = queryByTestId(testIds.snackbar)
 
         expect(queryAllByText(title)).toBeTruthy()
         expect(queryAllByText(body)).toBeTruthy()
@@ -154,7 +153,7 @@ describe('Snackbar', () => {
 
             new Promise<void>((resolve) =>
                 setTimeout(() => {
-                    expect(snackbar).not.toBeVisible()
+                    expect(callback).toBeCalled()
                     resolve()
                 }, autoHideDuration)
             )

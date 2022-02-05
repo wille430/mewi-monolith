@@ -40,7 +40,7 @@ export default class EmailService {
 
     static async sendEmail(to: string, template: string, locals, test = false) {
         let transporter
-        if (test) {
+        if (test || process.env.NODE_ENV === 'development') {
             const account = await NodeMailer.createTestAccount()
 
             transporter = NodeMailer.createTransport({

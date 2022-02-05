@@ -20,7 +20,6 @@ export interface DropDownMenuProps extends HTMLAttributes<HTMLDivElement> {
 
 const DropdownMenu = ({
     label,
-    name,
     options,
     isMulti,
     closeMenuOnSelect,

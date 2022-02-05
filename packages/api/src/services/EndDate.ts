@@ -7,7 +7,7 @@ interface endDates {
 export default class EndDate {
     static filePath = __dirname + '/lastDate.txt'
 
-    static getEndDates(): endDates | {} {
+    static getEndDates(): endDates {
         try {
             // Read text from file
             const text = fs.readFileSync(this.filePath, { encoding: 'utf-8' })
@@ -35,7 +35,7 @@ export default class EndDate {
     static getEndDateFor(marketplaceName: string): Date {
         try {
             const endDates = EndDate.getEndDates()
-            let endDate = endDates[marketplaceName]
+            const endDate = endDates[marketplaceName]
                 ? parseInt(endDates[marketplaceName])
                 : Date.now() - 14 * 24 * 60 * 60 * 1000
             return new Date(endDate)

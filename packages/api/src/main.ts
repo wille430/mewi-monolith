@@ -6,7 +6,7 @@ import ItemsService from './services/ItemsService'
 import app from './routes/app'
 import WatcherNotificationService from 'services/WatcherNotificationService'
 
-console.log("NODE ENV:", process.env.NODE_ENV)
+console.log('NODE ENV:', process.env.NODE_ENV)
 
 // Scheduled jobs
 

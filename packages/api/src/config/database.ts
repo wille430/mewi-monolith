@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
 
@@ -12,12 +12,11 @@ if (!MONGO_USERNAME || !MONGO_PASSWORD) {
 
 const database = {
     connect: () => {
+        const options: mongoose.ConnectOptions = {}
+
         // Connecting to the database
         mongoose
-            .connect(url, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            })
+            .connect(url, options)
             .then(() => {
                 console.log('Successfully connected to database')
             })

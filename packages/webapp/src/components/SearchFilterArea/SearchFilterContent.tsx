@@ -1,10 +1,5 @@
-import {
-    categoriesOptions,
-    PriceRange,
-    regions,
-    SearchFilterDataProps,
-} from '@mewi/types'
-import { FormEvent, ReactNode, useCallback } from 'react'
+import { categoriesOptions, regions, SearchFilterDataProps } from '@mewi/types'
+import { FormEvent, ReactNode } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
 import Checkbox from '../Checkbox'
@@ -54,11 +49,11 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
 
     const handleChange = (
         field: string,
-        newValue: string | string[] | boolean | PriceRange | undefined
+        newValue: string | string[] | boolean | number | undefined
     ) => {
-        console.log(`Setting ${field} to ${newValue}`)
+        console.log(`Setting ${field} to ${newValue || 'undefined'}`)
 
-        if (!newValue) {
+        if (typeof newValue === 'undefined') {
             setSearchFilterData(_.omit(searchFilterData, [field]))
         } else {
             setSearchFilterData({
@@ -67,8 +62,6 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             })
         }
     }
-
-    const debounceChange = useCallback(_.debounce(handleChange, 1000), [])
 
     const handleReset = () => {
         onReset && onReset()
@@ -111,8 +104,8 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             className='input'
                                             placeholder='Sökord'
                                             name='q'
-                                            onChange={(value) => debounceChange('keyword', value)}
-                                            value={searchFilterData.keyword}
+                                            onChange={(value) => handleChange('keyword', value)}
+                                            value={searchFilterData.keyword || ''}
                                             data-testid='keywordInput'
                                             fullWidth={true}
                                         />
@@ -126,32 +119,16 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                 )}
 
                                 {Dropdowns.map((dropdown) => {
-                                    if (exclude[dropdown.name]) return
+                                    if (exclude[dropdown.name]) return null
 
                                     return <LabeledDropdown key={v4()} {...dropdown} />
                                 })}
 
                                 {!exclude['price'] && (
                                     <PriceRangeFilter
-                                        gte={searchFilterData.priceRange?.gte}
-                                        lte={searchFilterData.priceRange?.lte}
-                                        onChange={(field, val) => {
-                                            let newPriceRange = searchFilterData.priceRange
-                                            if (!val) {
-                                                newPriceRange = _.omit(newPriceRange, [field])
-                                            } else {
-                                                newPriceRange = {
-                                                    ...newPriceRange,
-                                                    [field]: val,
-                                                }
-                                            }
-
-                                            if (_.size(newPriceRange) === 0) {
-                                                debounceChange('priceRange', undefined)
-                                            } else {
-                                                debounceChange('priceRange', newPriceRange)
-                                            }
-                                        }}
+                                        gte={searchFilterData.priceRangeGte}
+                                        lte={searchFilterData.priceRangeLte}
+                                        onChange={handleChange}
                                         data-testid='priceRangeSlider'
                                     />
                                 )}
@@ -161,7 +138,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                         label='Auktion'
                                         name='auction'
                                         onClick={(newVal) => handleChange('auction', newVal)}
-                                        checked={searchFilterData.auction || false}
+                                        checked={searchFilterData.auction}
                                         data-testid='auctionCheckbox'
                                     />
                                 </div>

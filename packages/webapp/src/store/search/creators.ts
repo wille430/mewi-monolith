@@ -52,7 +52,7 @@ export const getFiltersFromQueryParams = createAction(
         defaultValues?: Partial<SearchFilterDataProps>
     ): { payload: Pick<SearchState, 'filters' | 'sort' | 'page'> } => {
         const params = queryString.parse(window.location.search)
-        
+
         let filters = {}
         let sort = SortData.RELEVANCE
         let page = 1

@@ -1,4 +1,4 @@
-import { Result, ValidationError } from 'express-validator'
+import { ValidationError } from 'express-validator'
 
 class InputError extends Error {
     status: number

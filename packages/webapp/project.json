@@ -12,9 +12,7 @@
         },
         "build": {
             "executor": "@nrwl/web:webpack",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "defaultConfiguration": "production",
             "options": {
                 "compiler": "babel",
@@ -29,9 +27,7 @@
                     "packages/webapp/src/assets",
                     "packages/webapp/src/_redirects"
                 ],
-                "styles": [
-                    "packages/webapp/src/styles.css"
-                ],
+                "styles": ["packages/webapp/src/styles.css"],
                 "scripts": [],
                 "webpackConfig": "@nrwl/react/plugins/webpack"
             },
@@ -67,20 +63,14 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": [
-                "{options.outputFile}"
-            ],
+            "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": [
-                    "packages/webapp/**/*.{ts,tsx,js,jsx}"
-                ]
+                "lintFilePatterns": ["packages/webapp/**/*.{ts,tsx,js,jsx}"]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": [
-                "coverage/packages/webapp"
-            ],
+            "outputs": ["coverage/packages/webapp"],
             "options": {
                 "jestConfig": "packages/webapp/jest.config.js",
                 "passWithNoTests": true
@@ -103,9 +93,7 @@
         },
         "build-storybook": {
             "executor": "@nrwl/storybook:build",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "uiFramework": "@storybook/react",
                 "outputPath": "dist/storybook/webapp",

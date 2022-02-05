@@ -11,7 +11,7 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
     const handleSearchButtonClick = () => {
         history.push({
             pathname: '/search',
-            search: queryString.stringify(watcher.metadata)
+            search: queryString.stringify(watcher.metadata),
         })
     }
 
@@ -51,14 +51,14 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                     ) : (
                         <div></div>
                     )}
-                    {watcher.metadata.priceRange ? (
+                    {watcher.metadata.priceRangeGte || watcher.metadata.priceRangeLte ? (
                         <div className='mr-6'>
                             <label className='label'>Prisintervall:</label>
                             <span>
-                                {(watcher.metadata.priceRange.gte || '0') +
+                                {(watcher.metadata.priceRangeGte || '0') +
                                     '-' +
-                                    (watcher.metadata.priceRange.lte
-                                        ? watcher.metadata.priceRange.lte + 'kr'
+                                    (watcher.metadata.priceRangeLte
+                                        ? watcher.metadata.priceRangeLte + 'kr'
                                         : '')}
                             </span>
                         </div>
