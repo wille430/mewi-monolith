@@ -40,7 +40,12 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(updateFilters, (state, action) => {
-            console.log('Updating filters')
+            console.log(
+                'Updating filters from',
+                JSON.stringify(action.payload),
+                'to',
+                JSON.stringify(action.payload)
+            )
             state.filters = {
                 ...state.filters,
                 ...action.payload,

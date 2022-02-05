@@ -1,9 +1,10 @@
-import react from 'react'
+import react, { useCallback, useEffect } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
 import styles from './index.module.scss'
 import classNames from 'classnames'
+import { debounce } from 'lodash'
 
 const cx = classNames.bind(styles)
 
@@ -30,10 +31,30 @@ export const TextField = ({
     ...rest
 }: InputProps) => {
     const [isActive, setIsActive] = useState(false)
+    const [_value, _setValue] = useState('')
+
+    const syncValues = useCallback(
+        debounce((val: string) => {
+            onChange && onChange(val)
+        }, 1000),
+        []
+    )
+
+    // sync _value with value
+    useEffect(() => {
+        if (_value !== value) {
+            console.log(`Syncing internal state of TextField with placeholder "${placeholder}"`)
+            _setValue(value || '')
+        }
+    }, [value])
+
+    useEffect(() => {
+        syncValues(_value)
+    }, [_value])
 
     const ClearButton = () => {
         const handleClick = () => {
-            onChange && onChange('')
+            _setValue('')
             onReset && onReset()
         }
 
@@ -58,13 +79,13 @@ export const TextField = ({
             <header
                 className={cx({
                     [styles['header']]: true,
-                    [styles['isActive']]: value || isActive,
+                    [styles['isActive']]: _value || isActive,
                 })}
             >
                 <label
                     className={cx({
                         [styles['label']]: true,
-                        [styles['isActive']]: value || isActive,
+                        [styles['isActive']]: _value || isActive,
                     })}
                 >
                     {placeholder}
@@ -75,7 +96,7 @@ export const TextField = ({
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange && onChange(e.currentTarget.value)
+        _setValue(e.currentTarget.value)
     }
 
     const handleFocus = () => {
@@ -90,7 +111,7 @@ export const TextField = ({
         <div
             className={cx({
                 [styles['container']]: true,
-                [styles['isActive']]: value || isActive,
+                [styles['isActive']]: _value || isActive,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
             })}
@@ -102,7 +123,7 @@ export const TextField = ({
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={value}
+                value={_value || ''}
                 type={type}
             />
             <ClearButton />

@@ -51,7 +51,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         field: string,
         newValue: string | string[] | boolean | number | undefined
     ) => {
-        console.log(`Setting ${field} to ${newValue}`)
+        console.log(`Setting ${field} to ${newValue || 'undefined'}`)
 
         if (!newValue) {
             setSearchFilterData(_.omit(searchFilterData, [field]))
@@ -105,7 +105,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             placeholder='Sökord'
                                             name='q'
                                             onChange={(value) => handleChange('keyword', value)}
-                                            value={searchFilterData.keyword}
+                                            value={searchFilterData.keyword || ''}
                                             data-testid='keywordInput'
                                             fullWidth={true}
                                         />
