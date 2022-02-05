@@ -1,38 +1,20 @@
-import { useWindowWidth } from '@react-hook/window-size'
-import styled from 'styled-components'
-
-const SmallWaves = () => {
-    const windowWidth = useWindowWidth()
-
-    const ShapeDividerTop = styled.div`
-        position: absolute;
-        top: 45vh;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        line-height: 0;
-        z-index: -1;
-    `
-    const Svg = styled.svg`
-        position: relative;
-        display: block;
-        width: calc(252% + 1.3px);
-        height: ${(161 * windowWidth) / 2000 + 35}px;
-        transform: rotateY(170deg);
-    `
-
-    const Path = styled.path`
-        /* fill: red; */
-    `
-
+const Waves = () => {
     return (
-        <ShapeDividerTop>
-            <Svg
-                data-name='Layer 1'
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 1200 120'
+        <div className='relative' style={{
+            height: 'calc((15vw + 20vh) / 2)'
+        }}>
+            <svg
+                className='absolute'
+                viewBox='0 0 100 100'
+                height='100%'
+                width='100%'
                 preserveAspectRatio='none'
             >
+                <path
+                    fill='url(#grad1)'
+                    vectorEffect='non-scaling-stroke'
+                    d='M0 55 Q25 100, 53 55 Q80 10, 100 35 V0 H0'
+                />
                 <defs>
                     <linearGradient
                         id='grad1'
@@ -65,13 +47,22 @@ const SmallWaves = () => {
                         />
                     </linearGradient>
                 </defs>
-                <Path
-                    d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z'
-                    fill='url(#grad1)'
-                ></Path>
-            </Svg>
-        </ShapeDividerTop>
+            </svg>
+            <svg
+                className='absolute'
+                viewBox='0 0 100 100'
+                height='100%'
+                width='100%'
+                preserveAspectRatio='none'
+            >
+                <path
+                    className='fill-primary'
+                    vectorEffect='non-scaling-stroke'
+                    d='M0 55 Q25 100, 50 35 Q65 0, 80 22 Q90 35, 100 35 V0 H0'
+                />
+            </svg>
+        </div>
     )
 }
 
-export default SmallWaves
+export default Waves
