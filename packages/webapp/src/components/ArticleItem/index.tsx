@@ -33,11 +33,11 @@ const ArticleItem = ({ props, onClick }: Props) => {
 
     return (
         <div
-            className='rounded-md border-2 border-gray-300 text-xs flex flex-col shadow cursor-pointer bg-white overflow-hidden'
+            className='flex cursor-pointer flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white text-xs shadow'
             style={{ width: '270px', height: '270px' }}
             onClick={() => onClick()}
         >
-            <div className='bg-white h-2/3 border-b-2'>
+            <div className='h-2/3 border-b-2 bg-white'>
                 <img
                     className={`mx-auto h-full w-full ${
                         currentImage ? 'object-cover' : 'object-cover'
@@ -46,17 +46,17 @@ const ArticleItem = ({ props, onClick }: Props) => {
                     alt={props.title}
                 />
             </div>
-            <div className='p-2 h-1/3 flex flex-col justify-between'>
+            <div className='flex h-1/3 flex-col justify-between p-2'>
                 <div>
                     <span className='flex justify-between'>
-                        <span className='block text-sm h-5 overflow-hidden'>{props.title}</span>
+                        <span className='block h-5 overflow-hidden text-sm'>{props.title}</span>
                         <OriginLabel origin={props.origin} />
                     </span>
                     <span className='text-gray-500'>{props.region || ''}</span>
                 </div>
                 <span>{props.description}</span>
                 {/* <span>{props.category ? props.category[0] : ""}</span> */}
-                <div className='w-full flex justify-between'>
+                <div className='flex w-full justify-between'>
                     {props.price && props.price.value && props.price.currency && (
                         <span>
                             {props.price.value} {props.price.currency}

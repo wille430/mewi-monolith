@@ -11,7 +11,7 @@ const ParamInfo = ({ paramObj }: { paramObj: any }) => {
             {paramObj.map((param: any, i: number) => (
                 <article key={i} className='flex items-center space-x-2'>
                     <h4>{param.label}:</h4>
-                    <p className='text-gray-800 text-sm'>{param.value}</p>
+                    <p className='text-sm text-gray-800'>{param.value}</p>
                 </article>
             ))}
         </section>

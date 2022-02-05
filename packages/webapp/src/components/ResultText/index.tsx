@@ -14,7 +14,7 @@ const ResultText = () => {
         resultString += ` för "${filters.keyword}"`
     }
 
-    return <span className='text-gray-600 text-sm w-full'>{resultString}</span>
+    return <span className='w-full text-sm text-gray-600'>{resultString}</span>
 }
 
 export default ResultText

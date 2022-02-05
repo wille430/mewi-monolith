@@ -16,7 +16,7 @@ const PaymentPage = () => {
             <aside className='side-col' />
             <main className='main'>
                 <form ref={formRef} action={sessionUrl} method='POST'>
-                    <div className='w-full h-full flex items-center justify-center'>
+                    <div className='flex h-full w-full items-center justify-center'>
                         <StyledLoader />
                     </div>
                 </form>

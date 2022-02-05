@@ -62,12 +62,12 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
             className={`relative w-full ${size === 'small' && 'max-w-2xl'}`}
         >
             <div
-                className={`outline-none flex flex-row relative ${
+                className={`relative flex flex-row outline-none ${
                     size === 'small' ? 'h-8' : 'h-12'
                 }`}
             >
                 <input
-                    className='absoluteh-full w-full outline-none rounded-xl pl-4 pr-12 border border-black'
+                    className='absoluteh-full w-full rounded-xl border border-black pl-4 pr-12 outline-none'
                     placeholder='Sök efter en vara...'
                     onKeyDown={(e) => e.keyCode === 13 && handleSubmit()}
                     onChange={handleInputChange}

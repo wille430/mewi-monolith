@@ -37,7 +37,7 @@ function App() {
     }, [])
 
     return (
-        <div className='w-full min-h-screen'>
+        <div className='min-h-screen w-full'>
             <Router>
                 <Nav />
                 <Suspense fallback={<div></div>}>

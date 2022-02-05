@@ -145,7 +145,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                             </div>
                         </div>
                         <HorizontalLine />
-                        <div className='flex items-end justify-between flex-none'>
+                        <div className='flex flex-none items-end justify-between'>
                             <div className='flex'>{actions}</div>
                             <div className='flex flex-row-reverse gap-2'>
                                 {children}

@@ -31,9 +31,9 @@ const InnerNav = ({
     }, [history])
 
     return width > 768 ? (
-        <div className='md:col-start-2 md:col-end-5 hidden md:block flex-1 mx-4'>
+        <div className='mx-4 hidden flex-1 md:col-start-2 md:col-end-5 md:block'>
             <ul
-                className='flex flex-row bg-white rounded-full text-black p-2.5 px-4 mx-auto space-x-4 text-sm'
+                className='mx-auto flex flex-row space-x-4 rounded-full bg-white p-2.5 px-4 text-sm text-black'
                 style={{
                     maxWidth: '600px',
                 }}
@@ -42,13 +42,13 @@ const InnerNav = ({
             </ul>
         </div>
     ) : show ? (
-        <div className='top-0 left-0 bg-blue text-white w-full h-screen fixed z-40 flex flex-col'>
+        <div className='fixed top-0 left-0 z-40 flex h-screen w-full flex-col bg-blue text-white'>
             <header className='p-4'>
                 <button onClick={(e) => closeMenu()}>
                     <FiArrowLeft size='24' />
                 </button>
             </header>
-            <div className='flex justify-center items-center flex-grow'>
+            <div className='flex flex-grow items-center justify-center'>
                 <ul className='space-y-4'>{children}</ul>
             </div>
             <div className='h-1/4'></div>

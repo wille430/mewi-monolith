@@ -59,9 +59,7 @@ const SlideTransition = ({
         <Transition
             in={runOnStart ? show : inProp}
             duration={duration}
-            addEndListener={(node, done) =>
-                node.addEventListener('transitionend', () => undefined)
-            }
+            addEndListener={(node, done) => node.addEventListener('transitionend', () => undefined)}
         >
             {(state: TransitionStatus) => {
                 if (state === 'entering') {

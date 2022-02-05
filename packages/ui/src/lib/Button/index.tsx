@@ -58,7 +58,7 @@ export const Button = (props: ButtonProps) => {
             onClick={handleClick}
             {...rest}
         >
-            <div className='flex flex-row justify-center items-center'>
+            <div className='flex flex-row items-center justify-center'>
                 {icon}
                 <div
                     className={cx({

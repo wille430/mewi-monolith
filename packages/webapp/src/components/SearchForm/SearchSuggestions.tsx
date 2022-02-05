@@ -42,7 +42,7 @@ const SearchSuggestions = ({
         <div
             className={`absolute w-full ${
                 show && suggestions.length >= 1 ? 'block' : 'hidden'
-            } border border-gray-400 rounded-xl overflow-hidden z-40 divide-y-2`}
+            } z-40 divide-y-2 overflow-hidden rounded-xl border border-gray-400`}
             {...props}
         >
             {suggestions.map((suggestion, i) => (

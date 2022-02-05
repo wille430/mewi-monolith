@@ -3,7 +3,7 @@ import Hero from 'components/Hero'
 const Home = () => {
     return (
         <main className='w-full'>
-            <Hero/> 
+            <Hero />
         </main>
     )
 }

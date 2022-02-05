@@ -25,7 +25,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
         }
 
         return (
-            <div className='h-full w-full absolute flex items-center justify-between p-6'>
+            <div className='absolute flex h-full w-full items-center justify-between p-6'>
                 <button className={className} onClick={(e) => OffsetSelected(-1)}>
                     <FiArrowLeft />
                 </button>
@@ -54,13 +54,13 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
                 )
             }
             return (
-                <div className='h-full flex items-center'>
+                <div className='flex h-full items-center'>
                     <FiImage size='50' color='lightgray' style={{ height: '500px' }} />
                 </div>
             )
         } else {
             return (
-                <div className='w-full flex justify-center relative flex-1'>
+                <div className='relative flex w-full flex-1 justify-center'>
                     <div style={{ height: '500px' }}>
                         {imageUrls[selectedIndex] ? (
                             <img
@@ -69,7 +69,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
                                 alt={imageUrls[selectedIndex]}
                             />
                         ) : (
-                            <div className='h-full flex items-center'>
+                            <div className='flex h-full items-center'>
                                 <FiImage size='50' color='lightgray' />
                             </div>
                         )}

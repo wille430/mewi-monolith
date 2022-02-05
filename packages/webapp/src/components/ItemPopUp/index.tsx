@@ -23,7 +23,7 @@ const ItemPopUp = () => {
                 }}
             >
                 {!itemDisplay.selectedItem ? (
-                    <div className='h-full w-full flex justify-center items-center'>
+                    <div className='flex h-full w-full items-center justify-center'>
                         <StyledLoader />
                     </div>
                 ) : (

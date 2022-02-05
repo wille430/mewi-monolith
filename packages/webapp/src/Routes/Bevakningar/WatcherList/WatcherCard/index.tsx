@@ -23,17 +23,17 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
 
     return (
         <article
-            className='shadow-md rounded-md bg-white p-4 flex flex-col'
+            className='flex flex-col rounded-md bg-white p-4 shadow-md'
             data-testid='watcherCard'
         >
             {watcher.metadata.keyword && (
-                <header className='flex-none mb-4'>
+                <header className='mb-4 flex-none'>
                     <label className='label'>Sökord:</label>
                     <span>{watcher.metadata.keyword}</span>
                 </header>
             )}
             <div className='flex flex-grow space-y-4'>
-                <div className='grid grid-cols-fit-12 flex-1 gap-4'>
+                <div className='grid flex-1 grid-cols-fit-12 gap-4'>
                     {watcher.metadata.regions && watcher.metadata.regions.length >= 1 ? (
                         <div className='mr-6'>
                             <label className='label'>Regioner:</label>
@@ -75,7 +75,7 @@ const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
                     )}
                 </div>
             </div>
-            <footer className='flex items-center justify-between mt-2'>
+            <footer className='mt-2 flex items-center justify-between'>
                 <div className='text-sm opacity-70'>
                     <label className='label'>Lades till:</label>
                     <span>{new Date(watcher.createdAt).toLocaleDateString('se-SV')}</span>

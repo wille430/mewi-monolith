@@ -1,8 +1,11 @@
 const Waves = () => {
     return (
-        <div className='relative' style={{
-            height: 'calc((15vw + 20vh) / 2)'
-        }}>
+        <div
+            className='relative'
+            style={{
+                height: 'calc((15vw + 20vh) / 2)',
+            }}
+        >
             <svg
                 className='absolute'
                 viewBox='0 0 100 100'

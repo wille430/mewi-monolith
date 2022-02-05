@@ -44,7 +44,7 @@ const CategorySearch = () => {
                 })}
             >
                 {/* <AdPlaceholder size='lg' className='mb-12' /> */}
-                <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
+                <div className='flex flex-col gap-8 lg:flex-row lg:gap-4'>
                     <CategorySelectionList />
                     <div className=''>
                         <CategoryPathLabel categoryValues={params} />
@@ -53,7 +53,7 @@ const CategorySearch = () => {
                             <FilterArea exclude={{ category: true }} showKeywordField />
                         </div>
 
-                        <div className='w-full flex justify-between py-2 pb-6'>
+                        <div className='flex w-full justify-between py-2 pb-6'>
                             <ResultText />
                             <SortButton />
                         </div>
@@ -116,7 +116,7 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
         return linksWithSpacers
     }
 
-    return <span className='space-x-2 text-sm text-gray'>{renderLinks()}</span>
+    return <span className='text-gray space-x-2 text-sm'>{renderLinks()}</span>
 }
 
 export default CategorySearch

@@ -6,13 +6,13 @@ const Hero = () => {
     return (
         <section>
             <div
-                className='bg-primary flex justify-center align-center'
+                className='align-center flex justify-center bg-primary'
                 style={{
                     minHeight: '40vh',
                 }}
             >
-                <div className='max-w-lg lg:max-w-6xl p-4 mx-auto pt-16 flex lg:flex-row flex-col space-y-4 lg:space-y-0 lg:space-x-4 items-center lg:justify-between'>
-                    <div className='w-full flex justify-center items-center'>
+                <div className='mx-auto flex max-w-lg flex-col items-center space-y-4 p-4 pt-16 lg:max-w-6xl lg:flex-row lg:justify-between lg:space-y-0 lg:space-x-4'>
+                    <div className='flex w-full items-center justify-center'>
                         <figure className='h-32 lg:h-44'>
                             <MewiLogo />
                         </figure>
@@ -27,10 +27,10 @@ const Hero = () => {
 
 const SearchContainer = () => {
     return (
-            <div className='lg:bg-white lg:border-gray-200 lg:border-2 rounded-lg p-8 py-12 text-white lg:text-black flex lg:flex-col flex-col-reverse w-full max-w-xl flex-none'>
-                <h2 className='text-center mb-4'>Hitta begagnade produkter på ett enda ställe</h2>
-                <SearchForm />
-            </div>
+        <div className='flex w-full max-w-xl flex-none flex-col-reverse rounded-lg p-8 py-12 text-white lg:flex-col lg:border-2 lg:border-gray-200 lg:bg-white lg:text-black'>
+            <h2 className='mb-4 text-center'>Hitta begagnade produkter på ett enda ställe</h2>
+            <SearchForm />
+        </div>
     )
 }
 

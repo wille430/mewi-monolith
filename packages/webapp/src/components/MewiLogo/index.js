@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const MewiLogo = () => {
     return (
         <Link to='/'>
-            <img alt='Mewi Logo' className='w-auto h-full' src={logo} />
+            <img alt='Mewi Logo' className='h-full w-auto' src={logo} />
         </Link>
     )
 }

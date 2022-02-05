@@ -78,15 +78,15 @@ const Snackbar = ({
                     <div
                         style={{
                             width: 'clamp(20rem, 500px, 100%)',
-                            minHeight: '2rem'
+                            minHeight: '2rem',
                         }}
-                        className='flex flex-row z-50 rounded-md bg-white z-100 text-black justify-between shadow-lg cursor-pointer select-none'
+                        className='z-100 z-50 flex cursor-pointer select-none flex-row justify-between rounded-md bg-white text-black shadow-lg'
                         data-testid='snackbarContainer'
                         onClick={handleClick}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <div className='flex flex-col flex-grow divide-y divide-blue-dark h-auto w-full'>
+                        <div className='flex h-auto w-full flex-grow flex-col divide-y divide-blue-dark'>
                             <header className='flex-0 flex p-2 px-3'>
                                 <h4 className='flex-grow' data-testid='snackbarTitle'>
                                     {title}
@@ -97,7 +97,7 @@ const Snackbar = ({
                             </header>
 
                             <p
-                                className={`flex-grow text-sm break-words p-3 px-4 text-gray-500`}
+                                className={`flex-grow break-words p-3 px-4 text-sm text-gray-500`}
                                 style={{
                                     minHeight: '1.5rem',
                                 }}

@@ -16,12 +16,12 @@ const InputWithErrors = ({ errorMessage, ...rest }: Props) => {
     return (
         <div>
             <input
-                className='p-2 text-black rounded-sm w-full'
+                className='w-full rounded-sm p-2 text-black'
                 onFocus={(e) => setError(null)}
                 {...rest}
             />
             <br />
-            {<span className='text-red-500 h-6 inline-block'>{error ? error : ''}</span>}
+            {<span className='inline-block h-6 text-red-500'>{error ? error : ''}</span>}
         </div>
     )
 }

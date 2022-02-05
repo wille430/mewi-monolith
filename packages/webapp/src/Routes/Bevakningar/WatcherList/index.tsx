@@ -15,7 +15,7 @@ const WatcherList = () => {
     const renderItems = () => {
         if (isLoading) {
             return (
-                <div className='flex-grow flex justify-center items-center'>
+                <div className='flex flex-grow items-center justify-center'>
                     <div className='h-32'>
                         <StyledLoader />
                     </div>
@@ -24,7 +24,7 @@ const WatcherList = () => {
         } else {
             if (watchers.length > 0) {
                 return (
-                    <div className='w-full grid space-y-8'>
+                    <div className='grid w-full space-y-8'>
                         {watchers.map(
                             (watcherObj, i) =>
                                 watcherObj && <WatcherCard key={i} watcher={watcherObj} />
@@ -33,9 +33,9 @@ const WatcherList = () => {
                 )
             } else {
                 return (
-                    <div className='flex-grow flex justify-center items-center'>
+                    <div className='flex flex-grow items-center justify-center'>
                         <div className='h-32'>
-                            <span className='text-white text-sm'>Du har inga bevakningar ännu</span>
+                            <span className='text-sm text-white'>Du har inga bevakningar ännu</span>
                         </div>
                     </div>
                 )
@@ -50,20 +50,20 @@ const WatcherList = () => {
 
     return (
         <section
-            className='flex bg-blue rounded-lg mx-auto'
+            className='mx-auto flex rounded-lg bg-blue'
             style={{
                 maxWidth: '875px',
                 minHeight: '60vh',
             }}
         >
-            <div className='flex flex-col items-center w-full p-6'>
+            <div className='flex w-full flex-col items-center p-6'>
                 <header className='pb-6'>
                     <h3 className='text-white'>Mina bevakningar</h3>
                 </header>
-                <div className={'w-full flex flex-col space-y-2 flex-grow items-stretch'}>
+                <div className={'flex w-full flex-grow flex-col items-stretch space-y-2'}>
                     {renderItems()}
                 </div>
-                <footer className='w-full flex justify-end mt-6'>
+                <footer className='mt-6 flex w-full justify-end'>
                     <WatcherPopUpButton data-testid='createNewWatcherButton' />
                 </footer>
             </div>

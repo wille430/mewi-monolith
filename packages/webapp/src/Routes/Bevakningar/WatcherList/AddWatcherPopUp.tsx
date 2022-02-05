@@ -26,7 +26,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
         <PopUp onOutsideClick={hidePopUp} show={show}>
             <div className='p-2 sm:mt-32'>
                 <section
-                    className='bg-white rounded-md p-4 text-black shadow-md sm:mx-auto'
+                    className='rounded-md bg-white p-4 text-black shadow-md sm:mx-auto'
                     style={{
                         maxWidth: '1000px',
                     }}
@@ -41,7 +41,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                         heading='Lägg till en bevakning:'
                     />
                     <footer className='flex justify-end pt-4'>
-                        <div className='flex gap-2 flex-col-reverse sm:flex-row'>
+                        <div className='flex flex-col-reverse gap-2 sm:flex-row'>
                             <ResetButton onClick={clearInputs} />
                             <AddWatcherButton
                                 searchFilters={formData}

@@ -2,7 +2,6 @@ import Layout from 'components/Layout'
 import WatcherList from './WatcherList'
 
 const Bevakningar = () => {
-
     return (
         <Layout>
             <main className='main pb-32'>

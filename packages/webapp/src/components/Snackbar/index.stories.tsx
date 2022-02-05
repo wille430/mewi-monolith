@@ -6,7 +6,9 @@ export default {
     title: 'Snackbar',
 } as Meta
 
-const Template: Story = (args) => <Snackbar title='Title' body='body' autoHideDuration={5000} open={true} />
+const Template: Story = (args) => (
+    <Snackbar title='Title' body='body' autoHideDuration={5000} open={true} />
+)
 
 export const Primary = Template.bind({})
 Primary.args = {}

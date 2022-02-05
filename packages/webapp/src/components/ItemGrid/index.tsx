@@ -47,11 +47,11 @@ const ItemGrid = () => {
             }}
         >
             {isLoading ? (
-                <div className='flex justify-center items-center min-h-screen'>
+                <div className='flex min-h-screen items-center justify-center'>
                     <StyledLoader />
                 </div>
             ) : (
-                <div className='flex flex-wrap gap-4 justify-center'>
+                <div className='flex flex-wrap justify-center gap-4'>
                     {renderItems()}
                     <ItemPopUp />
                 </div>

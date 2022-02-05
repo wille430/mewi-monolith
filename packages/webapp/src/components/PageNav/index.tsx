@@ -62,7 +62,7 @@ const PageNav = ({ anchorEle }: PageNavProps) => {
     }
 
     return (
-        <div className='w-full flex justify-center py-6 max-w-full flex-wrap'>
+        <div className='flex w-full max-w-full flex-wrap justify-center py-6'>
             <NavEndButton onClick={() => changePage(-1)} icon={FiArrowLeft} />
             {RenderButtons()}
             <NavEndButton onClick={() => changePage(1)} icon={FiArrowRight} />
@@ -79,7 +79,7 @@ interface NavButtonProps {
 const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
     return (
         <button
-            className={`w-12 h-12 shadow mx-2 transform hover:shadow-md hover:scale-110 ${
+            className={`mx-2 h-12 w-12 transform shadow hover:scale-110 hover:shadow-md ${
                 selected && 'border-b-2 border-black'
             }`}
             onClick={(e) => onClick(e, label)}

@@ -8,7 +8,7 @@ const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
     const priceString = `${article.price.value || ''} ${article.price.currency || ''}`
 
     const InfoHeader = () => (
-        <div className='pt-4 bg-white flex-none'>
+        <div className='flex-none bg-white pt-4'>
             <span className='text-sm font-light'>{article.origin || ''}</span>
             <div className='flex justify-between'>
                 <div>
@@ -25,9 +25,9 @@ const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
     )
 
     const Description = () => (
-        <article className='px-2 flex-grow pb-12'>
+        <article className='flex-grow px-2 pb-12'>
             <h3 className='pb-1 font-light'>Beskrivning</h3>
-            <div className='flex flex-col sm:flex-row space-x-10'>
+            <div className='flex flex-col space-x-10 sm:flex-row'>
                 <div className='flex-grow'>
                     {article.body && (
                         <p>
@@ -48,12 +48,12 @@ const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
     )
 
     return (
-        <div className='h-full flex flex-col p-4 pt-0'>
+        <div className='flex h-full flex-col p-4 pt-0'>
             <CategoryString categories={article.category} />
             <div className='row-span-auto'>
                 <ImageDisplay imageUrls={article.imageUrl} />
             </div>
-            <section className='flex-grow flex flex-col sm:pb-0 pb-32'>
+            <section className='flex flex-grow flex-col pb-32 sm:pb-0'>
                 <InfoHeader />
                 <Description />
             </section>

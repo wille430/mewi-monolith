@@ -19,7 +19,7 @@ const LabeledDropdown = (props: LabeledDropdownProps) => {
 
     return (
         <div className='flex flex-col'>
-            <label className='h-10 inline-block'>{label}</label>
+            <label className='inline-block h-10'>{label}</label>
             <DropdownMenu
                 data-testid='dropdownMenu'
                 {...props}

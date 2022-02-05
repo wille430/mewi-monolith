@@ -32,9 +32,9 @@ const Register = () => {
         <Layout>
             <aside className='side-col'></aside>
             <main className='main'>
-                <Container className='max-w-lg mx-auto'>
+                <Container className='mx-auto max-w-lg'>
                     <Container.Header>
-                        <h3 className='text-center pb-6 pt-4'>Skapa ett konto</h3>
+                        <h3 className='pb-6 pt-4 text-center'>Skapa ett konto</h3>
                     </Container.Header>
                     <Container.Content>
                         <form className='flex flex-col items-center space-y-4'>

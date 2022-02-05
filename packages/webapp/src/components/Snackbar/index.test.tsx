@@ -31,9 +31,7 @@ describe('Snackbar', () => {
     })
 
     describe('displays content', () => {
-        const { queryAllByText } = render(
-            <Snackbar open={true} title={title} body={body} />
-        )
+        const { queryAllByText } = render(<Snackbar open={true} title={title} body={body} />)
 
         expect(queryAllByText(title)).toBeTruthy()
         expect(queryAllByText(body)).toBeTruthy()

@@ -18,7 +18,7 @@ const Nav = () => {
 
     return (
         <div className='relative'>
-            <div className='flex justify-between w-full bg-blue items-center p-3 space-x-2'>
+            <div className='flex w-full items-center justify-between space-x-2 bg-blue p-3'>
                 {path !== '/' && (
                     <figure className='h-10 flex-none'>
                         <MewiLogo />
@@ -37,7 +37,7 @@ const Nav = () => {
                     {isLoggedIn && <LogOutButton />}
                 </InnerNav>
                 {path !== '/' && (
-                    <div className='flex justify-end w-64 flex-grow md:flex-none max-w-xs'>
+                    <div className='flex w-64 max-w-xs flex-grow justify-end md:flex-none'>
                         <SearchForm size='small' />
                     </div>
                 )}

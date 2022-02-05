@@ -26,14 +26,14 @@ const Search = () => {
         <Layout>
             <aside className='side-col'></aside>
             <main className='main pb-32'>
-                <div className='flex flex-col gap-8 lg:gap-4 lg:flex-row'>
+                <div className='flex flex-col gap-8 lg:flex-row lg:gap-4'>
                     <CategorySelectionList />
                     <div className=''>
                         <div ref={scrollEle}>
                             <FilterArea exclude={{ category: true }} showKeywordField />
                         </div>
 
-                        <div className='w-full flex justify-between py-2 pb-6'>
+                        <div className='flex w-full justify-between py-2 pb-6'>
                             <ResultText />
                             <SortButton />
                         </div>

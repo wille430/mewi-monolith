@@ -84,7 +84,7 @@ const SnackbarHandler = ({ message, type }: SnackbarHandlerProps) => {
     }
 
     return (
-        <div className='fixed max-h-screen bottom-4 left-4'>
+        <div className='fixed bottom-4 left-4 max-h-screen'>
             {current && (
                 <RenderSnackbar
                     key={current?.id}

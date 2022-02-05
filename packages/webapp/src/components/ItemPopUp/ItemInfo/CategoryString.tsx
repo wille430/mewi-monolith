@@ -59,7 +59,7 @@ const CategoryString = ({ categories }: Props) => {
 
     categories = categories ? categories.map((cat) => valueToString[cat] || '') : ['Okategoriserad']
 
-    return <span className='text-sm font-light py-1'>{categories.join(' > ')}</span>
+    return <span className='py-1 text-sm font-light'>{categories.join(' > ')}</span>
 }
 
 export default CategoryString

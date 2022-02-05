@@ -4,16 +4,16 @@
 
 @layer base {
     .label {
-        @apply text-gray-400 mr-2;
+        @apply mr-2 text-gray-400;
     }
     .button {
         @apply rounded-sm bg-green p-2 text-black;
     }
     .layout {
-        @apply w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap justify-center;
+        @apply flex w-full flex-col flex-wrap justify-center sm:flex-row sm:flex-nowrap;
     }
     .side-col {
-        @apply w-full flex-grow px-4 hidden lg:block;
+        @apply hidden w-full flex-grow px-4 lg:block;
     }
     .main {
         @apply main-css p-4 md:p-2;

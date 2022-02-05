@@ -15,7 +15,7 @@ const PopUp = ({ children, show = true, onOutsideClick }: PopUpProps) => {
 
     return (
         <div
-            className='top-0 left-0 fixed w-screen h-screen bg-black bg-opacity-40 z-40 sm:p-4 overflow-y-scroll'
+            className='fixed top-0 left-0 z-40 h-screen w-screen overflow-y-scroll bg-black bg-opacity-40 sm:p-4'
             onClick={handleClick}
             style={{
                 display: show ? 'block' : 'none',
