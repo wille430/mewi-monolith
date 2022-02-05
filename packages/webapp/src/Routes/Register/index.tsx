@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
-import { createUser } from 'store/auth/creators'
+import { createUser, loadPage } from 'store/auth/creators'
 import { useAppSelector } from 'hooks/hooks'
 
 const Register = () => {
@@ -23,6 +23,10 @@ const Register = () => {
         e.preventDefault()
         dispatch(createUser([email, password, repassword]))
     }
+
+    useEffect(() => {
+        dispatch(loadPage())
+    }, [])
 
     return (
         <Layout>

@@ -15,4 +15,5 @@ export enum AuthActionTypes {
     AUTH_LOGOUT = 'auth/logout',
     AUTH_SIGNUP = 'auth/signup',
     AUTH_REFRESH = 'auth/refreshToken',
+    AUTH_PAGE_LOAD = 'auth/page_load',
 }

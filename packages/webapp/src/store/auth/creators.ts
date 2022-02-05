@@ -107,3 +107,5 @@ export const refreshAccessToken = createAsyncThunk(
         }
     }
 )
+
+export const loadPage = createAction(AuthActionTypes.AUTH_PAGE_LOAD)

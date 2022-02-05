@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { isFulfilled, isPending } from '@reduxjs/toolkit'
-import { createUser, loginUser, logOut, onAuthLoad, refreshAccessToken } from './creators'
+import { createUser, loadPage, loginUser, logOut, onAuthLoad, refreshAccessToken } from './creators'
 import { AuthState } from './types'
 
 const initialState: AuthState = {
@@ -78,6 +78,10 @@ export const userSlice = createSlice({
                 localStorage.removeItem('jwt')
                 localStorage.removeItem('refreshToken')
             })
+
+        builder.addCase(loadPage, (state, action) => {
+            state.errors = initialState.errors
+        })
 
         builder.addMatcher(isPending, (state, action) => {
             state.isLoading = true
