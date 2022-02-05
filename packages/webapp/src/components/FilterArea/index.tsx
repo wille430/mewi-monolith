@@ -5,7 +5,7 @@ import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilter
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import queryString from 'query-string'
-import { getSearchResults, setFilters, updateFilters } from 'store/search/creators'
+import { setFilters, updateFilters } from 'store/search/creators'
 import _ from 'lodash'
 import { useEffect, useRef } from 'react'
 
@@ -43,9 +43,6 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
                 )
             ),
         })
-
-        // get new results
-        dispatch(getSearchResults())
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {
