@@ -15,7 +15,7 @@ jest.mock('react-router', () => ({
     }),
 }))
 
-jest.mock('api/SearchAPI', () => {
+jest.mock('api/searchApi', () => {
     return {
         __esModule: true,
         default: {
