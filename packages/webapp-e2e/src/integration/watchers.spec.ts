@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 describe('watchers', () => {
     let accessTokens
 
@@ -19,6 +21,7 @@ describe('watchers', () => {
     })
 
     beforeEach(() => {
+        cy.visit('/minabevakningar')
         window.localStorage.setItem('jwt', accessTokens.jwt)
         window.localStorage.setItem('refreshToken', accessTokens?.refreshToken)
 
@@ -28,19 +31,29 @@ describe('watchers', () => {
     it('can create a new watcher and display it', () => {
         cy.get('[data-testid=createNewWatcherButton]').click()
 
+        // Fill in fields start
         cy.get('[data-testid=keywordInput]').type(formData.keyword)
+        cy.get('[data-testid=keywordInput]').should('have.value', formData.keyword)
+
         cy.get('[data-testid=regionsSelect]').type(formData.regions[0] + '{enter}')
+        cy.get('[data-testid=regionsSelect]').should('have.text', _.capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
+        cy.get('[data-testid=categorySelect]').should('have.text', _.capitalize(formData.category))
 
         cy.get('[data-testid=priceGte]').type(formData.price.gte)
+        cy.get('[data-testid=priceGte]').should('have.value', formData.price.gte)
+
         cy.get('[data-testid=priceLte]').type(formData.price.lte)
+        cy.get('[data-testid=priceLte]').should('have.value', formData.price.lte)
+        // Fiell in fields end
 
         if (formData.isAuction) cy.get('[data-testid=auctionCheckbox]').click()
 
         cy.get('[data-testid=sendButton]').click()
         cy.get('[data-testid=addWatcherPopUp]').should('not.be.visible')
 
+        // Validate displayed created watcher
         Object.keys(formData).forEach((key) => {
             switch (key) {
                 case 'regions':
@@ -71,7 +84,7 @@ describe('watchers', () => {
         })
     })
 
-    it('can redirect to search page with correct filters', () => {
+    it('can redirect to search page', () => {
         cy.get('[data-testid=watcherCard]')
             .first()
             .children()
@@ -79,6 +92,8 @@ describe('watchers', () => {
             .click()
 
         cy.url().should('contain', '/search')
+
+        // TODO: CHECK FILTERS IN FILTER AREA + URL
     })
 
     it('can delete watchers', () => {

@@ -1,5 +1,5 @@
 import react from 'react'
-import React, { DetailedHTMLProps, useEffect, useState } from 'react'
+import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
 import styles from './index.module.scss'
@@ -30,21 +30,10 @@ export const TextField = ({
     ...rest
 }: InputProps) => {
     const [isActive, setIsActive] = useState(false)
-    const [inputValue, setInputValue] = useState(value || '')
-
-    useEffect(() => {
-        if (value !== inputValue) {
-            onChange && onChange(inputValue)
-        }
-    }, [inputValue])
-
-    useEffect(() => {
-        setInputValue(value || '')
-    }, [value])
 
     const ClearButton = () => {
         const handleClick = () => {
-            setInputValue('')
+            onChange && onChange('')
             onReset && onReset()
         }
 
@@ -60,7 +49,7 @@ export const TextField = ({
                 </button>
             )
         } else {
-            return <></>
+            return null
         }
     }
 
@@ -69,13 +58,13 @@ export const TextField = ({
             <header
                 className={cx({
                     [styles['header']]: true,
-                    [styles['isActive']]: inputValue || isActive,
+                    [styles['isActive']]: value || isActive,
                 })}
             >
                 <label
                     className={cx({
                         [styles['label']]: true,
-                        [styles['isActive']]: inputValue || isActive,
+                        [styles['isActive']]: value || isActive,
                     })}
                 >
                     {placeholder}
@@ -86,10 +75,8 @@ export const TextField = ({
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.currentTarget.value)
+        onChange && onChange(e.currentTarget.value)
     }
-
-    const handleClick = () => {}
 
     const handleFocus = () => {
         setIsActive(true)
@@ -103,7 +90,7 @@ export const TextField = ({
         <div
             className={cx({
                 [styles['container']]: true,
-                [styles['isActive']]: isActive || inputValue,
+                [styles['isActive']]: value || isActive,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
             })}
@@ -113,10 +100,9 @@ export const TextField = ({
                 {...rest}
                 className={`${styles['input']} ${className}`}
                 onChange={handleChange}
-                onClick={handleClick}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={inputValue}
+                value={value}
                 type={type}
             />
             <ClearButton />

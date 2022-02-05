@@ -1,6 +1,5 @@
 import { ElasticQuery, SearchFilterDataProps } from '@mewi/types'
 import Elasticsearch, { elasticClient } from '../config/elasticsearch'
-import _ from 'lodash'
 
 export default class SearchService {
     static limit = 20
@@ -59,6 +58,8 @@ export default class SearchService {
             },
         }
 
+        console.log('Creating query from ', JSON.stringify(searchFilterData))
+
         Object.keys(searchFilterData).forEach((key) => {
             switch (key) {
                 case 'keyword':
@@ -85,10 +86,29 @@ export default class SearchService {
                     if (!query.bool.filter) query.bool.filter = []
                     query.bool.filter.push({ term: { isAuction: searchFilterData[key] } })
                     break
-                case 'priceRange':
+                case key.match(/priceRange(Gte|Lte)/)?.input:
                     if (!query.bool.filter) query.bool.filter = []
-                    if (!_.size(searchFilterData[key])) break
-                    query.bool.filter.push({ range: { 'price.value': searchFilterData[key] } })
+
+                    if (key.match(/(Gte)$/)) {
+                        query.bool.filter.push({
+                            range: {
+                                'price.value': {
+                                    gte: searchFilterData[key],
+                                },
+                            },
+                        })
+                    } else if (key.match(/(Lte)$/)) {
+                        query.bool.filter.push({
+                            range: {
+                                'price.value': {
+                                    lte: searchFilterData[key],
+                                },
+                            },
+                        })
+                    }
+
+                    console.log(`Price must be ${key} than ${searchFilterData[key]}`)
+
                     break
             }
         })

@@ -3,7 +3,6 @@ import { PublicWatcher } from '@mewi/types'
 export interface WatchersState {
     watchers: PublicWatcher[]
     isLoading: boolean
-    error: string
 }
 
 export enum WatchersActionType {

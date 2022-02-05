@@ -1,11 +1,10 @@
-import { PriceRange } from '@mewi/types'
 import { TextField } from '@mewi/ui'
 import { HTMLAttributes } from 'react'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
-    gte?: PriceRange['gte']
-    lte?: PriceRange['lte']
-    onChange: (field: 'gte' | 'lte', value?: string) => void
+    gte?: number
+    lte?: number
+    onChange: (field: 'priceRangeGte' | 'priceRangeLte', value?: number) => void
 }
 
 const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps) => {
@@ -15,18 +14,18 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
             <div className='flex flex-col space-y-3 text-black'>
                 <TextField
                     className='input'
-                    value={gte?.toString() || ''}
+                    value={gte?.toString()}
                     placeholder='Från (kr)'
-                    onChange={(value) => onChange('gte', value)}
+                    onChange={(value) => onChange('priceRangeGte', parseFloat(value))}
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
                 ></TextField>
                 <TextField
                     className='input'
-                    value={lte?.toString() || ''}
+                    value={lte?.toString()}
                     placeholder='Till (kr)'
-                    onChange={(value) => onChange('lte', value)}
+                    onChange={(value) => onChange('priceRangeLte', parseFloat(value))}
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}

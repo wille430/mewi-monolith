@@ -1,6 +1,6 @@
 #!bin/bash
 
-select opt in linux windows; do
+select opt in linux windows elasticsearch; do
     case $opt in
         linux)
             echo "Starting dev env for linux..."
@@ -16,6 +16,10 @@ select opt in linux windows; do
             echo "Starting dev env for windows..."
             ./tools/elasticsearch-7.16.2/bin/elasticsearch.bat & cd ../ & npx nx serve api & npx nx serve webapp
 
+
+            ;;
+        elasticsearch)
+            ./tools/elasticsearch-7.16.2/bin/elasticsearch.bat
 
             ;;
         *)

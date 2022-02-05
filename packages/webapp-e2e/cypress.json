@@ -8,5 +8,6 @@
     "video": true,
     "videosFolder": "../../dist/cypress/packages/webapp-e2e/videos",
     "screenshotsFolder": "../../dist/cypress/packages/webapp-e2e/screenshots",
-    "chromeWebSecurity": false
+    "chromeWebSecurity": false,
+    "projectId": "i37rci"
 }

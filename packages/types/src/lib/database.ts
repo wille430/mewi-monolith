@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson'
-import { JWT, PriceRange, SearchFilterDataProps, Category } from '..'
+import { JWT, SearchFilterDataProps } from '..'
 
 /**
  * Models

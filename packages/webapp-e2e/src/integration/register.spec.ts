@@ -1,5 +1,5 @@
 import { randomString } from '@mewi/util'
-describe('login', () => {
+describe('register', () => {
     const userInfo = {
         email: randomString(12) + '@removeme.com',
         password: `./${randomString(20)}123`,
