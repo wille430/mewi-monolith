@@ -19,6 +19,8 @@ jobs:
                   network.host: 127.0.0.1
                   http.port: 9200
                   discovery.type: single-node
+
+            - image: 'mongo'
         steps:
             - checkout
             - run:
@@ -30,22 +32,22 @@ jobs:
             - run:
                   command: sh ./tools/clear_elastic.sh
                   name: Prepare Elasticsearch
+            # - run:
+            #       name: Install and start MongoDB
+            #       command: |
+            #           wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+            #           sudo apt-get install gnupg
+            #           wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+            #           echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+            #           sudo apt-get update
+            #           sudo apt-get install -y mongodb-org
+            #           sudo systemctl enable mongod
+            # - run:
+            #       command: sudo npm install pm2 -g
+            #       name: Installing pm2
             - run:
                   command: npx nx affected --target=build --base=$NX_BASE --exclude=api
                   name: Run Builds (except API)
-            - run:
-                  command: sudo npm install pm2 -g
-                  name: Installing pm2
-            - run:
-                  name: Install and start MongoDB
-                  command: |
-                        wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
-                        sudo apt-get install gnupg
-                        wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
-                        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-                        sudo apt-get update
-                        sudo apt-get install -y mongodb-org
-                        sudo systemctl enable mongod
             # - run:
             #       command: npx nx build api
             #       name: Build API
