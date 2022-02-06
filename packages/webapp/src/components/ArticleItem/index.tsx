@@ -1,8 +1,8 @@
+import { ItemData } from '@mewi/types'
 import { toDateObj } from '@mewi/util'
 import missingImage from 'assets/missingImage.png'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
-import { ItemData } from 'models/types'
 import { ReactNode } from 'react'
 import OriginLabel from './OriginLabel'
 import TimeUntilDate from './TimeUntilDate'
@@ -54,7 +54,7 @@ const ArticleItem = ({ props, onClick }: Props) => {
                     </span>
                     <span className='text-gray-500'>{props.region || ''}</span>
                 </div>
-                <span>{props.description}</span>
+                {/* <span>{props.body}</span> */}
                 {/* <span>{props.category ? props.category[0] : ""}</span> */}
                 <div className='flex w-full justify-between'>
                     {props.price && props.price.value && props.price.currency && (

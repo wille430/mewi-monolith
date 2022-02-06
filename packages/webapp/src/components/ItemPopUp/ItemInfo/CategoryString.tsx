@@ -1,5 +1,7 @@
+import { CategoryType } from '@mewi/types'
+
 interface Props {
-    categories: string[]
+    categories: CategoryType
 }
 
 const CategoryString = ({ categories }: Props) => {

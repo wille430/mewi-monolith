@@ -59,9 +59,7 @@ export interface ElasticSearchBody {
     from: number
 }
 
-export type CategoryType = {
-    [key: number]: string
-}
+export type CategoryType = string[]
 
 export interface ItemData {
     id: string

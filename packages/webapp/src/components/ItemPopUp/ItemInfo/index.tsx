@@ -1,8 +1,8 @@
 import RedirectButton from './RedirectButton'
 import ImageDisplay from '../../ImageDisplay'
 import ParamInfo from './ParamInfo'
-import { ItemData } from 'models/types'
 import CategoryString from './CategoryString'
+import { ItemData } from '@mewi/types'
 
 const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
     const priceString = `${article.price.value || ''} ${article.price.currency || ''}`

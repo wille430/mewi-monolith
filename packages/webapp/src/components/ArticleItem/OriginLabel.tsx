@@ -1,4 +1,4 @@
-import { ItemData } from 'models/types'
+import { ItemData } from "@mewi/types"
 
 interface Props {
     origin: ItemData['origin']
