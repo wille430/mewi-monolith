@@ -39,7 +39,9 @@ describe('watchers', () => {
 
         // wait for region select to load fully
         cy.wait(longWait)
-        cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {delay: 100})
+        cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {
+            delay: 100,
+        })
         cy.get('[data-testid=regionsSelect]').should('have.text', _.capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
@@ -54,7 +56,12 @@ describe('watchers', () => {
 
         if (formData.isAuction) cy.get('[data-testid=auctionCheckbox]').click()
 
+        // submit
         cy.get('[data-testid=sendButton]').click()
+
+        // accept in modal
+        cy.get('[data-testid=modalAccept]').click()
+
         cy.get('[data-testid=addWatcherPopUp]').should('not.be.visible')
 
         // Validate displayed created watcher

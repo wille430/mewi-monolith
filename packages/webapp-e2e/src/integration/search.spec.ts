@@ -9,7 +9,7 @@ interface FormData extends SearchFilterDataProps {
 
 describe('search', () => {
     let formData: FormData = {}
-    const longWait = 3000
+    const longWait = 3500
     const debounceWait = 1500
 
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('search', () => {
         console.log('Filtering search with:', JSON.stringify(formData))
     })
 
-    Cypress._.times(3, () => {
+    Cypress._.times(1, () => {
         it('can filter with randomized filters and search', () => {
             // TODO: select category from category selection list
 
@@ -144,6 +144,10 @@ describe('search', () => {
         cy.wait(debounceWait)
 
         cy.get('[data-testid=addWatcherButton]').click()
+
+        // accept modal
+        cy.get('[data-testid=modalAccept]').click()
+
         cy.contains('Bevakningen lades till', { matchCase: false })
     })
 })

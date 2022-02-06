@@ -19,8 +19,8 @@ const CreateWatcherConfirmationModal = ({
                     heading='Är du säker att du vill lägga en bevakning på sökningen?'
                     bodyText='Genom att klicka på "Ja" godkänner du att ta emot e-post varje gång det kommer nya föremål som matchar din sökning.'
                     actions={[
-                        <Button label='Nej' variant='text' onClick={onExit} />,
-                        <Button label='Ja' onClick={onAccept} />,
+                        <Button label='Nej' variant='text' onClick={onExit} data-testid='modalDecline' />,
+                        <Button label='Ja' onClick={onAccept} data-testid='modalAccept' />,
                     ]}
                 />
             </div>
