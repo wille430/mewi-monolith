@@ -45,8 +45,10 @@ jobs:
             # - run:
             #       command: sudo npm install pm2 -g
             #       name: Installing pm2
+            - name: Derive appropriate SHAs for base and head for `nx affected` commands
+                    uses: nrwl/nx-set-shas@v2
             - run:
-                  command: npx nx affected --target=build --base=$NX_BASE --exclude=api
+                  command: npx nx affected --target=build --base=${{ env.NX_HEAD }} --exclude=api
                   name: Run Builds (except API)
             # - run:
             #       command: npx nx build api
@@ -58,7 +60,7 @@ jobs:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
             - run:
-                  command: npx nx affected --target=test --base=$NX_BASE
+                  command: npx nx affected --target=test --base=${{ env.NX_HEAD }}
                   name: Run Unit Tests
             - persist_to_workspace:
                   root: .
