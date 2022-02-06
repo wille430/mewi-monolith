@@ -1,56 +1,85 @@
 import { PasswordService } from './index'
 import UserModel from 'models/UserModel'
-import { APIError, AuthErrorCodes, AuthTokens, JWT } from '@mewi/types'
+import { APIError, AuthErrorCodes, AuthTokens, JWT, ValidationErrorCodes } from '@mewi/types'
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from './UserEmailService'
 import bcrypt from 'bcryptjs'
 
 class AuthService {
-    static async login(email: string, password: string): Promise<AuthTokens> {
-        email = email.toLowerCase()
-        const user = await UserModel.findOne({ email })
+    static async login(email: unknown, password: unknown): Promise<AuthTokens> {
+        // validate input
+        if (typeof email === 'string' && typeof password === 'string') {
+            email = email.trim().toLowerCase()
+            password = password.trim()
 
-        if (!user) throw new APIError(404, AuthErrorCodes.INVALID_EMAIL)
+            const user = await UserModel.findOne({ email })
 
-        const userId = user._id
-        const correctPassword = await PasswordService.correctPassword(userId, password)
+            if (!user) throw new APIError(404, AuthErrorCodes.INVALID_EMAIL)
 
-        if (!correctPassword) throw new APIError(401, AuthErrorCodes.INVALID_PASSWORD)
+            const userId = user._id
+            const correctPassword = await PasswordService.correctPassword(
+                userId,
+                password as string
+            )
 
-        return await this.createNewAuthTokens(userId, email)
+            if (!correctPassword) throw new APIError(401, AuthErrorCodes.INVALID_PASSWORD)
+
+            return await this.createNewAuthTokens(userId, email as string)
+        } else {
+            throw new APIError(422, ValidationErrorCodes.INVALID_INPUT)
+        }
     }
 
     /**
-     * Validating input and creating user
+     * Validating input and creatin user
      * @param email The email of the new user
      * @param password The password of the new user
      * @param repassword Should be the same as password
      * @returns a JWT-token
      */
-    static async signUp(email: string, password: string, repassword: string): Promise<AuthTokens> {
-        if (password !== repassword) throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_MATCHING)
-        email = email.toLowerCase()
+    static async signUp(
+        email: unknown,
+        password: unknown,
+        repassword: unknown
+    ): Promise<AuthTokens> {
+        // Validate input
+        if (
+            typeof email === 'string' &&
+            typeof password === 'string' &&
+            typeof repassword == 'string'
+        ) {
+            // Trim input
+            email = email.trim().toLowerCase()
+            password = password.trim()
+            repassword = repassword.trim()
 
-        const userExists = await UserModel.findOne({ email: email })
-        if (userExists) throw new APIError(409, AuthErrorCodes.USER_ALREADY_EXISTS)
+            if (password !== repassword) {
+                throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_MATCHING)
+            }
 
-        const validEmail = UserEmailService.validate(email)
-        const validPassword = PasswordService.validate(password)
+            const userExists = await UserModel.findOne({ email: email })
+            if (userExists) throw new APIError(409, AuthErrorCodes.USER_ALREADY_EXISTS)
 
-        if (!validEmail) {
-            throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
-        } else if (!validPassword) {
-            throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+            const validEmail = UserEmailService.validate(email as string)
+            const validPassword = PasswordService.validate(password as string)
+
+            if (!validEmail) {
+                throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
+            } else if (!validPassword) {
+                throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+            }
+
+            const encryptedPassword = await bcrypt.hash(password as string, 10)
+
+            const newUser = await UserModel.create({
+                email: email,
+                password: encryptedPassword,
+            })
+
+            return await this.createNewAuthTokens(newUser._id, email as string)
+        } else {
+            throw new APIError(422, ValidationErrorCodes.INVALID_INPUT)
         }
-
-        const encryptedPassword = await bcrypt.hash(password, 10)
-
-        const newUser = await UserModel.create({
-            email: email,
-            password: encryptedPassword,
-        })
-
-        return await this.createNewAuthTokens(newUser._id, email)
     }
 
     static async createNewAuthTokens(userId: string, email: string): Promise<AuthTokens> {

@@ -3,9 +3,10 @@ import { AuthService } from 'services/UserServices'
 import { APIError, AuthErrorCodes } from '@mewi/types'
 
 export const signUp = async (req, res, next) => {
-    const { email, password, repassword } = req.body as Record<string, string>
+    const { email, password, repassword } = req.body as Record<string, unknown | undefined>
+
     try {
-        const authTokens = await AuthService.signUp(email.trim(), password.trim(), repassword.trim())
+        const authTokens = await AuthService.signUp(email, password, repassword)
         res.status(201).json(authTokens)
     } catch (e) {
         next(e)
@@ -13,7 +14,7 @@ export const signUp = async (req, res, next) => {
 }
 
 export const login = async (req, res, next) => {
-    const { email, password } = req.body
+    const { email, password } = req.body as Record<string, unknown | undefined>
     try {
         const authTokens = await AuthService.login(email, password)
         res.status(200).json(authTokens)
@@ -26,7 +27,7 @@ export const validateToken = async (req, res, next) => {
     const { token } = req.body
     if (!token) return res.sendStatus(400)
 
-    jwt.verify(token, process.env.TOKEN_KEY, (err, user) => {
+    jwt.verify(token, process.env.TOKEN_KEY, (err) => {
         if (err) {
             next(new APIError(401, AuthErrorCodes.INVALID_JWT))
             return
