@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 interface PopUpProps {
     children: ReactNode
     show: boolean
-    onOutsideClick: () => void
+    onOutsideClick?: () => void
 }
 
 const PopUp = ({ children, show = true, onOutsideClick }: PopUpProps) => {

@@ -4,9 +4,7 @@ import classNames from 'classnames'
 
 const cx = classNames.bind(styles)
 
-interface ContainerProps extends HTMLAttributes<HTMLDivElement> {}
-
-export const Container = ({ className, children, ...rest }: ContainerProps) => {
+export const Container = ({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) => {
     return (
         <section className={`${styles['container']} ${className || ''}`} {...rest}>
             {children}

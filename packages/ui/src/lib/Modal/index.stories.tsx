@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react'
 import { Button } from '../Button'
-import Modal from './'
+import { Modal } from './'
 
 export default {
     component: Modal,

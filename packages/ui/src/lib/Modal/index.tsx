@@ -9,11 +9,11 @@ interface ModalProps {
     heading?: string
 }
 
-const Modal = ({ actions, bodyText, heading }: ModalProps) => {
+export const Modal = ({ actions, bodyText, heading }: ModalProps) => {
     return (
-        <Container>
+        <Container className='max-w-lg mx-auto'>
             <Container.Header>
-                <h3>{heading}</h3>
+                <h4>{heading}</h4>
                 <HorizontalLine />
             </Container.Header>
 
@@ -21,9 +21,7 @@ const Modal = ({ actions, bodyText, heading }: ModalProps) => {
                 <p className='text-gray-600'>{bodyText}</p>
             </Container.Content>
 
-            <Container.Footer className='flex justify-end'>{actions}</Container.Footer>
+            <Container.Footer className='flex justify-end space-x-2'>{actions}</Container.Footer>
         </Container>
     )
 }
-
-export default Modal
