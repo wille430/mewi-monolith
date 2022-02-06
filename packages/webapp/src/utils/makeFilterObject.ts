@@ -1,4 +1,4 @@
-const makeFilterObject = (value, label) => {
+const makeFilterObject = (value: string, label: string) => {
     return { value: value.toLowerCase(), label: label }
 }
 

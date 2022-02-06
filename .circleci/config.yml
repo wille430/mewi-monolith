@@ -24,11 +24,9 @@ jobs:
         steps:
             - checkout
             - run:
-                  command: npm install --frozen-lockfile
+                  command: npm install
                   name: Install dependencies
-            - nx/set-shas:
-                  error-on-no-successful-workflow: true
-                  main-branch-name: main
+            - nx/set-shas
             - run:
                   command: sh ./tools/clear_elastic.sh
                   name: Prepare Elasticsearch
