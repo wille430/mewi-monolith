@@ -76,7 +76,7 @@ jobs:
                   name: Login in to Okteto
             - checkout
             - attach_workspace:
-                  at:
+                  at: .
             - nx/set-shas:
                   error-on-no-successful-workflow: true
                   main-branch-name: main.
