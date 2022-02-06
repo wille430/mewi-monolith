@@ -15,6 +15,7 @@ const Waves = () => {
             >
                 <path
                     fill='url(#grad1)'
+                    className='drop-shadow-sm'
                     vectorEffect='non-scaling-stroke'
                     d='M0 55 Q25 100, 53 55 Q80 10, 100 35 V0 H0'
                 />
@@ -59,7 +60,7 @@ const Waves = () => {
                 preserveAspectRatio='none'
             >
                 <path
-                    className='fill-primary'
+                    className='fill-primary drop-shadow-lg'
                     vectorEffect='non-scaling-stroke'
                     d='M0 55 Q25 100, 50 35 Q65 0, 80 22 Q90 35, 100 35 V0 H0'
                 />
