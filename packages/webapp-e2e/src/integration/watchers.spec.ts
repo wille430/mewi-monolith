@@ -1,7 +1,9 @@
+import { capitalize } from '@mewi/util'
 import _ from 'lodash'
 
 describe('watchers', () => {
     let accessTokens
+    const longWait = 1000
 
     const formData = {
         keyword: 'volvo',
@@ -35,7 +37,9 @@ describe('watchers', () => {
         cy.get('[data-testid=keywordInput]').type(formData.keyword)
         cy.get('[data-testid=keywordInput]').should('have.value', formData.keyword)
 
-        cy.get('[data-testid=regionsSelect]').type(formData.regions[0] + '{enter}')
+        // wait for region select to load fully
+        cy.wait(longWait)
+        cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {delay: 100})
         cy.get('[data-testid=regionsSelect]').should('have.text', _.capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')

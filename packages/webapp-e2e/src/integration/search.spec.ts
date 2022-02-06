@@ -10,7 +10,7 @@ interface FormData extends SearchFilterDataProps {
 describe('search', () => {
     let formData: FormData = {}
     const longWait = 3000
-    const debounceWait = 1000
+    const debounceWait = 1500
 
     beforeEach(() => {
         cy.visit('/search')
@@ -35,17 +35,20 @@ describe('search', () => {
             // Insert regions
             // FIXME: fix detached from DOM error
             // TODO: insert multiple regions
-            cy.get('[data-testid=regionsSelect]').type(formData.regions[0] + ' {enter}', {
-                delay: 100,
-            })
+            cy.get('[data-testid=regionsSelect]', { timeout: 1000 }).type(
+                formData.regions[0] + ' {enter}',
+                {
+                    delay: 100,
+                }
+            )
 
             cy.get('[data-testid=regionsSelect]').should('have.text', formData.regions[0])
 
             // Insert price range
-            cy.get('[data-testid=priceGte]').type(formData.priceRangeGte + '{enter}')
+            cy.get('[data-testid=priceGte]').type(formData.priceRangeGte.toString())
             cy.get('[data-testid=priceGte]').should('have.value', formData.priceRangeGte)
 
-            cy.get('[data-testid=priceLte]').type(formData.priceRangeLte + '{enter}')
+            cy.get('[data-testid=priceLte]').type(formData.priceRangeLte.toString())
             cy.get('[data-testid=priceLte]').should('have.value', formData.priceRangeLte)
 
             if (formData.auction) {
@@ -124,12 +127,14 @@ describe('search', () => {
 
         // Inserts regions
         formData.regions.forEach((region) => {
-            cy.get('[data-testid=regionsSelect]').type(region + ' {enter}', { delay: 100 })
+            cy.get('[data-testid=regionsSelect]', { timeout: 1000 }).type(region + ' {enter}', {
+                delay: 100,
+            })
         })
 
         // Inserts price range
-        cy.get('[data-testid=priceGte]').type(formData.priceRangeGte + '{enter}')
-        cy.get('[data-testid=priceLte]').type(formData.priceRangeLte + '{enter}')
+        cy.get('[data-testid=priceGte]').type(formData.priceRangeGte.toString())
+        cy.get('[data-testid=priceLte]').type(formData.priceRangeLte.toString())
 
         if (formData.auction) {
             cy.get('[data-testid=auctionCheckbox]').click()

@@ -62,6 +62,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             console.log('Removing', field, 'from filters')
             onValueDelete && onValueDelete(field)
         } else if (Array.isArray(newValue) && !newValue.length) {
+            console.log('Removing', field, 'from filters')
             onValueDelete && onValueDelete(field)
         } else {
             onChange &&
@@ -116,7 +117,6 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             value={searchFilterData.keyword || ''}
                                             data-testid='keywordInput'
                                             fullWidth={true}
-                                            debounced={true}
                                         />
                                     </div>
                                 ) : (

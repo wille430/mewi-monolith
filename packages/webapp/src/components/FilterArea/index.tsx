@@ -11,7 +11,7 @@ import {
     setFilters,
     updateFilters,
 } from 'store/search/creators'
-import _, { debounce } from 'lodash'
+import _ from 'lodash'
 import { useCallback, useEffect, useRef } from 'react'
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
@@ -28,24 +28,26 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const firstRender = useRef(true)
 
     const getSearchResultsDebounce = useCallback(
-        debounce(() => {
+        _.debounce((_search) => {
             console.log('Updating url search params and getting new search results...')
-            updateSearchParams()
+            updateSearchParams(_search)
             dispatch(getSearchResults())
-        }, 500),
-        [search.filters, search.page, search.sort]
+        }, 1500),
+        []
     )
 
-    const updateSearchParams = () => {
+    const updateSearchParams = (_search: typeof search) => {
+        console.log({ filters: _search.filters })
+
         // update url search params
         history.push({
             pathname: window.location.pathname,
             search: queryString.stringify(
                 _.omit(
                     {
-                        ...search.filters,
-                        page: search.page,
-                        sort: search.sort !== SortData.RELEVANCE ? search.sort : undefined,
+                        ..._search.filters,
+                        page: _search.page,
+                        sort: _search.sort !== SortData.RELEVANCE ? _search.sort : undefined,
                     },
                     Object.keys(defaultValues || {})
                 )
@@ -68,7 +70,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
             return
         }
 
-        getSearchResultsDebounce()
+        getSearchResultsDebounce(search)
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {

@@ -38,7 +38,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                         onChange={(newData) => {
                             setFormData((prevState) => ({
                                 ...prevState,
-                                newData,
+                                ...newData,
                             }))
                         }}
                         onValueDelete={(key) => {

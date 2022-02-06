@@ -22,7 +22,6 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
-                    debounced={true}
                 ></TextField>
                 <TextField
                     className='input'
@@ -34,7 +33,6 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}
-                    debounced={true}
                 ></TextField>
             </div>
         </div>
