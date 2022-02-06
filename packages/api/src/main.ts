@@ -21,15 +21,17 @@ schedule.scheduleJob('30 * * * *', async () => {
     })
 })
 
-const lastScan = EndDate.getEndDateFor('blocket')
-if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
-    const scraper = new ScrapeService()
-    scraper.start().then(async () => {
-        await ItemsService.deleteOld()
+if (process.env.NODE_ENV === 'production') {
+    const lastScan = EndDate.getEndDateFor('blocket')
+    if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
+        const scraper = new ScrapeService()
+        scraper.start().then(async () => {
+            await ItemsService.deleteOld()
 
-        // Notify users of new items
-        await WatcherNotificationService.notifyUsers()
-    })
+            // Notify users of new items
+            await WatcherNotificationService.notifyUsers()
+        })
+    }
 }
 
 // const sendEmail = async () => {
