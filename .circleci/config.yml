@@ -58,7 +58,7 @@ jobs:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
             - run:
-                  command: npx nx affected --target=test --base=$NX_BASE
+                  command: npx nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
                   name: Run Unit Tests
             - persist_to_workspace:
                   root: .
