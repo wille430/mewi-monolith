@@ -1,5 +1,6 @@
 import { SortData } from '@mewi/types'
 import { createSlice } from '@reduxjs/toolkit'
+import _ from 'lodash'
 import {
     clearFilters,
     getFiltersFromQueryParams,
@@ -17,6 +18,9 @@ const initialState: SearchState = {
     filters: {},
     sort: SortData.RELEVANCE,
     page: 1,
+    loading: {
+        searching: false,
+    },
 }
 
 export const searchSlice = createSlice({
@@ -24,10 +28,18 @@ export const searchSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getSearchResults.fulfilled, (state, action) => {
-            state.hits = action.payload.hits
-            state.totalHits = action.payload.totalHits
-        })
+        builder
+            .addCase(getSearchResults.pending, (state) => {
+                state.loading.searching = true
+            })
+            .addCase(getSearchResults.fulfilled, (state, action) => {
+                state.hits = action.payload.hits
+                state.totalHits = action.payload.totalHits
+                state.loading.searching = false
+            })
+            .addCase(getSearchResults.rejected, (state) => {
+                state.loading.searching = false
+            })
 
         builder.addCase(clearFilters, (state) => {
             state.filters = initialState.filters
@@ -42,13 +54,29 @@ export const searchSlice = createSlice({
         builder.addCase(updateFilters, (state, action) => {
             console.log(
                 'Updating filters from',
-                JSON.stringify(action.payload),
+                JSON.stringify(state.filters),
                 'to',
-                JSON.stringify(action.payload)
+                JSON.stringify({
+                    ...state.filters,
+                    ...action.payload,
+                })
             )
-            state.filters = {
-                ...state.filters,
-                ...action.payload,
+
+            let key: keyof typeof action.payload
+
+            for (key in action.payload) {
+                // skip if values are the same
+                if (action.payload[key] === state.filters[key]) {
+                    continue
+                }
+
+                // remove from filters if undefined
+                if (action.payload[key] == null) {
+                    state.filters = _.omit(state.filters, key)
+                } else {
+                    // otherwise, set val
+                    state.filters = _.set(state.filters, key, action.payload[key])
+                }
             }
         })
 

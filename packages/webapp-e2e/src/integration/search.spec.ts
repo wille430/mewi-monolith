@@ -9,6 +9,8 @@ interface FormData extends SearchFilterDataProps {
 
 describe('search', () => {
     let formData: FormData = {}
+    const longWait = 3000
+    const debounceWait = 1000
 
     beforeEach(() => {
         cy.visit('/search')
@@ -28,7 +30,7 @@ describe('search', () => {
         it('can filter with randomized filters and search', () => {
             // TODO: select category from category selection list
 
-            cy.wait(2000)
+            cy.wait(longWait)
 
             // Insert regions
             // FIXME: fix detached from DOM error
@@ -36,6 +38,7 @@ describe('search', () => {
             cy.get('[data-testid=regionsSelect]').type(formData.regions[0] + ' {enter}', {
                 delay: 100,
             })
+
             cy.get('[data-testid=regionsSelect]').should('have.text', formData.regions[0])
 
             // Insert price range
@@ -51,6 +54,9 @@ describe('search', () => {
             } else {
                 cy.get('[data-testid=auctionCheckbox]').should('not.be.checked')
             }
+
+            // wait for debounce
+            cy.wait(debounceWait)
 
             // validate url
             cy.location().then((loc) => {
@@ -111,7 +117,7 @@ describe('search', () => {
             window.localStorage.setItem('refreshToken', res.body.refreshToken)
         })
 
-        cy.wait(2000)
+        cy.wait(longWait)
 
         // Inserts category
         // cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
@@ -128,6 +134,9 @@ describe('search', () => {
         if (formData.auction) {
             cy.get('[data-testid=auctionCheckbox]').click()
         }
+
+        // wait for debounce
+        cy.wait(debounceWait)
 
         cy.get('[data-testid=addWatcherButton]').click()
         cy.contains('Bevakningen lades till', { matchCase: false })

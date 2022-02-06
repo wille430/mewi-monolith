@@ -5,7 +5,10 @@ export interface SearchState {
     totalHits: number
     filters: SearchFilterDataProps
     sort: SortData
-    page: number
+    page: number,
+    loading: {
+        searching: boolean
+    }
 }
 
 export enum SearchActionTypes {

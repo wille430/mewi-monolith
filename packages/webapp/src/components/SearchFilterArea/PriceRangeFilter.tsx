@@ -14,21 +14,27 @@ const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps
             <div className='flex flex-col space-y-3 text-black'>
                 <TextField
                     className='input'
-                    value={gte?.toString()}
+                    value={gte?.toString() || ''}
                     placeholder='Från (kr)'
-                    onChange={(value) => onChange('priceRangeGte', parseFloat(value))}
+                    onChange={(value) =>
+                        onChange('priceRangeGte', value ? parseFloat(value) : undefined)
+                    }
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
+                    debounced={true}
                 ></TextField>
                 <TextField
                     className='input'
-                    value={lte?.toString()}
+                    value={lte?.toString() || ''}
                     placeholder='Till (kr)'
-                    onChange={(value) => onChange('priceRangeLte', parseFloat(value))}
+                    onChange={(value) =>
+                        onChange('priceRangeLte', value ? parseFloat(value) : undefined)
+                    }
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}
+                    debounced={true}
                 ></TextField>
             </div>
         </div>

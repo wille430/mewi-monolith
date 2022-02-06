@@ -1,11 +1,9 @@
 import _ from 'lodash'
 describe('login', () => {
-    let authTokens
     let userInfo
 
     before(() => {
         cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-            authTokens = _.pick(res.body, ['jwt', 'refreshToken'])
             userInfo = _.pick(res.body, ['email', 'password'])
         })
     })
@@ -21,7 +19,6 @@ describe('login', () => {
         cy.get('[data-testid=formSubmitButton]').click()
 
         cy.url().should('equal', Cypress.config('baseUrl') + 'minabevakningar')
-        cy.wait(500)
     })
 
     it('should display invalid password message', () => {

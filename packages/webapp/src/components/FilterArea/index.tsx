@@ -2,12 +2,17 @@ import { SearchFilterDataProps, SortData } from '@mewi/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
 import { Link, useHistory } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea'
-import { useAppSelector } from 'hooks/hooks'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import queryString from 'query-string'
-import { setFilters, updateFilters } from 'store/search/creators'
-import _ from 'lodash'
-import { useEffect, useRef } from 'react'
+import {
+    clearFilters,
+    getFiltersFromQueryParams,
+    getSearchResults,
+    setFilters,
+    updateFilters,
+} from 'store/search/creators'
+import _, { debounce } from 'lodash'
+import { useCallback, useEffect, useRef } from 'react'
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
     defaultValues?: SearchFilterDataProps
@@ -18,17 +23,20 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const search = useAppSelector((state) => state.search)
 
     const history = useHistory()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const firstUpdate = useRef(true)
+    const firstRender = useRef(true)
 
-    useEffect(() => {
-        // don't run on first update
-        if (firstUpdate.current) {
-            firstUpdate.current = false
-            return
-        }
+    const getSearchResultsDebounce = useCallback(
+        debounce(() => {
+            console.log('Updating url search params and getting new search results...')
+            updateSearchParams()
+            dispatch(getSearchResults())
+        }, 500),
+        [search.filters, search.page, search.sort]
+    )
 
+    const updateSearchParams = () => {
         // update url search params
         history.push({
             pathname: window.location.pathname,
@@ -43,6 +51,24 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
                 )
             ),
         })
+    }
+
+    useEffect(() => {
+        dispatch(getFiltersFromQueryParams())
+
+        // clear filters on unmount
+        return () => {
+            dispatch(clearFilters())
+        }
+    }, [])
+
+    useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false
+            return
+        }
+
+        getSearchResultsDebounce()
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {
@@ -53,14 +79,17 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         <SearchFilterArea
             {...rest}
             searchFilterData={search.filters}
-            setSearchFilterData={(newVal) => {
-                dispatch(updateFilters(newVal))
-            }}
             heading='Filtrera sökning'
             showSubmitButton={false}
             showResetButton={true}
             isCollapsable={true}
             onReset={handleReset}
+            onChange={(val) => {
+                dispatch(updateFilters(val))
+            }}
+            onValueDelete={(key) => {
+                dispatch(updateFilters({ [key]: undefined }))
+            }}
             actions={
                 isLoggedIn ? (
                     <AddWatcherButton

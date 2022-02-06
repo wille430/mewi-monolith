@@ -1,19 +1,25 @@
-import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
 import { useDispatch } from 'react-redux'
 import { createUser, loadPage } from 'store/auth/creators'
 import { useAppSelector } from 'hooks/hooks'
+import { useEffect, useState } from 'react'
 
 const Register = () => {
-    const initFormData = {
+    interface FormData {
+        email?: string
+        password?: string
+        repassword?: string
+    }
+
+    const initFormData: FormData = {
         email: '',
         password: '',
         repassword: '',
     }
 
-    const [formData, setFormData] = React.useState(initFormData)
+    const [formData, setFormData] = useState(initFormData)
     const { email, password, repassword } = formData
 
     const dispatch = useDispatch()
@@ -21,7 +27,7 @@ const Register = () => {
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        dispatch(createUser([email, password, repassword]))
+        dispatch(createUser([email || '', password || '', repassword || '']))
     }
 
     useEffect(() => {
@@ -41,11 +47,12 @@ const Register = () => {
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
-                                        setFormData({
-                                            ...formData,
+                                        setFormData((prevState) => ({
+                                            ...prevState,
                                             email: value,
-                                        })
+                                        }))
                                     }}
+                                    value={formData.email}
                                     name='email'
                                     placeholder='E-postadress'
                                     data-testid='emailInput'
@@ -56,11 +63,12 @@ const Register = () => {
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
-                                        setFormData({
-                                            ...formData,
+                                        setFormData((prevState) => ({
+                                            ...prevState,
                                             password: value,
-                                        })
+                                        }))
                                     }}
+                                    value={formData.password}
                                     name='password'
                                     placeholder='Lösenord'
                                     type='password'
@@ -72,11 +80,12 @@ const Register = () => {
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
-                                        setFormData({
-                                            ...formData,
+                                        setFormData((prevState) => ({
+                                            ...prevState,
                                             repassword: value,
-                                        })
+                                        }))
                                     }}
+                                    value={formData.repassword}
                                     name='repassword'
                                     placeholder='Bekräfta lösenord'
                                     type='password'

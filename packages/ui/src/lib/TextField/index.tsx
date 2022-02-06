@@ -1,4 +1,4 @@
-import react, { useCallback, useEffect } from 'react'
+import react, { useCallback, useEffect, useRef } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
@@ -14,8 +14,9 @@ type InputProps = Override<
         showClearButton?: boolean
         onReset?: () => void
         value?: string
-        onChange?: (value: string) => void
+        onChange?: (value?: string) => void
         fullWidth?: boolean
+        debounced?: boolean
     }
 >
 
@@ -28,28 +29,49 @@ export const TextField = ({
     value,
     fullWidth,
     type,
+    debounced = false,
     ...rest
 }: InputProps) => {
     const [isActive, setIsActive] = useState(false)
-    const [_value, _setValue] = useState('')
+    const [_value, _setValue] = useState<InputProps['value']>(value)
 
     const syncValues = useCallback(
-        debounce((val: string) => {
-            onChange && onChange(val)
-        }, 1000),
-        []
+        debounced
+            ? debounce(() => {
+                  if (_value !== value) {
+                      onChange && onChange(_value)
+                  }
+              }, 1000)
+            : () => {
+                  if (_value !== value) {
+                      onChange && onChange(_value)
+                  }
+              },
+        [_value, value]
     )
+
+    const firstRender = useRef(true)
 
     // sync _value with value
     useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false
+            return
+        }
+
         if (_value !== value) {
             console.log(`Syncing internal state of TextField with placeholder "${placeholder}"`)
-            _setValue(value || '')
+            _setValue(value)
         }
     }, [value])
 
     useEffect(() => {
-        syncValues(_value)
+        if (firstRender.current) {
+            firstRender.current = false
+            return
+        }
+
+        syncValues()
     }, [_value])
 
     const ClearButton = () => {

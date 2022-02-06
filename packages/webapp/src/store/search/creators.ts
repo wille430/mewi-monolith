@@ -31,6 +31,7 @@ export const getSearchResults = createAsyncThunk<
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
         const { filters, sort, page } = thunkApi.getState().search
+        console.log('Searching for', filters.keyword)
         const results = await searchApi.getSearchResults({
             searchFilters: filters,
             sort: sort,

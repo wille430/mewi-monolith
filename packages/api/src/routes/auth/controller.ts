@@ -3,9 +3,9 @@ import { AuthService } from 'services/UserServices'
 import { APIError, AuthErrorCodes } from '@mewi/types'
 
 export const signUp = async (req, res, next) => {
-    const { email, password, repassword } = req.body
+    const { email, password, repassword } = req.body as Record<string, string>
     try {
-        const authTokens = await AuthService.signUp(email, password, repassword)
+        const authTokens = await AuthService.signUp(email.trim(), password.trim(), repassword.trim())
         res.status(201).json(authTokens)
     } catch (e) {
         next(e)

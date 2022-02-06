@@ -4,6 +4,7 @@ import { SearchFilterDataProps } from '@mewi/types'
 import ResetButton from 'components/SearchFilterArea/ResetButton'
 import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
 import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'
+import _ from 'lodash'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
     const { show, setShow } = useShow
@@ -34,9 +35,16 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                 >
                     <SearchFilterContent
                         searchFilterData={formData}
-                        setSearchFilterData={(newData) => {
-                            setFormData(newData)
+                        onChange={(newData) => {
+                            setFormData((prevState) => ({
+                                ...prevState,
+                                newData,
+                            }))
                         }}
+                        onValueDelete={(key) => {
+                            setFormData((prevState) => _.omit(prevState, key))
+                        }}
+                        onReset={() => setFormData({ keyword: '' })}
                         showKeywordField={true}
                         heading='Lägg till en bevakning:'
                     />

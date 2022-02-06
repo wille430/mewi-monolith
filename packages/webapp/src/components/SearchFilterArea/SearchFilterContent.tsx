@@ -7,12 +7,12 @@ import LabeledDropdown from '../LabeledDropdown'
 import { v4 } from 'uuid'
 import { TextField, HorizontalLine } from '@mewi/ui'
 import { Button } from '@mewi/ui'
-import _ from 'lodash'
 
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
     onSubmit?: () => void
-    setSearchFilterData: (newData: SearchFilterDataProps) => void
+    onChange?: (newData: Partial<SearchFilterDataProps>) => void
+    onValueDelete?: (val: keyof SearchFilterContentProps['searchFilterData']) => void
     children?: ReactNode
     showKeywordField?: boolean
     heading?: string
@@ -29,7 +29,8 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
     const {
         searchFilterData,
         onSubmit,
-        setSearchFilterData,
+        onChange,
+        onValueDelete,
         children,
         showKeywordField,
         heading,
@@ -48,18 +49,25 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
     }
 
     const handleChange = (
-        field: string,
+        field: keyof typeof searchFilterData,
         newValue: string | string[] | boolean | number | undefined
     ) => {
         console.log(`Setting ${field} to ${newValue || 'undefined'}`)
 
-        if (typeof newValue === 'undefined') {
-            setSearchFilterData(_.omit(searchFilterData, [field]))
+        if (searchFilterData[field] === newValue) {
+            return
+        }
+
+        if (typeof newValue !== 'boolean' && !newValue) {
+            console.log('Removing', field, 'from filters')
+            onValueDelete && onValueDelete(field)
+        } else if (Array.isArray(newValue) && !newValue.length) {
+            onValueDelete && onValueDelete(field)
         } else {
-            setSearchFilterData({
-                ...searchFilterData,
-                [field]: newValue,
-            })
+            onChange &&
+                onChange({
+                    [field]: newValue,
+                })
         }
     }
 
@@ -108,6 +116,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
                                             value={searchFilterData.keyword || ''}
                                             data-testid='keywordInput'
                                             fullWidth={true}
+                                            debounced={true}
                                         />
                                     </div>
                                 ) : (

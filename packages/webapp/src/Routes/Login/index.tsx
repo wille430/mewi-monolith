@@ -7,15 +7,15 @@ import { useAppSelector } from 'hooks/hooks'
 import { useEffect, useState } from 'react'
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState<string | undefined>('')
+    const [password, setPassword] = useState<string | undefined>('')
 
     const dispatch = useDispatch()
     const errors = useAppSelector((state) => state.auth.errors)
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        dispatch(loginUser({ email, password }))
+        dispatch(loginUser({ email: email || '', password: password || '' }))
     }
 
     useEffect(() => {

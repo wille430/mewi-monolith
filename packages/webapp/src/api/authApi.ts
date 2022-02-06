@@ -13,6 +13,9 @@ export const signUp = async (
     password: string,
     repassword: string
 ): Promise<AuthTokens> => {
+
+    console.log('Creating user with credentials:', email, password, repassword)
+
     const authTokens: AuthTokens = await axios
         .post('/auth/signup', { email, password, repassword })
         .then((res) => res.data)

@@ -4,23 +4,11 @@ import SortButton from 'components/SortButton'
 import ItemGrid from '../../components/ItemGrid'
 import ResultText from '../../components/ResultText'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
-import { clearFilters, getFiltersFromQueryParams } from 'store/search/creators'
+import { useRef } from 'react'
 import CategorySelectionList from 'components/CategorySelectionList'
 
 const Search = () => {
-    const dispatch = useDispatch()
     const scrollEle = useRef<HTMLDivElement | null>(null)
-
-    useEffect(() => {
-        dispatch(getFiltersFromQueryParams())
-
-        // clear filters on unmount
-        return () => {
-            dispatch(clearFilters())
-        }
-    }, [])
 
     return (
         <Layout>
