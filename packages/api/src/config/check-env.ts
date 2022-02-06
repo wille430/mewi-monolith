@@ -1,14 +1,14 @@
 const checkEnv = () => {
     const envs = {
-        required: [
-            'MONGO_URI',
-            'TOKEN_KEY',
-            'SEARCH_ENGINE_URL',
-            'SEARCH_ENGINE_PORT',
+        required: ['MONGO_URI', 'TOKEN_KEY', 'SEARCH_ENGINE_URL', 'SEARCH_ENGINE_PORT'],
+        optional: [
+            'API_ADMIN_USERNAME',
+            'API_ADMIN_PASSWORD',
+            'MONGO_USERNAME',
+            'MONGO_PASSWORD',
             'GMAIL_MAIL',
             'GMAIL_PASS',
         ],
-        optional: ['API_ADMIN_USERNAME', 'API_ADMIN_PASSWORD', 'MONGO_USERNAME', 'MONGO_PASSWORD'],
     }
 
     // Check required envs
