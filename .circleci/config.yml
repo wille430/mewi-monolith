@@ -24,9 +24,11 @@ jobs:
         steps:
             - checkout
             - run:
-                  command: npm install
+                  command: npm install --frozen-lockfile
                   name: Install dependencies
-            - nx/set-shas
+            - nx/set-shas:
+                  error-on-no-successful-workflow: true
+                  main-branch-name: main
             - run:
                   command: sh ./tools/clear_elastic.sh
                   name: Prepare Elasticsearch
@@ -74,7 +76,10 @@ jobs:
                   name: Login in to Okteto
             - checkout
             - attach_workspace:
-                  at: .
+                  at:
+            - nx/set-shas:
+                  error-on-no-successful-workflow: true
+                  main-branch-name: main.
             - run:
                   command: npx nx affected --target=deploy --base=$NX_BASE
                   name: Deploy to apps
