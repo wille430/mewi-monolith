@@ -31,6 +31,7 @@ const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
         .post('/user/watchers', body)
         .then((res) => res.data.watcher)
         .catch((err) => {
+            console.error(err)
             throw err
         })
     return newWatcher
