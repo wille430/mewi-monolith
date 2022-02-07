@@ -87,7 +87,11 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
+            - hold:
+                type: approval
             - test:
+                  requires:
+                      - hold
                   filters:
                       branches:
                           only:
@@ -101,7 +105,11 @@ workflows:
                       - test
     build_and_test:
         jobs:
+            - hold:
+                type: approval
             - test:
+                  requires:
+                      - hold
                   filters:
                       branches:
                           only:
