@@ -57,6 +57,7 @@
         "@babel/core": "7.12.13",
         "@babel/preset-typescript": "7.12.13",
         "@csstools/postcss-sass": "^4.0.0",
+        "@faker-js/faker": "^6.0.0-alpha.5",
         "@nrwl/cli": "13.3.9",
         "@nrwl/cypress": "^13.3.12",
         "@nrwl/eslint-plugin-nx": "13.3.9",
