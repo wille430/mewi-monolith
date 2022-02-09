@@ -1,0 +1,105 @@
+.nav {
+    // small screens
+
+    @apply bg-primary text-white;
+    display: none;
+    grid-area: na;
+
+    @screen lg {
+        // big screen
+        @apply mx-auto flex w-full max-w-xl flex-row rounded-full bg-white p-2.5 px-4 text-sm text-black;
+
+        & header {
+            display: none;
+        }
+
+        & ul {
+            @apply flex w-full space-x-4;
+
+            & li {
+                display: flex;
+            }
+        }
+
+        &.show {
+            @apply relative h-full w-full;
+
+            & ul {
+                @apply flex flex-row space-y-0;
+            }
+        }
+
+        &.hidden {
+            display: block;
+        }
+    }
+}
+
+.container {
+    @apply h-full w-full bg-primary p-4;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        '. mb'
+        'me me';
+
+    & figure {
+        @apply hidden h-8 w-auto;
+    }
+
+    & form {
+        @apply flex-grow;
+    }
+
+    & form,
+    & form > div {
+        max-width: max-content;
+        height: 100%;
+    }
+
+    @screen lg {
+        display: grid;
+        grid-template-columns: 15rem 1fr 15rem;
+        grid-gap: 0.75rem;
+        grid-template-rows: auto;
+        grid-template-areas: '. na .';
+
+        & figure {
+            @apply block h-10;
+        }
+    }
+}
+.menuButton {
+    display: block;
+    grid-area: mb;
+    margin-left: auto;
+
+    @screen lg {
+        display: none;
+    }
+}
+
+.drawerWrapper {
+    @apply transition-all duration-300 ease-out delay-200;
+
+    &.show {
+        @apply py-4;
+    }
+
+    @screen lg {
+        display: none;
+    }
+}
+
+.drawer {
+    display: block;
+    grid-area: me;
+
+    @apply text-white;
+
+    @screen lg {
+        display: none;
+    }
+}

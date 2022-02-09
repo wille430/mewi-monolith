@@ -27,7 +27,7 @@
                     "packages/webapp/src/assets",
                     "packages/webapp/src/_redirects"
                 ],
-                "styles": ["packages/webapp/src/styles.css"],
+                "styles": ["packages/webapp/src/styles.scss"],
                 "scripts": [],
                 "webpackConfig": "@nrwl/react/plugins/webpack"
             },
