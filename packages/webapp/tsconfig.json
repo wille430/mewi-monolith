@@ -16,7 +16,8 @@
             "@mewi/types": ["../../types/src/index.ts"],
             "@mewi/util": ["../../util/src/index.ts"],
             "@mewi/ui": ["../../ui/src/index.ts"]
-        }
+        },
+        "plugins": [{ "name": "typescript-plugin-css-modules" }]
     },
     "files": [],
     "include": [],
