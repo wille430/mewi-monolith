@@ -36,7 +36,7 @@ export const userSlice = createSlice({
 
         builder.addCase(onAuthLoad, (state, action) => {
             const { jwt, refreshToken } = action.payload
-            if (jwt && refreshToken) {
+            if (jwt || (jwt && refreshToken)) {
                 state.isLoggedIn = true
             }
         })

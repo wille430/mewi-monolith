@@ -17,6 +17,8 @@ import PopUp from 'components/PopUp/ index'
 import styles from './index.module.scss'
 import classNames from 'classnames'
 import { Button } from '@mewi/ui'
+import { useWindowWidth } from '@react-hook/window-size'
+import { screens } from 'themes/tailwindConfig'
 
 const cx = classNames.bind(styles)
 
@@ -27,6 +29,7 @@ type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSear
 const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const { isLoggedIn } = useAppSelector((state) => state.auth)
     const search = useAppSelector((state) => state.search)
+    const windowWidth = useWindowWidth()
 
     const [showPopUp, setShowPopUp] = useState(false)
 
@@ -39,7 +42,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         _.debounce((_search) => {
             console.log('Updating url search params and getting new search results...')
             updateSearchParams(_search)
-            dispatch(getSearchResults())
+            dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
         }, 1500),
         []
     )
@@ -78,6 +81,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
             return
         }
 
+        console.log('Filters updated. Searching in 1500ms...')
         getSearchResultsDebounce(search)
     }, [search.filters, search.page, search.sort])
 
@@ -85,60 +89,44 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         dispatch(setFilters(defaultValues))
     }
 
-    const CustomSearchFilterArea = ({ className }: Partial<SearchFilterAreaProps>) => (
-        <SearchFilterArea
-            {...rest}
-            className={className}
-            searchFilterData={search.filters}
-            heading='Filtrera sökning'
-            showSubmitButton={false}
-            showResetButton={true}
-            onReset={handleReset}
-            onChange={(val) => {
-                dispatch(updateFilters(val))
-            }}
-            onValueDelete={(key) => {
-                dispatch(updateFilters({ [key]: undefined }))
-            }}
-            actions={
-                isLoggedIn ? (
-                    <AddWatcherButton
-                        searchFilters={search.filters}
-                        data-testid='addWatcherButton'
-                    />
-                ) : (
-                    <Link to='/login'>Bevaka sökning</Link>
-                )
-            }
-        />
-    )
+    const SearchFilterAreaArgs: SearchFilterAreaProps = {
+        ...rest,
+        searchFilterData: search.filters,
+        heading: 'Filtrera sökning',
+        showSubmitButton: false,
+        showResetButton: true,
+        onReset: handleReset,
+        onChange: (val) => {
+            dispatch(updateFilters(val))
+        },
+        onValueDelete: (key) => {
+            dispatch(updateFilters({ [key]: undefined }))
+        },
+        actions: isLoggedIn ? (
+            <AddWatcherButton searchFilters={search.filters} data-testid='addWatcherButton' />
+        ) : (
+            <Link to='/login'>Bevaka sökning</Link>
+        ),
+    }
 
-    return (
-        <>
-            <PopUp
-                show={showPopUp}
-                onOutsideClick={() => setShowPopUp(false)}
-                className={cx({
-                    [styles.popUp]: true,
-                })}
-            >
-                <CustomSearchFilterArea />
-            </PopUp>
-            <Button
-                className={cx({
-                    [styles.showFiltersButton]: true,
-                })}
-                onClick={() => setShowPopUp(true)}
-                label='Show filters'
-            ></Button>
-
-            <CustomSearchFilterArea
-                className={cx({
-                    [styles.regular]: true,
-                })}
-            />
-        </>
-    )
+    if (windowWidth >= parseInt(screens['lg'])) {
+        return <SearchFilterArea {...SearchFilterAreaArgs} />
+    } else {
+        return (
+            <>
+                <PopUp show={showPopUp} onOutsideClick={() => setShowPopUp(false)}>
+                    <SearchFilterArea {...SearchFilterAreaArgs} />
+                </PopUp>
+                <Button
+                    className={cx({
+                        [styles.showFiltersButton]: true,
+                    })}
+                    onClick={() => setShowPopUp(true)}
+                    label='Show filters'
+                    data-testid='showFilters'
+                ></Button>
+            </>
+        )
+    }
 }
-
 export default FilterArea

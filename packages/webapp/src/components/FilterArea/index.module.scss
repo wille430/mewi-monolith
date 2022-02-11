@@ -7,9 +7,11 @@
 }
 
 .regular {
+    @apply pointer-events-none invisible;
     display: none !important;
 
     @screen lg {
+        @apply pointer-events-auto visible;
         display: block !important;
     }
 }
