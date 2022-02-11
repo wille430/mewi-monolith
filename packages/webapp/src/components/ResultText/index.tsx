@@ -1,9 +1,21 @@
 import { useAppSelector } from 'hooks/hooks'
+import { useEffect, useState } from 'react'
 
 const ResultText = () => {
-    const { totalHits, filters } = useAppSelector((state) => state.search)
+    const { hits, totalHits, filters } = useAppSelector((state) => state.search)
+
+    const [keyword, setKeyword] = useState('')
+
+    useEffect(() => {
+        setKeyword(filters.keyword || '')
+    }, [hits])
 
     let resultString = ''
+
+    // Don't display if keywor is empty
+    if (!keyword) {
+        return <span></span>
+    }
 
     if (totalHits >= 10000) {
         resultString += `Hittade över ${totalHits || 0} resultat`
@@ -11,7 +23,7 @@ const ResultText = () => {
         resultString += `Hittade ${totalHits || 0} resultat`
     }
     if (filters.keyword) {
-        resultString += ` för "${filters.keyword}"`
+        resultString += ` för "${keyword}"`
     }
 
     return <span className='w-full text-sm text-gray-600'>{resultString}</span>
