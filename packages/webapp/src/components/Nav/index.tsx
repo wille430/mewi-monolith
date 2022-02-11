@@ -101,30 +101,38 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
                 when: 'afterChildren',
                 staggerChildren: 0.01,
                 staggerDirection: -1,
+                duration: 0.1,
             },
         },
         show: {
             height: 'auto',
-            transition: { staggerChildren: 0.01 },
         },
     }
 
     const linkAnimation = {
         hidden: {
             opacity: 0,
+            transition: {
+                duration: 0.1,
+            },
         },
         show: {
             opacity: 1,
         },
     }
 
+    const paddingAnimation = {
+        animate: (active: boolean) => ({
+            height: active ? '2rem' : '0rem',
+            transition: {
+                duration: 0.2,
+            },
+        }),
+    }
+
     return (
-        <div
-            className={cx({
-                [styles.drawerWrapper]: true,
-                [styles.show]: show,
-            })}
-        >
+        <div>
+            <motion.div variants={paddingAnimation} animate='animate' custom={show} />
             <AnimatePresence>
                 {show && (
                     <motion.ul
@@ -143,6 +151,7 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
                     </motion.ul>
                 )}
             </AnimatePresence>
+            <motion.div variants={paddingAnimation} animate='animate' custom={show} />
         </div>
     )
 }
