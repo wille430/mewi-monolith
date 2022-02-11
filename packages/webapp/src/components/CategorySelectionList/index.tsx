@@ -107,9 +107,9 @@ const CategorySelectionList = () => {
     }
 
     return (
-        <section className={styles.container}>
+        <div id='categorySelection' className={styles.container}>
             <ul>{renderListItems()}</ul>
-        </section>
+        </div>
     )
 }
 

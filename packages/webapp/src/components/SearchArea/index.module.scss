@@ -1,0 +1,17 @@
+.container {
+    @apply flex w-full flex-col;
+
+    @screen lg {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        max-width: theme('screens.xl');
+        margin: 0 auto;
+        padding: 2rem;
+
+        & > aside:first-of-type {
+            grid-row: 1 / -1;
+            grid-column: 0 / 0;
+            padding-right: 6rem;
+        }
+    }
+}
