@@ -37,6 +37,10 @@
             max-width: 20rem;
         }
 
+        & > div {
+            flex-grow: 1;
+        }
+
         & div > h4 {
             padding-bottom: 0.75rem;
         }
