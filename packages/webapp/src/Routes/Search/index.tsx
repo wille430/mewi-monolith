@@ -4,11 +4,11 @@ import SearchArea from 'components/SearchArea'
 const Search = () => {
     return (
         <Layout>
-            <aside className='side-col'></aside>
+            {/* <aside className='side-col'></aside> */}
             <main className='main max-w-full'>
                 <SearchArea />
             </main>
-            <aside className='side-col space-y-16'></aside>
+            {/* <aside className='side-col space-y-16'></aside> */}
         </Layout>
     )
 }

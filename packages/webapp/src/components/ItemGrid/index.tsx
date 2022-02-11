@@ -3,10 +3,15 @@ import ArticleItem from 'components/ArticleItem/index'
 import ItemPopUp from '../ItemPopUp'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getItem } from 'store/itemDisplay/creators'
+import styles from './index.module.scss'
+import classNames from 'classnames'
+
+const cx = classNames.bind(styles)
 
 const ItemGrid = () => {
     const search = useAppSelector((state) => state.search)
-    const isLoading = useAppSelector(state => state.search.loading.searching)
+    const status = useAppSelector((state) => state.search.status.searching)
+    const { totalHits } = useAppSelector((state) => state.search)
 
     const dispatch = useAppDispatch()
 
@@ -25,25 +30,42 @@ const ItemGrid = () => {
         ))
     }
 
-    return (
-        <section
-            className='flex-grow'
-            style={{
-                minHeight: '50%',
-            }}
-        >
-            {isLoading ? (
-                <div className='flex min-h-screen items-center justify-center'>
-                    <StyledLoader />
-                </div>
-            ) : (
-                <div className='flex flex-wrap justify-center gap-4'>
+    if (status === 'loading') {
+        return (
+            <section
+                className={cx({
+                    [styles.center]: true,
+                })}
+            >
+                <StyledLoader />
+            </section>
+        )
+    } else if (status === 'complete') {
+        if (totalHits > 0) {
+            return (
+                <section
+                    className={cx({
+                        [styles.grid]: true,
+                    })}
+                >
                     {renderItems()}
                     <ItemPopUp />
-                </div>
-            )}
-        </section>
-    )
+                </section>
+            )
+        } else {
+            return (
+                <section className={cx({ [styles.center]: true })}>
+                    <span>Inga resultat hittades för din sökning.</span>
+                </section>
+            )
+        }
+    } else {
+        return (
+            <section className={cx({ [styles.center]: true })}>
+                <span>Ett fel inträffade</span>
+            </section>
+        )
+    }
 }
 
 export default ItemGrid

@@ -1,5 +1,6 @@
 .container {
     @apply flex w-full flex-col;
+    min-height: 80vh;
 
     @screen lg {
         display: grid;

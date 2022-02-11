@@ -27,7 +27,7 @@ const SearchArea = () => {
                 <CategorySelectionList />
             </aside>
 
-            <div>
+            <div className='flex flex-col flex-grow'>
                 <CategoryPathLabel categoryValues={params} />
 
                 <div ref={scrollEle}>

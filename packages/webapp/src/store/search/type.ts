@@ -5,9 +5,9 @@ export interface SearchState {
     totalHits: number
     filters: SearchFilterDataProps
     sort: SortData
-    page: number,
-    loading: {
-        searching: boolean
+    page: number
+    status: {
+        searching: 'complete' | 'loading' | 'error'
     }
 }
 

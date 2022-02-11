@@ -18,8 +18,8 @@ const initialState: SearchState = {
     filters: {},
     sort: SortData.RELEVANCE,
     page: 1,
-    loading: {
-        searching: false,
+    status: {
+        searching: 'complete',
     },
 }
 
@@ -30,15 +30,15 @@ export const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getSearchResults.pending, (state) => {
-                state.loading.searching = true
+                state.status.searching = 'loading'
             })
             .addCase(getSearchResults.fulfilled, (state, action) => {
                 state.hits = action.payload.hits
                 state.totalHits = action.payload.totalHits
-                state.loading.searching = false
+                state.status.searching = 'complete'
             })
             .addCase(getSearchResults.rejected, (state) => {
-                state.loading.searching = false
+                state.status.searching = 'error'
             })
 
         builder.addCase(clearFilters, (state) => {
