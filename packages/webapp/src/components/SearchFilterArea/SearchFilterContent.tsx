@@ -18,11 +18,11 @@ export interface SearchFilterContentProps {
     heading?: string
     showResetButton?: boolean
     showSubmitButton?: boolean
-    collapse?: boolean
     actions?: ReactNode
     categoryOptions?: { value: string; label: string }[]
     exclude?: { [key: string]: boolean }
     onReset?: () => void
+    className?: string
 }
 
 const SearchFilterContent = (props: SearchFilterContentProps) => {
@@ -36,11 +36,11 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         heading,
         showResetButton,
         showSubmitButton,
-        collapse,
         actions,
         categoryOptions,
         exclude = {},
         onReset,
+        className,
     } = props
 
     const handleSubmit = (e: FormEvent) => {
@@ -97,85 +97,81 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
         },
     ]
 
-    if (!collapse) {
-        return (
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <div className='flex flex-col'>
-                        <div className='flex-grow'>
-                            <h3>{heading}</h3>
-                            <HorizontalLine />
-                            <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
-                                {showKeywordField ? (
-                                    <div className='flex flex-col'>
-                                        <label className='inline-block h-10'></label>
-                                        <TextField
-                                            className='input'
-                                            placeholder='Sökord'
-                                            name='q'
-                                            onChange={(value) => handleChange('keyword', value)}
-                                            value={searchFilterData.keyword || ''}
-                                            data-testid='keywordInput'
-                                            fullWidth={true}
-                                        />
-                                    </div>
-                                ) : (
+    return (
+        <div className={className}>
+            <form onSubmit={handleSubmit}>
+                <div className='flex flex-col'>
+                    <div className='flex-grow'>
+                        <h3>{heading}</h3>
+                        <HorizontalLine />
+                        <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
+                            {showKeywordField ? (
+                                <div className='flex flex-col'>
+                                    <label className='inline-block h-10'></label>
                                     <TextField
-                                        type='hidden'
+                                        className='input'
+                                        placeholder='Sökord'
                                         name='q'
-                                        value={searchFilterData.keyword}
-                                    />
-                                )}
-
-                                {Dropdowns.map((dropdown) => {
-                                    if (exclude[dropdown.name]) return null
-
-                                    return <LabeledDropdown key={v4()} {...dropdown} />
-                                })}
-
-                                {!exclude['price'] && (
-                                    <PriceRangeFilter
-                                        gte={searchFilterData.priceRangeGte}
-                                        lte={searchFilterData.priceRangeLte}
-                                        onChange={handleChange}
-                                        data-testid='priceRangeSlider'
-                                    />
-                                )}
-
-                                <div className='p-4'>
-                                    <Checkbox
-                                        label='Auktion'
-                                        name='auction'
-                                        onClick={(newVal) => handleChange('auction', newVal)}
-                                        checked={searchFilterData.auction}
-                                        data-testid='auctionCheckbox'
+                                        onChange={(value) => handleChange('keyword', value)}
+                                        value={searchFilterData.keyword || ''}
+                                        data-testid='keywordInput'
+                                        fullWidth={true}
                                     />
                                 </div>
-                            </div>
-                        </div>
-                        <HorizontalLine />
-                        <div className='flex flex-none items-end justify-between'>
-                            <div className='flex'>{actions}</div>
-                            <div className='flex flex-row-reverse gap-2'>
-                                {children}
-                                {showSubmitButton && (
-                                    <Button
-                                        type='submit'
-                                        data-testid='searchFilterSubmitButton'
-                                        label='Filtrera'
-                                        className='bg-primary'
-                                    />
-                                )}
-                                {showResetButton && <ResetButton onClick={handleReset} />}
+                            ) : (
+                                <TextField
+                                    type='hidden'
+                                    name='q'
+                                    value={searchFilterData.keyword}
+                                />
+                            )}
+
+                            {Dropdowns.map((dropdown) => {
+                                if (exclude[dropdown.name]) return null
+
+                                return <LabeledDropdown key={v4()} {...dropdown} />
+                            })}
+
+                            {!exclude['price'] && (
+                                <PriceRangeFilter
+                                    gte={searchFilterData.priceRangeGte}
+                                    lte={searchFilterData.priceRangeLte}
+                                    onChange={handleChange}
+                                    data-testid='priceRangeSlider'
+                                />
+                            )}
+
+                            <div className='p-4'>
+                                <Checkbox
+                                    label='Auktion'
+                                    name='auction'
+                                    onClick={(newVal) => handleChange('auction', newVal)}
+                                    checked={searchFilterData.auction}
+                                    data-testid='auctionCheckbox'
+                                />
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        )
-    }
-
-    return <div></div>
+                    <HorizontalLine />
+                    <div className='flex flex-none items-end justify-between'>
+                        <div className='flex'>{actions}</div>
+                        <div className='flex flex-row-reverse gap-2'>
+                            {children}
+                            {showSubmitButton && (
+                                <Button
+                                    type='submit'
+                                    data-testid='searchFilterSubmitButton'
+                                    label='Filtrera'
+                                    className='bg-primary'
+                                />
+                            )}
+                            {showResetButton && <ResetButton onClick={handleReset} />}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    )
 }
 
 export default SearchFilterContent

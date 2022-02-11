@@ -1,0 +1,25 @@
+.popUp {
+    @apply block;
+
+    @screen lg {
+        display: none !important;
+    }
+}
+
+.regular {
+    display: none !important;
+
+    @screen lg {
+        display: block !important;
+    }
+}
+
+.showFiltersButton {
+    @apply mx-auto block h-12 w-full border-2 border-gray-300 active:border-gray-600;
+    background-color: white !important;
+    color: theme('colors.gray.500') !important;
+
+    @screen lg {
+        @apply hidden;
+    }
+}

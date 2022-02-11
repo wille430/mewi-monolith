@@ -12,7 +12,13 @@ import {
     updateFilters,
 } from 'store/search/creators'
 import _ from 'lodash'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import PopUp from 'components/PopUp/ index'
+import styles from './index.module.scss'
+import classNames from 'classnames'
+import { Button } from '@mewi/ui'
+
+const cx = classNames.bind(styles)
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
     defaultValues?: SearchFilterDataProps
@@ -21,6 +27,8 @@ type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSear
 const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const { isLoggedIn } = useAppSelector((state) => state.auth)
     const search = useAppSelector((state) => state.search)
+
+    const [showPopUp, setShowPopUp] = useState(false)
 
     const history = useHistory()
     const dispatch = useAppDispatch()
@@ -77,14 +85,14 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         dispatch(setFilters(defaultValues))
     }
 
-    return (
+    const CustomSearchFilterArea = ({ className }: Partial<SearchFilterAreaProps>) => (
         <SearchFilterArea
             {...rest}
+            className={className}
             searchFilterData={search.filters}
             heading='Filtrera sökning'
             showSubmitButton={false}
             showResetButton={true}
-            isCollapsable={true}
             onReset={handleReset}
             onChange={(val) => {
                 dispatch(updateFilters(val))
@@ -103,6 +111,33 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
                 )
             }
         />
+    )
+
+    return (
+        <>
+            <PopUp
+                show={showPopUp}
+                onOutsideClick={() => setShowPopUp(false)}
+                className={cx({
+                    [styles.popUp]: true,
+                })}
+            >
+                <CustomSearchFilterArea />
+            </PopUp>
+            <Button
+                className={cx({
+                    [styles.showFiltersButton]: true,
+                })}
+                onClick={() => setShowPopUp(true)}
+                label='Show filters'
+            ></Button>
+
+            <CustomSearchFilterArea
+                className={cx({
+                    [styles.regular]: true,
+                })}
+            />
+        </>
     )
 }
 
