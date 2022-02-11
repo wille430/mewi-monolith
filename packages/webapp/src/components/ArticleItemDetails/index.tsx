@@ -1,5 +1,4 @@
 import { ItemData } from '@mewi/types'
-import { capitalize } from '@mewi/util'
 import styles from './index.module.scss'
 import classNames from 'classnames'
 import { Container } from '@mewi/ui'
@@ -9,6 +8,7 @@ import OriginLabel from '../ArticleItem/OriginLabel'
 import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
 import Description from './Description'
+import CategoryPathLabel from 'components/SearchArea/CategoryPathLabel'
 
 const cx = classNames.bind(styles)
 
@@ -28,10 +28,6 @@ const ArticleItemDetails = ({
     redirectUrl,
     onClose,
 }: ArticleItemDetails) => {
-    const categoryPathString = Object.values(category)
-        .map((value) => capitalize(value || ''))
-        .join(' > ')
-
     const handleClose = () => {
         onClose && onClose()
     }
@@ -48,7 +44,12 @@ const ArticleItemDetails = ({
                         [styles.categoryPath]: true,
                     })}
                 >
-                    {categoryPathString}
+                    <CategoryPathLabel
+                        categoryValues={{
+                            category_id: category[0],
+                            subcat_id: category[1],
+                        }}
+                    />
                 </span>
                 <span>
                     <Button onClick={handleClose} variant='text' icon={<FiX />} />
