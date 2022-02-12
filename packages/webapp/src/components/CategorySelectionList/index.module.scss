@@ -11,7 +11,7 @@
 }
 
 .selected {
-    font-weight: 800;
+    font-weight: 800 !important;
 
     & > ul > * {
         font-weight: 400;

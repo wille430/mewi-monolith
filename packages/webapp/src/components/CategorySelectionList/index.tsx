@@ -57,14 +57,13 @@ const CategorySelectionList = () => {
      * Determine if a category is currently selected
      */
     const isCategorySelected = (categoryPath: string[]) => {
-        for (let i = 0; i < categoryPath.length; i++) {
-            if (categoryPath[i] !== currentCategoryPath[i]) {
-                // return false if the values doesn't match
-                return false
-            }
+        const sliced = currentCategoryPath.slice(0, categoryPath.length)
+
+        if (_.isEqual(sliced, categoryPath)) {
+            return true
         }
 
-        return true
+        return false
     }
 
     const renderListItems = (categoryPath: string[] = []) => {
@@ -83,7 +82,7 @@ const CategorySelectionList = () => {
                     <CategorySelectionList.ListItem
                         key={key}
                         categoryPath={subcategoryPath}
-                        currentlySelected={_.isEqual(currentCategoryPath, subcategoryPath)}
+                        currentlySelected={isSelected}
                     >
                         {isSelected && renderListItems(subcategoryPath)}
                     </CategorySelectionList.ListItem>
@@ -97,7 +96,7 @@ const CategorySelectionList = () => {
                     <CategorySelectionList.ListItem
                         key={key}
                         categoryPath={[key]}
-                        currentlySelected={_.isEqual(currentCategoryPath, [key])}
+                        currentlySelected={isSelected}
                     >
                         {isSelected && renderListItems([key])}
                     </CategorySelectionList.ListItem>
@@ -138,7 +137,6 @@ const CategoryListItem = ({ categoryPath, children, currentlySelected }: ListIte
                 [styles.selected]: currentlySelected,
             })}
         >
-            {/* TODO: text of selected category should be bold */}
             <Link to={getLink()}>{category?.label}</Link>
             <ul>{children}</ul>
         </li>
