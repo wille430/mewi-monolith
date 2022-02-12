@@ -67,7 +67,7 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
                 }`}
             >
                 <input
-                    className='absoluteh-full w-full rounded-xl border border-black pl-4 pr-12 outline-none'
+                    className='absoluteh-full w-full rounded-xl border border-black text-black pl-4 pr-12 outline-none'
                     placeholder='Sök efter en vara...'
                     onKeyDown={(e) => e.keyCode === 13 && handleSubmit()}
                     onChange={handleInputChange}
