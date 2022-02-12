@@ -3,7 +3,7 @@ import StyledLoader from 'components/StyledLoader'
 import { createRef, useEffect } from 'react'
 
 const PaymentPage = () => {
-    const sessionUrl = process.env.NX_API_URL + '(payment/new_session'
+    const sessionUrl = process.env.NX_API_URL + '/payment/new_session'
 
     const formRef = createRef<HTMLFormElement>()
 

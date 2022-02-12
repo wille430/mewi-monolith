@@ -1,18 +1,16 @@
 import * as React from 'react'
 import { Redirect } from 'react-router'
-import { Route } from 'react-router-dom'
+import Page, { PageProps } from './Page'
 
-interface Props {
-    children: React.ReactNode
+interface Props extends PageProps {
     isAuthenticated: boolean
-    [key: string]: any
 }
 
-const PublicRoute = ({ children, isAuthenticated, ...rest }: Props) => {
+const PublicRoute = ({ isAuthenticated, component, ...rest }: Props) => {
     return (
-        <Route
+        <Page
             {...rest}
-            render={() => (!isAuthenticated ? children : <Redirect to='/minabevakningar' />)}
+            component={!isAuthenticated ? component : <Redirect to='/minabevakningar' />}
         />
     )
 }

@@ -50,6 +50,12 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const updateSearchParams = (_search: typeof search) => {
         console.log({ filters: _search.filters })
 
+        if (_search.filters.keyword) {
+            document.title = `Sökning för "${_search.filters.keyword}" - Mewi`
+        } else {
+            document.title = 'Sök - Mewi.se'
+        }
+
         // update url search params
         history.push({
             pathname: window.location.pathname,
