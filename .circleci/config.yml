@@ -89,13 +89,13 @@ workflows:
         jobs:
             - hold:
                 type: approval
+                filters:
+                    branches:
+                        only:
+                            - main
             - test:
                   requires:
                       - hold
-                  filters:
-                      branches:
-                          only:
-                              - main
             - deploy:
                   filters:
                       branches:
@@ -107,10 +107,10 @@ workflows:
         jobs:
             - hold:
                 type: approval
+                filters:
+                    branches:
+                        only:
+                            - dev
             - test:
                   requires:
                       - hold
-                  filters:
-                      branches:
-                          only:
-                              - dev
