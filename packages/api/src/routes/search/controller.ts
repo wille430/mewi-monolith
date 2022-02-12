@@ -60,7 +60,10 @@ export const getSearchResults = async (req, res) => {
     } else {
         results = await elasticClient.search({
             index: index,
-            body: {},
+            body: {
+                sort: sort ? [sort] : [],
+                ...SearchService.calculateFromAndSize(options.page),
+            },
         })
     }
 
