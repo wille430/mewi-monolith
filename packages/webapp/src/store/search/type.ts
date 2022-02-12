@@ -19,4 +19,5 @@ export enum SearchActionTypes {
     SORT = 'search/sort',
     FILTERS_FROM_PARAMS = 'search/filtersFromParams',
     SET_PAGE = 'search/setPage',
+    CLEAR_RESULTS = 'search/clear',
 }

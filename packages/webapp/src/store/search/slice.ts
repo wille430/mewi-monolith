@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import {
     clearFilters,
+    clearSearchResults,
     getFiltersFromQueryParams,
     getSearchResults,
     goToPage,
@@ -41,8 +42,16 @@ export const searchSlice = createSlice({
                 state.status.searching = 'error'
             })
 
-        builder.addCase(clearFilters, (state) => {
-            state.filters = initialState.filters
+        builder.addCase(clearFilters, (state, action) => {
+            if (action.payload) {
+                state.filters = {
+                    ...initialState.filters,
+                    ...action.payload,
+                }
+            } else {
+                state.filters = initialState.filters
+            }
+
             state.sort = initialState.sort
             state.page = 1
         })
@@ -84,6 +93,12 @@ export const searchSlice = createSlice({
 
         builder.addCase(goToPage, (state, action) => {
             state.page = action.payload
+        })
+
+        builder.addCase(clearSearchResults, (state) => {
+            state.hits = []
+            state.totalHits = 0
+            state.status.searching = 'loading'
         })
     },
 })

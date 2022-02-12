@@ -6,7 +6,14 @@ import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
 
-export const clearFilters = createAction(SearchActionTypes.CLEAR_FILTERS)
+export const clearFilters = createAction(
+    SearchActionTypes.CLEAR_FILTERS,
+    (filtersToKeep?: Partial<SearchFilterDataProps>) => {
+        return {
+            payload: filtersToKeep,
+        }
+    }
+)
 
 export const setFilters = createAction(
     SearchActionTypes.SET_FILTERS,
@@ -100,3 +107,5 @@ export const goToPage = createAction(SearchActionTypes.SET_PAGE, (page: number) 
         payload: page,
     }
 })
+
+export const clearSearchResults = createAction(SearchActionTypes.CLEAR_RESULTS)

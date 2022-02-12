@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import queryString from 'query-string'
 import {
     clearFilters,
+    clearSearchResults,
     getFiltersFromQueryParams,
     getSearchResults,
     setFilters,
@@ -97,6 +98,9 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     }, [search.filters])
 
     useEffect(() => {
+
+        dispatch(clearSearchResults())
+
         if (search.filters !== _filters) {
             debounceSetFilters(_filters)
         }
@@ -113,7 +117,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {
-        dispatch(setFilters(defaultValues))
+        dispatch(clearFilters(defaultValues))
     }
 
     const SearchFilterAreaArgs: SearchFilterAreaProps = {
