@@ -9,7 +9,6 @@ import {
     getFiltersFromQueryParams,
     getSearchResults,
     setFilters,
-    updateFilters,
 } from 'store/search/creators'
 import _ from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -31,6 +30,8 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const search = useAppSelector((state) => state.search)
     const windowWidth = useWindowWidth()
 
+    const [_filters, _setFilters] = useState(search.filters)
+
     const [showPopUp, setShowPopUp] = useState(false)
 
     const history = useHistory()
@@ -38,12 +39,19 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
 
     const firstRender = useRef(true)
 
-    const getSearchResultsDebounce = useCallback(
-        _.debounce((_search) => {
-            console.log('Updating url search params and getting new search results...')
-            updateSearchParams(_search)
-            dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
-        }, 1500),
+    // const getSearchResultsDebounce = useCallback(
+    //     _.debounce((_search) => {
+    //         console.log('Updating url search params and getting new search results...')
+    //         updateSearchParams(_search)
+    //         dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
+    //     }, 750),
+    //     []
+    // )
+
+    const debounceSetFilters = useCallback(
+        _.debounce((filters: typeof search.filters) => {
+            dispatch(setFilters(filters))
+        }, 500),
         []
     )
 
@@ -81,14 +89,27 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         }
     }, [])
 
+    // sync global and component filter state
+    useEffect(() => {
+        if (search.filters !== _filters) {
+            _setFilters(search.filters)
+        }
+    }, [search.filters])
+
+    useEffect(() => {
+        if (search.filters !== _filters) {
+            debounceSetFilters(_filters)
+        }
+    }, [_filters])
+
     useEffect(() => {
         if (firstRender.current) {
             firstRender.current = false
             return
         }
 
-        console.log('Filters updated. Searching in 1500ms...')
-        getSearchResultsDebounce(search)
+        updateSearchParams(search)
+        dispatch(getSearchResults())
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {
@@ -97,16 +118,19 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
 
     const SearchFilterAreaArgs: SearchFilterAreaProps = {
         ...rest,
-        searchFilterData: search.filters,
+        searchFilterData: _filters,
         heading: 'Filtrera sökning',
         showSubmitButton: false,
         showResetButton: true,
         onReset: handleReset,
-        onChange: (val) => {
-            dispatch(updateFilters(val))
+        onChange: (key, value) => {
+            _setFilters((prevState) => ({
+                ...prevState,
+                [key]: value,
+            }))
         },
         onValueDelete: (key) => {
-            dispatch(updateFilters({ [key]: undefined }))
+            _setFilters((prevState) => _.omit(prevState, key))
         },
         actions: isLoggedIn ? (
             <AddWatcherButton searchFilters={search.filters} data-testid='addWatcherButton' />

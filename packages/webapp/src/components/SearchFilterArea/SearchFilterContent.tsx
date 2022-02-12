@@ -11,7 +11,10 @@ import { Button } from '@mewi/ui'
 export interface SearchFilterContentProps {
     searchFilterData: SearchFilterDataProps
     onSubmit?: () => void
-    onChange?: (newData: Partial<SearchFilterDataProps>) => void
+    onChange?: (
+        key: keyof SearchFilterDataProps,
+        value: SearchFilterDataProps[keyof SearchFilterDataProps]
+    ) => void
     onValueDelete?: (val: keyof SearchFilterContentProps['searchFilterData']) => void
     children?: ReactNode
     showKeywordField?: boolean
@@ -65,10 +68,7 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             console.log('Removing', field, 'from filters')
             onValueDelete && onValueDelete(field)
         } else {
-            onChange &&
-                onChange({
-                    [field]: newValue,
-                })
+            onChange && onChange(field, newValue)
         }
     }
 
