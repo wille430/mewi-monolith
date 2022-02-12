@@ -64,7 +64,7 @@ const Nav = () => {
                     </ul>
                 </div>
 
-                {path !== '/' && <SearchForm size='small' />}
+                {path !== '/' && <SearchForm />}
 
                 <MenuButton
                     onClick={() => setShowMenu(!showMenu)}

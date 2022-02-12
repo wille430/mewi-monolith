@@ -1,0 +1,18 @@
+.container {
+    @apply absolute z-40 w-full text-black;
+
+    height: calc(2.38rem * 5);
+    transform: translateY(0.25rem);
+
+    &.hide {
+        display: none;
+    }
+}
+
+.ul {
+    @apply divide-y-2 overflow-y-hidden rounded-xl border-2 border-gray-400 bg-white;
+
+    & > li {
+        @apply w-full bg-white transition-colors;
+    }
+}

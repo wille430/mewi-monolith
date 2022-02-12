@@ -13,10 +13,10 @@ interface DrawerAnimationProps {
 const DrawerAnimation = ({ open, children }: DrawerAnimationProps) => {
     const drawerVariants = {
         show: {
-            height: 0,
+            height: 'auto',
         },
         hidden: {
-            height: 'auto',
+            height: 0,
         },
     }
 
