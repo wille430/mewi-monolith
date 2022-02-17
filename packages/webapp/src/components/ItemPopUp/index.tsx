@@ -27,7 +27,7 @@ const ItemPopUp = () => {
                         <StyledLoader />
                     </div>
                 ) : (
-                    <ArticleItemDetails {...itemDisplay.selectedItem} />
+                    <ArticleItemDetails onClose={handleClose} {...itemDisplay.selectedItem} />
                 )}
             </div>
         </PopUp>
