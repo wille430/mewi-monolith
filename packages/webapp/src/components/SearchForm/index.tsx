@@ -2,8 +2,6 @@ import { useState } from 'react'
 import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'
-import { useDispatch } from 'react-redux'
-import { setFilters } from 'store/search/creators'
 import queryString from 'query-string'
 
 export interface SearchFormProps {
@@ -11,8 +9,6 @@ export interface SearchFormProps {
 }
 
 const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
-    const dispatch = useDispatch()
-
     const history = useHistory()
     const [keyword, setKeyword] = useState('')
     const [showSuggestions, setShowSuggestions] = useState(false)
@@ -21,12 +17,11 @@ const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
         setKeyword(e.target?.value)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (_keyword?: string) => {
         history.push({
             pathname: '/search',
-            search: queryString.stringify({ keyword }),
+            search: queryString.stringify({ keyword: _keyword || keyword }),
         })
-        dispatch(setFilters({ keyword }))
     }
 
     return (
@@ -55,11 +50,10 @@ const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
                 query={keyword}
                 show={showSuggestions}
                 onAutoCompleteClick={(newKeyword) => {
-                    setTimeout(() => {
-                        handleSubmit && handleSubmit()
-                    }, 500)
-
                     setKeyword(newKeyword)
+                    setTimeout(() => {
+                        handleSubmit && handleSubmit(newKeyword)
+                    }, 500)
                 }}
                 data-testid='searchSuggestions'
             />
