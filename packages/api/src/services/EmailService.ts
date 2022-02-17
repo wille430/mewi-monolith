@@ -2,6 +2,7 @@ import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
 import fs from 'fs'
 import path from 'path'
+import { ItemData, PublicWatcher } from '@mewi/types'
 
 export default class EmailService {
     static googleAuth = {
@@ -11,7 +12,7 @@ export default class EmailService {
 
     static templatesDirectory() {
         if (fs.existsSync(path.join(__dirname, 'emails'))) {
-            return './emails'
+            return path.join(__dirname, 'emails')
         } else {
             return path.resolve(__dirname, '../emails')
         }
@@ -19,7 +20,14 @@ export default class EmailService {
 
     static newWatchersTemplatePath = this.templatesDirectory() + '/newItems'
 
-    static async sendEmailWithItems(email: string, watcher, items, totalCount?: number) {
+    static async sendEmailWithItems(
+        email: string,
+        watcher: PublicWatcher,
+        items: ItemData[],
+        totalCount?: number
+    ) {
+        console.log('Rendering email with items:', JSON.stringify(items))
+
         const locals = {
             newItemCount: totalCount || items.length,
             keyword: watcher.metadata.keyword,
@@ -32,12 +40,12 @@ export default class EmailService {
     }
 
     /**
-     * 
+     *
      * @param to Email of receiver
      * @param template Absolute path to email template
      * @param locals Object of template variables
      * @param test True if email should be sent throught NodeMailer test account
-     * @returns 
+     * @returns
      */
     static async sendEmail(to: string, template: string, locals, test = false) {
         let transporter
