@@ -49,8 +49,8 @@ jobs:
                   command: npx nx run-many --target=lint --all
                   name: Lint projects
             - run:
-                  command: npx nx run-many --all --target=build --exclude=api
-                  name: Run Builds (except API)
+                  command: npx nx run-many --all --target=build --configuration=production
+                  name: Run Builds
             # - run:
             #       command: npx nx build api
             #       name: Build API

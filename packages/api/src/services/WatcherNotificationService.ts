@@ -11,7 +11,7 @@ class WatcherNotificationService {
     client = elasticClient
 
     constructor(client?: typeof elasticClient) {
-        this.client = client
+        this.client = client || elasticClient
     }
 
     /**
@@ -25,6 +25,7 @@ class WatcherNotificationService {
         // Get users with corresponding watcher
         const arrayOfUids = watcher.users.map((x) => x.toString())
         const users = await UserService.usersInIds(arrayOfUids)
+
 
         users.forEach(async (user) => {
             this.notifyUser(user, watcher, callback)
@@ -62,7 +63,6 @@ class WatcherNotificationService {
             comparationDate
         )
 
-        console.log(`Found no new items for watcher ${watcher._id}. Returning null.`)
         if (newItems.length <= 0) return
 
         console.log(

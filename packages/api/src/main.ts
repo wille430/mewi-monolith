@@ -34,6 +34,7 @@ if (process.env.NODE_ENV === 'production') {
     }
 }
 
+new WatcherNotificationService().notifyUsers()
 // const sendEmail = async () => {
 //     const items = await SearchService.search({
 //         query: { match: { title: 'volvo' } },
