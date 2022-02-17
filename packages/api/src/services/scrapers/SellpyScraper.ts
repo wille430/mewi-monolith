@@ -11,6 +11,7 @@ export default class SellpyScraper extends Scraper {
             maxEntries,
             name: 'sellpy',
             limit: 20,
+            baseUrl: 'https://www.sellpy.com/',
         })
     }
 

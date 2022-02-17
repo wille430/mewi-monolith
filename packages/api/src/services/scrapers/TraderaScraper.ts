@@ -19,7 +19,6 @@ interface TraderaCategory {
 
 export default class TraderaScraper extends Scraper {
     catIndex = 0
-    baseUrl = 'https://www.tradera.com'
     categories: TraderaCategory[] | null
     itemsPerCategory: number
 
@@ -28,6 +27,7 @@ export default class TraderaScraper extends Scraper {
             maxEntries,
             name: 'tradera',
             limit: 1,
+            baseUrl: 'https://www.tradera.com/',
         })
     }
 
