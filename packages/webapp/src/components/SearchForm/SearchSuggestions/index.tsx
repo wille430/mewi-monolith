@@ -44,8 +44,12 @@ const SearchSuggestions = ({
 
     const animation = {
         animation: ({ show, i }: { show: boolean; i: number }) => ({
+            display: 'block',
             height: show ? ['0%', '20%', '20%', `${i * 20}%`] : [`${i * 20}%`, '20%', '20%', '0%'],
             opacity: i > 0 ? (show ? [0, 1, 1, 1] : [1, 1, 1, 0]) : [0, 0, 0, 0],
+            transitionEnd: {
+                display: show ? 'block' : 'none',
+            },
         }),
     }
 

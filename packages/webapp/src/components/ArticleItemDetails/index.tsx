@@ -63,7 +63,7 @@ const ArticleItemDetails = ({
                         <div>
                             <span>{region}</span>
                             <h3>{title}</h3>
-                            <h4>{`${price.value} ${price.currency}`}</h4>
+                            {price && <h4>{`${price.value} ${price.currency}`}</h4>}
                         </div>
                         <div>
                             <h4 className={styles.originLabel}>

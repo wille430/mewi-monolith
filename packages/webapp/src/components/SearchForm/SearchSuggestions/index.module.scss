@@ -3,14 +3,13 @@
 
     height: calc(2.38rem * 5);
     transform: translateY(0.25rem);
-
-    &.hide {
-        display: none;
-    }
+    pointer-events: none;
 }
 
 .ul {
     @apply divide-y-2 overflow-y-hidden rounded-xl border-2 border-gray-400 bg-white;
+
+    pointer-events: all;
 
     & > li {
         @apply w-full bg-white transition-colors;

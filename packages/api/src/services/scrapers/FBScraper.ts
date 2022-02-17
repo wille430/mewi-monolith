@@ -23,7 +23,8 @@ export default class FBScraper extends Scraper {
         const { document } = dom.window
 
         // find category list
-        const catList = document.getSelection('')
+        // const catList = document.getSelection('')
 
+        return []
     }
 }
