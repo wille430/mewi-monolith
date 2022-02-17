@@ -71,14 +71,8 @@ class WatcherNotificationService {
             ).toDateString()} (watcher_id: ${watcherInUser._id})`
         )
 
-        const locals = {
-            newItemCount: totalHits,
-            keyword: watcher.metadata.keyword,
-            items: newItems,
-        }
-
         // send email
-        await EmailService.sendEmail(user.email, 'newItems', locals)
+        await EmailService.sendEmailWithItems(user.email, watcher, newItems, totalHits)
 
         callback && callback()
 

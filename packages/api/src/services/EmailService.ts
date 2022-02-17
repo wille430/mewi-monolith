@@ -1,4 +1,3 @@
-import { UserService } from './UserServices'
 import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
 import path from 'path'
@@ -23,9 +22,7 @@ export default class EmailService {
 
     static newWatchersTemplatePath = EmailService.findTemplateDir() + '/newItems'
 
-    /** @params sendEmailWithItems Notify user with {ItemData} */
-    static async sendEmailWithItems(userId: string, watcher, items, totalCount?: number) {
-        const user = await UserService.user(userId)
+    static async sendEmailWithItems(email: string, watcher, items, totalCount?: number) {
 
         const locals = {
             newItemCount: totalCount || items.length,
@@ -33,7 +30,7 @@ export default class EmailService {
             items: items,
         }
 
-        const info = await this.sendEmail(user.email, this.newWatchersTemplatePath, locals)
+        const info = await this.sendEmail(email, this.newWatchersTemplatePath, locals)
 
         console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
