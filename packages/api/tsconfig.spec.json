@@ -5,5 +5,5 @@
         "module": "commonjs",
         "types": ["jest", "node"]
     },
-    "include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "src/types/types.ts"]
+    "include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "src/types/types.ts", "src/services/scrapers/FBScraper.test.old.ts"]
 }
