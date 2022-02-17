@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose'
 
-interface Watcher extends mongoose.Types.Subdocument {
-    _id: mongoose.Schema.Types.ObjectId
+export interface Watcher extends mongoose.Types.Subdocument {
+    _id: mongoose.Types.ObjectId
     notifiedAt: Date | null
     createdAt: string
     updatedAt: string
 }
 
-export interface User extends Document {
+export interface User extends mongoose.Document {
     email: string
     password: string
     premium: boolean

@@ -1,4 +1,4 @@
-import UserModel from 'models/UserModel'
+import UserModel, { User } from 'models/UserModel'
 import { APIError, AuthErrorCodes } from '@mewi/types'
 
 export default class UserService {
@@ -15,7 +15,7 @@ export default class UserService {
         return user
     }
 
-    static async usersInIds(ids: string[]) {
+    static async usersInIds(ids: string[]): Promise<User[]> {
         const users = UserModel.find({ _id: { $in: ids } })
         return users
     }

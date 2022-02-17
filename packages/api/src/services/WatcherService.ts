@@ -59,7 +59,6 @@ export default class WatcherService {
         const similarWatcher = await this.findSimilarWatcher(query)
 
         if (!similarWatcher) {
-
             // Create new watcher
             const newWatcher = await WatcherModel.create({
                 metadata,
