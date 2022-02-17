@@ -8,7 +8,7 @@ describe('Email Service', () => {
             items: [],
         }
 
-        const email = await EmailService.sendEmail('wille430@gmail.com', 'newItems', locals, true)
+        const email = await EmailService.sendEmail('wille430@gmail.com', EmailService.newWatchersTemplatePath, locals, true)
         expect(email.response).toBeTruthy()
     })
 })

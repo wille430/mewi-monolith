@@ -1,7 +1,7 @@
 import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
 
 export default class EmailService {
     static googleAuth = {
@@ -9,21 +9,17 @@ export default class EmailService {
         pass: process.env.GMAIL_PASS,
     }
 
-    static findTemplateDir() {
-        const templatePath = path.resolve('packages/api/src/emails')
-        if (fs.existsSync(templatePath)) {
-            // template path for non-compiled project
-            return templatePath
+    static templatesDirectory() {
+        if (fs.existsSync(path.join(__dirname, 'emails'))) {
+            return './emails'
         } else {
-            // template path in out-dir
-            return 'emails'
+            return path.resolve(__dirname, '../emails')
         }
     }
 
-    static newWatchersTemplatePath = EmailService.findTemplateDir() + '/newItems'
+    static newWatchersTemplatePath = this.templatesDirectory() + '/newItems'
 
     static async sendEmailWithItems(email: string, watcher, items, totalCount?: number) {
-
         const locals = {
             newItemCount: totalCount || items.length,
             keyword: watcher.metadata.keyword,
@@ -35,6 +31,14 @@ export default class EmailService {
         console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
 
+    /**
+     * 
+     * @param to Email of receiver
+     * @param template Absolute path to email template
+     * @param locals Object of template variables
+     * @param test True if email should be sent throught NodeMailer test account
+     * @returns 
+     */
     static async sendEmail(to: string, template: string, locals, test = false) {
         let transporter
         if (test || process.env.NODE_ENV === 'development') {
@@ -66,7 +70,7 @@ export default class EmailService {
         })
 
         const emailInfo = await email.send({
-            template: this.findTemplateDir() + '/' + template,
+            template: template,
             message: {
                 to: to,
             },
