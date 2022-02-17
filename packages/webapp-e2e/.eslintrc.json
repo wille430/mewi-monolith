@@ -5,7 +5,8 @@
         {
             "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
             "rules": {
-                "@typescript-eslint/no-explicit-any": "off"
+                "@typescript-eslint/no-explicit-any": "off",
+                "cypress/no-unnecessary-waiting": 0
             }
         }
     ]

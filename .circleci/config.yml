@@ -46,6 +46,9 @@ jobs:
             #       command: sudo npm install pm2 -g
             #       name: Installing pm2
             - run:
+                  command: npx nx run-many --target=lint --all
+                  name: Lint projects
+            - run:
                   command: npx nx run-many --all --target=build --exclude=api
                   name: Run Builds (except API)
             # - run:
@@ -88,11 +91,11 @@ workflows:
     build_test_and_deploy:
         jobs:
             - hold:
-                type: approval
-                filters:
-                    branches:
-                        only:
-                            - main
+                  type: approval
+                  filters:
+                      branches:
+                          only:
+                              - main
             - test:
                   requires:
                       - hold
@@ -106,11 +109,11 @@ workflows:
     build_and_test:
         jobs:
             - hold:
-                type: approval
-                filters:
-                    branches:
-                        only:
-                            - dev
+                  type: approval
+                  filters:
+                      branches:
+                          only:
+                              - dev
             - test:
                   requires:
                       - hold
