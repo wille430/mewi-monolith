@@ -16,7 +16,6 @@ describe('user', () => {
             })
 
             it('should return error object with missing JWT error', () => {
-                console.log(response.body)
                 expect(response.body.error).toBeTruthy()
                 expect(response.body.error.type).toBe(AuthErrorCodes.MISSING_JWT)
             })

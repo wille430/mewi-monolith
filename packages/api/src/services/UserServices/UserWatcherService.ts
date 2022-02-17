@@ -62,10 +62,8 @@ class UserWatcherService {
 
         let watcher: typeof similarWatcher
         if (similarWatcher) {
-            console.log('Found similar watcher')
             watcher = similarWatcher
         } else {
-            console.log('No similar watcher found. Creating a new watcher...')
             watcher = await WatcherService.create(metadata, query)
         }
 
@@ -74,8 +72,6 @@ class UserWatcherService {
         )
 
         if (!watcherInUser) {
-            console.log('User does not subscribe to the watcher. Adding it to user...')
-
             const userWatcher = user.watchers.create({
                 _id: watcher._id,
             })

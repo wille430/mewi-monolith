@@ -154,8 +154,6 @@ describe('auth', () => {
             })
 
             it('should return jwt and refresh token', () => {
-                console.log(response.body)
-
                 expect(typeof response.body.jwt).toBe('string')
                 expect(typeof response.body.refreshToken).toBe('string')
             })

@@ -1,9 +1,9 @@
-import { ItemData } from 'types/types'
+import { ItemData } from '@mewi/types'
 import { toUnixTime, toDateObj } from '@mewi/util'
 import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
 
-export default class Scraper {
+class Scraper {
     maxEntries: number
     name: string
     limit: number
@@ -64,3 +64,5 @@ export default class Scraper {
         }
     }
 }
+
+export default Scraper

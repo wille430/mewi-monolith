@@ -1,5 +1,6 @@
-import { Category, ItemData, SellpyItemData } from 'types/types'
-import Scraper from './Scraper'
+import { Category, SellpyItemData } from 'types/types'
+import { ItemData } from '@mewi/types'
+import Scraper from 'services/scrapers/Scraper'
 import axios from 'axios'
 
 export default class SellpyScraper extends Scraper {
@@ -48,7 +49,7 @@ export default class SellpyScraper extends Scraper {
                               value: item.pricing.amount || 0,
                               currency: item.pricing.currency,
                           }
-                        : {},
+                        : undefined,
                     region: null,
                     origin: 'Sellpy',
                 })

@@ -71,7 +71,7 @@ export interface ItemData {
     imageUrl: string[]
     isAuction: boolean
     redirectUrl: string
-    price: {
+    price?: {
         value: number
         currency: string
     }

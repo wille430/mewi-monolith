@@ -53,29 +53,29 @@ export type Category = (
     | 'övrigt'
 )[]
 
-export interface ItemData {
-    id: string
-    title: string
-    body?: string
-    category: Category
-    date?: number
-    endDate?: number
-    imageUrl: string[]
-    isAuction: boolean
-    redirectUrl: string
-    price: {
-        value?: number
-        currency?: string
-    }
-    region: string
-    zipcode?: string
-    parameters?: {
-        id: string
-        label: string
-        value: string
-    }[]
-    origin: string
-}
+// export interface ItemData {
+//     id: string
+//     title: string
+//     body?: string
+//     category: Category
+//     date?: number
+//     endDate?: number
+//     imageUrl: string[]
+//     isAuction: boolean
+//     redirectUrl: string
+//     price: {
+//         value?: number
+//         currency?: string
+//     }
+//     region: string
+//     zipcode?: string
+//     parameters?: {
+//         id: string
+//         label: string
+//         value: string
+//     }[]
+//     origin: string
+// }
 
 export interface BlocketItemData {
     ad_id: string
