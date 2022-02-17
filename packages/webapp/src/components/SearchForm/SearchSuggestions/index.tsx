@@ -35,7 +35,6 @@ const SearchSuggestions = ({
             }
 
             searchApi.autocomplete(_query).then((suggestions) => {
-                console.log({ suggestions })
                 setSuggestions(suggestions)
             })
         }, 750),
