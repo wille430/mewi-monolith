@@ -12,5 +12,5 @@ describe('Blipp Scraper', () => {
 
         expect(typeof pageCount).toBe('number')
         expect(pageCount).toBeGreaterThan(0)
-    })
+    }, 10000)
 })

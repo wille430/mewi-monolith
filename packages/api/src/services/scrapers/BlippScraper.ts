@@ -16,7 +16,7 @@ class BlippScraper extends Scraper {
     }
 
     /**
-     * Get the number of pages that are available
+     * Get the number of pages of products that are available
      */
     async numberOfPages(): Promise<number> {
         const browser = await puppeteer.launch()
@@ -30,8 +30,6 @@ class BlippScraper extends Scraper {
         const pageCount = await listings.$$eval('li > a', (elements) => {
             return elements[elements.length - 2].textContent
         })
-
-        console.log({ pageCount })
 
         return parseInt(pageCount)
     }
