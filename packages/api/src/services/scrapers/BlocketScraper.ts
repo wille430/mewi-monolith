@@ -8,7 +8,6 @@ import axios from 'axios'
 import { BlocketItemData } from 'types/types'
 
 class BlocketScraper extends Scraper {
-    baseUrl = 'https://www.blocket.se'
     page = 1
 
     constructor(maxEntries?: number) {
@@ -16,6 +15,7 @@ class BlocketScraper extends Scraper {
             maxEntries,
             name: 'blocket',
             limit: 40,
+            baseUrl: 'https://www.blocket.se',
         })
     }
 

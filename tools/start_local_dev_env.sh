@@ -9,7 +9,7 @@ select opt in linux windows elasticsearch; do
 
             cd ../
             sudo systemctl start mongodb
-            npx nx serve webapp & npx nx serve api  & ./elasticsearch-7.16.1/bin/elasticsearch
+            npx nx serve webapp & npx nx serve api  & ./tools/elasticsearch-7.16.1/bin/elasticsearch
 
             ;;
         windows)
