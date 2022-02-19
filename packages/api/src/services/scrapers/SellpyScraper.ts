@@ -1,6 +1,6 @@
 import { Category, SellpyItemData } from 'types/types'
 import { ItemData } from '@mewi/types'
-import Scraper from './Scraper'
+import Scraper from 'services/scrapers/Scraper'
 import axios from 'axios'
 
 export default class SellpyScraper extends Scraper {

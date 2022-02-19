@@ -1,4 +1,4 @@
-import Scraper from './Scraper'
+import Scraper from 'services/scrapers/Scraper'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
 import { ItemData } from '@mewi/types'

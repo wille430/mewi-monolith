@@ -1,5 +1,5 @@
 import { ItemData } from '@mewi/types'
-import Scraper from './Scraper'
+import Scraper from 'services/scrapers/Scraper'
 import puppeteer from 'puppeteer'
 
 class BlippScraper extends Scraper {
