@@ -1,6 +1,6 @@
 import { categories } from '@mewi/types'
 import classNames from 'classnames'
-import { useAppDispatch } from 'hooks/hooks'
+import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import _ from 'lodash'
 import { ReactNode, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -31,27 +31,35 @@ const getNestedCategory = (categoryPath: string[]) => {
 const CategorySelectionList = () => {
     // /kategorier/:category_id/:subcat_id
     const { category_id, subcat_id } = useParams<any>()
+    const { filters } = useAppSelector((state) => state.search)
 
     const currentCategoryPath = [category_id, subcat_id].filter((x) => x !== undefined) as string[] // <== remove all null values
     const lastCategoryPath = useRef(currentCategoryPath)
 
     const dispatch = useAppDispatch()
 
-    useEffect(() => {
+    const updateCategoryFilter = () => {
+        const selectedCategory = currentCategoryPath[currentCategoryPath.length - 1]
+
         // only update filters if category path changed
-        if (_.isEqual(lastCategoryPath.current, currentCategoryPath)) {
+        if (
+            _.isEqual(lastCategoryPath.current, currentCategoryPath) &&
+            filters.category === selectedCategory
+        ) {
             return
         }
 
-        // one render, set category to current path
+        // on render, set category to current path
         dispatch(
             updateFilters({
-                category: currentCategoryPath[currentCategoryPath.length - 1],
+                category: selectedCategory,
             })
         )
 
         lastCategoryPath.current = currentCategoryPath
-    }, [currentCategoryPath])
+    }
+
+    useEffect(() => updateCategoryFilter(), [currentCategoryPath])
 
     /**
      * Determine if a category is currently selected

@@ -14,7 +14,7 @@ describe('Blipp Scraper', () => {
 
         expect(typeof pageCount).toBe('number')
         expect(pageCount).toBeGreaterThan(0)
-    }, 10000)
+    }, 30000)
 
     it('should return aticles on page', async () => {
         const pageNumber = 1
@@ -33,7 +33,7 @@ describe('Blipp Scraper', () => {
             expect(item.category).toBeInstanceOf(Array)
             expect(item.category).toContain('fordon')
         }
-    }, 10000)
+    }, 30000)
 
     let mockGetNextArticles
 

@@ -1,6 +1,6 @@
 import { SearchFilterDataProps, SortData } from '@mewi/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import queryString from 'query-string'
@@ -36,23 +36,23 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const [showPopUp, setShowPopUp] = useState(false)
 
     const history = useHistory()
+    const location = useLocation()
     const dispatch = useAppDispatch()
 
     const firstRender = useRef(true)
 
-    // const getSearchResultsDebounce = useCallback(
-    //     _.debounce((_search) => {
-    //         console.log('Updating url search params and getting new search results...')
-    //         updateSearchParams(_search)
-    //         dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
-    //     }, 750),
-    //     []
-    // )
+    const getSearchResultsDebounce = useCallback(
+        _.debounce((_search) => {
+            dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
+        }, 500),
+        []
+    )
 
     const debounceSetFilters = useCallback(
-        _.debounce((filters: typeof search.filters) => {
-            dispatch(setFilters(filters))
-        }, 500),
+        _.debounce((_search: typeof search) => {
+            dispatch(setFilters(_search.filters))
+            updateSearchParams(_search)
+        }, 750),
         []
     )
 
@@ -88,21 +88,22 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         return () => {
             dispatch(clearFilters())
         }
-    }, [])
+    }, [location.search])
 
-    // sync global and component filter state
     useEffect(() => {
-        if (search.filters !== _filters) {
+        if (!_.isEqual(search.filters, _filters)) {
             _setFilters(search.filters)
         }
     }, [search.filters])
 
     useEffect(() => {
-
         dispatch(clearSearchResults())
 
-        if (search.filters !== _filters) {
-            debounceSetFilters(_filters)
+        if (!_.isEqual(search.filters, _filters)) {
+            debounceSetFilters({
+                ...search,
+                filters: _filters,
+            })
         }
     }, [_filters])
 
@@ -112,8 +113,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
             return
         }
 
-        updateSearchParams(search)
-        dispatch(getSearchResults())
+        getSearchResultsDebounce(search)
     }, [search.filters, search.page, search.sort])
 
     const handleReset = () => {

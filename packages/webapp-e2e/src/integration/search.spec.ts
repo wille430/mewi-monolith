@@ -39,7 +39,7 @@ describe('search', () => {
             // FIXME: fix detached from DOM error
             // TODO: insert multiple regions
             cy.getBySel('regionsSelect', { timeout: 1000 }).type(formData.regions[0] + ' {enter}', {
-                delay: 100,
+                delay: 150,
             })
 
             cy.getBySel('regionsSelect').should('have.text', formData.regions[0])
@@ -138,7 +138,7 @@ describe('search', () => {
         cy.getBySel('priceLte').type(formData.priceRangeLte.toString())
 
         if (formData.auction) {
-            cy.get('auctionCheckbox').click()
+            cy.getBySel('auctionCheckbox').click()
         }
 
         // wait for debounce

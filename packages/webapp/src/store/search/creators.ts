@@ -61,12 +61,22 @@ export const getFiltersFromQueryParams = createAction(
     ): { payload: Pick<SearchState, 'filters' | 'sort' | 'page'> } => {
         const params = queryString.parse(window.location.search)
 
-        let filters = {}
+        let filters: SearchFilterDataProps = {}
         let sort = SortData.RELEVANCE
         let page = 1
         Object.keys(params).forEach((key) => {
-            if (['keyword', 'regions', 'category', 'priceRange', 'auction'].includes(key)) {
-                filters = _.merge(filters, { [key]: params[key] })
+            if (['keyword', 'regions', 'auction', 'priceRangeGte', 'priceRangeLte'].includes(key)) {
+                switch (key as keyof SearchFilterDataProps) {
+                    case 'auction':
+                        if (params[key] === 'true') {
+                            filters = _.merge(filters, { [key]: true })
+                        } else {
+                            filters = _.omit(filters, key)
+                        }
+                        break
+                    default:
+                        filters = _.merge(filters, { [key]: params[key] })
+                }
             } else if (key === 'sort') {
                 if (Object.values(SortData).includes(params[key] as SortData)) {
                     sort = params[key] as SortData

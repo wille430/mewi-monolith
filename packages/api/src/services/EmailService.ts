@@ -26,8 +26,6 @@ export default class EmailService {
         items: ItemData[],
         totalCount?: number
     ) {
-        console.log('Rendering email with items:', JSON.stringify(items))
-
         const locals = {
             newItemCount: totalCount || items.length,
             keyword: watcher.metadata.keyword,

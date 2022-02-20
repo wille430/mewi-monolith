@@ -26,9 +26,12 @@ class WatcherNotificationService {
         const arrayOfUids = watcher.users.map((x) => x.toString())
         const users = await UserService.usersInIds(arrayOfUids)
 
-
         users.forEach(async (user) => {
-            this.notifyUser(user, watcher, callback)
+            try {
+                await this.notifyUser(user, watcher, callback)
+            } catch (e) {
+                console.error(e)
+            }
         })
     }
 
@@ -77,7 +80,10 @@ class WatcherNotificationService {
         callback && callback()
 
         // Update date when last notified in user watcher
-        user.watchers.id(watcher._id).notifiedAt = new Date(Date.now())
+        watcherInUser.set({
+            ...watcherInUser,
+            notififedAt: new Date(Date.now()),
+        })
 
         await user.save()
         console.log(`${user.email} was successully notified!`)
@@ -96,6 +102,7 @@ class WatcherNotificationService {
 
         console.log(`${mailSent} emails were sent!`)
     }
+    i
 
     userShouldBeNotified(lastNotificationDate: Date): boolean {
         if (!lastNotificationDate) return true
