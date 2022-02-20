@@ -64,7 +64,7 @@ export interface ElasticSearchBody {
 export type CategoryType = string[]
 
 export interface ItemData {
-    id: string
+    _id: string
     title: string
     body?: string
     category: CategoryType
@@ -84,7 +84,7 @@ export interface ItemData {
         label: string
         value: string
     }[]
-    origin: 'Blocket' | 'Tradera' | 'Sellpy'
+    origin: 'Blocket' | 'Tradera' | 'Sellpy' | 'Blipp'
 }
 
 export interface AuthTokens {

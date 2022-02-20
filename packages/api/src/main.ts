@@ -35,19 +35,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 new WatcherNotificationService().notifyUsers()
-// const sendEmail = async () => {
-//     const items = await SearchService.search({
-//         query: { match: { title: 'volvo' } },
-//         size: 5
-//     }).then(x => x.body.hits.hits)
-
-//     const res = await EmailService.sendEmail('william.wigemo@outlook.com', 'newItems', {
-//         newItemCount: items.length,
-//         keyword: 'volvo',
-//         items: items.map(x => x._source)
-//     })
-// }
-
-// sendEmail()
 
 app.listen(3001, () => console.log('Listening on port 3001...'))

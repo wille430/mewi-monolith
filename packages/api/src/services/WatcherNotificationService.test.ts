@@ -1,14 +1,14 @@
 import { Client } from '@elastic/elasticsearch'
 import faker from '@faker-js/faker'
-import { categories, ItemData, PublicWatcher } from '@mewi/types'
+import { ItemData, PublicWatcher } from '@mewi/types'
 import UserModel from 'models/UserModel'
 import mongoose from 'mongoose'
 import WatcherNotificationService from './WatcherNotificationService'
 import Mock from '@elastic/elasticsearch-mock'
 import Elasticsearch from 'config/elasticsearch'
-import _ from 'lodash'
 import EmailService from './EmailService'
 import * as mockingoose from 'mockingoose'
+import { generateMockItemData } from 'utils/testUtils'
 
 function randomDate(start: Date, end: Date) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
@@ -28,16 +28,7 @@ describe('Watcher Notification Service', () => {
             Connection: mock.getConnection(),
         })
 
-        mockItem = {
-            id: faker.datatype.uuid(),
-            title: faker.random.words(5),
-            category: [_.sample(categories)._id],
-            imageUrl: [faker.internet.url()],
-            isAuction: faker.datatype.boolean(),
-            redirectUrl: faker.internet.url(),
-            region: faker.address.cityName(),
-            origin: 'Tradera',
-        }
+        mockItem = generateMockItemData() as ItemData
 
         mock.add(
             {

@@ -1,5 +1,5 @@
 import { ItemData } from '@mewi/types'
-import { toUnixTime, toDateObj } from '@mewi/util'
+import { toUnixTime } from '@mewi/util'
 import axios from 'axios'
 import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
@@ -30,6 +30,8 @@ class Scraper {
         this.limit = limit
         this.baseUrl = baseUrl
         this.useRobots = useRobots
+
+        console.log(EndDate.getEndDateFor(this.name))
 
         this.endDate = toUnixTime(EndDate.getEndDateFor(this.name))
     }
@@ -76,15 +78,15 @@ class Scraper {
                 })
             }
 
-            const summary = this.summary(items)
-
-            if (itemCount == 0) {
+            if (itemCount === 0) {
                 EndDate.setEndDateFor(this.name, Date.now())
             }
 
-            // Assign loop-validators new values
-            continueScraping = summary.continue
+            if (items.length < this.limit) {
+                continueScraping = false
+            }
 
+            // Assign loop-validators new values
             itemCount += await ItemsService.addItems(items).catch((e) => {
                 console.log(e)
                 return 0
@@ -96,14 +98,6 @@ class Scraper {
 
     async getNextArticles(): Promise<ItemData[]> {
         return []
-    }
-
-    summary(items: ItemData[]) {
-        return {
-            itemsAdded: items.length,
-            firstDate: items[0]?.date ? toDateObj(items[0].date) : toDateObj(Date.now()),
-            continue: !(items.length < this.limit),
-        }
     }
 }
 

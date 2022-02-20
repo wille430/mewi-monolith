@@ -2,7 +2,6 @@ import Scraper from 'services/scrapers/Scraper'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
 import { ItemData } from '@mewi/types'
-
 import { JSDOM } from 'jsdom'
 import axios from 'axios'
 import { BlocketItemData } from 'types/types'
@@ -41,7 +40,7 @@ class BlocketScraper extends Scraper {
 
             const items: ItemData[] = data.map(
                 (item: BlocketItemData): ItemData => ({
-                    id: item.ad_id,
+                    _id: item.ad_id,
                     title: item.subject,
                     body: item.body,
                     category: CategoryService.parseBlocketCategories(item.category),
@@ -97,7 +96,7 @@ class BlocketScraper extends Scraper {
         }
 
         const item: ItemData = {
-            id: itemData.ad_id,
+            _id: itemData.ad_id,
             title: itemData.subject,
             body: itemData.body,
             category: itemData.category.map((cat) => cat.name) || [],

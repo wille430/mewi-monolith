@@ -1,6 +1,7 @@
 import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import * as fs from 'fs'
-import ScrapeService from './scrapers/ScrapeService'
+import { ItemData } from '@mewi/types'
+// import ScrapeService from './scrapers/ScrapeService'
 
 export default class ItemsService {
     static async deleteOld(daysOld = 2) {
@@ -31,7 +32,13 @@ export default class ItemsService {
         await elasticClient.indices.refresh({ index: Elasticsearch.defaultIndex })
     }
 
-    static async addItems(items: any[], index = Elasticsearch.defaultIndex): Promise<number> {
+    /**
+     * Add items to elasticsearch index
+     * @param items Array of items to add to index
+     * @param index Elasticsearch index
+     * @returns Amount of items added
+     */
+    static async addItems(items: ItemData[], index = Elasticsearch.defaultIndex): Promise<number> {
         const addedItemsCount = items.length
 
         if (process.env.DEV_MODE) {
@@ -53,11 +60,11 @@ export default class ItemsService {
         return addedItemsCount
     }
 
-    static async clearAndRepopulate() {
-        const scraper = new ScrapeService()
-        fs.unlink('./lastDate.txt', async () => {
-            await ItemsService.deleteOld(0)
-            await scraper.start()
-        })
-    }
+    // static async clearAndRepopulate() {
+    //     const scraper = new ScrapeService()
+    //     fs.unlink('./lastDate.txt', async () => {
+    //         await ItemsService.deleteOld(0)
+    //         await scraper.start()
+    //     })
+    // }
 }

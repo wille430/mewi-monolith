@@ -19,7 +19,7 @@
             "@mewi/types": ["../../types/src/index.ts"],
             "@mewi/util": ["../../util/src/index.ts"]
         },
-        "lib": ["es2019"],
+        "lib": ["es2019", "dom"],
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "jsx": "react-jsx"
