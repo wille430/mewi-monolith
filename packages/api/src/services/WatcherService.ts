@@ -31,8 +31,6 @@ export default class WatcherService {
 
         watcher.users = watcher.users.filter((uid) => uid.toString() !== userId)
 
-        console.log(watcher.users)
-
         // Remove watcher if not in use
         if (watcher.users.length <= 0) {
             await watcher.remove()

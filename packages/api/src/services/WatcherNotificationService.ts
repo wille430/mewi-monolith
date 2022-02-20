@@ -80,10 +80,7 @@ class WatcherNotificationService {
         callback && callback()
 
         // Update date when last notified in user watcher
-        watcherInUser.set({
-            ...watcherInUser,
-            notififedAt: new Date(Date.now()),
-        })
+        watcherInUser.notifiedAt = new Date()
 
         await user.save()
         console.log(`${user.email} was successully notified!`)
