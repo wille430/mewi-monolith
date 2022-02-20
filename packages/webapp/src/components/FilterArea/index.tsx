@@ -91,7 +91,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     }, [location.search])
 
     useEffect(() => {
-        if (!_.isEqual(search.filters, _filters)) {
+        if (!_.isEqual(_.omit(search.filters, 'category'), _filters)) {
             _setFilters(search.filters)
         }
     }, [search.filters])
@@ -99,7 +99,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     useEffect(() => {
         dispatch(clearSearchResults())
 
-        if (!_.isEqual(search.filters, _filters)) {
+        if (!_.isEqual(_.omit(search.filters, 'category'), _filters)) {
             debounceSetFilters({
                 ...search,
                 filters: _filters,
