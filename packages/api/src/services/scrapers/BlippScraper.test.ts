@@ -16,24 +16,24 @@ describe('Blipp Scraper', () => {
         expect(pageCount).toBeGreaterThan(0)
     }, 30000)
 
-    it('should return aticles on page', async () => {
-        const pageNumber = 1
-        const items = await scraper.getArticlesOnPage(pageNumber)
+    // it('should return aticles on page', async () => {
+    //     const pageNumber = 1
+    //     const items = await scraper.getArticlesOnPage(pageNumber)
 
-        expect(items.length).toBeGreaterThan(0)
+    //     expect(items.length).toBeGreaterThan(0)
 
-        for (const item of items) {
-            expect(typeof item._id).toBe('string')
-            expect(typeof item.title).toBe('string')
-            expect(item.imageUrl).toBeInstanceOf(Array)
-            expect(typeof item.isAuction).toBe('boolean')
-            expect(typeof item.redirectUrl).toBe('string')
-            expect(typeof item.region).toBe('string')
-            expect(typeof item.origin).toBe('string')
-            expect(item.category).toBeInstanceOf(Array)
-            expect(item.category).toContain('fordon')
-        }
-    }, 30000)
+    //     for (const item of items) {
+    //         expect(typeof item._id).toBe('string')
+    //         expect(typeof item.title).toBe('string')
+    //         expect(item.imageUrl).toBeInstanceOf(Array)
+    //         expect(typeof item.isAuction).toBe('boolean')
+    //         expect(typeof item.redirectUrl).toBe('string')
+    //         expect(typeof item.region).toBe('string')
+    //         expect(typeof item.origin).toBe('string')
+    //         expect(item.category).toBeInstanceOf(Array)
+    //         expect(item.category).toContain('fordon')
+    //     }
+    // }, 30000)
 
     let mockGetNextArticles
 
