@@ -1,4 +1,3 @@
-import schedule from 'node-schedule'
 import { toUnixTime } from '@mewi/util'
 import EndDate from './services/EndDate'
 import ScrapeService from './services/scrapers/ScrapeService'
@@ -8,18 +7,8 @@ import WatcherNotificationService from 'services/WatcherNotificationService'
 
 console.log('NODE ENV:', process.env.NODE_ENV)
 
-// Scheduled jobs
-
-// Update elasticsearch index
-schedule.scheduleJob('30 * * * *', async () => {
-    const scraper = new ScrapeService()
-    scraper.start().then(async () => {
-        await ItemsService.deleteOld()
-
-        // Notify users of new items
-        await new WatcherNotificationService().notifyUsers()
-    })
-})
+const scraper = new ScrapeService()
+scraper.schedule()
 
 if (process.env.NODE_ENV === 'production') {
     const lastScan = EndDate.getEndDateFor('blocket')

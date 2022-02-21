@@ -4,11 +4,13 @@ import axios from 'axios'
 import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
 import robotsParser from 'robots-parser'
+import nodeSchedule from 'node-schedule'
+import Elasticsearch, { elasticClient } from 'config/elasticsearch'
 
 interface ScraperProps {
-    maxEntries: number
+    maxEntries?: number
     name: string
-    limit: number
+    limit?: number
     baseUrl: string
     useRobots?: boolean
 }
@@ -20,6 +22,8 @@ class Scraper {
     endDate: number
     baseUrl: string
     useRobots: boolean
+    deleteOlderThan: number = Date.now() - 2 * 24 * 60 * 60 * 1000
+    cronTimerSchedule = '30 * * * *'
 
     // Robots
     canCrawl = false
@@ -98,6 +102,37 @@ class Scraper {
 
     async getNextArticles(): Promise<ItemData[]> {
         return []
+    }
+
+    schedule(callback?: () => void): void {
+        console.log(
+            `Scheduling scraper for ${this.name} with schedule (${this.cronTimerSchedule})`
+        )
+        nodeSchedule.scheduleJob(this.cronTimerSchedule, () => {
+            this.start().then(async () => {
+                await this.deleteOld()
+                callback && callback()
+            })
+        })
+    }
+
+    async deleteOld(): Promise<void> {
+        const response = await elasticClient.deleteByQuery({
+            index: Elasticsearch.defaultIndex,
+            body: {
+                query: {
+                    bool: {
+                        should: [
+                            { range: { date: { lte: this.deleteOlderThan } } },
+                            { range: { endDate: { lte: Date.now() } } },
+                            { match: { origin: this.name } },
+                        ],
+                    },
+                },
+            },
+        })
+
+        console.log(`Successfully deleted ${response.body.deleted} items with origin ${this.name}`)
     }
 }
 

@@ -15,6 +15,11 @@ class BlippScraper extends Scraper {
             baseUrl: 'https://blipp.se/',
             useRobots: true,
         })
+        // run every other day
+        this.cronTimerSchedule = '30 21 1-31/2 * *'
+
+        // delete 2 days old items
+        this.deleteOlderThan = Date.now() - 2 * 24 * 60 * 60 * 1000
     }
 
     /**

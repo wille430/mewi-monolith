@@ -1,10 +1,17 @@
 import { toDateObj } from '@mewi/util'
+import WatcherNotificationService from 'services/WatcherNotificationService'
+import BlippScraper from './BlippScraper'
 import BlocketScraper from './BlocketScraper'
 import SellpyScraper from './SellpyScraper'
 import TraderaScraper from './TraderaScraper'
 
 export default class ScrapeService {
-    scrapers = [new BlocketScraper(500), new SellpyScraper(200), new TraderaScraper(200)]
+    scrapers = [
+        new BlocketScraper(500),
+        new SellpyScraper(200),
+        new TraderaScraper(200),
+        new BlippScraper(200),
+    ]
 
     async start() {
         for (const scraper of this.scrapers) {
@@ -14,6 +21,14 @@ export default class ScrapeService {
                 } which are from ${toDateObj(scraper.endDate)}`
             )
             await scraper.start()
+        }
+    }
+
+    schedule() {
+        for (const scraper of this.scrapers) {
+            scraper.schedule(async () => {
+                await new WatcherNotificationService().notifyUsers()
+            })
         }
     }
 }
