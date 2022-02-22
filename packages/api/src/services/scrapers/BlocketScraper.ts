@@ -18,6 +18,10 @@ class BlocketScraper extends Scraper {
         })
     }
 
+    async checkRobots(): Promise<void> {
+        this.canCrawl = true
+    }
+
     async getNextArticles(): Promise<ItemData[]> {
         try {
             const url = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
