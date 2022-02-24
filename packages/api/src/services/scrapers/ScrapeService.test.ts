@@ -19,6 +19,6 @@ describe('Scraper Service', () => {
 
     it('should schedule all scrapers', () => {
         scrapeService.schedule()
-        expect(nodeSchedule.scheduleJob).toBeCalledTimes(scrapeService.scrapers.length)
+        expect(nodeSchedule.scheduleJob).toBeCalledTimes(scrapeService.scrapers.length + 1)
     })
 })

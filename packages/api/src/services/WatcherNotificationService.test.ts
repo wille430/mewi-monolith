@@ -67,7 +67,7 @@ describe('Watcher Notification Service', () => {
                 date
             )
 
-            if (Date.now() - date.getTime() > 24 * 60 * 60 * 1000) {
+            if (Date.now() - date.getTime() > 1.5 * 24 * 60 * 60 * 1000) {
                 expect(shouldBeNotified).toBe(true)
             } else {
                 expect(shouldBeNotified).toBe(false)
