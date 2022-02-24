@@ -105,7 +105,7 @@ class WatcherNotificationService {
         if (!lastNotificationDate) return true
 
         const ms = toUnixTime(lastNotificationDate)
-        if (Date.now() - ms > 24 * 60 * 60 * 1000) return true
+        if (Date.now() - ms > 1.5 * 24 * 60 * 60 * 1000) return true
 
         return false
     }

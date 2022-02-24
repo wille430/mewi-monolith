@@ -38,10 +38,15 @@ export default class ItemsService {
      * @param index Elasticsearch index
      * @returns Amount of items added
      */
-    static async addItems(items: ItemData[], index = Elasticsearch.defaultIndex): Promise<number> {
-        const addedItemsCount = items.length
+    static async addItems(
+        items: ItemData[],
+        index = Elasticsearch.defaultIndex,
+        test = false
+    ): Promise<number> {
+        let addedItemsCount = items.length
 
-        if (process.env.DEV_MODE) {
+        if (test) {
+            console.log('Appending items to ./build/items.json...')
             for (let i = 0; i < items.length; i++) {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
@@ -50,11 +55,16 @@ export default class ItemsService {
 
             if (body.length === 0) return 0
 
-            await elasticClient.bulk({
+            const { body: bulkResponse } = await elasticClient.bulk({
                 refresh: true,
                 index: index,
                 body: body,
             })
+
+            if (bulkResponse.errors) {
+                console.error('An error occured when indexing new items!')
+                addedItemsCount = 0
+            }
         }
 
         return addedItemsCount

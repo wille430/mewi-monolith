@@ -26,7 +26,7 @@ class BlippScraper extends Scraper {
      * Get the number of pages of products that are available
      */
     async numberOfPages(): Promise<number> {
-        const browser = await puppeteer.launch()
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
         const page = await browser.newPage()
 
         await page.goto(this.scrapeUrl)
@@ -49,7 +49,7 @@ class BlippScraper extends Scraper {
     async getArticlesOnPage(pageNum: number): Promise<ItemData[]> {
         const url = `https://bilar.blipp.se/vara-bilar/page/${pageNum}/`
 
-        const browser = await puppeteer.launch()
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
         const page = await browser.newPage()
 
         await page.goto(url)

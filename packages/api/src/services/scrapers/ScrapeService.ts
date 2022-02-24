@@ -4,6 +4,7 @@ import BlippScraper from './BlippScraper'
 import BlocketScraper from './BlocketScraper'
 import SellpyScraper from './SellpyScraper'
 import TraderaScraper from './TraderaScraper'
+import nodeSchedule from 'node-schedule'
 
 export default class ScrapeService {
     scrapers = [
@@ -26,9 +27,12 @@ export default class ScrapeService {
 
     schedule() {
         for (const scraper of this.scrapers) {
-            scraper.schedule(async () => {
-                await new WatcherNotificationService().notifyUsers()
-            })
+            scraper.schedule()
         }
+
+        // schedule email notifications
+        nodeSchedule.scheduleJob('30 18 * * *', async () => {
+            await new WatcherNotificationService().notifyUsers()
+        })
     }
 }
