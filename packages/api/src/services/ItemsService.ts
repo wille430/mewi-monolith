@@ -63,7 +63,15 @@ export default class ItemsService {
 
             if (bulkResponse.errors) {
                 console.error('An error occured when indexing new items!')
-                addedItemsCount = 0
+
+                bulkResponse.items.forEach((action, i) => {
+                    const operation = Object.keys(action)[0]
+
+                    if (action[operation].error) {
+                        addedItemsCount -= 1
+                        console.error(action[operation].error)
+                    }
+                })
             }
         }
 
