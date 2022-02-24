@@ -124,10 +124,24 @@ class Scraper {
                 query: {
                     bool: {
                         should: [
-                            { range: { date: { lte: this.deleteOlderThan } } },
-                            { range: { endDate: { lte: Date.now() } } },
-                            { match: { origin: this.name } },
+                            {
+                                range: {
+                                    date: {
+                                        lte: this.deleteOlderThan,
+                                    },
+                                },
+                            },
+                            {
+                                range: {
+                                    endDate: {
+                                        lte: Date.now(),
+                                    },
+                                },
+                            },
                         ],
+                        must: {
+                            term: { origin: this.name },
+                        },
                     },
                 },
             },
