@@ -35,10 +35,10 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                 >
                     <SearchFilterContent
                         searchFilterData={formData}
-                        onChange={(newData) => {
+                        onChange={(key, value) => {
                             setFormData((prevState) => ({
                                 ...prevState,
-                                ...newData,
+                                [key]: value,
                             }))
                         }}
                         onValueDelete={(key) => {

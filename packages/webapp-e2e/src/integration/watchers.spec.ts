@@ -2,7 +2,7 @@ import { capitalize } from '@mewi/util'
 import _ from 'lodash'
 
 describe('watchers', () => {
-    let accessTokens
+    let jwt: string
     const longWait = 1000
 
     const formData = {
@@ -17,16 +17,11 @@ describe('watchers', () => {
     }
 
     before(() => {
-        cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-            accessTokens = res.body
-        })
+        cy.login().then((token) => (jwt = token))
     })
 
     beforeEach(() => {
-        cy.visit('/minabevakningar')
-        window.localStorage.setItem('jwt', accessTokens.jwt)
-        window.localStorage.setItem('refreshToken', accessTokens?.refreshToken)
-
+        cy.authenticate(jwt)
         cy.visit('/minabevakningar')
     })
 
@@ -62,7 +57,7 @@ describe('watchers', () => {
         // accept in modal
         cy.get('[data-testid=modalAccept]').click()
 
-        cy.get('[data-testid=addWatcherPopUp]').should('not.be.visible')
+        cy.get('[data-testid=addWatcherPopUp]').should('not.exist')
 
         // Validate displayed created watcher
         Object.keys(formData).forEach((key) => {

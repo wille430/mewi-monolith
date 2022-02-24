@@ -11,8 +11,6 @@ describe('user watchers', () => {
             .post('/test/user')
             .then((res) => res.body.jwt)
 
-        console.log('Auth Token:', token)
-
         headers = { Authorization: 'Bearer ' + token }
     })
 
@@ -101,8 +99,6 @@ describe('user watchers', () => {
                     searchFilters: newSearchFilters,
                 })
                 .set(headers)
-
-            console.log(JSON.stringify(response.body))
         })
 
         it('should return 201 status code', () => {

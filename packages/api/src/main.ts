@@ -17,7 +17,7 @@ schedule.scheduleJob('30 * * * *', async () => {
         await ItemsService.deleteOld()
 
         // Notify users of new items
-        await WatcherNotificationService.notifyUsers()
+        await new WatcherNotificationService().notifyUsers()
     })
 })
 
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
             await ItemsService.deleteOld()
 
             // Notify users of new items
-            await WatcherNotificationService.notifyUsers()
+            await new WatcherNotificationService().notifyUsers()
         })
     }
 }
@@ -49,5 +49,4 @@ if (process.env.NODE_ENV === 'production') {
 
 // sendEmail()
 
-// Start app by listening on port
 app.listen(3001, () => console.log('Listening on port 3001...'))

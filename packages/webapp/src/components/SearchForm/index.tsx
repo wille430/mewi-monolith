@@ -1,56 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'
-import { useDispatch } from 'react-redux'
-import { setFilters } from 'store/search/creators'
 import queryString from 'query-string'
 
 export interface SearchFormProps {
-    size?: 'large' | 'small'
     showSearchIcon?: boolean
 }
 
-const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) => {
-    const [state, setState] = useState({
-        showAutoComplete: false,
-        blur: false,
-    })
-
-    const dispatch = useDispatch()
-
+const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
     const history = useHistory()
     const [keyword, setKeyword] = useState('')
+    const [showSuggestions, setShowSuggestions] = useState(false)
 
     const handleInputChange = (e: any) => {
         setKeyword(e.target?.value)
     }
 
-    // Wait a certain amount of time before closing the auto complete window
-    useEffect(() => {
-        const waitAndHideAutoComplete = async () => {
-            if (state.blur === true) {
-                await new Promise((resolve, reject) => {
-                    setInterval(() => {
-                        resolve(0)
-                    }, 250)
-                })
-                setState((prevState) => ({
-                    ...prevState,
-                    showAutoComplete: false,
-                    blur: false,
-                }))
-            }
-        }
-        waitAndHideAutoComplete()
-    }, [state.blur])
-
-    const handleSubmit = () => {
+    const handleSubmit = (_keyword?: string) => {
         history.push({
             pathname: '/search',
-            search: queryString.stringify({ keyword }),
+            search: queryString.stringify({ keyword: _keyword || keyword }),
         })
-        dispatch(setFilters({ keyword }))
     }
 
     return (
@@ -59,42 +30,30 @@ const SearchForm = ({ size = 'large', showSearchIcon = true }: SearchFormProps) 
                 e.preventDefault()
                 handleSubmit()
             }}
-            className={`relative w-full ${size === 'small' && 'max-w-2xl'}`}
+            className='relative h-12 w-full'
         >
-            <div
-                className={`relative flex flex-row outline-none ${
-                    size === 'small' ? 'h-8' : 'h-12'
-                }`}
-            >
+            <div className='flex h-full flex-row outline-none'>
                 <input
-                    className='absoluteh-full w-full rounded-xl border border-black pl-4 pr-12 outline-none'
+                    className='w-full rounded-xl border border-black pl-4 pr-12 text-black outline-none'
                     placeholder='Sök efter en vara...'
                     onKeyDown={(e) => e.keyCode === 13 && handleSubmit()}
                     onChange={handleInputChange}
                     value={keyword}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setShowSuggestions(false)}
                     autoComplete='off'
-                    onFocus={(e) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            showAutoComplete: true,
-                            blur: false,
-                        }))
-                    }
-                    onBlur={(e) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            blur: true,
-                        }))
-                    }
                     data-testid='searchInput'
                 />
                 {showSearchIcon && <SearchButton />}
             </div>
             <SearchSuggestions
                 query={keyword}
-                show={state.showAutoComplete}
+                show={showSuggestions}
                 onAutoCompleteClick={(newKeyword) => {
                     setKeyword(newKeyword)
+                    setTimeout(() => {
+                        handleSubmit && handleSubmit(newKeyword)
+                    }, 500)
                 }}
                 data-testid='searchSuggestions'
             />

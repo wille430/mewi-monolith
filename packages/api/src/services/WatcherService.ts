@@ -59,8 +59,6 @@ export default class WatcherService {
         const similarWatcher = await this.findSimilarWatcher(query)
 
         if (!similarWatcher) {
-            console.log(`No similar watcher found. Creating a new watcher...`)
-
             // Create new watcher
             const newWatcher = await WatcherModel.create({
                 metadata,
@@ -69,7 +67,6 @@ export default class WatcherService {
 
             return newWatcher
         } else {
-            console.log(`Found similar watcher ${similarWatcher._id} returning existing watcher...`)
             throw new APIError(
                 409,
                 DatabaseErrorCodes.CONFLICTING_RESOURCE,

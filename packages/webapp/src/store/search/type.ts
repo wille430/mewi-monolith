@@ -5,9 +5,9 @@ export interface SearchState {
     totalHits: number
     filters: SearchFilterDataProps
     sort: SortData
-    page: number,
-    loading: {
-        searching: boolean
+    page: number
+    status: {
+        searching: 'complete' | 'loading' | 'error'
     }
 }
 
@@ -19,4 +19,5 @@ export enum SearchActionTypes {
     SORT = 'search/sort',
     FILTERS_FROM_PARAMS = 'search/filtersFromParams',
     SET_PAGE = 'search/setPage',
+    CLEAR_RESULTS = 'search/clear',
 }

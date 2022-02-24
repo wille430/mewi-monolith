@@ -1,25 +1,67 @@
-import { ItemData } from 'types/types'
+import { ItemData } from '@mewi/types'
 import { toUnixTime, toDateObj } from '@mewi/util'
+import axios from 'axios'
 import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
+import robotsParser from 'robots-parser'
 
-export default class Scraper {
+interface ScraperProps {
+    maxEntries: number
+    name: string
+    limit: number
+    baseUrl: string
+    useRobots?: boolean
+}
+
+class Scraper {
     maxEntries: number
     name: string
     limit: number
     endDate: number
+    baseUrl: string
+    useRobots: boolean
 
-    constructor({ maxEntries = 50, name, limit = 20 }) {
+    // Robots
+    canCrawl = false
+
+    constructor({ maxEntries = 50, name, limit = 20, baseUrl, useRobots = true }: ScraperProps) {
         this.maxEntries = maxEntries
         this.name = name
         this.limit = limit
+        this.baseUrl = baseUrl
+        this.useRobots = useRobots
 
         this.endDate = toUnixTime(EndDate.getEndDateFor(this.name))
+    }
+
+    async checkRobots() {
+        // skip if useRobots is false
+        if (!this.useRobots) {
+            this.canCrawl = true
+            return
+        }
+
+        const robotsTxt = await axios.get(this.baseUrl).then((res) => res.data)
+
+        const robots = robotsParser(this.baseUrl + 'robots.txt', robotsTxt)
+
+        if (robots.isAllowed(this.baseUrl)) {
+            this.canCrawl = true
+        } else {
+            this.canCrawl = false
+        }
     }
 
     async start() {
         let itemCount = 0
         let continueScraping = true
+
+        // check robots
+        await this.checkRobots()
+        if (!this.canCrawl) {
+            console.warn('Webcrawling not allowed for', this.baseUrl)
+            return
+        }
 
         // Loop for each page until max entries are met
         while (itemCount < this.maxEntries && continueScraping) {
@@ -56,7 +98,7 @@ export default class Scraper {
         return []
     }
 
-    summary(items: any[]) {
+    summary(items: ItemData[]) {
         return {
             itemsAdded: items.length,
             firstDate: items[0]?.date ? toDateObj(items[0].date) : toDateObj(Date.now()),
@@ -64,3 +106,5 @@ export default class Scraper {
         }
     }
 }
+
+export default Scraper

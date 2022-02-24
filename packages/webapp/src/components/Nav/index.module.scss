@@ -54,7 +54,7 @@
     }
 
     & form,
-    & form > div {
+    & form > div:first-child {
         max-width: max-content;
         height: 100%;
     }

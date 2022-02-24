@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.
@@ -15,3 +16,22 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            getBySel(
+                selector: string,
+                args?: Partial<
+                    Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow
+                >
+            ): Chainable<JQuery<HTMLElement>>
+            getBySelLike(
+                selector: string,
+                args?: Partial<
+                    Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow
+                >
+            ): Chainable<JQuery<HTMLElement>>
+        }
+    }
+}

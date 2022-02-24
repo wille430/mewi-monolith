@@ -1,12 +1,95 @@
-import { ItemData } from '@mewi/types'
+import { ItemData, PublicWatcher, WatcherMetadata } from '@mewi/types'
 import { toDateObj, toUnixTime } from '@mewi/util'
 import Elasticsearch, { elasticClient } from 'config/elasticsearch'
+import { User } from 'models/UserModel'
 import EmailService from './EmailService'
-import { UserService, UserWatcherService } from './UserServices'
+import SearchService from './SearchService'
+import { UserService } from './UserServices'
 import WatcherService from './WatcherService'
 
 class WatcherNotificationService {
-    static async notifyUsers() {
+    client = elasticClient
+
+    constructor(client?: typeof elasticClient) {
+        this.client = client
+    }
+
+    /**
+     * Notify all users who are subscribed to the watcher
+     * @param watcher PublicWatcher
+     * @param callback Called after each user is notified
+     */
+    async notifyUsersOfWatcher(watcher: PublicWatcher, callback?: () => void) {
+        console.log('Notifying users who are subscribed to watcher', watcher._id)
+
+        // Get users with corresponding watcher
+        const arrayOfUids = watcher.users.map((x) => x.toString())
+        const users = await UserService.usersInIds(arrayOfUids)
+
+        users.forEach(async (user) => {
+            this.notifyUser(user, watcher, callback)
+        })
+    }
+
+    /**
+     * Notify a user of new items in watcher
+     * @param user Mongoose User object
+     * @param watcher PublicWatcher
+     * @param callback Called after user is notified
+     * @returns {Promise<void>}
+     */
+    async notifyUser(user: User, watcher: PublicWatcher, callback?: () => void): Promise<void> {
+        // Get UserWatcher of user
+        const watcherInUser = user.watchers.id(watcher._id)
+
+        if (!watcherInUser) {
+            await new WatcherService(watcher._id).delete(user._id)
+            return
+        }
+        if (!this.userShouldBeNotified(watcherInUser.notifiedAt)) return
+
+        const dateAdded = Date.parse(watcherInUser.createdAt)
+
+        const lastNotificationDate = watcherInUser.notifiedAt
+            ? toUnixTime(watcherInUser.notifiedAt)
+            : null
+
+        let comparationDate = dateAdded
+        if (lastNotificationDate) comparationDate = lastNotificationDate
+
+        const { newItems, totalHits } = await this.getNewItemsSince(
+            watcher.metadata,
+            comparationDate
+        )
+
+        console.log(`Found no new items for watcher ${watcher._id}. Returning null.`)
+        if (newItems.length <= 0) return
+
+        console.log(
+            `Found ${newItems.length} new items for user ${user.email} since ${toDateObj(
+                comparationDate
+            ).toDateString()} (watcher_id: ${watcherInUser._id})`
+        )
+
+        const locals = {
+            newItemCount: totalHits,
+            keyword: watcher.metadata.keyword,
+            items: newItems,
+        }
+
+        // send email
+        await EmailService.sendEmail(user.email, 'newItems', locals)
+
+        callback && callback()
+
+        // Update date when last notified in user watcher
+        user.watchers.id(watcher._id).notifiedAt = new Date(Date.now())
+
+        await user.save()
+        console.log(`${user.email} was successully notified!`)
+    }
+
+    async notifyUsers() {
         // Iterate through every watcher in mongodb
         const watchers = await WatcherService.getAll()
 
@@ -14,79 +97,49 @@ class WatcherNotificationService {
         let mailSent = 0
 
         watchers.forEach(async (watcher) => {
-            // Get users with corresponding watcher
-            const arrayOfUids = watcher.users.map((x) => x.toString())
-            const users = await UserService.usersInIds(arrayOfUids)
-
-            users.forEach(async (user) => {
-                const watcherInUser = await UserWatcherService.get(user._id, watcher._id)
-                if (!watcherInUser) {
-                    await new WatcherService(watcher._id).delete(user._id)
-                    return
-                }
-                if (!this.userShouldBeNotified(watcherInUser.notifiedAt)) return
-
-                const dateAdded = Date.parse(watcherInUser.createdAt)
-
-                const lastNotificationDate = watcherInUser.notifiedAt
-                    ? toUnixTime(watcherInUser.notifiedAt)
-                    : null
-
-                let comparationDate = dateAdded
-                if (lastNotificationDate) comparationDate = lastNotificationDate
-
-                // Modify query to include range for date > comparationDate
-                const userWatcher = watcher
-                userWatcher.query.bool.must.push({ range: { date: { gte: comparationDate } } })
-
-                // Get new items for since date
-                const response = await elasticClient.search({
-                    index: Elasticsearch.defaultIndex,
-                    body: {
-                        query: userWatcher.query,
-                        size: 5,
-                        sort: [{ date: 'asc' }],
-                    },
-                })
-
-                const newItems: ItemData[] = response.body.hits.hits.map((x) => x._source)
-                if (newItems.length <= 0) return
-
-                console.log(
-                    `Found ${newItems.length} new items for user ${user.email} since ${toDateObj(
-                        comparationDate
-                    ).toDateString()} (watcher_id: ${watcherInUser._id})`
-                )
-
-                const locals = {
-                    newItemCount: response.body.hits.total.value,
-                    keyword: watcher.metadata.keyword,
-                    items: newItems,
-                }
-
-                // send email
-                await EmailService.sendEmail(user.email, 'newItems', locals)
-
-                mailSent += 1
-
-                // Update date when last notified in user watcher
-                const userDoc = await UserService.user(user._id)
-                userDoc.watchers.id(watcher._id).notifiedAt = new Date(Date.now())
-                console.log(userDoc.watchers.id(watcher._id))
-                await userDoc.save()
-            })
+            await this.notifyUsersOfWatcher(watcher, () => (mailSent += 1))
         })
 
         console.log(`${mailSent} emails were sent!`)
     }
 
-    static userShouldBeNotified(lastNotificationDate: Date): boolean {
+    userShouldBeNotified(lastNotificationDate: Date): boolean {
         if (!lastNotificationDate) return true
 
         const ms = toUnixTime(lastNotificationDate)
         if (Date.now() - ms > 24 * 60 * 60 * 1000) return true
 
         return false
+    }
+
+    /**
+     * Find items added since a certain date
+     * @param {WatcherMetadata} metadata Find items matching this query
+     * @param {number} sinceDate Unix time
+     * @return Object with an array of ItemData and totalHits
+     */
+    async getNewItemsSince(metadata: WatcherMetadata, sinceDate: number) {
+        const elasticQuery = SearchService.createElasticQuery(metadata)
+
+        // Modify query to include range for date > comparationDate
+        elasticQuery.bool.must.push({ range: { date: { gte: sinceDate } } })
+
+        // Get new items for since date
+        const response = await this.client.search({
+            index: Elasticsearch.defaultIndex,
+            body: {
+                query: elasticQuery,
+                size: 5,
+                sort: [{ date: 'desc' }],
+            },
+        })
+
+        const newItems: ItemData[] = response.body.hits.hits.map((x) => x._source)
+
+        return {
+            newItems,
+            totalHits: response.body.hits.total.value,
+        }
     }
 }
 

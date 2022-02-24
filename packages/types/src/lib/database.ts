@@ -16,7 +16,7 @@ export interface UserData {
     email: string
     password: string
     premium: boolean
-    watchers: [UserWatcherData]
+    watchers: UserWatcherData[]
 }
 
 export type WatcherMetadata = SearchFilterDataProps
@@ -28,6 +28,8 @@ export interface PublicWatcher {
     users: ObjectId[]
     createdAt: string
 }
+
+export type withId<T> = T & { _id: ObjectId }
 
 export interface FilterStates {
     regionState: { state: string; setState: any }
@@ -71,7 +73,7 @@ export interface ItemData {
     imageUrl: string[]
     isAuction: boolean
     redirectUrl: string
-    price: {
+    price?: {
         value: number
         currency: string
     }

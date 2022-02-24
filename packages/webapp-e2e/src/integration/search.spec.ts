@@ -32,30 +32,30 @@ describe('search', () => {
 
             cy.wait(longWait)
 
+            // open filters
+            cy.getBySel('showFilters').click()
+
             // Insert regions
             // FIXME: fix detached from DOM error
             // TODO: insert multiple regions
-            cy.get('[data-testid=regionsSelect]', { timeout: 1000 }).type(
-                formData.regions[0] + ' {enter}',
-                {
-                    delay: 100,
-                }
-            )
+            cy.getBySel('regionsSelect', { timeout: 1000 }).type(formData.regions[0] + ' {enter}', {
+                delay: 100,
+            })
 
-            cy.get('[data-testid=regionsSelect]').should('have.text', formData.regions[0])
+            cy.getBySel('regionsSelect').should('have.text', formData.regions[0])
 
             // Insert price range
-            cy.get('[data-testid=priceGte]').type(formData.priceRangeGte.toString())
-            cy.get('[data-testid=priceGte]').should('have.value', formData.priceRangeGte)
+            cy.getBySel('priceGte').type(formData.priceRangeGte.toString())
+            cy.getBySel('priceGte').should('have.value', formData.priceRangeGte)
 
-            cy.get('[data-testid=priceLte]').type(formData.priceRangeLte.toString())
-            cy.get('[data-testid=priceLte]').should('have.value', formData.priceRangeLte)
+            cy.getBySel('priceLte').type(formData.priceRangeLte.toString())
+            cy.getBySel('priceLte').should('have.value', formData.priceRangeLte)
 
             if (formData.auction) {
-                cy.get('[data-testid=auctionCheckbox]').click()
-                cy.get('[data-testid=auctionCheckbox]').should('be.checked')
+                cy.getBySel('auctionCheckbox').click()
+                cy.getBySel('auctionCheckbox').should('be.checked')
             } else {
-                cy.get('[data-testid=auctionCheckbox]').should('not.be.checked')
+                cy.getBySel('auctionCheckbox').should('not.be.checked')
             }
 
             // wait for debounce
@@ -102,7 +102,7 @@ describe('search', () => {
     it('can search for a new keyword', () => {
         const keyword = randomString(5)
 
-        cy.get('[data-testid=searchInput]').type(keyword + '{enter}')
+        cy.getBySel('searchInput').type(keyword + '{enter}')
 
         cy.url().should('contain', '/search?keyword=' + keyword)
 
@@ -110,15 +110,16 @@ describe('search', () => {
     })
 
     it('redirects to login page if adding watcher without being logged in', () => {
+        cy.getBySel('showFilters').click()
+
         cy.contains('Bevaka sökning').click()
         cy.url().should('contain', '/login')
     })
 
     it('can add a watcher from current search', () => {
-        cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-            window.localStorage.setItem('jwt', res.body.jwt)
-            window.localStorage.setItem('refreshToken', res.body.refreshToken)
-        })
+        cy.login()
+
+        cy.getBySel('showFilters').click()
 
         cy.wait(longWait)
 
@@ -127,26 +128,26 @@ describe('search', () => {
 
         // Inserts regions
         formData.regions.forEach((region) => {
-            cy.get('[data-testid=regionsSelect]', { timeout: 1000 }).type(region + ' {enter}', {
+            cy.getBySel('regionsSelect', { timeout: 1000 }).type(region + ' {enter}', {
                 delay: 100,
             })
         })
 
         // Inserts price range
-        cy.get('[data-testid=priceGte]').type(formData.priceRangeGte.toString())
-        cy.get('[data-testid=priceLte]').type(formData.priceRangeLte.toString())
+        cy.getBySel('priceGte').type(formData.priceRangeGte.toString())
+        cy.getBySel('priceLte').type(formData.priceRangeLte.toString())
 
         if (formData.auction) {
-            cy.get('[data-testid=auctionCheckbox]').click()
+            cy.get('auctionCheckbox').click()
         }
 
         // wait for debounce
         cy.wait(debounceWait)
 
-        cy.get('[data-testid=addWatcherButton]').click()
+        cy.getBySel('addWatcherButton').click()
 
         // accept modal
-        cy.get('[data-testid=modalAccept]').click()
+        cy.getBySel('modalAccept').click()
 
         cy.contains('Bevakningen lades till', { matchCase: false })
     })

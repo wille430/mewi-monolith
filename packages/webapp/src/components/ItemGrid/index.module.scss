@@ -1,0 +1,7 @@
+.grid {
+    @apply flex w-full flex-grow flex-wrap justify-center gap-4;
+}
+
+.center {
+    @apply flex-grow flex justify-center items-center;
+}

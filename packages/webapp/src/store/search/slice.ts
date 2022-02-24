@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import {
     clearFilters,
+    clearSearchResults,
     getFiltersFromQueryParams,
     getSearchResults,
     goToPage,
@@ -18,8 +19,8 @@ const initialState: SearchState = {
     filters: {},
     sort: SortData.RELEVANCE,
     page: 1,
-    loading: {
-        searching: false,
+    status: {
+        searching: 'complete',
     },
 }
 
@@ -30,19 +31,27 @@ export const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getSearchResults.pending, (state) => {
-                state.loading.searching = true
+                state.status.searching = 'loading'
             })
             .addCase(getSearchResults.fulfilled, (state, action) => {
                 state.hits = action.payload.hits
                 state.totalHits = action.payload.totalHits
-                state.loading.searching = false
+                state.status.searching = 'complete'
             })
             .addCase(getSearchResults.rejected, (state) => {
-                state.loading.searching = false
+                state.status.searching = 'error'
             })
 
-        builder.addCase(clearFilters, (state) => {
-            state.filters = initialState.filters
+        builder.addCase(clearFilters, (state, action) => {
+            if (action.payload) {
+                state.filters = {
+                    ...initialState.filters,
+                    ...action.payload,
+                }
+            } else {
+                state.filters = initialState.filters
+            }
+
             state.sort = initialState.sort
             state.page = 1
         })
@@ -52,16 +61,6 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(updateFilters, (state, action) => {
-            console.log(
-                'Updating filters from',
-                JSON.stringify(state.filters),
-                'to',
-                JSON.stringify({
-                    ...state.filters,
-                    ...action.payload,
-                })
-            )
-
             let key: keyof typeof action.payload
 
             for (key in action.payload) {
@@ -94,6 +93,12 @@ export const searchSlice = createSlice({
 
         builder.addCase(goToPage, (state, action) => {
             state.page = action.payload
+        })
+
+        builder.addCase(clearSearchResults, (state) => {
+            state.hits = []
+            state.totalHits = 0
+            state.status.searching = 'loading'
         })
     },
 })

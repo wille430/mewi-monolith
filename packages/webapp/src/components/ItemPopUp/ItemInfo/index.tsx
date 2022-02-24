@@ -5,7 +5,7 @@ import CategoryString from './CategoryString'
 import { ItemData } from '@mewi/types'
 
 const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
-    const priceString = `${article.price.value || ''} ${article.price.currency || ''}`
+    const priceString = `${article.price?.value || ''} ${article.price?.currency || ''}`
 
     const InfoHeader = () => (
         <div className='flex-none bg-white pt-4'>

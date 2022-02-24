@@ -9,6 +9,7 @@ import ProtectedRoutes from 'Routes/ProtectedRoutes'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { onAuthLoad } from 'store/auth/creators'
+import Page from 'components/Page'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -42,28 +43,43 @@ function App() {
                 <Nav />
                 <Suspense fallback={<div></div>}>
                     <Switch>
-                        <PublicRoute path='/login' isAuthenticated={isAuthenticated}>
-                            <Login />
-                        </PublicRoute>
-                        <PublicRoute path='/register' isAuthenticated={isAuthenticated}>
-                            <Register />
-                        </PublicRoute>
-                        <Route
+                        <PublicRoute
+                            title='Logga in - Mewi.se'
+                            path='/login'
+                            isAuthenticated={isAuthenticated}
+                            component={<Login />}
+                        />
+                        <PublicRoute
+                            title='Skapa konto - Mewi.se'
+                            path='/register'
+                            isAuthenticated={isAuthenticated}
+                            component={<Register />}
+                        />
+                        <Page
+                            title='Sök - Mewi.se'
                             path={[
                                 '/kategorier/:category_id/:subcat_id',
                                 '/kategorier/:category_id',
                             ]}
-                        >
-                            <CategorySearch />
-                        </Route>
-                        <Route path='/kategorier' component={Categories} />
-                        <Route exact path='/search'>
-                            <Search />
-                        </Route>
-                        <Route exact path='/' component={Home} />
-                        <PrivateRoute path='/' isAuthenticated={isAuthenticated}>
-                            <ProtectedRoutes />
-                        </PrivateRoute>
+                            component={<CategorySearch />}
+                        />
+                        <Page
+                            title='Alla kategorier - Mewi.se'
+                            path='/kategorier'
+                            component={<Categories />}
+                        />
+                        <Page title='Sök - Mewi.se' exact path='/search' component={<Search />} />
+                        <Page
+                            title='Hitta begagnade produkter på ett enda ställe - Mewi.se '
+                            exact
+                            path='/'
+                            component={<Home />}
+                        />
+                        <PrivateRoute
+                            path='/'
+                            isAuthenticated={isAuthenticated}
+                            component={<ProtectedRoutes />}
+                        />
                         <Route path='*'>
                             <Redirect to={{ pathname: '/' }} />
                         </Route>

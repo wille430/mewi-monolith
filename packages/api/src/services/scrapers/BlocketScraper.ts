@@ -1,13 +1,13 @@
-import Scraper from './Scraper'
+import Scraper from 'services/scrapers/Scraper'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
-import { BlocketItemData, ItemData } from 'types/types'
+import { ItemData } from '@mewi/types'
 
 import { JSDOM } from 'jsdom'
 import axios from 'axios'
+import { BlocketItemData } from 'types/types'
 
-export default class BlocketScraper extends Scraper {
-    baseUrl = 'https://www.blocket.se'
+class BlocketScraper extends Scraper {
     page = 1
 
     constructor(maxEntries?: number) {
@@ -15,6 +15,7 @@ export default class BlocketScraper extends Scraper {
             maxEntries,
             name: 'blocket',
             limit: 40,
+            baseUrl: 'https://www.blocket.se',
         })
     }
 
@@ -55,7 +56,7 @@ export default class BlocketScraper extends Scraper {
                               value: item.price.value,
                               currency: item.price.suffix,
                           }
-                        : {},
+                        : undefined,
                     region: item.location[0].name,
                     zipcode: item.zipcode,
                     parameters: this.parseParameterGroup(item.parameter_groups),
@@ -67,6 +68,7 @@ export default class BlocketScraper extends Scraper {
             return items
         } catch (e) {
             console.log(e)
+            return []
         }
     }
 
@@ -104,12 +106,10 @@ export default class BlocketScraper extends Scraper {
                 ? itemData.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
                 : [],
             redirectUrl: itemData.share_url,
-            price: itemData.price
-                ? {
-                      value: itemData.price.value,
-                      currency: itemData.price.suffix,
-                  }
-                : {},
+            price: {
+                value: itemData.price.value,
+                currency: itemData.price.suffix,
+            },
             isAuction: false,
             region: itemData.location[0].name,
             zipcode: itemData.zipcode,
@@ -156,3 +156,5 @@ export default class BlocketScraper extends Scraper {
         return params
     }
 }
+
+export default BlocketScraper

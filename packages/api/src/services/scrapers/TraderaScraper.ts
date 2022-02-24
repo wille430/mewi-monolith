@@ -1,7 +1,8 @@
-import { ItemData, TraderaItemData } from 'types/types'
+import { TraderaItemData } from 'types/types'
+import { ItemData } from '@mewi/types'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
-import Scraper from './Scraper'
+import Scraper from 'services/scrapers/Scraper'
 import axios from 'axios'
 
 interface TraderaCategory {
@@ -18,7 +19,6 @@ interface TraderaCategory {
 
 export default class TraderaScraper extends Scraper {
     catIndex = 0
-    baseUrl = 'https://www.tradera.com'
     categories: TraderaCategory[] | null
     itemsPerCategory: number
 
@@ -27,6 +27,7 @@ export default class TraderaScraper extends Scraper {
             maxEntries,
             name: 'tradera',
             limit: 1,
+            baseUrl: 'https://www.tradera.com/',
         })
     }
 
@@ -65,7 +66,7 @@ export default class TraderaScraper extends Scraper {
                               value: item.price,
                               currency: 'kr',
                           }
-                        : {},
+                        : undefined,
                     region: null,
                     origin: 'Tradera',
                 })

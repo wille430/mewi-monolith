@@ -6,7 +6,13 @@ const cx = classNames.bind(styles)
 
 export const Container = ({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) => {
     return (
-        <section className={`${styles['container']} ${className || ''}`} {...rest}>
+        <section
+            className={classNames({
+                [styles['container']]: true,
+                [className || '']: !!className,
+            })}
+            {...rest}
+        >
             {children}
         </section>
     )

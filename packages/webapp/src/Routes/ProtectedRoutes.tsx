@@ -1,18 +1,23 @@
+import Page from 'components/Page'
 import StyledLoader from 'components/StyledLoader'
 import { Suspense } from 'react'
-import { Route, Switch } from 'react-router'
+import { Switch } from 'react-router-dom'
 import routes from './routes'
 
 const ProtectedRoutes = () => (
-    <Switch>
-        <Suspense fallback={<StyledLoader />}>
-            {routes.map(({ component: Component, path, exact }) => (
-                <Route path={`/${path}`} key={path} exact={exact}>
-                    <Component />
-                </Route>
+    <Suspense fallback={<StyledLoader />}>
+        <Switch>
+            {routes.map(({ component: Component, path, exact, title }, i) => (
+                <Page
+                    title={title}
+                    path={`/${path}`}
+                    key={i}
+                    exact={exact}
+                    component={<Component />}
+                />
             ))}
-        </Suspense>
-    </Switch>
+        </Switch>
+    </Suspense>
 )
 
 export default ProtectedRoutes

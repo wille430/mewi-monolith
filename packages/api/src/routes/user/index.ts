@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import Authentication from '../../middleware/Authentication'
+import { authenticateJWT } from '../../middleware/Authentication'
 import { getInfo } from './controller'
 import Watchers from './watchers'
 
 const router = Router()
 
-router.use(Authentication.authenticateJWT)
+router.use(authenticateJWT)
 
 router.get('/', getInfo)
 router.use('/watchers', Watchers)
