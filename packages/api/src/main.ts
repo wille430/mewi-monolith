@@ -4,8 +4,11 @@ import ScrapeService from './services/scrapers/ScrapeService'
 import ItemsService from './services/ItemsService'
 import app from './routes/app'
 import WatcherNotificationService from 'services/WatcherNotificationService'
+import Elasticsearch from 'config/elasticsearch'
 
 console.log('NODE ENV:', process.env.NODE_ENV)
+
+Elasticsearch.prepare()
 
 const scraper = new ScrapeService()
 scraper.schedule()

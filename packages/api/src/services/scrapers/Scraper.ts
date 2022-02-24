@@ -91,10 +91,13 @@ class Scraper {
             }
 
             // Assign loop-validators new values
-            itemCount += await ItemsService.addItems(items).catch((e) => {
-                console.log(e)
-                return 0
-            })
+            await ItemsService.addItems(items)
+                .then((val) => {
+                    itemCount += val
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         }
 
         console.log(`Added ${itemCount} items from ${this.name}`)
@@ -105,9 +108,7 @@ class Scraper {
     }
 
     schedule(callback?: () => void): void {
-        console.log(
-            `Scheduling scraper for ${this.name} with schedule (${this.cronTimerSchedule})`
-        )
+        console.log(`Scheduling scraper for ${this.name} with schedule (${this.cronTimerSchedule})`)
         nodeSchedule.scheduleJob(this.cronTimerSchedule, () => {
             this.start().then(async () => {
                 await this.deleteOld()

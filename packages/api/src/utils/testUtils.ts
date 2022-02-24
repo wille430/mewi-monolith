@@ -15,7 +15,7 @@ export const generateMockItemData = (
     const items: ItemData[] = []
     for (const i in Array(count).keys()) {
         items.push({
-            _id: faker.datatype.uuid(),
+            id: faker.datatype.uuid(),
             title: faker.random.words(5),
             category: [_.sample(categories)._id],
             imageUrl: [faker.internet.url()],

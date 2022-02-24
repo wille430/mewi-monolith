@@ -64,7 +64,7 @@ export interface ElasticSearchBody {
 export type CategoryType = string[]
 
 export interface ItemData {
-    _id: string
+    id: string
     title: string
     body?: string
     category: CategoryType

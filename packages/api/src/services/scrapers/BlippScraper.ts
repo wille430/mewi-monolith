@@ -59,7 +59,7 @@ class BlippScraper extends Scraper {
         let gridItems = await listings.$$eval('.listing_is_active', (eles) => {
             return eles.map<ItemData | undefined>((ele) => {
                 const item: Partial<ItemData> = {
-                    _id: `blipp-${ele
+                    id: `blipp-${ele
                         .querySelector('.car-title')
                         .textContent.replace('\n', '')
                         .match(/\S+/g)
@@ -89,7 +89,7 @@ class BlippScraper extends Scraper {
                 }
 
                 if (
-                    !item._id ||
+                    !item.id ||
                     !item.title ||
                     !item.redirectUrl ||
                     !item.price.value ||

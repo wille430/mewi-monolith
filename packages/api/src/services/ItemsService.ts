@@ -51,7 +51,7 @@ export default class ItemsService {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
         } else {
-            const body = items.flatMap((item) => [{ index: { _index: index } }, item])
+            const body = items.flatMap((item) => [{ index: { _index: index, _id: item.id } }, item])
 
             if (body.length === 0) return 0
 
@@ -68,8 +68,8 @@ export default class ItemsService {
                     const operation = Object.keys(action)[0]
 
                     if (action[operation].error) {
-                        addedItemsCount -= 1
                         console.error(action[operation].error)
+                        addedItemsCount -= 1
                     }
                 })
             }

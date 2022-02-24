@@ -36,7 +36,7 @@ export default class SellpyScraper extends Scraper {
 
             const items: ItemData[] = data.map(
                 (item: SellpyItemData): ItemData => ({
-                    _id: item.objectID,
+                    id: item.objectID,
                     title: item.metadata.brand || item.metadata.type,
                     category: [],
                     date: item.updatedAt * 1000,

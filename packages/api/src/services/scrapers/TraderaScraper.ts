@@ -51,7 +51,7 @@ export default class TraderaScraper extends Scraper {
 
             const items: ItemData[] = itemData.map(
                 (item): ItemData => ({
-                    _id: item.itemId.toString(),
+                    id: item.itemId.toString(),
                     title: item.shortDescription,
                     category: CategoryService.parseTraderaCategories(
                         this.categories[this.catIndex].title
