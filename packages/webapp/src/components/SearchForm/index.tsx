@@ -3,6 +3,8 @@ import SearchSuggestions from './SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router'
 import queryString from 'query-string'
+import { useAppDispatch } from 'hooks/hooks'
+import { setFilters } from 'store/search/creators'
 
 export interface SearchFormProps {
     showSearchIcon?: boolean
@@ -12,12 +14,14 @@ const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
     const history = useHistory()
     const [keyword, setKeyword] = useState('')
     const [showSuggestions, setShowSuggestions] = useState(false)
+    const dispatch = useAppDispatch()
 
     const handleInputChange = (e: any) => {
         setKeyword(e.target?.value)
     }
 
     const handleSubmit = (_keyword?: string) => {
+        dispatch(setFilters({}))
         history.push({
             pathname: '/search',
             search: queryString.stringify({ keyword: _keyword || keyword }),

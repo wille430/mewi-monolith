@@ -10,6 +10,7 @@ import {
     setFilters,
     setSort,
     updateFilters,
+    updateSearchParams,
 } from './creators'
 import { SearchState } from './type'
 
@@ -54,10 +55,16 @@ export const searchSlice = createSlice({
 
             state.sort = initialState.sort
             state.page = 1
+
+            updateSearchParams(state)
         })
 
         builder.addCase(setFilters, (state, action) => {
             state.filters = action.payload
+            state.page = 1
+            state.status.searching = 'loading'
+
+            updateSearchParams(state)
         })
 
         builder.addCase(updateFilters, (state, action) => {
@@ -77,11 +84,17 @@ export const searchSlice = createSlice({
                     state.filters = _.set(state.filters, key, action.payload[key])
                 }
             }
+
+            state.status.searching = 'loading'
+
+            updateSearchParams(state)
         })
 
         builder.addCase(setSort, (state, action) => {
             state.sort = action.payload
             state.page = 1
+
+            updateSearchParams(state)
         })
 
         builder.addCase(getFiltersFromQueryParams, (state, action) => {
@@ -93,6 +106,7 @@ export const searchSlice = createSlice({
 
         builder.addCase(goToPage, (state, action) => {
             state.page = action.payload
+            updateSearchParams(state)
         })
 
         builder.addCase(clearSearchResults, (state) => {
