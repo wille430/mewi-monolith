@@ -8,24 +8,26 @@ import Elasticsearch from 'config/elasticsearch'
 
 console.log('NODE ENV:', process.env.NODE_ENV)
 
-Elasticsearch.prepare()
+;(async () => {
+    await Elasticsearch.prepare()
 
-const scraper = new ScrapeService()
-scraper.schedule()
+    const scraper = new ScrapeService()
+    scraper.schedule()
 
-if (process.env.NODE_ENV === 'production') {
-    const lastScan = EndDate.getEndDateFor('blocket')
-    if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
-        const scraper = new ScrapeService()
-        scraper.start().then(async () => {
-            await ItemsService.deleteOld()
+    // if (process.env.NODE_ENV === 'production') {
+        const lastScan = EndDate.getEndDateFor('blocket')
+        if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
+            const scraper = new ScrapeService()
+            scraper.start().then(async () => {
+                await ItemsService.deleteOld()
 
-            // Notify users of new items
-            await new WatcherNotificationService().notifyUsers()
-        })
-    }
-}
+                // Notify users of new items
+                await new WatcherNotificationService().notifyUsers()
+            })
+        }
+    // }
 
-new WatcherNotificationService().notifyUsers()
+    new WatcherNotificationService().notifyUsers()
+})()
 
 app.listen(3001, () => console.log('Listening on port 3001...'))
