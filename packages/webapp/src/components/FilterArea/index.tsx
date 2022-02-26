@@ -1,9 +1,8 @@
-import { SearchFilterDataProps, SortData } from '@mewi/types'
+import { SearchFilterDataProps } from '@mewi/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import queryString from 'query-string'
 import {
     clearFilters,
     clearSearchResults,
@@ -35,7 +34,6 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
 
     const [showPopUp, setShowPopUp] = useState(false)
 
-    const history = useHistory()
     const location = useLocation()
     const dispatch = useAppDispatch()
 
@@ -51,35 +49,9 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const debounceSetFilters = useCallback(
         _.debounce((_search: typeof search) => {
             dispatch(setFilters(_search.filters))
-            updateSearchParams(_search)
         }, 750),
         []
     )
-
-    const updateSearchParams = (_search: typeof search) => {
-        console.log({ filters: _search.filters })
-
-        if (_search.filters.keyword) {
-            document.title = `Sökning för "${_search.filters.keyword}" - Mewi`
-        } else {
-            document.title = 'Sök - Mewi.se'
-        }
-
-        // update url search params
-        history.push({
-            pathname: window.location.pathname,
-            search: queryString.stringify(
-                _.omit(
-                    {
-                        ..._search.filters,
-                        page: _search.page,
-                        sort: _search.sort !== SortData.RELEVANCE ? _search.sort : undefined,
-                    },
-                    Object.keys(defaultValues || {})
-                )
-            ),
-        })
-    }
 
     useEffect(() => {
         dispatch(getFiltersFromQueryParams())

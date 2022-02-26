@@ -9,6 +9,7 @@ export interface SearchState {
     status: {
         searching: 'complete' | 'loading' | 'error'
     }
+    searchParams: string
 }
 
 export enum SearchActionTypes {
@@ -20,4 +21,5 @@ export enum SearchActionTypes {
     FILTERS_FROM_PARAMS = 'search/filtersFromParams',
     SET_PAGE = 'search/setPage',
     CLEAR_RESULTS = 'search/clear',
+    UPDATE_SEARCH_PARAMS = 'search/updateParams',
 }

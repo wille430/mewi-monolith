@@ -12,11 +12,6 @@ const ResultText = () => {
 
     let resultString = ''
 
-    // Don't display if keywor is empty
-    if (!keyword) {
-        return <span></span>
-    }
-
     if (totalHits >= 10000) {
         resultString += `Hittade över ${totalHits || 0} resultat`
     } else {

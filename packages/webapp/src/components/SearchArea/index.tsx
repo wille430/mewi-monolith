@@ -5,16 +5,38 @@ import ItemGrid from 'components/ItemGrid'
 import PageNav from 'components/PageNav'
 import ResultText from 'components/ResultText'
 import SortButton from 'components/SortButton'
-import { useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
 import classNames from 'classnames'
+import { useAppDispatch, useAppSelector } from 'hooks/hooks'
+import { updateSearchParams } from 'store/search/creators'
 
 const cx = classNames.bind(styles)
 
 const SearchArea = () => {
     const params = useParams<ParamTypes>()
     const scrollEle = useRef<HTMLDivElement | null>(null)
+    const { searchParams, filters, page, sort } = useAppSelector((state) => state.search)
+    const history = useHistory()
+    const isFirstRender = useRef(true)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false
+            return
+        }
+
+        if (history.location.search !== searchParams) {
+            console.log({ current: history.location.search, new: searchParams })
+            history.push(window.location.pathname + '?' + searchParams)
+        }
+    }, [searchParams])
+
+    useEffect(() => {
+        dispatch(updateSearchParams())
+    }, [filters, page, sort])
 
     return (
         <section
@@ -27,7 +49,7 @@ const SearchArea = () => {
                 <CategorySelectionList />
             </aside>
 
-            <div className='flex flex-col flex-grow'>
+            <div className='flex flex-grow flex-col'>
                 <CategoryPathLabel categoryValues={params} />
 
                 <div ref={scrollEle}>

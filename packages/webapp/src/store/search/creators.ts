@@ -6,27 +6,19 @@ import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
 
-export const updateSearchParams = (_search: SearchState) => {
-    console.log({ filters: _search.filters })
+export const updateSearchParams = createAsyncThunk(
+    SearchActionTypes.UPDATE_SEARCH_PARAMS,
+    async (args, thunkApi) => {
+        const state = thunkApi.getState() as RootState
+        const { filters, page, sort } = state.search
 
-    if (_search.filters.keyword) {
-        document.title = `Sökning för "${_search.filters.keyword}" - Mewi`
-    } else {
-        document.title = 'Sök - Mewi.se'
+        return {
+            filters: filters,
+            page: page,
+            sort: sort,
+        }
     }
-
-    const searchParams = _.omit(
-        {
-            ..._search.filters,
-            page: _search.page > 1 ? _search.page : undefined,
-            sort: _search.sort !== SortData.RELEVANCE ? _search.sort : undefined,
-        },
-        ['category']
-    )
-
-    // update url search params
-    window.history.pushState(queryString.stringify(searchParams), window.location.pathname)
-}
+)
 
 export const clearFilters = createAction(
     SearchActionTypes.CLEAR_FILTERS,

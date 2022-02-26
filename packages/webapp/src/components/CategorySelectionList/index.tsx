@@ -114,7 +114,11 @@ const CategorySelectionList = () => {
     }
 
     return (
-        <div id='categorySelection' className={styles.container}>
+        <div
+            id='categorySelection'
+            data-testid='categorySelectionList'
+            className={styles.container}
+        >
             <ul>{renderListItems()}</ul>
         </div>
     )
@@ -135,7 +139,7 @@ const CategoryListItem = ({ categoryPath, children, currentlySelected }: ListIte
     const category = getNestedCategory(categoryPath)
 
     const getLink = () => {
-        return '/kategorier/' + categoryPath.join('/')
+        return '/kategorier/' + categoryPath.join('/') + window.location.search
     }
 
     return (
@@ -144,6 +148,7 @@ const CategoryListItem = ({ categoryPath, children, currentlySelected }: ListIte
                 [styles.subcat]: categoryPath.length > 1,
                 [styles.selected]: currentlySelected,
             })}
+            data-testid={`categoryListItem-${categoryPath.length - 1}`}
         >
             <Link to={getLink()}>{category?.label}</Link>
             <ul>{children}</ul>

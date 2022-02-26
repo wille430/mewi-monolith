@@ -3,8 +3,13 @@
     "compilerOptions": {
         "sourceMap": false,
         "outDir": "../../dist/out-tsc",
-        "allowJs": true,
-        "types": ["cypress", "node"]
+        "types": ["cypress", "node"],
+        "baseUrl": "../webapp/src",
+        "paths": {
+            "@mewi/types": ["../../types/src/index.ts"],
+            "@mewi/util": ["../../util/src/index.ts"],
+            "@mewi/ui": ["../../ui/src/index.ts"]
+        }
     },
     "include": ["src/**/*.ts", "src/**/*.js"]
 }
