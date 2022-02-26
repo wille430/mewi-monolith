@@ -62,10 +62,18 @@ const PageNav = ({ anchorEle }: PageNavProps) => {
     }
 
     return (
-        <div className='flex w-full max-w-full flex-wrap justify-center py-6'>
-            <NavEndButton onClick={() => changePage(-1)} icon={FiArrowLeft} />
+        <div className='flex w-full max-w-full flex-wrap justify-center py-6' data-testid='pageNav'>
+            <NavEndButton
+                data-testid='pageNavPrev'
+                onClick={() => changePage(-1)}
+                icon={FiArrowLeft}
+            />
             {RenderButtons()}
-            <NavEndButton onClick={() => changePage(1)} icon={FiArrowRight} />
+            <NavEndButton
+                data-testid='pageNavNext'
+                onClick={() => changePage(1)}
+                icon={FiArrowRight}
+            />
         </div>
     )
 }
@@ -83,6 +91,7 @@ const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
                 selected && 'border-b-2 border-black'
             }`}
             onClick={(e) => onClick(e, label)}
+            data-testid={`pageNavButton`}
         >
             <span className='font-bold'>{label}</span>
         </button>

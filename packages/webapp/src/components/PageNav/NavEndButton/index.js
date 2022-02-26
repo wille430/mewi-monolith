@@ -1,7 +1,7 @@
 import * as styles from './style'
 
-const NavEndButton = ({ onClick, icon }) => {
-    return <styles.Button onClick={onClick}>{icon()}</styles.Button>
+const NavEndButton = ({ onClick, icon, ...rest }) => {
+    return <styles.Button onClick={onClick} {...rest}>{icon()}</styles.Button>
 }
 
 export default NavEndButton

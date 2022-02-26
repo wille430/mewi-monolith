@@ -124,13 +124,17 @@ export const searchSlice = createSlice({
                 document.title = 'Sök - Mewi.se'
             }
 
+            const keysToEmit = ['category']
+
+            if (!filters.auction) keysToEmit.push('auction')
+
             const searchParams = _.omit(
                 {
                     ...filters,
                     page: page > 1 ? page : undefined,
                     sort: sort !== SortData.RELEVANCE ? sort : undefined,
                 },
-                ['category']
+                keysToEmit
             )
 
             // update url search params

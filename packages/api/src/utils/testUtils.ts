@@ -13,7 +13,8 @@ export const generateMockItemData = (
     data?: Partial<ItemData>
 ): ItemData | ItemData[] => {
     const items: ItemData[] = []
-    for (const i in Array(count).keys()) {
+
+    while (items.length < count) {
         items.push({
             id: faker.datatype.uuid(),
             title: faker.random.words(5),

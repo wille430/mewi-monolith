@@ -166,12 +166,49 @@ describe('search', () => {
                         expect(parseInt(searchParams[key] as string)).to.equal(formData[key])
                         break
                     case 'auction':
-                        expect(searchParams[key]).to.equal(Boolean(formData[key]))
+                        expect(Boolean(searchParams[key])).to.equal(formData[key])
                         break
                     default:
                         expect(searchParams[key]).to.equal(formData[key])
                 }
             }
+        })
+    })
+
+    it.only('should be able to navigate through pages', () => {
+        cy.visit('/')
+        cy.getBySel('searchInput').type('{enter}')
+
+        cy.wrap(Array(5)).each((ele, i) => {
+            const currentPage = i + 2
+            cy.getBySel('pageNav').contains(currentPage).click()
+
+            cy.location().then((loc) => {
+                const searchParams = queryString.parse(loc.search)
+                expect(searchParams['page']).to.equal(currentPage.toString())
+            })
+        })
+
+        cy.location().then((loc) => {
+            const currentPage = parseInt(queryString.parse(loc.search)['page'] as string)
+
+            console.log('Current page:', currentPage)
+
+            cy.getBySel('pageNavNext').click()
+
+            cy.wrap(currentPage).then((page) => {
+                cy.location().then((loc) => {
+                    const searchParams = queryString.parse(loc.search)
+                    expect(searchParams['page']).to.equal((page + 1).toString())
+                })
+
+                cy.getBySel('pageNavPrev').click()
+
+                cy.location().then((loc) => {
+                    const searchParams = queryString.parse(loc.search)
+                    expect(searchParams['page']).to.equal(page.toString())
+                })
+            })
         })
     })
 })

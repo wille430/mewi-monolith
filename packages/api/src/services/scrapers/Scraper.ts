@@ -122,25 +122,10 @@ class Scraper {
             index: Elasticsearch.defaultIndex,
             body: {
                 query: {
-                    bool: {
-                        should: [
-                            {
-                                range: {
-                                    date: {
-                                        lte: this.deleteOlderThan,
-                                    },
-                                },
-                            },
-                            {
-                                range: {
-                                    endDate: {
-                                        lte: Date.now(),
-                                    },
-                                },
-                            },
-                        ],
-                        must: {
-                            term: { origin: this.name },
+                    term: { origin: this.name },
+                    range: {
+                        date: {
+                            lte: this.deleteOlderThan,
                         },
                     },
                 },
