@@ -4,14 +4,23 @@ import RemoveButton from './RemoveWatcherButton'
 import { PublicWatcher } from '@mewi/types'
 import { Button } from '@mewi/ui'
 import queryString from 'query-string'
+import _ from 'lodash'
+import { findNestedCategory } from 'utils'
 
 const WatcherCard = ({ watcher }: { watcher: PublicWatcher }) => {
     const history = useHistory()
 
     const handleSearchButtonClick = () => {
+        const filters = _.omit(watcher.metadata, ['category'])
+        let pathname = '/search'
+
+        if (watcher.metadata.category) {
+            pathname = `/kategorier/${findNestedCategory(watcher.metadata.category).join('/')}`
+        }
+
         history.push({
-            pathname: '/search',
-            search: queryString.stringify(watcher.metadata),
+            pathname,
+            search: queryString.stringify(filters),
         })
     }
 

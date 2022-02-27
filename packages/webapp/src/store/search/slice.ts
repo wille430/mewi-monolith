@@ -22,7 +22,7 @@ const initialState: SearchState = {
     sort: SortData.RELEVANCE,
     page: 1,
     status: {
-        searching: 'complete',
+        searching: 'loading',
     },
     searchParams: '',
 }
@@ -62,7 +62,6 @@ export const searchSlice = createSlice({
         builder.addCase(setFilters, (state, action) => {
             state.filters = action.payload
             state.page = 1
-            state.status.searching = 'loading'
         })
 
         builder.addCase(updateFilters, (state, action) => {
@@ -138,7 +137,7 @@ export const searchSlice = createSlice({
             )
 
             // update url search params
-            state.searchParams = queryString.stringify(searchParams)
+            state.searchParams = '?' + queryString.stringify(searchParams)
         })
     },
 })

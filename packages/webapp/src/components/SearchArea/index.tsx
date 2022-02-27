@@ -30,7 +30,7 @@ const SearchArea = () => {
 
         if (history.location.search !== searchParams) {
             console.log({ current: history.location.search, new: searchParams })
-            history.push(window.location.pathname + '?' + searchParams)
+            history.push(window.location.pathname + searchParams)
         }
     }, [searchParams])
 
