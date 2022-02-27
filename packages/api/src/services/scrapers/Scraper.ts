@@ -58,6 +58,10 @@ class Scraper {
         }
     }
 
+    shouldContinueScraping(itemLength: number, expectedLength: number) {
+        return itemLength >= expectedLength
+    }
+
     async start() {
         let itemCount = 0
         let continueScraping = true
@@ -86,9 +90,7 @@ class Scraper {
                 EndDate.setEndDateFor(this.name, Date.now())
             }
 
-            if (items.length < this.limit) {
-                continueScraping = false
-            }
+            continueScraping = this.shouldContinueScraping(items.length, this.limit)
 
             // Assign loop-validators new values
             await ItemsService.addItems(items)
