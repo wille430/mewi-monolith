@@ -47,12 +47,13 @@ export default class EmailService {
      */
     static async sendEmail(to: string, template: string, locals, test = false) {
         let transporter
-        if (test || process.env.NODE_ENV === 'development') {
+        if (test || process.env.NODE_ENV !== 'production') {
             const account = await NodeMailer.createTestAccount()
 
             transporter = NodeMailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
+                host: account.smtp.host,
+                port: account.smtp.port,
+                secure: account.smtp.secure,
                 auth: {
                     user: account.user,
                     pass: account.pass,
