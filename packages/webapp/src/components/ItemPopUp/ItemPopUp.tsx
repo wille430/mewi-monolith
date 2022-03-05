@@ -1,6 +1,6 @@
-import PopUp from 'components/PopUp/ index'
+import PopUp from 'components/PopUp/PopUp'
 import StyledLoader from 'components/StyledLoader'
-import ArticleItemDetails from 'components/ArticleItemDetails'
+import ArticleItemDetails from 'components/ArticleItemDetails/ArticleItemDetails'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { clearItem } from 'store/itemDisplay/creators'

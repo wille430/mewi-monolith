@@ -1,9 +1,9 @@
 import StyledLoader from 'components/StyledLoader'
-import ArticleItem from 'components/ArticleItem/index'
-import ItemPopUp from '../ItemPopUp'
+import ArticleItem from 'components/ArticleItem/ArticleItem'
+import ItemPopUp from '../ItemPopUp/ItemPopUp'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getItem } from 'store/itemDisplay/creators'
-import styles from './index.module.scss'
+import styles from './ItemGrid.module.scss'
 import classNames from 'classnames'
 
 const cx = classNames.bind(styles)

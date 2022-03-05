@@ -1,5 +1,5 @@
 import React, { MutableRefObject } from 'react'
-import NavEndButton from './NavEndButton'
+import NavEndButton from './NavEndButton/NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'
 import { useAppSelector } from 'hooks/hooks'

@@ -1,7 +1,7 @@
 import { SearchFilterDataProps } from '@mewi/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
 import { Link, useLocation } from 'react-router-dom'
-import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea'
+import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea/SearchFilterArea'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import {
     clearFilters,
@@ -12,8 +12,8 @@ import {
 } from 'store/search/creators'
 import _ from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import PopUp from 'components/PopUp/ index'
-import styles from './index.module.scss'
+import PopUp from 'components/PopUp/PopUp'
+import styles from './FilterArea.module.scss'
 import classNames from 'classnames'
 import { Button } from '@mewi/ui'
 import { useWindowWidth } from '@react-hook/window-size'

@@ -1,4 +1,4 @@
-import styles from './index.module.scss'
+import styles from './DrawerAnimation.module.scss'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { ReactNode } from 'react'

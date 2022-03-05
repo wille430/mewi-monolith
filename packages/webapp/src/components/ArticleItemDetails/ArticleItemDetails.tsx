@@ -1,13 +1,13 @@
 import { ItemData } from '@mewi/types'
-import styles from './index.module.scss'
+import styles from './ArticleItemDetails.module.scss'
 import classNames from 'classnames'
 import { Container } from '@mewi/ui'
-import ImageDisplay from '../ImageDisplay'
+import ImageDisplay from '../ImageDisplay/ImageDisplay'
 import { HorizontalLine } from '@mewi/ui'
 import OriginLabel from '../ArticleItem/OriginLabel'
 import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
-import Description from './Description'
+import Description from './Description/Description'
 import CategoryPathLabel from 'components/SearchArea/CategoryPathLabel'
 
 const cx = classNames.bind(styles)

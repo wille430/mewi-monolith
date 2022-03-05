@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { ReactNode, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { updateFilters } from 'store/search/creators'
-import styles from './index.module.scss'
+import styles from './CategorySelectionList.module.scss'
 
 const cx = classNames.bind(styles)
 

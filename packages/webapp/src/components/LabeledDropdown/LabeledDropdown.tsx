@@ -1,4 +1,4 @@
-import DropdownMenu, { DropDownMenuProps } from 'components/DropdownMenu/index'
+import DropdownMenu, { DropDownMenuProps } from 'components/DropdownMenu/DropdownMenu'
 import { HTMLAttributes } from 'react'
 import { Override } from 'types/types'
 

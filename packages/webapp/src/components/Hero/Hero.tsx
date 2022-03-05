@@ -1,5 +1,5 @@
-import MewiLogo from 'components/MewiLogo'
-import SearchForm from 'components/SearchForm'
+import MewiLogo from 'components/MewiLogo/MewiLogo'
+import SearchForm from 'components/SearchForm/SearchForm'
 import Waves from './Waves'
 
 const Hero = () => {

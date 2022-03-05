@@ -2,7 +2,7 @@ import searchApi from 'api/searchApi'
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import AutoCompleteRow from '../AutoCompleteRow'
-import styles from './index.module.scss'
+import styles from './SearchSuggestions.module.scss'
 import classNames from 'classnames'
 import { HTMLMotionProps, motion } from 'framer-motion'
 

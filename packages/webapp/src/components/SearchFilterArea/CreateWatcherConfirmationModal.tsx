@@ -1,5 +1,5 @@
 import { Modal, Button } from '@mewi/ui'
-import PopUp from 'components/PopUp/ index'
+import PopUp from 'components/PopUp/PopUp'
 
 interface CreateWatcherConfirmationModalProps {
     open?: boolean

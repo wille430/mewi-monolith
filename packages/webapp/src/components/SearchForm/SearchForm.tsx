@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import SearchSuggestions from './SearchSuggestions'
+import SearchSuggestions from './SearchSuggestions/SearchSuggestions'
 import SearchButton from './SearchButton'
 import { useHistory } from 'react-router-dom'
 import queryString from 'query-string'

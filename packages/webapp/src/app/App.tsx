@@ -1,7 +1,7 @@
 import './App.css'
 import { lazy, Suspense, useEffect } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import Nav from 'components/Nav/index'
+import Nav from 'components/Nav/Nav'
 import Login from 'Routes/Login'
 import PrivateRoute from 'components/PrivateRoute'
 import PublicRoute from 'components/PublicRoute'
