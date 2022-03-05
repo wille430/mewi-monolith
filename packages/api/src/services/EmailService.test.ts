@@ -2,7 +2,7 @@ import { randomEmail } from '@mewi/util'
 import EmailService from './EmailService'
 
 describe('Email Service', () => {
-    it.todo('should be able to send email', async () => {
+    it.skip('should be able to send email', async () => {
         const locals = {
             newItemCount: 100,
             keyword: 'test',
