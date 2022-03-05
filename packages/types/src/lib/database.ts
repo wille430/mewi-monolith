@@ -29,6 +29,8 @@ export interface PublicWatcher {
     createdAt: string
 }
 
+export interface JoinedWatcher extends Omit<PublicWatcher, 'users' | '_id'>, UserWatcherData {}
+
 export type withId<T> = T & { _id: ObjectId }
 
 export interface FilterStates {

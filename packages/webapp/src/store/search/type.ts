@@ -1,7 +1,8 @@
-import { ItemData, SearchFilterDataProps, SortData } from '@mewi/types'
+import { SearchFilterDataProps, SortData } from '@mewi/types'
+import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {
-    hits: ItemData[]
+    hits: getSearchResultsReturnType['hits']
     totalHits: number
     filters: SearchFilterDataProps
     sort: SortData

@@ -513,12 +513,14 @@ export interface SearchFilterDataProps {
     priceRangeGte?: number
     priceRangeLte?: number
     auction?: boolean
+    dateGte?: number
 }
 
 export interface SearchPostRequestBody {
     page?: number
     searchFilters?: SearchFilterDataProps
     sort?: SortData
+    limit?: number
 }
 
 export enum SortData {

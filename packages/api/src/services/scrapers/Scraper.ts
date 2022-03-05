@@ -17,6 +17,7 @@ interface ScraperProps {
 
 class Scraper {
     maxEntries: number
+    itemsAdded = 0
     name: string
     limit: number
     endDate: number
@@ -58,14 +59,15 @@ class Scraper {
         }
     }
 
-    shouldContinueScraping(itemLength: number, expectedLength: number) {
-        return itemLength >= expectedLength
+    shouldContinueScraping() {
+        if (this.itemsAdded >= this.maxEntries) {
+            return false
+        } else {
+            return true
+        }
     }
 
     async start() {
-        let itemCount = 0
-        let continueScraping = true
-
         // check robots
         await this.checkRobots()
         if (!this.canCrawl) {
@@ -73,8 +75,10 @@ class Scraper {
             return
         }
 
+        let continueScraping = true
+
         // Loop for each page until max entries are met
-        while (itemCount < this.maxEntries && continueScraping) {
+        while (continueScraping) {
             // Get items from page (child function)
             let items = await this.getNextArticles()
 
@@ -86,23 +90,27 @@ class Scraper {
                 })
             }
 
-            if (itemCount === 0) {
+            if (this.itemsAdded === 0) {
                 EndDate.setEndDateFor(this.name, Date.now())
             }
 
-            continueScraping = this.shouldContinueScraping(items.length, this.limit)
+            continueScraping = this.shouldContinueScraping()
 
             // Assign loop-validators new values
             await ItemsService.addItems(items)
                 .then((val) => {
-                    itemCount += val
+                    this.itemsAdded += val
+
+                    if (val <= 0) {
+                        continueScraping = false
+                    }
                 })
                 .catch((e) => {
                     console.log(e)
                 })
         }
 
-        console.log(`Added ${itemCount} items from ${this.name}`)
+        console.log(`Added ${this.itemsAdded} items from ${this.name}`)
     }
 
     async getNextArticles(): Promise<ItemData[]> {

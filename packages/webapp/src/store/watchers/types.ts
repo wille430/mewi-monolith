@@ -1,8 +1,9 @@
-import { PublicWatcher } from '@mewi/types'
+import { ItemData, JoinedWatcher } from '@mewi/types'
 
 export interface WatchersState {
-    watchers: PublicWatcher[]
+    watchers: JoinedWatcher[]
     isLoading: boolean
+    newItems: Record<string, ItemData[]>
 }
 
 export enum WatchersActionType {
@@ -10,4 +11,5 @@ export enum WatchersActionType {
     WATCHERS_FETCH = 'watchers/getAll',
     WATCHERS_DELETE = 'watchers/delete',
     WATHCERS_ERROR = 'watchers/error',
+    GET_NEW_ITEMS = 'watchers/new_items',
 }

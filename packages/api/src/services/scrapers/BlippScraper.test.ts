@@ -35,7 +35,7 @@ describe('Blipp Scraper', () => {
     //     }
     // }, 30000)
 
-    let mockGetNextArticles
+    let mockGetNextArticles: jest.Mock<Promise<any[]>>
 
     it('should iterate through all pages', async () => {
         const itemsPerPage = 9
@@ -43,7 +43,7 @@ describe('Blipp Scraper', () => {
         let currentPage = 1
 
         mockGetNextArticles = jest.fn(async () => {
-            if (currentPage >= pages) {
+            if (currentPage > pages) {
                 return []
             }
 
@@ -55,7 +55,7 @@ describe('Blipp Scraper', () => {
             .spyOn(EndDate, 'setEndDateFor')
             .mockImplementation(() => undefined)
         const mockAddItems = jest.spyOn(ItemsService, 'addItems').mockImplementation(() => {
-            return Promise.resolve(itemsPerPage)
+            return Promise.resolve(currentPage > pages ? 0 : 9)
         })
 
         scraper.getNextArticles = mockGetNextArticles

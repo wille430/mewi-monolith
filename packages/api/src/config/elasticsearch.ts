@@ -2,7 +2,7 @@ import { Client } from '@elastic/elasticsearch'
 import { ItemData } from '@mewi/types'
 import _ from 'lodash'
 import ItemsService from 'services/ItemsService'
-import { generateMockItemData } from 'utils/testUtils'
+import { generateMockItemData } from '@mewi/util'
 
 class Elasticsearch {
     static hostUrl = process.env.SEARCH_ENGINE_URL || 'localhost'

@@ -1,4 +1,4 @@
-import WatcherCard from './WatcherCard'
+import WatcherCard from './WatcherCard/WatcherCard'
 import * as React from 'react'
 import StyledLoader from 'components/StyledLoader'
 import WatcherPopUpButton from './WatcherPopUpButton'
@@ -50,7 +50,7 @@ const WatcherList = () => {
 
     return (
         <section
-            className='mx-auto flex rounded-lg bg-blue'
+            className='mx-auto flex rounded-lg bg-blue w-full'
             style={{
                 maxWidth: '875px',
                 minHeight: '60vh',
@@ -60,7 +60,7 @@ const WatcherList = () => {
                 <header className='pb-6'>
                     <h3 className='text-white'>Mina bevakningar</h3>
                 </header>
-                <div className={'flex w-full flex-grow flex-col items-stretch space-y-2'}>
+                <div className={'flex w-full flex-grow flex-col space-y-2'}>
                     {renderItems()}
                 </div>
                 <footer className='mt-6 flex w-full justify-end'>

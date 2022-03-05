@@ -61,7 +61,7 @@ export default class SearchService {
         console.log('Creating query from ', JSON.stringify(searchFilterData))
 
         Object.keys(searchFilterData).forEach((key) => {
-            switch (key) {
+            switch (key as keyof SearchFilterDataProps) {
                 case 'keyword':
                     if (!searchFilterData[key]) break
                     query.bool.must.push({ match: { title: searchFilterData[key] } })
@@ -106,8 +106,17 @@ export default class SearchService {
                             },
                         })
                     }
+                    break
+                case 'dateGte':
+                    if (!query.bool.filter) query.bool.filter = []
 
-                    console.log(`Price must be ${key} than ${searchFilterData[key]}`)
+                    query.bool.filter.push({
+                        range: {
+                            date: {
+                                gte: searchFilterData[key],
+                            },
+                        },
+                    })
 
                     break
             }

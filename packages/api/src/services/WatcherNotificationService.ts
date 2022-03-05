@@ -50,12 +50,12 @@ class WatcherNotificationService {
             await new WatcherService(watcher._id).delete(user._id)
             return
         }
-        if (!this.userShouldBeNotified(watcherInUser.notifiedAt)) return
+        if (!this.userShouldBeNotified(new Date(watcherInUser.notifiedAt))) return
 
         const dateAdded = Date.parse(watcherInUser.createdAt)
 
         const lastNotificationDate = watcherInUser.notifiedAt
-            ? toUnixTime(watcherInUser.notifiedAt)
+            ? toUnixTime(new Date(watcherInUser.notifiedAt))
             : null
 
         let comparationDate = dateAdded
@@ -80,7 +80,7 @@ class WatcherNotificationService {
         callback && callback()
 
         // Update date when last notified in user watcher
-        watcherInUser.notifiedAt = new Date()
+        watcherInUser.notifiedAt = new Date().toString()
 
         await user.save()
         console.log(`${user.email} was successully notified!`)

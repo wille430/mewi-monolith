@@ -8,7 +8,7 @@ import Mock from '@elastic/elasticsearch-mock'
 import Elasticsearch from 'config/elasticsearch'
 import EmailService from './EmailService'
 import * as mockingoose from 'mockingoose'
-import { generateMockItemData } from 'utils/testUtils'
+import { generateMockItemData } from '@mewi/util'
 
 function randomDate(start: Date, end: Date) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))

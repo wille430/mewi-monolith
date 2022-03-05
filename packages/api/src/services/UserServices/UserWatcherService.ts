@@ -3,11 +3,19 @@
  */
 
 import { ObjectId } from 'bson'
-import { APIError, DatabaseErrorCodes, ElasticQuery, SearchFilterDataProps } from '@mewi/types'
+import {
+    APIError,
+    DatabaseErrorCodes,
+    ElasticQuery,
+    JoinedWatcher,
+    SearchFilterDataProps,
+} from '@mewi/types'
 import WatcherModel from 'models/WatcherModel'
 import WatcherService from 'services/WatcherService'
 import { UserService } from './index'
 import SearchService from 'services/SearchService'
+import _ from 'lodash'
+import { Watcher } from 'models/UserModel'
 
 class UserWatcherService {
     /**
@@ -15,13 +23,25 @@ class UserWatcherService {
      * @param userId User ID
      * @returns Array of watchers
      */
-    static async getAll(userId: string) {
+    static async getAll(userId: string): Promise<JoinedWatcher[]> {
         const user = await UserService.user(userId)
         const userWatchers = user.watchers
 
-        const watchers = await Promise.all(
-            userWatchers.map(async (userWatcher) => {
-                return await WatcherModel.findById(userWatcher._id)
+        const watchers: JoinedWatcher[] = await Promise.all(
+            userWatchers.map(async (userWatcher: Watcher) => {
+                try {
+                    const publicWatcher = await WatcherModel.findById(userWatcher._id)
+
+                    const joinedWatcher: JoinedWatcher = {
+                        ...userWatcher.toObject(),
+                        ..._.pick(publicWatcher.toObject(), ['query', 'metadata']),
+                        _id: userWatcher._id.toString(),
+                    }
+
+                    return joinedWatcher
+                } catch (e) {
+                    console.log(e)
+                }
             })
         )
 
@@ -34,10 +54,15 @@ class UserWatcherService {
      * @param watcherId ID of watcher
      * @returns A user watcher
      */
-    static async get(userId: string, watcherId: string) {
+    static async get(userId: string, watcherId: string): Promise<JoinedWatcher> {
         const user = await UserService.user(userId)
+        const userWatcher = user.watchers.id(watcherId)
+        const publicWatcher = await WatcherModel.findById(watcherId)
 
-        return user.watchers.id(watcherId)
+        return {
+            ...userWatcher,
+            ...publicWatcher,
+        }
     }
 
     static async userEligable(userId: string) {
@@ -55,7 +80,7 @@ class UserWatcherService {
     static async addWatcher(
         userId: string,
         { metadata, query }: { metadata: SearchFilterDataProps; query: ElasticQuery }
-    ) {
+    ): Promise<JoinedWatcher> {
         const user = await UserService.user(userId)
 
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
@@ -88,7 +113,11 @@ class UserWatcherService {
 
             console.log('Done. Returning user...')
 
-            return watcher
+            return {
+                ...watcher.toObject(),
+                ...userWatcher.toObject(),
+                _id: userWatcher._id.toString(),
+            }
         } else {
             console.log('User is already subscribed to the watcher')
 
@@ -107,7 +136,7 @@ class UserWatcherService {
         userId: string,
         watcherId: string,
         searchFilters: SearchFilterDataProps
-    ) {
+    ): Promise<JoinedWatcher> {
         const query = SearchService.createElasticQuery(searchFilters)
         const similarWatcher = await WatcherService.findSimilarWatcher(searchFilters)
 
@@ -140,7 +169,11 @@ class UserWatcherService {
         await user.save()
         await watcher.save()
 
-        return watcher
+        return {
+            ...watcher.toObject(),
+            ...newUserWatcher.toObject(),
+            _id: newUserWatcher._id.toString(),
+        }
     }
 }
 

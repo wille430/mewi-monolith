@@ -1,5 +1,5 @@
 import Layout from 'components/Layout'
-import WatcherList from './WatcherList'
+import WatcherList from './WatcherList/WatcherList'
 
 const Bevakningar = () => {
     return (

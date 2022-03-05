@@ -1,10 +1,8 @@
+import { UserWatcherData } from '@mewi/types'
 import * as mongoose from 'mongoose'
 
-export interface Watcher extends mongoose.Types.Subdocument {
+export interface Watcher extends mongoose.Types.Subdocument, Omit<UserWatcherData, '_id'> {
     _id: mongoose.Types.ObjectId
-    notifiedAt: Date | null
-    createdAt: string
-    updatedAt: string
 }
 
 export interface User extends mongoose.Document {
@@ -17,7 +15,7 @@ export interface User extends mongoose.Document {
 const WatcherSchema = new mongoose.Schema<Watcher>(
     {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'watcher' },
-        notifiedAt: { type: Date, default: null },
+        notifiedAt: { type: String, default: null },
     },
     {
         timestamps: true,

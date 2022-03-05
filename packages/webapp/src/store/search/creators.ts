@@ -1,6 +1,6 @@
 import { SearchFilterDataProps, SortData } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import searchApi from 'api/searchApi'
+import searchApi, { getSearchResultsReturnType } from 'api/searchApi'
 import { RootState } from 'store'
 import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
@@ -46,13 +46,12 @@ export const updateFilters = createAction(
 )
 
 export const getSearchResults = createAsyncThunk<
-    Pick<SearchState, 'hits' | 'totalHits'>,
+    getSearchResultsReturnType,
     void,
     { state: RootState }
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
         const { filters, sort, page } = thunkApi.getState().search
-        console.log('Searching for', filters.keyword)
         const results = await searchApi.getSearchResults({
             searchFilters: filters,
             sort: sort,

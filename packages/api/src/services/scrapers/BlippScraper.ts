@@ -126,10 +126,6 @@ class BlippScraper extends Scraper {
 
         return items
     }
-
-    shouldContinueScraping(): boolean {
-        return true
-    }
 }
 
 export default BlippScraper
