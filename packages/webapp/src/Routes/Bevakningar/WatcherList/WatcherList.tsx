@@ -25,12 +25,12 @@ const WatcherList = () => {
         } else {
             if (watchers.length > 0) {
                 return (
-                    <div className='grid w-full space-y-8'>
+                    <>
                         {watchers.map(
                             (watcherObj, i) =>
                                 watcherObj && <WatcherCard key={i} watcher={watcherObj} />
                         )}
-                    </div>
+                    </>
                 )
             } else {
                 return (
@@ -54,9 +54,7 @@ const WatcherList = () => {
             <Container.Header>
                 <h3>Mina bevakningar</h3>
             </Container.Header>
-            <Container.Content className={'flex flex-col space-y-2'}>
-                {renderItems()}
-            </Container.Content>
+            <Container.Content className={styles.content}>{renderItems()}</Container.Content>
             <Container.Footer className='flex justify-end pt-4'>
                 <WatcherPopUpButton data-testid='createNewWatcherButton' />
             </Container.Footer>

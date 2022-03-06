@@ -1,8 +1,19 @@
 .watcherList {
     width: 100%;
     max-width: 96rem;
+    min-height: 42rem;
 
     h3 {
         margin-bottom: 0.5rem;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        & > * + * {
+            margin-top: 1rem;
+        }
     }
 }
