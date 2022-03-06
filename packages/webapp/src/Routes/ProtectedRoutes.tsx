@@ -1,11 +1,11 @@
+import LazyLoader from 'components/LazyLoader/LazyLoader'
 import Page from 'components/Page'
-import StyledLoader from 'components/StyledLoader'
 import { Suspense } from 'react'
 import { Switch } from 'react-router-dom'
 import routes from './routes'
 
 const ProtectedRoutes = () => (
-    <Suspense fallback={<StyledLoader />}>
+    <Suspense fallback={<LazyLoader />}>
         <Switch>
             {routes.map(({ component: Component, path, exact, title }, i) => (
                 <Page
