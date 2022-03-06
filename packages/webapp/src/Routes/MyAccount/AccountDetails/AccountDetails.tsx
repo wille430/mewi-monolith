@@ -16,11 +16,11 @@ const AccountDetails = () => {
         <section>
             <h4>Kontouppgifter</h4>
             <EditableField
-                label='Email'
+                label='E-post'
                 value={userState.email}
                 onEditComplete={(val) => dispatch(updateUserInfo({ field: 'email', new_val: val }))}
             />
-            <EditableField label='Password' type='password' value={faker.internet.password()} />
+            <EditableField label='Password' type='password' value={faker.internet.password()} disabled />
         </section>
     )
 }

@@ -10,7 +10,7 @@ interface EditableFieldProps extends TextFieldProps {
     onEditComplete?: (val?: string) => void
 }
 
-const EditableField = ({ label, onEditComplete, ...rest }: EditableFieldProps) => {
+const EditableField = ({ label, onEditComplete, disabled, ...rest }: EditableFieldProps) => {
     const [isEditing, setEditing] = useState(false)
     const [_value, _setValue] = useState(rest.value)
 
@@ -26,7 +26,7 @@ const EditableField = ({ label, onEditComplete, ...rest }: EditableFieldProps) =
     return (
         <div>
             <label>{label}</label>
-            {isEditing ? (
+            {isEditing && !disabled ? (
                 <TextField
                     {...rest}
                     className={styles.editable}
@@ -37,7 +37,12 @@ const EditableField = ({ label, onEditComplete, ...rest }: EditableFieldProps) =
             ) : (
                 <div className={styles.noneditable}>
                     <input {..._.omit(rest, 'onChange')} disabled />
-                    <Button icon={<MdOutlineModeEditOutline />} onClick={() => setEditing(true)} />
+                    {!disabled && (
+                        <Button
+                            icon={<MdOutlineModeEditOutline />}
+                            onClick={() => setEditing(true)}
+                        />
+                    )}
                 </div>
             )}
         </div>
