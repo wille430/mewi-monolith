@@ -1,13 +1,13 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { Link, LinkProps } from 'react-router-dom'
 
-type Props = PropsWithChildren<{
+export type NavLinkItemProps = PropsWithChildren<{
     children: ReactNode
     to: string
 }> &
     LinkProps
 
-const NavLinkItem = ({ children, to, ...props }: Props) => {
+const NavLinkItem = ({ children, to, ...props }: NavLinkItemProps) => {
     return (
         <li>
             <Link to={to} {...props}>
