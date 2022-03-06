@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react'
 import { uniqueId } from 'lodash'
-import ArticleItemDetails from './index'
+import ArticleItemDetails from './ArticleItemDetails'
 
 export default {
     component: ArticleItemDetails,

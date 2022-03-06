@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import Checkbox from './index'
+import Checkbox from './Checkbox'
 import { randomString } from '@mewi/util'
 
 it('renders correctly', () => {

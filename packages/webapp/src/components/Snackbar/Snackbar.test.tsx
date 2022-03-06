@@ -1,4 +1,4 @@
-import Snackbar from './index'
+import Snackbar from './Snackbar'
 import '@testing-library/jest-dom'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { randomString } from '@mewi/util'

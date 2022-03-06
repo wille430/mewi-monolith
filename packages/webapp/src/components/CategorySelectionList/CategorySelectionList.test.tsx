@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
-import CategorySelectionList from '.'
+import CategorySelectionList from './CategorySelectionList'
 import { categories } from '@mewi/types'
 import { MemoryRouter, Route } from 'react-router-dom'
 import _ from 'lodash'

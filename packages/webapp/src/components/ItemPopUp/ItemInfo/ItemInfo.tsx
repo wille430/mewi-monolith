@@ -1,5 +1,5 @@
-import RedirectButton from './RedirectButton'
-import ImageDisplay from '../../ImageDisplay'
+import RedirectButton from './RedirectButton/RedirectButton'
+import ImageDisplay from '../../ImageDisplay/ImageDisplay'
 import ParamInfo from './ParamInfo'
 import CategoryString from './CategoryString'
 import { ItemData } from '@mewi/types'

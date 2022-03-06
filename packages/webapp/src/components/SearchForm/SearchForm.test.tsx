@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import SearchForm from './index'
+import SearchForm from './SearchForm'
 import { act } from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { store } from 'store'

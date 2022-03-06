@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import LabeledDropdown from './index'
+import LabeledDropdown from './LabeledDropdown'
 import { randomString } from '@mewi/util'
 
 it('renders correctly', () => {

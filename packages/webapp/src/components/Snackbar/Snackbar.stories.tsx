@@ -1,5 +1,5 @@
 import { Story, Meta } from '@storybook/react'
-import Snackbar from './index'
+import Snackbar from './Snackbar'
 
 export default {
     component: Snackbar,
