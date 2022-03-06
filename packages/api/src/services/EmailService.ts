@@ -74,6 +74,7 @@ export default class EmailService {
                 from: this.googleAuth.email,
             },
             transport: transporter,
+            preview: false,
         })
 
         const emailInfo = await email.send({

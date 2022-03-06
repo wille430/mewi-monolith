@@ -122,6 +122,19 @@ input:-webkit-autofill:active {
                 background-color: $primary;
                 position: absolute;
             }
+
+            &.noLabel {
+                transform: translateX(-0.5rem) translateY(-0.5rem);
+
+                &:after {
+                    content: '';
+                    width: 100%;
+                    left: 0;
+                    height: 2px;
+                    background-color: $primary;
+                    position: absolute;
+                }
+            }
         }
     }
 }

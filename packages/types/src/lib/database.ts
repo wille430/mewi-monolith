@@ -93,3 +93,5 @@ export interface AuthTokens {
     jwt: JWT
     refreshToken: string
 }
+
+export type EditableUserFields = keyof Pick<UserData, 'email'>

@@ -16,6 +16,12 @@ const routes: (Omit<PageProps, 'component'> & {
         component: lazy(() => import('Routes/PaymentPage')),
         exact: true,
     },
+    {
+        title: 'Mitt Konto - Mewi.se',
+        path: 'mittkonto',
+        component: lazy(() => import('Routes/MyAccount/MyAccount')),
+        exact: true,
+    },
 ]
 
 export default routes
