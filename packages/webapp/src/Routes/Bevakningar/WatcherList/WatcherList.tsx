@@ -5,7 +5,7 @@ import { getAllWatchers } from 'store/watchers/creators'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'hooks/hooks'
 import { useEffect } from 'react'
-import { Container } from '@mewi/ui'
+import { Container, HorizontalLine } from '@mewi/ui'
 import styles from './WatcherList.module.scss'
 
 const WatcherList = () => {
@@ -36,7 +36,7 @@ const WatcherList = () => {
                 return (
                     <div className='flex flex-grow items-center justify-center'>
                         <div className='h-32'>
-                            <span className='text-sm text-white'>Du har inga bevakningar ännu</span>
+                            <span className='text-sm'>Du har inga bevakningar ännu</span>
                         </div>
                     </div>
                 )
@@ -55,7 +55,8 @@ const WatcherList = () => {
                 <h3>Mina bevakningar</h3>
             </Container.Header>
             <Container.Content className={styles.content}>{renderItems()}</Container.Content>
-            <Container.Footer className='flex justify-end pt-4'>
+            <HorizontalLine />
+            <Container.Footer className='flex justify-end'>
                 <WatcherPopUpButton data-testid='createNewWatcherButton' />
             </Container.Footer>
         </Container>
