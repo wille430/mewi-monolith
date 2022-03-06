@@ -1,11 +1,12 @@
 import WatcherCard from './WatcherCard/WatcherCard'
-import * as React from 'react'
 import StyledLoader from 'components/StyledLoader'
 import WatcherPopUpButton from './WatcherPopUpButton'
 import { getAllWatchers } from 'store/watchers/creators'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'hooks/hooks'
 import { useEffect } from 'react'
+import { Container } from '@mewi/ui'
+import styles from './WatcherList.module.scss'
 
 const WatcherList = () => {
     const { isLoading, watchers } = useAppSelector((state) => state.watchers)
@@ -49,25 +50,17 @@ const WatcherList = () => {
     }, [])
 
     return (
-        <section
-            className='mx-auto flex rounded-lg bg-blue w-full'
-            style={{
-                maxWidth: '875px',
-                minHeight: '60vh',
-            }}
-        >
-            <div className='flex w-full flex-col items-center p-6'>
-                <header className='pb-6'>
-                    <h3 className='text-white'>Mina bevakningar</h3>
-                </header>
-                <div className={'flex w-full flex-grow flex-col space-y-2'}>
-                    {renderItems()}
-                </div>
-                <footer className='mt-6 flex w-full justify-end'>
-                    <WatcherPopUpButton data-testid='createNewWatcherButton' />
-                </footer>
-            </div>
-        </section>
+        <Container className={styles.watcherList}>
+            <Container.Header>
+                <h3>Mina bevakningar</h3>
+            </Container.Header>
+            <Container.Content className={'flex flex-col space-y-2'}>
+                {renderItems()}
+            </Container.Content>
+            <Container.Footer className='flex justify-end pt-4'>
+                <WatcherPopUpButton data-testid='createNewWatcherButton' />
+            </Container.Footer>
+        </Container>
     )
 }
 

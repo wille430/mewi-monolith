@@ -100,12 +100,12 @@ const WatcherCard = ({ watcher, newItems }: { watcher: JoinedWatcher; newItems?:
                         )}
                     </div>
                 </div>
-                <footer className='mt-2 flex items-center justify-between'>
-                    <div className='text-sm opacity-70'>
+                <footer className='mt-2 flex flex-col-reverse items-center justify-between sm:flex-row'>
+                    <div className='text-sm opacity-70 w-full sm:w-auto'>
                         <label className='label'>Lades till:</label>
                         <span>{new Date(watcher.createdAt).toLocaleDateString('se-SV')}</span>
                     </div>
-                    <div className='flex space-x-2'>
+                    <div className='flex justify-end space-x-2 sm:justify-start w-full sm:w-auto'>
                         <Button
                             onClick={handleSearchButtonClick}
                             label='Sök på min bevakning'
@@ -119,9 +119,7 @@ const WatcherCard = ({ watcher, newItems }: { watcher: JoinedWatcher; newItems?:
                 </footer>
             </article>
             <AnimatePresence>
-                {expand && (
-                    <NewItemsDrawer watcherId={watcher._id} newItems={newItems || []} />
-                )}
+                {expand && <NewItemsDrawer watcherId={watcher._id} newItems={newItems || []} />}
             </AnimatePresence>
         </div>
     )
