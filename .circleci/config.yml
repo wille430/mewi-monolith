@@ -47,7 +47,7 @@ jobs:
             #       command: sudo npm install pm2 -g
             #       name: Installing pm2
             - run:
-                  command: npx nx run-many --target=lint --all
+                  command: npx nx affected --target=lint --base=$NX_BASE
                   name: Lint projects
             - run:
                   command: npx nx run-many --all --target=build --configuration=production
@@ -62,7 +62,8 @@ jobs:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
             - run:
-                  command: npx nx run-many --all --target=test
+                #   command: npx nx run-many --all --target=test
+                  command: npx nx affected --target=test --base=$NX_BASE
                   name: Run Unit Tests
             - persist_to_workspace:
                   root: .
