@@ -80,6 +80,9 @@ jobs:
                   error-on-no-successful-workflow: true
                   main-branch-name: main
             - run:
+                  name: Build API Image
+                  command: docker build ./packages/api -t $API_IMAGE_NAME
+            - run:
                   name: Push Docker API Image
                   command: |
                       echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
