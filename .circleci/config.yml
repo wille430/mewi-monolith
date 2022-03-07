@@ -25,7 +25,7 @@ jobs:
         steps:
             - checkout
             - run:
-                  command: npm install --frozen-lockfile
+                  command: npm ci
                   name: Install dependencies
             - nx/set-shas:
                   error-on-no-successful-workflow: true
