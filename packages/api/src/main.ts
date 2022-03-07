@@ -5,6 +5,9 @@ import ItemsService from './services/ItemsService'
 import app from './routes/app'
 import WatcherNotificationService from 'services/WatcherNotificationService'
 import Elasticsearch from 'config/elasticsearch'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 console.log('NODE ENV:', process.env.NODE_ENV)
 ;(async () => {

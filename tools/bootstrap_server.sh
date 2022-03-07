@@ -11,7 +11,15 @@ echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee 
 sudo apt update
 sudo apt install elasticsearch
 
+# CONFIGURE
+echo "network.host: localhost" >> /etc/elasticsearch/elasticsearch.yml
 
+# INSTALL NODE
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt update
+sudo apt install -y nodejs
+sudo apt install -y npm
+npm i -g pm2
 
 # START SERVICES
 sudo systemctl start mongod
@@ -19,3 +27,9 @@ sudo systemctl enable mongod
 
 sudo systemctl start elasticsearch
 sudo systemctl enable elasticsearch
+
+sudo systemctl enable pm2
+sudo systemctl start pm2
+
+# CONFIGS
+curl -XPUT localhost:9200/items

@@ -14,6 +14,8 @@ spec:
             labels:
                 app: api
         spec:
+            imagePullSecrets:
+            - name: regcred
             containers:
                 - image: wille430/mewi-api:latest
                   name: mewi-api
