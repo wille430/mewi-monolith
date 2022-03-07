@@ -82,7 +82,7 @@ jobs:
                   main-branch-name: main
             - run:
                   name: Build API Image
-                  command: docker build ./packages/api -t $API_IMAGE_NAME
+                  command: docker build . -f ./packages/api/Dockerfile -t $API_IMAGE_NAME
             - run:
                   name: Push Docker API Image
                   command: |
@@ -98,11 +98,13 @@ jobs:
             - run:
                   name: Deploy API image to cluster
                   command: |
-                      ./kubectl \
+                        echo "$KUBERNETES_CLUSTER_CERTIFICATE" | base64 --decode > cert.crt
+                        ./kubectl \
                           --kubeconfig=/dev/null \
                           --server=$KUBERNETES_SERVER \
                           --certificate-authority=cert.crt \
                           --token=$KUBERNETES_TOKEN \
+                            apply -f ./k8s/
             - run:
                   command: npx nx run-many --all --target=deploy
                   name: Deploy to apps
