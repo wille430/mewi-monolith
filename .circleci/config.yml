@@ -86,6 +86,7 @@ jobs:
             - run:
                   command: |
                       scp -r ./dist/packages/api/* root@$API_SERVER_HOST:/root/api/
+                      ssh root@$API_SERVER_HOST "npm i; pm2 delete main; pm2 start /root/api/main.js"
                   name: Deploy to API server
             - run:
                   command: npx nx run-many --all --target=deploy
