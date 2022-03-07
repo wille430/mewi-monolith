@@ -72,18 +72,33 @@ jobs:
         machine:
             image: ubuntu-2004:202010-01
         steps:
-            - run:
-                  command: curl https://get.okteto.com -sSfL | sh
-                  name: Install Okteto CLI
-            - run:
-                  command: okteto login --token $OKTETO_TOKEN
-                  name: Login in to Okteto
+            # TODO: deploy image
             - checkout
             - attach_workspace:
                   at: .
             - nx/set-shas:
                   error-on-no-successful-workflow: true
-                  main-branch-name: main.
+                  main-branch-name: main
+            - run:
+                  name: Push Docker API Image
+                  command: |
+                      echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+                      docker tag $API_IMAGE_NAME:latest $API_IMAGE_NAME:$CIRCLE_SHA1
+                      docker push $API_IMAGE_NAME:latest
+                      docker push $API_IMAGE_NAME:$CIRCLE_SHA1
+            - run:
+                  name: Install kubectl
+                  command: |
+                      curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+                      chmod u+x ./kubectl
+            - run:
+                  name: Deploy API image to cluster
+                  command: |
+                      ./kubectl \
+                          --kubeconfig=/dev/null \
+                          --server=$KUBERNETES_SERVER \
+                          --certificate-authority=cert.crt \
+                          --token=$KUBERNETES_TOKEN \
             - run:
                   command: npx nx run-many --all --target=deploy
                   name: Deploy to apps
