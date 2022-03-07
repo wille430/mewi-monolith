@@ -62,7 +62,7 @@ jobs:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
             - run:
-                #   command: npx nx run-many --all --target=test
+                  #   command: npx nx run-many --all --target=test
                   command: npx nx affected --target=test --base=$NX_BASE
                   name: Run Unit Tests
             - persist_to_workspace:
@@ -80,11 +80,13 @@ jobs:
             - nx/set-shas:
                   error-on-no-successful-workflow: true
                   main-branch-name: main
+            - add_ssh_keys:
+                  fingerprints:
+                      - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
             - run:
-                command: |
-                    scp -r .\dist\packages\api\* root@$API_SERVER_HOST:/root/api/
-                    $API_SERVER_PASS
-                name: Deploy to API server
+                  command: |
+                      scp -r .\dist\packages\api\* root@$API_SERVER_HOST:/root/api/
+                  name: Deploy to API server
             - run:
                   command: npx nx run-many --all --target=deploy
                   name: Deploy to apps
