@@ -85,7 +85,7 @@ jobs:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
             - run:
                   command: |
-                      scp -r .\dist\packages\api\* root@$API_SERVER_HOST:/root/api/
+                      scp -r ./dist/packages/api/* root@$API_SERVER_HOST:/root/api/
                   name: Deploy to API server
             - run:
                   command: npx nx run-many --all --target=deploy
