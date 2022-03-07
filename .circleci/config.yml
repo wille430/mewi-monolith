@@ -81,30 +81,10 @@ jobs:
                   error-on-no-successful-workflow: true
                   main-branch-name: main
             - run:
-                  name: Build API Image
-                  command: docker build . -f ./packages/api/Dockerfile -t $API_IMAGE_NAME
-            - run:
-                  name: Push Docker API Image
-                  command: |
-                      echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                      docker tag $API_IMAGE_NAME:latest $API_IMAGE_NAME:$CIRCLE_SHA1
-                      docker push $API_IMAGE_NAME:latest
-                      docker push $API_IMAGE_NAME:$CIRCLE_SHA1
-            - run:
-                  name: Install kubectl
-                  command: |
-                      curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-                      chmod u+x ./kubectl
-            - run:
-                  name: Deploy API image to cluster
-                  command: |
-                        echo "$KUBERNETES_CLUSTER_CERTIFICATE" | base64 --decode > cert.crt
-                        ./kubectl \
-                          --kubeconfig=/dev/null \
-                          --server=$KUBERNETES_SERVER \
-                          --certificate-authority=cert.crt \
-                          --token=$KUBERNETES_TOKEN \
-                            apply -f ./k8s/
+                command: |
+                    scp -r .\dist\packages\api\* root@$API_SERVER_HOST:/root/api/
+                    $API_SERVER_PASS
+                name: Deploy to API server
             - run:
                   command: npx nx run-many --all --target=deploy
                   name: Deploy to apps
