@@ -10,6 +10,7 @@ import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { onAuthLoad } from 'store/auth/creators'
 import Page from 'components/Page'
+import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -74,6 +75,12 @@ function App() {
                             exact
                             path='/'
                             component={<Home />}
+                        />
+                        <Page
+                            title='Glömt lösenord - Mewi.se'
+                            exact
+                            path='/glomtlosenord'
+                            component={<ForgottenPassword />}
                         />
                         <PrivateRoute
                             path='/'
