@@ -40,3 +40,5 @@ export const ValidationErrorCodes = {
 export const WatcherErrorCodes = {
     INVALID_QUERY: 'watcher/invalid_query',
 }
+
+export const MissingUserError = new APIError(404, AuthErrorCodes.MISSING_USER)

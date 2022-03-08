@@ -1,5 +1,11 @@
 import UserModel, { User } from 'models/UserModel'
-import { APIError, AuthErrorCodes, EditableUserFields, UserData, ValidationErrorCodes } from '@mewi/types'
+import {
+    APIError,
+    AuthErrorCodes,
+    EditableUserFields,
+    UserData,
+    ValidationErrorCodes,
+} from '@mewi/types'
 import UserEmailService from './UserEmailService'
 
 export default class UserService {
@@ -12,7 +18,7 @@ export default class UserService {
     }
 
     static async info(userId: string) {
-        const user = await UserService.user(userId, { password: 0 })
+        const user = await UserService.user(userId, { email: 1, premium: 1, watchers: 1 })
         return user
     }
 

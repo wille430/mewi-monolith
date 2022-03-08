@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { categories, ItemData } from '@mewi/types'
+import { categories, ItemData, UserData } from '@mewi/types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
@@ -43,3 +43,11 @@ export const generateMockItemData = (
         return items[0]
     }
 }
+
+export const generateMockUserData = (): UserData => ({
+    email: randomEmail(),
+    password: faker.datatype.uuid(),
+    premium: faker.datatype.boolean(),
+    watchers: [],
+    passwordResetSecret: faker.random.alpha({ count: 256 }),
+})

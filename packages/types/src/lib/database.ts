@@ -17,6 +17,7 @@ export interface UserData {
     password: string
     premium: boolean
     watchers: UserWatcherData[]
+    passwordResetSecret: string
 }
 
 export type WatcherMetadata = SearchFilterDataProps
