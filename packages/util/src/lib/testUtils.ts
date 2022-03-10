@@ -45,6 +45,7 @@ export const generateMockItemData = (
 }
 
 export const generateMockUserData = (): UserData => ({
+    _id: faker.datatype.uuid(),
     email: randomEmail(),
     password: faker.datatype.uuid(),
     premium: faker.datatype.boolean(),

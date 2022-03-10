@@ -7,7 +7,7 @@ export interface Watcher extends mongoose.Types.Subdocument, Omit<UserWatcherDat
 }
 
 export type User = mongoose.Document &
-    Omit<UserData, 'watchers'> & {
+    Omit<UserData, 'watchers' | '_id'> & {
         watchers: mongoose.Types.DocumentArray<Watcher>
     }
 
