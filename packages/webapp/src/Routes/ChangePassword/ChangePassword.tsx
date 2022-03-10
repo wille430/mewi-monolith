@@ -1,12 +1,25 @@
-import { Button, Container, TextField } from '@mewi/ui'
+import { Button, Container, TextField, TextFieldProps } from '@mewi/ui'
 import Layout from 'components/Layout'
 import { useAppDispatch } from 'hooks/hooks'
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { forgottenPassword } from 'store/user/creator'
 
+type FormData = Record<
+    string,
+    {
+        errorMessage: string
+    } & TextFieldProps
+>
+
 const ForgottenPassword = () => {
-    const [email, setEmail] = useState<string | undefined>()
+    const initialForm: FormData = {
+        email: {
+            name: 'email',
+            placeholder: 'E-postaddress',
+        },
+    }
+    const [form, setForm] = useState(initialForm)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [success, setSuccess] = useState(false)
 
@@ -20,7 +33,6 @@ const ForgottenPassword = () => {
         dispatch(forgottenPassword()).then((action) => {
             if (action.meta.requestStatus === 'fulfilled') {
                 setSuccess(true)
-                setEmail(undefined)
             } else {
                 if (typeof action.payload === 'string') setErrorMessage(action.payload)
             }
@@ -33,12 +45,14 @@ const ForgottenPassword = () => {
                 <Container className='mx-auto max-w-lg'>
                     <Container.Header>
                         <h3 className='pb-6 pt-4 text-center'>Glömt lösenord</h3>
-                    </Container.Header>
+                    <>
                     <Container.Content>
                         <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
-                                    onChange={(value) => setEmail(value)}
+                                    onChange={(value) =>
+                                        setForm((prevState) => ({ ...prevState, email: {} }))
+                                    }
                                     value={email}
                                     name='email'
                                     placeholder='E-postadress'
