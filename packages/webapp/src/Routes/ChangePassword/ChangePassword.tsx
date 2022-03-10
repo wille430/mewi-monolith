@@ -1,42 +1,23 @@
-import { Button, Container, TextField, TextFieldProps } from '@mewi/ui'
+import { Button, Container, TextField } from '@mewi/ui'
 import Layout from 'components/Layout'
 import { useAppDispatch } from 'hooks/hooks'
 import { FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { forgottenPassword } from 'store/user/creator'
-
-type FormData = Record<
-    string,
-    {
-        errorMessage: string
-    } & TextFieldProps
->
 
 const ForgottenPassword = () => {
-    const initialForm: FormData = {
-        email: {
-            name: 'email',
-            placeholder: 'E-postaddress',
-        },
+    const initialState = {
+        password: '',
+        repassword: '',
     }
-    const [form, setForm] = useState(initialForm)
-    const [errorMessage, setErrorMessage] = useState<string | undefined>()
-    const [success, setSuccess] = useState(false)
+
+    const [formData, setFormData] = useState(initialState)
+    const [errors, setErrors] = useState(initialState)
 
     const dispatch = useAppDispatch()
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
-        // TODO: disaptch api call
-        setErrorMessage(undefined)
-        setSuccess(false)
-        dispatch(forgottenPassword()).then((action) => {
-            if (action.meta.requestStatus === 'fulfilled') {
-                setSuccess(true)
-            } else {
-                if (typeof action.payload === 'string') setErrorMessage(action.payload)
-            }
-        })
+
+        // TODO DISPATCH
     }
 
     return (
@@ -44,41 +25,54 @@ const ForgottenPassword = () => {
             <main className='main'>
                 <Container className='mx-auto max-w-lg'>
                     <Container.Header>
-                        <h3 className='pb-6 pt-4 text-center'>Glömt lösenord</h3>
-                    <>
+                        <h3 className='pb-6 pt-4 text-center'>Nytt lösenord</h3>
+                    </Container.Header>
                     <Container.Content>
                         <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
-                                    onChange={(value) =>
-                                        setForm((prevState) => ({ ...prevState, email: {} }))
+                                    onChange={(val) =>
+                                        setFormData((prevState) => ({
+                                            ...prevState,
+                                            password: val || '',
+                                        }))
                                     }
-                                    value={email}
-                                    name='email'
-                                    placeholder='E-postadress'
-                                    data-testid='emailInput'
+                                    value={formData.password}
+                                    name='password'
+                                    placeholder='Lösenord'
+                                    type='password'
+                                    data-testid='passwordInput'
                                     fullWidth={true}
                                 />
-                                <span className='text-red-400'>{errorMessage}</span>
-                                <span className='text-green-400'>
-                                    {success &&
-                                        `Ett meddelande till ${email} har skickats med en återställningslänk`}
-                                </span>
+                                <span className='text-red-400'>{errors.password}</span>
+                            </div>
+                            <div className='w-full'>
+                                <TextField
+                                    onChange={(val) =>
+                                        setFormData((prevState) => ({
+                                            ...prevState,
+                                            repassword: val || '',
+                                        }))
+                                    }
+                                    value={formData.repassword}
+                                    name='repassword'
+                                    placeholder='Bekräfta lösenord'
+                                    type='password'
+                                    data-testid='repasswordInput'
+                                    fullWidth={true}
+                                />
+                                <span className='text-red-400'>{errors.repassword}</span>
                             </div>
 
                             <Button
-                                label='Byt lösenord'
+                                label='Ändra lösenord'
                                 onClick={onFormSubmit}
                                 data-testid='formSubmitButton'
                             />
                         </form>
                     </Container.Content>
                     <Container.Footer>
-                        <div className='pt-6'>
-                            <Link to='/login' className='text-center underline'>
-                                Logga in istället
-                            </Link>
-                        </div>
+                        <div className='pt-6'></div>
                     </Container.Footer>
                 </Container>
             </main>

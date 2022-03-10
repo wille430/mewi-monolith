@@ -14,7 +14,7 @@ const ForgottenPassword = () => {
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
-        // TODO: disaptch api call
+        
         setErrorMessage(undefined)
         setSuccess(false)
         dispatch(forgottenPassword()).then((action) => {
