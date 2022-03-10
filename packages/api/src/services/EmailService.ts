@@ -1,8 +1,8 @@
-import { UserService } from './UserServices'
 import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
+import { ItemData, PublicWatcher } from '@mewi/types'
 
 export default class EmailService {
     static googleAuth = {
@@ -10,42 +10,50 @@ export default class EmailService {
         pass: process.env.GMAIL_PASS,
     }
 
-    static findTemplateDir() {
-        const templatePath = path.resolve('packages/api/src/emails')
-        if (fs.existsSync(templatePath)) {
-            // template path for non-compiled project
-            return templatePath
+    static templatesDirectory() {
+        if (fs.existsSync(path.join(__dirname, 'emails'))) {
+            return path.join(__dirname, 'emails')
         } else {
-            // template path in out-dir
-            return 'emails'
+            return path.resolve(__dirname, '../emails')
         }
     }
 
-    static newWatchersTemplatePath = EmailService.findTemplateDir() + '/newItems'
+    static newWatchersTemplatePath = this.templatesDirectory() + '/newItems'
 
-    /** @params sendEmailWithItems Notify user with {ItemData} */
-    static async sendEmailWithItems(userId: string, watcher, items, totalCount?: number) {
-        const user = await UserService.user(userId)
-
+    static async sendEmailWithItems(
+        email: string,
+        watcher: PublicWatcher,
+        items: ItemData[],
+        totalCount?: number
+    ) {
         const locals = {
             newItemCount: totalCount || items.length,
             keyword: watcher.metadata.keyword,
             items: items,
         }
 
-        const info = await this.sendEmail(user.email, this.newWatchersTemplatePath, locals)
+        const info = await this.sendEmail(email, this.newWatchersTemplatePath, locals)
 
         console.log('Preview URL: %s', NodeMailer.getTestMessageUrl(info))
     }
 
+    /**
+     *
+     * @param to Email of receiver
+     * @param template Absolute path to email template
+     * @param locals Object of template variables
+     * @param test True if email should be sent throught NodeMailer test account
+     * @returns
+     */
     static async sendEmail(to: string, template: string, locals, test = false) {
         let transporter
-        if (test || process.env.NODE_ENV === 'development') {
+        if (test || process.env.NODE_ENV !== 'production') {
             const account = await NodeMailer.createTestAccount()
 
             transporter = NodeMailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
+                host: account.smtp.host,
+                port: account.smtp.port,
+                secure: account.smtp.secure,
                 auth: {
                     user: account.user,
                     pass: account.pass,
@@ -66,10 +74,11 @@ export default class EmailService {
                 from: this.googleAuth.email,
             },
             transport: transporter,
+            preview: false,
         })
 
         const emailInfo = await email.send({
-            template: this.findTemplateDir() + '/' + template,
+            template: template,
             message: {
                 to: to,
             },

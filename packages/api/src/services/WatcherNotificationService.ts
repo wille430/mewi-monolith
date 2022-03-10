@@ -11,7 +11,7 @@ class WatcherNotificationService {
     client = elasticClient
 
     constructor(client?: typeof elasticClient) {
-        this.client = client
+        this.client = client || elasticClient
     }
 
     /**
@@ -27,7 +27,11 @@ class WatcherNotificationService {
         const users = await UserService.usersInIds(arrayOfUids)
 
         users.forEach(async (user) => {
-            this.notifyUser(user, watcher, callback)
+            try {
+                await this.notifyUser(user, watcher, callback)
+            } catch (e) {
+                console.error(e)
+            }
         })
     }
 
@@ -46,12 +50,12 @@ class WatcherNotificationService {
             await new WatcherService(watcher._id).delete(user._id)
             return
         }
-        if (!this.userShouldBeNotified(watcherInUser.notifiedAt)) return
+        if (!this.userShouldBeNotified(new Date(watcherInUser.notifiedAt))) return
 
         const dateAdded = Date.parse(watcherInUser.createdAt)
 
         const lastNotificationDate = watcherInUser.notifiedAt
-            ? toUnixTime(watcherInUser.notifiedAt)
+            ? toUnixTime(new Date(watcherInUser.notifiedAt))
             : null
 
         let comparationDate = dateAdded
@@ -62,7 +66,6 @@ class WatcherNotificationService {
             comparationDate
         )
 
-        console.log(`Found no new items for watcher ${watcher._id}. Returning null.`)
         if (newItems.length <= 0) return
 
         console.log(
@@ -71,19 +74,13 @@ class WatcherNotificationService {
             ).toDateString()} (watcher_id: ${watcherInUser._id})`
         )
 
-        const locals = {
-            newItemCount: totalHits,
-            keyword: watcher.metadata.keyword,
-            items: newItems,
-        }
-
         // send email
-        await EmailService.sendEmail(user.email, 'newItems', locals)
+        await EmailService.sendEmailWithItems(user.email, watcher, newItems, totalHits)
 
         callback && callback()
 
         // Update date when last notified in user watcher
-        user.watchers.id(watcher._id).notifiedAt = new Date(Date.now())
+        watcherInUser.notifiedAt = new Date().toString()
 
         await user.save()
         console.log(`${user.email} was successully notified!`)
@@ -102,12 +99,13 @@ class WatcherNotificationService {
 
         console.log(`${mailSent} emails were sent!`)
     }
+    i
 
     userShouldBeNotified(lastNotificationDate: Date): boolean {
         if (!lastNotificationDate) return true
 
         const ms = toUnixTime(lastNotificationDate)
-        if (Date.now() - ms > 24 * 60 * 60 * 1000) return true
+        if (Date.now() - ms > 1.5 * 24 * 60 * 60 * 1000) return true
 
         return false
     }

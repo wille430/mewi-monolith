@@ -1,25 +1,30 @@
 import { ItemData } from '@mewi/types'
-import { toUnixTime, toDateObj } from '@mewi/util'
+import { toUnixTime } from '@mewi/util'
 import axios from 'axios'
 import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
 import robotsParser from 'robots-parser'
+import nodeSchedule from 'node-schedule'
+import Elasticsearch, { elasticClient } from 'config/elasticsearch'
 
 interface ScraperProps {
-    maxEntries: number
+    maxEntries?: number
     name: string
-    limit: number
+    limit?: number
     baseUrl: string
     useRobots?: boolean
 }
 
 class Scraper {
     maxEntries: number
+    itemsAdded = 0
     name: string
     limit: number
     endDate: number
     baseUrl: string
     useRobots: boolean
+    deleteOlderThan: number = Date.now() - 2 * 24 * 60 * 60 * 1000
+    cronTimerSchedule = '30 * * * *'
 
     // Robots
     canCrawl = false
@@ -30,6 +35,8 @@ class Scraper {
         this.limit = limit
         this.baseUrl = baseUrl
         this.useRobots = useRobots
+
+        console.log(EndDate.getEndDateFor(this.name))
 
         this.endDate = toUnixTime(EndDate.getEndDateFor(this.name))
     }
@@ -52,10 +59,15 @@ class Scraper {
         }
     }
 
-    async start() {
-        let itemCount = 0
-        let continueScraping = true
+    shouldContinueScraping() {
+        if (this.itemsAdded >= this.maxEntries) {
+            return false
+        } else {
+            return true
+        }
+    }
 
+    async start() {
         // check robots
         await this.checkRobots()
         if (!this.canCrawl) {
@@ -63,8 +75,10 @@ class Scraper {
             return
         }
 
+        let continueScraping = true
+
         // Loop for each page until max entries are met
-        while (itemCount < this.maxEntries && continueScraping) {
+        while (continueScraping) {
             // Get items from page (child function)
             let items = await this.getNextArticles()
 
@@ -76,34 +90,59 @@ class Scraper {
                 })
             }
 
-            const summary = this.summary(items)
-
-            if (itemCount == 0) {
+            if (this.itemsAdded === 0) {
                 EndDate.setEndDateFor(this.name, Date.now())
             }
 
-            // Assign loop-validators new values
-            continueScraping = summary.continue
+            continueScraping = this.shouldContinueScraping()
 
-            itemCount += await ItemsService.addItems(items).catch((e) => {
-                console.log(e)
-                return 0
-            })
+            // Assign loop-validators new values
+            await ItemsService.addItems(items)
+                .then((val) => {
+                    this.itemsAdded += val
+
+                    if (val <= 0) {
+                        continueScraping = false
+                    }
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         }
 
-        console.log(`Added ${itemCount} items from ${this.name}`)
+        console.log(`Added ${this.itemsAdded} items from ${this.name}`)
     }
 
     async getNextArticles(): Promise<ItemData[]> {
         return []
     }
 
-    summary(items: ItemData[]) {
-        return {
-            itemsAdded: items.length,
-            firstDate: items[0]?.date ? toDateObj(items[0].date) : toDateObj(Date.now()),
-            continue: !(items.length < this.limit),
-        }
+    schedule(callback?: () => void): void {
+        console.log(`Scheduling scraper for ${this.name} with schedule (${this.cronTimerSchedule})`)
+        nodeSchedule.scheduleJob(this.cronTimerSchedule, () => {
+            this.start().then(async () => {
+                await this.deleteOld()
+                callback && callback()
+            })
+        })
+    }
+
+    async deleteOld(): Promise<void> {
+        const response = await elasticClient.deleteByQuery({
+            index: Elasticsearch.defaultIndex,
+            body: {
+                query: {
+                    term: { origin: this.name },
+                    range: {
+                        date: {
+                            lte: this.deleteOlderThan,
+                        },
+                    },
+                },
+            },
+        })
+
+        console.log(`Successfully deleted ${response.body.deleted} items with origin ${this.name}`)
     }
 }
 

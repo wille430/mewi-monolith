@@ -2,7 +2,6 @@ import Scraper from 'services/scrapers/Scraper'
 import { toUnixTime } from '@mewi/util'
 import CategoryService from '../CategoryService'
 import { ItemData } from '@mewi/types'
-
 import { JSDOM } from 'jsdom'
 import axios from 'axios'
 import { BlocketItemData } from 'types/types'
@@ -17,6 +16,10 @@ class BlocketScraper extends Scraper {
             limit: 40,
             baseUrl: 'https://www.blocket.se',
         })
+    }
+
+    async checkRobots(): Promise<void> {
+        this.canCrawl = true
     }
 
     async getNextArticles(): Promise<ItemData[]> {

@@ -1,10 +1,24 @@
 import { SearchFilterDataProps, SortData } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import searchApi from 'api/searchApi'
+import searchApi, { getSearchResultsReturnType } from 'api/searchApi'
 import { RootState } from 'store'
 import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
+
+export const updateSearchParams = createAsyncThunk(
+    SearchActionTypes.UPDATE_SEARCH_PARAMS,
+    async (args, thunkApi) => {
+        const state = thunkApi.getState() as RootState
+        const { filters, page, sort } = state.search
+
+        return {
+            filters: filters,
+            page: page,
+            sort: sort,
+        }
+    }
+)
 
 export const clearFilters = createAction(
     SearchActionTypes.CLEAR_FILTERS,
@@ -32,13 +46,12 @@ export const updateFilters = createAction(
 )
 
 export const getSearchResults = createAsyncThunk<
-    Pick<SearchState, 'hits' | 'totalHits'>,
+    getSearchResultsReturnType,
     void,
     { state: RootState }
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
         const { filters, sort, page } = thunkApi.getState().search
-        console.log('Searching for', filters.keyword)
         const results = await searchApi.getSearchResults({
             searchFilters: filters,
             sort: sort,
@@ -61,12 +74,22 @@ export const getFiltersFromQueryParams = createAction(
     ): { payload: Pick<SearchState, 'filters' | 'sort' | 'page'> } => {
         const params = queryString.parse(window.location.search)
 
-        let filters = {}
+        let filters: SearchFilterDataProps = {}
         let sort = SortData.RELEVANCE
         let page = 1
         Object.keys(params).forEach((key) => {
-            if (['keyword', 'regions', 'category', 'priceRange', 'auction'].includes(key)) {
-                filters = _.merge(filters, { [key]: params[key] })
+            if (['keyword', 'regions', 'auction', 'priceRangeGte', 'priceRangeLte'].includes(key)) {
+                switch (key as keyof SearchFilterDataProps) {
+                    case 'auction':
+                        if (params[key] === 'true') {
+                            filters = _.merge(filters, { [key]: true })
+                        } else {
+                            filters = _.omit(filters, key)
+                        }
+                        break
+                    default:
+                        filters = _.merge(filters, { [key]: params[key] })
+                }
             } else if (key === 'sort') {
                 if (Object.values(SortData).includes(params[key] as SortData)) {
                     sort = params[key] as SortData

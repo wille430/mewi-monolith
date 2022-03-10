@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { uniqueId } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
-import Snackbar, { SnackbarProps } from './Snackbar'
+import Snackbar, { SnackbarProps } from './Snackbar/Snackbar'
 
 type SnackbarContent = SnackbarProps & { id: string }
 

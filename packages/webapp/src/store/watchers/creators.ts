@@ -1,15 +1,18 @@
 import { SearchFilterDataProps } from '@mewi/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import searchApi from 'api/searchApi'
 import watcherApi from 'api/watcherApi'
+import _ from 'lodash'
+import { RootState } from 'store'
 import { WatchersActionType } from './types'
 
 export const createWatcher = createAsyncThunk(
     WatchersActionType.WATCHERS_ADD,
-    async (searchFilters: SearchFilterDataProps, thunkAPI) => {
+    async (searchFilters: SearchFilterDataProps, thunkApi) => {
         try {
             return await watcherApi.createWatcher(searchFilters)
         } catch (e: any) {
-            return thunkAPI.rejectWithValue(e)
+            return thunkApi.rejectWithValue(e)
         }
     }
 )
@@ -30,4 +33,37 @@ export const removeWatcher = createAsyncThunk(
     }
 )
 
-// to-do: update
+// TODO: update
+
+export const getNewItems = createAsyncThunk(
+    WatchersActionType.GET_NEW_ITEMS,
+    async (id: string, thunkApi) => {
+        const state = thunkApi.getState() as RootState
+        const watcher = state.watchers.watchers.find((x) => x._id.toString() === id)
+        if (!watcher) {
+            console.log(`Watcher with id ${id} not found`)
+            return undefined
+        }
+
+        const { hits } = await searchApi.getSearchResults({
+            searchFilters: {
+                ...watcher.metadata,
+                dateGte: new Date(
+                    _.max([
+                        new Date(watcher.notifiedAt || Date.now()).getTime(),
+                        new Date(watcher.createdAt).getTime(),
+                        Date.now() - 2 * 24 * 60 * 60 * 1000,
+                    ]) || 0
+                ).getTime(),
+            },
+            limit: 5,
+        })
+
+        const newItems = hits.map((x) => x._source)
+
+        return {
+            id,
+            newItems,
+        }
+    }
+)

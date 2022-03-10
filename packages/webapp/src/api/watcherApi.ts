@@ -1,8 +1,8 @@
-import { PublicWatcher, SearchFilterDataProps } from '@mewi/types'
+import { JoinedWatcher, SearchFilterDataProps } from '@mewi/types'
 import axios from 'axios'
 
-const getWatchers = async () => {
-    const watchers: PublicWatcher[] = await axios
+const getWatchers = async (): Promise<JoinedWatcher[]> => {
+    const watchers = await axios
         .get('/user/watchers')
         .then((res) => res.data.watchers)
         .catch((err) => {
@@ -11,23 +11,21 @@ const getWatchers = async () => {
     return watchers
 }
 
-const getWatcher = async (watcherId: string) => {
-    const watcher: PublicWatcher = await axios
-        .get('/user/watchers/' + watcherId)
-        .then((res) => res.data.watcher)
+const getWatcher = async (watcherId: string): Promise<JoinedWatcher> => {
+    const watcher = await axios.get('/user/watchers/' + watcherId).then((res) => res.data.watcher)
     return watcher
 }
 
-const deleteWatcher = async (watcherId: string) => {
+const deleteWatcher = async (watcherId: string): Promise<void> => {
     await axios.delete('/user/watchers/' + watcherId)
 }
 
-const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
+const createWatcher = async (searchFilterData: SearchFilterDataProps): Promise<JoinedWatcher> => {
     const body = {
         searchFilters: searchFilterData,
     }
 
-    const newWatcher: PublicWatcher = await axios
+    const newWatcher = await axios
         .post('/user/watchers', body)
         .then((res) => res.data.watcher)
         .catch((err) => {
@@ -36,7 +34,10 @@ const createWatcher = async (searchFilterData: SearchFilterDataProps) => {
     return newWatcher
 }
 
-const updateWatcher = async (watcherId: string, newSearchFilterData: SearchFilterDataProps) => {
+const updateWatcher = async (
+    watcherId: string,
+    newSearchFilterData: SearchFilterDataProps
+): Promise<JoinedWatcher> => {
     const body = {
         searchFilters: newSearchFilterData,
     }

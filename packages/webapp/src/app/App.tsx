@@ -1,7 +1,7 @@
 import './App.css'
 import { lazy, Suspense, useEffect } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import Nav from 'components/Nav/index'
+import Nav from 'components/Nav/Nav'
 import Login from 'Routes/Login'
 import PrivateRoute from 'components/PrivateRoute'
 import PublicRoute from 'components/PublicRoute'
@@ -10,6 +10,7 @@ import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { onAuthLoad } from 'store/auth/creators'
 import Page from 'components/Page'
+import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -74,6 +75,12 @@ function App() {
                             exact
                             path='/'
                             component={<Home />}
+                        />
+                        <Page
+                            title='Glömt lösenord - Mewi.se'
+                            exact
+                            path='/glomtlosenord'
+                            component={<ForgottenPassword />}
                         />
                         <PrivateRoute
                             path='/'

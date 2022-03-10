@@ -1,7 +1,8 @@
-import { ItemData, SearchFilterDataProps, SortData } from '@mewi/types'
+import { SearchFilterDataProps, SortData } from '@mewi/types'
+import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {
-    hits: ItemData[]
+    hits: getSearchResultsReturnType['hits']
     totalHits: number
     filters: SearchFilterDataProps
     sort: SortData
@@ -9,6 +10,7 @@ export interface SearchState {
     status: {
         searching: 'complete' | 'loading' | 'error'
     }
+    searchParams: string
 }
 
 export enum SearchActionTypes {
@@ -20,4 +22,5 @@ export enum SearchActionTypes {
     FILTERS_FROM_PARAMS = 'search/filtersFromParams',
     SET_PAGE = 'search/setPage',
     CLEAR_RESULTS = 'search/clear',
+    UPDATE_SEARCH_PARAMS = 'search/updateParams',
 }

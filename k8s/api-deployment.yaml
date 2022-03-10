@@ -14,9 +14,10 @@ spec:
             labels:
                 app: api
         spec:
+            imagePullSecrets:
+            - name: regcred
             containers:
-                - image: okteto.dev/api
-                  # - image: wille430/mewi-api
+                - image: wille430/mewi-api:latest
                   name: mewi-api
                   env:
                       - name: SEARCH_ENGINE_URL

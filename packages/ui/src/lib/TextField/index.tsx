@@ -1,4 +1,4 @@
-import react, { useCallback, useEffect, useRef } from 'react'
+import react, { ReactNode, useCallback, useEffect, useRef } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
@@ -8,7 +8,7 @@ import { debounce } from 'lodash'
 
 const cx = classNames.bind(styles)
 
-type InputProps = Override<
+export type TextFieldProps = Override<
     DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     {
         showClearButton?: boolean
@@ -17,6 +17,7 @@ type InputProps = Override<
         onChange?: (value?: string) => void
         fullWidth?: boolean
         debounced?: boolean
+        endComponent?: ReactNode[]
     }
 >
 
@@ -30,10 +31,11 @@ export const TextField = ({
     fullWidth,
     type,
     debounced = false,
+    endComponent,
     ...rest
-}: InputProps) => {
+}: TextFieldProps) => {
     const [isActive, setIsActive] = useState(false)
-    const [_value, _setValue] = useState<InputProps['value']>(value)
+    const [_value, _setValue] = useState<TextFieldProps['value']>(value)
 
     const syncValues = useCallback(
         debounced
@@ -112,7 +114,11 @@ export const TextField = ({
                 >
                     {placeholder}
                 </label>
-                <hr />
+                <hr
+                    className={cx({
+                        [styles['noLabel']]: !placeholder,
+                    })}
+                />
             </header>
         )
     }
@@ -136,12 +142,13 @@ export const TextField = ({
                 [styles['isActive']]: _value || isActive,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
+                [className || '']: true,
             })}
         >
             <Label />
             <input
                 {...rest}
-                className={`${styles['input']} ${className}`}
+                className={styles['input']}
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -149,6 +156,7 @@ export const TextField = ({
                 type={type}
             />
             <ClearButton />
+            {endComponent}
         </div>
     )
 }

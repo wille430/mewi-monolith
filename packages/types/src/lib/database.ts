@@ -17,6 +17,7 @@ export interface UserData {
     password: string
     premium: boolean
     watchers: UserWatcherData[]
+    passwordResetSecret: string
 }
 
 export type WatcherMetadata = SearchFilterDataProps
@@ -28,6 +29,8 @@ export interface PublicWatcher {
     users: ObjectId[]
     createdAt: string
 }
+
+export interface JoinedWatcher extends Omit<PublicWatcher, 'users' | '_id'>, UserWatcherData {}
 
 export type withId<T> = T & { _id: ObjectId }
 
@@ -84,10 +87,12 @@ export interface ItemData {
         label: string
         value: string
     }[]
-    origin: 'Blocket' | 'Tradera' | 'Sellpy'
+    origin: 'Blocket' | 'Tradera' | 'Sellpy' | 'Blipp'
 }
 
 export interface AuthTokens {
     jwt: JWT
     refreshToken: string
 }
+
+export type EditableUserFields = keyof Pick<UserData, 'email'>

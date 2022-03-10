@@ -1,3 +1,5 @@
+import { store } from 'store'
+
 export type Override<T1, T2> = Omit<T1, keyof T2> & T2
 
 export interface ValidatorMessage {
@@ -26,3 +28,10 @@ export interface FilterStates {
 }
 
 export type Parameters<T> = T extends (...args: infer T) => any ? T : never
+
+declare global {
+    interface Window {
+        Cypress?: any
+        store: typeof store
+    }
+}

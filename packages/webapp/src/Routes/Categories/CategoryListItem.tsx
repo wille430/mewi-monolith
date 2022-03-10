@@ -17,7 +17,7 @@ const CategoryListItem = ({
     const redirectUrl = `${parentTo}/${categoryValue}`
 
     return (
-        <div>
+        <div data-testid={`categoryListItem-${subCatIndex}`}>
             <Link to={redirectUrl} className={`${subCatIndex === 0 ? 'text-lg font-bold' : ''}`}>
                 {categoryData.label}
             </Link>

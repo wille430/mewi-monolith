@@ -1,27 +1,27 @@
-import schedule from 'node-schedule'
 import { toUnixTime } from '@mewi/util'
 import EndDate from './services/EndDate'
 import ScrapeService from './services/scrapers/ScrapeService'
 import ItemsService from './services/ItemsService'
 import app from './routes/app'
 import WatcherNotificationService from 'services/WatcherNotificationService'
+import Elasticsearch from 'config/elasticsearch'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 console.log('NODE ENV:', process.env.NODE_ENV)
+;(async () => {
+    await Elasticsearch.prepare()
 
-// Scheduled jobs
-
-// Update elasticsearch index
-schedule.scheduleJob('30 * * * *', async () => {
     const scraper = new ScrapeService()
-    scraper.start().then(async () => {
-        await ItemsService.deleteOld()
+    scraper.schedule()
 
-        // Notify users of new items
-        await new WatcherNotificationService().notifyUsers()
-    })
-})
+    if (process.env.NODE_ENV === 'development' && (await Elasticsearch.itemsInDb()) < 10000) {
+        console.log('Populating with fake data...')
+        await Elasticsearch.populateWithFakeData(10000)
+    }
 
-if (process.env.NODE_ENV === 'production') {
+    // if (process.env.NODE_ENV === 'production') {
     const lastScan = EndDate.getEndDateFor('blocket')
     if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
         const scraper = new ScrapeService()
@@ -32,21 +32,9 @@ if (process.env.NODE_ENV === 'production') {
             await new WatcherNotificationService().notifyUsers()
         })
     }
-}
+    // }
 
-// const sendEmail = async () => {
-//     const items = await SearchService.search({
-//         query: { match: { title: 'volvo' } },
-//         size: 5
-//     }).then(x => x.body.hits.hits)
-
-//     const res = await EmailService.sendEmail('william.wigemo@outlook.com', 'newItems', {
-//         newItemCount: items.length,
-//         keyword: 'volvo',
-//         items: items.map(x => x._source)
-//     })
-// }
-
-// sendEmail()
+    new WatcherNotificationService().notifyUsers()
+})()
 
 app.listen(3001, () => console.log('Listening on port 3001...'))

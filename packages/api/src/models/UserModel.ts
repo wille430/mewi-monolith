@@ -1,23 +1,20 @@
+import { UserData, UserWatcherData } from '@mewi/types'
+import { v4 as uuidv4 } from 'uuid'
 import * as mongoose from 'mongoose'
 
-export interface Watcher extends mongoose.Types.Subdocument {
+export interface Watcher extends mongoose.Types.Subdocument, Omit<UserWatcherData, '_id'> {
     _id: mongoose.Types.ObjectId
-    notifiedAt: Date | null
-    createdAt: string
-    updatedAt: string
 }
 
-export interface User extends mongoose.Document {
-    email: string
-    password: string
-    premium: boolean
-    watchers: mongoose.Types.DocumentArray<Watcher>
-}
+export type User = mongoose.Document &
+    Omit<UserData, 'watchers'> & {
+        watchers: mongoose.Types.DocumentArray<Watcher>
+    }
 
 const WatcherSchema = new mongoose.Schema<Watcher>(
     {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'watcher' },
-        notifiedAt: { type: Date, default: null },
+        notifiedAt: { type: String, default: null },
     },
     {
         timestamps: true,
@@ -29,6 +26,7 @@ const UserSchema = new mongoose.Schema<User>({
     password: { type: String },
     premium: { type: Boolean, default: false },
     watchers: [WatcherSchema],
+    passwordResetSecret: { type: String, default: uuidv4() },
 })
 
 const UserModel = mongoose.model<User>('users', UserSchema)

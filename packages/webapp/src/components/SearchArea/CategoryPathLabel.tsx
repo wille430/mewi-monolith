@@ -35,7 +35,7 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
 
             parentLinkPath = `${parentLinkPath}/${catVal}`
 
-            links.push(<Link to={parentLinkPath}>{parentCategory.label}</Link>)
+            links.push(<Link key={parentCategory._id} to={parentLinkPath}>{parentCategory.label}</Link>)
         })
 
         // Add > between each link
@@ -44,7 +44,7 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
         links.forEach((ele, index) => {
             linksWithSpacers.push(ele)
             if (index !== links.length - 1) {
-                linksWithSpacers.push(<span className=''>{'>'}</span>)
+                linksWithSpacers.push(<span key={index} className=''>{'>'}</span>)
             }
         })
 

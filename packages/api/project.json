@@ -6,10 +6,7 @@
         "deploy": {
             "builder": "@nrwl/workspace:run-commands",
             "options": {
-                "commands": [
-                    "okteto build --file ./packages/api/Dockerfile --tag okteto.dev/api",
-                    "okteto pipeline deploy"
-                ],
+                "commands": ["echo WARN: deploy command is deprecated for api"],
                 "parallel": false
             }
         },

@@ -1,6 +1,7 @@
 import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import * as fs from 'fs'
-import ScrapeService from './scrapers/ScrapeService'
+import { ItemData } from '@mewi/types'
+// import ScrapeService from './scrapers/ScrapeService'
 
 export default class ItemsService {
     static async deleteOld(daysOld = 2) {
@@ -31,33 +32,57 @@ export default class ItemsService {
         await elasticClient.indices.refresh({ index: Elasticsearch.defaultIndex })
     }
 
-    static async addItems(items: any[], index = Elasticsearch.defaultIndex): Promise<number> {
-        const addedItemsCount = items.length
+    /**
+     * Add items to elasticsearch index
+     * @param items Array of items to add to index
+     * @param index Elasticsearch index
+     * @returns Amount of items added
+     */
+    static async addItems(
+        items: ItemData[],
+        index = Elasticsearch.defaultIndex,
+        test = false
+    ): Promise<number> {
+        let addedItemsCount = items.length
 
-        if (process.env.DEV_MODE) {
+        if (test) {
+            console.log('Appending items to ./build/items.json...')
             for (let i = 0; i < items.length; i++) {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
         } else {
-            const body = items.flatMap((item) => [{ index: { _index: index } }, item])
+            const body = items.flatMap((item) => [{ index: { _index: index, _id: item.id } }, item])
 
             if (body.length === 0) return 0
 
-            await elasticClient.bulk({
+            const { body: bulkResponse } = await elasticClient.bulk({
                 refresh: true,
                 index: index,
                 body: body,
             })
+
+            if (bulkResponse.errors) {
+                console.error('An error occured when indexing new items!')
+
+                bulkResponse.items.forEach((action, i) => {
+                    const operation = Object.keys(action)[0]
+
+                    if (action[operation].error) {
+                        console.error(action[operation].error)
+                        addedItemsCount -= 1
+                    }
+                })
+            }
         }
 
         return addedItemsCount
     }
 
-    static async clearAndRepopulate() {
-        const scraper = new ScrapeService()
-        fs.unlink('./lastDate.txt', async () => {
-            await ItemsService.deleteOld(0)
-            await scraper.start()
-        })
-    }
+    // static async clearAndRepopulate() {
+    //     const scraper = new ScrapeService()
+    //     fs.unlink('./lastDate.txt', async () => {
+    //         await ItemsService.deleteOld(0)
+    //         await scraper.start()
+    //     })
+    // }
 }

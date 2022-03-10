@@ -1,3 +1,4 @@
+import { Search } from '@elastic/elasticsearch/api/requestParams'
 import { SearchPostRequestBody, SortData } from '@mewi/types'
 import { elasticClient } from '../../config/elasticsearch'
 import SearchService from '../../services/SearchService'
@@ -30,6 +31,9 @@ export const getSearchResults = async (req, res) => {
     const options: SearchPostRequestBody = req.body
 
     let sort: Record<string, 'asc' | 'desc'>
+    let body: Search<any>['body'] = {
+        sort: sort ? [sort] : [],
+    }
 
     switch (options.sort) {
         case SortData.DATE_ASC:
@@ -46,6 +50,17 @@ export const getSearchResults = async (req, res) => {
             break
     }
 
+    if (options.limit) {
+        body = {
+            size: options.limit,
+        }
+    } else {
+        body = {
+            ...body,
+            ...SearchService.calculateFromAndSize(options.page),
+        }
+    }
+
     let results
     if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
         const query = SearchService.createElasticQuery(options.searchFilters)
@@ -53,17 +68,13 @@ export const getSearchResults = async (req, res) => {
             index: index,
             body: {
                 query: query,
-                sort: sort ? [sort] : [],
-                ...SearchService.calculateFromAndSize(options.page),
+                ...body,
             },
         })
     } else {
         results = await elasticClient.search({
             index: index,
-            body: {
-                sort: sort ? [sort] : [],
-                ...SearchService.calculateFromAndSize(options.page),
-            },
+            body,
         })
     }
 

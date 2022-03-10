@@ -1,5 +1,5 @@
 import Layout from 'components/Layout'
-import SearchArea from 'components/SearchArea'
+import SearchArea from 'components/SearchArea/SearchArea'
 
 const Search = () => {
     return (

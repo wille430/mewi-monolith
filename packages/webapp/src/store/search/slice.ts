@@ -10,8 +10,10 @@ import {
     setFilters,
     setSort,
     updateFilters,
+    updateSearchParams,
 } from './creators'
 import { SearchState } from './type'
+import queryString from 'query-string'
 
 const initialState: SearchState = {
     hits: [],
@@ -20,8 +22,9 @@ const initialState: SearchState = {
     sort: SortData.RELEVANCE,
     page: 1,
     status: {
-        searching: 'complete',
+        searching: 'loading',
     },
+    searchParams: '',
 }
 
 export const searchSlice = createSlice({
@@ -58,6 +61,7 @@ export const searchSlice = createSlice({
 
         builder.addCase(setFilters, (state, action) => {
             state.filters = action.payload
+            state.page = 1
         })
 
         builder.addCase(updateFilters, (state, action) => {
@@ -77,6 +81,8 @@ export const searchSlice = createSlice({
                     state.filters = _.set(state.filters, key, action.payload[key])
                 }
             }
+
+            state.status.searching = 'loading'
         })
 
         builder.addCase(setSort, (state, action) => {
@@ -86,7 +92,13 @@ export const searchSlice = createSlice({
 
         builder.addCase(getFiltersFromQueryParams, (state, action) => {
             console.log('Updating state from url search params...')
-            state.filters = action.payload.filters
+            state.filters = {
+                ...state.filters,
+                ...action.payload.filters,
+            }
+
+            console.log('New filters:', state.filters)
+
             state.sort = action.payload.sort
             state.page = action.payload.page
         })
@@ -99,6 +111,33 @@ export const searchSlice = createSlice({
             state.hits = []
             state.totalHits = 0
             state.status.searching = 'loading'
+        })
+
+        builder.addCase(updateSearchParams.fulfilled, (state, action) => {
+            const { filters, page, sort } = action.payload
+            console.log('Updating search params with:', action.payload)
+
+            if (filters.keyword) {
+                document.title = `Sökning för "${filters.keyword}" - Mewi`
+            } else {
+                document.title = 'Sök - Mewi.se'
+            }
+
+            const keysToEmit = ['category']
+
+            if (!filters.auction) keysToEmit.push('auction')
+
+            const searchParams = _.omit(
+                {
+                    ...filters,
+                    page: page > 1 ? page : undefined,
+                    sort: sort !== SortData.RELEVANCE ? sort : undefined,
+                },
+                keysToEmit
+            )
+
+            // update url search params
+            state.searchParams = '?' + queryString.stringify(searchParams)
         })
     },
 })

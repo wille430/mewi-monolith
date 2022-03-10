@@ -13,7 +13,7 @@
         @apply flex w-full flex-col flex-wrap justify-center sm:flex-row sm:flex-nowrap;
     }
     .side-col {
-        @apply hidden w-full flex-grow px-4 lg:block;
+        @apply hidden w-full flex-grow px-4 lg:block p-2;
     }
     .main {
         @apply main-css p-4 md:p-2;

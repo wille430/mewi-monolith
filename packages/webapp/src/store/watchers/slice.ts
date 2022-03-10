@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { createWatcher, getAllWatchers, removeWatcher } from './creators'
+import { createWatcher, getAllWatchers, getNewItems, removeWatcher } from './creators'
 import { WatchersState } from './types'
 
 const initialState: WatchersState = {
     watchers: [],
     isLoading: false,
+    newItems: {},
 }
 
 export const watchersSlice = createSlice({
@@ -36,6 +37,12 @@ export const watchersSlice = createSlice({
             state.watchers = state.watchers.filter(
                 (watcher) => watcher._id.toString() !== action.payload
             )
+        })
+
+        builder.addCase(getNewItems.fulfilled, (state, action) => {
+            if (!action.payload) return
+
+            state.newItems[action.payload.id] = action.payload.newItems
         })
     },
 })

@@ -18,6 +18,10 @@ spec:
             containers:
                 - name: mongodb
                   image: mongo
+                  resources:
+                      requests:
+                          cpu: "100m"
+                          memory: "750Mi"
                   volumeMounts:
                       - mountPath: '/data/db'
                         name: mongodata
