@@ -8,8 +8,12 @@ import bcrypt from 'bcryptjs'
 import UserModel from 'models/UserModel'
 import { APIError, AuthErrorCodes, MissingUserError } from '@mewi/types'
 import jwt from 'jsonwebtoken'
+import { v4 as uuidv4 } from 'uuid'
 
 class PasswordService {
+    static passwordPattern =
+        /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-?;,.{}|":<>[\]\\' ~_]).{8,}/gm
+
     static async correctPassword(userId: string, password: string): Promise<boolean> {
         const user = await UserService.user(userId)
         const encryptedPassword = user.password
@@ -20,9 +24,7 @@ class PasswordService {
     }
 
     static validate(password: string): boolean {
-        const re = new RegExp(
-            /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-?;,.{}|":<>[\]\\' ~_]).{8,}/gm
-        )
+        const re = new RegExp(this.passwordPattern)
 
         return re.test(password)
     }
@@ -65,6 +67,10 @@ class PasswordService {
 
         // set new password
         user.password = newPassword
+
+        // new secret
+        user.passwordResetSecret = uuidv4()
+
         await user.save()
     }
 }

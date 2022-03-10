@@ -19,6 +19,7 @@ export default class EmailService {
     }
 
     static newWatchersTemplatePath = this.templatesDirectory() + '/newItems'
+    static forgottenPasswordTemplate = this.templatesDirectory() + '/forgottenPassword'
 
     static async sendEmailWithItems(
         email: string,
@@ -88,5 +89,17 @@ export default class EmailService {
         const info = await transporter.sendMail(emailInfo.originalMessage)
 
         return info
+    }
+
+    static async sendForgottenPasswordEmail(email: string, token: string) {
+        let link = `/nyttlosenord?token=${token}`
+
+        if (process.env.NODE_ENV === 'production') {
+            link = 'https://www.mewi.se' + link
+        } else {
+            link = 'localhost:4200' + link
+        }
+
+        await this.sendEmail(email, this.forgottenPasswordTemplate, { link })
     }
 }
