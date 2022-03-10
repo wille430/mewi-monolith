@@ -1,14 +1,29 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import Layout from 'components/Layout'
-import { useState } from 'react'
+import { useAppDispatch } from 'hooks/hooks'
+import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { forgottenPassword } from 'store/user/creator'
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()
-    const error = useState<string | undefined>()
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
+    const [success, setSuccess] = useState(false)
 
-    const onFormSubmit = () => {
+    const dispatch = useAppDispatch()
+
+    const onFormSubmit = (e: FormEvent) => {
+        e.preventDefault()
         // TODO: disaptch api call
+        setErrorMessage(undefined)
+        setSuccess(false)
+        dispatch(forgottenPassword()).then((action) => {
+            if (action.meta.requestStatus === 'fulfilled') {
+                setSuccess(true)
+            } else {
+                if (typeof action.payload === 'string') setErrorMessage(action.payload)
+            }
+        })
     }
 
     return (
@@ -29,11 +44,15 @@ const ForgottenPassword = () => {
                                     data-testid='emailInput'
                                     fullWidth={true}
                                 />
-                                <span className='text-red-400'>{error}</span>
+                                <span className='text-red-400'>{errorMessage}</span>
+                                <span className='text-green-400'>
+                                    {success &&
+                                        `Ett meddelande till ${email} har skickats med en återställningslänk`}
+                                </span>
                             </div>
 
                             <Button
-                                label='Registrera dig'
+                                label='Byt lösenord'
                                 onClick={onFormSubmit}
                                 data-testid='formSubmitButton'
                             />

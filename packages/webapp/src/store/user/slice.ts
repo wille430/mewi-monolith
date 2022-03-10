@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getInfo, updateUserInfo } from './creator'
+import { forgottenPassword, getInfo, updateUserInfo } from './creator'
 import { UserState } from './types'
 
 const initialState: UserState = {}
