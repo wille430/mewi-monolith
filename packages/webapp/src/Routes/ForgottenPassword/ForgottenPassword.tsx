@@ -20,6 +20,7 @@ const ForgottenPassword = () => {
         dispatch(forgottenPassword()).then((action) => {
             if (action.meta.requestStatus === 'fulfilled') {
                 setSuccess(true)
+                setEmail(undefined)
             } else {
                 if (typeof action.payload === 'string') setErrorMessage(action.payload)
             }
