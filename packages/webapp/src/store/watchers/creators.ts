@@ -2,7 +2,6 @@ import { SearchFilterDataProps } from '@mewi/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import searchApi from 'api/searchApi'
 import watcherApi from 'api/watcherApi'
-import _ from 'lodash'
 import { RootState } from 'store'
 import { WatchersActionType } from './types'
 
@@ -48,13 +47,7 @@ export const getNewItems = createAsyncThunk(
         const { hits } = await searchApi.getSearchResults({
             searchFilters: {
                 ...watcher.metadata,
-                dateGte: new Date(
-                    _.max([
-                        new Date(watcher.notifiedAt || Date.now()).getTime(),
-                        new Date(watcher.createdAt).getTime(),
-                        Date.now() - 2 * 24 * 60 * 60 * 1000,
-                    ]) || 0
-                ).getTime(),
+                dateGte: new Date(watcher.createdAt).getTime(),
             },
             limit: 5,
         })
