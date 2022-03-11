@@ -49,11 +49,6 @@ class PasswordService {
         const user = await UserModel.findById(userId)
         if (!user) throw MissingUserError
 
-        // validate password
-        if (!PasswordService.validate(newPassword) || passwordConfirm !== newPassword) {
-            throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
-        }
-
         // validate reset token
         jwt.verify(passwordResetToken, user.passwordResetSecret, (err, payload) => {
             if (err) {
@@ -66,13 +61,22 @@ class PasswordService {
             }
         })
 
+        // validate password
+        if (!PasswordService.validate(newPassword) || passwordConfirm !== newPassword) {
+            throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+        }
+
         // set new password
-        user.password = newPassword
+        user.password = await PasswordService.hash(newPassword)
 
         // new secret
         user.passwordResetSecret = uuidv4()
 
         await user.save()
+    }
+
+    static hash(password: string) {
+        return bcrypt.hash(password, 10)
     }
 }
 

@@ -1,6 +1,6 @@
-import { AuthErrorCodes } from '@mewi/types'
+import { APIError, AuthErrorCodes } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { login, refreshJwtToken, signUp } from 'api'
+import { login, signUp } from 'api'
 import authApi from 'api/authApi'
 import { AuthActionTypes, AuthState } from './types'
 
@@ -101,7 +101,7 @@ export const refreshAccessToken = createAsyncThunk(
         try {
             const oldAccessToken = localStorage.getItem('refreshToken')
 
-            const authTokens = await refreshJwtToken(oldAccessToken)
+            const authTokens = await authApi.refreshJwtToken(oldAccessToken)
             return authTokens
         } catch (e) {
             return thunkAPI.rejectWithValue(e)
@@ -111,17 +111,39 @@ export const refreshAccessToken = createAsyncThunk(
 
 export const loadPage = createAction(AuthActionTypes.AUTH_PAGE_LOAD)
 
+export type changePasswordErrorPayload = { password: string; repassword: string; general: string }
+
 export const changePassword = createAsyncThunk(
     AuthActionTypes.CHANGE_PASSWORD,
-    async (
-        { userId, resetToken, newPassword, passwordConfirm }: Record<string, string>,
-        thunkApi
-    ) => {
+    async (args: Parameters<typeof authApi.changePassword>, thunkApi) => {
         try {
-            await authApi.changePassword(userId, resetToken, newPassword, passwordConfirm)
+            await authApi.changePassword(...args)
             return
         } catch (e) {
-            return thunkApi.rejectWithValue(e)
+            const error = (e as { error: APIError }).error
+            const errorMessages: changePasswordErrorPayload = {
+                password: '',
+                repassword: '',
+                general: '',
+            }
+            switch (error.type) {
+                case AuthErrorCodes.PASSWORD_TOO_LONG:
+                    errorMessages.password = 'Lösenordet är för långt'
+                    break
+                case AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH:
+                    errorMessages.password = 'Lösenordet är inte starkt nog'
+                    break
+                case AuthErrorCodes.PASSWORD_NOT_MATCHING:
+                    errorMessages.repassword = 'Lösenorden matchar inte'
+                    break
+                case AuthErrorCodes.INVALID_JWT:
+                    errorMessages.general = 'Länken är inte giltig längre'
+                    break
+                default:
+                    errorMessages.general = 'Ett fel inträffade'
+            }
+
+            return thunkApi.rejectWithValue(errorMessages)
         }
     }
 )

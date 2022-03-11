@@ -31,11 +31,16 @@ export const refreshJwtToken = async (oldRefreshToken?: string | null): Promise<
 
 export const changePassword = async (
     userId: string,
-    newPassword: string,
-    passwordConfirm: string,
+    password: string,
+    repassword: string,
     token: string
 ): Promise<void> => {
-    await axios.put('/auth/password', { userId, token, newPassword, passwordConfirm })
+    await axios.put('/auth/password', {
+        userId,
+        token,
+        newPassword: password,
+        passwordConfirm: repassword,
+    })
 }
 
 export default {

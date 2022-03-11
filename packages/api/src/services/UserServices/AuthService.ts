@@ -3,7 +3,6 @@ import UserModel from 'models/UserModel'
 import { APIError, AuthErrorCodes, AuthTokens, JWT, ValidationErrorCodes } from '@mewi/types'
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from './UserEmailService'
-import bcrypt from 'bcryptjs'
 
 class AuthService {
     static async login(email: unknown, password: unknown): Promise<AuthTokens> {
@@ -69,7 +68,7 @@ class AuthService {
                 throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
             }
 
-            const encryptedPassword = await bcrypt.hash(password as string, 10)
+            const encryptedPassword = await PasswordService.hash(password as string)
 
             const newUser = await UserModel.create({
                 email: email,

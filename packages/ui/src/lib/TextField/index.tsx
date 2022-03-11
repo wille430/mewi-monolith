@@ -19,7 +19,9 @@ export type TextFieldProps = Override<
         debounced?: boolean
         endComponent?: ReactNode[]
     }
->
+> & {
+    'data-testid'?: string
+}
 
 export const TextField = ({
     onChange,

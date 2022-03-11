@@ -73,6 +73,7 @@ export const userSlice = createSlice({
                 localStorage.setItem('refreshToken', refreshToken)
             })
             .addCase(refreshAccessToken.rejected, (state, action) => {
+                console.log('LOGGIN OUT...')
                 state.isLoggedIn = false
 
                 localStorage.removeItem('jwt')

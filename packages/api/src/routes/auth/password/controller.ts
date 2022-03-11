@@ -2,29 +2,37 @@ import { APIError, AuthErrorCodes } from '@mewi/types'
 import EmailService from 'services/EmailService'
 import { PasswordService, UserEmailService, UserService } from 'services/UserServices'
 
-export const resetPassword = async (req, res, next) => {
-    const { userId, newPassword, passwordConfirm, token } = req.body
+export const changePassword = async (req, res, next) => {
+    try {
+        const { userId, newPassword, passwordConfirm, token } = req.body
 
-    await PasswordService.updatePassword(userId, newPassword, passwordConfirm, token).catch(next)
+        await PasswordService.updatePassword(userId, newPassword, passwordConfirm, token)
 
-    res.sendStatus(200)
+        res.sendStatus(200)
+    } catch (e) {
+        return next(e)
+    }
 }
 
 export const forgottenPassword = async (req, res, next) => {
-    const { sendEmail, email } = req.body
+    try {
+        const { sendEmail, email } = req.body
 
-    if (!UserEmailService.validate(email)) {
-        return next(new APIError(422, AuthErrorCodes.INVALID_EMAIL))
+        if (!UserEmailService.validate(email)) {
+            throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
+        }
+
+        const user = await UserService.findUser({ email })
+        const resetToken = await PasswordService.createResetToken(user._id)
+
+        if (sendEmail !== false) {
+            await EmailService.sendForgottenPasswordEmail(user._id, user.email, resetToken)
+        }
+
+        res.status(200).json({
+            token: resetToken,
+        })
+    } catch (e) {
+        return next(e)
     }
-
-    const user = await UserService.findUser({ email }).catch(next)
-    const resetToken = await PasswordService.createResetToken(user._id).catch(next)
-
-    if (sendEmail !== false) {
-        await EmailService.sendForgottenPasswordEmail(user._id, user.email, resetToken)
-    }
-
-    res.status(200).json({
-        token: resetToken,
-    })
 }

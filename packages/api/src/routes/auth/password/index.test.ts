@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
 import app from 'routes/app'
-import { AuthService, PasswordService, UserService } from 'services/UserServices'
+import { PasswordService, UserService } from 'services/UserServices'
 import request from 'supertest'
 import { generateMockUserData, randomEmail } from '@mewi/util'
 import { v4 as uuidv4 } from 'uuid'
@@ -20,14 +20,11 @@ describe('password', () => {
 
             // make request
             process.env.TOKEN_KEY = uuidv4()
-            const token = await AuthService.createJWT(userId, randomEmail())
-
-            const headers = { Authorization: 'Bearer ' + token }
 
             const newPassword = '!Aa0' + faker.internet.password(6)
             const resetToken = faker.datatype.uuid()
 
-            response = await request(app).put('/auth/password').set(headers).send({
+            response = await request(app).put('/auth/password').send({
                 userId,
                 newPassword,
                 passwordConfirm: newPassword,
@@ -49,7 +46,7 @@ describe('password', () => {
         const sendEmailMock = jest.fn(() => Promise.resolve())
 
         beforeAll(async () => {
-            const userId = new Types.ObjectId().toString()
+            const email = randomEmail()
 
             PasswordService.createResetToken = createResetTokenMock
             UserService.findUser = getUserMock
@@ -57,14 +54,10 @@ describe('password', () => {
 
             // make request
             process.env.TOKEN_KEY = uuidv4()
-            const token = await AuthService.createJWT(userId, randomEmail())
-
-            const headers = { Authorization: 'Bearer ' + token }
 
             response = await request(app)
                 .post('/auth/password/reset')
-                .set(headers)
-                .send({ userId: userId, sendEmail: true })
+                .send({ email, sendEmail: true })
         })
 
         it('should return with 200', () => {
