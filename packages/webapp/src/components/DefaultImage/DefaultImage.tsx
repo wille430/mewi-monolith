@@ -1,4 +1,5 @@
 import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useRef, useState } from 'react'
+import missingImage from 'assets/missingImage.png'
 
 const DefaultImage = (
     props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
@@ -9,7 +10,7 @@ const DefaultImage = (
 
     useEffect(() => {
         if (error) {
-            component.current = <div {...props} className={`bg-gray-400 ${props.className}`} />
+            component.current = <img alt='' {...props} src={missingImage} />
         } else {
             component.current = initialComponent
         }

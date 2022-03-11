@@ -1,6 +1,6 @@
 import { ItemData } from '@mewi/types'
 import { toDateObj } from '@mewi/util'
-import missingImage from 'assets/missingImage.png'
+import DefaultImage from 'components/DefaultImage/DefaultImage'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { ReactNode } from 'react'
@@ -38,11 +38,11 @@ const ArticleItem = ({ props, onClick }: Props) => {
             onClick={() => onClick()}
         >
             <div className='h-2/3 border-b-2 bg-white'>
-                <img
+                <DefaultImage
                     className={`mx-auto h-full w-full ${
                         currentImage ? 'object-cover' : 'object-cover'
                     }`}
-                    src={currentImage || missingImage}
+                    src={currentImage}
                     alt={props.title}
                 />
             </div>
