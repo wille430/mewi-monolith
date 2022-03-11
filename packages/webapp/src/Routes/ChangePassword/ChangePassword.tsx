@@ -2,6 +2,8 @@ import { Button, Container, TextField } from '@mewi/ui'
 import Layout from 'components/Layout'
 import { useAppDispatch } from 'hooks/hooks'
 import { FormEvent, useState } from 'react'
+import { changePassword } from 'store/auth/creators'
+import { useSearchParams } from 'react-router-dom'
 
 const ForgottenPassword = () => {
     const initialState = {
@@ -11,13 +13,27 @@ const ForgottenPassword = () => {
 
     const [formData, setFormData] = useState(initialState)
     const [errors, setErrors] = useState(initialState)
+    const params = useSearchParams()
 
     const dispatch = useAppDispatch()
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
 
-        // TODO DISPATCH
+        const { userId, token } = params as Record<string, string>
+
+        console.log({ userId, token })
+
+        if (userId && token && formData.password && formData.repassword) {
+            dispatch(
+                changePassword({
+                    userId,
+                    token,
+                    newPassword: formData.password,
+                    passwordConfirm: formData.repassword,
+                })
+            )
+        }
     }
 
     return (

@@ -51,18 +51,20 @@ export const getInfo = createAsyncThunk(UserActionType.FETCH_USER_INFO, async ()
 
 export const forgottenPassword = createAsyncThunk(
     UserActionType.FORGOTTEN_PASSWORD,
-    async (args, thunkApi) => {
+    async (email: string, thunkApi) => {
         try {
-            await userApi.forgottenPassword()
-        } catch (e) {
-            if (e instanceof APIError) {
-                switch (e.type) {
+            await userApi.forgottenPassword(email)
+        } catch (e: any) {
+            if (e.error) {
+                const error = e.error
+                console.log(error.type)
+                switch (error.type) {
                     case AuthErrorCodes.INVALID_EMAIL:
                         return thunkApi.rejectWithValue('Epostaddressen som angavs är inkorrekt')
                     case AuthErrorCodes.MISSING_USER:
-                        return thunkApi.rejectWithValue(
-                            'Det finns ingen användare med epostaddressen'
-                        )
+                        return thunkApi.fulfillWithValue(undefined)
+                    default:
+                        return thunkApi.rejectWithValue('Ett fel inträffade')
                 }
             } else {
                 return thunkApi.rejectWithValue('Ett fel inträffade')

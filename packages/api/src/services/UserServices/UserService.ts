@@ -3,22 +3,30 @@ import {
     APIError,
     AuthErrorCodes,
     EditableUserFields,
+    MissingUserError,
     UserData,
     ValidationErrorCodes,
 } from '@mewi/types'
 import UserEmailService from './UserEmailService'
+import EmailService from 'services/EmailService'
+import { FilterQuery } from 'mongoose'
 
 export default class UserService {
-    static async user(userId: string, projection?: any) {
-        const user = await UserModel.findById(userId, projection)
-
-        if (!user) throw new APIError(404, AuthErrorCodes.MISSING_USER)
+    static async findUser(filter: FilterQuery<UserData>, projection?: any) {
+        const user = await UserModel.findOne(filter, projection)
+        if (!user) throw MissingUserError
 
         return user
     }
 
+    static async userById(userId: string, projection?: any) {
+        const user = await UserModel.findById(userId, projection)
+        if (!user) throw MissingUserError
+        return user
+    }
+
     static async info(userId: string) {
-        const user = await UserService.user(userId, { email: 1, premium: 1, watchers: 1 })
+        const user = await UserService.userById(userId, { email: 1, premium: 1, watchers: 1 })
         return user
     }
 

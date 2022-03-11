@@ -16,4 +16,5 @@ export enum AuthActionTypes {
     AUTH_SIGNUP = 'auth/signup',
     AUTH_REFRESH = 'auth/refreshToken',
     AUTH_PAGE_LOAD = 'auth/page_load',
+    CHANGE_PASSWORD = '/auth/change_password',
 }

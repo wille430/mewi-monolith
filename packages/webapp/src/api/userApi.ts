@@ -13,8 +13,8 @@ const getInfo = async () => {
     return response.data
 }
 
-const forgottenPassword = async (): Promise<void> => {
-    await axios.post('/user/password/reset')
+const forgottenPassword = async (email: string): Promise<void> => {
+    await axios.post('/auth/password/reset', { email })
 }
 
 export default {

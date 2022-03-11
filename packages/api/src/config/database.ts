@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 
+if (!process.env.MONGO_URI) {
+    process.env.MONGO_URI = 'localhost'
+}
+
 const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
 
 let url

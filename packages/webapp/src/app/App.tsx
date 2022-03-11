@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { onAuthLoad } from 'store/auth/creators'
 import Page from 'components/Page'
 import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
+import ChangePassword from 'Routes/ChangePassword/ChangePassword'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -76,11 +77,19 @@ function App() {
                             path='/'
                             component={<Home />}
                         />
-                        <Page
+                        <PublicRoute
                             title='Glömt lösenord - Mewi.se'
                             exact
                             path='/glomtlosenord'
+                            isAuthenticated={isAuthenticated}
                             component={<ForgottenPassword />}
+                        />
+                        <PublicRoute
+                            title='Nytt lösenord - Mewi.se'
+                            exact
+                            path='/nyttlosenord'
+                            isAuthenticated={isAuthenticated}
+                            component={<ChangePassword />}
                         />
                         <PrivateRoute
                             path='/'

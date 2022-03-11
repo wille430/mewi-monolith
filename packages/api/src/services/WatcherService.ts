@@ -17,7 +17,7 @@ export default class WatcherService {
 
     async delete(userId: string) {
         // Remove watcher from user
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         try {
             user.watchers.pull(this.watcher_id)
         } catch (e) {

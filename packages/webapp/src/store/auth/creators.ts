@@ -1,6 +1,7 @@
 import { AuthErrorCodes } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, refreshJwtToken, signUp } from 'api'
+import authApi from 'api/authApi'
 import { AuthActionTypes, AuthState } from './types'
 
 export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, () => {
@@ -109,3 +110,18 @@ export const refreshAccessToken = createAsyncThunk(
 )
 
 export const loadPage = createAction(AuthActionTypes.AUTH_PAGE_LOAD)
+
+export const changePassword = createAsyncThunk(
+    AuthActionTypes.CHANGE_PASSWORD,
+    async (
+        { userId, resetToken, newPassword, passwordConfirm }: Record<string, string>,
+        thunkApi
+    ) => {
+        try {
+            await authApi.changePassword(userId, resetToken, newPassword, passwordConfirm)
+            return
+        } catch (e) {
+            return thunkApi.rejectWithValue(e)
+        }
+    }
+)

@@ -13,7 +13,6 @@ export const signUp = async (
     password: string,
     repassword: string
 ): Promise<AuthTokens> => {
-
     console.log('Creating user with credentials:', email, password, repassword)
 
     const authTokens: AuthTokens = await axios
@@ -28,4 +27,20 @@ export const refreshJwtToken = async (oldRefreshToken?: string | null): Promise<
         .then((res) => res.data)
 
     return authTokens
+}
+
+export const changePassword = async (
+    userId: string,
+    newPassword: string,
+    passwordConfirm: string,
+    token: string
+): Promise<void> => {
+    await axios.put('/auth/password', { userId, token, newPassword, passwordConfirm })
+}
+
+export default {
+    login,
+    signUp,
+    refreshJwtToken,
+    changePassword,
 }

@@ -24,7 +24,7 @@ class UserWatcherService {
      * @returns Array of watchers
      */
     static async getAll(userId: string): Promise<JoinedWatcher[]> {
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         const userWatchers = user.watchers
 
         const watchers: JoinedWatcher[] = await Promise.all(
@@ -55,7 +55,7 @@ class UserWatcherService {
      * @returns A user watcher
      */
     static async get(userId: string, watcherId: string): Promise<JoinedWatcher> {
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         const userWatcher = user.watchers.id(watcherId)
         const publicWatcher = await WatcherModel.findById(watcherId)
 
@@ -66,7 +66,7 @@ class UserWatcherService {
     }
 
     static async userEligable(userId: string) {
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         const isPremium = user.premium
         const watcherCount = user.watchers.length
 
@@ -81,7 +81,7 @@ class UserWatcherService {
         userId: string,
         { metadata, query }: { metadata: SearchFilterDataProps; query: ElasticQuery }
     ): Promise<JoinedWatcher> {
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
 
         const similarWatcher = await WatcherService.findSimilarWatcher(query)
 
@@ -154,7 +154,7 @@ class UserWatcherService {
         console.log('Watcher to add:', watcher)
 
         // remove old watcher and add new
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         user.watchers.pull({ _id: watcherId })
 
         const newUserWatcher = user.watchers.create({

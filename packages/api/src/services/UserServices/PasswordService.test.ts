@@ -26,7 +26,7 @@ describe('Password Service', () => {
         const resetToken = await PasswordService.createResetToken(userData._id)
         const newPassword = '!Aa0' + faker.internet.password(6)
 
-        await PasswordService.updatePassword(userData._id, newPassword, resetToken)
+        await PasswordService.updatePassword(userData.email, newPassword, newPassword, resetToken)
         expect(save).toBeCalledTimes(1)
 
         // TODO: CHECK SO THAT A NEW SECRET IS CREATED
@@ -37,7 +37,7 @@ describe('Password Service', () => {
         const newPassword = '!Aa0' + faker.internet.password(6)
 
         try {
-            await PasswordService.updatePassword(userData._id, newPassword, resetToken)
+            await PasswordService.updatePassword(userData._id, newPassword, newPassword, resetToken)
             fail()
         } catch (e) {
             expect(e.type).toBe(AuthErrorCodes.INVALID_JWT)

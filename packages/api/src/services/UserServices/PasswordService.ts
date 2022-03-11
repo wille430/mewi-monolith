@@ -15,7 +15,7 @@ class PasswordService {
         /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()+=-?;,.{}|":<>[\]\\' ~_]).{8,}/gm
 
     static async correctPassword(userId: string, password: string): Promise<boolean> {
-        const user = await UserService.user(userId)
+        const user = await UserService.userById(userId)
         const encryptedPassword = user.password
 
         const matches: boolean = await bcrypt.compare(password, encryptedPassword)
@@ -43,13 +43,14 @@ class PasswordService {
     static async updatePassword(
         userId: string,
         newPassword: string,
+        passwordConfirm: string,
         passwordResetToken: string
     ): Promise<void> {
         const user = await UserModel.findById(userId)
         if (!user) throw MissingUserError
 
         // validate password
-        if (!PasswordService.validate(newPassword)) {
+        if (!PasswordService.validate(newPassword) || passwordConfirm !== newPassword) {
             throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
         }
 

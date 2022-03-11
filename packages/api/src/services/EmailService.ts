@@ -46,7 +46,7 @@ export default class EmailService {
      * @param test True if email should be sent throught NodeMailer test account
      * @returns
      */
-    static async sendEmail(to: string, template: string, locals, test = false) {
+    static async sendEmail(to: string, template: string, locals, test = false, preview = false) {
         let transporter
         if (test || process.env.NODE_ENV !== 'production') {
             const account = await NodeMailer.createTestAccount()
@@ -75,7 +75,7 @@ export default class EmailService {
                 from: this.googleAuth.email,
             },
             transport: transporter,
-            preview: false,
+            preview: preview,
         })
 
         const emailInfo = await email.send({
@@ -91,8 +91,8 @@ export default class EmailService {
         return info
     }
 
-    static async sendForgottenPasswordEmail(email: string, token: string) {
-        let link = `/nyttlosenord?token=${token}`
+    static async sendForgottenPasswordEmail(userId: string, email: string, token: string) {
+        let link = `/nyttlosenord?token=${token}&userId=${userId}`
 
         if (process.env.NODE_ENV === 'production') {
             link = 'https://www.mewi.se' + link
@@ -100,6 +100,10 @@ export default class EmailService {
             link = 'localhost:4200' + link
         }
 
-        await this.sendEmail(email, this.forgottenPasswordTemplate, { link })
+        if (process.env.NODE_ENV === 'production') {
+            await this.sendEmail(email, this.forgottenPasswordTemplate, { link })
+        } else {
+            await this.sendEmail(email, this.forgottenPasswordTemplate, { link }, true, true)
+        }
     }
 }

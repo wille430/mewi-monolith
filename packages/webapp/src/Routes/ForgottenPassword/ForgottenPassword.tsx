@@ -8,18 +8,25 @@ import { forgottenPassword } from 'store/user/creator'
 const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
-    const [success, setSuccess] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
 
     const dispatch = useAppDispatch()
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
-        
+
+        if (!email) {
+            setErrorMessage('Fältet kan inte vara tomt')
+            return
+        }
+
         setErrorMessage(undefined)
-        setSuccess(false)
-        dispatch(forgottenPassword()).then((action) => {
+        setSuccessMessage('')
+        dispatch(forgottenPassword(email)).then((action) => {
             if (action.meta.requestStatus === 'fulfilled') {
-                setSuccess(true)
+                setSuccessMessage(
+                    `Ett meddelande till ${email} har skickats med en återställningslänk`
+                )
                 setEmail(undefined)
             } else {
                 if (typeof action.payload === 'string') setErrorMessage(action.payload)
@@ -38,7 +45,10 @@ const ForgottenPassword = () => {
                         <form className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
-                                    onChange={(value) => setEmail(value)}
+                                    onChange={(value) => {
+                                        setSuccessMessage('')
+                                        setEmail(value)
+                                    }}
                                     value={email}
                                     name='email'
                                     placeholder='E-postadress'
@@ -46,10 +56,7 @@ const ForgottenPassword = () => {
                                     fullWidth={true}
                                 />
                                 <span className='text-red-400'>{errorMessage}</span>
-                                <span className='text-green-400'>
-                                    {success &&
-                                        `Ett meddelande till ${email} har skickats med en återställningslänk`}
-                                </span>
+                                <span className='text-green-400'>{successMessage}</span>
                             </div>
 
                             <Button
