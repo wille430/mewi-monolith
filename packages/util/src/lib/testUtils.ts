@@ -22,7 +22,7 @@ export const generateMockItemData = (
         items.push({
             id: faker.datatype.uuid(),
             title: faker.random.words(5),
-            category: [_.sample(categories)?._id || 'fordon'],
+            category: [_.sample(Object.keys(categories)) || 'fordon'],
             imageUrl: [faker.internet.url()],
             isAuction: faker.datatype.boolean(),
             redirectUrl: faker.internet.url(),
