@@ -9,6 +9,7 @@ import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
 import Description from './Description/Description'
 import CategoryPathLabel from 'components/SearchArea/CategoryPathLabel'
+import { useEffect } from 'react'
 
 const cx = classNames.bind(styles)
 
@@ -35,6 +36,10 @@ const ArticleItemDetails = ({
     const handleRedirect = () => {
         window.open(redirectUrl)
     }
+
+    useEffect(() => {
+        console.log(category)
+    }, [])
 
     return (
         <Container>

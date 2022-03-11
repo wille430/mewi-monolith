@@ -21,21 +21,22 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
         let parentLinkPath = '/kategorier'
 
         Object.values(categoryValues).forEach((catVal) => {
+
+            if (!catVal) return
+
             if (!parentCategory) {
                 parentCategory = categories[catVal]
             } else {
                 parentCategory = parentCategory.subcat[catVal]
             }
 
-            if (!parentCategory) {
-                history.replace({
-                    pathname: '/404',
-                })
-            }
-
             parentLinkPath = `${parentLinkPath}/${catVal}`
 
-            links.push(<Link key={parentCategory._id} to={parentLinkPath}>{parentCategory.label}</Link>)
+            links.push(
+                <Link key={parentCategory._id} to={parentLinkPath}>
+                    {parentCategory.label}
+                </Link>
+            )
         })
 
         // Add > between each link
@@ -44,7 +45,11 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
         links.forEach((ele, index) => {
             linksWithSpacers.push(ele)
             if (index !== links.length - 1) {
-                linksWithSpacers.push(<span key={index} className=''>{'>'}</span>)
+                linksWithSpacers.push(
+                    <span key={index} className=''>
+                        {'>'}
+                    </span>
+                )
             }
         })
 
