@@ -1,7 +1,8 @@
-import { ButtonHTMLAttributes, useState } from 'react'
+import { Button, ButtonProps } from '@mewi/ui'
+import { useState } from 'react'
 import AddWatcherPopUp from './AddWatcherPopUp'
 
-const WatcherPopUpButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
+const WatcherPopUpButton = (props: ButtonProps) => {
     const [show, setShow] = useState(false)
 
     const handleClick = () => {
@@ -11,9 +12,7 @@ const WatcherPopUpButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
         <>
             <AddWatcherPopUp useShow={{ show, setShow }} />
-            <button className='button' onClick={handleClick} {...props}>
-                Skapa ny bevakning
-            </button>
+            <Button onClick={handleClick} label='Skapa bevakning' {...props}/>
         </>
     )
 }

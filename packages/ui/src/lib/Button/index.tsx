@@ -7,7 +7,7 @@ import { Override } from '../types'
 
 const cx = classNames.bind(styles)
 
-type ButtonProps = Override<
+export type ButtonProps = Override<
     HTMLAttributes<HTMLButtonElement>,
     {
         onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void> | void

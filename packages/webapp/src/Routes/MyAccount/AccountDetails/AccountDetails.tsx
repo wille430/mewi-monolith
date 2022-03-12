@@ -20,7 +20,12 @@ const AccountDetails = () => {
                 value={userState.email}
                 onEditComplete={(val) => dispatch(updateUserInfo({ field: 'email', new_val: val }))}
             />
-            <EditableField label='Password' type='password' value={faker.internet.password()} disabled />
+            <EditableField
+                label='Lösenord'
+                type='password'
+                value={faker.internet.password()}
+                disabled
+            />
         </section>
     )
 }
