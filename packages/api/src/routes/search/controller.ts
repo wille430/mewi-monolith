@@ -28,59 +28,64 @@ export const findById = async (req, res) => {
 }
 
 export const getSearchResults = async (req, res) => {
-    const options: SearchPostRequestBody = req.body
+    try {
+        const options: SearchPostRequestBody = req.body
 
-    let sort: Record<string, 'asc' | 'desc'>
-    let body: Search<any>['body'] = {
-        sort: sort ? [sort] : [],
-    }
-
-    switch (options.sort) {
-        case SortData.DATE_ASC:
-            sort = { date: 'asc' }
-            break
-        case SortData.DATE_DESC:
-            sort = { date: 'desc' }
-            break
-        case SortData.PRICE_ASC:
-            sort = { 'price.value': 'asc' }
-            break
-        case SortData.PRICE_DESC:
-            sort = { 'price.value': 'desc' }
-            break
-    }
-
-    if (options.limit) {
-        body = {
-            size: options.limit,
+        let sort: Record<string, 'asc' | 'desc'>
+        let body: Search<any>['body'] = {
+            sort: sort ? [sort] : [],
         }
-    } else {
-        body = {
-            ...body,
-            ...SearchService.calculateFromAndSize(options.page),
-        }
-    }
 
-    let results
-    if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
-        const query = SearchService.createElasticQuery(options.searchFilters)
-        results = await elasticClient.search({
-            index: index,
-            body: {
-                query: query,
+        switch (options.sort) {
+            case SortData.DATE_ASC:
+                sort = { date: 'asc' }
+                break
+            case SortData.DATE_DESC:
+                sort = { date: 'desc' }
+                break
+            case SortData.PRICE_ASC:
+                sort = { 'price.value': 'asc' }
+                break
+            case SortData.PRICE_DESC:
+                sort = { 'price.value': 'desc' }
+                break
+        }
+
+        if (options.limit) {
+            body = {
+                size: options.limit,
+            }
+        } else {
+            body = {
                 ...body,
-            },
-        })
-    } else {
-        results = await elasticClient.search({
-            index: index,
-            body,
-        })
-    }
+                ...SearchService.calculateFromAndSize(options.page),
+            }
+        }
 
-    res.status(200).json({
-        options: options,
-        totalHits: results.body.hits?.total?.value || 0,
-        hits: results.body.hits?.hits || [],
-    })
+        let results
+        if (options.searchFilters && Object.keys(options.searchFilters).length > 0) {
+            const query = SearchService.createElasticQuery(options.searchFilters)
+            results = await elasticClient.search({
+                index: index,
+                body: {
+                    query: query,
+                    ...body,
+                },
+            })
+        } else {
+            results = await elasticClient.search({
+                index: index,
+                body,
+            })
+        }
+
+        res.status(200).json({
+            options: options,
+            totalHits: results.body.hits?.total?.value || 0,
+            hits: results.body.hits?.hits || [],
+        })
+    } catch (e) {
+        console.error(e)
+        res.status(500)
+    }
 }
