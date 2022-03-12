@@ -97,7 +97,7 @@ export default class EmailService {
         if (process.env.NODE_ENV === 'production') {
             link = 'https://www.mewi.se' + link
         } else {
-            link = 'localhost:4200' + link
+            link = 'http://localhost:4200' + link
         }
 
         if (process.env.NODE_ENV === 'production') {
