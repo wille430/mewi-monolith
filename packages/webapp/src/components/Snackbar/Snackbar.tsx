@@ -1,6 +1,10 @@
+import { motion, Variants } from 'framer-motion'
 import { HTMLAttributes, useEffect, useRef } from 'react'
 import { FiX } from 'react-icons/fi'
-import SlideTransition from '../SlideTransition'
+import classNames from 'classnames'
+import styles from './Snackbar.module.scss'
+
+const cx = classNames.bind(styles)
 
 export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     title?: string
@@ -13,15 +17,7 @@ export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     type?: 'error' | 'info'
 }
 
-const Snackbar = ({
-    title,
-    body,
-    handleClose,
-    open = true,
-    autoHideDuration = 6000,
-    animationDuration = 500,
-    onExited,
-}: SnackbarProps) => {
+const Snackbar = ({ title, body, handleClose, autoHideDuration = 6000, type }: SnackbarProps) => {
     const timerAutoHide = useRef<NodeJS.Timeout | null>()
     const shouldCloseSnackbar = useRef(false)
     const isInteractedWith = useRef(false)
@@ -31,8 +27,6 @@ const Snackbar = ({
     }
 
     const handleClick = () => closeSnackbar()
-
-    const handleExited = () => onExited && onExited()
 
     const handleMouseEnter = () => {
         isInteractedWith.current = true
@@ -63,53 +57,56 @@ const Snackbar = ({
         }, autoHideDuration)
     }
 
+    const snackbarVariants: Variants = {
+        hidden: {
+            x: '-120%',
+        },
+        show: {
+            x: type === 'error' ? [-75, 75, -45, 45, -15, 15, 0] : 0,
+        },
+    }
+
     useEffect(() => {
         setAutoHideTimeout()
     }, [])
 
     return (
-        <SlideTransition
-            runOnStart={!open}
-            in={open}
-            duration={animationDuration}
-            onExited={handleExited}
-            render={(state) => {
-                return (
-                    <div
-                        style={{
-                            width: 'clamp(20rem, 500px, 100%)',
-                            minHeight: '2rem',
-                        }}
-                        className='z-100 z-50 flex cursor-pointer select-none flex-row justify-between rounded-md bg-white text-black shadow-lg'
-                        data-testid='snackbarContainer'
-                        onClick={handleClick}
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <div className='flex h-auto w-full flex-grow flex-col divide-y divide-blue-dark'>
-                            <header className='flex-0 flex p-2 px-3'>
-                                <h4 className='flex-grow' data-testid='snackbarTitle'>
-                                    {title}
-                                </h4>
-                                <button data-testid='closeSnackbar' onClick={handleClick}>
-                                    <FiX size='20' />
-                                </button>
-                            </header>
+        <motion.div
+            className={cx({
+                [styles.snackbar]: true,
+                [styles.small]: !body,
+                [styles.error]: type === 'error',
+            })}
+            data-testid='snackbarContainer'
+            onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            variants={snackbarVariants}
+            initial={'hidden'}
+            animate={'show'}
+            exit={'hidden'}
+            transition={{ type: 'spring', damping: 18, stiffness: 90 }}
+        >
+            <header className={styles.header}>
+                <h4 className='flex-grow' data-testid='snackbarTitle'>
+                    {title}
+                </h4>
+                <button data-testid='closeSnackbar' onClick={handleClick}>
+                    <FiX size='20' />
+                </button>
+            </header>
 
-                            <p
-                                className={`flex-grow break-words p-3 px-4 text-sm text-gray-500`}
-                                style={{
-                                    minHeight: '1.5rem',
-                                }}
-                                data-testid='snackbarText'
-                            >
-                                {body}
-                            </p>
-                        </div>
-                    </div>
-                )
-            }}
-        />
+            {body && (
+                <p
+                    className={cx({
+                        [styles.bodyText]: true,
+                    })}
+                    data-testid='snackbarText'
+                >
+                    {body}
+                </p>
+            )}
+        </motion.div>
     )
 }
 

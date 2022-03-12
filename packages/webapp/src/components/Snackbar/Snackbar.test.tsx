@@ -1,7 +1,7 @@
 import Snackbar from './Snackbar'
 import '@testing-library/jest-dom'
 import { cleanup, fireEvent, render } from '@testing-library/react'
-import { randomString } from '@mewi/util'
+import faker from '@faker-js/faker'
 
 const testIds = {
     snackbar: 'snackbarContainer',
@@ -15,14 +15,14 @@ describe('Snackbar', () => {
     let body = ''
 
     beforeEach(() => {
-        title = randomString(8)
-        body = randomString(8)
+        title = faker.random.words()
+        body = faker.lorem.paragraphs()
         jest.useFakeTimers()
         cleanup()
     })
 
     it('should render correctly', () => {
-        const { queryByTestId } = render(<Snackbar />)
+        const { queryByTestId } = render(<Snackbar title={title} body={body} />)
 
         expect(queryByTestId(testIds.snackbar)).toBeTruthy()
         expect(queryByTestId(testIds.closeButton)).toBeTruthy()

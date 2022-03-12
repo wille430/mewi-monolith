@@ -1,4 +1,4 @@
-import { APIError, AuthErrorCodes, EditableUserFields, UserData } from '@mewi/types'
+import { AuthErrorCodes, EditableUserFields, UserData } from '@mewi/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import userApi from 'api/userApi'
 import { RootState } from 'store'
@@ -54,6 +54,7 @@ export const forgottenPassword = createAsyncThunk(
     async (email: string, thunkApi) => {
         try {
             await userApi.forgottenPassword(email)
+            return
         } catch (e: any) {
             if (e.error) {
                 const error = e.error

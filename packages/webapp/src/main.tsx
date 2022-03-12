@@ -11,7 +11,7 @@ import { store } from 'store'
 // import { Elements } from '@stripe/react-stripe-js'
 import setupInterceptors from 'api/setupInterceptors.'
 
-if (window.Cypress) {
+if (window.Cypress || process.env.NODE_ENV !== 'production') {
     window.store = store
 }
 

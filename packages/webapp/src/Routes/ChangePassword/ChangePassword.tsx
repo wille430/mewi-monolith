@@ -6,6 +6,7 @@ import { changePassword, changePasswordErrorPayload } from 'store/auth/creators'
 import useQuery from 'hooks/useQuery'
 import FormTextField from 'components/FormTextField/FormTextField'
 import { useHistory } from 'react-router-dom'
+import { pushToSnackbar } from 'store/snackbar/creators'
 
 const ForgottenPassword = () => {
     const initialState = {
@@ -33,6 +34,7 @@ const ForgottenPassword = () => {
                 (action) => {
                     if (action.meta.requestStatus === 'fulfilled') {
                         history.push('/login')
+                        dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
                     } else {
                         if (action.payload) {
                             setErrors(action.payload as changePasswordErrorPayload)
@@ -90,7 +92,9 @@ const ForgottenPassword = () => {
                                 errorMessage={errors.repassword}
                             />
 
-                            {errors.general && <span className='text-red-400 w-full'>{errors.general}</span>}
+                            {errors.general && (
+                                <span className='w-full text-red-400'>{errors.general}</span>
+                            )}
 
                             <Button
                                 label='Ändra lösenord'

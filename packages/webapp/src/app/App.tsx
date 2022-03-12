@@ -12,6 +12,7 @@ import { onAuthLoad } from 'store/auth/creators'
 import Page from 'components/Page'
 import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
 import ChangePassword from 'Routes/ChangePassword/ChangePassword'
+import SnackbarHandler from 'components/SnackbarHandler'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -102,6 +103,7 @@ function App() {
                     </Switch>
                 </Suspense>
             </Router>
+            <SnackbarHandler />
         </div>
     )
 }
