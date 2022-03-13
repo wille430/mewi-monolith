@@ -3,7 +3,7 @@ import axios from 'axios'
 import { SearchState } from 'store/search/type'
 
 export type getSearchResultsReturnType = {
-    hits: { _id: string; _source: ItemData }[]
+    hits: ItemData[]
     totalHits: SearchState['totalHits']
 }
 
@@ -26,7 +26,7 @@ const autocomplete = async (keyword: string) => {
     return suggestions
 }
 const getItemById = async (itemId: string) => {
-    const item: ItemData = await axios.get('/items/' + itemId).then((res) => res.data.body._source)
+    const item: ItemData = await axios.get('/items/' + itemId).then((res) => res.data)
     return item
 }
 

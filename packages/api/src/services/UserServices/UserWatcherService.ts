@@ -3,18 +3,11 @@
  */
 
 import { ObjectId } from 'bson'
-import {
-    APIError,
-    DatabaseErrorCodes,
-    ElasticQuery,
-    JoinedWatcher,
-    SearchFilterDataProps,
-} from '@mewi/types'
+import { APIError, DatabaseErrorCodes, JoinedWatcher, SearchFilterDataProps } from '@mewi/types'
 import WatcherModel from 'models/WatcherModel'
 import WatcherService from 'services/WatcherService'
 import { UserService } from './index'
 import SearchService from 'services/SearchService'
-import _ from 'lodash'
 import { Watcher } from 'models/UserModel'
 
 class UserWatcherService {
@@ -34,7 +27,7 @@ class UserWatcherService {
 
                     const joinedWatcher: JoinedWatcher = {
                         ...userWatcher.toObject(),
-                        ..._.pick(publicWatcher.toObject(), ['query', 'metadata']),
+                        metadata: publicWatcher.metadata,
                         _id: userWatcher._id.toString(),
                     }
 
@@ -79,17 +72,16 @@ class UserWatcherService {
 
     static async addWatcher(
         userId: string,
-        { metadata, query }: { metadata: SearchFilterDataProps; query: ElasticQuery }
+        metadata: SearchFilterDataProps
     ): Promise<JoinedWatcher> {
         const user = await UserService.userById(userId)
-
-        const similarWatcher = await WatcherService.findSimilarWatcher(query)
+        const similarWatcher = await WatcherModel.findOne({ metadata })
 
         let watcher: typeof similarWatcher
         if (similarWatcher) {
             watcher = similarWatcher
         } else {
-            watcher = await WatcherService.create(metadata, query)
+            watcher = await WatcherService.create(metadata)
         }
 
         const watcherInUser = user.watchers.find(
@@ -137,8 +129,8 @@ class UserWatcherService {
         watcherId: string,
         searchFilters: SearchFilterDataProps
     ): Promise<JoinedWatcher> {
-        const query = SearchService.createElasticQuery(searchFilters)
-        const similarWatcher = await WatcherService.findSimilarWatcher(searchFilters)
+        const query = SearchService.createDbFilters(searchFilters)
+        const similarWatcher = await WatcherModel.findOne({ metadata: searchFilters })
 
         let watcher: typeof similarWatcher
         if (similarWatcher) {
@@ -146,7 +138,7 @@ class UserWatcherService {
             watcher = similarWatcher
         } else {
             console.log('No similar watcher found. Creating a new watcher...')
-            watcher = await WatcherService.create(searchFilters, query)
+            watcher = await WatcherService.create(searchFilters)
         }
 
         if (!watcher) throw new APIError(404, DatabaseErrorCodes.MISSING_DOCUMENT)

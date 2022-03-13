@@ -1,30 +1,15 @@
 import { PublicWatcher } from '@mewi/types'
 import { Schema, model } from 'mongoose'
 
-// export interface WatcherQuery {
-//     bool: {
-//         must: [
-//             {
-//                 match: {
-//                     title: string,
-//                     [key: string]: any
-//                 }
-//             },
-//             {
-//                 range?: { date: { gte: number } }
-//             }
-//         ]
-//     }
-// }
-
 const WatcherSchema = new Schema<PublicWatcher>(
     {
-        query: { type: Object, unique: true },
         metadata: {
             type: Object,
             default: {
                 keyword: '',
             },
+            required: true,
+            unique: true,
         },
         users: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     },

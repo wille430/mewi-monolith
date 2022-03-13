@@ -42,9 +42,7 @@ export default class SellpyScraper extends Scraper {
                     date: item.updatedAt * 1000,
                     imageUrl: item.images || [],
                     isAuction: false,
-                    redirectUrl: item.metadata.brand
-                        ? `https://sellpy.com/item/${item.objectID}`
-                        : null,
+                    redirectUrl: `https://sellpy.com/item/${item.objectID}`,
                     price: item.pricing
                         ? {
                               value: item.pricing.amount || 0,

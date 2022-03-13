@@ -515,10 +515,11 @@ export interface SearchFilterDataProps {
     auction?: boolean
     dateGte?: number
 }
-
-export interface SearchPostRequestBody {
-    page?: number
+export interface SearchPostRequestBody extends SearchOptions {
     searchFilters?: SearchFilterDataProps
+}
+export interface SearchOptions {
+    page?: number
     sort?: SortData
     limit?: number
 }

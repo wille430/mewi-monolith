@@ -175,7 +175,7 @@ describe('search', () => {
         })
     })
 
-    it.only('should be able to navigate through pages', () => {
+    it('should be able to navigate through pages', () => {
         cy.visit('/')
         cy.getBySel('searchInput').type('{enter}')
 

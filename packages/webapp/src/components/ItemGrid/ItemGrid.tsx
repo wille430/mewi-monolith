@@ -20,12 +20,12 @@ const ItemGrid = () => {
     }
 
     const renderItems = () => {
-        return search.hits.map((item: any, i: number) => (
+        return search.hits.map((item, i: number) => (
             <ArticleItem
                 key={i}
-                props={item['_source']}
-                id={item['_id']}
-                onClick={() => handleItemClick(item['_id'])}
+                props={item}
+                id={item.id}
+                onClick={() => handleItemClick(item.id)}
             />
         ))
     }

@@ -5,7 +5,7 @@ import EndDate from '../EndDate'
 import ItemsService from '../ItemsService'
 import robotsParser from 'robots-parser'
 import nodeSchedule from 'node-schedule'
-import Elasticsearch, { elasticClient } from 'config/elasticsearch'
+import ListingModel from 'models/ListingModel'
 
 interface ScraperProps {
     maxEntries?: number
@@ -128,21 +128,11 @@ class Scraper {
     }
 
     async deleteOld(): Promise<void> {
-        const response = await elasticClient.deleteByQuery({
-            index: Elasticsearch.defaultIndex,
-            body: {
-                query: {
-                    term: { origin: this.name },
-                    range: {
-                        date: {
-                            lte: this.deleteOlderThan,
-                        },
-                    },
-                },
-            },
+        const { deletedCount } = await ListingModel.deleteMany({
+            date: { $lte: this.deleteOlderThan },
         })
 
-        console.log(`Successfully deleted ${response.body.deleted} items with origin ${this.name}`)
+        console.log(`Successfully deleted ${deletedCount} items with origin ${this.name}`)
     }
 }
 

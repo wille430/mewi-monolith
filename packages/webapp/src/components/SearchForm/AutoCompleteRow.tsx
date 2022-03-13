@@ -19,7 +19,7 @@ const AutoCompleteRow = ({ children, keyword, onClick }: AutoCompleteRowProps) =
     return (
         <li
             onClick={handleClick}
-            className='z-50 block w-full cursor-pointer px-4 py-1.5 text-left hover:bg-gray-300'
+            className='z-50 block w-full cursor-pointer px-4 py-1.5 text-left hover:bg-gray-300 truncate'
         >
             {children}
         </li>

@@ -44,15 +44,13 @@ export const getNewItems = createAsyncThunk(
             return undefined
         }
 
-        const { hits } = await searchApi.getSearchResults({
+        const { hits: newItems } = await searchApi.getSearchResults({
             searchFilters: {
                 ...watcher.metadata,
                 dateGte: new Date(watcher.createdAt).getTime(),
             },
             limit: 5,
         })
-
-        const newItems = hits.map((x) => x._source)
 
         return {
             id,

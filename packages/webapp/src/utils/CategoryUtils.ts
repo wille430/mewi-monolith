@@ -9,5 +9,5 @@ export const findNestedCategory = (categoryToFind: string): string[] => {
         }
     }
 
-    return []
+    return [categoryToFind]
 }

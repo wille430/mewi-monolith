@@ -97,7 +97,11 @@ describe('watchers', () => {
             .get('[data-testid=watcherSearchButton]')
             .click()
 
-        cy.url().should('contain', '/search')
+        if (formData.category) {
+            cy.url().should('contain', '/kategorier')
+        } else {
+            cy.url().should('contain', '/search')
+        }
 
         // TODO: CHECK FILTERS IN FILTER AREA + URL
     })

@@ -32,7 +32,7 @@ export default class ScrapeService {
 
         // schedule email notifications
         nodeSchedule.scheduleJob('30 18 * * *', async () => {
-            await new WatcherNotificationService().notifyUsers()
+            await WatcherNotificationService.notifyUsers()
         })
     }
 }

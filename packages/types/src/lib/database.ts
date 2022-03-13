@@ -25,7 +25,6 @@ export type WatcherMetadata = SearchFilterDataProps
 
 export interface PublicWatcher {
     _id: ObjectId
-    query: ElasticQuery
     metadata: WatcherMetadata
     users: ObjectId[]
     createdAt: string
@@ -77,10 +76,7 @@ export interface ItemData {
     imageUrl: string[]
     isAuction: boolean
     redirectUrl: string
-    price?: {
-        value: number
-        currency: string
-    }
+    price?: ListingPrice
     region: string
     zipcode?: string
     parameters?: {
@@ -88,7 +84,12 @@ export interface ItemData {
         label: string
         value: string
     }[]
-    origin: 'Blocket' | 'Tradera' | 'Sellpy' | 'Blipp'
+    origin: keyof typeof ListingOrigins
+}
+
+export type ListingPrice = {
+    value: number
+    currency: string
 }
 
 export interface AuthTokens {
@@ -97,3 +98,10 @@ export interface AuthTokens {
 }
 
 export type EditableUserFields = keyof Pick<UserData, 'email'>
+
+export enum ListingOrigins {
+    Blocket = 'Blocket',
+    Tradera = 'Tradera',
+    Sellpy = 'Sellpy',
+    Blipp = 'Blipp',
+}

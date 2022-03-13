@@ -1,8 +1,6 @@
 import WatcherService from 'services/WatcherService'
 import { UserWatcherService } from 'services/UserServices'
-import SearchService from 'services/SearchService'
 import { APIError, SearchFilterDataProps, ValidationErrorCodes } from '@mewi/types'
-import { WatcherErrorCodes } from '@mewi/types'
 
 export const getAll = async (req, res, next) => {
     // Get user_id
@@ -31,29 +29,14 @@ export const create = async (req, res, next) => {
                 'You must provide search filters to create a new watcher.'
             )
         } else {
-            const query = SearchService.createElasticQuery(searchFilters)
-            const validQuery = await SearchService.validateQuery(query)
-
-            if (!validQuery) {
-                throw new APIError(
-                    400,
-                    WatcherErrorCodes.INVALID_QUERY,
-                    'The search filters provided were not valid.'
-                )
-            } else {
-                // Create watcher
-                const newWatcher = await UserWatcherService.addWatcher(user_id, {
-                    metadata: searchFilters,
-                    query: query,
-                })
-                res.status(201).json({
-                    watcher: newWatcher,
-                })
-            }
+            // Create watcher
+            const newWatcher = await UserWatcherService.addWatcher(user_id, searchFilters)
+            res.status(201).json({
+                watcher: newWatcher,
+            })
         }
     } catch (e) {
-        next(e)
-        return
+        return next(e)
     }
 }
 
@@ -84,25 +67,15 @@ export const update = async (req, res, next) => {
                 'You must provide search filters to update a new watcher.'
             )
         } else {
-            const query = SearchService.createElasticQuery(searchFilters)
-            const validQuery = await SearchService.validateQuery(query)
-            if (!validQuery) {
-                throw new APIError(
-                    400,
-                    WatcherErrorCodes.INVALID_QUERY,
-                    'The search filters provided were not valid.'
-                )
-            } else {
-                // Update watcher
-                const newWatcher = await UserWatcherService.updateWatcher(
-                    user_id,
-                    watcher_id,
-                    searchFilters
-                )
-                res.status(201).json({
-                    watcher: newWatcher,
-                })
-            }
+            // Update watcher
+            const newWatcher = await UserWatcherService.updateWatcher(
+                user_id,
+                watcher_id,
+                searchFilters
+            )
+            res.status(201).json({
+                watcher: newWatcher,
+            })
         }
     } catch (e) {
         next(e)

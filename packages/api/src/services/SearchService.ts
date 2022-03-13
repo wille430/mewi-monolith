@@ -1,128 +1,60 @@
-import { ElasticQuery, SearchFilterDataProps } from '@mewi/types'
-import Elasticsearch, { elasticClient } from '../config/elasticsearch'
+import { ItemData, SearchFilterDataProps, SearchOptions, SortData } from '@mewi/types'
+import ListingModel from 'models/ListingModel'
+import { FilterQuery, QueryOptions } from 'mongoose'
+import { generateMockItemData } from '@mewi/util'
 
 export default class SearchService {
     static limit = 20
 
-    static async validateQuery(query): Promise<boolean> {
-        return await elasticClient.indices
-            .validateQuery({
-                index: 'items',
-                body: { query },
-            })
-            .then((x) => x.body.valid)
-    }
+    static async search(
+        query?: SearchFilterDataProps,
+        options?: SearchOptions
+    ): Promise<{ hits: ItemData[]; totalHits: number }> {
+        const filterQuery = this.createDbFilters(query)
+        const queryOptions: QueryOptions = {}
 
-    static async search(query?: SearchFilterDataProps) {
-        if (query) {
-            return await elasticClient.search({
-                index: Elasticsearch.defaultIndex,
-                body: SearchService.createElasticQuery(query),
-            })
+        switch (options.sort) {
+            case SortData.DATE_ASC:
+                queryOptions.sort = { date: 1 }
+                break
+            case SortData.DATE_DESC:
+                queryOptions.sort = { date: -1 }
+                break
+            case SortData.PRICE_ASC:
+                queryOptions.sort = { 'price.value': 1 }
+                break
+            case SortData.PRICE_DESC:
+                queryOptions.sort = { 'price.value': -1 }
+                break
+        }
+
+        if (options.limit) {
+            queryOptions.limit = options.limit
         } else {
-            return await elasticClient.search({
-                index: Elasticsearch.defaultIndex,
-            })
+            const { from, size } = SearchService.calculateFromAndSize(options.page)
+            queryOptions.limit = size
+            queryOptions.skip = from
+        }
+
+        return {
+            hits: await ListingModel.find(filterQuery, null, queryOptions).lean(),
+            totalHits: await ListingModel.find(filterQuery, null).count(),
         }
     }
 
-    static async autocomplete(keyword) {
-        const suggestResponse = await elasticClient.search({
-            index: Elasticsearch.defaultIndex,
-            body: {
-                suggest: {
-                    keywordSuggest: {
-                        text: keyword,
-                        term: { field: 'title' },
-                    },
-                },
-            },
-        })
+    static async autocomplete(keyword): Promise<string[]> {
+        const response = await ListingModel.aggregate([
+            { $match: { $text: { $search: keyword } } },
+            { $limit: 5 },
+            { $project: { _id: 0, title: 1 } },
+        ])
 
-        return suggestResponse.body.suggest.keywordSuggest[0]?.options
+        return response.map((x) => x.title)
     }
 
     static async findById(id: string) {
-        const response = await elasticClient.get({
-            id: id,
-            index: Elasticsearch.defaultIndex,
-        })
-
-        return response
-    }
-
-    static createElasticQuery(searchFilterData: SearchFilterDataProps): ElasticQuery {
-        const query: ElasticQuery = {
-            bool: {
-                must: [],
-            },
-        }
-
-        console.log('Creating query from ', JSON.stringify(searchFilterData))
-
-        Object.keys(searchFilterData).forEach((key) => {
-            switch (key as keyof SearchFilterDataProps) {
-                case 'keyword':
-                    if (!searchFilterData[key]) break
-                    query.bool.must.push({ match: { title: searchFilterData[key] } })
-                    break
-                case 'regions':
-                    if (Array.isArray(searchFilterData[key])) {
-                        query.bool.must.push({
-                            match: { region: (searchFilterData[key] as string[]).join(', ') },
-                        })
-                    } else {
-                        query.bool.must.push({
-                            match: { region: [searchFilterData[key] as string].join(', ') },
-                        })
-                    }
-
-                    break
-                case 'category':
-                    if (!query.bool.filter) query.bool.filter = []
-                    query.bool.filter.push({ term: { [key]: searchFilterData[key] } })
-                    break
-                case 'auction':
-                    if (!query.bool.filter) query.bool.filter = []
-                    query.bool.filter.push({ term: { isAuction: searchFilterData[key] } })
-                    break
-                case key.match(/priceRange(Gte|Lte)/)?.input:
-                    if (!query.bool.filter) query.bool.filter = []
-
-                    if (key.match(/(Gte)$/)) {
-                        query.bool.filter.push({
-                            range: {
-                                'price.value': {
-                                    gte: searchFilterData[key],
-                                },
-                            },
-                        })
-                    } else if (key.match(/(Lte)$/)) {
-                        query.bool.filter.push({
-                            range: {
-                                'price.value': {
-                                    lte: searchFilterData[key],
-                                },
-                            },
-                        })
-                    }
-                    break
-                case 'dateGte':
-                    if (!query.bool.filter) query.bool.filter = []
-
-                    query.bool.filter.push({
-                        range: {
-                            date: {
-                                gte: searchFilterData[key],
-                            },
-                        },
-                    })
-
-                    break
-            }
-        })
-
-        return query
+        const listing = await ListingModel.findById(id)
+        return listing
     }
 
     static calculateFromAndSize(page = 1) {
@@ -138,6 +70,79 @@ export default class SearchService {
                 from: (page - 1) * size,
                 size: size,
             }
+        }
+    }
+
+    static createDbFilters(searchFilterData: SearchFilterDataProps): FilterQuery<ItemData> {
+        const filterQuery: FilterQuery<ItemData> = {}
+
+        console.log('Creating query from ', JSON.stringify(searchFilterData))
+
+        Object.keys(searchFilterData).forEach((key) => {
+            switch (key as keyof SearchFilterDataProps) {
+                case 'keyword':
+                    if (!searchFilterData[key]) break
+                    filterQuery.$text = {
+                        ...(filterQuery.$text || []),
+                        $search: searchFilterData[key],
+                    }
+                    break
+                case 'regions':
+                    if (Array.isArray(searchFilterData[key])) {
+                        filterQuery.$and = [
+                            ...(filterQuery.$and || []),
+                            { region: (searchFilterData[key] as string[]).join(', ') },
+                        ]
+                    } else {
+                        filterQuery.$and = [
+                            ...(filterQuery.$and || []),
+                            { region: [searchFilterData[key] as string].join(', ') },
+                        ]
+                    }
+                    break
+                case 'category':
+                    filterQuery.$and = [
+                        ...(filterQuery.$and || []),
+                        { category: { $all: searchFilterData[key] } },
+                    ]
+                    break
+                case 'auction':
+                    filterQuery.$and = [
+                        ...(filterQuery.$and || []),
+                        { isAuction: searchFilterData[key] },
+                    ]
+                    break
+                case key.match(/priceRange(Gte|Lte)/)?.input:
+                    if (key.match(/(Gte)$/)) {
+                        filterQuery.$and = [
+                            ...(filterQuery.$and || []),
+                            { 'price.value': { $gte: searchFilterData[key] } },
+                        ]
+                    } else if (key.match(/(Lte)$/)) {
+                        filterQuery.$and = [
+                            ...(filterQuery.$and || []),
+                            { 'price.value': { $lte: searchFilterData[key] } },
+                        ]
+                    }
+                    break
+                case 'dateGte':
+                    filterQuery.$and = [
+                        ...(filterQuery.$and || []),
+                        { date: { $gte: searchFilterData[key] } },
+                    ]
+
+                    break
+            }
+        })
+
+        return filterQuery
+    }
+
+    static async populateWithMockData(count = 100) {
+        let i = 0
+        while (i < count) {
+            await ListingModel.insertMany(generateMockItemData())
+            i += 1
         }
     }
 }

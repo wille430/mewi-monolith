@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { categories, ItemData, UserData } from '@mewi/types'
+import { categories, ItemData, ListingOrigins, UserData } from '@mewi/types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
@@ -27,7 +27,9 @@ export const generateMockItemData = (
             isAuction: faker.datatype.boolean(),
             redirectUrl: faker.internet.url(),
             region: faker.address.cityName(),
-            origin: 'Tradera',
+            origin: Object.values(ListingOrigins)[
+                Math.floor(Math.random() * Object.values(ListingOrigins).length)
+            ],
             price: {
                 value: faker.datatype.number({ min: 10, max: 9999999 }),
                 currency: 'kr',

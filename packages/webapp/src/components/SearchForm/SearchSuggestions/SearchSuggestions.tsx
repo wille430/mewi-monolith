@@ -8,12 +8,6 @@ import { HTMLMotionProps, motion } from 'framer-motion'
 
 const cx = classNames.bind(styles)
 
-interface Suggestion {
-    text: string
-    score: number
-    freq: number
-}
-
 interface SearchSuggestionsProps extends HTMLMotionProps<'ul'> {
     query?: string
     show: boolean
@@ -26,7 +20,7 @@ const SearchSuggestions = ({
     onAutoCompleteClick,
     ...props
 }: SearchSuggestionsProps) => {
-    const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+    const [suggestions, setSuggestions] = useState<string[]>([])
 
     const getSuggestions = useCallback(
         _.debounce((_query) => {
@@ -78,10 +72,10 @@ const SearchSuggestions = ({
                 {suggestions.map((suggestion, i) => (
                     <AutoCompleteRow
                         key={i}
-                        keyword={suggestion.text}
-                        onClick={() => onAutoCompleteClick && onAutoCompleteClick(suggestion.text)}
+                        keyword={suggestion}
+                        onClick={() => onAutoCompleteClick && onAutoCompleteClick(suggestion)}
                     >
-                        {suggestion.text}
+                        {suggestion}
                     </AutoCompleteRow>
                 ))}
             </motion.ul>

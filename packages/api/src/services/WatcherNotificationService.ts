@@ -1,6 +1,6 @@
-import { ItemData, PublicWatcher, WatcherMetadata } from '@mewi/types'
+import { PublicWatcher, WatcherMetadata } from '@mewi/types'
 import { toDateObj, toUnixTime } from '@mewi/util'
-import Elasticsearch, { elasticClient } from 'config/elasticsearch'
+import ListingModel from 'models/ListingModel'
 import { User } from 'models/UserModel'
 import EmailService from './EmailService'
 import SearchService from './SearchService'
@@ -8,18 +8,12 @@ import { UserService } from './UserServices'
 import WatcherService from './WatcherService'
 
 class WatcherNotificationService {
-    client = elasticClient
-
-    constructor(client?: typeof elasticClient) {
-        this.client = client || elasticClient
-    }
-
     /**
      * Notify all users who are subscribed to the watcher
      * @param watcher PublicWatcher
      * @param callback Called after each user is notified
      */
-    async notifyUsersOfWatcher(watcher: PublicWatcher, callback?: () => void) {
+    static async notifyUsersOfWatcher(watcher: PublicWatcher, callback?: () => void) {
         console.log('Notifying users who are subscribed to watcher', watcher._id)
 
         // Get users with corresponding watcher
@@ -42,7 +36,11 @@ class WatcherNotificationService {
      * @param callback Called after user is notified
      * @returns {Promise<void>}
      */
-    async notifyUser(user: User, watcher: PublicWatcher, callback?: () => void): Promise<void> {
+    static async notifyUser(
+        user: User,
+        watcher: PublicWatcher,
+        callback?: () => void
+    ): Promise<void> {
         // Get UserWatcher of user
         const watcherInUser = user.watchers.id(watcher._id)
 
@@ -86,7 +84,7 @@ class WatcherNotificationService {
         console.log(`${user.email} was successully notified!`)
     }
 
-    async notifyUsers() {
+    static async notifyUsers() {
         // Iterate through every watcher in mongodb
         const watchers = await WatcherService.getAll()
 
@@ -99,9 +97,8 @@ class WatcherNotificationService {
 
         console.log(`${mailSent} emails were sent!`)
     }
-    i
 
-    userShouldBeNotified(lastNotificationDate: Date): boolean {
+    static userShouldBeNotified(lastNotificationDate: Date): boolean {
         if (!lastNotificationDate) return true
 
         const ms = toUnixTime(lastNotificationDate)
@@ -116,27 +113,27 @@ class WatcherNotificationService {
      * @param {number} sinceDate Unix time
      * @return Object with an array of ItemData and totalHits
      */
-    async getNewItemsSince(metadata: WatcherMetadata, sinceDate: number) {
-        const elasticQuery = SearchService.createElasticQuery(metadata)
+    static async getNewItemsSince(metadata: WatcherMetadata, sinceDate: number) {
+        const filterQuery = SearchService.createDbFilters(metadata)
 
         // Modify query to include range for date > comparationDate
-        elasticQuery.bool.must.push({ range: { date: { gte: sinceDate } } })
+        if (filterQuery.$and) {
+            filterQuery.$and.push({ date: { $gte: sinceDate } })
+        } else {
+            filterQuery.$and = [{ date: { $gte: sinceDate } }]
+        }
 
         // Get new items for since date
-        const response = await this.client.search({
-            index: Elasticsearch.defaultIndex,
-            body: {
-                query: elasticQuery,
-                size: 5,
-                sort: [{ date: 'desc' }],
-            },
-        })
+        const newListings = await ListingModel.find(filterQuery, null, {
+            limit: 5,
+            sort: { date: -1 },
+        }).lean()
 
-        const newItems: ItemData[] = response.body.hits.hits.map((x) => x._source)
+        const totalHits = await ListingModel.find(filterQuery).count()
 
         return {
-            newItems,
-            totalHits: response.body.hits.total.value,
+            newItems: newListings,
+            totalHits,
         }
     }
 }

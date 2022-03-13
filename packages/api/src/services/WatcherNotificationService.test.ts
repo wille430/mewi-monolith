@@ -1,49 +1,27 @@
-import { Client } from '@elastic/elasticsearch'
 import faker from '@faker-js/faker'
 import { ItemData, PublicWatcher } from '@mewi/types'
 import UserModel from 'models/UserModel'
 import mongoose from 'mongoose'
 import WatcherNotificationService from './WatcherNotificationService'
-import Mock from '@elastic/elasticsearch-mock'
-import Elasticsearch from 'config/elasticsearch'
 import EmailService from './EmailService'
 import * as mockingoose from 'mockingoose'
 import { generateMockItemData } from '@mewi/util'
+import ListingModel from 'models/ListingModel'
 
 function randomDate(start: Date, end: Date) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
 
 describe('Watcher Notification Service', () => {
-    let mock
-    let client
     let mockItem: ItemData
     let sendEmailMock
 
     beforeEach(() => {
-        // Mock elasticSearch
-        mock = new Mock()
-        client = new Client({
-            node: 'http://localhost:9200',
-            Connection: mock.getConnection(),
-        })
-
         mockItem = generateMockItemData() as ItemData
-
-        mock.add(
-            {
-                method: 'POST',
-                path: `/${Elasticsearch.defaultIndex}/_search`,
-            },
-            () => {
-                return {
-                    hits: {
-                        total: { value: 1 },
-                        hits: [{ _source: mockItem }],
-                    },
-                }
-            }
-        )
+        ListingModel.find = jest.fn().mockReturnValue({
+            lean: jest.fn().mockResolvedValue([mockItem]),
+            count: jest.fn().mockResolvedValue(1),
+        })
 
         // Mock EmailService
         sendEmailMock = jest.fn(() => {
@@ -63,9 +41,7 @@ describe('Watcher Notification Service', () => {
         const dates: Date[] = new Array(10).fill(randomDate(startDate, endDate))
 
         for (const date of dates) {
-            const shouldBeNotified = new WatcherNotificationService(client).userShouldBeNotified(
-                date
-            )
+            const shouldBeNotified = WatcherNotificationService.userShouldBeNotified(date)
 
             if (Date.now() - date.getTime() > 1.5 * 24 * 60 * 60 * 1000) {
                 expect(shouldBeNotified).toBe(true)
@@ -96,17 +72,6 @@ describe('Watcher Notification Service', () => {
 
         const watcher: PublicWatcher = {
             _id: watcherId,
-            query: {
-                bool: {
-                    must: [
-                        {
-                            match: {
-                                title: faker.random.word(),
-                            },
-                        },
-                    ],
-                },
-            },
             metadata: { keyword: faker.random.word() },
             users: [new mongoose.Types.ObjectId(userId)],
             createdAt: creationDate,
@@ -114,7 +79,7 @@ describe('Watcher Notification Service', () => {
 
         const callback = jest.fn(() => console.log('Callback called!'))
 
-        await new WatcherNotificationService(client).notifyUser(user, watcher, callback)
+        await WatcherNotificationService.notifyUser(user, watcher, callback)
 
         expect(sendEmailMock).toBeCalledTimes(1)
         expect(callback).toBeCalledTimes(1)

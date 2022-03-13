@@ -25,7 +25,6 @@ Primary.args = {
         metadata: {
             keyword: faker.random.words(3),
         },
-        query: { bool: { must: [] } },
         createdAt: new Date().toString(),
         notifiedAt: new Date().toString(),
         updatedAt: new Date().toString(),

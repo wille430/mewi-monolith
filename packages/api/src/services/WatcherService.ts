@@ -1,6 +1,4 @@
 import WatcherModel from 'models/WatcherModel'
-import { WatcherErrorCodes } from 'types/watcher'
-import SearchService from './SearchService'
 import { UserService } from './UserServices'
 import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
 
@@ -45,22 +43,15 @@ export default class WatcherService {
         return watcher
     }
 
-    static async findSimilarWatcher(query, projection = {}) {
-        return await WatcherModel.findOne({ query }, projection)
-    }
-
-    static async create(metadata: SearchFilterDataProps, query) {
-        const isValidQuery = await SearchService.validateQuery(query)
-
-        if (!isValidQuery) throw new APIError(422, WatcherErrorCodes.INVALID_QUERY)
-
-        const similarWatcher = await this.findSimilarWatcher(query)
+    static async create(metadata: SearchFilterDataProps) {
+        const similarWatcher = await WatcherModel.findOne({ metadata })
 
         if (!similarWatcher) {
             // Create new watcher
             const newWatcher = await WatcherModel.create({
                 metadata,
-                query,
+            }).catch((e) => {
+                throw console.log(e)
             })
 
             return newWatcher
@@ -73,8 +64,8 @@ export default class WatcherService {
         }
     }
 
-    static async isUserInWatcherWithQuery(userId: string, query) {
-        const similarWatcher = await WatcherService.findSimilarWatcher(query, { users: 1 })
+    static async isUserInWatcherWithQuery(userId: string, metadata: SearchFilterDataProps) {
+        const similarWatcher = await WatcherModel.findOne({ metadata }, { users: 1 })
 
         if (!similarWatcher) return false
 

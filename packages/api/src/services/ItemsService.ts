@@ -1,6 +1,6 @@
-import Elasticsearch, { elasticClient } from '../config/elasticsearch'
 import * as fs from 'fs'
 import { ItemData } from '@mewi/types'
+import ListingModel from 'models/ListingModel'
 // import ScrapeService from './scrapers/ScrapeService'
 
 export default class ItemsService {
@@ -13,37 +13,26 @@ export default class ItemsService {
 
         console.log('Deleting items with post date', new Date(dateToRemove), 'or earlier...')
 
-        const response = await elasticClient.deleteByQuery({
-            index: Elasticsearch.defaultIndex,
-            body: {
-                query: {
-                    bool: {
-                        should: [
-                            { range: { date: { lte: dateToRemove } } },
-                            { range: { endDate: { lte: Date.now() } } },
-                        ],
-                    },
-                },
-            },
+        // delete old listings
+        const { deletedCount: deletedCount1 } = await ListingModel.deleteMany({
+            date: { $lte: dateToRemove },
         })
 
-        console.log('Successfully deleted', response.body.deleted, 'items')
+        // delete auctions that have ended
+        const { deletedCount: deletedCount2 } = await ListingModel.deleteMany({
+            endDate: { $lte: Date.now() },
+        })
 
-        await elasticClient.indices.refresh({ index: Elasticsearch.defaultIndex })
+        console.log('Successfully deleted', deletedCount1 + deletedCount2, 'items')
     }
 
     /**
-     * Add items to elasticsearch index
-     * @param items Array of items to add to index
-     * @param index Elasticsearch index
+     * Add listings to db
+     * @param items Array of listings to add to index
      * @returns Amount of items added
      */
-    static async addItems(
-        items: ItemData[],
-        index = Elasticsearch.defaultIndex,
-        test = false
-    ): Promise<number> {
-        let addedItemsCount = items.length
+    static async addItems(items: ItemData[], test = false): Promise<number> {
+        const addedItemsCount = items.length
 
         if (test) {
             console.log('Appending items to ./build/items.json...')
@@ -51,28 +40,13 @@ export default class ItemsService {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
         } else {
-            const body = items.flatMap((item) => [{ index: { _index: index, _id: item.id } }, item])
-
-            if (body.length === 0) return 0
-
-            const { body: bulkResponse } = await elasticClient.bulk({
-                refresh: true,
-                index: index,
-                body: body,
-            })
-
-            if (bulkResponse.errors) {
-                console.error('An error occured when indexing new items!')
-
-                bulkResponse.items.forEach((action, i) => {
-                    const operation = Object.keys(action)[0]
-
-                    if (action[operation].error) {
-                        console.error(action[operation].error)
-                        addedItemsCount -= 1
-                    }
-                })
-            }
+            ListingModel.bulkWrite(
+                items.map((x) => ({
+                    insertOne: {
+                        document: x,
+                    },
+                }))
+            )
         }
 
         return addedItemsCount
