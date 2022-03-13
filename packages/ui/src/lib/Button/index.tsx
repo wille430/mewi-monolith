@@ -40,7 +40,7 @@ export const Button = (props: ButtonProps) => {
     const [isLoading, setLoading] = useState(false)
 
     const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        if (onClick) {
+        if (onClick && !isLoading) {
             setLoading(true)
             await onClick(e)
             setLoading(false)

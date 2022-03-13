@@ -53,7 +53,7 @@ export default class SearchService {
     }
 
     static async findById(id: string) {
-        const listing = await ListingModel.findById(id)
+        const listing = await ListingModel.findOne({ id })
         return listing
     }
 

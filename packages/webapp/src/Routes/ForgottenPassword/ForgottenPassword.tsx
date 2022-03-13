@@ -12,26 +12,25 @@ const ForgottenPassword = () => {
 
     const dispatch = useAppDispatch()
 
-    const onFormSubmit = (e: FormEvent) => {
+    const onFormSubmit = async (e: FormEvent) => {
         e.preventDefault()
+
+        setErrorMessage(undefined)
+        setSuccessMessage('')
 
         if (!email) {
             setErrorMessage('Fältet kan inte vara tomt')
             return
         }
 
-        setErrorMessage(undefined)
-        setSuccessMessage('')
-        dispatch(forgottenPassword(email)).then((action) => {
-            if (action.meta.requestStatus === 'fulfilled') {
-                setSuccessMessage(
-                    `Ett meddelande till ${email} har skickats med en återställningslänk`
-                )
-                setEmail(undefined)
-            } else {
-                if (typeof action.payload === 'string') setErrorMessage(action.payload)
-            }
-        })
+        const action = await dispatch(forgottenPassword(email))
+
+        if (action.meta.requestStatus === 'fulfilled') {
+            setSuccessMessage(`Ett meddelande till ${email} har skickats med en återställningslänk`)
+            setEmail(undefined)
+        } else {
+            if (typeof action.payload === 'string') setErrorMessage(action.payload)
+        }
     }
 
     return (
@@ -42,7 +41,7 @@ const ForgottenPassword = () => {
                         <h3 className='pb-6 pt-4 text-center'>Glömt lösenord</h3>
                     </Container.Header>
                     <Container.Content>
-                        <form className='flex flex-col items-center space-y-4'>
+                        <div className='flex flex-col items-center space-y-4'>
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
@@ -64,7 +63,7 @@ const ForgottenPassword = () => {
                                 onClick={onFormSubmit}
                                 data-testid='formSubmitButton'
                             />
-                        </form>
+                        </div>
                     </Container.Content>
                     <Container.Footer>
                         <div className='pt-6'>

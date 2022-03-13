@@ -29,7 +29,7 @@ export const forgottenPassword = async (req, res, next) => {
             await EmailService.sendForgottenPasswordEmail(user._id, user.email, resetToken)
         }
 
-        res.status(200)
+        res.sendStatus(200)
     } catch (e) {
         return next(e)
     }
