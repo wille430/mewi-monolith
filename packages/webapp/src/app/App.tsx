@@ -21,17 +21,6 @@ const Register = lazy(() => import('Routes/Register'))
 const Categories = lazy(() => import('Routes/Categories'))
 const CategorySearch = lazy(() => import('Routes/CategorySearch'))
 
-// if (!window.console) {
-//     // const noOp = function () {} // no-op function
-//     // eslint-disable-next-line
-//     console = {
-//         ...console,
-//         log: noOp,
-//         warn: noOp,
-//         error: noOp,
-//     }
-// }
-
 function App() {
     const isAuthenticated = useAppSelector((state) => state.auth.isLoggedIn)
     const dispatch = useDispatch()

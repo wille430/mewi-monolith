@@ -9,13 +9,13 @@ select opt in linux windows elasticsearch; do
 
             cd ../
             sudo systemctl start mongodb
-            npx nx serve webapp & npx nx serve api  & ./tools/elasticsearch-7.16.1/bin/elasticsearch
+            npx nx serve webapp & npx nx serve api
 
             ;;
         windows)
             echo "Starting dev env for windows..."
-            npx kill-port 4200 3001 9200
-            ./tools/elasticsearch-7.16.2/bin/elasticsearch.bat & cd ../ & npx nx serve api & npx nx serve webapp
+            npx kill-port 4200 3001
+            cd ../ & npx nx serve api & npx nx serve webapp
 
 
             ;;

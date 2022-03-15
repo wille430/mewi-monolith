@@ -3,7 +3,9 @@ import * as mongoose from 'mongoose'
 
 export type Listing = ItemData
 
-const ListingSchema = new mongoose.Schema<Listing>({
+export type ListingDoc = Listing & mongoose.Document
+
+export const ListingSchema = new mongoose.Schema<Listing>({
     id: { type: String, unique: true, required: true },
     title: { type: String, required: true },
     body: { type: String, required: false },
@@ -36,6 +38,6 @@ const ListingSchema = new mongoose.Schema<Listing>({
 
 ListingSchema.index({ title: 'text' })
 
-const ListingModel = mongoose.model<Listing>('listings', ListingSchema)
+export const ListingModel = mongoose.model<Listing>('listings', ListingSchema)
 
 export default ListingModel

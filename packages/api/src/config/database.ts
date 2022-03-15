@@ -14,7 +14,7 @@ if (!MONGO_USERNAME || !MONGO_PASSWORD) {
     url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URI}`
 }
 
-const database = {
+const db = {
     connect: () => {
         const options: mongoose.ConnectOptions = {}
 
@@ -32,4 +32,4 @@ const database = {
     },
 }
 
-export default database
+export default db

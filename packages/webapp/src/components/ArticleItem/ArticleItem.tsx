@@ -10,7 +10,7 @@ import TimeUntilDate from './TimeUntilDate'
 interface Props {
     props: ItemData
     id: string
-    onClick: () => void
+    onClick?: () => void
 }
 
 const ArticleItem = ({ props, onClick }: Props) => {
@@ -35,7 +35,7 @@ const ArticleItem = ({ props, onClick }: Props) => {
         <div
             className='flex cursor-pointer flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white text-xs shadow'
             style={{ width: '270px', height: '270px' }}
-            onClick={() => onClick()}
+            onClick={() => onClick && onClick()}
         >
             <div className='h-2/3 border-b-2 bg-white'>
                 <DefaultImage

@@ -3,7 +3,7 @@ import cors from 'cors'
 import notFound from './404'
 import * as dotenv from 'dotenv'
 import checkEnv from 'config/check-env'
-import database from 'config/database'
+import db from 'config/database'
 import morgan from 'morgan'
 
 /** Routes */
@@ -14,11 +14,12 @@ import search from './search'
 import auth from './auth'
 import test from './test'
 import errorHandler from './errorHandler'
+import featured from './featured'
 
 const app = express()
 
 dotenv.config()
-database.connect()
+db.connect()
 checkEnv()
 
 // Add middlewares
@@ -35,6 +36,7 @@ app.use('/payment', payment)
 app.use('/search', search)
 app.use('/auth', auth)
 app.use('/test', test)
+app.use('/featured', featured)
 
 app.use('/', (req, res) => {
     res.json({

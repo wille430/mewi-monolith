@@ -7,6 +7,7 @@ import WatcherNotificationService from 'services/WatcherNotificationService'
 import * as dotenv from 'dotenv'
 import SearchService from 'services/SearchService'
 import ListingModel from 'models/ListingModel'
+import FeaturedItemService from 'services/FeaturedItemsService'
 
 dotenv.config()
 
@@ -14,6 +15,7 @@ console.log('NODE ENV:', process.env.NODE_ENV)
 ;(async () => {
     const scraper = new ScrapeService()
     scraper.schedule()
+    FeaturedItemService.schedule()
 
     // TODO: Add fake data in development
 
@@ -39,6 +41,6 @@ console.log('NODE ENV:', process.env.NODE_ENV)
     }
 
     WatcherNotificationService.notifyUsers()
-})()
 
-app.listen(3001, () => console.log('Listening on port 3001...'))
+    app.listen(3001, () => console.log('Listening on port 3001...'))
+})()
