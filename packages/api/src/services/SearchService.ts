@@ -2,6 +2,7 @@ import { ItemData, SearchFilterDataProps, SearchOptions, SortData } from '@mewi/
 import ListingModel from 'models/ListingModel'
 import { FilterQuery, QueryOptions } from 'mongoose'
 import { generateMockItemData } from '@mewi/util'
+import ItemsService from 'services/ItemsService'
 
 export default class SearchService {
     static limit = 20
@@ -53,8 +54,12 @@ export default class SearchService {
     }
 
     static async findById(id: string) {
-        const listing = await ListingModel.findById(id)
-        return listing
+        try {
+            const listing = await ListingModel.findOne({ id })
+            return listing
+        } catch (e) {
+            return undefined
+        }
     }
 
     static calculateFromAndSize(page = 1) {
@@ -139,10 +144,6 @@ export default class SearchService {
     }
 
     static async populateWithMockData(count = 100) {
-        let i = 0
-        while (i < count) {
-            await ListingModel.insertMany(generateMockItemData())
-            i += 1
-        }
+        await ItemsService.addItems(generateMockItemData(count) as ItemData[])
     }
 }

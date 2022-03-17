@@ -1,8 +1,7 @@
 import StyledLoader from 'components/StyledLoader'
 import ArticleItem from 'components/ArticleItem/ArticleItem'
 import ItemPopUp from '../ItemPopUp/ItemPopUp'
-import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import { getItem } from 'store/itemDisplay/creators'
+import { useAppSelector } from 'hooks/hooks'
 import styles from './ItemGrid.module.scss'
 import classNames from 'classnames'
 
@@ -13,20 +12,9 @@ const ItemGrid = () => {
     const status = useAppSelector((state) => state.search.status.searching)
     const { totalHits } = useAppSelector((state) => state.search)
 
-    const dispatch = useAppDispatch()
-
-    const handleItemClick = (id: string) => {
-        dispatch(getItem(id))
-    }
-
     const renderItems = () => {
         return search.hits.map((item, i: number) => (
-            <ArticleItem
-                key={i}
-                props={item}
-                id={item.id}
-                onClick={() => handleItemClick(item.id)}
-            />
+            <ArticleItem key={i} props={item} id={item.id} />
         ))
     }
 

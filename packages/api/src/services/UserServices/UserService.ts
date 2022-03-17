@@ -8,7 +8,6 @@ import {
     ValidationErrorCodes,
 } from '@mewi/types'
 import UserEmailService from './UserEmailService'
-import EmailService from 'services/EmailService'
 import { FilterQuery } from 'mongoose'
 
 export default class UserService {

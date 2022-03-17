@@ -40,13 +40,18 @@ export default class ItemsService {
                 fs.appendFileSync('./build/items.json', JSON.stringify(items[i]))
             }
         } else {
-            ListingModel.bulkWrite(
-                items.map((x) => ({
-                    insertOne: {
-                        document: x,
-                    },
-                }))
-            )
+            try {
+                ListingModel.bulkWrite(
+                    items.map((x) => ({
+                        insertOne: {
+                            document: x,
+                        },
+                    })),
+                    { ordered: false }
+                )
+            } catch (e) {
+                console.log(e)
+            }
         }
 
         return addedItemsCount

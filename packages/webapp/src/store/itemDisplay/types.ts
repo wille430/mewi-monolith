@@ -1,7 +1,7 @@
 import { ItemData } from '@mewi/types'
 
 export interface ItemDisplayState {
-    selectedItem: ItemData | null
+    selectedItem?: ItemData
     isLoading: boolean
     error: string
 }

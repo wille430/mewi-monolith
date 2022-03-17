@@ -3,18 +3,20 @@ import { toDateObj } from '@mewi/util'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
+import { useAppDispatch } from 'hooks/hooks'
 import { ReactNode } from 'react'
+import { getItem } from 'store/itemDisplay/creators'
 import OriginLabel from './OriginLabel'
 import TimeUntilDate from './TimeUntilDate'
 
 interface Props {
     props: ItemData
     id: string
-    onClick?: () => void
 }
 
-const ArticleItem = ({ props, onClick }: Props) => {
+const ArticleItem = ({ props }: Props) => {
     const currentImage = props.imageUrl[0]
+    const dispatch = useAppDispatch()
 
     let dateComponent: ReactNode
 
@@ -33,9 +35,9 @@ const ArticleItem = ({ props, onClick }: Props) => {
 
     return (
         <div
-            className='flex cursor-pointer flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white text-xs shadow'
+            className='flex flex-none cursor-pointer flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white text-xs shadow'
             style={{ width: '270px', height: '270px' }}
-            onClick={() => onClick && onClick()}
+            onClick={() => dispatch(getItem(props.id))}
         >
             <div className='h-2/3 border-b-2 bg-white'>
                 <DefaultImage

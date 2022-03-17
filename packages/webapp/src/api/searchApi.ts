@@ -26,7 +26,7 @@ const autocomplete = async (keyword: string) => {
     return suggestions
 }
 const getItemById = async (itemId: string) => {
-    const item: ItemData = await axios.get('/items/' + itemId).then((res) => res.data)
+    const item: ItemData | undefined = await axios.get('/items/' + itemId).then((res) => res.data)
     return item
 }
 

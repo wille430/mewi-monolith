@@ -13,8 +13,10 @@ const ItemPopUp = () => {
         dispatch(clearItem())
     }
 
+    console.log(itemDisplay.selectedItem)
+
     return (
-        <PopUp show={Boolean(itemDisplay.selectedItem)} onOutsideClick={handleClose}>
+        <PopUp show={!!itemDisplay.selectedItem} onOutsideClick={handleClose}>
             <div
                 className='mx-auto'
                 style={{

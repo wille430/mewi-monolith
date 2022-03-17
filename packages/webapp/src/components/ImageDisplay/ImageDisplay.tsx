@@ -4,6 +4,7 @@ import { FiArrowLeft, FiArrowRight, FiImage } from 'react-icons/fi'
 import { Carousel } from 'react-responsive-carousel'
 import ImageNav from './ImageNav'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import DefaultImage from 'components/DefaultImage/DefaultImage'
 
 const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -43,11 +44,11 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
                     <Carousel className='h-full overflow-y-hidden'>
                         {imageUrls.map((imageUrl) => (
                             <div>
-                                <img
+                                <DefaultImage
                                     className='h-full object-contain'
                                     src={imageUrl}
                                     alt={imageUrl}
-                                ></img>
+                                />
                             </div>
                         ))}
                     </Carousel>
@@ -63,7 +64,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
                 <div className='relative flex w-full flex-1 justify-center'>
                     <div style={{ height: '500px' }}>
                         {imageUrls[selectedIndex] ? (
-                            <img
+                            <DefaultImage
                                 className='h-full object-contain'
                                 src={imageUrls[selectedIndex]}
                                 alt={imageUrls[selectedIndex]}
