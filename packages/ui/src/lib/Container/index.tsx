@@ -1,22 +1,21 @@
+import React from 'react'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import styles from './index.module.scss'
 import classNames from 'classnames'
 
 const cx = classNames.bind(styles)
 
-export const Container = ({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) => {
-    return (
-        <section
-            className={classNames({
-                [styles['container']]: true,
-                [className || '']: !!className,
-            })}
-            {...rest}
-        >
-            {children}
-        </section>
-    )
-}
+export const Container = ({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) => (
+    <section
+        className={classNames({
+            [styles['container']]: true,
+            [className || '']: !!className,
+        })}
+        {...rest}
+    >
+        {children}
+    </section>
+)
 
 const Header = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => (
     <header

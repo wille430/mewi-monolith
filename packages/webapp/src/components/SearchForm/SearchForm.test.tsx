@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import SearchForm from './SearchForm'
 import { act } from 'react-dom/test-utils'

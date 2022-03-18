@@ -11,26 +11,21 @@
             }
         },
         "build": {
-            "executor": "@nrwl/web:webpack",
-            "outputs": ["{options.outputPath}"],
-            "defaultConfiguration": "production",
+            "executor": "@nxext/vite:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
-                "compiler": "babel",
                 "outputPath": "dist/packages/webapp",
-                "index": "packages/webapp/src/index.html",
-                "baseHref": "/",
-                "main": "packages/webapp/src/main.tsx",
-                "polyfills": "packages/webapp/src/polyfills.ts",
-                "tsConfig": "packages/webapp/tsconfig.app.json",
+                "baseUrl": ".",
                 "assets": [
-                    "packages/webapp/src/favicon.ico",
+                    "./src/favicon.ico",
                     "packages/webapp/src/assets",
                     "packages/webapp/src/_redirects"
-                ],
-                "styles": ["packages/webapp/src/styles.scss"],
-                "scripts": [],
-                "webpackConfig": "@nrwl/react/plugins/webpack"
+                ]
             },
+            "defaultConfiguration": "production",
+            "configFile": "packages/webapp/vite.config.ts",
             "configurations": {
                 "production": {
                     "fileReplacements": [
@@ -49,11 +44,12 @@
             }
         },
         "serve": {
-            "executor": "@nrwl/web:dev-server",
+            "executor": "@nxext/vite:dev",
             "options": {
                 "buildTarget": "webapp:build",
                 "hmr": true
             },
+            "configFile": "packages/webpack/vite.config.ts",
             "configurations": {
                 "production": {
                     "buildTarget": "webapp:build:production",
@@ -63,16 +59,22 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": ["{options.outputFile}"],
+            "outputs": [
+                "{options.outputFile}"
+            ],
             "options": {
-                "lintFilePatterns": ["packages/webapp/**/*.{ts,tsx,js,jsx}"]
+                "lintFilePatterns": [
+                    "packages/webapp/**/*.{ts,tsx,js,jsx}"
+                ]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": ["coverage/packages/webapp"],
+            "outputs": [
+                "coverage/packages/webapp"
+            ],
             "options": {
-                "jestConfig": "packages/webapp/jest.config.js",
+                "jestConfig": "packages/webapp/jest.config.ts",
                 "passWithNoTests": true
             }
         },
@@ -93,7 +95,9 @@
         },
         "build-storybook": {
             "executor": "@nrwl/storybook:build",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "uiFramework": "@storybook/react",
                 "outputPath": "dist/storybook/webapp",

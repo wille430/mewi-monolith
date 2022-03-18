@@ -1,5 +1,5 @@
-const mainConfig = require('../../tailwind.config')
+import * as mainConfig from '@root/tailwind.config.js'
 
-module.exports = {
+export default {
     ...mainConfig
 }

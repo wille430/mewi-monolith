@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from 'react'
+import { MutableRefObject } from 'react'
 import NavEndButton from './NavEndButton/NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import config from 'config'

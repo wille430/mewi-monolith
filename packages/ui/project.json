@@ -5,35 +5,31 @@
     "tags": [],
     "targets": {
         "build": {
-            "executor": "@nrwl/web:rollup",
-            "outputs": ["{options.outputPath}"],
+            "executor": "@nxext/vite:package",
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "outputPath": "dist/packages/ui",
-                "tsConfig": "packages/ui/tsconfig.lib.json",
-                "project": "packages/ui/package.json",
-                "entryFile": "packages/ui/src/index.ts",
-                "external": ["react/jsx-runtime"],
-                "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-                "compiler": "babel",
-                "assets": [
-                    {
-                        "glob": "packages/ui/README.md",
-                        "input": ".",
-                        "output": "."
-                    }
-                ]
+                "configFile": "packages/ui/vite.config.js"
             }
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": ["{options.outputFile}"],
+            "outputs": [
+                "{options.outputFile}"
+            ],
             "options": {
-                "lintFilePatterns": ["packages/ui/**/*.{ts,tsx,js,jsx}"]
+                "lintFilePatterns": [
+                    "packages/ui/**/*.{ts,tsx,js,jsx}"
+                ]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": ["coverage/packages/ui"],
+            "outputs": [
+                "coverage/packages/ui"
+            ],
             "options": {
                 "jestConfig": "packages/ui/jest.config.js",
                 "passWithNoTests": true
@@ -56,7 +52,9 @@
         },
         "build-storybook": {
             "executor": "@nrwl/storybook:build",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "uiFramework": "@storybook/react",
                 "outputPath": "dist/storybook/ui",

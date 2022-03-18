@@ -1,5 +1,4 @@
 import { SmallButton } from 'common/components/Button.style'
-import React from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 

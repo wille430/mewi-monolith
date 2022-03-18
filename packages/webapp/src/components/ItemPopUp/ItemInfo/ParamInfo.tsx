@@ -1,4 +1,3 @@
-import React from 'react'
 
 const ParamInfo = ({ paramObj }: { paramObj: any }) => {
     if (!paramObj) return <></>

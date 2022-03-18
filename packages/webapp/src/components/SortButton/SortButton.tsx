@@ -1,4 +1,3 @@
-import React from 'react'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { setSort } from 'store/search/creators'

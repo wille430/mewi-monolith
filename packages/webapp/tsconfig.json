@@ -17,7 +17,8 @@
             "@mewi/util": ["../../util/src/index.ts"],
             "@mewi/ui": ["../../ui/src/index.ts"]
         },
-        "plugins": [{ "name": "typescript-plugin-css-modules" }]
+        "plugins": [{ "name": "typescript-plugin-css-modules" }],
+        "types": ["vite/client"]
     },
     "files": [],
     "include": [],

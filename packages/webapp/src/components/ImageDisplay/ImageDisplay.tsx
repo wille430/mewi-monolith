@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { FiArrowLeft, FiArrowRight, FiImage } from 'react-icons/fi'
 import { Carousel } from 'react-responsive-carousel'
