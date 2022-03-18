@@ -7,15 +7,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
-            name: '@mewi/ui'
+            formats: ["es"]
         },
-        rollupOptions: {
-            external: ['react'],
-            output: {
-                globals: {
-                    react: 'React'
-                }
-            }
-        }
     }
 })

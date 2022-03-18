@@ -16,7 +16,7 @@
             "options": {
                 "outputPath": "dist/packages/api",
                 "main": "packages/api/src/main.ts",
-                "tsConfig": "packages/api/tsconfig.app.json",
+                "tsConfig": "packages/api/tsconfig.json",
                 "assets": ["packages/api/src/assets", "packages/api/src/emails"],
                 "generatePackageJson": true
             },

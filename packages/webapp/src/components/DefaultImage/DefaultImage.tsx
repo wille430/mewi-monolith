@@ -4,12 +4,11 @@ import missingImage from 'assets/missingImage.png'
 const DefaultImage = (
     props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
 ) => {
-    const [error, setError] = useState(true)
+    const [error, setError] = useState(false)
     return (
         <img
             alt=''
             onError={() => setError(true)}
-            onLoad={(e) => e.currentTarget.src !== missingImage && setError(false)}
             {...props}
             src={error ? missingImage : props.src}
         />

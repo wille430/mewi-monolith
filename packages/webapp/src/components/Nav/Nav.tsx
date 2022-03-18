@@ -52,11 +52,11 @@ const Nav = () => {
                 >
                     <ul>
                         {publicLinks.map((link) => (
-                            <NavLinkItem to={link.path}>{link.name}</NavLinkItem>
+                            <NavLinkItem key={link.path} to={link.path}>{link.name}</NavLinkItem>
                         ))}
                         <div className='flex-grow' />
                         {privateLinks.map((link) => (
-                            <NavLinkItem to={link.path} className={link.styling}>
+                            <NavLinkItem key={link.path} to={link.path} className={link.styling}>
                                 {link.name}
                             </NavLinkItem>
                         ))}

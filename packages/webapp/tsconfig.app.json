@@ -1,33 +1,35 @@
 {
-    "extends": "./tsconfig.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "../../dist/out-tsc",
-        "types": ["node"]
-    },
-    "files": [
-        "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
-        "../../node_modules/@nrwl/react/typings/image.d.ts"
-    ],
-    "exclude": [
-        "**/*.spec.ts",
-        "**/*.test.ts",
-        "**/*.spec.tsx",
-        "**/*.test.tsx",
-        "**/*.spec.js",
-        "**/*.test.js",
-        "**/*.spec.jsx",
-        "**/*.test.jsx",
-        "**/*.stories.ts",
-        "**/*.stories.js",
-        "**/*.stories.jsx",
-        "**/*.stories.tsx"
-    ]
-    // "include": [
-    //     "**/*.js",
-    //     "**/*.jsx",
-    //     "**/*.ts",
-    //     "**/*.tsx",
-    //     "../../tailwind.config.js",
-    //     "../../postcss.config.js"
-    // ]
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@mewi/types": [
+                "../../types/src/index.ts"
+            ],
+            "@mewi/util": [
+                "../../util/src/index.ts"
+            ],
+            "@mewi/ui": [
+                "../../ui/src/index.ts"
+            ]
+        },
+        "plugins": [
+            {
+                "name": "typescript-plugin-css-modules"
+            }
+        ],
+        "types": [
+            "vite/client"
+        ]
+    }
 }

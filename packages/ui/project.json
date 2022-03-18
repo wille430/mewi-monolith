@@ -5,13 +5,14 @@
     "tags": [],
     "targets": {
         "build": {
-            "executor": "@nxext/vite:package",
+            "executor": "@nxext/vite:build",
             "outputs": [
                 "{options.outputPath}"
             ],
             "options": {
                 "outputPath": "dist/packages/ui",
-                "configFile": "packages/ui/vite.config.js"
+                "configFile": "packages/ui/vite.config.js",
+                "entryFile": "./src/index.ts"
             }
         },
         "lint": {
