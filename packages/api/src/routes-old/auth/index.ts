@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { login, refreshToken, signUp, validateToken } from './controller'
-import Password from '../auth/password'
+import Password from './password'
 
 const router = Router()
 
