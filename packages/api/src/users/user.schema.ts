@@ -13,8 +13,8 @@ export class User {
   @Prop()
   email: string
 
-  @Prop()
-  password: string
+  @Prop({ select: false })
+  password?: string
 
   @Prop()
   premium: boolean
@@ -23,8 +23,8 @@ export class User {
   //   TODO: FIX CORRECT TYPE
   watchers: UserWatcher[]
 
-  @Prop({ default: uuidv4() })
-  passwordResetSecret: string
+  @Prop({ default: uuidv4(), select: false })
+  passwordResetSecret?: string
 
   @Prop({ type: [String], default: [Role.User] })
   roles: Role[]
