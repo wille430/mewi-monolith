@@ -5,6 +5,7 @@ import { ListingsModule } from 'listings/listings.module'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
+import { WatchersModule } from './watchers/watchers.module';
 
 const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
 
@@ -23,6 +24,7 @@ if (!MONGO_USERNAME || !MONGO_PASSWORD) {
     AuthModule,
     UsersModule,
     UserWatchersModule,
+    WatchersModule,
   ],
   controllers: [AppController],
 })
