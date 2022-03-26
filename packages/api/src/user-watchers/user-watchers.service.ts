@@ -2,45 +2,86 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { Model, FilterQuery } from 'mongoose'
+import { Model, PipelineStage } from 'mongoose'
 import { User } from 'users/user.schema'
-import { UserWatcher } from 'user-watchers/user-watcher.schema'
-import { PopulatedWatcher, Watcher } from 'watchers/watcher.schema'
+import { PopulatedWatcher, Watcher, WatcherDocument } from 'watchers/watcher.schema'
 import _ from 'lodash'
 import mongoose from 'mongoose'
+import { WatchersService } from 'watchers/watchers.service'
 
 @Injectable()
 export class UserWatchersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    @InjectModel(Watcher.name) private watcherModel: Model<Watcher>
+    @InjectModel(Watcher.name) private watcherModel: Model<Watcher>,
+    private watchersService: WatchersService
   ) {}
 
-  create(createUserWatcherDto: CreateUserWatcherDto) {
-    // TODO
+  async create({ userId, metadata }: CreateUserWatcherDto): Promise<PopulatedWatcher> {
+    let watcher: WatcherDocument
 
     // 1. Check if watcher with same metadata exists
-
-    // 2. If false, create watcher
+    if (await this.watchersService.exists(metadata)) {
+      watcher = await this.watcherModel.findOne({ metadata })
+    } else {
+      // 2. If false, create watcher
+      watcher = await this.watcherModel.create({ metadata })
+    }
 
     // 3. Append user watcher to user
+    const user = await this.userModel.findById(userId)
+    const userWatcher = user.watchers.create({ _id: watcher._id })
 
-    return 'This action adds a new userWatcher'
+    user.watchers.addToSet(userWatcher)
+    watcher.users.addToSet(user._id)
+
+    await user.save()
+    await watcher.save()
+
+    return {
+      ...user.watchers.id(watcher._id).toJSON(),
+      metadata,
+    }
   }
 
-  async findAll(userId?: string): Promise<UserWatcher[]> {
+  async findAll(userId: string): Promise<PopulatedWatcher[]> {
+    let pipeline: PipelineStage[] = [
+      { $limit: 1 },
+      {
+        $match: { _id: new mongoose.Types.ObjectId(userId) },
+      },
+      {
+        $unwind: {
+          path: '$watchers',
+        },
+      },
+      {
+        $lookup: {
+          from: 'watchers',
+          localField: 'watchers._id',
+          foreignField: '_id',
+          as: 'watchers.watcher',
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          watchers: {
+            $push: '$watchers',
+          },
+        },
+      },
+    ]
+
     try {
-      if (userId) {
-        return (await this.userModel.findOne({ _id: userId }).select('watchers')).watchers
-      } else {
-        return (await this.userModel.findOne().select('watchers')).watchers
-      }
+      const agg = await this.userModel.aggregate(pipeline)
+      return agg[0].watchers as PopulatedWatcher[]
     } catch (e) {
       return []
     }
   }
 
-  async findOne(id: string, userId: string): Promise<UserWatcher> | undefined {
+  async findOne(id: string, userId: string): Promise<PopulatedWatcher & Document> | undefined {
     try {
       const agg = await this.userModel.aggregate([
         { $limit: 1 },
@@ -79,11 +120,20 @@ export class UserWatchersService {
     }
   }
 
-  update(id: string, updateUserWatcherDto: UpdateUserWatcherDto) {
-    return `This action updates a #${id} userWatcher`
+  async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+    this.remove(id, userId)
+    this.create({ metadata, userId })
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} userWatcher`
+  async remove(id: string, userId: string) {
+    // delete from user
+    await this.userModel.updateOne({ _id: userId }, { $pull: { watchers: { _id: id } } })
+
+    // delete from watcher
+    await this.watcherModel.updateOne({ _id: id }, { $pull: { users: userId } })
+
+    if (!(await this.watcherModel.findById(id)).users.length) {
+      this.watcherModel.deleteOne({ _id: id })
+    }
   }
 }

@@ -17,12 +17,12 @@ export class User {
   @Prop({ select: false })
   password?: string
 
-  @Prop()
+  @Prop({ default: false })
   premium: boolean
 
   @Prop([UserWatcherSchema])
   //   TODO: FIX CORRECT TYPE
-  watchers: mongoose.Types.DocumentArray<UserWatcher> | UserWatcher[]
+  watchers: mongoose.Types.DocumentArray<UserWatcher>
 
   @Prop({ default: uuidv4(), select: false })
   passwordResetSecret?: string

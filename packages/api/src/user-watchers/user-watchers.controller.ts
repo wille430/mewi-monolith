@@ -43,7 +43,7 @@ export class MyWatchersController {
 
   @Delete(':id')
   remove(@Param('id') id: string, @GetUser() user: UserPayload) {
-    return this.userWatchersService.remove(id)
+    return this.userWatchersService.remove(id, user.userId)
   }
 }
 
@@ -60,8 +60,8 @@ export class UserWatchersController {
 
   @Get()
   @Roles(Role.Admin)
-  findAll() {
-    return this.userWatchersService.findAll()
+  findAll(@Param('user_id') userId: string) {
+    return this.userWatchersService.findAll(userId)
   }
 
   @Get(':id')
@@ -78,7 +78,7 @@ export class UserWatchersController {
 
   @Delete(':id')
   @Roles(Role.Admin)
-  remove(@Param('id') id: string) {
-    return this.userWatchersService.remove(id)
+  remove(@Param('id') id: string, @Param('user_id') userId: string) {
+    return this.userWatchersService.remove(id, userId)
   }
 }

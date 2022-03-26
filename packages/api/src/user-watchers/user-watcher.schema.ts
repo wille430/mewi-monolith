@@ -12,7 +12,7 @@ export class UserWatcher {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Watcher.name })
   _id: string
 
-  @Prop()
+  @Prop({ default: null })
   notifiedAt: string
 }
 

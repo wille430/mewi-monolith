@@ -84,4 +84,22 @@ export class ListingsService {
   async remove(id: number) {
     await this.listingModel.deleteOne({ _id: id })
   }
+
+  async sample(count: number = 1) {
+    const totalDocs = await this.listingModel.count()
+
+    const randomNums = Array.from({ length: count }, () => Math.floor(Math.random() * totalDocs))
+
+    const randomDocs = []
+    const addedDocNums = []
+
+    for (const i of randomNums) {
+      if (!addedDocNums.includes(i)) {
+        randomDocs.push(await this.listingModel.findOne().skip(i))
+        addedDocNums.push(i)
+      }
+    }
+
+    return randomDocs
+  }
 }

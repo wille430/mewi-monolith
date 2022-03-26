@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import { FindAllListingsDto } from 'listings/dto/find-all-listing.dto'
+import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { Schema as MongooseSchema } from 'mongoose'
 import { UserWatcher } from 'user-watchers/user-watcher.schema'
@@ -21,7 +22,9 @@ export class Watcher {
   })
   metadata: typeof FindAllListingsDto
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'user' })
+  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
+  users: mongoose.Types.Array<mongoose.Types.ObjectId>
+
   @Prop()
   notifiedAt: string
 }

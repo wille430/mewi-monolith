@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { CacheModule, Module } from '@nestjs/common'
 import { ListingsService } from './listings.service'
 import { ListingsController } from './listings.controller'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -13,6 +13,7 @@ import { ListingSchema } from 'models/ListingModel'
         schema: ListingSchema,
       },
     ]),
+    CacheModule.register(),
   ],
   controllers: [ListingsController],
   providers: [ListingsService],

@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { CreateWatcherDto } from './dto/create-watcher.dto';
-import { UpdateWatcherDto } from './dto/update-watcher.dto';
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Watcher } from 'watchers/watcher.schema'
+import { CreateWatcherDto } from './dto/create-watcher.dto'
+import { UpdateWatcherDto } from './dto/update-watcher.dto'
+import { Model, QueryOptions } from 'mongoose'
+import { FindAllWatchersDto } from 'watchers/dto/find-all-watchers.dto'
 
 @Injectable()
 export class WatchersService {
-  create(createWatcherDto: CreateWatcherDto) {
-    return 'This action adds a new watcher';
+  constructor(@InjectModel(Watcher.name) private watcherModel: Model<Watcher>) {}
+
+  async exists(metadata: CreateWatcherDto['metadata']) {
+    const count = await this.watcherModel.count({ metadata })
+    return count === 0 ? false : true
   }
 
-  findAll() {
-    return `This action returns all watchers`;
+  async create(createWatcherDto: CreateWatcherDto) {
+    const watcher = await this.watcherModel.create(createWatcherDto)
+
+    return watcher.save()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} watcher`;
+  async findAll(query: FindAllWatchersDto) {
+    const { limit } = query
+    const options: QueryOptions = {}
+
+    if (limit) options.limit = +limit
+
+    const watchers = await this.watcherModel.find({}, undefined, options)
+
+    return watchers
   }
 
-  update(id: number, updateWatcherDto: UpdateWatcherDto) {
-    return `This action updates a #${id} watcher`;
+  async findOne(id: number) {
+    return await this.watcherModel.findById(id)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} watcher`;
+  async update(id: number, updateWatcherDto: UpdateWatcherDto) {
+    return await this.watcherModel.updateOne({ _id: id }, updateWatcherDto)
+  }
+
+  async remove(id: number) {
+    await this.watcherModel.deleteOne({ _id: id })
   }
 }
