@@ -5,6 +5,7 @@ import { RootState } from 'store'
 import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
+import axios from 'axios'
 
 export const updateSearchParams = createAsyncThunk(
     SearchActionTypes.UPDATE_SEARCH_PARAMS,
@@ -52,12 +53,11 @@ export const getSearchResults = createAsyncThunk<
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
         const { filters, sort, page } = thunkApi.getState().search
-        const results = await searchApi.getSearchResults({
-            searchFilters: filters,
-            sort: sort,
-            page: page,
-        })
-        return results
+        const { totalHits, hits } = await axios
+            .get('/listings?' + queryString.stringify({ ...filters, sort, page }))
+            .then((res) => res.data)
+
+        return { totalHits, hits }
     } catch (e) {
         return thunkApi.rejectWithValue(e)
     }
@@ -132,3 +132,9 @@ export const goToPage = createAction(SearchActionTypes.SET_PAGE, (page: number) 
 })
 
 export const clearSearchResults = createAction(SearchActionTypes.CLEAR_RESULTS)
+
+export const openListing = createAction(SearchActionTypes.OPEN_LISTING, (id: string) => ({
+    payload: id,
+}))
+
+export const closeListing = createAction(SearchActionTypes.CLOSE_LISTING)

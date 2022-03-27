@@ -1,6 +1,0 @@
-{
-  "apiInputPath": "../../packages/api",
-  "sdkOutput": "sdk",
-  "sdkInterfacePath": "sdk-interface.ts",
-  "verbose": true
-}

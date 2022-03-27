@@ -1,7 +1,7 @@
 import CategorySelectionList from 'components/CategorySelectionList/CategorySelectionList'
 import CategoryPathLabel, { ParamTypes } from './CategoryPathLabel'
 import FilterArea from 'components/FilterArea/FilterArea'
-import ItemGrid from 'components/ItemGrid/ItemGrid'
+import ListingGrid from 'components/ListingGrid/ListingGrid'
 import PageNav from 'components/PageNav/PageNav'
 import ResultText from 'components/ResultText/ResultText'
 import SortButton from 'components/SortButton/SortButton'
@@ -61,7 +61,7 @@ const SearchArea = () => {
                     <SortButton />
                 </div>
 
-                <ItemGrid />
+                <ListingGrid />
 
                 <PageNav anchorEle={scrollEle} />
             </div>

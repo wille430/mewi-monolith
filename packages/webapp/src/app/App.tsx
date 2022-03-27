@@ -1,4 +1,3 @@
-import './App.css'
 import { lazy, Suspense, useEffect } from 'react'
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Nav from 'components/Nav/Nav'

@@ -1,17 +1,18 @@
 import { SearchFilterDataProps } from '@mewi/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
 import { Link, useLocation } from 'react-router-dom'
-import SearchFilterArea, { SearchFilterAreaProps } from 'components/SearchFilterArea/SearchFilterArea'
+import SearchFilterArea, {
+    SearchFilterAreaProps,
+} from 'components/SearchFilterArea/SearchFilterArea'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import {
     clearFilters,
     clearSearchResults,
     getFiltersFromQueryParams,
-    getSearchResults,
     setFilters,
 } from 'store/search/creators'
 import _ from 'lodash'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PopUp from 'components/PopUp/PopUp'
 import styles from './FilterArea.module.scss'
 import classNames from 'classnames'
@@ -31,20 +32,10 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const windowWidth = useWindowWidth()
 
     const [_filters, _setFilters] = useState(search.filters)
-
     const [showPopUp, setShowPopUp] = useState(false)
 
     const location = useLocation()
     const dispatch = useAppDispatch()
-
-    const firstRender = useRef(true)
-
-    const getSearchResultsDebounce = useCallback(
-        _.debounce((_search) => {
-            dispatch(getSearchResults()).then(() => console.log('Updated search results!'))
-        }, 500),
-        []
-    )
 
     const debounceSetFilters = useCallback(
         _.debounce((_search: typeof search) => {
@@ -79,15 +70,6 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         }
     }, [_filters])
 
-    useEffect(() => {
-        if (firstRender.current) {
-            firstRender.current = false
-            return
-        }
-
-        getSearchResultsDebounce(search)
-    }, [search.filters, search.page, search.sort])
-
     const handleReset = () => {
         dispatch(clearFilters(defaultValues))
     }
@@ -115,7 +97,7 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
         ),
     }
 
-    if (windowWidth >= parseInt(screens['lg'])) {
+    if (windowWidth >= parseInt(500)) {
         return <SearchFilterArea {...SearchFilterAreaArgs} />
     } else {
         return (

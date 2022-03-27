@@ -7,10 +7,8 @@ export interface SearchState {
     filters: SearchFilterDataProps
     sort: SortData
     page: number
-    status: {
-        searching: 'complete' | 'loading' | 'error'
-    }
     searchParams: string
+    selectedListingId?: string
 }
 
 export enum SearchActionTypes {
@@ -23,4 +21,6 @@ export enum SearchActionTypes {
     SET_PAGE = 'search/setPage',
     CLEAR_RESULTS = 'search/clear',
     UPDATE_SEARCH_PARAMS = 'search/updateParams',
+    OPEN_LISTING = 'search/listing/set',
+    CLOSE_LISTING = 'search/listing/clear',
 }

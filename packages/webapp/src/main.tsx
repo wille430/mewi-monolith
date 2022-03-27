@@ -10,6 +10,7 @@ import { store } from 'store'
 // import { Elements } from '@stripe/react-stripe-js'
 import setupInterceptors from 'api/setupInterceptors.'
 import { StrictMode } from 'react'
+import axios from 'axios'
 
 console.log(import.meta.env)
 
@@ -17,25 +18,32 @@ if (window.Cypress || import.meta.env.DEV) {
     window.store = store
 }
 
-const queryClient = new QueryClient()
-
-    ; (async () => {
-        // const stripe = loadStripe('pk_test_51HkomQLTeDsRddXB98y0CDMDz7ZQZR1j2lEU0X0ooM8gPgJweFj3UD4NKnfxFh4YtVtKGWFuwhRjpukScJd0oOhJ00sfbhtE9e')
-
-        ReactDOM.render(
-            <StrictMode>
-                <Provider store={store}>
-                    <QueryClientProvider client={queryClient}>
-                        {/* <Elements stripe={stripe}> */}
-                        <BrowserRouter>
-                            <App />
-                        </BrowserRouter>
-                        {/* </Elements> */}
-                    </QueryClientProvider>
-                </Provider>
-            </StrictMode>,
-            document.getElementById('root')
-        )
-    })()
-
 setupInterceptors(store)
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            queryFn: async ({ queryKey }) =>
+                axios.get('/' + queryKey[0] as string).then((res) => res.data),
+        },
+    },
+})
+
+;(async () => {
+    // const stripe = loadStripe('pk_test_51HkomQLTeDsRddXB98y0CDMDz7ZQZR1j2lEU0X0ooM8gPgJweFj3UD4NKnfxFh4YtVtKGWFuwhRjpukScJd0oOhJ00sfbhtE9e')
+
+    ReactDOM.render(
+        <StrictMode>
+            <Provider store={store}>
+                <QueryClientProvider client={queryClient}>
+                    {/* <Elements stripe={stripe}> */}
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                    {/* </Elements> */}
+                </QueryClientProvider>
+            </Provider>
+        </StrictMode>,
+        document.getElementById('root')
+    )
+})()

@@ -1,12 +1,12 @@
 import ArticleItemRow from 'components/ArticleItemRow/ArticleItemRow'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import { getItem } from 'store/itemDisplay/creators'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
 import { ItemData } from '@mewi/types'
 import { useEffect, useState } from 'react'
 import { getNewItems } from 'store/watchers/creators'
 import StyledLoader from 'components/StyledLoader'
+import { openListing } from 'store/search/creators'
 
 interface NewItemsDrawerProps {
     newItems: ItemData[]
@@ -30,7 +30,7 @@ const NewItemsDrawer = ({ watcherId, newItems }: NewItemsDrawerProps) => {
     }
 
     const handleClick = (id: string) => {
-        dispatch(getItem(id))
+        dispatch(openListing(id))
     }
 
     const renderItems = () => {

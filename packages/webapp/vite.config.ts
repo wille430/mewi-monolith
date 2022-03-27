@@ -17,10 +17,11 @@ for (const dir of srcRootContent) {
 }
 
 export default defineConfig({
-    plugins: [react({
-        exclude: /\.stories\.(t|j)sx?$/
-    })
-],
+    plugins: [
+        react({
+            exclude: /\.stories\.(t|j)sx?$/,
+        }),
+    ],
     root: 'packages/webapp/src',
     server: {
         port: 4200,
@@ -33,11 +34,11 @@ export default defineConfig({
     },
     optimizeDeps: {
         exclude: ['@mewi/ui'],
-        include: ['@mewi/types', '@mewi/util']
+        include: ['@mewi/types', '@mewi/util'],
     },
     build: {
         rollupOptions: {
-            external: ['@mewi/types']
-        }
-    }
+            external: ['@mewi/types'],
+        },
+    },
 })

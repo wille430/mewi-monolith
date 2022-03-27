@@ -4,9 +4,11 @@ import _ from 'lodash'
 import {
     clearFilters,
     clearSearchResults,
+    closeListing,
     getFiltersFromQueryParams,
     getSearchResults,
     goToPage,
+    openListing,
     setFilters,
     setSort,
     updateFilters,
@@ -21,9 +23,6 @@ const initialState: SearchState = {
     filters: {},
     sort: SortData.RELEVANCE,
     page: 1,
-    status: {
-        searching: 'loading',
-    },
     searchParams: '',
 }
 
@@ -32,18 +31,10 @@ export const searchSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder
-            .addCase(getSearchResults.pending, (state) => {
-                state.status.searching = 'loading'
-            })
-            .addCase(getSearchResults.fulfilled, (state, action) => {
-                state.hits = action.payload.hits
-                state.totalHits = action.payload.totalHits
-                state.status.searching = 'complete'
-            })
-            .addCase(getSearchResults.rejected, (state) => {
-                state.status.searching = 'error'
-            })
+        builder.addCase(getSearchResults.fulfilled, (state, action) => {
+            state.hits = action.payload.hits
+            state.totalHits = action.payload.totalHits
+        })
 
         builder.addCase(clearFilters, (state, action) => {
             if (action.payload) {
@@ -81,8 +72,6 @@ export const searchSlice = createSlice({
                     state.filters = _.set(state.filters, key, action.payload[key])
                 }
             }
-
-            state.status.searching = 'loading'
         })
 
         builder.addCase(setSort, (state, action) => {
@@ -110,7 +99,6 @@ export const searchSlice = createSlice({
         builder.addCase(clearSearchResults, (state) => {
             state.hits = []
             state.totalHits = 0
-            state.status.searching = 'loading'
         })
 
         builder.addCase(updateSearchParams.fulfilled, (state, action) => {
@@ -138,6 +126,14 @@ export const searchSlice = createSlice({
 
             // update url search params
             state.searchParams = '?' + queryString.stringify(searchParams)
+        })
+
+        builder.addCase(openListing, (state, action) => {
+            state.selectedListingId = action.payload
+        })
+
+        builder.addCase(closeListing, (state) => {
+            state.selectedListingId = initialState.selectedListingId
         })
     },
 })

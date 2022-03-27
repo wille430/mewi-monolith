@@ -5,7 +5,7 @@ import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { useAppDispatch } from 'hooks/hooks'
 import { ReactNode } from 'react'
-import { getItem } from 'store/itemDisplay/creators'
+import { openListing } from 'store/search/creators'
 import OriginLabel from './OriginLabel'
 import TimeUntilDate from './TimeUntilDate'
 
@@ -37,7 +37,7 @@ const ArticleItem = ({ props }: Props) => {
         <div
             className='flex flex-none cursor-pointer flex-col overflow-hidden rounded-md border-2 border-gray-300 bg-white text-xs shadow'
             style={{ width: '270px', height: '270px' }}
-            onClick={() => dispatch(getItem(props.id))}
+            onClick={() => dispatch(openListing(props.id))}
         >
             <div className='h-2/3 border-b-2 bg-white'>
                 <DefaultImage

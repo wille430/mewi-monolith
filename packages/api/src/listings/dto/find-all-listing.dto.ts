@@ -3,7 +3,7 @@ import { IsOptional, IsNumber, IsString } from 'class-validator'
 export class FindAllListingsDto {
   @IsOptional()
   @IsNumber()
-  limit: number = 9
+  limit: number = 24
 
   @IsOptional()
   @IsString()
