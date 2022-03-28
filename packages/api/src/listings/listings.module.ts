@@ -2,8 +2,7 @@ import { CacheModule, Module } from '@nestjs/common'
 import { ListingsService } from './listings.service'
 import { ListingsController } from './listings.controller'
 import { MongooseModule } from '@nestjs/mongoose'
-import { Listing } from 'listings/listing.schema'
-import { ListingSchema } from 'models/ListingModel'
+import { Listing, ListingSchema } from 'listings/listing.schema'
 
 @Module({
   imports: [

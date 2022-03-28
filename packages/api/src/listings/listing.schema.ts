@@ -28,12 +28,12 @@ export class Listing {
 
   @Prop(
     raw({
-      value: { type: String },
+      value: { type: Number },
       currency: { type: String },
     })
   )
   price: {
-    value: string
+    value: number
     currency: string
   }
 

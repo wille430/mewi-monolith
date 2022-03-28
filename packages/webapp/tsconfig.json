@@ -1,38 +1,36 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "jsx": "react-jsx",
-        "allowJs": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
+        "module": "ESNext",
+        "lib": ["ESNext", "DOM"],
+        "moduleResolution": "Node",
+        "target": "ESNext",
+        "useDefineForClassFields": true,
         "strict": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": false,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
         "baseUrl": "src",
+        "jsx": "react",
         "paths": {
             "@mewi/types": ["../../types/src/index.ts"],
             "@mewi/util": ["../../util/src/index.ts"],
             "@mewi/ui": ["../../ui/src/index.ts"]
         },
-        "plugins": [{ "name": "typescript-plugin-css-modules" }],
         "types": ["vite/client"]
     },
     "files": [],
     "include": [],
     "references": [
         {
-            "path": "./tsconfig.app.json",
-            "composite": true
+            "path": "./tsconfig.app.json"
         },
         {
-            "path": "./tsconfig.spec.json",
-            "composite": true
-        },
-        {
-            "path": "./.storybook/tsconfig.json"
+            "path": "./tsconfig.spec.json"
         }
     ]
 }

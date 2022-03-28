@@ -21,11 +21,11 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.fulfilled, (state, action) => {
-                const { jwt, refreshToken } = action.payload
+                const { access_token, refresh_token } = action.payload
 
-                if (jwt && refreshToken) {
-                    localStorage.setItem('jwt', jwt)
-                    localStorage.setItem('refreshToken', refreshToken)
+                if (access_token && refresh_token) {
+                    localStorage.setItem('access_token', access_token)
+                    localStorage.setItem('refresh_token', refresh_token)
 
                     state.isLoggedIn = true
                 }
@@ -35,8 +35,8 @@ export const userSlice = createSlice({
             })
 
         builder.addCase(onAuthLoad, (state, action) => {
-            const { jwt, refreshToken } = action.payload
-            if (jwt || (jwt && refreshToken)) {
+            const { access_token, refresh_token } = action.payload
+            if (access_token || (access_token && refresh_token)) {
                 state.isLoggedIn = true
             }
         })
@@ -50,13 +50,13 @@ export const userSlice = createSlice({
 
         builder
             .addCase(createUser.fulfilled, (state, action) => {
-                const { jwt, refreshToken } = action.payload
-                if (!jwt || !refreshToken) return
+                const { access_token, refresh_token } = action.payload
+                if (!access_token || !refresh_token) return
 
                 state.isLoggedIn = true
 
-                localStorage.setItem('jwt', jwt)
-                localStorage.setItem('refreshToken', refreshToken)
+                localStorage.setItem('access_token', access_token)
+                localStorage.setItem('refresh_token', refresh_token)
             })
             .addCase(createUser.rejected, (state, action: PayloadAction<any>) => {
                 state.errors = action.payload
@@ -65,12 +65,12 @@ export const userSlice = createSlice({
         builder
             .addCase(refreshAccessToken.fulfilled, (state, action) => {
                 if (!action.payload) return
-                const { jwt, refreshToken } = action.payload
+                const { access_token, refresh_token } = action.payload
 
                 state.isLoggedIn = true
 
-                localStorage.setItem('jwt', jwt)
-                localStorage.setItem('refreshToken', refreshToken)
+                localStorage.setItem('access_token', access_token)
+                localStorage.setItem('refresh_token', refresh_token)
             })
             .addCase(refreshAccessToken.rejected, (state, action) => {
                 console.log('LOGGIN OUT...')

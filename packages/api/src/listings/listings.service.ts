@@ -5,6 +5,7 @@ import { UpdateListingDto } from './dto/update-listing.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, FilterQuery } from 'mongoose'
 import { FindAllListingsDto } from 'listings/dto/find-all-listing.dto'
+import { sortableFields, SortData } from '@mewi/types'
 
 @Injectable()
 export class ListingsService {
@@ -17,6 +18,7 @@ export class ListingsService {
 
     async findAll(dto: FindAllListingsDto) {
         let filter: FilterQuery<ListingDocument> = { $and: [] }
+        let sort: Record<keyof Listing, string> | {} = {}
 
         if (dto.priceRangeGte) {
             filter.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
@@ -27,7 +29,7 @@ export class ListingsService {
         }
 
         for (const key in dto) {
-            const value = dto[key]
+            const value = dto[key] as string
             switch (key as keyof typeof dto) {
                 case 'keyword':
                     filter.$text = {
@@ -61,6 +63,11 @@ export class ListingsService {
                 case 'dateGte':
                     filter.$and.push({ date: { $gte: key } })
                     break
+                case 'sort':
+                    sort = sortableFields[value]
+                    console.log(sort)
+
+                    break
             }
         }
 
@@ -71,7 +78,7 @@ export class ListingsService {
         return {
             filters: dto,
             totalHits: await this.listingModel.count(filter),
-            hits: await this.listingModel.find(filter, {}, { limit: dto.limit }),
+            hits: await this.listingModel.find(filter, {}, { limit: +dto.limit }).sort(sort),
         }
     }
 

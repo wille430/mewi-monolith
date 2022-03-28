@@ -6,7 +6,7 @@
 import { UserService } from './index'
 import bcrypt from 'bcryptjs'
 import UserModel from 'models/UserModel'
-import { APIError, AuthErrorCodes, MissingUserError } from '@mewi/types'
+import { APIError, mewi.Types.Auth.Error, MissingUserError } from '@mewi/types'
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -54,16 +54,16 @@ class PasswordService {
             if (err) {
                 switch (err.name) {
                     case 'TokenExpiredError':
-                        throw new APIError(401, AuthErrorCodes.INVALID_JWT, 'Token is expired')
+                        throw new APIError(401, mewi.Types.Auth.Error.INVALID_JWT, 'Token is expired')
                     default:
-                        throw new APIError(401, AuthErrorCodes.INVALID_JWT)
+                        throw new APIError(401, mewi.Types.Auth.Error.INVALID_JWT)
                 }
             }
         })
 
         // validate password
         if (!PasswordService.validate(newPassword) || passwordConfirm !== newPassword) {
-            throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+            throw new APIError(422, mewi.Types.Auth.Error.PASSWORD_NOT_STRONG_ENOUGH)
         }
 
         // set new password

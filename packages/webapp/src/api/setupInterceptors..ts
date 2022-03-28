@@ -8,7 +8,7 @@ const setupInterceptors = (store: typeof Store) => {
     axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/'
 
     axios.interceptors.request.use((request) => {
-        const accessToken = localStorage.getItem('jwt')
+        const accessToken = localStorage.getItem('access_token')
         if (request.headers && accessToken) {
             request.headers['Authorization'] = 'Bearer ' + accessToken
         }

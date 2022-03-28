@@ -93,8 +93,8 @@ export type ListingPrice = {
 }
 
 export interface AuthTokens {
-    jwt: JWT
-    refreshToken: string
+    access_token: JWT
+    refresh_token: string
 }
 
 export type EditableUserFields = keyof Pick<UserData, 'email'>

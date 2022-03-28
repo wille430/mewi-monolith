@@ -1,9 +1,10 @@
-import { IsOptional, IsNumber, IsString } from 'class-validator'
+import { SortData } from '@mewi/types'
+import { IsOptional, IsString, IsNumberString, IsNumber, IsEnum } from 'class-validator'
 
 export class FindAllListingsDto {
+  @IsNumberString()
   @IsOptional()
-  @IsNumber()
-  limit: number = 24
+  limit: string = '24'
 
   @IsOptional()
   @IsString()
@@ -16,16 +17,20 @@ export class FindAllListingsDto {
   category?: string
 
   @IsOptional()
-  @IsNumber()
-  priceRangeGte?: number
+  @IsNumberString()
+  priceRangeGte?: number | string
 
   @IsOptional()
-  @IsNumber()
-  priceRangeLte?: number
+  @IsNumberString()
+  priceRangeLte?: number | string
 
   @IsOptional()
   auction?: boolean
 
   @IsOptional()
   dateGte?: number
+
+  @IsOptional()
+  @IsEnum(SortData)
+  sort?: SortData
 }

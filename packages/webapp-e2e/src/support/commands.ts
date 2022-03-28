@@ -21,17 +21,17 @@ declare namespace Cypress {
 
 Cypress.Commands.add('login', () => {
     cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-        const { jwt, refreshToken } = res.body
+        const { access_token, refresh_token } = res.body
 
-        window.localStorage.setItem('jwt', jwt)
-        window.localStorage.setItem('refreshToken', refreshToken)
+        window.localStorage.setItem('access_token', access_token)
+        window.localStorage.setItem('refresh_token', refresh_token)
 
-        return cy.wrap(jwt)
+        return cy.wrap(access_token)
     })
 })
 
 Cypress.Commands.add('authenticate', (jwt: string) => {
-    window.localStorage.setItem('jwt', jwt)
+    window.localStorage.setItem('access_token', jwt)
 })
 
 //

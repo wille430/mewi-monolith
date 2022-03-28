@@ -1,4 +1,4 @@
-import { AuthErrorCodes, EditableUserFields, UserData } from '@mewi/types'
+import { Types, EditableUserFields, UserData } from '@mewi/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import userApi from 'api/userApi'
 import { RootState } from 'store'
@@ -60,9 +60,9 @@ export const forgottenPassword = createAsyncThunk(
                 const error = e.error
                 console.log(error.type)
                 switch (error.type) {
-                    case AuthErrorCodes.INVALID_EMAIL:
+                    case Types.Auth.Error.INVALID_EMAIL:
                         return thunkApi.rejectWithValue('Epostaddressen som angavs är inkorrekt')
-                    case AuthErrorCodes.MISSING_USER:
+                    case Types.Auth.Error.MISSING_USER:
                         return thunkApi.fulfillWithValue(undefined)
                     default:
                         return thunkApi.rejectWithValue('Ett fel inträffade')

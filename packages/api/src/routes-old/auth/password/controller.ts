@@ -1,4 +1,4 @@
-import { APIError, AuthErrorCodes } from '@mewi/types'
+import { APIError, mewi.Types.Auth.Error } from '@mewi/types'
 import EmailService from 'services/EmailService'
 import { PasswordService, UserEmailService, UserService } from 'services/UserServices'
 
@@ -19,7 +19,7 @@ export const forgottenPassword = async (req, res, next) => {
         const { sendEmail, email } = req.body
 
         if (!UserEmailService.validate(email)) {
-            throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
+            throw new APIError(422, mewi.Types.Auth.Error.INVALID_EMAIL)
         }
 
         const user = await UserService.findUser({ email })

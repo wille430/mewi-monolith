@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, UserConfigExport } from 'vite'
 import { readdirSync } from 'fs'
 import path from 'path'
+import _mainConfig from '@nxext/vite/plugins/vite'
+import react from '@vitejs/plugin-react'
 
 const absolutePathAliases: Record<string, string> = {}
 
@@ -22,7 +23,6 @@ export default defineConfig({
             exclude: /\.stories\.(t|j)sx?$/,
         }),
     ],
-    root: 'packages/webapp/src',
     server: {
         port: 4200,
     },
@@ -30,15 +30,9 @@ export default defineConfig({
         alias: {
             ...absolutePathAliases,
             '@root/tailwind.config.js': 'tailwind.config.js',
-        },
-    },
-    optimizeDeps: {
-        exclude: ['@mewi/ui'],
-        include: ['@mewi/types', '@mewi/util'],
-    },
-    build: {
-        rollupOptions: {
-            external: ['@mewi/types'],
+            '@mewi/types': path.resolve(__dirname, '../types/src/index.ts'),
+            '@mewi/util': path.resolve(__dirname, '../util/src/index.ts'),
+            '@mewi/ui': path.resolve(__dirname, '../ui/src/index.ts'),
         },
     },
 })

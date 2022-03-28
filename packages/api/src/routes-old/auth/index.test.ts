@@ -1,6 +1,6 @@
 import app from 'routes/app'
 import request from 'supertest'
-import { AuthErrorCodes, ValidationErrorCodes } from '@mewi/types'
+import { mewi.Types.Auth.Error, ValidationErrorCodes } from '@mewi/types'
 import { randomEmail, randomString } from '@mewi/util'
 import faker from '@faker-js/faker'
 import _ from 'lodash'
@@ -41,7 +41,7 @@ describe('auth', () => {
 
             it('should return with correct error type', () => {
                 expect(
-                    _.find(Object.values(AuthErrorCodes), (x) => x === response.body.error.type)
+                    _.find(Object.values(mewi.Types.Auth.Error), (x) => x === response.body.error.type)
                 ).toBeTruthy()
             })
         })
@@ -108,7 +108,7 @@ describe('auth', () => {
             })
 
             it('should return with correct error type', () => {
-                expect(response.body.error.type).toBe(AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+                expect(response.body.error.type).toBe(mewi.Types.Auth.Error.PASSWORD_NOT_STRONG_ENOUGH)
             })
         })
 
@@ -131,7 +131,7 @@ describe('auth', () => {
             })
 
             it('should return with correct error type', () => {
-                expect(response.body.error.type).toBe(AuthErrorCodes.INVALID_EMAIL)
+                expect(response.body.error.type).toBe(mewi.Types.Auth.Error.INVALID_EMAIL)
             })
         })
 

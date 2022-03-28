@@ -1,35 +1,9 @@
 {
-    "extends": "../../tsconfig.base.json",
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "jsx": "react-jsx",
-        "allowJs": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": false,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "baseUrl": "./src",
-        "paths": {
-            "@mewi/types": [
-                "../../types/src/index.ts"
-            ],
-            "@mewi/util": [
-                "../../util/src/index.ts"
-            ],
-            "@mewi/ui": [
-                "../../ui/src/index.ts"
-            ]
-        },
-        "plugins": [
-            {
-                "name": "typescript-plugin-css-modules"
-            }
-        ],
-        "types": [
-            "vite/client"
-        ]
-    }
+        "outDir": "../../dist/out-tsc",
+        "types": ["node"]
+    },
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"],
+    "include": ["**/*.ts"]
 }

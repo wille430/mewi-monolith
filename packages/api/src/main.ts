@@ -10,7 +10,8 @@ import ListingModel from 'models/ListingModel'
 import FeaturedItemService from 'services/FeaturedItemsService'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { ValidationPipe } from '@nestjs/common'
+import { BadRequestException, ValidationPipe } from '@nestjs/common'
+import { ValidationError } from 'class-validator'
 
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule)
@@ -18,7 +19,10 @@ const bootstrap = async () => {
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
-        })
+            exceptionFactory: (validationErrors: ValidationError[] = []) => {
+                return new BadRequestException(validationErrors)
+            }
+        }),
     )
     await app.listen(3001)
 }

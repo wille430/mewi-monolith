@@ -1,7 +1,7 @@
 import UserModel, { User } from 'models/UserModel'
 import {
     APIError,
-    AuthErrorCodes,
+    mewi.Types.Auth.Error,
     EditableUserFields,
     MissingUserError,
     UserData,
@@ -40,11 +40,11 @@ export default class UserService {
         value: UserData[EditableUserFields]
     ) {
         const user = await await UserModel.findById(userId)
-        if (!user) throw new APIError(404, AuthErrorCodes.MISSING_USER)
+        if (!user) throw new APIError(404, mewi.Types.Auth.Error.MISSING_USER)
 
         if (field === 'email') {
             if (!UserEmailService.validate(value)) {
-                throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
+                throw new APIError(422, mewi.Types.Auth.Error.INVALID_EMAIL)
             }
         } else {
             throw new APIError(422, ValidationErrorCodes.INVALID_INPUT)

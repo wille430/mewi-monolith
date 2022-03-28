@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { AuthErrorCodes, UserData } from '@mewi/types'
+import { mewi.Types.Auth.Error, UserData } from '@mewi/types'
 import { generateMockUserData } from '@mewi/util'
 import UserModel from 'models/UserModel'
 import PasswordService from './PasswordService'
@@ -40,7 +40,7 @@ describe('Password Service', () => {
             await PasswordService.updatePassword(userData._id, newPassword, newPassword, resetToken)
             fail()
         } catch (e) {
-            expect(e.type).toBe(AuthErrorCodes.INVALID_JWT)
+            expect(e.type).toBe(mewi.Types.Auth.Error.INVALID_JWT)
         }
     })
 })

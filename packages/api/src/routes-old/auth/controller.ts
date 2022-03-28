@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import { AuthService } from 'services/UserServices'
-import { APIError, AuthErrorCodes } from '@mewi/types'
+import { APIError, mewi.Types.Auth.Error } from '@mewi/types'
 
 export const signUp = async (req, res, next) => {
     const { email, password, repassword } = req.body as Record<string, unknown | undefined>
@@ -29,7 +29,7 @@ export const validateToken = async (req, res, next) => {
 
     jwt.verify(token, process.env.TOKEN_KEY, (err) => {
         if (err) {
-            next(new APIError(401, AuthErrorCodes.INVALID_JWT))
+            next(new APIError(401, mewi.Types.Auth.Error.INVALID_JWT))
             return
         }
         res.sendStatus(200)
@@ -42,7 +42,7 @@ export const refreshToken = async (req, res, next) => {
 
     jwt.verify(refreshToken, process.env.TOKEN_KEY, async (err, user) => {
         if (err) {
-            next(new APIError(401, AuthErrorCodes.INVALID_REFRESH_TOKEN))
+            next(new APIError(401, mewi.Types.Auth.Error.INVALID_REFRESH_TOKEN))
             return
         }
 

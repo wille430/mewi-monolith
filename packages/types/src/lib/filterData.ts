@@ -531,3 +531,11 @@ export enum SortData {
     DATE_ASC = 'date_asc',
     DATE_DESC = 'date_desc',
 }
+
+export const sortableFields: Record<SortData, Record<string, number>> = {
+    relevance: {},
+    price_desc: { 'price.value': -1 },
+    price_asc: { 'price.value': 1 },
+    date_asc: { date: 1 },
+    date_desc: { date: -1 },
+}

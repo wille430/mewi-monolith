@@ -1,4 +1,4 @@
-import { AuthErrorCodes } from '@mewi/types'
+import { mewi.Types.Auth.Error } from '@mewi/types'
 import request from 'supertest'
 import app from '../app'
 
@@ -17,7 +17,7 @@ describe('user', () => {
 
             it('should return error object with missing JWT error', () => {
                 expect(response.body.error).toBeTruthy()
-                expect(response.body.error.type).toBe(AuthErrorCodes.MISSING_JWT)
+                expect(response.body.error.type).toBe(mewi.Types.Auth.Error.MISSING_JWT)
             })
         })
 

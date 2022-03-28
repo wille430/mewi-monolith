@@ -1,5 +1,5 @@
 module.exports = {
-    content: ['./packages/webapp/src/**/*.{html,js,jsx,ts,tsx}'],
+    content: ['./packages/webapp/src/**/*.{html,js,jsx,ts,tsx,scss,css}', '.packages/webapp/index.html'],
     theme: {
         extend: {
             colors: {
@@ -27,6 +27,4 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require('@tailwindcss/aspect-ratio')],
-    mode: 'jit',
 }

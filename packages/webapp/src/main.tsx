@@ -6,13 +6,9 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from 'store'
-// import { loadStripe } from '@stripe/stripe-js'
-// import { Elements } from '@stripe/react-stripe-js'
 import setupInterceptors from 'api/setupInterceptors.'
 import { StrictMode } from 'react'
 import axios from 'axios'
-
-console.log(import.meta.env)
 
 if (window.Cypress || import.meta.env.DEV) {
     window.store = store

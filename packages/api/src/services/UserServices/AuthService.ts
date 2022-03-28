@@ -1,6 +1,6 @@
 import { PasswordService } from './index'
 import UserModel from 'models/UserModel'
-import { APIError, AuthErrorCodes, AuthTokens, JWT, ValidationErrorCodes } from '@mewi/types'
+import { APIError, mewi.Types.Auth.Error, AuthTokens, JWT, ValidationErrorCodes } from '@mewi/types'
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from './UserEmailService'
 
@@ -13,7 +13,7 @@ class AuthService {
 
             const user = await UserModel.findOne({ email })
 
-            if (!user) throw new APIError(404, AuthErrorCodes.INVALID_EMAIL)
+            if (!user) throw new APIError(404, mewi.Types.Auth.Error.INVALID_EMAIL)
 
             const userId = user._id
             const correctPassword = await PasswordService.correctPassword(
@@ -21,7 +21,7 @@ class AuthService {
                 password as string
             )
 
-            if (!correctPassword) throw new APIError(401, AuthErrorCodes.INVALID_PASSWORD)
+            if (!correctPassword) throw new APIError(401, mewi.Types.Auth.Error.INVALID_PASSWORD)
 
             return await this.createNewAuthTokens(userId, email as string)
         } else {
@@ -53,19 +53,19 @@ class AuthService {
             repassword = repassword.trim()
 
             if (password !== repassword) {
-                throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_MATCHING)
+                throw new APIError(422, mewi.Types.Auth.Error.PASSWORD_NOT_MATCHING)
             }
 
             const userExists = await UserModel.findOne({ email: email })
-            if (userExists) throw new APIError(409, AuthErrorCodes.USER_ALREADY_EXISTS)
+            if (userExists) throw new APIError(409, mewi.Types.Auth.Error.USER_ALREADY_EXISTS)
 
             const validEmail = UserEmailService.validate(email as string)
             const validPassword = PasswordService.validate(password as string)
 
             if (!validEmail) {
-                throw new APIError(422, AuthErrorCodes.INVALID_EMAIL)
+                throw new APIError(422, mewi.Types.Auth.Error.INVALID_EMAIL)
             } else if (!validPassword) {
-                throw new APIError(422, AuthErrorCodes.PASSWORD_NOT_STRONG_ENOUGH)
+                throw new APIError(422, mewi.Types.Auth.Error.PASSWORD_NOT_STRONG_ENOUGH)
             }
 
             const encryptedPassword = await PasswordService.hash(password as string)
