@@ -1,0 +1,151 @@
+@import '../colors.scss';
+@import '../utilities.module.scss';
+@import '../animation.scss';
+
+.button {
+    border-radius: 0.2rem;
+    padding: 0.25rem 0.75rem;
+    z-index: 1;
+    overflow: hidden;
+    position: relative;
+
+    &--outlined {
+        @extend .button;
+        background-color: transparent;
+        color: $primary;
+        border: 1px solid hsl(0, 0%, 60%);
+
+        &:hover {
+            background-color: rgba($color: $primary, $alpha: 0.18);
+        }
+
+        &:active {
+            @extend .pressAnimation;
+        }
+
+        &--disabled {
+            @extend .button;
+            color: gray;
+            background-color: transparent;
+            background-color: hsl(0, 0%, 88%);
+            border: 1px solid hsl(0, 0%, 85%);
+
+            &:hover {
+                cursor: default;
+            }
+        }
+    }
+
+    &--contained {
+        @extend .button;
+        color: white;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px;
+        }
+
+        &:active {
+            @extend .pressAnimation;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        &--disabled {
+            @extend .button;
+            color: gray;
+            background-color: hsl(0, 0%, 85%);
+
+            &:hover {
+                cursor: default;
+            }
+        }
+
+        &.primary {
+            background-color: $primary;
+            &:hover {
+                background-color: lighten($color: $primary, $amount: 0.65);
+            }
+        }
+
+        &.secondary {
+            background-color: $secondary;
+
+            &:hover {
+                background-color: lighten($color: $secondary, $amount: 0.65);
+            }
+        }
+
+        &.error {
+            background-color: $error;
+
+            &:hover {
+                background-color: lighten($color: $error, $amount: 0.65);
+            }
+        }
+    }
+
+    &--text {
+        @extend .button;
+        background-color: transparent;
+        color: $primary;
+
+        &:active {
+            @extend .pressAnimation;
+            background-color: transparent;
+        }
+
+        &--disabled {
+            @extend .button;
+            color: gray;
+            background-color: transparent;
+            background-color: hsl(0, 0%, 88%);
+
+            &:hover {
+                cursor: default;
+            }
+        }
+    }
+}
+
+.pressAnimation {
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        border-radius: 0.2rem;
+        transform: scale(1.05);
+        background-color: saturate(
+            $color: transparentize($color: hsl(0, 0%, 0%), $amount: 0.75),
+            $amount: 1
+        );
+        top: 0;
+        left: 0;
+
+        @include keyframes(buttonPress) {
+            0% {
+                width: 0px;
+                border-radius: 50%;
+                left: 50%;
+            }
+            20% {
+                width: 90%;
+                border-radius: 10%;
+                transform: scale(1.02);
+            }
+            25% {
+                width: 100%;
+                border-radius: 0px;
+                left: 0;
+            }
+            100% {
+                transform: scale(1.05);
+            }
+        }
+
+        @include animate(buttonPress, 1s, linear, 1);
+    }
+}

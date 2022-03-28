@@ -1,0 +1,60 @@
+{
+    "root": "packages/api",
+    "sourceRoot": "packages/api/src",
+    "projectType": "application",
+    "targets": {
+        "deploy": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+                "commands": ["echo WARN: deploy command is deprecated for api"],
+                "parallel": false
+            }
+        },
+        "build": {
+            "executor": "@nrwl/node:build",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/api",
+                "main": "packages/api/src/main.ts",
+                "tsConfig": "packages/api/tsconfig.json",
+                "assets": ["packages/api/src/assets", "packages/api/src/emails"],
+                "generatePackageJson": true
+            },
+            "configurations": {
+                "production": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "packages/api/src/environments/environment.ts",
+                            "with": "packages/api/src/environments/environment.prod.ts"
+                        }
+                    ]
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/node:execute",
+            "options": {
+                "buildTarget": "api:build"
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/api/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/api"],
+            "options": {
+                "jestConfig": "packages/api/jest.config.js",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

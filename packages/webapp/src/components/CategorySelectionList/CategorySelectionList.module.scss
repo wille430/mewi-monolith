@@ -1,0 +1,19 @@
+.container {
+    max-width: 100%;
+    min-width: 12rem;
+    background-color: white;
+}
+
+.subcat {
+    font-size: 0.8rem;
+    color: rgb(77, 77, 77);
+    margin-left: 1rem;
+}
+
+.selected {
+    font-weight: 800 !important;
+
+    & > ul > * {
+        font-weight: 400;
+    }
+}

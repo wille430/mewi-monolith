@@ -1,0 +1,17 @@
+{
+  "name": "@mewi/util",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Mewi",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.6",
+    "@mewi/types": "workspace:^1.0.0",
+    "lodash": "^4.17.21",
+    "tslib": "^2.3.1"
+  }
+}

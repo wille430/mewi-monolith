@@ -1,0 +1,6 @@
+.env
+.local.env
+**/*/lastDate.txt
+dist/*
+node_modules
+dist

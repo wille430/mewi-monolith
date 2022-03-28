@@ -1,0 +1,15 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "sourceMap": false,
+        "outDir": "../../dist/out-tsc",
+        "types": ["cypress", "node"],
+        "baseUrl": "../webapp/src",
+        "paths": {
+            "@mewi/types": ["../../types/src/index.ts"],
+            "@mewi/util": ["../../util/src/index.ts"],
+            "@mewi/ui": ["../../ui/src/index.ts"]
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.js"]
+}

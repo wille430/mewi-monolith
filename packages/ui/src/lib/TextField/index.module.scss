@@ -1,0 +1,146 @@
+@import '../colors.scss';
+@import '../utilities.module.scss';
+@import '../animation.scss';
+
+.input {
+    outline: none;
+    width: 100%;
+    background-color: transparent;
+    flex-grow: 1;
+}
+
+// remove auto complete bg color
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.container {
+    background-color: $paper;
+    width: clamp(8rem, 10rem, 100%);
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid hsl(0, 0%, 70%);
+    transition: all ease-in-out 250ms;
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    background-color: white;
+
+    &.isActive {
+        border: 2px solid $primary;
+        border-top: none;
+    }
+
+    &.fullWidth {
+        width: 100%;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+.clearButton {
+    color: gray;
+    pointer-events: inherit;
+
+    &:hover > * {
+        transition: all 500ms ease;
+        transform: rotateZ(90deg);
+    }
+}
+
+.label {
+    transition: translate 1s linear;
+    pointer-events: none;
+    font-size: 1rem;
+    color: gray;
+    flex: none;
+
+    &.isActive {
+        font-size: 0.75rem;
+        color: $primary;
+        transform: translateY(-1.1rem);
+        transition: none;
+
+        // &:after {
+        //     content: '';
+        //     display: block;
+        //     position: absolute;
+        //     z-index: -1;
+        //     height: 0.5rem;
+        //     width: 100%;
+        //     left: 0px;
+        //     background-color: red;
+        // }
+
+        // &:after {
+        //     content: '';
+        //     height: 1px;
+        //     position: absolute;
+        //     width: 100%;
+        //     background-color: $primary;
+        //     top: 0.5rem;
+        //     right: 0px;
+        // }
+    }
+}
+
+.header {
+    position: absolute;
+    width: 100%;
+    display: block;
+    pointer-events: none;
+
+    & hr {
+        display: none;
+        background-color: transparent;
+        border: none;
+    }
+
+    &.isActive {
+        display: flex;
+        & hr {
+            display: block;
+            position: relative;
+            height: 2px;
+            width: 100%;
+            flex-grow: 1;
+            transform: translateY(-0.5rem);
+            pointer-events: none;
+            color: transparent;
+            background-color: transparent;
+
+            &:after {
+                content: '';
+                width: calc(100% - 1rem);
+                height: 2px;
+                right: 0.5rem;
+                background-color: $primary;
+                position: absolute;
+            }
+
+            &.noLabel {
+                transform: translateX(-0.5rem) translateY(-0.5rem);
+
+                &:after {
+                    content: '';
+                    width: 100%;
+                    left: 0;
+                    height: 2px;
+                    background-color: $primary;
+                    position: absolute;
+                }
+            }
+        }
+    }
+}
+
+.wrapper {
+    height: max-content;
+    padding: 0;
+    margin: 0;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@mewi/types",
+  "version": "1.0.0",
+  "description": "This library was generated with [Nx](https://nx.dev).",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "types"
+  ],
+  "author": "Mewi",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.6",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.2.8",
+    "tslib": "^2.3.1"
+  }
+}

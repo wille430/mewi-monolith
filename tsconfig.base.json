@@ -1,0 +1,25 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2017", "dom", "es2019"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@mewi/types": ["packages/types/src/index.ts"],
+            "@mewi/ui": ["packages/ui/src/index.ts"],
+            "@mewi/util": ["packages/util/src/index.ts"]
+        },
+        "esModuleInterop": true
+    },
+    "exclude": ["node_modules", "tmp"]
+}

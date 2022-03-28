@@ -1,0 +1,264 @@
+[
+    {
+        "_id": "61366a5106116ee385a56b17",
+        "cat": "Fordon",
+        "subcat": [
+            {
+                "_id": "6138ed961848c7da4db9a4f0",
+                "cat": "Bilar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f2",
+                "cat": "Båtar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f1",
+                "cat": "Bildelar & biltillbehör",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f5",
+                "cat": "Mopeder",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f3",
+                "cat": "Båtdelar & tillbehör",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f4",
+                "cat": "Husvagnar & husbilar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f8",
+                "cat": "MC-delar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f6",
+                "cat": "A-traktor",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f9",
+                "cat": "Lastbil, truck & entreprenad",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4f7",
+                "cat": "Motorcyklar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4fb",
+                "cat": "Snöskotrar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ed961848c7da4db9a4fc",
+                "cat": "Snöskoterdelar",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c38",
+        "cat": "För hemmet",
+        "subcat": [
+            {
+                "_id": "6138edb7d7f1768a965f239d",
+                "cat": "Bygg & trädgård",
+                "subcat": []
+            },
+            {
+                "_id": "6138edb7d7f1768a965f239f",
+                "cat": "Husgeråd & vitvaror",
+                "subcat": []
+            },
+            {
+                "_id": "6138edb7d7f1768a965f239e",
+                "cat": "Möbler & hemindredning",
+                "subcat": []
+            },
+            {
+                "_id": "6138edb7d7f1768a965f23a0",
+                "cat": "Verktyg",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c39",
+        "cat": "Bostad",
+        "subcat": [
+            {
+                "_id": "6138edd642f67c68a716fdee",
+                "cat": "Lägenheter",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdef",
+                "cat": "Villor",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdf0",
+                "cat": "Radhus",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdf1",
+                "cat": "Tomter",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdf2",
+                "cat": "Gårdar",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdf3",
+                "cat": "Fritidsboende",
+                "subcat": []
+            },
+            {
+                "_id": "6138edd642f67c68a716fdf4",
+                "cat": "Utland",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c3a",
+        "cat": "Personligt",
+        "subcat": [
+            {
+                "_id": "6138ee31f39ac37b8acccb3a",
+                "cat": "Kläder & skor",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee31f39ac37b8acccb3b",
+                "cat": "Accessoarer & klockor",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee31f39ac37b8acccb3d",
+                "cat": "Barnartiklar & leksaker",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee31f39ac37b8acccb3c",
+                "cat": "Barnkläder & skor",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c3b",
+        "cat": "Elektronik",
+        "subcat": [
+            {
+                "_id": "6138ee7a2e0764c2b9f40e39",
+                "cat": "Datorer & TV-spel",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee7a2e0764c2b9f40e3a",
+                "cat": "Ljud & bild",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee7a2e0764c2b9f40e3b",
+                "cat": "Telefoner & tillbehör",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c3c",
+        "cat": "Fritid & hobby",
+        "subcat": [
+            {
+                "_id": "6138ee8d2c4f0b665e4c59ac",
+                "cat": "Upplevelser & nöje",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59ad",
+                "cat": "Böcker & studentlitteratur",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59ae",
+                "cat": "Cyklar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59af",
+                "cat": "Djur",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59b0",
+                "cat": "Hobby & samlarprylar",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59b1",
+                "cat": "Hästar & ridsport",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59b2",
+                "cat": "Jakt & fiske",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59b3",
+                "cat": "Musikutrustning",
+                "subcat": []
+            },
+            {
+                "_id": "6138ee8d2c4f0b665e4c59b4",
+                "cat": "Sport- & fritidsutrustning",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c3d",
+        "cat": "Affärsverksamhet",
+        "subcat": [
+            {
+                "_id": "6138eea3c70d6b471d06ffc8",
+                "cat": "Affärsöverlåtelser",
+                "subcat": []
+            },
+            {
+                "_id": "6138eea3c70d6b471d06ffc9",
+                "cat": "Inventarier & maskiner",
+                "subcat": []
+            },
+            {
+                "_id": "6138eea3c70d6b471d06ffca",
+                "cat": "Lokaler & fastigheter",
+                "subcat": []
+            },
+            {
+                "_id": "6138eea3c70d6b471d06ffcb",
+                "cat": "Tjänster",
+                "subcat": []
+            }
+        ]
+    },
+    {
+        "_id": "6138eb92163f13592bfd0c3e",
+        "cat": "Övrigt",
+        "subcat": []
+    }
+]

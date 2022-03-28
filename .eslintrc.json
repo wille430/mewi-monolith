@@ -1,0 +1,44 @@
+{
+    "root": true,
+    "ignorePatterns": ["**/*"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@nrwl/nx", "@typescript-eslint", "unused-imports", "prettier"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-unused-vars": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "warn",
+            {
+                "vars": "all",
+                "varsIgnorePattern": "^_",
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        "react-hooks/exhaustive-deps": "off",
+        "no-control-regex": "off",
+        "semi": ["error", "never"]
+    },
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {
+                "@nrwl/nx/enforce-module-boundaries": [
+                    "error",
+                    {
+                        "enforceBuildableLibDependency": true,
+                        "allow": [],
+                        "depConstraints": [
+                            {
+                                "sourceTag": "*",
+                                "onlyDependOnLibsWithTags": ["*"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
