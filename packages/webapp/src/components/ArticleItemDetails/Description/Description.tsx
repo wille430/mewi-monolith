@@ -1,4 +1,3 @@
-
 const Description = ({ text }: { text: string }) => {
     const paragraphs = text.split('\n')
 

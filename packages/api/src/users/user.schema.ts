@@ -9,26 +9,26 @@ export type UserDocument = User & Document
 
 @Schema()
 export class User {
-  _id: string
+    _id: string
 
-  @Prop()
-  email: string
+    @Prop()
+    email: string
 
-  @Prop({ select: false })
-  password?: string
+    @Prop({ select: false })
+    password?: string
 
-  @Prop({ default: false })
-  premium: boolean
+    @Prop({ default: false })
+    premium: boolean
 
-  @Prop([UserWatcherSchema])
-  //   TODO: FIX CORRECT TYPE
-  watchers: mongoose.Types.DocumentArray<UserWatcher>
+    @Prop([UserWatcherSchema])
+    //   TODO: FIX CORRECT TYPE
+    watchers: mongoose.Types.DocumentArray<UserWatcher>
 
-  @Prop({ default: uuidv4(), select: false })
-  passwordResetSecret?: string
+    @Prop({ default: uuidv4(), select: false })
+    passwordResetSecret?: string
 
-  @Prop({ type: [String], default: [Role.User] })
-  roles: Role[]
+    @Prop({ type: [String], default: [Role.User] })
+    roles: Role[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

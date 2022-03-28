@@ -6,17 +6,17 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { UsersModule } from 'users/users.module'
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: Watcher.name,
-        schema: WatcherSchema,
-      },
-    ]),
-    UsersModule,
-  ],
-  controllers: [WatchersController],
-  providers: [WatchersService],
-  exports: [MongooseModule],
+    imports: [
+        MongooseModule.forFeature([
+            {
+                name: Watcher.name,
+                schema: WatcherSchema,
+            },
+        ]),
+        UsersModule,
+    ],
+    controllers: [WatchersController],
+    providers: [WatchersService],
+    exports: [MongooseModule],
 })
 export class WatchersModule {}

@@ -6,7 +6,9 @@ import { useQuery } from 'react-query'
 
 const FeaturedListings = () => {
     const { isLoading, error, data } = useQuery('featuredListings', () =>
-        axios.get('/listings/featured').then((res) => _.sortBy(res.data as ItemData[], (x) => x.date))
+        axios
+            .get('/listings/featured')
+            .then((res) => _.sortBy(res.data as ItemData[], (x) => x.date))
     )
     if (isLoading) {
         return <span>Loading feauted items...</span>

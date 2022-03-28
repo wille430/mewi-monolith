@@ -8,12 +8,7 @@ const ProtectedRoutes = () => (
     <Suspense fallback={<LazyLoader />}>
         <Switch>
             {routes.map(({ component: Component, path, title }, i) => (
-                <Page
-                    title={title}
-                    path={`/${path}`}
-                    key={i}
-                    component={<Component />}
-                />
+                <Page title={title} path={`/${path}`} key={i} component={<Component />} />
             ))}
         </Switch>
     </Suspense>

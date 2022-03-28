@@ -51,7 +51,9 @@ const Login = () => {
                                     data-testid='passwordInput'
                                     fullWidth={true}
                                 />
-                                <Link className='block' to='/glomtlosenord'>Har du glömt lösenordet?</Link>
+                                <Link className='block' to='/glomtlosenord'>
+                                    Har du glömt lösenordet?
+                                </Link>
                                 <span className='text-red-400'>{errors.password}</span>
                             </div>
 

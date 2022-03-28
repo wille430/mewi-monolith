@@ -6,17 +6,17 @@ import { Listing } from 'listings/listing.schema'
 import { ListingSchema } from 'models/ListingModel'
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: Listing.name,
-        schema: ListingSchema,
-      },
-    ]),
-    CacheModule.register(),
-  ],
-  controllers: [ListingsController],
-  providers: [ListingsService],
-  exports: [MongooseModule],
+    imports: [
+        MongooseModule.forFeature([
+            {
+                name: Listing.name,
+                schema: ListingSchema,
+            },
+        ]),
+        CacheModule.register(),
+    ],
+    controllers: [ListingsController],
+    providers: [ListingsService],
+    exports: [MongooseModule],
 })
 export class ListingsModule {}

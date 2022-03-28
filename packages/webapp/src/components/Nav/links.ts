@@ -3,7 +3,9 @@ export const privateLinks: NavLink[] = [
         name: 'Mina Bevakningar',
         path: '/minabevakningar',
         styling: 'text-green-dark',
-        sublinks: [{ name: 'Mitt Konto', path: '/mittkonto', styling: 'text-white', private: true }],
+        sublinks: [
+            { name: 'Mitt Konto', path: '/mittkonto', styling: 'text-white', private: true },
+        ],
     },
 ]
 

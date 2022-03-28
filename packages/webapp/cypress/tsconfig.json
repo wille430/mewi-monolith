@@ -6,6 +6,6 @@
         "types": ["cypress"],
         "strict": true,
         "baseUrl": "../node_modules",
-        "target": "ES5",
-    },
+        "target": "ES5"
+    }
 }

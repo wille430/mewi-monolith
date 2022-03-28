@@ -8,7 +8,7 @@ const MyAccount = () => {
         <Layout>
             <aside className='side-col'></aside>
             <main className='main'>
-                <Container style={{minHeight: '50vh'}}>
+                <Container style={{ minHeight: '50vh' }}>
                     <Container.Header>
                         <h3>Mitt Konto</h3>
                         <HorizontalLine />

@@ -3,7 +3,6 @@ import { startDevServer } from '@cypress/vite-dev-server'
 import webpackPreprocessor from '@cypress/webpack-preprocessor'
 
 export default (on, config) => {
-
     on('dev-server:start', (options) => {
         return startDevServer({
             options,

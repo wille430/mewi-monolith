@@ -19,14 +19,14 @@ export const snackbarSlice = createSlice({
                 if (state.current) {
                     state.queue = [...state.queue, action.payload]
                 } else {
-                    state.current = { id: uniqueId(), ...action.payload}
+                    state.current = { id: uniqueId(), ...action.payload }
                 }
             })
             .addCase(nextSnackbar, (state) => {
                 const newSnack = state.queue.shift()
 
                 if (newSnack) {
-                    state.current = {id: uniqueId(), ...newSnack}
+                    state.current = { id: uniqueId(), ...newSnack }
                 } else {
                     state.current = undefined
                 }

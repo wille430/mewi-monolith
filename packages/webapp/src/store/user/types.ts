@@ -1,6 +1,5 @@
 export interface UserState {
     email?: string
-    
 }
 
 export enum UserActionType {

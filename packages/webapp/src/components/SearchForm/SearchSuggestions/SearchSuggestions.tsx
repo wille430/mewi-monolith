@@ -22,7 +22,10 @@ const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
     const [suggestions, setSuggestions] = useState<string[]>([])
 
-    const autocomplete = useMemo(async (): Promise<string[]> => query ? await searchApi.autocomplete(query) : [], [query])
+    const autocomplete = useMemo(
+        async (): Promise<string[]> => (query ? await searchApi.autocomplete(query) : []),
+        [query]
+    )
 
     const getSuggestions = useCallback(
         _.debounce((_query) => {
@@ -30,7 +33,7 @@ const SearchSuggestions = ({
                 setSuggestions([])
             }
 
-            autocomplete.then(v => {
+            autocomplete.then((v) => {
                 setSuggestions(v)
             })
         }, 750),
@@ -51,9 +54,9 @@ const SearchSuggestions = ({
     useEffect(() => {
         getSuggestions(query)
 
-        return (() => {
+        return () => {
             getSuggestions.cancel()
-        })
+        }
     }, [query])
 
     return (

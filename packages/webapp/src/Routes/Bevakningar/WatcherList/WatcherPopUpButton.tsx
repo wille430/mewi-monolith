@@ -12,7 +12,7 @@ const WatcherPopUpButton = (props: ButtonProps) => {
     return (
         <>
             <AddWatcherPopUp useShow={{ show, setShow }} />
-            <Button onClick={handleClick} label='Skapa bevakning' {...props}/>
+            <Button onClick={handleClick} label='Skapa bevakning' {...props} />
         </>
     )
 }

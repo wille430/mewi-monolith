@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: process.env.TOKEN_KEY || 'secretKey',
+    secret: process.env.TOKEN_KEY || 'secretKey',
 }

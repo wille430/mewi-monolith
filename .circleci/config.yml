@@ -59,8 +59,8 @@ obs:
                   name: Deploy to API server
             - run:
                   command: |
-                        npm i netlify-cli -g
-                        netlify deploy --auth $NETLIFY_TOKEN
+                      npm i netlify-cli -g
+                      netlify deploy --auth $NETLIFY_TOKEN
                   name: Deploy to apps
 workflows:
     version: 2

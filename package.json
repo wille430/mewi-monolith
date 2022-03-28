@@ -7,7 +7,8 @@
         "lint:fix": "eslint packages/**/*/src/**/*.{ts,tsx} --fix",
         "e2e": "pnpm run e2e -r",
         "build": "pnpm run build -r",
-        "test": "pnpm run test -r"
+        "test": "pnpm run test -r",
+        "format": "prettier -w ."
     },
     "private": true,
     "devDependencies": {

@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             queryFn: async ({ queryKey }) =>
-                axios.get('/' + queryKey[0] as string).then((res) => res.data),
+                axios.get(('/' + queryKey[0]) as string).then((res) => res.data),
         },
     },
 })

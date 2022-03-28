@@ -1,4 +1,3 @@
-
 const ParamInfo = ({ paramObj }: { paramObj: any }) => {
     if (!paramObj) return <></>
     return (

@@ -12,73 +12,73 @@ import { GetUser } from 'decorators/user.decorator'
 @UseGuards(JwtAuthGuard)
 @Controller('users/me/watchers')
 export class MyWatchersController {
-  constructor(private readonly userWatchersService: UserWatchersService) {}
+    constructor(private readonly userWatchersService: UserWatchersService) {}
 
-  @Post()
-  create(
-    @Body() createUserWatcherDto: Omit<CreateUserWatcherDto, 'userId'>,
-    @GetUser() user: UserPayload
-  ) {
-    return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
-  }
+    @Post()
+    create(
+        @Body() createUserWatcherDto: Omit<CreateUserWatcherDto, 'userId'>,
+        @GetUser() user: UserPayload
+    ) {
+        return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
+    }
 
-  @Get()
-  findAll(@GetUser() user: UserPayload) {
-    return this.userWatchersService.findAll(user.userId)
-  }
+    @Get()
+    findAll(@GetUser() user: UserPayload) {
+        return this.userWatchersService.findAll(user.userId)
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string, @GetUser() user: UserPayload) {
-    return this.userWatchersService.findOne(id, user.userId)
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string, @GetUser() user: UserPayload) {
+        return this.userWatchersService.findOne(id, user.userId)
+    }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateUserWatcherDto: UpdateUserWatcherDto,
-    @GetUser() user: UserPayload
-  ) {
-    return this.userWatchersService.update(id, updateUserWatcherDto)
-  }
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateUserWatcherDto: UpdateUserWatcherDto,
+        @GetUser() user: UserPayload
+    ) {
+        return this.userWatchersService.update(id, updateUserWatcherDto)
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string, @GetUser() user: UserPayload) {
-    return this.userWatchersService.remove(id, user.userId)
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string, @GetUser() user: UserPayload) {
+        return this.userWatchersService.remove(id, user.userId)
+    }
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users/:user_id/watchers')
 export class UserWatchersController {
-  constructor(private readonly userWatchersService: UserWatchersService) {}
+    constructor(private readonly userWatchersService: UserWatchersService) {}
 
-  @Post()
-  @Roles(Role.Admin)
-  create(@Body() createUserWatcherDto: CreateUserWatcherDto) {
-    return this.userWatchersService.create(createUserWatcherDto)
-  }
+    @Post()
+    @Roles(Role.Admin)
+    create(@Body() createUserWatcherDto: CreateUserWatcherDto) {
+        return this.userWatchersService.create(createUserWatcherDto)
+    }
 
-  @Get()
-  @Roles(Role.Admin)
-  findAll(@Param('user_id') userId: string) {
-    return this.userWatchersService.findAll(userId)
-  }
+    @Get()
+    @Roles(Role.Admin)
+    findAll(@Param('user_id') userId: string) {
+        return this.userWatchersService.findAll(userId)
+    }
 
-  @Get(':id')
-  @Roles(Role.Admin)
-  findOne(@Param('id') id: string, @Param('user_id') userId: string) {
-    return this.userWatchersService.findOne(id, userId)
-  }
+    @Get(':id')
+    @Roles(Role.Admin)
+    findOne(@Param('id') id: string, @Param('user_id') userId: string) {
+        return this.userWatchersService.findOne(id, userId)
+    }
 
-  @Patch(':id')
-  @Roles(Role.Admin)
-  update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
-    return this.userWatchersService.update(id, updateUserWatcherDto)
-  }
+    @Patch(':id')
+    @Roles(Role.Admin)
+    update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
+        return this.userWatchersService.update(id, updateUserWatcherDto)
+    }
 
-  @Delete(':id')
-  @Roles(Role.Admin)
-  remove(@Param('id') id: string, @Param('user_id') userId: string) {
-    return this.userWatchersService.remove(id, userId)
-  }
+    @Delete(':id')
+    @Roles(Role.Admin)
+    remove(@Param('id') id: string, @Param('user_id') userId: string) {
+        return this.userWatchersService.remove(id, userId)
+    }
 }

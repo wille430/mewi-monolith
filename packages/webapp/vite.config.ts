@@ -21,12 +21,12 @@ for (const dir of srcRootContent) {
 export default defineConfig({
     plugins: [react()],
     server: {
-        port: 4200
+        port: 4200,
     },
     resolve: {
         alias: {
             ...absolutePathAliases,
         },
     },
-    base: '/'
+    base: '/',
 })

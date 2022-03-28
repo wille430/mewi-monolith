@@ -21,7 +21,6 @@ const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
         let parentLinkPath = '/kategorier'
 
         Object.values(categoryValues).forEach((catVal) => {
-
             if (!catVal) return
 
             if (!parentCategory) {

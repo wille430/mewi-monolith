@@ -5,58 +5,58 @@ export type ListingDocument = Listing & Document
 
 @Schema()
 export class Listing {
-  @Prop()
-  id: string
+    @Prop()
+    id: string
 
-  @Prop()
-  title: string
+    @Prop()
+    title: string
 
-  @Prop()
-  body?: string
+    @Prop()
+    body?: string
 
-  @Prop([String])
-  category: string[]
+    @Prop([String])
+    category: string[]
 
-  @Prop()
-  date: number
+    @Prop()
+    date: number
 
-  @Prop()
-  redirectUrl: string
+    @Prop()
+    redirectUrl: string
 
-  @Prop([String])
-  imageUrl: string[]
+    @Prop([String])
+    imageUrl: string[]
 
-  @Prop(
-    raw({
-      value: { type: String },
-      currency: { type: String },
-    })
-  )
-  price: {
-    value: string
-    currency: string
-  }
+    @Prop(
+        raw({
+            value: { type: String },
+            currency: { type: String },
+        })
+    )
+    price: {
+        value: string
+        currency: string
+    }
 
-  @Prop()
-  region: string
+    @Prop()
+    region: string
 
-  @Prop([
-    raw({
-      id: { type: String },
-      label: { type: String },
-      value: { type: String },
-    }),
-  ])
-  parameters: { id: string; label: string; value: string }[]
+    @Prop([
+        raw({
+            id: { type: String },
+            label: { type: String },
+            value: { type: String },
+        }),
+    ])
+    parameters: { id: string; label: string; value: string }[]
 
-  @Prop()
-  origin: string
+    @Prop()
+    origin: string
 
-  @Prop()
-  isAuction: boolean
+    @Prop()
+    isAuction: boolean
 
-  @Prop()
-  endDate: number
+    @Prop()
+    endDate: number
 }
 
 export const ListingSchema = SchemaFactory.createForClass(Listing)

@@ -10,23 +10,23 @@ export type WatcherDocument = Watcher & Document
 export interface PopulatedWatcher extends Pick<Watcher, 'metadata'>, UserWatcher {}
 
 @Schema({
-  timestamps: true,
+    timestamps: true,
 })
 export class Watcher {
-  _id: string
+    _id: string
 
-  @Prop({
-    type: FindAllListingsDto,
-    required: true,
-    unique: true,
-  })
-  metadata: typeof FindAllListingsDto
+    @Prop({
+        type: FindAllListingsDto,
+        required: true,
+        unique: true,
+    })
+    metadata: typeof FindAllListingsDto
 
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
-  users: mongoose.Types.Array<mongoose.Types.ObjectId>
+    @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
+    users: mongoose.Types.Array<mongoose.Types.ObjectId>
 
-  @Prop()
-  notifiedAt: string
+    @Prop()
+    notifiedAt: string
 }
 
 export const WatcherSchema = SchemaFactory.createForClass(Watcher)

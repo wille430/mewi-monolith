@@ -10,129 +10,129 @@ import { WatchersService } from 'watchers/watchers.service'
 
 @Injectable()
 export class UserWatchersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
-    @InjectModel(Watcher.name) private watcherModel: Model<Watcher>,
-    private watchersService: WatchersService
-  ) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(Watcher.name) private watcherModel: Model<Watcher>,
+        private watchersService: WatchersService
+    ) {}
 
-  async create({ userId, metadata }: CreateUserWatcherDto): Promise<PopulatedWatcher> {
-    let watcher: WatcherDocument
+    async create({ userId, metadata }: CreateUserWatcherDto): Promise<PopulatedWatcher> {
+        let watcher: WatcherDocument
 
-    // 1. Check if watcher with same metadata exists
-    if (await this.watchersService.exists(metadata)) {
-      watcher = await this.watcherModel.findOne({ metadata })
-    } else {
-      // 2. If false, create watcher
-      watcher = await this.watcherModel.create({ metadata })
+        // 1. Check if watcher with same metadata exists
+        if (await this.watchersService.exists(metadata)) {
+            watcher = await this.watcherModel.findOne({ metadata })
+        } else {
+            // 2. If false, create watcher
+            watcher = await this.watcherModel.create({ metadata })
+        }
+
+        // 3. Append user watcher to user
+        const user = await this.userModel.findById(userId)
+        const userWatcher = user.watchers.create({ _id: watcher._id })
+
+        user.watchers.addToSet(userWatcher)
+        watcher.users.addToSet(user._id)
+
+        await user.save()
+        await watcher.save()
+
+        return {
+            ...user.watchers.id(watcher._id).toJSON(),
+            metadata,
+        }
     }
 
-    // 3. Append user watcher to user
-    const user = await this.userModel.findById(userId)
-    const userWatcher = user.watchers.create({ _id: watcher._id })
-
-    user.watchers.addToSet(userWatcher)
-    watcher.users.addToSet(user._id)
-
-    await user.save()
-    await watcher.save()
-
-    return {
-      ...user.watchers.id(watcher._id).toJSON(),
-      metadata,
-    }
-  }
-
-  async findAll(userId: string): Promise<PopulatedWatcher[]> {
-    const pipeline: PipelineStage[] = [
-      { $limit: 1 },
-      {
-        $match: { _id: new mongoose.Types.ObjectId(userId) },
-      },
-      {
-        $unwind: {
-          path: '$watchers',
-        },
-      },
-      {
-        $lookup: {
-          from: 'watchers',
-          localField: 'watchers._id',
-          foreignField: '_id',
-          as: 'watchers.watcher',
-        },
-      },
-      {
-        $group: {
-          _id: '$_id',
-          watchers: {
-            $push: '$watchers',
-          },
-        },
-      },
-    ]
-
-    try {
-      const agg = await this.userModel.aggregate(pipeline)
-      return agg[0].watchers as PopulatedWatcher[]
-    } catch (e) {
-      return []
-    }
-  }
-
-  async findOne(id: string, userId: string): Promise<PopulatedWatcher & Document> | undefined {
-    try {
-      const agg = await this.userModel.aggregate([
-        { $limit: 1 },
-        {
-          $match: { _id: new mongoose.Types.ObjectId(userId) },
-        },
-        {
-          $unwind: {
-            path: '$watchers',
-          },
-        },
-        { $match: { 'watchers._id': new mongoose.Types.ObjectId(id) } },
-        {
-          $lookup: {
-            from: 'watchers',
-            localField: 'watchers._id',
-            foreignField: '_id',
-            as: 'watchers.watcher',
-          },
-        },
-        {
-          $group: {
-            _id: '$_id',
-            watchers: {
-              $push: '$watchers',
+    async findAll(userId: string): Promise<PopulatedWatcher[]> {
+        const pipeline: PipelineStage[] = [
+            { $limit: 1 },
+            {
+                $match: { _id: new mongoose.Types.ObjectId(userId) },
             },
-          },
-        },
-      ])
+            {
+                $unwind: {
+                    path: '$watchers',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'watchers',
+                    localField: 'watchers._id',
+                    foreignField: '_id',
+                    as: 'watchers.watcher',
+                },
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    watchers: {
+                        $push: '$watchers',
+                    },
+                },
+            },
+        ]
 
-      const watcher = agg[0].watchers[0]
-
-      return watcher
-    } catch (e) {
-      return undefined
+        try {
+            const agg = await this.userModel.aggregate(pipeline)
+            return agg[0].watchers as PopulatedWatcher[]
+        } catch (e) {
+            return []
+        }
     }
-  }
 
-  async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
-    this.remove(id, userId)
-    this.create({ metadata, userId })
-  }
+    async findOne(id: string, userId: string): Promise<PopulatedWatcher & Document> | undefined {
+        try {
+            const agg = await this.userModel.aggregate([
+                { $limit: 1 },
+                {
+                    $match: { _id: new mongoose.Types.ObjectId(userId) },
+                },
+                {
+                    $unwind: {
+                        path: '$watchers',
+                    },
+                },
+                { $match: { 'watchers._id': new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: 'watchers',
+                        localField: 'watchers._id',
+                        foreignField: '_id',
+                        as: 'watchers.watcher',
+                    },
+                },
+                {
+                    $group: {
+                        _id: '$_id',
+                        watchers: {
+                            $push: '$watchers',
+                        },
+                    },
+                },
+            ])
 
-  async remove(id: string, userId: string) {
-    // delete from user
-    await this.userModel.updateOne({ _id: userId }, { $pull: { watchers: { _id: id } } })
+            const watcher = agg[0].watchers[0]
 
-    // delete from watcher
-    await this.watcherModel.updateOne({ _id: id }, { $pull: { users: userId } })
-
-    if (!(await this.watcherModel.findById(id)).users.length) {
-      this.watcherModel.deleteOne({ _id: id })
+            return watcher
+        } catch (e) {
+            return undefined
+        }
     }
-  }
+
+    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+        this.remove(id, userId)
+        this.create({ metadata, userId })
+    }
+
+    async remove(id: string, userId: string) {
+        // delete from user
+        await this.userModel.updateOne({ _id: userId }, { $pull: { watchers: { _id: id } } })
+
+        // delete from watcher
+        await this.watcherModel.updateOne({ _id: id }, { $pull: { users: userId } })
+
+        if (!(await this.watcherModel.findById(id)).users.length) {
+            this.watcherModel.deleteOne({ _id: id })
+        }
+    }
 }

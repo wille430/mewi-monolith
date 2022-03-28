@@ -6,8 +6,8 @@ import { WatchersModule } from 'watchers/watchers.module'
 import { WatchersService } from 'watchers/watchers.service'
 
 @Module({
-  controllers: [MyWatchersController, UserWatchersController],
-  providers: [UserWatchersService, WatchersService],
-  imports: [UsersModule, WatchersModule],
+    controllers: [MyWatchersController, UserWatchersController],
+    providers: [UserWatchersService, WatchersService],
+    imports: [UsersModule, WatchersModule],
 })
 export class UserWatchersModule {}
