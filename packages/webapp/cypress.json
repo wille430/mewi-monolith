@@ -9,5 +9,6 @@
     "videosFolder": "../../dist/cypress/packages/webapp/videos",
     "screenshotsFolder": "../../dist/cypress/packages/webapp/screenshots",
     "chromeWebSecurity": false,
-    "projectId": "i37rci"
+    "projectId": "i37rci",
+    "baseUrl": "http://localhost:4200"
 }
