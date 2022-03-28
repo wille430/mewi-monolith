@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { FindAllListingsDto } from 'listings/dto/find-all-listing.dto'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'

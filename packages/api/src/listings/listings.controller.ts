@@ -6,7 +6,6 @@ import {
     Patch,
     Param,
     Delete,
-    HttpCode,
     CACHE_MANAGER,
     Inject,
     Query,

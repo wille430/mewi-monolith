@@ -3,7 +3,7 @@
  */
 
 import { Types } from 'bson'
-import { Types as MewiTypes, DatabaseErrorCodes, JoinedWatcher, SearchFilterDataProps } from '@mewi/types'
+import { DatabaseErrorCodes, JoinedWatcher, SearchFilterDataProps } from '@mewi/types'
 import WatcherModel from 'models/WatcherModel'
 import WatcherService from 'services/WatcherService'
 import { UserService } from './index'

@@ -1,6 +1,6 @@
 import { SearchFilterDataProps, SortData } from '@mewi/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import searchApi, { getSearchResultsReturnType } from 'api/searchApi'
+import { getSearchResultsReturnType } from 'api/searchApi'
 import { RootState } from 'store'
 import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'

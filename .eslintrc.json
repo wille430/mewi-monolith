@@ -1,8 +1,7 @@
 {
     "root": true,
-    "ignorePatterns": ["**/*"],
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@nrwl/nx", "@typescript-eslint", "unused-imports", "prettier"],
+    "plugins": ["@typescript-eslint", "unused-imports", "prettier"],
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
@@ -24,21 +23,7 @@
     "overrides": [
         {
             "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-            "rules": {
-                "@nrwl/nx/enforce-module-boundaries": [
-                    "error",
-                    {
-                        "enforceBuildableLibDependency": true,
-                        "allow": [],
-                        "depConstraints": [
-                            {
-                                "sourceTag": "*",
-                                "onlyDependOnLibsWithTags": ["*"]
-                            }
-                        ]
-                    }
-                ]
-            }
+            "rules": {}
         }
     ]
 }

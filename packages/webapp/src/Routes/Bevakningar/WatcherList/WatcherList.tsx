@@ -46,7 +46,6 @@ const WatcherList = () => {
 
     useEffect(() => {
         dispatch(getAllWatchers())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

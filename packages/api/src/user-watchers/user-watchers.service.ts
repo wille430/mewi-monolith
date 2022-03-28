@@ -5,7 +5,6 @@ import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { Model, PipelineStage } from 'mongoose'
 import { User } from 'users/user.schema'
 import { PopulatedWatcher, Watcher, WatcherDocument } from 'watchers/watcher.schema'
-import _ from 'lodash'
 import mongoose from 'mongoose'
 import { WatchersService } from 'watchers/watchers.service'
 
@@ -45,7 +44,7 @@ export class UserWatchersService {
   }
 
   async findAll(userId: string): Promise<PopulatedWatcher[]> {
-    let pipeline: PipelineStage[] = [
+    const pipeline: PipelineStage[] = [
       { $limit: 1 },
       {
         $match: { _id: new mongoose.Types.ObjectId(userId) },

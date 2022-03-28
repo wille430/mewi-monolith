@@ -4,7 +4,8 @@
     "license": "MIT",
     "main": "src/main.ts",
     "scripts": {
-        "dev": "nest start --watch --debug"
+        "dev": "nest start --watch --debug",
+        "lint": "eslint"
     },
     "dependencies": {
         "@faker-js/faker": "^6.0.0-alpha.6",
@@ -18,6 +19,7 @@
         "@nestjs/mongoose": "^9.0.3",
         "@nestjs/passport": "^8.2.1",
         "@nestjs/platform-express": "^8.4.2",
+        "@types/lodash": "^4.14.180",
         "bcryptjs": "^2.4.3",
         "cache-manager": "^3.6.0",
         "class-transformer": "^0.5.1",

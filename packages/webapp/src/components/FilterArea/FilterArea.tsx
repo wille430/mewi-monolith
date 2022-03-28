@@ -18,7 +18,6 @@ import styles from './FilterArea.module.scss'
 import classNames from 'classnames'
 import { Button } from '@mewi/ui'
 import { useWindowWidth } from '@react-hook/window-size'
-import { screens } from 'themes/tailwindConfig'
 
 const cx = classNames.bind(styles)
 

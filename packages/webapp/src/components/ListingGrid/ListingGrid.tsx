@@ -7,8 +7,6 @@ import { ItemData } from '@mewi/types'
 import { useInfiniteQuery } from 'react-query'
 import useQuery from 'hooks/useQuery'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import axios from 'axios'
-import queryString from 'query-string'
 import { getSearchResults } from 'store/search/creators'
 
 const cx = classNames.bind(styles)

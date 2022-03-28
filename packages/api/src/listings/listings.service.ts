@@ -51,6 +51,7 @@ export class ListingsService {
                     filter.$and.push({
                         isAuction: value,
                     })
+                    break
                 case key.match(/priceRange(Gte|Lte)/)?.input:
                     if (key.match(/(Gte)$/)) {
                         filter.$and.push({ 'price.value': { $gte: value } })
@@ -89,7 +90,7 @@ export class ListingsService {
         await this.listingModel.deleteOne({ _id: id })
     }
 
-    async sample(count: number = 1) {
+    async sample(count = 1) {
         const totalDocs = await this.listingModel.count()
 
         const randomNums = Array.from({ length: count }, () =>

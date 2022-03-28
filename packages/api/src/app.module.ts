@@ -5,7 +5,7 @@ import { ListingsModule } from 'listings/listings.module'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
-import { WatchersModule } from './watchers/watchers.module';
+import { WatchersModule } from './watchers/watchers.module'
 import {ConfigModule} from '@nestjs/config'
 
 const getMongoUri = () => {
