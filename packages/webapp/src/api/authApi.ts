@@ -1,13 +1,6 @@
 import axios from 'axios'
 import { AuthTokens } from '@mewi/common/types'
 
-export const login = async (email: string, password: string): Promise<AuthTokens> => {
-    const authTokens: AuthTokens = await axios
-        .post('/auth/login', { email, password })
-        .then((res) => res.data)
-    return authTokens
-}
-
 export const signUp = async (
     email: string,
     password: string,
@@ -44,7 +37,6 @@ export const changePassword = async (
 }
 
 export default {
-    login,
     signUp,
     refreshJwtToken,
     changePassword,

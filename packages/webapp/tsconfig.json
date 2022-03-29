@@ -7,7 +7,8 @@
         "jsx": "react-jsx",
         "baseUrl": "src",
         "esModuleInterop": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "isolatedModules": true
     },
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }],

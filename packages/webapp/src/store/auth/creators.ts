@@ -1,8 +1,9 @@
 import { Error } from '@mewi/common'
-import { AuthTokens } from '@mewi/common/dist/types'
+import { AuthTokens } from '@mewi/common/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { login, signUp } from 'api'
+import { signUp } from 'api'
 import authApi from 'api/authApi'
+import axios from 'axios'
 import { AuthActionTypes, AuthState } from './types'
 
 export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, (): { payload: AuthTokens } => {
@@ -18,7 +19,10 @@ export const loginUser = createAsyncThunk(
     AuthActionTypes.AUTH_LOGIN,
     async ({ email, password }: { email: string; password: string }, thunkAPI) => {
         try {
-            const authTokens = await login(email, password)
+            const authTokens = await axios
+                .post('/auth/login', { email, password })
+                .then((res) => res.data)
+
             return authTokens
         } catch (e: any) {
             let errors: AuthState['errors'] = {}

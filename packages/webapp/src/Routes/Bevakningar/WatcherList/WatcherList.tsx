@@ -1,17 +1,18 @@
 import WatcherCard from './WatcherCard/WatcherCard'
 import StyledLoader from 'components/StyledLoader'
 import WatcherPopUpButton from './WatcherPopUpButton'
-import { getAllWatchers } from 'store/watchers/creators'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'hooks/hooks'
-import { useEffect } from 'react'
 import { Container, HorizontalLine } from '@mewi/ui'
 import styles from './WatcherList.module.scss'
+import { useQuery } from 'react-query'
+import axios from 'axios'
+import { IPopulatedWatcher } from '@mewi/common/types'
 
 const WatcherList = () => {
-    const { isLoading, watchers } = useAppSelector((state) => state.watchers)
+    const { data: watchers, isLoading } = useQuery('watchers', () =>
+        axios.get<IPopulatedWatcher[]>('/users/me/watchers').then((res) => res.data)
+    )
 
-    const dispatch = useDispatch()
+    console.log(watchers)
 
     const renderItems = () => {
         if (isLoading) {
@@ -43,10 +44,6 @@ const WatcherList = () => {
             }
         }
     }
-
-    useEffect(() => {
-        dispatch(getAllWatchers())
-    }, [])
 
     return (
         <Container className={styles.watcherList}>

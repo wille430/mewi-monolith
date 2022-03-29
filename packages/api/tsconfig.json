@@ -22,7 +22,7 @@
             "@mewi/common": ["../common/src/index"],
             "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
-        }
+        },
     },
     "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*"]
 }

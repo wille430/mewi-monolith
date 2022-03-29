@@ -10,7 +10,7 @@ export type UserWatcherDocument = UserWatcher & Document
     timestamps: true,
 })
 export class UserWatcher implements IUserWatcher {
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Watcher.name })
+    @Prop({ type: mongoose.Types.ObjectId, ref: Watcher.name })
     _id: string
 
     @Prop({ default: null })

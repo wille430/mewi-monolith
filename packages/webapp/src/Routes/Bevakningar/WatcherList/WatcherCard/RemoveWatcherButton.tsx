@@ -1,17 +1,25 @@
 import { FiTrash } from 'react-icons/fi'
 import { Button } from '@mewi/ui'
-import { useDispatch } from 'react-redux'
-import { removeWatcher } from 'store/watchers/creators'
+import { useMutation, useQueryClient } from 'react-query'
+import axios from 'axios'
+import { IUserWatcher } from '@mewi/common/types'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
-    const dispatch = useDispatch()
+    const queryClient = useQueryClient()
+    const mutation = useMutation(
+        async () => await axios.delete(`/users/me/watchers/${watcherId}`),
+        {
+            onSuccess: async () =>
+                queryClient.setQueryData('watchers', (old: IUserWatcher[]) =>
+                    old.filter((x) => x._id !== watcherId)
+                ),
+        }
+    )
 
     return (
         <Button
             data-testid='removeWatcherButton'
-            onClick={async () => {
-                dispatch(removeWatcher(watcherId))
-            }}
+            onClick={async () => mutation.mutate()}
             color='error'
             icon={<FiTrash color='white' />}
         />

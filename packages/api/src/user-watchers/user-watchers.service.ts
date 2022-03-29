@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common'
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { Model, PipelineStage } from 'mongoose'
 import { User } from '@/users/user.schema'
 import { PopulatedWatcher, Watcher, WatcherDocument } from '@/watchers/watcher.schema'
-import mongoose, { Document } from 'mongoose'
+import { Document } from 'mongoose'
 import { WatchersService } from '@/watchers/watchers.service'
+import { ObjectId } from 'mongodb'
+import { Error } from '@mewi/common'
 
 @Injectable()
 export class UserWatchersService {
@@ -32,7 +34,15 @@ export class UserWatchersService {
         const userWatcher = user.watchers.create({ _id: watcher._id })
 
         user.watchers.addToSet(userWatcher)
-        watcher.users.addToSet(user._id)
+        const addedWatcher = watcher.users.addToSet(user._id)
+
+        if (!addedWatcher.length) {
+            throw new ConflictException({
+                statusCode: HttpStatus.CONFLICT,
+                message: ['You are already subscribed to a similar watcher'],
+                error: Error.Database.CONFLICTING_RESOURCE,
+            })
+        }
 
         await user.save()
         await watcher.save()
@@ -47,19 +57,11 @@ export class UserWatchersService {
         const pipeline: PipelineStage[] = [
             { $limit: 1 },
             {
-                $match: { _id: new mongoose.Schema.Types.ObjectId(userId) },
+                $match: { _id: new ObjectId(userId) },
             },
             {
                 $unwind: {
                     path: '$watchers',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'watchers',
-                    localField: 'watchers._id',
-                    foreignField: '_id',
-                    as: 'watchers.watcher',
                 },
             },
             {
@@ -68,6 +70,14 @@ export class UserWatchersService {
                     watchers: {
                         $push: '$watchers',
                     },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'watchers',
+                    localField: 'watchers._id',
+                    foreignField: '_id',
+                    as: 'watchers',
                 },
             },
         ]
@@ -82,17 +92,18 @@ export class UserWatchersService {
 
     async findOne(id: string, userId: string): Promise<PopulatedWatcher & Document> | undefined {
         try {
+            // TODO: dont return users
             const agg = await this.userModel.aggregate([
                 { $limit: 1 },
                 {
-                    $match: { _id: new mongoose.Schema.Types.ObjectId(userId) },
+                    $match: { _id: new ObjectId(userId) },
                 },
                 {
                     $unwind: {
                         path: '$watchers',
                     },
                 },
-                { $match: { 'watchers._id': new mongoose.Schema.Types.ObjectId(id) } },
+                { $match: { 'watchers._id': new ObjectId(id) } },
                 {
                     $lookup: {
                         from: 'watchers',
@@ -125,6 +136,9 @@ export class UserWatchersService {
     }
 
     async remove(id: string, userId: string) {
+        id = new ObjectId(id)
+        userId = new ObjectId(userId)
+
         // delete from user
         await this.userModel.updateOne({ _id: userId }, { $pull: { watchers: { _id: id } } })
 

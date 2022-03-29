@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { SignUpDto } from '@/auth/dto/sign-up.dto'
+import { AuthTokens } from '@mewi/common/types'
 
 @Injectable()
 export class AuthService {
@@ -23,11 +24,11 @@ export class AuthService {
         return undefined
     }
 
-    createTokens(user: User) {
+    createTokens(user: User): AuthTokens {
         const payload = { email: user.email, sub: user._id }
         return {
             access_token: this.jwtService.sign(payload),
-            refetch_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
+            refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
         }
     }
 

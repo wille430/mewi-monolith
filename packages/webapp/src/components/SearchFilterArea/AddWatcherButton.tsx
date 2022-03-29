@@ -1,11 +1,13 @@
-import { SearchFilterDataProps } from '@mewi/common/types'
+import { IUserWatcher, SearchFilterDataProps } from '@mewi/common/types'
 import { Error } from '@mewi/common'
 import { Button } from '@mewi/ui'
-import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import { useEffect, useState } from 'react'
-import { createWatcher } from 'store/watchers/creators'
-import cx from 'classnames'
 import CreateWatcherConfirmationModal from './CreateWatcherConfirmationModal'
+import { useMutation, useQueryClient } from 'react-query'
+import axios from 'axios'
+import { useState } from 'react'
+import classNames from 'classnames'
+
+const cx = classNames.bind({})
 
 type Props = {
     searchFilters: SearchFilterDataProps
@@ -13,43 +15,42 @@ type Props = {
 }
 
 const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
-    const dispatch = useAppDispatch()
-    const [response, setResponse] = useState('')
-    const [error, setError] = useState('')
-    const search = useAppSelector((state) => state.search)
     const [showModal, setShowModal] = useState(false)
+    const queryClient = useQueryClient()
 
-    useEffect(() => {
-        setError('')
-        setResponse('')
-    }, [search])
+    const mutation = useMutation(
+        async (newWatcher: SearchFilterDataProps) => {
+            return axios
+                .post<IUserWatcher>('/users/me/watchers', { metadata: newWatcher })
+                .then((res) => res.data)
+        },
+        {
+            onError: (error: any, variables, context) => {
+                console.log({error})
+                switch (error.code) {
+                    case Error.Watcher.INVALID_QUERY:
+                        error = 'Felaktigt filter'
+                        break
+                    case Error.Database.CONFLICTING_RESOURCE:
+                        error = 'En bevakning med samma sökning finns redan'
+                        break
+                    default:
+                        error = 'Ett fel inträffade'
+                }
+
+                return error
+            },
+            onSuccess: (data, variables, context) => {
+                setShowModal(false)
+                queryClient.setQueryData('watchers', (old: IUserWatcher[]) => [...old, data])
+            },
+        }
+    )
 
     // Add watcher
     const submit = async () => {
         onClick && onClick()
-        setShowModal(false)
-
-        setResponse('')
-        setError('')
-
-        dispatch(createWatcher(searchFilters))
-            .unwrap()
-            .then((action) => {
-                console.log(action)
-                setResponse('Bevakningen lades till')
-            })
-            .catch((e) => {
-                switch (e.error?.type) {
-                    case Error.Watcher.INVALID_QUERY:
-                        setError('Felaktigt filter')
-                        break
-                    case Error.Watcher.CONFLICTING_RESOURCE:
-                        setError('En bevakning med samma sökning finns redan')
-                        break
-                    default:
-                        setError('Ett fel inträffade')
-                }
-            })
+        mutation.mutate(searchFilters)
     }
 
     const handleClick = () => {
@@ -67,12 +68,24 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
                 />
                 <span
                     className={cx({
-                        'text-secondary': response,
-                        'text-red-400': error,
+                        'text-red-400': mutation.error,
                         'ml-4': true,
                     })}
                 >
-                    {response || error}
+                    {() => {
+                        if (!mutation.error) {
+                            return ''
+                        }
+
+                        switch ((mutation.error as any).code) {
+                            case Error.Watcher.INVALID_QUERY:
+                                return 'Felaktigt filter'
+                            case Error.Database.CONFLICTING_RESOURCE:
+                                return 'En bevakning med samma sökning finns redan'
+                            default:
+                                return 'Ett fel inträffade'
+                        }
+                    }}
                 </span>
             </div>
             <CreateWatcherConfirmationModal
