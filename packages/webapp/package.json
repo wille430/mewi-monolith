@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "vite build",
         "preview": "vite preview",
         "cy:run": "cypress open",
         "e2e": "start-server-and-test dev http-get://localhost:4200 cy:run",
