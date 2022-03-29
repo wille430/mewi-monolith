@@ -1,36 +1,34 @@
-import { JWT, SearchFilterDataProps } from '..'
+import { SearchFilterDataProps } from './index'
 import { Types } from 'mongoose'
 
 /**
  * Models
  */
 
-export interface UserWatcherData {
+export interface IUserWatcher {
     _id: string
     notifiedAt?: string
     createdAt: string
     updatedAt: string
 }
 
-export interface UserData {
+export interface IUser {
     _id: string
     email: string
-    password: string
+    password?: string
     premium: boolean
-    watchers: UserWatcherData[]
+    watchers: IUserWatcher[]
     passwordResetSecret: string
 }
 
-export type WatcherMetadata = SearchFilterDataProps
-
-export interface PublicWatcher {
-    _id: Types.ObjectId
-    metadata: WatcherMetadata
+export interface IWatcher {
+    _id: string
+    metadata: SearchFilterDataProps
     users: Types.ObjectId[]
     createdAt: string
 }
 
-export interface JoinedWatcher extends Omit<PublicWatcher, 'users' | '_id'>, UserWatcherData {}
+export interface IPopulatedWatcher extends Omit<IWatcher, 'users' | '_id'>, IUserWatcher {}
 
 export type withId<T> = T & { _id: Types.ObjectId }
 
@@ -47,26 +45,11 @@ export interface PriceRangeProps {
     gte: string
 }
 
-// ELASTICSEARCH
-
-export interface ElasticQuery {
-    bool: {
-        must: ({ span_or: { clauses: any[] } } | { match: { [key: string]: any } } | any)[]
-        filter?: { [key: string]: any }[]
-        must_not?: any[]
-    }
-}
-
-export interface ElasticSearchBody {
-    query: ElasticQuery
-    size: number
-    sort?: { [key: string]: any }[]
-    from: number
-}
-
 export type CategoryType = string[]
 
-export interface ItemData {
+// TODO: export enum Category {}
+
+export interface IListing {
     id: string
     title: string
     body?: string
@@ -84,7 +67,7 @@ export interface ItemData {
         label: string
         value: string
     }[]
-    origin: keyof typeof ListingOrigins
+    origin: ListingOrigins
 }
 
 export type ListingPrice = {
@@ -93,11 +76,11 @@ export type ListingPrice = {
 }
 
 export interface AuthTokens {
-    access_token: JWT
+    access_token: string
     refresh_token: string
 }
 
-export type EditableUserFields = keyof Pick<UserData, 'email'>
+export type EditableUserFields = keyof Pick<IUser, 'email'>
 
 export enum ListingOrigins {
     Blocket = 'Blocket',

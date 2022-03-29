@@ -1,14 +1,14 @@
-import { ItemData, SearchFilterDataProps, SearchOptions, SortData } from '@mewi/types'
+import { ItemData, Types.SearchFilterDataProps, SearchOptions, SortData } from '@mewi/common'
 import ListingModel from 'models/ListingModel'
 import { FilterQuery, QueryOptions } from 'mongoose'
-import { generateMockItemData } from '@mewi/util'
+import { generateMockItemData } from '@mewi/common/utils'
 import ItemsService from 'services/ItemsService'
 
 export default class SearchService {
     static limit = 20
 
     static async search(
-        query?: SearchFilterDataProps,
+        query?: Types.SearchFilterDataProps,
         options?: SearchOptions
     ): Promise<{ hits: ItemData[]; totalHits: number }> {
         const filterQuery = this.createDbFilters(query)
@@ -78,13 +78,13 @@ export default class SearchService {
         }
     }
 
-    static createDbFilters(searchFilterData: SearchFilterDataProps): FilterQuery<ItemData> {
+    static createDbFilters(searchFilterData: Types.SearchFilterDataProps): FilterQuery<ItemData> {
         const filterQuery: FilterQuery<ItemData> = {}
 
         console.log('Creating query from ', JSON.stringify(searchFilterData))
 
         Object.keys(searchFilterData).forEach((key) => {
-            switch (key as keyof SearchFilterDataProps) {
+            switch (key as keyof Types.SearchFilterDataProps) {
                 case 'keyword':
                     if (!searchFilterData[key]) break
                     filterQuery.$text = {

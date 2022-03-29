@@ -12,9 +12,8 @@
     },
     "dependencies": {
         "@faker-js/faker": "^6.0.0-alpha.6",
-        "@mewi/types": "workspace:^1.0.0",
+        "@mewi/common": "workspace:^1.0.0",
         "@mewi/ui": "workspace:^1.0.0",
-        "@mewi/util": "workspace:^1.0.0",
         "@react-hook/window-size": "^3.0.7",
         "@reduxjs/toolkit": "^1.8.0",
         "@types/lodash": "^4.14.180",

@@ -1,4 +1,4 @@
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import styles from './ArticleItemRow.module.scss'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Button } from '@mewi/ui'
 
 interface ArticleItemRowProps extends HTMLMotionProps<'article'> {
-    item: ItemData
+    item: IListing
 }
 
 const ArticleItemRow = ({ item, ...rest }: ArticleItemRowProps) => {

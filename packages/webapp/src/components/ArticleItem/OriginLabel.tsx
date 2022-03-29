@@ -1,7 +1,7 @@
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 
 interface Props {
-    origin: ItemData['origin']
+    origin: IListing['origin']
 }
 
 const OriginLabel = ({ origin }: Props) => {

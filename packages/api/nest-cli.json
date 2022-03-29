@@ -1,5 +1,5 @@
 {
     "collection": "@nestjs/schematics",
     "sourceRoot": "src",
-    "entryFile": "api-old/src/main"
+    "entryFile": "api/src/main"
 }

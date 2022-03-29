@@ -2,14 +2,14 @@ import ArticleItemRow from 'components/ArticleItemRow/ArticleItemRow'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import { useEffect, useState } from 'react'
 import { getNewItems } from 'store/watchers/creators'
 import StyledLoader from 'components/StyledLoader'
 import { openListing } from 'store/search/creators'
 
 interface NewItemsDrawerProps {
-    newItems: ItemData[]
+    newItems: IListing[]
     watcherId: string
 }
 
@@ -17,7 +17,7 @@ const NewItemsDrawer = ({ watcherId, newItems }: NewItemsDrawerProps) => {
     const dispatch = useAppDispatch()
     const [isLoading, setIsLoading] = useState(false)
     const _newItems = useAppSelector((state) => state.watchers.newItems)[watcherId] as
-        | ItemData[]
+        | IListing[]
         | undefined
 
     const drawerVariants = {

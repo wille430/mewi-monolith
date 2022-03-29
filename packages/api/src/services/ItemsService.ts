@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import { ItemData } from '@mewi/types'
+import { ItemData } from '@mewi/common'
 import ListingModel from 'models/ListingModel'
 // import ScrapeService from './scrapers/ScrapeService'
 

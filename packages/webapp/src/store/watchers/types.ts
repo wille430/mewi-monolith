@@ -1,9 +1,9 @@
-import { ItemData, JoinedWatcher } from '@mewi/types'
+import { IListing, JoinedWatcher } from '@mewi/common/types'
 
 export interface WatchersState {
     watchers: JoinedWatcher[]
     isLoading: boolean
-    newItems: Record<string, ItemData[]>
+    newItems: Record<string, IListing[]>
 }
 
 export enum WatchersActionType {

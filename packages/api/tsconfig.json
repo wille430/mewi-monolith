@@ -8,7 +8,7 @@
         "allowSyntheticDefaultImports": true,
         "target": "es2017",
         "sourceMap": true,
-        "outDir": "../../dist/api-old",
+        "outDir": "../../dist/api",
         "baseUrl": "./",
         "incremental": true,
         "skipLibCheck": true,
@@ -19,8 +19,8 @@
         "noFallthroughCasesInSwitch": false,
         "preserveSymlinks": true,
         "paths": {
-            "@mewi/util": ["../util/src/index"],
-            "@mewi/types": ["../types/src/index"],
+            "@mewi/common": ["../common/src/index"],
+            "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
         }
     },

@@ -15,9 +15,9 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@mewi/types": ["packages/types/src/index.ts"],
+            "@mewi/common": ["packages/common/src/index.ts"],
+            "@mewi/common/*": ["packages/common/src/*"],
             "@mewi/ui": ["packages/ui/src/index.ts"],
-            "@mewi/util": ["packages/util/src/index.ts"]
         },
         "esModuleInterop": true
     },

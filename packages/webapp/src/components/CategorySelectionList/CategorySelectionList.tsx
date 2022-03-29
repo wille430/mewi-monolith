@@ -1,4 +1,4 @@
-import { categories } from '@mewi/types'
+import { categories } from '@mewi/common/types'
 import classNames from 'classnames'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import _ from 'lodash'

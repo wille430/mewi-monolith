@@ -1,10 +1,10 @@
-import { categories, regions, SearchFilterDataProps } from '@mewi/types'
-import { randomString } from '@mewi/util'
+import { categories, regions, Types.SearchFilterDataProps } from '@mewi/common'
+import { randomString } from '@mewi/common/utils'
 import _ from 'lodash'
 import queryString from 'query-string'
 import { setFilters } from '../../../webapp/src/store/search/creators'
 
-interface FormData extends SearchFilterDataProps {
+interface FormData extends Types.SearchFilterDataProps {
     regions?: string
 }
 

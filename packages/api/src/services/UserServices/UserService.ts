@@ -6,7 +6,7 @@ import {
     MissingUserError,
     UserData,
     ValidationErrorCodes,
-} from '@mewi/types'
+} from '@mewi/common'
 import UserEmailService from './UserEmailService'
 import { FilterQuery } from 'mongoose'
 

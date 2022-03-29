@@ -1,4 +1,4 @@
-import { SearchFilterDataProps, SortData } from '@mewi/types'
+import { Types } from '@mewi/common'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { getSearchResultsReturnType } from 'api/searchApi'
 import { RootState } from 'store'
@@ -23,7 +23,7 @@ export const updateSearchParams = createAsyncThunk(
 
 export const clearFilters = createAction(
     SearchActionTypes.CLEAR_FILTERS,
-    (filtersToKeep?: Partial<SearchFilterDataProps>) => {
+    (filtersToKeep?: Partial<Types.SearchFilterDataProps>) => {
         return {
             payload: filtersToKeep,
         }
@@ -32,14 +32,14 @@ export const clearFilters = createAction(
 
 export const setFilters = createAction(
     SearchActionTypes.SET_FILTERS,
-    (filters: SearchFilterDataProps) => {
+    (filters: Types.SearchFilterDataProps) => {
         return { payload: filters }
     }
 )
 
 export const updateFilters = createAction(
     SearchActionTypes.UPDATE_FILTERS,
-    (filters: Partial<SearchFilterDataProps>) => {
+    (filters: Partial<Types.SearchFilterDataProps>) => {
         return {
             payload: filters,
         }
@@ -63,23 +63,23 @@ export const getSearchResults = createAsyncThunk<
     }
 })
 
-export const setSort = createAction(SearchActionTypes.SORT, (sortData: SortData) => {
+export const setSort = createAction(SearchActionTypes.SORT, (sortData: Types.SortData) => {
     return { payload: sortData }
 })
 
 export const getFiltersFromQueryParams = createAction(
     SearchActionTypes.FILTERS_FROM_PARAMS,
     (
-        defaultValues?: Partial<SearchFilterDataProps>
+        defaultValues?: Partial<Types.SearchFilterDataProps>
     ): { payload: Pick<SearchState, 'filters' | 'sort' | 'page'> } => {
         const params = queryString.parse(window.location.search)
 
-        let filters: SearchFilterDataProps = {}
-        let sort = SortData.RELEVANCE
+        let filters: Types.SearchFilterDataProps = {}
+        let sort = Types.SortData.RELEVANCE
         let page = 1
         Object.keys(params).forEach((key) => {
             if (['keyword', 'regions', 'auction', 'priceRangeGte', 'priceRangeLte'].includes(key)) {
-                switch (key as keyof SearchFilterDataProps) {
+                switch (key as keyof Types.SearchFilterDataProps) {
                     case 'auction':
                         if (params[key] === 'true') {
                             filters = _.merge(filters, { [key]: true })
@@ -91,8 +91,8 @@ export const getFiltersFromQueryParams = createAction(
                         filters = _.merge(filters, { [key]: params[key] })
                 }
             } else if (key === 'sort') {
-                if (Object.values(SortData).includes(params[key] as SortData)) {
-                    sort = params[key] as SortData
+                if (Object.values(Types.SortData).includes(params[key] as Types.SortData)) {
+                    sort = params[key] as Types.SortData
                 }
             } else if (key === 'page') {
                 page = parseInt(params[key] as string)

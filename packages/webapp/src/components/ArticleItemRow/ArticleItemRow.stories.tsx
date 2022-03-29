@@ -1,5 +1,5 @@
-import { ItemData } from '@mewi/types'
-import { generateMockItemData } from '@mewi/util'
+import { IListing } from '@mewi/common/types'
+import { generateMockIListing } from '@mewi/common/utils'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import ArticleItemRow from './ArticleItemRow'
 
@@ -12,5 +12,5 @@ const Template: ComponentStory<typeof ArticleItemRow> = (args) => <ArticleItemRo
 
 export const Primary = Template.bind({})
 Primary.args = {
-    item: generateMockItemData(1) as ItemData,
+    item: generateMockIListing(1) as IListing,
 }

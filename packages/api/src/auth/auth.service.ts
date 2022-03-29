@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common'
 import { User, UserDocument } from '@/users/user.schema'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import bcrypt from 'bcryptjs'
+import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { SignUpDto } from '@/auth/dto/sign-up.dto'
 
@@ -16,7 +16,7 @@ export class AuthService {
     async validateUser(email: string, pass: string): Promise<User | undefined> {
         const user = await this.userModel.findOne({ email }).select('+password')
 
-        if (user && (await bcrypt.compare(pass, user.password))) {
+        if (user && (await compare(pass, user.password))) {
             return this.userModel.findOne({ email })
         }
 
@@ -46,7 +46,7 @@ export class AuthService {
             })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await hash(password, 10)
         const newUser = new this.userModel({ email, password: hashedPassword })
 
         return this.createTokens(await newUser.save())

@@ -9,7 +9,7 @@
         "build": "pnpm run build -r",
         "test": "pnpm run test -r",
         "format": "prettier -w .",
-        "dev": "pnpm run build -F @mewi/util -F @mewi/types & pnpm run dev -r --parallel"
+        "dev": "pnpm run build:watch -F @mewi/common | pnpm run dev -r --parallel"
     },
     "private": true,
     "devDependencies": {

@@ -1,7 +1,7 @@
 import { Controller, Post } from '@nestjs/common'
 import { TestService } from './test.service'
 import { UsersService } from '@/users/users.service'
-import { randomEmail, randomPassword } from '@mewi/util'
+import { Utils } from '@mewi/common'
 
 @Controller('test')
 export class TestController {
@@ -12,6 +12,6 @@ export class TestController {
 
     @Post('user')
     create() {
-        return this.usersService.create({ email: randomEmail(), password: randomPassword() })
+        return this.usersService.create({ email: Utils.randomEmail(), password: Utils.randomPassword() })
     }
 }

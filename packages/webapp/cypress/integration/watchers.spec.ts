@@ -1,4 +1,4 @@
-import { capitalize } from '@mewi/util'
+import { capitalize } from '@mewi/common/utils'
 import _ from 'lodash'
 
 describe('watchers', () => {

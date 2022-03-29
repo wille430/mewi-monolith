@@ -1,4 +1,4 @@
-import { SortData } from '@mewi/types'
+import { Types } from '@mewi/common'
 import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import {
@@ -16,12 +16,13 @@ import {
 } from './creators'
 import { SearchState } from './type'
 import queryString from 'query-string'
+import { SortData } from '@mewi/common/types'
 
 const initialState: SearchState = {
     hits: [],
     totalHits: 0,
     filters: {},
-    sort: SortData.RELEVANCE,
+    sort: Types.SortData.RELEVANCE,
     page: 1,
     searchParams: '',
 }

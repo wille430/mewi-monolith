@@ -1,10 +1,11 @@
+import { IListing, ListingOrigins } from '@mewi/common/types'
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
 export type ListingDocument = Listing & Document
 
 @Schema()
-export class Listing {
+export class Listing implements IListing {
     @Prop()
     id: string
 
@@ -32,8 +33,8 @@ export class Listing {
             currency: { type: String },
         })
     )
-    price: {
-        value: string
+    price?: {
+        value: number
         currency: string
     }
 
@@ -49,8 +50,8 @@ export class Listing {
     ])
     parameters: { id: string; label: string; value: string }[]
 
-    @Prop()
-    origin: string
+    @Prop({ type: String, enum: ListingOrigins })
+    origin: IListing['origin']
 
     @Prop()
     isAuction: boolean

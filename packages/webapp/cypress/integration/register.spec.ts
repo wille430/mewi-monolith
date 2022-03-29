@@ -1,4 +1,4 @@
-import { randomString } from '@mewi/util'
+import { randomString } from '@mewi/common/utils'
 describe('register', () => {
     const userInfo = {
         email: randomString(12) + '@removeme.com',

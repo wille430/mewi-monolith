@@ -2,7 +2,7 @@ import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
 import fs from 'fs'
 import path from 'path'
-import { ItemData, PublicWatcher } from '@mewi/types'
+import { ItemData, IWatcher } from '@mewi/common'
 
 export default class EmailService {
     static googleAuth = {
@@ -23,7 +23,7 @@ export default class EmailService {
 
     static async sendEmailWithItems(
         email: string,
-        watcher: PublicWatcher,
+        watcher: IWatcher,
         items: ItemData[],
         totalCount?: number
     ) {

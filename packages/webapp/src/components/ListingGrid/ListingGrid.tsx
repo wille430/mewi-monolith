@@ -3,7 +3,7 @@ import ArticleItem from 'components/ArticleItem/ArticleItem'
 import ItemPopUp from '../ItemPopUp/ItemPopUp'
 import styles from './ListingGrid.module.scss'
 import classNames from 'classnames'
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import { useInfiniteQuery } from 'react-query'
 import useQuery from 'hooks/useQuery'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
@@ -16,7 +16,7 @@ const ListingGrid = () => {
     const filters = useAppSelector((state) => state.search.filters)
     const dispatch = useAppDispatch()
 
-    const fetchListings = async (): Promise<ItemData[]> => {
+    const fetchListings = async (): Promise<IListing[]> => {
         return (await dispatch(getSearchResults()).unwrap()).hits
     }
 
@@ -25,7 +25,7 @@ const ListingGrid = () => {
         isLoading,
         error,
         isFetching,
-    } = useInfiniteQuery<ItemData[]>(['listings', { ...filters }], fetchListings, {
+    } = useInfiniteQuery<IListing[]>(['listings', { ...filters }], fetchListings, {
         getNextPageParam: (lastPage, allPages) => currentPage + 1,
         refetchOnWindowFocus: false,
     })

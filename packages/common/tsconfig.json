@@ -1,13 +1,14 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "ES6",
         "target": "ES6",
         "declaration": true,
+        "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "src",
-        "rootDir": "src"
+        "rootDir": "src",
     },
     "include": ["src/**/*"],
-    "exclude": ["./src/**/*.{test,spec}.{ts,js}"]
+    "exclude": ["node_modules"]
 }

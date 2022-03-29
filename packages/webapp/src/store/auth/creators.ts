@@ -1,15 +1,16 @@
-import { AuthTokens, Types } from '@mewi/types'
+import { Error } from '@mewi/common'
+import { AuthTokens } from '@mewi/common/dist/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, signUp } from 'api'
 import authApi from 'api/authApi'
 import { AuthActionTypes, AuthState } from './types'
 
-export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, () => {
+export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, (): { payload: AuthTokens } => {
     return {
         payload: {
             access_token: localStorage.getItem('access_token'),
             refresh_token: localStorage.getItem('refresh_token'),
-        } as AuthTokens,
+        },
     }
 })
 
@@ -22,9 +23,9 @@ export const loginUser = createAsyncThunk(
         } catch (e: any) {
             let errors: AuthState['errors'] = {}
             switch (e.error) {
-                case Types.Auth.Error.INVALID_EMAIL:
-                case Types.Auth.Error.INVALID_PASSWORD:
-                case Types.Auth.Error.MISSING_USER:
+                case Error.Auth.INVALID_EMAIL:
+                case Error.Auth.INVALID_PASSWORD:
+                case Error.Auth.MISSING_USER:
                     errors = {
                         ...errors,
                         email: 'Felaktig epostaddress eller lösenord',
@@ -54,29 +55,29 @@ export const createUser = createAsyncThunk(
             let errors: AuthState['errors'] = {}
 
             switch (e.error?.type) {
-                case Types.Auth.Error.INVALID_EMAIL:
+                case Error.Auth.INVALID_EMAIL:
                     errors = {
                         email: 'Felaktig epostaddress',
                     }
                     break
-                case Types.Auth.Error.USER_ALREADY_EXISTS:
+                case Error.Auth.USER_ALREADY_EXISTS:
                     errors = {
                         email: 'Epostaddressen är upptagen',
                     }
                     break
-                case Types.Auth.Error.PASSWORD_NOT_STRONG_ENOUGH:
+                case Error.Auth.PASSWORD_NOT_STRONG_ENOUGH:
                     errors = {
                         password:
                             'Lösenordet är för svagt. Använd minst 8 bokstäver, special tecken, stor bokstav och siffror',
                     }
                     break
-                case Types.Auth.Error.PASSWORD_TOO_LONG:
+                case Error.Auth.PASSWORD_TOO_LONG:
                     errors = {
                         password:
                             'Lösenordet är för långt. Använd minst 8 bokstäver och max 30 bokstäver',
                     }
                     break
-                case Types.Auth.Error.PASSWORD_NOT_MATCHING:
+                case Error.Auth.PASSWORD_NOT_MATCHING:
                     errors = {
                         repassword: 'Lösenorden måste matcha',
                     }
@@ -126,16 +127,16 @@ export const changePassword = createAsyncThunk(
                 general: '',
             }
             switch (e.error) {
-                case Types.Auth.Error.PASSWORD_TOO_LONG:
+                case Error.Auth.PASSWORD_TOO_LONG:
                     errorMessages.password = 'Lösenordet är för långt'
                     break
-                case Types.Auth.Error.PASSWORD_NOT_STRONG_ENOUGH:
+                case Error.Auth.PASSWORD_NOT_STRONG_ENOUGH:
                     errorMessages.password = 'Lösenordet är inte starkt nog'
                     break
-                case Types.Auth.Error.PASSWORD_NOT_MATCHING:
+                case Error.Auth.PASSWORD_NOT_MATCHING:
                     errorMessages.repassword = 'Lösenorden matchar inte'
                     break
-                case Types.Auth.Error.INVALID_JWT:
+                case Error.Auth.INVALID_JWT:
                     errorMessages.general = 'Länken är inte giltig längre'
                     break
                 default:

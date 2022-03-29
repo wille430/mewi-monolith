@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { categories, ItemData, ListingOrigins, UserData } from '@mewi/types'
+import { categories, IListing, ListingOrigins, IUser } from '../types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
@@ -18,9 +18,9 @@ export const randomPassword = () => {
  */
 export const generateMockItemData = (
     count = 1,
-    data?: Partial<ItemData>
-): ItemData | ItemData[] => {
-    const items: ItemData[] = []
+    data?: Partial<IListing>
+): IListing | IListing[] => {
+    const items: IListing[] = []
 
     while (items.length < count) {
         items.push({
@@ -50,7 +50,7 @@ export const generateMockItemData = (
     }
 }
 
-export const generateMockUserData = (): UserData => ({
+export const generateMockUserData = (): IUser => ({
     _id: faker.datatype.uuid(),
     email: randomEmail(),
     password: faker.datatype.uuid(),

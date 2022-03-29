@@ -1,4 +1,5 @@
-import { DatabaseErrorCodes, SearchFilterDataProps, WatcherErrorCodes } from '@mewi/types'
+import { SearchFilterDataProps } from '@mewi/common/types'
+import { Error } from '@mewi/common'
 import { Button } from '@mewi/ui'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { useEffect, useState } from 'react'
@@ -39,10 +40,10 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
             })
             .catch((e) => {
                 switch (e.error?.type) {
-                    case WatcherErrorCodes.INVALID_QUERY:
+                    case Error.Watcher.INVALID_QUERY:
                         setError('Felaktigt filter')
                         break
-                    case DatabaseErrorCodes.CONFLICTING_RESOURCE:
+                    case Error.Watcher.CONFLICTING_RESOURCE:
                         setError('En bevakning med samma sökning finns redan')
                         break
                     default:

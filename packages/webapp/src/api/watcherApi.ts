@@ -1,7 +1,7 @@
-import { JoinedWatcher, SearchFilterDataProps } from '@mewi/types'
+import { Types } from '@mewi/common'
 import axios from 'axios'
 
-const getWatchers = async (): Promise<JoinedWatcher[]> => {
+const getWatchers = async (): Promise<Types.JoinedWatcher[]> => {
     const watchers = await axios
         .get('/user/watchers')
         .then((res) => res.data.watchers)
@@ -11,7 +11,7 @@ const getWatchers = async (): Promise<JoinedWatcher[]> => {
     return watchers
 }
 
-const getWatcher = async (watcherId: string): Promise<JoinedWatcher> => {
+const getWatcher = async (watcherId: string): Promise<Types.JoinedWatcher> => {
     const watcher = await axios.get('/user/watchers/' + watcherId).then((res) => res.data.watcher)
     return watcher
 }
@@ -20,7 +20,9 @@ const deleteWatcher = async (watcherId: string): Promise<void> => {
     await axios.delete('/user/watchers/' + watcherId)
 }
 
-const createWatcher = async (searchFilterData: SearchFilterDataProps): Promise<JoinedWatcher> => {
+const createWatcher = async (
+    searchFilterData: Types.SearchFilterDataProps
+): Promise<Types.JoinedWatcher> => {
     const body = {
         searchFilters: searchFilterData,
     }
@@ -36,8 +38,8 @@ const createWatcher = async (searchFilterData: SearchFilterDataProps): Promise<J
 
 const updateWatcher = async (
     watcherId: string,
-    newSearchFilterData: SearchFilterDataProps
-): Promise<JoinedWatcher> => {
+    newSearchFilterData: Types.SearchFilterDataProps
+): Promise<Types.JoinedWatcher> => {
     const body = {
         searchFilters: newSearchFilterData,
     }

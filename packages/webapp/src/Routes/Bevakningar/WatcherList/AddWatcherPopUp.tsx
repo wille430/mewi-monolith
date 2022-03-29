@@ -1,6 +1,6 @@
 import PopUp from 'components/PopUp/PopUp'
 import { useState } from 'react'
-import { SearchFilterDataProps } from '@mewi/types'
+import { SearchFilterDataProps } from '@mewi/common/types'
 import ResetButton from 'components/SearchFilterArea/ResetButton'
 import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
 import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'

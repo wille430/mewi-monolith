@@ -4,7 +4,7 @@ import ArticleItemDetails from 'components/ArticleItemDetails/ArticleItemDetails
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { closeListing } from 'store/search/creators'
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 
 const ItemPopUp = () => {
     const { selectedListingId, hits } = useAppSelector((state) => state.search)
@@ -29,7 +29,7 @@ const ItemPopUp = () => {
                 ) : (
                     <ArticleItemDetails
                         onClose={handleClose}
-                        {...(hits.find((x) => x.id === selectedListingId) as ItemData)}
+                        {...(hits.find((x) => x.id === selectedListingId) as IListing)}
                     />
                 )}
             </div>

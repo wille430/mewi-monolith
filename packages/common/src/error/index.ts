@@ -1,18 +1,18 @@
-export const DatabaseErrorCodes = {
-    CONFLICTING_RESOURCE: 'database/already_exists',
-    MISSING_DOCUMENT: 'database/not_found',
+export enum Database {
+    CONFLICTING_RESOURCE = 'database/already_exists',
+    MISSING_DOCUMENT = 'database/not_found',
 }
 
-export const ValidationErrorCodes = {
-    MISSING_FIELDS: 'validation/missing_fields',
-    INVALID_INPUT: 'validation/failed',
+export enum Validation {
+    MISSING_FIELDS = 'validation/missing_fields',
+    INVALID_INPUT = 'validation/failed',
 }
 
-export const WatcherErrorCodes = {
-    INVALID_QUERY: 'watcher/invalid_query',
+export enum Watcher {
+    INVALID_QUERY = 'watcher/invalid_query',
 }
 
-enum AuthError {
+export enum Auth {
     INVALID_EMAIL = 'auth/invalid_email',
     INVALID_PASSWORD = 'auth/invalid_password',
     INVALID_CREDENTIALS = 'auth/invalid_credentials',
@@ -24,11 +24,4 @@ enum AuthError {
     MISSING_JWT = 'auth/missing_jwt',
     INVALID_REFRESH_TOKEN = 'auth/invalid_refresh_token',
     USER_ALREADY_EXISTS = 'auth/user_already_exists',
-}
-
-export class Auth {
-    private _error = AuthError
-    get Error() {
-        return this._error
-    }
 }

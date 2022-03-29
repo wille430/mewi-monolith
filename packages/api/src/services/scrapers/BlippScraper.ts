@@ -1,4 +1,4 @@
-import { ItemData } from '@mewi/types'
+import { ItemData } from '@mewi/common'
 import Scraper from 'services/scrapers/Scraper'
 import puppeteer from 'puppeteer'
 

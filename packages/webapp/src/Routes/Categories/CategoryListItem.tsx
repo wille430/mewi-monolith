@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Category } from '@mewi/types'
+import { Category } from '@mewi/common/types'
 
 interface Props {
     categoryValue: string

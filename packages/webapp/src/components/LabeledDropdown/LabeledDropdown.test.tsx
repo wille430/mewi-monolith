@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import LabeledDropdown from './LabeledDropdown'
-import { randomString } from '@mewi/util'
+import { randomString } from '@mewi/common/utils'
 
 it('renders correctly', () => {
     const mockOptions = []

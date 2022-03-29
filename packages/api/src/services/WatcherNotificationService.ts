@@ -1,5 +1,5 @@
-import { PublicWatcher, WatcherMetadata } from '@mewi/types'
-import { toUnixTime } from '@mewi/util'
+import { IWatcher, WatcherMetadata } from '@mewi/common'
+import { toUnixTime } from '@mewi/common/utils'
 import ListingModel from 'models/ListingModel'
 import { User } from 'models/UserModel'
 import EmailService from './EmailService'
@@ -10,10 +10,10 @@ import WatcherService from './WatcherService'
 class WatcherNotificationService {
     /**
      * Notify all users who are subscribed to the watcher
-     * @param watcher PublicWatcher
+     * @param watcher IWatcher
      * @param callback Called after each user is notified
      */
-    static async notifyUsersOfWatcher(watcher: PublicWatcher, callback?: () => void) {
+    static async notifyUsersOfWatcher(watcher: IWatcher, callback?: () => void) {
         console.log('Notifying users who are subscribed to watcher', watcher._id)
 
         // Get users with corresponding watcher
@@ -32,13 +32,13 @@ class WatcherNotificationService {
     /**
      * Notify a user of new items in watcher
      * @param user Mongoose User object
-     * @param watcher PublicWatcher
+     * @param watcher IWatcher
      * @param callback Called after user is notified
      * @returns {Promise<void>}
      */
     static async notifyUser(
         user: User,
-        watcher: PublicWatcher,
+        watcher: IWatcher,
         callback?: () => void
     ): Promise<void> {
         // Get UserWatcher of user

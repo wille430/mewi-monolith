@@ -1,4 +1,4 @@
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import styles from './ArticleItemDetails.module.scss'
 import classNames from 'classnames'
 import { Container } from '@mewi/ui'
@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 
 const cx = classNames.bind(styles)
 
-interface ArticleItemDetails extends ItemData {
+interface ArticleItemDetails extends IListing {
     onClose?: () => void
 }
 
@@ -101,7 +101,7 @@ const ArticleItemDetails = ({
     )
 }
 
-const Specifications = ({ specs }: { specs: ItemData['parameters'] }) => (
+const Specifications = ({ specs }: { specs: IListing['parameters'] }) => (
     <table className={styles.specifications}>
         {specs?.map(({ label, value }) => (
             <tr>

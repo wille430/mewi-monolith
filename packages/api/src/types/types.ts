@@ -1,3 +1,4 @@
+// TODO: create category enum in common lib
 export type Category = (
     | 'fordon'
     | 'för_hemmet'

@@ -1,4 +1,4 @@
-import { categories, Category } from '@mewi/types'
+import { categories, Category } from '@mewi/common/types'
 import { ReactNode } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 

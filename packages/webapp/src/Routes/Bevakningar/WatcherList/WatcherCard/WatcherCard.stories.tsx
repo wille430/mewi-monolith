@@ -4,8 +4,8 @@ import mongoose from 'mongoose'
 import { Provider } from 'react-redux'
 import { store } from 'store'
 import faker from '@faker-js/faker'
-import { generateMockItemData } from '@mewi/util'
-import { ItemData } from '@mewi/types'
+import { generateMockIListing } from '@mewi/common/utils'
+import { IListing } from '@mewi/common/types'
 
 export default {
     component: WatcherCard,
@@ -29,5 +29,5 @@ Primary.args = {
         notifiedAt: new Date().toString(),
         updatedAt: new Date().toString(),
     },
-    newItems: generateMockItemData(5) as ItemData[],
+    newItems: generateMockIListing(5) as IListing[],
 }

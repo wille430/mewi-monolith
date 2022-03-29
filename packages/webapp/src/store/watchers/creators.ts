@@ -1,4 +1,4 @@
-import { SearchFilterDataProps } from '@mewi/types'
+import { Types } from '@mewi/common'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import searchApi from 'api/searchApi'
 import watcherApi from 'api/watcherApi'
@@ -7,7 +7,7 @@ import { WatchersActionType } from './types'
 
 export const createWatcher = createAsyncThunk(
     WatchersActionType.WATCHERS_ADD,
-    async (searchFilters: SearchFilterDataProps, thunkApi) => {
+    async (searchFilters: Types.SearchFilterDataProps, thunkApi) => {
         try {
             return await watcherApi.createWatcher(searchFilters)
         } catch (e: any) {

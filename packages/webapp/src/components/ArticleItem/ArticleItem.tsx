@@ -1,4 +1,4 @@
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
@@ -9,7 +9,7 @@ import OriginLabel from './OriginLabel'
 import TimeUntilDate from './TimeUntilDate'
 
 interface Props {
-    props: ItemData
+    props: IListing
     id: string
 }
 

@@ -1,7 +1,7 @@
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { setSort } from 'store/search/creators'
-import { SortData } from '@mewi/types'
+import { SortData } from '@mewi/common/types'
 
 const SortButton = () => {
     const { sort } = useAppSelector((state) => state.search)

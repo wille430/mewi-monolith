@@ -1,5 +1,5 @@
 import { Category, SellpyItemData } from 'types/types'
-import { ItemData } from '@mewi/types'
+import { ItemData } from '@mewi/common'
 import Scraper from 'services/scrapers/Scraper'
 import axios from 'axios'
 

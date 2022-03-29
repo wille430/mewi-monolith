@@ -2,9 +2,9 @@ import RedirectButton from './RedirectButton/RedirectButton'
 import ImageDisplay from '../../ImageDisplay/ImageDisplay'
 import ParamInfo from './ParamInfo'
 import CategoryString from './CategoryString'
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 
-const ItemInfo = ({ article }: { article: ItemData }): JSX.Element => {
+const ItemInfo = ({ article }: { article: IListing }): JSX.Element => {
     const priceString = `${article.price?.value || ''} ${article.price?.currency || ''}`
 
     const InfoHeader = () => (

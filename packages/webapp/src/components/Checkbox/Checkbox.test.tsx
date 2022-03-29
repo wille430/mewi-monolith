@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import Checkbox from './Checkbox'
-import { randomString } from '@mewi/util'
+import { randomString } from '@mewi/common/utils'
 
 it('renders correctly', () => {
     const mockLabel = randomString(5)

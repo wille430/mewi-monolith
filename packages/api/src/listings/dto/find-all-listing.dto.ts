@@ -1,6 +1,7 @@
+import { SearchFilterDataProps } from '@mewi/common/types'
 import { IsOptional, IsNumber, IsString } from 'class-validator'
 
-export class FindAllListingsDto {
+export class FindAllListingsDto implements SearchFilterDataProps {
     @IsOptional()
     @IsNumber()
     limit = 24

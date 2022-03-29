@@ -1,6 +1,6 @@
 import { TraderaItemData } from 'types/types'
-import { ItemData } from '@mewi/types'
-import { toUnixTime } from '@mewi/util'
+import { ItemData } from '@mewi/common'
+import { toUnixTime } from '@mewi/common/utils'
 import CategoryService from '../CategoryService'
 import Scraper from 'services/scrapers/Scraper'
 import axios from 'axios'

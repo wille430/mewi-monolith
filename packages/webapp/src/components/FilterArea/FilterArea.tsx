@@ -1,4 +1,4 @@
-import { SearchFilterDataProps } from '@mewi/types'
+import { SearchFilterDataProps } from '@mewi/common/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
 import { Link, useLocation } from 'react-router-dom'
 import SearchFilterArea, {

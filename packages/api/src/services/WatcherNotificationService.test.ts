@@ -1,11 +1,11 @@
 import faker from '@faker-js/faker'
-import { ItemData, PublicWatcher } from '@mewi/types'
+import { ItemData, IWatcher } from '@mewi/common'
 import UserModel from 'models/UserModel'
 import mongoose from 'mongoose'
 import WatcherNotificationService from './WatcherNotificationService'
 import EmailService from './EmailService'
 import * as mockingoose from 'mockingoose'
-import { generateMockItemData } from '@mewi/util'
+import { generateMockItemData } from '@mewi/common/utils'
 import ListingModel from 'models/ListingModel'
 
 function randomDate(start: Date, end: Date) {
@@ -70,7 +70,7 @@ describe('Watcher Notification Service', () => {
             watchers: [userWatcher],
         })
 
-        const watcher: PublicWatcher = {
+        const watcher: IWatcher = {
             _id: watcherId,
             metadata: { keyword: faker.random.word() },
             users: [new mongoose.Types.ObjectId(userId)],

@@ -4,11 +4,12 @@ import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { UserWatcher, UserWatcherSchema } from '@/user-watchers/user-watcher.schema'
 import { v4 as uuidv4 } from 'uuid'
+import { IUser } from '@mewi/common/types'
 
 export type UserDocument = User & Document
 
 @Schema()
-export class User {
+export class User implements Omit<IUser, 'watchers'> {
     _id: string
 
     @Prop()
@@ -25,7 +26,7 @@ export class User {
     watchers: mongoose.Types.DocumentArray<UserWatcher>
 
     @Prop({ default: uuidv4(), select: false })
-    passwordResetSecret?: string
+    passwordResetSecret: string
 
     @Prop({ type: [String], default: [Role.User] })
     roles: Role[]

@@ -6,7 +6,7 @@
 import { UserService } from './index'
 import bcrypt from 'bcryptjs'
 import UserModel from 'models/UserModel'
-import { APIError, AuthErrorCodes, MissingUserError } from '@mewi/types'
+import { APIError, AuthErrorCodes, MissingUserError } from '@mewi/common'
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 

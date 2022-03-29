@@ -1,4 +1,4 @@
-import { ItemData } from '@mewi/types'
+import { IListing } from '@mewi/common/types'
 import axios from 'axios'
 import ArticleItem from 'components/ArticleItem/ArticleItem'
 import _ from 'lodash'
@@ -8,7 +8,7 @@ const FeaturedListings = () => {
     const { isLoading, error, data } = useQuery('featuredListings', () =>
         axios
             .get('/listings/featured')
-            .then((res) => _.sortBy(res.data as ItemData[], (x) => x.date))
+            .then((res) => _.sortBy(res.data as IListing[], (x) => x.date))
     )
     if (isLoading) {
         return <span>Loading feauted items...</span>

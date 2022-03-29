@@ -6,9 +6,10 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "baseUrl": "src",
-        "esModuleInterop": false
+        "esModuleInterop": true,
+        "moduleResolution": "node"
     },
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }],
-    "exclude": ["src/*/**.stories.{ts,tsx,js,jsx}", "node_modules"]
+    "exclude": ["node_modules"]
 }

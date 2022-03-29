@@ -1,6 +1,6 @@
 import WatcherModel from 'models/WatcherModel'
 import { UserService } from './UserServices'
-import { APIError, DatabaseErrorCodes, SearchFilterDataProps } from '@mewi/types'
+import { APIError, DatabaseErrorCodes, Types.SearchFilterDataProps } from '@mewi/common'
 
 export default class WatcherService {
     watcher_id: string
@@ -43,7 +43,7 @@ export default class WatcherService {
         return watcher
     }
 
-    static async create(metadata: SearchFilterDataProps) {
+    static async create(metadata: Types.SearchFilterDataProps) {
         const similarWatcher = await WatcherModel.findOne({ metadata })
 
         if (!similarWatcher) {
@@ -64,7 +64,7 @@ export default class WatcherService {
         }
     }
 
-    static async isUserInWatcherWithQuery(userId: string, metadata: SearchFilterDataProps) {
+    static async isUserInWatcherWithQuery(userId: string, metadata: Types.SearchFilterDataProps) {
         const similarWatcher = await WatcherModel.findOne({ metadata }, { users: 1 })
 
         if (!similarWatcher) return false

@@ -1,4 +1,4 @@
-import { randomEmail } from '@mewi/util'
+import { randomEmail } from '@mewi/common'
 import EmailService from './EmailService'
 
 describe('Email Service', () => {

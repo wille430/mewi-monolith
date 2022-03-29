@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AuthTokens } from '@mewi/types'
+import { AuthTokens } from '@mewi/common/types'
 
 export const login = async (email: string, password: string): Promise<AuthTokens> => {
     const authTokens: AuthTokens = await axios

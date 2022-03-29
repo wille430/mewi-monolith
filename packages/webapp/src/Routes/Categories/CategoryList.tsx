@@ -1,4 +1,4 @@
-import { categories } from '@mewi/types'
+import { categories } from '@mewi/common/types'
 import CategoryListItem from './CategoryListItem'
 
 const CategoryList = () => {

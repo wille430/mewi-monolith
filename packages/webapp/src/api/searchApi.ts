@@ -1,9 +1,10 @@
-import { ItemData, SearchPostRequestBody } from '@mewi/types'
+import { SearchPostRequestBody } from '@mewi/common/types'
 import axios from 'axios'
 import { SearchState } from 'store/search/type'
+import { IListing } from '@mewi/common/types'
 
 export type getSearchResultsReturnType = {
-    hits: ItemData[]
+    hits: IListing[]
     totalHits: SearchState['totalHits']
 }
 
@@ -26,7 +27,7 @@ const autocomplete = async (keyword: string) => {
     return suggestions
 }
 const getItemById = async (itemId: string) => {
-    const item: ItemData | undefined = await axios.get('/items/' + itemId).then((res) => res.data)
+    const item: IListing | undefined = await axios.get('/items/' + itemId).then((res) => res.data)
     return item
 }
 
