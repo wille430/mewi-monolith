@@ -1,9 +1,14 @@
 import * as Loader from 'react-loader-spinner'
-import theme from 'themes/theme'
+import tailwindConfig from 'themes/tailwindConfig'
 
 const StyledLoader = () => {
     return (
-        <Loader.TailSpin height='40px' width='40px' color={theme.accent1} data-testid='spinner' />
+        <Loader.TailSpin
+            height='40px'
+            width='40px'
+            color={tailwindConfig.theme.colors['secondary']}
+            data-testid='spinner'
+        />
     )
 }
 

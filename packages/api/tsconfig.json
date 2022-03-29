@@ -1,21 +1,28 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "files": [],
-    "include": ["./src/**/*"],
-    "exclude": ["./src/**/*.spec.ts", "./src/**/*.test.ts", "./src/services/**/*"],
     "compilerOptions": {
         "module": "commonjs",
-        "types": ["node", "express"],
-        "baseUrl": "src",
-        "rootDir": ".",
-        "outDir": "./dist",
-        "lib": ["es2019", "dom"],
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "outDir": "../../dist/api-old",
+        "baseUrl": "./",
+        "incremental": true,
+        "skipLibCheck": true,
+        "strictNullChecks": false,
+        "noImplicitAny": false,
+        "strictBindCallApply": false,
+        "forceConsistentCasingInFileNames": false,
+        "noFallthroughCasesInSwitch": false,
+        "preserveSymlinks": true,
         "paths": {
-            "@mewi/types": ["../types/src/index.ts"],
-            "@mewi/util": ["../util/src/index.ts"],
-            "@mewi/ui": ["../ui/src/index.ts"]
+            "@mewi/util": ["../util/src/index"],
+            "@mewi/types": ["../types/src/index"],
+            "@/*": ["./src/*"]
         }
-    }
+    },
+    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*"]
 }

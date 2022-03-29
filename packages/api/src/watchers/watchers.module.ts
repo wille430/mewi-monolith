@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { WatchersService } from './watchers.service'
 import { WatchersController } from './watchers.controller'
-import { Watcher, WatcherSchema } from 'watchers/watcher.schema'
+import { Watcher, WatcherSchema } from '@/watchers/watcher.schema'
 import { MongooseModule } from '@nestjs/mongoose'
-import { UsersModule } from 'users/users.module'
+import { UsersModule } from '@/users/users.module'
 
 @Module({
     imports: [

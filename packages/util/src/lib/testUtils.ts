@@ -6,6 +6,10 @@ export const randomEmail = () => {
     return `${faker.name.firstName()}@${faker.name.lastName()}@${faker.internet.domainName()}`
 }
 
+export const randomPassword = () => {
+    return '.Abc123' + faker.random.alpha(10)
+}
+
 /**
  * Generate fake item data
  * @param count How many items should be generated?

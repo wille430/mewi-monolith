@@ -13,11 +13,11 @@ import {
 import { WatchersService } from './watchers.service'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
-import { FindAllWatchersDto } from 'watchers/dto/find-all-watchers.dto'
-import { JwtAuthGuard } from 'auth/jwt-auth.guard'
-import { RolesGuard } from 'auth/roles.guard'
-import { Roles } from 'auth/roles.decorator'
-import { Role } from 'auth/role.enum'
+import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { RolesGuard } from '@/auth/roles.guard'
+import { Roles } from '@/auth/roles.decorator'
+import { Role } from '@/auth/role.enum'
 
 @Controller('watchers')
 @UseGuards(JwtAuthGuard, RolesGuard)

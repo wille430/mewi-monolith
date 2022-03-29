@@ -1,34 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Post } from '@nestjs/common'
 import { TestService } from './test.service'
-import { CreateTestDto } from './dto/create-test.dto'
-import { UpdateTestDto } from './dto/update-test.dto'
+import { UsersService } from '@/users/users.service'
+import { randomEmail, randomPassword } from '@mewi/util'
 
 @Controller('test')
 export class TestController {
-    constructor(private readonly testService: TestService) {}
+    constructor(
+        private readonly testService: TestService,
+        private readonly usersService: UsersService
+    ) {}
 
-    @Post()
-    create(@Body() createTestDto: CreateTestDto) {
-        return this.testService.create(createTestDto)
-    }
-
-    @Get()
-    findAll() {
-        return this.testService.findAll()
-    }
-
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.testService.findOne(+id)
-    }
-
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
-        return this.testService.update(+id, updateTestDto)
-    }
-
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.testService.remove(+id)
+    @Post('user')
+    create() {
+        return this.usersService.create({ email: randomEmail(), password: randomPassword() })
     }
 }

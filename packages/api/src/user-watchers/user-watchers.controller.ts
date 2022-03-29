@@ -2,12 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { JwtAuthGuard } from 'auth/jwt-auth.guard'
-import { Roles } from 'auth/roles.decorator'
-import { Role } from 'auth/role.enum'
-import { RolesGuard } from 'auth/roles.guard'
-import { UserPayload } from 'auth/jwt-strategy'
-import { GetUser } from 'decorators/user.decorator'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { Roles } from '@/auth/roles.decorator'
+import { Role } from '@/auth/role.enum'
+import { RolesGuard } from '@/auth/roles.guard'
+import { UserPayload } from '@/auth/jwt-strategy'
+import { GetUser } from '@/decorators/user.decorator'
 
 @UseGuards(JwtAuthGuard)
 @Controller('users/me/watchers')

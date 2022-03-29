@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'
-import { Watcher } from 'watchers/watcher.schema'
+import { Watcher } from '@/watchers/watcher.schema'
 
 export type UserWatcherDocument = UserWatcher & Document
 

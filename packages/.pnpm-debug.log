@@ -1,0 +1,30 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1,
+    "total": 7,
+    "workspacePrefix": "D:\\User Data\\Documents\\.Programmering\\Active Projects\\mewi-monolith-pnpm"
+  },
+  "1 info pnpm": {
+    "err": {
+      "name": "Error",
+      "message": "api@0.0.1 dev: `nest start --watch`\nExit status 1",
+      "code": "ELIFECYCLE",
+      "stack": "Error: api@0.0.1 dev: `nest start --watch`\nExit status 1\n    at EventEmitter.<anonymous> (C:\\Users\\willi\\AppData\\Roaming\\npm\\node_modules\\pnpm\\dist\\pnpm.cjs:105724:20)\n    at EventEmitter.emit (node:events:390:28)\n    at ChildProcess.<anonymous> (C:\\Users\\willi\\AppData\\Roaming\\npm\\node_modules\\pnpm\\dist\\pnpm.cjs:92285:18)\n    at ChildProcess.emit (node:events:390:28)\n    at maybeClose (node:internal/child_process:1064:16)\n    at Process.ChildProcess._handle.onexit (node:internal/child_process:301:5)"
+    }
+  },
+  "2 error pnpm": {
+    "errno": 1,
+    "code": "ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL",
+    "pkgid": "api@0.0.1",
+    "stage": "dev",
+    "script": "nest start --watch",
+    "pkgname": "api",
+    "prefix": "D:\\User Data\\Documents\\.Programmering\\Active Projects\\mewi-monolith-pnpm\\packages\\api",
+    "err": {
+      "name": "pnpm",
+      "message": "api@0.0.1 dev: `nest start --watch`\nExit status 1",
+      "code": "ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL",
+      "stack": "Error: api@0.0.1 dev: `nest start --watch`\nExit status 1\n    at EventEmitter.<anonymous> (C:\\Users\\willi\\AppData\\Roaming\\npm\\node_modules\\pnpm\\dist\\pnpm.cjs:105724:20)\n    at EventEmitter.emit (node:events:390:28)\n    at ChildProcess.<anonymous> (C:\\Users\\willi\\AppData\\Roaming\\npm\\node_modules\\pnpm\\dist\\pnpm.cjs:92285:18)\n    at ChildProcess.emit (node:events:390:28)\n    at maybeClose (node:internal/child_process:1064:16)\n    at Process.ChildProcess._handle.onexit (node:internal/child_process:301:5)"
+    }
+  }
+}

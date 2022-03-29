@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { Model, PipelineStage } from 'mongoose'
-import { User } from 'users/user.schema'
-import { PopulatedWatcher, Watcher, WatcherDocument } from 'watchers/watcher.schema'
-import mongoose from 'mongoose'
-import { WatchersService } from 'watchers/watchers.service'
+import { User } from '@/users/user.schema'
+import { PopulatedWatcher, Watcher, WatcherDocument } from '@/watchers/watcher.schema'
+import mongoose, { Document } from 'mongoose'
+import { WatchersService } from '@/watchers/watchers.service'
 
 @Injectable()
 export class UserWatchersService {
@@ -47,7 +47,7 @@ export class UserWatchersService {
         const pipeline: PipelineStage[] = [
             { $limit: 1 },
             {
-                $match: { _id: new mongoose.Types.ObjectId(userId) },
+                $match: { _id: new mongoose.Schema.Types.ObjectId(userId) },
             },
             {
                 $unwind: {
@@ -85,14 +85,14 @@ export class UserWatchersService {
             const agg = await this.userModel.aggregate([
                 { $limit: 1 },
                 {
-                    $match: { _id: new mongoose.Types.ObjectId(userId) },
+                    $match: { _id: new mongoose.Schema.Types.ObjectId(userId) },
                 },
                 {
                     $unwind: {
                         path: '$watchers',
                     },
                 },
-                { $match: { 'watchers._id': new mongoose.Types.ObjectId(id) } },
+                { $match: { 'watchers._id': new mongoose.Schema.Types.ObjectId(id) } },
                 {
                     $lookup: {
                         from: 'watchers',

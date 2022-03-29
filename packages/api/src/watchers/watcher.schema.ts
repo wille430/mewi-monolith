@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { FindAllListingsDto } from 'listings/dto/find-all-listing.dto'
+import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { Schema as MongooseSchema } from 'mongoose'
-import { UserWatcher } from 'user-watchers/user-watcher.schema'
+import { UserWatcher } from '@/user-watchers/user-watcher.schema'
 
 export type WatcherDocument = Watcher & Document
 

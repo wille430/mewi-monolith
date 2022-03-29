@@ -1,13 +1,19 @@
 {
     "name": "@mewi/types",
     "version": "1.0.0",
-    "description": "This library was generated with [Nx](https://nx.dev).",
-    "main": "src/index.ts",
+    "description": "Types for Mewi",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "build": "tsc",
+        "watch": "tsc -w"
     },
     "keywords": [
         "types"
+    ],
+    "files": [
+        "/dist"
     ],
     "author": "Mewi",
     "license": "ISC",

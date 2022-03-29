@@ -8,7 +8,8 @@
         "e2e": "pnpm run e2e -r",
         "build": "pnpm run build -r",
         "test": "pnpm run test -r",
-        "format": "prettier -w ."
+        "format": "prettier -w .",
+        "dev": "pnpm run build -F @mewi/util -F @mewi/types & pnpm run dev -r --parallel"
     },
     "private": true,
     "devDependencies": {

@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator'
-import { Match } from 'decorators/match.decorator'
-import { IsPassword } from 'decorators/password.decorator'
+import { Match } from '@/decorators/match.decorator'
+import { IsPassword } from '@/decorators/password.decorator'
 
 export class SignUpDto {
     @IsEmail()

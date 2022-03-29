@@ -1,9 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { InjectModel } from '@nestjs/mongoose'
-import { Role } from 'auth/role.enum'
-import { ROLES_KEY } from 'auth/roles.decorator'
-import { User, UserDocument } from 'users/user.schema'
+import { Role } from '@/auth/role.enum'
+import { ROLES_KEY } from '@/auth/roles.decorator'
+import { User, UserDocument } from '@/users/user.schema'
 import { Model } from 'mongoose'
 
 @Injectable()

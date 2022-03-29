@@ -1,24 +1,13 @@
 {
     "extends": "../../tsconfig.base.json",
-    "files": [],
-    "include": [],
-    "references": [
-        {
-            "path": "./tsconfig.lib.json"
-        },
-        {
-            "path": "./tsconfig.spec.json"
-        }
-    ],
     "compilerOptions": {
-        "rootDir": ".",
-        "outDir": "./dist",
+        "module": "ES6",
         "target": "ES6",
-        "lib": ["ES6"],
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true
+        "declaration": true,
+        "outDir": "./dist",
+        "baseUrl": "src",
+        "rootDir": "src"
     },
+    "include": ["src/**/*"],
     "exclude": ["./src/**/*.{test,spec}.{ts,js}"]
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Watcher } from 'watchers/watcher.schema'
+import { Watcher } from '@/watchers/watcher.schema'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { Model, QueryOptions } from 'mongoose'
-import { FindAllWatchersDto } from 'watchers/dto/find-all-watchers.dto'
+import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 
 @Injectable()
 export class WatchersService {

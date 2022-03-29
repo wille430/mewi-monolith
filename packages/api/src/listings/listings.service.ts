@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { Listing, ListingDocument } from 'listings/listing.schema'
+import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, FilterQuery } from 'mongoose'
-import { FindAllListingsDto } from 'listings/dto/find-all-listing.dto'
+import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 
 @Injectable()
 export class ListingsService {
