@@ -15,10 +15,8 @@ export interface IUserWatcher {
 export interface IUser {
     _id: string
     email: string
-    password?: string
     premium: boolean
     watchers: IUserWatcher[]
-    passwordResetSecret: string
 }
 
 export interface IWatcher {

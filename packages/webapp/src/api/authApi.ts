@@ -16,7 +16,7 @@ export const signUp = async (
 
 export const refreshJwtToken = async (oldRefreshToken?: string | null): Promise<AuthTokens> => {
     const authTokens = await axios
-        .post('/auth/refreshtoken', { refreshToken: oldRefreshToken })
+        .post('/auth/token', { refresh_token: oldRefreshToken })
         .then((res) => res.data)
 
     return authTokens

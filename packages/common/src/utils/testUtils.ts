@@ -50,7 +50,10 @@ export const generateMockItemData = (
     }
 }
 
-export const generateMockUserData = (): IUser => ({
+export const generateMockUserData = (): IUser & {
+    password: string
+    passwordResetSecret: string
+} => ({
     _id: faker.datatype.uuid(),
     email: randomEmail(),
     password: faker.datatype.uuid(),

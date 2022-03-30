@@ -3,7 +3,6 @@ import Layout from 'components/Layout'
 import { useAppDispatch } from 'hooks/hooks'
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { forgottenPassword } from 'store/user/creator'
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()
@@ -15,22 +14,22 @@ const ForgottenPassword = () => {
     const onFormSubmit = async (e: FormEvent) => {
         e.preventDefault()
 
-        setErrorMessage(undefined)
-        setSuccessMessage('')
+        // TODO: implement password reset here and in backend
 
-        if (!email) {
-            setErrorMessage('Fältet kan inte vara tomt')
-            return
-        }
+        // setErrorMessage(undefined)
+        // setSuccessMessage('')
 
-        const action = await dispatch(forgottenPassword(email))
+        // if (!email) {
+        //     setErrorMessage('Fältet kan inte vara tomt')
+        //     return
+        // }
 
-        if (action.meta.requestStatus === 'fulfilled') {
-            setSuccessMessage(`Ett meddelande till ${email} har skickats med en återställningslänk`)
-            setEmail(undefined)
-        } else {
-            if (typeof action.payload === 'string') setErrorMessage(action.payload)
-        }
+        // if (action.meta.requestStatus === 'fulfilled') {
+        //     setSuccessMessage(`Ett meddelande till ${email} har skickats med en återställningslänk`)
+        //     setEmail(undefined)
+        // } else {
+        //     if (typeof action.payload === 'string') setErrorMessage(action.payload)
+        // }
     }
 
     return (

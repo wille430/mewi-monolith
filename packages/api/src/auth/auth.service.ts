@@ -1,11 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { User, UserDocument } from '@/users/user.schema'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
-import { SignUpDto } from '@/auth/dto/sign-up.dto'
+import SignUpDto from '@/auth/dto/sign-up.dto'
 import { AuthTokens } from '@mewi/common/types'
+import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,10 @@ export class AuthService {
         const payload = { email: user.email, sub: user._id }
         return {
             access_token: this.jwtService.sign(payload),
-            refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
+            refresh_token: this.jwtService.sign(payload, {
+                expiresIn: '7d',
+                secret: process.env.REFRESH_TOKEN_SECRET,
+            }),
         }
     }
 
@@ -51,5 +55,20 @@ export class AuthService {
         const newUser = new this.userModel({ email, password: hashedPassword })
 
         return this.createTokens(await newUser.save())
+    }
+
+    async refreshToken(refreshTokenDto: RefreshTokenDto) {
+        const { refresh_token } = refreshTokenDto
+
+        try {
+            const payload = this.jwtService.verify(refresh_token, {
+                secret: process.env.REFRESH_TOKEN_SECRET,
+            })
+            const user = await this.userModel.findOne({ email: payload.user })
+
+            return this.createTokens(user)
+        } catch (e) {
+            throw new UnauthorizedException()
+        }
     }
 }

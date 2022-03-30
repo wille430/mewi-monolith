@@ -1,4 +1,5 @@
 import { Types } from '@mewi/common'
+import { IListing } from '@mewi/common/types'
 import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {
@@ -8,7 +9,7 @@ export interface SearchState {
     sort: Types.SortData
     page: number
     searchParams: string
-    selectedListingId?: string
+    selectedListing?: IListing
 }
 
 export enum SearchActionTypes {

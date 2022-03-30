@@ -13,6 +13,7 @@ const MyAccount = () => {
                         <h3>Mitt Konto</h3>
                         <HorizontalLine />
                     </Container.Header>
+
                     <Container.Content>
                         <AccountDetails />
                     </Container.Content>

@@ -24,3 +24,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context)
     }
 }
+
+@Injectable()
+export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
+    constructor(private reflector: Reflector) {
+        super()
+    }
+
+    handleRequest<TUser = any>(err: any, user: any, info: any, context: any, status?: any): TUser {
+        return user
+    }
+}

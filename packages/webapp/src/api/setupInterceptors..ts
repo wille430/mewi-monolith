@@ -1,4 +1,3 @@
-import { instance } from 'api'
 import axios from 'axios'
 import { refreshAccessToken } from 'store/auth/creators'
 import { store as Store } from 'store/index'
@@ -15,7 +14,6 @@ const setupInterceptors = (store: typeof Store) => {
         return request
     })
 
-    const { dispatch } = store
     axios.interceptors.response.use(
         (response) => {
             return response
@@ -26,16 +24,9 @@ const setupInterceptors = (store: typeof Store) => {
             if (err.response) {
                 // jwt was expired
                 if (err.response.status === 401 && config.url !== '/auth/login' && !config._retry) {
-                    config._retry = true
-                    try {
-                        return await new Promise((resolve) => {
-                            dispatch(refreshAccessToken()).then(() => {
-                                resolve(instance(config))
-                            })
-                        })
-                    } catch (e: any) {
-                        return Promise.reject(err.response.data)
-                    }
+                    const { dispatch } = store
+                    dispatch(refreshAccessToken())
+                    return Promise.reject(err.response.data)
                 } else {
                     return Promise.reject(err.response.data)
                 }

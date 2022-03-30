@@ -103,14 +103,23 @@ export const logOut = createAction(AuthActionTypes.AUTH_LOGOUT, () => ({ payload
 export const refreshAccessToken = createAsyncThunk(
     AuthActionTypes.AUTH_REFRESH,
     async (args, thunkAPI) => {
-        try {
-            const oldAccessToken = localStorage.getItem('refresh_token')
+        console.log('refreshing token...')
+        const oldRefreshToken = localStorage.getItem('refresh_token')
 
-            const authTokens = await authApi.refreshJwtToken(oldAccessToken)
-            return authTokens
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e)
-        }
+        const authTokens = await axios
+            .post<AuthTokens>('/auth/token', { refresh_token: oldRefreshToken })
+            .then((res) => {
+                console.log('fulfilled')
+                return res.data
+            })
+            .catch((e) => {
+                console.log('rejecting')
+                return thunkAPI.rejectWithValue(e)
+            })
+
+        console.log(authTokens)
+
+        return authTokens
     }
 )
 

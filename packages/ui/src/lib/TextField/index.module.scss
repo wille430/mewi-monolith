@@ -41,6 +41,10 @@ input:-webkit-autofill:active {
     &.hidden {
         display: none;
     }
+
+    &.disabled {
+        background-color: rgb(216, 212, 212);
+    }
 }
 
 .clearButton {

@@ -130,11 +130,11 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(openListing, (state, action) => {
-            state.selectedListingId = action.payload
+            state.selectedListing = action.payload
         })
 
         builder.addCase(closeListing, (state) => {
-            state.selectedListingId = initialState.selectedListingId
+            state.selectedListing = initialState.selectedListing
         })
     },
 })

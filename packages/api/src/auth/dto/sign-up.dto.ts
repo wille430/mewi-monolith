@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-valid
 import { Match } from '@/decorators/match.decorator'
 import { IsPassword } from '@/decorators/password.decorator'
 
-export class SignUpDto {
+export default class SignUpDto {
     @IsEmail()
     @IsNotEmpty()
     email: string

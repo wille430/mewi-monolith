@@ -6,6 +6,7 @@ import { SearchActionTypes, SearchState } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
 import axios from 'axios'
+import { IListing } from '@mewi/common/types'
 
 export const updateSearchParams = createAsyncThunk(
     SearchActionTypes.UPDATE_SEARCH_PARAMS,
@@ -133,8 +134,8 @@ export const goToPage = createAction(SearchActionTypes.SET_PAGE, (page: number) 
 
 export const clearSearchResults = createAction(SearchActionTypes.CLEAR_RESULTS)
 
-export const openListing = createAction(SearchActionTypes.OPEN_LISTING, (id: string) => ({
-    payload: id,
+export const openListing = createAction(SearchActionTypes.OPEN_LISTING, (listing: IListing) => ({
+    payload: listing,
 }))
 
 export const closeListing = createAction(SearchActionTypes.CLOSE_LISTING)

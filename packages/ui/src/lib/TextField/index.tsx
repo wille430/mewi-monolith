@@ -34,6 +34,7 @@ export const TextField = ({
     type,
     debounced = false,
     endComponent,
+    disabled,
     ...rest
 }: TextFieldProps) => {
     const [isActive, setIsActive] = useState(false)
@@ -141,13 +142,14 @@ export const TextField = ({
         <div
             className={cx({
                 [styles['container']]: true,
-                [styles['isActive']]: _value || isActive,
+                [styles['isActive']]: (_value || isActive) && placeholder,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
                 [className || '']: true,
+                [styles['disabled']]: disabled,
             })}
         >
-            <Label />
+            {placeholder && <Label />}
             <input
                 {...rest}
                 className={styles['input']}
@@ -156,6 +158,7 @@ export const TextField = ({
                 onBlur={handleBlur}
                 value={_value || ''}
                 type={type}
+                disabled={disabled}
             />
             <ClearButton />
             {endComponent}

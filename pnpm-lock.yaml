@@ -37,6 +37,7 @@ importers:
       '@nestjs/mongoose': ^9.0.3
       '@nestjs/passport': ^8.2.1
       '@nestjs/platform-express': ^8.4.2
+      '@nestjs/testing': ^8.4.3
       '@types/bcryptjs': ^2.4.2
       '@types/email-templates': ^8.0.4
       '@types/jsonwebtoken': ^8.5.6
@@ -80,6 +81,7 @@ importers:
       '@nestjs/mongoose': 9.0.3_742992f5dab0042c776e60419b3a70aa
       '@nestjs/passport': 8.2.1_bdc4c6d4e53181e1a525c1b5bd912ba2
       '@nestjs/platform-express': 8.4.3_2da8a9968be4406723e870d9d23c8df0
+      '@nestjs/testing': 8.4.3_f3535ac88edb13f3afdbc086f65fb7f4
       '@types/lodash': 4.14.180
       bcryptjs: 2.4.3
       cache-manager: 3.6.0
@@ -3258,6 +3260,26 @@ packages:
       typescript: 4.6.2
     transitivePeerDependencies:
       - chokidar
+    dev: false
+
+  /@nestjs/testing/8.4.3_f3535ac88edb13f3afdbc086f65fb7f4:
+    resolution: {integrity: sha512-6+b2UCObr5onv7TG398VUdkNeU9n+f+TeTvlzmZlp9LKIAS4ZxDxwpdLDl5m/AssdkaZpfb0u755BJfKP5wbNw==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0
+      '@nestjs/core': ^8.0.0
+      '@nestjs/microservices': ^8.0.0
+      '@nestjs/platform-express': ^8.0.0
+    peerDependenciesMeta:
+      '@nestjs/microservices':
+        optional: true
+      '@nestjs/platform-express':
+        optional: true
+    dependencies:
+      optional: 0.1.4
+      '@nestjs/common': 8.4.3_add13df2cdecb4b62cd3f7664ea82e18
+      '@nestjs/core': 8.4.3_c2aa74453c5108161d7d668927d51cc5
+      '@nestjs/platform-express': 8.4.3_2da8a9968be4406723e870d9d23c8df0
+      tslib: 2.3.1
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -10989,6 +11011,10 @@ packages:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+    dev: false
+
+  /optional/0.1.4:
+    resolution: {integrity: sha512-gtvrrCfkE08wKcgXaVwQVgwEQ8vel2dc5DDBn9RLQZ3YtmtkBss6A2HY6BnJH4N/4Ku97Ri/SF8sNWE2225WJw==}
     dev: false
 
   /optionator/0.9.1:

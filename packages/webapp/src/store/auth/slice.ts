@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { isFulfilled, isPending } from '@reduxjs/toolkit'
+import setupInterceptors from 'api/setupInterceptors.'
+import { store } from 'store'
 import { createUser, loadPage, loginUser, logOut, onAuthLoad, refreshAccessToken } from './creators'
 import { AuthState } from './types'
 
@@ -64,10 +66,12 @@ export const userSlice = createSlice({
 
         builder
             .addCase(refreshAccessToken.fulfilled, (state, action) => {
-                if (!action.payload) return
                 const { access_token, refresh_token } = action.payload
+                console.log({access_token})
 
                 state.isLoggedIn = true
+
+                setupInterceptors(store)
 
                 localStorage.setItem('access_token', access_token)
                 localStorage.setItem('refresh_token', refresh_token)
@@ -75,9 +79,11 @@ export const userSlice = createSlice({
             .addCase(refreshAccessToken.rejected, (state, action) => {
                 console.log('LOGGIN OUT...')
                 state.isLoggedIn = false
+                
+                setupInterceptors(store)
 
-                localStorage.removeItem('jwt')
-                localStorage.removeItem('refreshToken')
+                localStorage.removeItem('access_token')
+                localStorage.removeItem('refresh_token')
             })
 
         builder.addCase(loadPage, (state, action) => {

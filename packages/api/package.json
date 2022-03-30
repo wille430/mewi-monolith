@@ -18,6 +18,7 @@
         "@nestjs/mongoose": "^9.0.3",
         "@nestjs/passport": "^8.2.1",
         "@nestjs/platform-express": "^8.4.2",
+        "@nestjs/testing": "^8.4.3",
         "@types/lodash": "^4.14.180",
         "bcryptjs": "^2.4.3",
         "cache-manager": "^3.6.0",

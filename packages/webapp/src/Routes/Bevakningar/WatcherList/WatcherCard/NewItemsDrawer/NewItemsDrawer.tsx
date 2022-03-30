@@ -30,7 +30,7 @@ const NewItemsDrawer = ({ watcherId, newItems }: NewItemsDrawerProps) => {
     }
 
     const handleClick = (id: string) => {
-        dispatch(openListing(id))
+        dispatch(openListing(newItems.find((x) => x.id === id)))
     }
 
     const renderItems = () => {
