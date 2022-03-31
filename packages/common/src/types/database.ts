@@ -24,6 +24,7 @@ export interface IWatcher {
     metadata: SearchFilterDataProps
     users: Types.ObjectId[]
     createdAt: string
+    updatedAt: string
 }
 
 export interface IPopulatedWatcher extends Omit<IWatcher, 'users' | '_id'>, IUserWatcher {}

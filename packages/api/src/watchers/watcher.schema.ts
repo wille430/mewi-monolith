@@ -14,15 +14,15 @@ export class Metadata implements SearchFilterDataProps {
     @IsOptional()
     @IsString()
     keyword?: string
-    
+
     @IsOptional()
     // TODO: validate
     regions?: string[] | string
-    
+
     @IsOptional()
     @IsString()
     category?: string
-    
+
     @IsOptional()
     @IsNumber()
     priceRangeGte?: number
@@ -38,13 +38,12 @@ export class Metadata implements SearchFilterDataProps {
     @IsOptional()
     @IsNumber()
     dateGte?: number
-
 }
 
 @Schema({
     timestamps: true,
 })
-export class Watcher implements IWatcher {
+export class Watcher implements Partial<IWatcher> {
     _id: string
 
     @Prop({
@@ -57,10 +56,8 @@ export class Watcher implements IWatcher {
     @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
     users: mongoose.Types.Array<mongoose.Types.ObjectId>
 
-    @Prop()
+    @Prop({ type: MongooseSchema.Types.Date })
     notifiedAt: string
-
-    createdAt: string
 }
 
 export const WatcherSchema = SchemaFactory.createForClass(Watcher)

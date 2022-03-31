@@ -7,7 +7,6 @@ import {
     Param,
     Delete,
     UseGuards,
-    Inject,
     Put,
     UnprocessableEntityException,
 } from '@nestjs/common'
@@ -18,7 +17,6 @@ import { Roles } from '@/auth/roles.decorator'
 import { Role } from '@/auth/role.enum'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
-import { REQUEST } from '@nestjs/core'
 import ChangePasswordDto from '@/users/dto/change-password.dto'
 import { Public } from '@/decorators/public.decorator'
 import { GetUser } from '@/decorators/user.decorator'
@@ -26,10 +24,7 @@ import { GetUser } from '@/decorators/user.decorator'
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
-    constructor(
-        @Inject(REQUEST) private readonly req,
-        private readonly usersService: UsersService
-    ) {}
+    constructor(private readonly usersService: UsersService) {}
 
     @Post()
     @Roles(Role.Admin)
@@ -53,11 +48,9 @@ export class UsersController {
     @UseGuards(OptionalJwtAuthGuard)
     async changePassword(
         @Body()
-        dto: ChangePasswordDto
+        dto: ChangePasswordDto,
+        @GetUser() user
     ) {
-        const { user } = this.req
-        console.log(dto)
-
         if (dto.password && dto.passwordConfirm) {
             if (user?.userId) {
                 return this.usersService.changePassword(dto, user.userId)
