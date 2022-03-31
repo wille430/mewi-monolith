@@ -18,6 +18,7 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "preserveSymlinks": true,
+        "types": ["vitest/globals"],
         "paths": {
             "@mewi/common": ["../common/src/index"],
             "@mewi/common/*": ["../common/src/*"],

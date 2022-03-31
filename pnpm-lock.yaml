@@ -44,6 +44,7 @@ importers:
       '@types/lodash': ^4.14.180
       '@types/passport-jwt': ^3.0.6
       '@types/passport-local': ^1.0.34
+      '@types/supertest': ^2.0.12
       bcryptjs: ^2.4.3
       cache-manager: ^3.6.0
       class-transformer: ^0.5.1
@@ -119,6 +120,7 @@ importers:
       '@types/jsonwebtoken': 8.5.8
       '@types/passport-jwt': 3.0.6
       '@types/passport-local': 1.0.34
+      '@types/supertest': 2.0.12
       fakingoose: 2.2.1
       mockingoose: 2.15.2_mongoose@6.2.9
       mongodb-memory-server: 8.4.2
@@ -4340,6 +4342,10 @@ packages:
       '@types/node': 17.0.23
     dev: true
 
+  /@types/cookiejar/2.1.2:
+    resolution: {integrity: sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==}
+    dev: true
+
   /@types/email-templates/8.0.4:
     resolution: {integrity: sha512-HYvVoyG8qS6PrimZZOS4wMrtQ9MelKEl0sOpi4zVpz2Ds74v+UvWckIFz3NyGyTwAR1okMbwJkApgR2GL/ALjg==}
     dependencies:
@@ -4632,6 +4638,19 @@ packages:
   /@types/source-list-map/0.1.2:
     resolution: {integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==}
     dev: false
+
+  /@types/superagent/4.1.15:
+    resolution: {integrity: sha512-mu/N4uvfDN2zVQQ5AYJI/g4qxn2bHB6521t1UuH09ShNWjebTqN0ZFuYK9uYjcgmI0dTQEs+Owi1EO6U0OkOZQ==}
+    dependencies:
+      '@types/cookiejar': 2.1.2
+      '@types/node': 17.0.23
+    dev: true
+
+  /@types/supertest/2.0.12:
+    resolution: {integrity: sha512-X3HPWTwXRerBZS7Mo1k6vMVR1Z6zmJcDVn5O/31whe0tnjE4te6ZJSJGq1RiqHPjzPdMTfjCFogDJmwng9xHaQ==}
+    dependencies:
+      '@types/superagent': 4.1.15
+    dev: true
 
   /@types/tailwindcss/3.0.9:
     resolution: {integrity: sha512-uZjNKNjlA6cr6py/GWsDjevJb/Bl0fmaMNUdIpNMW3TJGJzxN9O6uFWx97LiSK7ithWNrrDSytq1FdvHpgSvWg==}
