@@ -18,12 +18,16 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "preserveSymlinks": true,
-        "types": ["vitest/globals"],
         "paths": {
             "@mewi/common": ["../common/src/index"],
             "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
-        },
+        }
     },
-    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*"]
+    // "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*"],
+    "references": [
+        {
+            "path": "./tsconfig.spec.json"
+        }
+    ]
 }

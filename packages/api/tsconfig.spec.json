@@ -1,13 +1,15 @@
 {
-    "extends": "./tsconfig.base.json",
-    "include": ["src/**/*.test.ts", "src/**/*.spec.ts"],
-    "exclude": ["**/*"],
+    "extends": "./tsconfig.json",
+    "include": ["**/*.spec.ts", "**/*.test.ts", "src/**/*", "src/*"],
+    "exclude": ["src/services/*"],
     "compilerOptions": {
-        "types": ["vitest/globals"],
+        "types": ["vitest/globals", "node"],
+        "baseUrl": ".",
         "paths": {
             "@mewi/common": ["../common/src/index"],
             "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
-        }
-    }
+        },
+        "composite": true
+    },
 }

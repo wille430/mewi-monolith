@@ -35,10 +35,11 @@
     "author": "Mewi",
     "license": "ISC",
     "dependencies": {
-        "@faker-js/faker": "^6.0.0-alpha.6",
+        "@faker-js/faker": "^6.0.0",
         "@types/lodash": "^4.14.180",
         "lodash": "^4.17.21",
         "mongoose": "6.2.9",
+        "query-string": "^7.1.1",
         "tslib": "^2.3.1"
     }
 }

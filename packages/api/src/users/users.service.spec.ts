@@ -5,16 +5,23 @@ import { User, UserDocument, UserSchema } from './user.schema'
 import { UsersService } from './users.service'
 import { Model } from 'mongoose'
 import { factory } from 'fakingoose'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { randomEmail, randomPassword } from '@mewi/common/utils'
+import { ChangePasswordAuth } from './dto/change-password.dto'
+import _ from 'lodash'
+import { CreateUserDto } from './dto/create-user.dto'
 
 describe('UsersService', () => {
-    let service: UsersService
+    let usersService: UsersService
     let mongod: MongoMemoryServer
     let userModel: Model<UserDocument>
     const userFactory = factory(UserSchema, {}).setGlobalObjectIdOptions({
         tostring: false,
     })
 
-    beforeEach(async () => {
+    let user: UserDocument
+
+    beforeAll(async () => {
         mongod = await MongoMemoryServer.create()
 
         const module: TestingModule = await Test.createTestingModule({
@@ -32,14 +39,14 @@ describe('UsersService', () => {
             providers: [UsersService],
         }).compile()
 
-        service = module.get<UsersService>(UsersService)
+        usersService = module.get<UsersService>(UsersService)
         userModel = module.get<Model<UserDocument>>(getModelToken(User.name))
     })
 
     beforeEach(async () => {
         const mockUser = userFactory.generate()
-        const user = await userModel.create(mockUser)
-        return user.save()
+        user = await userModel.create(mockUser)
+        await user.save()
     })
 
     afterEach(() => {
@@ -47,8 +54,71 @@ describe('UsersService', () => {
     })
 
     it('should be defined', () => {
-        expect(service).toBeDefined()
+        expect(usersService).toBeDefined()
     })
 
-    describe('#findAll', () => {})
+    describe('#create', () => {
+        it('should create new user and return it', async () => {
+            const createUserDto: CreateUserDto = {
+                email: randomEmail(),
+                password: randomPassword(),
+            }
+
+            const newUser = await usersService.create(createUserDto)
+
+            expect(newUser).toHaveProperty('email', createUserDto.email)
+            expect(newUser).toHaveProperty('premium', false)
+            expect(newUser).toHaveProperty('watchers', [])
+            expect(newUser).toHaveProperty('passwordResetSecret')
+        })
+    })
+
+    describe('#findAll', () => {
+        it('should return an array of users', async () => {
+            expect(await usersService.findAll()).toEqual(await userModel.find({}))
+        })
+    })
+
+    describe('#findOne', () => {
+        it('should return one user', async () => {
+            expect(await usersService.findOne(user._id)).toBeInstanceOf(Object)
+        })
+    })
+
+    describe('#update', () => {
+        it('should return updated user', async () => {
+            const updateUserDto: UpdateUserDto = { email: randomEmail() }
+            const updatedUser = await usersService.update(user._id, updateUserDto)
+
+            expect(updatedUser).toHaveProperty('email', updateUserDto.email)
+        })
+    })
+
+    describe('#remove', () => {
+        it('should remove user', async () => {
+            expect(await usersService.findOne(user._id)).toBeTruthy()
+
+            await usersService.remove(user._id)
+
+            expect(await usersService.findOne(user._id)).toBeNull()
+        })
+    })
+
+    describe('#changePassword', () => {
+        it('should update password for user', async () => {
+            const changePasswordDto: ChangePasswordAuth = {
+                password: randomPassword(),
+                passwordConfirm: '',
+            }
+            changePasswordDto.passwordConfirm = changePasswordDto.password
+
+            const originalPassHash = user.password
+
+            await usersService.changePassword(changePasswordDto, user._id)
+
+            expect(
+                (await userModel.findOne({ _id: user._id }, { password: 1 })).password
+            ).not.toEqual(originalPassHash)
+        })
+    })
 })

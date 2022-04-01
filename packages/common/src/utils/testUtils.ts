@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { categories, IListing, ListingOrigins, IUser } from '../types'
 import _ from 'lodash'
 

@@ -29,7 +29,7 @@ export class User implements Omit<IUser, 'watchers'> {
     @Prop({ type: String, default: uuidv4(), select: false })
     passwordResetSecret: string
 
-    @Prop({ type: [String], default: [Role.User] })
+    @Prop({ type: [String], enum: Role, default: [Role.User] })
     roles: Role[]
 }
 
