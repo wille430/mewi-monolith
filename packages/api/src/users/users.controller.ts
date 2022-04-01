@@ -35,6 +35,7 @@ export class UsersController {
     @Get()
     @Roles(Role.Admin)
     findAll() {
+        console.log(this.usersService)
         return this.usersService.findAll()
     }
 

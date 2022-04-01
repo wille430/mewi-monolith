@@ -3,6 +3,11 @@
     "include": ["src/**/*.test.ts", "src/**/*.spec.ts"],
     "exclude": ["**/*"],
     "compilerOptions": {
-        "types": ["vitest/globals"]
+        "types": ["vitest/globals"],
+        "paths": {
+            "@mewi/common": ["../common/src/index"],
+            "@mewi/common/*": ["../common/src/*"],
+            "@/*": ["./src/*"]
+        }
     }
 }

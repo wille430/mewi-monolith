@@ -8,7 +8,7 @@
         "lint": "eslint",
         "test": "vitest",
         "coverage": "vitest run --coverage",
-        "tdd": "vitest watch"
+        "test:watch": "vitest watch"
     },
     "dependencies": {
         "@faker-js/faker": "^6.0.0-alpha.6",

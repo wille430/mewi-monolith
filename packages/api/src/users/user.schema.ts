@@ -10,22 +10,23 @@ export type UserDocument = User & Document
 
 @Schema()
 export class User implements Omit<IUser, 'watchers'> {
+
     _id: string
 
-    @Prop()
+    @Prop({ type: String })
     email: string
 
-    @Prop({ select: false })
+    @Prop({ type: String, select: false })
     password?: string
 
-    @Prop({ default: false })
+    @Prop({ type: Boolean, default: false })
     premium: boolean
 
-    @Prop([UserWatcherSchema])
+    @Prop({ type: [UserWatcherSchema], default: [] })
     //   TODO: FIX CORRECT TYPE
     watchers: mongoose.Types.DocumentArray<UserWatcher>
 
-    @Prop({ default: uuidv4(), select: false })
+    @Prop({ type: String, default: uuidv4(), select: false })
     passwordResetSecret: string
 
     @Prop({ type: [String], default: [Role.User] })

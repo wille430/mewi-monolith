@@ -7,29 +7,54 @@ import { INestApplication } from '@nestjs/common'
 import { factory } from 'fakingoose'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import request from 'supertest'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { RolesGuard } from '../auth/roles.guard'
+import { UsersService } from './users.service'
 
 describe('UsersController', () => {
     let userModel: Model<UserDocument>
     let app: INestApplication
-    const userFactory = factory<UserDocument>(UserSchema, {}).setGlobalObjectIdOptions({
+    let mongod: MongoMemoryServer
+    let usersService = { findAll: () => [] }
+    const userFactory = factory(UserSchema, {}).setGlobalObjectIdOptions({
         tostring: false,
     })
 
     beforeAll(async () => {
+        const MockAuthGuard = {
+            canActive: () => {
+                return true
+            },
+        }
+
+        const MockRolesGuard = {
+            canActive: () => {
+                return true
+            },
+        }
+        
+        mongod = await MongoMemoryServer.create()
+
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 MongooseModule.forRootAsync({
                     useFactory: async () => {
-                        const mongod = new MongoMemoryServer()
-                        const uri = await mongod.getUri()
+                        const uri = mongod.getUri()
                         return {
-                            uri,
+                            uri: uri,
                         }
                     },
                 }),
                 UsersModule,
             ],
-        }).compile()
+        })
+            .overrideGuard(JwtAuthGuard)
+            .useValue(MockAuthGuard)
+            .overrideGuard(RolesGuard)
+            .useValue(MockRolesGuard)
+            .overrideProvider(UsersService)
+            .useValue(usersService)
+            .compile()
 
         app = module.createNestApplication()
         userModel = module.get<Model<UserDocument>>(getModelToken(User.name))
@@ -42,7 +67,7 @@ describe('UsersController', () => {
     })
 
     afterEach(() => {
-        userModel.remove()
+        userModel.remove({})
     })
 
     it('GET /users', () => {
