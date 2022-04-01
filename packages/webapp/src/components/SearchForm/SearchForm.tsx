@@ -20,7 +20,7 @@ const SearchForm = ({ showSearchIcon = true }: SearchFormProps) => {
     const handleSubmit = (_keyword?: string) => {
         history.push({
             pathname: '/search',
-            search: queryString.stringify({ keyword: _keyword || keyword }),
+            search: queryString.stringify({ keyword: _keyword ?? keyword }),
         })
     }
 

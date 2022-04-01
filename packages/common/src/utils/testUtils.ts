@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { categories, IListing, ListingOrigins, IUser } from '../types'
+import { IListing, ListingOrigins, IUser, Category } from '../types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
@@ -26,14 +26,14 @@ export const generateMockItemData = (
         items.push({
             id: faker.datatype.uuid(),
             title: faker.random.words(5),
-            category: [_.sample(Object.keys(categories)) || 'fordon'],
+            category: [_.sample(Object.values(Category))],
             imageUrl: [faker.internet.url()],
             isAuction: faker.datatype.boolean(),
+            date: faker.datatype.datetime().getTime(),
             redirectUrl: faker.internet.url(),
             region: faker.address.cityName(),
-            origin: Object.values(ListingOrigins)[
-                Math.floor(Math.random() * Object.values(ListingOrigins).length)
-            ],
+            origin: _.sample(Object.values(ListingOrigins)),
+            parameters: [],
             price: {
                 value: faker.datatype.number({ min: 10, max: 9999999 }),
                 currency: 'kr',

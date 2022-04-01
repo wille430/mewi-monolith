@@ -1,12 +1,14 @@
 import { Button, Container } from '@mewi/ui'
 import Layout from 'components/Layout'
-import { useAppDispatch } from 'hooks/hooks'
-import { FormEvent, useState } from 'react'
-import { changePassword, changePasswordErrorPayload } from 'store/auth/creators'
+import { FormEvent, useEffect, useState } from 'react'
+import { changePasswordErrorPayload } from 'store/auth/creators'
 import useQuery from 'hooks/useQuery'
 import FormTextField from 'components/FormTextField/FormTextField'
-import { useHistory } from 'react-router-dom'
 import { pushToSnackbar } from 'store/snackbar/creators'
+import { useNavigate } from 'react-router'
+import { useMutation } from 'react-query'
+import axios from 'axios'
+import { useAppDispatch } from 'hooks/hooks'
 
 const ForgottenPassword = () => {
     const initialState = {
@@ -18,35 +20,45 @@ const ForgottenPassword = () => {
     const [formData, setFormData] = useState(initialState)
     const [errors, setErrors] = useState<changePasswordErrorPayload>(initialState)
     const query = useQuery()
-    const history = useHistory()
-
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
+
+    const mutation = useMutation(
+        async () =>
+            axios.put('/users/password', {
+                token: query.get('token'),
+                password: formData.password,
+                passwordConfirm: formData.repassword,
+            }),
+        {
+            onSuccess: () => {
+                navigate('/login')
+                dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
+            },
+            onError: () => {
+                setErrors({
+                    ...initialState,
+                    general: 'Ett fel inträffade',
+                })
+            },
+        }
+    )
+
+    useEffect(() => {
+        if (!query.get('userId') || !query.get('token')) {
+            navigate('/')
+        }
+    }, [])
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
 
         const { userId, token } = { userId: query.get('userId'), token: query.get('token') }
 
-        console.log({ userId, token })
-
         if (userId && token && formData.password && formData.repassword) {
-            dispatch(changePassword([userId, formData.password, formData.repassword, token])).then(
-                (action) => {
-                    if (action.meta.requestStatus === 'fulfilled') {
-                        navigate('/login')
-                        dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
-                    } else {
-                        if (action.payload) {
-                            setErrors(action.payload as changePasswordErrorPayload)
-                        } else {
-                            setErrors({
-                                ...initialState,
-                                general: 'Ett fel inträffade',
-                            })
-                        }
-                    }
-                }
-            )
+            setErrors(initialState)
+            setFormData(initialState)
+            mutation.mutate()
         }
     }
 

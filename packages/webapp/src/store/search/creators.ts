@@ -53,7 +53,11 @@ export const getSearchResults = createAsyncThunk<
     { state: RootState }
 >(SearchActionTypes.GET_RESULTS, async (args, thunkApi) => {
     try {
-        const { filters, sort, page } = thunkApi.getState().search
+        const { filters: _filters, sort, page } = thunkApi.getState().search
+        let filters = _filters
+
+        if (filters.keyword === '') filters = _.omit(filters, 'keyword')
+
         const { totalHits, hits } = await axios
             .get('/listings?' + queryString.stringify({ ...filters, sort, page }))
             .then((res) => res.data)

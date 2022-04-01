@@ -1,35 +1,36 @@
 import { Button, Container, TextField } from '@mewi/ui'
+import axios from 'axios'
 import Layout from 'components/Layout'
-import { useAppDispatch } from 'hooks/hooks'
 import { FormEvent, useState } from 'react'
+import { useMutation } from 'react-query'
 import { Link } from 'react-router-dom'
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()
-    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [successMessage, setSuccessMessage] = useState('')
-
-    const dispatch = useAppDispatch()
+    const [errorMessage, setErrorMessage] = useState('')
+    const mutation = useMutation(async () => axios.put('/users/password', { email }), {
+        onSuccess: () => {
+            setSuccessMessage(
+                `Ett mejl har skickats till ${email} med en lösenordsåterställningslänk`
+            )
+            setEmail('')
+        },
+        onError: () => setErrorMessage('Ett fel inträffade'),
+    })
 
     const onFormSubmit = async (e: FormEvent) => {
         e.preventDefault()
 
-        // TODO: implement password reset here and in backend
+        setErrorMessage(undefined)
+        setSuccessMessage('')
 
-        // setErrorMessage(undefined)
-        // setSuccessMessage('')
+        if (!email) {
+            setErrorMessage('Fältet kan inte vara tomt')
+            return
+        }
 
-        // if (!email) {
-        //     setErrorMessage('Fältet kan inte vara tomt')
-        //     return
-        // }
-
-        // if (action.meta.requestStatus === 'fulfilled') {
-        //     setSuccessMessage(`Ett meddelande till ${email} har skickats med en återställningslänk`)
-        //     setEmail(undefined)
-        // } else {
-        //     if (typeof action.payload === 'string') setErrorMessage(action.payload)
-        // }
+        mutation.mutate()
     }
 
     return (
@@ -61,6 +62,7 @@ const ForgottenPassword = () => {
                                 label='Byt lösenord'
                                 onClick={onFormSubmit}
                                 data-testid='formSubmitButton'
+                                disabled={mutation.isLoading}
                             />
                         </div>
                     </Container.Content>

@@ -1,42 +1,23 @@
-import { categories, Category } from '@mewi/common/types'
+import { Category, CategoryLabel } from '@mewi/common/types'
 import { ReactNode } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 interface CategoryPathLabelProps {
-    categoryValues: ParamTypes
+    categories: Category[]
 }
 
-export interface ParamTypes {
-    category_id: string
-    subcat_id?: string
-}
-
-const CategoryPathLabel = ({ categoryValues }: CategoryPathLabelProps) => {
-    const history = useHistory()
-
+const CategoryPathLabel = ({ categories }: CategoryPathLabelProps) => {
     const renderLinks = () => {
-        const links: ReactNode[] = []
+        const links: ReactNode[] = [<Link to='/kategorier'>Alla kategorier</Link>]
 
-        let parentCategory: Category | undefined = undefined
-        let parentLinkPath = '/kategorier'
-
-        Object.values(categoryValues).forEach((catVal) => {
-            if (!catVal) return
-
-            if (!parentCategory) {
-                parentCategory = categories[catVal]
-            } else {
-                parentCategory = parentCategory.subcat[catVal]
-            }
-
-            parentLinkPath = `${parentLinkPath}/${catVal}`
-
+        for (const value of categories || []) {
+            const indexOfValue = Object.values(categories).indexOf(value)
             links.push(
-                <Link key={parentCategory._id} to={parentLinkPath}>
-                    {parentCategory.label}
+                <Link key={value} to={'/kategorier/' + value}>
+                    {CategoryLabel[Object.keys(Category)[indexOfValue]]}
                 </Link>
             )
-        })
+        }
 
         // Add > between each link
         const linksWithSpacers: ReactNode[] = []

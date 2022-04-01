@@ -166,7 +166,7 @@ export interface BlocketItemData {
         query_key: string
     }[]
     map_url: string
-    parameter_groups: {
+    parameter_groups?: {
         label: string
         parameters: {
             id: string
@@ -178,7 +178,7 @@ export interface BlocketItemData {
     price: {
         label: 'Pris'
         suffix: 'kr'
-        value: number
+        value: string
         value_without_vat: number
     }
     safety_tips: {

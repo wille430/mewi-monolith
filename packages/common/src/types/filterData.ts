@@ -1,277 +1,277 @@
-export interface Category {
-    _id: string
-    label: string
-    subcat: CategoryHash
-}
+// export interface Category {
+//     _id: string
+//     label: string
+//     subcat: CategoryHash
+// }
 
-export interface CategoryHash {
-    [key: string]: Category
-}
+// export interface CategoryHash {
+//     [key: string]: Category
+// }
 
-export const categories: CategoryHash = {
-    fordon: {
-        _id: '61366a5106116ee385a56b17',
-        label: 'Fordon',
-        subcat: {
-            bilar: {
-                _id: '6138ed961848c7da4db9a4f0',
-                label: 'Bilar',
-                subcat: {},
-            },
-            båtar: {
-                _id: '6138ed961848c7da4db9a4f2',
-                label: 'Båtar',
-                subcat: {},
-            },
-            bildelar_biltillbehör: {
-                _id: '6138ed961848c7da4db9a4f1',
-                label: 'Bildelar & biltillbehör',
-                subcat: {},
-            },
-            mopeder: {
-                _id: '6138ed961848c7da4db9a4f5',
-                label: 'Mopeder',
-                subcat: {},
-            },
-            båtdelar_tillbehör: {
-                _id: '6138ed961848c7da4db9a4f3',
-                label: 'Båtdelar & tillbehör',
-                subcat: {},
-            },
-            husvagnar_husbilar: {
-                _id: '6138ed961848c7da4db9a4f4',
-                label: 'Husvagnar & husbilar',
-                subcat: {},
-            },
-            'mc-delar': {
-                _id: '6138ed961848c7da4db9a4f8',
-                label: 'MC-delar',
-                subcat: {},
-            },
-            'a-traktor': {
-                _id: '6138ed961848c7da4db9a4f6',
-                label: 'A-traktor',
-                subcat: {},
-            },
-            lastbil_truck_entreprenad: {
-                _id: '6138ed961848c7da4db9a4f9',
-                label: 'Lastbil, truck & entreprenad',
-                subcat: {},
-            },
-            motorcyklar: {
-                _id: '6138ed961848c7da4db9a4f7',
-                label: 'Motorcyklar',
-                subcat: {},
-            },
-            snöskotrar: {
-                _id: '6138ed961848c7da4db9a4fb',
-                label: 'Snöskotrar',
-                subcat: {},
-            },
-            snöskoterdelar: {
-                _id: '6138ed961848c7da4db9a4fc',
-                label: 'Snöskoterdelar',
-                subcat: {},
-            },
-        },
-    },
-    för_hemmet: {
-        _id: '6138eb92163f13592bfd0c38',
-        label: 'För hemmet',
-        subcat: {
-            bygg_trädgård: {
-                _id: '6138edb7d7f1768a965f239d',
-                label: 'Bygg & trädgård',
-                subcat: {},
-            },
-            husgeråd_vitvaror: {
-                _id: '6138edb7d7f1768a965f239f',
-                label: 'Husgeråd & vitvaror',
-                subcat: {},
-            },
-            möbler_hemindredning: {
-                _id: '6138edb7d7f1768a965f239e',
-                label: 'Möbler & hemindredning',
-                subcat: {},
-            },
-            verktyg: {
-                _id: '6138edb7d7f1768a965f23a0',
-                label: 'Verktyg',
-                subcat: {},
-            },
-        },
-    },
-    bostad: {
-        _id: '6138eb92163f13592bfd0c39',
-        label: 'Bostad',
-        subcat: {
-            lägenheter: {
-                _id: '6138edd642f67c68a716fdee',
-                label: 'Lägenheter',
-                subcat: {},
-            },
-            villor: {
-                _id: '6138edd642f67c68a716fdef',
-                label: 'Villor',
-                subcat: {},
-            },
-            radhus: {
-                _id: '6138edd642f67c68a716fdf0',
-                label: 'Radhus',
-                subcat: {},
-            },
-            tomter: {
-                _id: '6138edd642f67c68a716fdf1',
-                label: 'Tomter',
-                subcat: {},
-            },
-            gårdar: {
-                _id: '6138edd642f67c68a716fdf2',
-                label: 'Gårdar',
-                subcat: {},
-            },
-            fritidsboende: {
-                _id: '6138edd642f67c68a716fdf3',
-                label: 'Fritidsboende',
-                subcat: {},
-            },
-            utland: {
-                _id: '6138edd642f67c68a716fdf4',
-                label: 'Utland',
-                subcat: {},
-            },
-        },
-    },
-    personligt: {
-        _id: '6138eb92163f13592bfd0c3a',
-        label: 'Personligt',
-        subcat: {
-            kläder_skor: {
-                _id: '6138ee31f39ac37b8acccb3a',
-                label: 'Kläder & skor',
-                subcat: {},
-            },
-            accessoarer_klockor: {
-                _id: '6138ee31f39ac37b8acccb3b',
-                label: 'Accessoarer & klockor',
-                subcat: {},
-            },
-            barnartiklar_leksaker: {
-                _id: '6138ee31f39ac37b8acccb3d',
-                label: 'Barnartiklar & leksaker',
-                subcat: {},
-            },
-            barnkläder_skor: {
-                _id: '6138ee31f39ac37b8acccb3c',
-                label: 'Barnkläder & skor',
-                subcat: {},
-            },
-        },
-    },
-    elektronik: {
-        _id: '6138eb92163f13592bfd0c3b',
-        label: 'Elektronik',
-        subcat: {
-            'datorer_tv-spel': {
-                _id: '6138ee7a2e0764c2b9f40e39',
-                label: 'Datorer & TV-spel',
-                subcat: {},
-            },
-            ljud_bild: {
-                _id: '6138ee7a2e0764c2b9f40e3a',
-                label: 'Ljud & bild',
-                subcat: {},
-            },
-            telefoner_tillbehör: {
-                _id: '6138ee7a2e0764c2b9f40e3b',
-                label: 'Telefoner & tillbehör',
-                subcat: {},
-            },
-        },
-    },
-    fritid_hobby: {
-        _id: '6138eb92163f13592bfd0c3c',
-        label: 'Fritid & hobby',
-        subcat: {
-            upplevelser_nöje: {
-                _id: '6138ee8d2c4f0b665e4c59ac',
-                label: 'Upplevelser & nöje',
-                subcat: {},
-            },
-            böcker_studentlitteratur: {
-                _id: '6138ee8d2c4f0b665e4c59ad',
-                label: 'Böcker & studentlitteratur',
-                subcat: {},
-            },
-            cyklar: {
-                _id: '6138ee8d2c4f0b665e4c59ae',
-                label: 'Cyklar',
-                subcat: {},
-            },
-            djur: {
-                _id: '6138ee8d2c4f0b665e4c59af',
-                label: 'Djur',
-                subcat: {},
-            },
-            hobby_samlarprylar: {
-                _id: '6138ee8d2c4f0b665e4c59b0',
-                label: 'Hobby & samlarprylar',
-                subcat: {},
-            },
-            hästar_ridsport: {
-                _id: '6138ee8d2c4f0b665e4c59b1',
-                label: 'Hästar & ridsport',
-                subcat: {},
-            },
-            jakt_fiske: {
-                _id: '6138ee8d2c4f0b665e4c59b2',
-                label: 'Jakt & fiske',
-                subcat: {},
-            },
-            musikutrustning: {
-                _id: '6138ee8d2c4f0b665e4c59b3',
-                label: 'Musikutrustning',
-                subcat: {},
-            },
-            'sport-_fritidsutrustning': {
-                _id: '6138ee8d2c4f0b665e4c59b4',
-                label: 'Sport- & fritidsutrustning',
-                subcat: {},
-            },
-        },
-    },
-    affärsverksamhet: {
-        _id: '6138eb92163f13592bfd0c3d',
-        label: 'Affärsverksamhet',
-        subcat: {
-            affärsöverlåtelser: {
-                _id: '6138eea3c70d6b471d06ffc8',
-                label: 'Affärsöverlåtelser',
-                subcat: {},
-            },
-            inventarier_maskiner: {
-                _id: '6138eea3c70d6b471d06ffc9',
-                label: 'Inventarier & maskiner',
-                subcat: {},
-            },
-            lokaler_fastigheter: {
-                _id: '6138eea3c70d6b471d06ffca',
-                label: 'Lokaler & fastigheter',
-                subcat: {},
-            },
-            tjänster: {
-                _id: '6138eea3c70d6b471d06ffcb',
-                label: 'Tjänster',
-                subcat: {},
-            },
-        },
-    },
-    övrigt: {
-        _id: '6138eb92163f13592bfd0c3e',
-        label: 'Övrigt',
-        subcat: {},
-    },
-}
+// export const categories: CategoryHash = {
+//     fordon: {
+//         _id: '61366a5106116ee385a56b17',
+//         label: 'Fordon',
+//         subcat: {
+//             bilar: {
+//                 _id: '6138ed961848c7da4db9a4f0',
+//                 label: 'Bilar',
+//                 subcat: {},
+//             },
+//             båtar: {
+//                 _id: '6138ed961848c7da4db9a4f2',
+//                 label: 'Båtar',
+//                 subcat: {},
+//             },
+//             bildelar_biltillbehör: {
+//                 _id: '6138ed961848c7da4db9a4f1',
+//                 label: 'Bildelar & biltillbehör',
+//                 subcat: {},
+//             },
+//             mopeder: {
+//                 _id: '6138ed961848c7da4db9a4f5',
+//                 label: 'Mopeder',
+//                 subcat: {},
+//             },
+//             båtdelar_tillbehör: {
+//                 _id: '6138ed961848c7da4db9a4f3',
+//                 label: 'Båtdelar & tillbehör',
+//                 subcat: {},
+//             },
+//             husvagnar_husbilar: {
+//                 _id: '6138ed961848c7da4db9a4f4',
+//                 label: 'Husvagnar & husbilar',
+//                 subcat: {},
+//             },
+//             'mc-delar': {
+//                 _id: '6138ed961848c7da4db9a4f8',
+//                 label: 'MC-delar',
+//                 subcat: {},
+//             },
+//             'a-traktor': {
+//                 _id: '6138ed961848c7da4db9a4f6',
+//                 label: 'A-traktor',
+//                 subcat: {},
+//             },
+//             lastbil_truck_entreprenad: {
+//                 _id: '6138ed961848c7da4db9a4f9',
+//                 label: 'Lastbil, truck & entreprenad',
+//                 subcat: {},
+//             },
+//             motorcyklar: {
+//                 _id: '6138ed961848c7da4db9a4f7',
+//                 label: 'Motorcyklar',
+//                 subcat: {},
+//             },
+//             snöskotrar: {
+//                 _id: '6138ed961848c7da4db9a4fb',
+//                 label: 'Snöskotrar',
+//                 subcat: {},
+//             },
+//             snöskoterdelar: {
+//                 _id: '6138ed961848c7da4db9a4fc',
+//                 label: 'Snöskoterdelar',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     för_hemmet: {
+//         _id: '6138eb92163f13592bfd0c38',
+//         label: 'För hemmet',
+//         subcat: {
+//             bygg_trädgård: {
+//                 _id: '6138edb7d7f1768a965f239d',
+//                 label: 'Bygg & trädgård',
+//                 subcat: {},
+//             },
+//             husgeråd_vitvaror: {
+//                 _id: '6138edb7d7f1768a965f239f',
+//                 label: 'Husgeråd & vitvaror',
+//                 subcat: {},
+//             },
+//             möbler_hemindredning: {
+//                 _id: '6138edb7d7f1768a965f239e',
+//                 label: 'Möbler & hemindredning',
+//                 subcat: {},
+//             },
+//             verktyg: {
+//                 _id: '6138edb7d7f1768a965f23a0',
+//                 label: 'Verktyg',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     bostad: {
+//         _id: '6138eb92163f13592bfd0c39',
+//         label: 'Bostad',
+//         subcat: {
+//             lägenheter: {
+//                 _id: '6138edd642f67c68a716fdee',
+//                 label: 'Lägenheter',
+//                 subcat: {},
+//             },
+//             villor: {
+//                 _id: '6138edd642f67c68a716fdef',
+//                 label: 'Villor',
+//                 subcat: {},
+//             },
+//             radhus: {
+//                 _id: '6138edd642f67c68a716fdf0',
+//                 label: 'Radhus',
+//                 subcat: {},
+//             },
+//             tomter: {
+//                 _id: '6138edd642f67c68a716fdf1',
+//                 label: 'Tomter',
+//                 subcat: {},
+//             },
+//             gårdar: {
+//                 _id: '6138edd642f67c68a716fdf2',
+//                 label: 'Gårdar',
+//                 subcat: {},
+//             },
+//             fritidsboende: {
+//                 _id: '6138edd642f67c68a716fdf3',
+//                 label: 'Fritidsboende',
+//                 subcat: {},
+//             },
+//             utland: {
+//                 _id: '6138edd642f67c68a716fdf4',
+//                 label: 'Utland',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     personligt: {
+//         _id: '6138eb92163f13592bfd0c3a',
+//         label: 'Personligt',
+//         subcat: {
+//             kläder_skor: {
+//                 _id: '6138ee31f39ac37b8acccb3a',
+//                 label: 'Kläder & skor',
+//                 subcat: {},
+//             },
+//             accessoarer_klockor: {
+//                 _id: '6138ee31f39ac37b8acccb3b',
+//                 label: 'Accessoarer & klockor',
+//                 subcat: {},
+//             },
+//             barnartiklar_leksaker: {
+//                 _id: '6138ee31f39ac37b8acccb3d',
+//                 label: 'Barnartiklar & leksaker',
+//                 subcat: {},
+//             },
+//             barnkläder_skor: {
+//                 _id: '6138ee31f39ac37b8acccb3c',
+//                 label: 'Barnkläder & skor',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     elektronik: {
+//         _id: '6138eb92163f13592bfd0c3b',
+//         label: 'Elektronik',
+//         subcat: {
+//             'datorer_tv-spel': {
+//                 _id: '6138ee7a2e0764c2b9f40e39',
+//                 label: 'Datorer & TV-spel',
+//                 subcat: {},
+//             },
+//             ljud_bild: {
+//                 _id: '6138ee7a2e0764c2b9f40e3a',
+//                 label: 'Ljud & bild',
+//                 subcat: {},
+//             },
+//             telefoner_tillbehör: {
+//                 _id: '6138ee7a2e0764c2b9f40e3b',
+//                 label: 'Telefoner & tillbehör',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     fritid_hobby: {
+//         _id: '6138eb92163f13592bfd0c3c',
+//         label: 'Fritid & hobby',
+//         subcat: {
+//             upplevelser_nöje: {
+//                 _id: '6138ee8d2c4f0b665e4c59ac',
+//                 label: 'Upplevelser & nöje',
+//                 subcat: {},
+//             },
+//             böcker_studentlitteratur: {
+//                 _id: '6138ee8d2c4f0b665e4c59ad',
+//                 label: 'Böcker & studentlitteratur',
+//                 subcat: {},
+//             },
+//             cyklar: {
+//                 _id: '6138ee8d2c4f0b665e4c59ae',
+//                 label: 'Cyklar',
+//                 subcat: {},
+//             },
+//             djur: {
+//                 _id: '6138ee8d2c4f0b665e4c59af',
+//                 label: 'Djur',
+//                 subcat: {},
+//             },
+//             hobby_samlarprylar: {
+//                 _id: '6138ee8d2c4f0b665e4c59b0',
+//                 label: 'Hobby & samlarprylar',
+//                 subcat: {},
+//             },
+//             hästar_ridsport: {
+//                 _id: '6138ee8d2c4f0b665e4c59b1',
+//                 label: 'Hästar & ridsport',
+//                 subcat: {},
+//             },
+//             jakt_fiske: {
+//                 _id: '6138ee8d2c4f0b665e4c59b2',
+//                 label: 'Jakt & fiske',
+//                 subcat: {},
+//             },
+//             musikutrustning: {
+//                 _id: '6138ee8d2c4f0b665e4c59b3',
+//                 label: 'Musikutrustning',
+//                 subcat: {},
+//             },
+//             'sport-_fritidsutrustning': {
+//                 _id: '6138ee8d2c4f0b665e4c59b4',
+//                 label: 'Sport- & fritidsutrustning',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     affärsverksamhet: {
+//         _id: '6138eb92163f13592bfd0c3d',
+//         label: 'Affärsverksamhet',
+//         subcat: {
+//             affärsöverlåtelser: {
+//                 _id: '6138eea3c70d6b471d06ffc8',
+//                 label: 'Affärsöverlåtelser',
+//                 subcat: {},
+//             },
+//             inventarier_maskiner: {
+//                 _id: '6138eea3c70d6b471d06ffc9',
+//                 label: 'Inventarier & maskiner',
+//                 subcat: {},
+//             },
+//             lokaler_fastigheter: {
+//                 _id: '6138eea3c70d6b471d06ffca',
+//                 label: 'Lokaler & fastigheter',
+//                 subcat: {},
+//             },
+//             tjänster: {
+//                 _id: '6138eea3c70d6b471d06ffcb',
+//                 label: 'Tjänster',
+//                 subcat: {},
+//             },
+//         },
+//     },
+//     övrigt: {
+//         _id: '6138eb92163f13592bfd0c3e',
+//         label: 'Övrigt',
+//         subcat: {},
+//     },
+// }
 
 export const categoriesOptions = [
     {

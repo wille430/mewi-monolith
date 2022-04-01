@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { User, UserDocument } from '@/users/user.schema'
 import { Model } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { IUser } from '@mewi/common/types'
 import {
     ChangePasswordAuth,
     ChangePasswordNoAuth,

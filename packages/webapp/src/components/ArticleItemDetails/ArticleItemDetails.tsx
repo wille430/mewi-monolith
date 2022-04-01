@@ -9,7 +9,6 @@ import { Button } from '@mewi/ui'
 import { FiX } from 'react-icons/fi'
 import Description from './Description/Description'
 import CategoryPathLabel from 'components/SearchArea/CategoryPathLabel'
-import { useEffect } from 'react'
 
 const cx = classNames.bind(styles)
 
@@ -37,10 +36,6 @@ const ArticleItemDetails = ({
         window.open(redirectUrl)
     }
 
-    useEffect(() => {
-        console.log(category)
-    }, [])
-
     return (
         <Container>
             <Container.Header className={styles.header}>
@@ -49,12 +44,7 @@ const ArticleItemDetails = ({
                         [styles.categoryPath]: true,
                     })}
                 >
-                    <CategoryPathLabel
-                        categoryValues={{
-                            category_id: category[0],
-                            subcat_id: category[1],
-                        }}
-                    />
+                    <CategoryPathLabel categories={category} />
                 </span>
                 <span>
                     <Button onClick={handleClose} variant='text' icon={<FiX />} />
@@ -103,12 +93,14 @@ const ArticleItemDetails = ({
 
 const Specifications = ({ specs }: { specs: IListing['parameters'] }) => (
     <table className={styles.specifications}>
-        {specs?.map(({ label, value }) => (
-            <tr>
-                <td>{label}:</td>
-                <td>{value}</td>
-            </tr>
-        ))}
+        <tbody>
+            {specs?.map(({ label, value }) => (
+                <tr>
+                    <td>{label}:</td>
+                    <td>{value}</td>
+                </tr>
+            ))}
+        </tbody>
     </table>
 )
 

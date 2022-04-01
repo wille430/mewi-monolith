@@ -1,4 +1,4 @@
-import { IListing, ListingOrigins } from '@mewi/common/types'
+import { Category, IListing, ListingOrigins } from '@mewi/common/types'
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
@@ -15,8 +15,8 @@ export class Listing implements IListing {
     @Prop()
     body?: string
 
-    @Prop([String])
-    category: string[]
+    @Prop({ type: [String], enum: Category, default: [Category.OVRIGT] })
+    category: Category[]
 
     @Prop()
     date: number
@@ -43,12 +43,11 @@ export class Listing implements IListing {
 
     @Prop([
         raw({
-            id: { type: String },
             label: { type: String },
             value: { type: String },
         }),
     ])
-    parameters: { id: string; label: string; value: string }[]
+    parameters: { label: string; value: string }[]
 
     @Prop({ type: String, enum: ListingOrigins })
     origin: IListing['origin']
@@ -57,7 +56,9 @@ export class Listing implements IListing {
     isAuction: boolean
 
     @Prop()
-    endDate: number
+    endDate?: number
 }
 
 export const ListingSchema = SchemaFactory.createForClass(Listing)
+
+ListingSchema.index({ title: 'text' })

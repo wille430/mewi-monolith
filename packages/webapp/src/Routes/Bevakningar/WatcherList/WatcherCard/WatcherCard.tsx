@@ -2,17 +2,22 @@ import ExpandButton from './ExpandButton/ExpandButton'
 import { useHistory } from 'react-router-dom'
 import { capitalize } from '@mewi/common/utils'
 import RemoveButton from './RemoveWatcherButton'
-import { IListing, JoinedWatcher } from '@mewi/common/types'
+import { IListing, IPopulatedWatcher } from '@mewi/common/types'
 import { Button } from '@mewi/ui'
 import queryString from 'query-string'
 import _ from 'lodash'
-import { findNestedCategory } from 'utils'
 import { useEffect, useRef, useState } from 'react'
 import styles from './WatcherCard.module.scss'
 import { AnimatePresence } from 'framer-motion'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 
-const WatcherCard = ({ watcher, newItems }: { watcher: JoinedWatcher; newItems?: IListing[] }) => {
+const WatcherCard = ({
+    watcher,
+    newItems,
+}: {
+    watcher: IPopulatedWatcher
+    newItems?: IListing[]
+}) => {
     const history = useHistory()
     const [expand, setExpand] = useState(false)
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -22,7 +27,7 @@ const WatcherCard = ({ watcher, newItems }: { watcher: JoinedWatcher; newItems?:
         let pathname = '/search'
 
         if (watcher.metadata.category) {
-            pathname = `/kategorier/${findNestedCategory(watcher.metadata.category).join('/')}`
+            pathname = `/kategorier/${watcher.metadata.category}`
         }
 
         history.push({

@@ -21,7 +21,7 @@ const FeaturedListings = () => {
                 <h3>Produkter i blickfånget</h3>
                 <div className='flex space-x-4 overflow-x-auto scroll-smooth'>
                     {data?.map((x) => (
-                        <ArticleItem id={x.id} props={x} />
+                        <ArticleItem key={x.id} id={x.id} props={x} />
                     ))}
                 </div>
             </section>

@@ -1,5 +1,5 @@
 import { Listing } from '@/listings/listing.schema'
-import { ListingOrigins } from '@mewi/common/types'
+import { Category, ListingOrigins } from '@mewi/common/types'
 import {
     IsArray,
     IsBoolean,
@@ -22,7 +22,8 @@ export class CreateListingDto implements Listing {
 
     @IsArray()
     @IsString({ each: true })
-    category: string[]
+    @IsEnum(Category)
+    category: Category[]
 
     @IsNumber()
     @Min(0)

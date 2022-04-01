@@ -68,18 +68,18 @@ export class UsersController {
     @Get(':id')
     @Roles(Role.Admin)
     findOne(@Param('id') id: string) {
-        return this.usersService.findOne(+id)
+        return this.usersService.findOne(id)
     }
 
     @Patch(':id')
     @Roles(Role.Admin)
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.update(+id, updateUserDto)
+        return this.usersService.update(id, updateUserDto)
     }
 
     @Delete(':id')
     @Roles(Role.Admin)
     remove(@Param('id') id: string) {
-        return this.usersService.remove(+id)
+        return this.usersService.remove(id)
     }
 }

@@ -1,14 +1,11 @@
-import { categories } from '@mewi/common/types'
+import { Category } from '@mewi/common/types'
 import CategoryListItem from './CategoryListItem'
 
 const CategoryList = () => {
     return (
         <div className='flex flex-wrap gap-y-12 gap-x-12' data-testid='categoryList'>
-            {Object.keys(categories).map((key) => (
-                <CategoryListItem
-                    categoryValue={key}
-                    categoryData={categories[key]}
-                ></CategoryListItem>
+            {Object.keys(Category).map((key) => (
+                <CategoryListItem categoryKey={key as keyof typeof Category} />
             ))}
         </div>
     )

@@ -1,5 +1,6 @@
 import { SearchFilterDataProps } from './index'
 import { Types } from 'mongoose'
+import { Category } from './category.enum'
 
 /**
  * Models
@@ -52,17 +53,15 @@ export interface IListing {
     id: string
     title: string
     body?: string
-    category: CategoryType
-    date?: number
+    category: Category[]
+    date: number
     endDate?: number
     imageUrl: string[]
     isAuction: boolean
     redirectUrl: string
     price?: ListingPrice
     region: string
-    zipcode?: string
-    parameters?: {
-        id: string
+    parameters: {
         label: string
         value: string
     }[]

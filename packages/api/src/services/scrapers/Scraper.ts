@@ -118,10 +118,10 @@ class Scraper {
     }
 
     schedule(callback?: () => void): void {
-        console.log(`Scheduling scraper for ${this.name} with schedule (${this.cronTimerSchedule})`)
-        nodeSchedule.scheduleJob(this.cronTimerSchedule, () => {
+        console.log(`scheduling scraper for ${this.name} with schedule (${this.crontimerschedule})`)
+        nodeschedule.schedulejob(this.crontimerschedule, () => {
             this.start().then(async () => {
-                await this.deleteOld()
+                await this.deleteold()
                 callback && callback()
             })
         })

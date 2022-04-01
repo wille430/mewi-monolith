@@ -17,6 +17,6 @@ import { UsersModule } from '@/users/users.module'
     ],
     controllers: [WatchersController],
     providers: [WatchersService],
-    exports: [MongooseModule],
+    exports: [MongooseModule, UsersModule, WatchersService],
 })
 export class WatchersModule {}

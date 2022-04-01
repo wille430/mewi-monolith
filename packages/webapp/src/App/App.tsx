@@ -48,10 +48,7 @@ function App() {
                         />
                         <Page
                             title='Sök - Mewi.se'
-                            path={[
-                                '/kategorier/:category_id/:subcat_id',
-                                '/kategorier/:category_id',
-                            ]}
+                            path={['/kategorier/:category_id']}
                             component={<CategorySearch />}
                         />
                         <Page

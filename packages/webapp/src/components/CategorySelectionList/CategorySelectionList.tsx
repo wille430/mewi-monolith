@@ -1,4 +1,5 @@
-import { categories } from '@mewi/common/types'
+// import { categories } from '@mewi/common/types'
+import { Category, CategoryLabel } from '@mewi/common/types'
 import classNames from 'classnames'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import _ from 'lodash'
@@ -9,24 +10,24 @@ import styles from './CategorySelectionList.module.scss'
 
 const cx = classNames.bind(styles)
 
-/**
- *
- * @param categoryPath An array of keys nested in categories
- * @returns null || {@link Category}
- */
-const getNestedCategory = (categoryPath: string[]) => {
-    let category = null
+// /**
+//  *
+//  * @param categoryPath An array of keys nested in categories
+//  * @returns null || {@link Category}
+//  */
+// const getNestedCategory = (categoryPath: string[]) => {
+//     let category = null
 
-    for (const catKey of categoryPath) {
-        if (!category) {
-            category = categories[catKey]
-        } else {
-            category = category.subcat[catKey]
-        }
-    }
+//     for (const catKey of categoryPath) {
+//         if (!category) {
+//             category = categories[catKey]
+//         } else {
+//             category = category.subcat[catKey]
+//         }
+//     }
 
-    return category
-}
+//     return category
+// }
 
 const CategorySelectionList = () => {
     // /kategorier/:category_id/:subcat_id
@@ -64,53 +65,25 @@ const CategorySelectionList = () => {
     /**
      * Determine if a category is currently selected
      */
-    const isCategorySelected = (categoryPath: string[]) => {
-        const sliced = currentCategoryPath.slice(0, categoryPath.length)
-
-        if (_.isEqual(sliced, categoryPath)) {
+    const isCategorySelected = (currentCat: Category) => {
+        if (currentCategoryPath.includes(currentCat as any)) {
             return true
         }
-
         return false
     }
 
-    const renderListItems = (categoryPath: string[] = []) => {
-        if (categoryPath.length) {
-            // if not empty, find the category from the keys in categoryPath
-            const category = getNestedCategory(categoryPath)
+    const renderListItems = () => {
+        return Object.keys(Category).map((key) => {
+            const isSelected = isCategorySelected(Category[key])
 
-            // if null, exit
-            if (!category) return
-
-            return Object.keys(category?.subcat || {}).map((key) => {
-                const subcategoryPath = [...categoryPath, key]
-                const isSelected = isCategorySelected(subcategoryPath)
-
-                return (
-                    <CategorySelectionList.ListItem
-                        key={key}
-                        categoryPath={subcategoryPath}
-                        currentlySelected={isSelected}
-                    >
-                        {isSelected && renderListItems(subcategoryPath)}
-                    </CategorySelectionList.ListItem>
-                )
-            })
-        } else {
-            return Object.keys(categories).map((key) => {
-                const isSelected = isCategorySelected([key])
-
-                return (
-                    <CategorySelectionList.ListItem
-                        key={key}
-                        categoryPath={[key]}
-                        currentlySelected={isSelected}
-                    >
-                        {isSelected && renderListItems([key])}
-                    </CategorySelectionList.ListItem>
-                )
-            })
-        }
+            return (
+                <CategorySelectionList.ListItem
+                    key={key}
+                    categoryKey={key as keyof typeof Category}
+                    currentlySelected={isSelected}
+                />
+            )
+        })
     }
 
     return (
@@ -126,8 +99,8 @@ const CategorySelectionList = () => {
 
 interface ListItem {
     currentlySelected: boolean
-    categoryPath: string[]
-    children: ReactNode
+    children?: ReactNode
+    categoryKey: keyof typeof Category
 }
 
 /**
@@ -135,22 +108,19 @@ interface ListItem {
  * @param currentlySelected Whether category is selected
  * @param categoryPath An array of keys to the category in {@link categories}
  */
-const CategoryListItem = ({ categoryPath, children, currentlySelected }: ListItem) => {
-    const category = getNestedCategory(categoryPath)
-
+const CategoryListItem = ({ children, categoryKey, currentlySelected }: ListItem) => {
     const getLink = () => {
-        return '/kategorier/' + categoryPath.join('/') + window.location.search
+        return '/kategorier/' + Category[categoryKey] + window.location.search
     }
 
     return (
         <li
             className={cx({
-                [styles.subcat]: categoryPath.length > 1,
                 [styles.selected]: currentlySelected,
             })}
-            data-testid={`categoryListItem-${categoryPath.length - 1}`}
+            data-testid={`categoryListItem-${Category[categoryKey]}`}
         >
-            <Link to={getLink()}>{category?.label}</Link>
+            <Link to={getLink()}>{CategoryLabel[categoryKey]}</Link>
             <ul>{children}</ul>
         </li>
     )
