@@ -60,7 +60,7 @@ export interface IListing {
     isAuction: boolean
     redirectUrl: string
     price?: ListingPrice
-    region: string
+    region?: string
     parameters: {
         label: string
         value: string

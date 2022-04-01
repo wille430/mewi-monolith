@@ -103,12 +103,14 @@ export class Scraper {
             this.maxEntries - (await this.listingModel.count({ origin: ListingOrigins[this.name] }))
         const errors: Record<string, string> = {}
 
+        console.log(`Remaining listings to add: ${remainingEntries}`)
+
         let i = 0
         while (scrapedListings.length && remainingEntries > 0) {
             const validListings = await this.getValidListings(scrapedListings)
             const listingCountToAdd = Math.min(remainingEntries, validListings.length)
 
-            validListings.splice(0, listingCountToAdd)
+            validListings.slice(0, listingCountToAdd)
 
             await this.listingModel.insertMany(validListings).catch((e) => {
                 errors[i] = e

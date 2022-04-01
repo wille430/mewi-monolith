@@ -4,13 +4,14 @@ import { BlocketScraper } from './blocket.scraper'
 import { Model } from 'mongoose'
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { ListingOrigins } from '@mewi/common/types'
+import { TraderaScraper } from './tradera.scraper'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: BlocketScraper[] = []
+    scrapers: (BlocketScraper | TraderaScraper)[] = []
 
     constructor(@InjectModel(Listing.name) listingModel: Model<ListingDocument>) {
-        this.scrapers = [new BlocketScraper(listingModel)]
+        this.scrapers = [new BlocketScraper(listingModel), new TraderaScraper(listingModel)]
     }
 
     scheduleAll() {

@@ -100,11 +100,9 @@ export class BlocketScraper extends Scraper {
         const mainCategory = blocketCategory[0]
 
         for (const category of Object.values(Category)) {
-            const similarity = stringSimilarity(category, mainCategory.name)*2
-
+            const similarity = stringSimilarity(category, mainCategory.name) * 2
 
             if (similarity >= 0.7) {
-                console.log(`${category} and ${mainCategory.name} are ${similarity*100}% similar`)
                 return [category as Category]
             }
         }

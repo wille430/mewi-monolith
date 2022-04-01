@@ -6,22 +6,22 @@ export type ListingDocument = Listing & Document
 
 @Schema()
 export class Listing implements IListing {
-    @Prop()
+    @Prop({ unique: true })
     id: string
 
-    @Prop()
+    @Prop(String)
     title: string
 
-    @Prop()
+    @Prop(String)
     body?: string
 
     @Prop({ type: [String], enum: Category, default: [Category.OVRIGT] })
     category: Category[]
 
-    @Prop()
+    @Prop(Number)
     date: number
 
-    @Prop()
+    @Prop(String)
     redirectUrl: string
 
     @Prop([String])
@@ -38,8 +38,8 @@ export class Listing implements IListing {
         currency: string
     }
 
-    @Prop()
-    region: string
+    @Prop(String)
+    region?: string
 
     @Prop([
         raw({
@@ -52,10 +52,10 @@ export class Listing implements IListing {
     @Prop({ type: String, enum: ListingOrigins })
     origin: IListing['origin']
 
-    @Prop()
+    @Prop({ type: Boolean, default: false })
     isAuction: boolean
 
-    @Prop()
+    @Prop(Number)
     endDate?: number
 }
 
