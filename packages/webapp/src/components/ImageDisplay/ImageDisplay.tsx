@@ -12,7 +12,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
     const ImageArrowNavigation = () => {
         const transition = 'transition duration-200 ease-in-out'
         const className =
-            'w-12 h-12 hover:bg-gray-400 hover:bg-opacity-40 flex justify-center items-center rounded-full ' +
+            'w-12 h-12 bg-secondary hover:bg-opacity-80 bg-opacity-60 flex justify-center items-center rounded-full ' +
             transition
 
         const OffsetSelected = (amount: number) => {
@@ -26,7 +26,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
         }
 
         return (
-            <div className='absolute flex h-full w-full items-center justify-between p-6'>
+            <div className='absolute flex h-full w-full items-center justify-between p-2'>
                 <button className={className} onClick={(e) => OffsetSelected(-1)}>
                     <FiArrowLeft />
                 </button>
@@ -62,10 +62,10 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
         } else {
             return (
                 <div className='relative flex w-full flex-1 justify-center'>
-                    <div style={{ height: '500px' }}>
+                    <div style={{ maxHeight: '500px', width: '100%', height: 'auto' }}>
                         {imageUrls[selectedIndex] ? (
                             <DefaultImage
-                                className='h-full object-contain'
+                                className='w-full max-h-full object-contain'
                                 src={imageUrls[selectedIndex]}
                                 alt={imageUrls[selectedIndex]}
                             />

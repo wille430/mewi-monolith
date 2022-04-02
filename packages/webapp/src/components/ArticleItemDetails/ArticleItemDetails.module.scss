@@ -5,6 +5,7 @@
 .infoHeader {
     display: flex;
     justify-content: space-between;
+    padding: 0rem 1rem;
 }
 
 .specifications {
@@ -58,4 +59,13 @@
 .header {
     display: flex;
     justify-content: space-between;
+}
+
+.container {
+    min-height: 90vh;
+    padding: 0;
+
+    & > *:not(:nth-child(2)) {
+        padding: 1rem;
+    }
 }

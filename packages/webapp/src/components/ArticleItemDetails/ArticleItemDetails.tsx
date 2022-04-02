@@ -37,7 +37,7 @@ const ArticleItemDetails = ({
     }
 
     return (
-        <Container>
+        <Container className={styles.container}>
             <Container.Header className={styles.header}>
                 <span
                     className={cx({
@@ -77,11 +77,15 @@ const ArticleItemDetails = ({
                             <h4>Beskrivning</h4>
                             <Description text={body || ''} />
                         </div>
-                        <HorizontalLine />
-                        <aside>
-                            <h4>Specifikationer</h4>
-                            <Specifications specs={parameters} />
-                        </aside>
+                        {parameters.length > 0 && (
+                            <>
+                                <HorizontalLine />
+                                <aside>
+                                    <h4>Specifikationer</h4>
+                                    <Specifications specs={parameters} />
+                                </aside>
+                            </>
+                        )}
                     </div>
                     <footer></footer>
                 </article>
