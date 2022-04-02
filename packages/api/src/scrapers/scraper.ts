@@ -146,7 +146,7 @@ export class Scraper {
         console.log(`Successfully deleted ${deletedCount} items with origin ${this.name}`)
     }
 
-    async getValidListings(listings: Listing[]) {
+    private async getValidListings(listings: Listing[]) {
         const validListings: Listing[] = []
 
         for (const listing of listings) {

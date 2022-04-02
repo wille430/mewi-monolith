@@ -42,7 +42,7 @@
         "passport": "^0.5.2",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
-        "puppeteer": "^13.3.2",
+        "puppeteer": "13.3.2",
         "reflect-metadata": "^0.1.13",
         "remove": "^0.1.5",
         "robots-parser": "^3.0.0",

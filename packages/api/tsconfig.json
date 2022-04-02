@@ -18,6 +18,9 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "preserveSymlinks": true,
+        "types": ["node"],
+        "esModuleInterop": true,
+        "lib": ["es2019", "dom"],
         "paths": {
             "@mewi/common": ["../common/src/index"],
             "@mewi/common/*": ["../common/src/*"],
