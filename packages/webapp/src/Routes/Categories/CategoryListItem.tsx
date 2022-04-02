@@ -12,8 +12,9 @@ const CategoryListItem = ({ categoryKey, subCatIndex = 0, parentTo = '/kategorie
 
     return (
         <div data-testid={`categoryListItem-${subCatIndex}`}>
-            <Link to={redirectUrl} className={`${subCatIndex === 0 ? 'text-lg font-bold' : ''}`}>
-                {CategoryLabel[categoryKey]}
+            <Link to={redirectUrl} className='block w-32'>
+                <div className='h-16 w-16 bg-green rounded-full mx-auto' />
+                <span className='block text-center'>{CategoryLabel[categoryKey]}</span>
             </Link>
         </div>
     )

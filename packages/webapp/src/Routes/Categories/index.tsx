@@ -4,7 +4,7 @@ const Categories = () => {
     return (
         <div className='layout'>
             <main className='main pb-32'>
-                <section>
+                <section className='max-w-lg mx-auto'>
                     <h3 className='pb-6'>Kategorier</h3>
                     <CategoryList />
                 </section>
