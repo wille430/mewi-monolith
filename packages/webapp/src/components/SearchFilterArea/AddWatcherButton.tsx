@@ -1,11 +1,12 @@
 import { IUserWatcher, ListingSearchFilters } from '@mewi/common/types'
-import { Error } from '@mewi/common'
 import { Button } from '@mewi/ui'
 import CreateWatcherConfirmationModal from './CreateWatcherConfirmationModal'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { useState } from 'react'
 import classNames from 'classnames'
+import { useAppDispatch } from 'hooks/hooks'
+import { pushToSnackbar } from 'store/snackbar/creators'
 
 const cx = classNames.bind({})
 
@@ -16,7 +17,9 @@ type Props = {
 
 const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
     const [showModal, setShowModal] = useState(false)
+    const [error, setError] = useState('')
     const queryClient = useQueryClient()
+    const dispatch = useAppDispatch()
 
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
@@ -25,23 +28,26 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
                 .then((res) => res.data)
         },
         {
+            onMutate: () => setError(''),
             onError: (error: any, variables, context) => {
-                console.log({error})
-                switch (error.code) {
-                    case Error.Watcher.INVALID_QUERY:
+                switch (error.statusCode) {
+                    case 422:
+                    case 400:
                         error = 'Felaktigt filter'
                         break
-                    case Error.Database.CONFLICTING_RESOURCE:
+                    case 409:
                         error = 'En bevakning med samma sökning finns redan'
                         break
                     default:
                         error = 'Ett fel inträffade'
                 }
 
-                return error
+                setError(error)
+                setShowModal(false)
             },
             onSuccess: (data, variables, context) => {
                 setShowModal(false)
+                dispatch(pushToSnackbar({ title: 'Bevakningar lades till!' }))
                 queryClient.setQueryData('watchers', (old: IUserWatcher[]) => [...old, data])
             },
         }
@@ -72,20 +78,7 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
                         'ml-4': true,
                     })}
                 >
-                    {() => {
-                        if (!mutation.error) {
-                            return ''
-                        }
-
-                        switch ((mutation.error as any).code) {
-                            case Error.Watcher.INVALID_QUERY:
-                                return 'Felaktigt filter'
-                            case Error.Database.CONFLICTING_RESOURCE:
-                                return 'En bevakning med samma sökning finns redan'
-                            default:
-                                return 'Ett fel inträffade'
-                        }
-                    }}
+                    {error}
                 </span>
             </div>
             <CreateWatcherConfirmationModal

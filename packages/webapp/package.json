@@ -7,7 +7,7 @@
         "build": "vite build",
         "preview": "vite preview",
         "cy:run": "cypress open",
-        "e2e": "start-server-and-test dev http://localhost:4200 cy:run",
+        "e2e": "pnpm run dev & pnpm run cy:run",
         "test": "jest"
     },
     "dependencies": {

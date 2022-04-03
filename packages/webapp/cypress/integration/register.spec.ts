@@ -1,14 +1,15 @@
-import { randomString } from '@mewi/common/utils'
+import { Utils } from '@mewi/common'
+
 describe('register', () => {
     const userInfo = {
-        email: randomString(12) + '@removeme.com',
-        password: `./${randomString(20)}123`,
+        email: Utils.randomEmail(),
+        password: Utils.randomPassword(),
     }
 
     beforeEach(() => {
         cy.visit('/register')
-        userInfo.email = randomString(12) + '@removeme.com'
-        userInfo.password = `./${randomString(20)}123`
+        userInfo.email = Utils.randomEmail()
+        userInfo.password = Utils.randomPassword()
     })
 
     it('should register a new user', () => {
@@ -18,7 +19,7 @@ describe('register', () => {
 
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.url().should('equal', Cypress.config('baseUrl') + 'minabevakningar')
+        cy.url().should('equal', Cypress.config('baseUrl') + '/minabevakningar')
     })
 
     it('should display too weak password message', () => {
@@ -32,13 +33,13 @@ describe('register', () => {
     })
 
     it('should display invalid email message', () => {
-        cy.get('[data-testid=emailInput]').type(randomString(10))
+        cy.get('[data-testid=emailInput]').type(Utils.randomString(10))
         cy.get('[data-testid=passwordInput]').type(userInfo.password)
         cy.get('[data-testid=repasswordInput]').type(userInfo.password)
 
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.contains('felaktig epostaddress', { matchCase: false })
+        cy.contains('e-postadressen är felaktig', { matchCase: false })
     })
 
     it('should display passwords must match', () => {
@@ -54,7 +55,7 @@ describe('register', () => {
     it('should display error when email is in use already', () => {
         cy.request('post', 'http://localhost:3001/auth/signup', {
             ...userInfo,
-            repassword: userInfo.password,
+            passwordConfirm: userInfo.password,
         })
 
         cy.get('[data-testid=emailInput]').type(userInfo.email)
@@ -63,6 +64,6 @@ describe('register', () => {
 
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.contains('epostaddressen är upptagen', { matchCase: false })
+        cy.contains('e-postadressen är upptagen', { matchCase: false })
     })
 })

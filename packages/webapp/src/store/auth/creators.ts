@@ -15,39 +15,9 @@ export const onAuthLoad = createAction(AuthActionTypes.AUTH_LOAD, (): { payload:
     }
 })
 
-export const loginUser = createAsyncThunk(
-    AuthActionTypes.AUTH_LOGIN,
-    async ({ email, password }: { email: string; password: string }, thunkAPI) => {
-        try {
-            const authTokens = await axios
-                .post('/auth/login', { email, password })
-                .then((res) => res.data)
-
-            return authTokens
-        } catch (e: any) {
-            let errors: AuthState['errors'] = {}
-            switch (e.error) {
-                case Error.Auth.INVALID_EMAIL:
-                case Error.Auth.INVALID_PASSWORD:
-                case Error.Auth.MISSING_USER:
-                    errors = {
-                        ...errors,
-                        email: 'Felaktig epostaddress eller lösenord',
-                        password: 'Felaktig epostaddress eller lösenord',
-                    }
-                    break
-                default:
-                    errors = {
-                        ...errors,
-                        all: 'Ett fel inträffade. Försök igen.',
-                    }
-                    break
-            }
-
-            return thunkAPI.rejectWithValue(errors || {})
-        }
-    }
-)
+export const loginUser = createAction(AuthActionTypes.AUTH_LOGIN, (authTokens: AuthTokens) => ({
+    payload: authTokens,
+}))
 
 export const createUser = createAsyncThunk(
     AuthActionTypes.AUTH_SIGNUP,

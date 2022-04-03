@@ -1,5 +1,4 @@
-import { categories, regions, Types.ListingSearchFilters } from '@mewi/common'
-import { randomString } from '@mewi/common/utils'
+import { Types, Utils } from '@mewi/common'
 import _ from 'lodash'
 import queryString from 'query-string'
 import { setFilters } from '../../../webapp/src/store/search/creators'
@@ -10,7 +9,6 @@ interface FormData extends Types.ListingSearchFilters {
 
 describe('search', () => {
     let formData: FormData = {}
-    const longWait = 3500
     const debounceWait = 1500
 
     beforeEach(() => {
@@ -18,7 +16,7 @@ describe('search', () => {
 
         formData = {
             // category: _.sample(Object.keys(categories)),
-            regions: _.sampleSize(regions).map((regionOption) => regionOption.label)[0],
+            regions: _.sampleSize(Types.regions).map((regionOption) => regionOption.label)[0],
             priceRangeGte: Math.round(Math.random() * 2000),
             priceRangeLte: Math.round((1 + Math.random()) * 2000),
             auction: Math.round(Math.random()) === 1 ? true : false,
@@ -30,8 +28,6 @@ describe('search', () => {
     Cypress._.times(1, () => {
         it('can filter with randomized filters and search', () => {
             // TODO: select category from category selection list
-
-            cy.wait(longWait)
 
             // open filters
             cy.getBySel('showFilters').click()
@@ -46,11 +42,15 @@ describe('search', () => {
             cy.getBySel('regionsSelect').should('have.text', formData.regions)
 
             // Insert price range
-            cy.getBySel('priceGte').type(formData.priceRangeGte.toString())
-            cy.getBySel('priceGte').should('have.value', formData.priceRangeGte)
+            if (formData.priceRangeGte) {
+                cy.getBySel('priceGte').type(formData.priceRangeGte.toString())
+                cy.getBySel('priceGte').should('have.value', formData.priceRangeGte)
+            }
 
-            cy.getBySel('priceLte').type(formData.priceRangeLte.toString())
-            cy.getBySel('priceLte').should('have.value', formData.priceRangeLte)
+            if (formData.priceRangeLte) {
+                cy.getBySel('priceLte').type(formData.priceRangeLte.toString())
+                cy.getBySel('priceLte').should('have.value', formData.priceRangeLte)
+            }
 
             if (formData.auction) {
                 cy.getBySel('auctionCheckbox').click()
@@ -67,40 +67,42 @@ describe('search', () => {
                 const parsedUrl: typeof formData = queryString.parse(loc.search)
                 console.log('PARSED URL:', parsedUrl)
 
-                _.forOwn(formData, (value, key: keyof typeof formData) => {
+                for (const key of Object.keys(formData)) {
+                    const value = formData[key as keyof FormData]
+
                     if (!value) {
-                        expect(parsedUrl[key]).to.be.an('undefined')
+                        expect(parsedUrl[key as keyof FormData]).to.be.an('undefined')
                         return
                     }
 
                     switch (key) {
                         case 'regions':
                             if (typeof parsedUrl.regions === 'string') {
-                                expect(formData.regions.toLowerCase()).to.equal(parsedUrl[key])
+                                expect(formData.regions?.toLowerCase()).to.equal(parsedUrl[key])
                             } else {
                                 // TODO: validate if parsed url contains an array of regions
                             }
                             break
                         case 'priceRangeGte':
                             expect(parsedUrl.priceRangeGte).to.equal(
-                                formData.priceRangeGte.toString()
+                                formData.priceRangeGte?.toString()
                             )
                             break
                         case 'priceRangeLte':
                             expect(parsedUrl.priceRangeGte).to.equal(
-                                formData.priceRangeGte.toString()
+                                formData.priceRangeGte?.toString()
                             )
                             break
                         default:
-                            expect(parsedUrl[key]).to.equal(value.toString())
+                            expect(parsedUrl[key as keyof FormData]).to.equal(value.toString())
                     }
-                })
+                }
             })
         })
     })
 
     it('can search for a new keyword', () => {
-        const keyword = randomString(5)
+        const keyword = Utils.randomString(5)
 
         cy.getBySel('searchInput').type(keyword + '{enter}')
 
@@ -133,53 +135,51 @@ describe('search', () => {
         cy.contains('Bevakningen lades till', { matchCase: false })
     })
 
-    it('keeps filters when changing categories', () => {
-        cy.window().its('store').invoke('dispatch', setFilters(formData))
+    // TODO: filters should be cleared
+    // it('keeps filters when changing categories', () => {
+    //     cy.window().its('store').invoke('dispatch', setFilters(formData))
 
-        // change category
-        const newCategory = _.sample(categories)
-        const categoryId = Object.keys(categories).find(
-            (key) => categories[key]._id === newCategory._id
-        )
-        cy.getBySel(`categoryListItem-0`).contains(newCategory.label).click()
+    //     // change category
+    //     const newCategoryKey = _.sample(Object.keys(Types.Category)) as keyof typeof Types.Category
+    //     cy.getBySel(`categoryListItem-0`).contains(Types.CategoryLabel[newCategoryKey as keyof typeof Types.Category]).click()
 
-        // expect url search params to update correctly
-        cy.location().then((loc) => {
-            const searchParams = queryString.parse(loc.search)
+    //     // expect url search params to update correctly
+    //     cy.location().then((loc) => {
+    //         const searchParams = queryString.parse(loc.search)
 
-            console.log(decodeURI(loc.pathname), `/kategorier/${categoryId}`)
+    //         console.log(decodeURI(loc.pathname), `/kategorier/${Types.Category[newCategoryKey as keyof typeof Types.Category]}`)
 
-            expect(!!decodeURI(loc.pathname).match(`/kategorier/${categoryId}`)).to.equal(true)
+    //         expect(!!decodeURI(loc.pathname).match(`/kategorier/${Types.Category[newCategoryKey as keyof typeof Types.Category]}`)).to.equal(true)
 
-            const keysToIgnore = ['category']
+    //         const keysToIgnore = ['category']
 
-            if (!formData.auction) keysToIgnore.push('auction')
+    //         if (!formData.auction) keysToIgnore.push('auction')
 
-            expect(Object.keys(searchParams)).to.have.members(
-                Object.keys(formData).filter((x) => !keysToIgnore.includes(x))
-            )
+    //         expect(Object.keys(searchParams)).to.have.members(
+    //             Object.keys(formData).filter((x) => !keysToIgnore.includes(x))
+    //         )
 
-            for (const key in searchParams) {
-                switch (key) {
-                    case 'priceRangeGte':
-                    case 'priceRangeLte':
-                        expect(parseInt(searchParams[key] as string)).to.equal(formData[key])
-                        break
-                    case 'auction':
-                        expect(Boolean(searchParams[key])).to.equal(formData[key])
-                        break
-                    default:
-                        expect(searchParams[key]).to.equal(formData[key])
-                }
-            }
-        })
-    })
+    //         for (const key in searchParams) {
+    //             switch (key) {
+    //                 case 'priceRangeGte':
+    //                 case 'priceRangeLte':
+    //                     expect(parseInt(searchParams[key] as string)).to.equal(formData[key])
+    //                     break
+    //                 case 'auction':
+    //                     expect(Boolean(searchParams[key])).to.equal(formData[key])
+    //                     break
+    //                 default:
+    //                     expect(searchParams[key]).to.equal(formData[key as keyof FormData])
+    //             }
+    //         }
+    //     })
+    // })
 
     it('should be able to navigate through pages', () => {
         cy.visit('/')
         cy.getBySel('searchInput').type('{enter}')
 
-        cy.wrap(Array(5)).each((ele, i) => {
+        cy.wrap(Array(1)).each((ele, i) => {
             const currentPage = i + 2
             cy.getBySel('pageNav').contains(currentPage).click()
 
@@ -191,8 +191,6 @@ describe('search', () => {
 
         cy.location().then((loc) => {
             const currentPage = parseInt(queryString.parse(loc.search)['page'] as string)
-
-            console.log('Current page:', currentPage)
 
             cy.getBySel('pageNavNext').click()
 

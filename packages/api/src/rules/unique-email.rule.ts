@@ -1,5 +1,6 @@
-import { UserDocument } from '@/users/user.schema'
+import { User, UserDocument } from '@/users/user.schema'
 import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
 import {
     ValidationArguments,
     ValidatorConstraint,
@@ -10,15 +11,15 @@ import { Model } from 'mongoose'
 @ValidatorConstraint({ name: 'UniqueEmail', async: true })
 @Injectable()
 export class UniqueEmailRule implements ValidatorConstraintInterface {
-    constructor(private userModel: Model<UserDocument>) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async validate(value: string, validationArguments?: ValidationArguments): Promise<boolean> {
         try {
             const user = await this.userModel.find({ email: value })
-            if (user) {
-                return false
-            } else {
+            if (!user || !user.length) {
                 return true
+            } else {
+                return false
             }
         } catch (e) {
             return false

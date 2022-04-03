@@ -2,10 +2,10 @@
     "extends": "../tsconfig.json",
     "include": ["../node_modules/cypress", "./support/*.ts", "./integration/*.ts", "**/*.ts"],
     "compilerOptions": {
-        "isolatedModules": false,
-        "types": ["cypress"],
+        "sourceMap": false,
+        "types": ["cypress", "node"],
         "strict": true,
-        "baseUrl": "../node_modules",
-        "target": "ES5"
+        "baseUrl": "../src",
+        "target": "ES6"
     }
 }

@@ -1,4 +1,3 @@
-import { SearchPostRequestBody } from '@mewi/common/types'
 import axios from 'axios'
 import { SearchState } from 'store/search/type'
 import { IListing } from '@mewi/common/types'
@@ -8,9 +7,7 @@ export type getSearchResultsReturnType = {
     totalHits: SearchState['totalHits']
 }
 
-const getSearchResults = async (
-    options?: SearchPostRequestBody
-): Promise<getSearchResultsReturnType> => {
+const getSearchResults = async (options?): Promise<getSearchResultsReturnType> => {
     const { hits, totalHits } = await axios
         .post('/search', {
             ...options,
@@ -23,7 +20,7 @@ const getSearchResults = async (
 const autocomplete = async (keyword: string) => {
     if (keyword === '') return []
     const suggestions =
-        (await axios.get('/search/suggest/' + keyword).then((res) => res.data)) || []
+        (await axios.get('/listings/autocomplete/' + keyword).then((res) => res.data)) || []
     return suggestions
 }
 const getItemById = async (itemId: string) => {

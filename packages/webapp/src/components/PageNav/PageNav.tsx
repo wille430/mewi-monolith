@@ -11,7 +11,10 @@ interface PageNavProps {
 }
 
 const PageNav = ({ anchorEle }: PageNavProps) => {
-    const { totalHits, page } = useAppSelector((state) => state.search)
+    const {
+        totalHits,
+        filters: { page },
+    } = useAppSelector((state) => state.search)
     const totalPages = Math.ceil(totalHits / config.searchLimit) || 1
     const dispatch = useDispatch()
 

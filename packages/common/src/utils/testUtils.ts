@@ -3,7 +3,7 @@ import { IListing, ListingOrigins, IUser, Category } from '../types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
-    return `${faker.name.firstName()}@${faker.name.lastName()}@${faker.internet.domainName()}`
+    return `${faker.name.firstName()}.${faker.name.lastName()}@${faker.internet.domainName()}`
 }
 
 export const randomPassword = () => {

@@ -10,6 +10,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
+import { useContainer } from 'class-validator'
 
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule)
@@ -19,9 +20,10 @@ const bootstrap = async () => {
             transform: true,
             exceptionFactory: (errors: ValidationError[] = []) => {
                 return new BadRequestException(errors)
-            }
+            },
         })
     )
+    useContainer(app.select(AppModule), { fallbackOnErrors: true })
     await app.listen(3001)
 }
 

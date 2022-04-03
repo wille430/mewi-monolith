@@ -5,20 +5,21 @@ import {
     ValidatorConstraintInterface,
 } from 'class-validator'
 import { Model } from 'mongoose'
-import { UserDocument } from '@/users/user.schema'
+import { User, UserDocument } from '@/users/user.schema'
+import { InjectModel } from '@nestjs/mongoose'
 
 @ValidatorConstraint({ name: 'UserExists', async: true })
 @Injectable()
 export class UserExistsRule implements ValidatorConstraintInterface {
-    constructor(private userModel: Model<UserDocument>) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async validate(value: string, validationArguments?: ValidationArguments): Promise<boolean> {
         try {
             const user = await this.userModel.find({ email: value })
-            if (user) {
-                return true
-            } else {
+            if (!user || !user.length) {
                 return false
+            } else {
+                return true
             }
         } catch (e) {
             return false

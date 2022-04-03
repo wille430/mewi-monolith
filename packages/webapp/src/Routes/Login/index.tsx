@@ -4,15 +4,22 @@ import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
 import axios from 'axios'
+import { useAppDispatch } from 'hooks/hooks'
+import { loginUser } from 'store/auth/creators'
+import { AuthTokens } from '@mewi/common/types'
 
 const Login = () => {
     const [email, setEmail] = useState<string | undefined>('')
     const [password, setPassword] = useState<string | undefined>('')
+    const dispatch = useAppDispatch()
 
     const [error, setError] = useState('')
     const mutation = useMutation(async () => await axios.post('/auth/login', { email, password }), {
         onError: () => setError('Felaktig e-postadress eller lösenord'),
-        onSuccess: () => setError(''),
+        onSuccess: (val) => {
+            setError('')
+            dispatch(loginUser(val.data as AuthTokens))
+        },
     })
 
     return (

@@ -1,6 +1,7 @@
 import path from 'path'
 import { startDevServer } from '@cypress/vite-dev-server'
 import webpackPreprocessor from '@cypress/webpack-preprocessor'
+import * as webpackConfig from '../webpack.config'
 
 export default (on, config) => {
     on('dev-server:start', (options) => {
@@ -11,7 +12,9 @@ export default (on, config) => {
             },
         })
     })
-    on('file:preprocessor', webpackPreprocessor(options))
+    on('file:preprocessor', webpackPreprocessor({
+        webpackOptions: webpackConfig
+    }))
 
     return config
 }

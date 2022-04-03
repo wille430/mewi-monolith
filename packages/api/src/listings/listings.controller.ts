@@ -43,6 +43,11 @@ export class ListingsController {
         return await this.cacheManager.get('featured')
     }
 
+    @Get('autocomplete/:keyword')
+    async autocomplete(@Param('keyword') keyword: string) {
+        return this.listingsService.autocomplete(keyword)
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.listingsService.findOne(+id)

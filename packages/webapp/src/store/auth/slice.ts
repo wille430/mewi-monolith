@@ -21,20 +21,16 @@ export const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder
-            .addCase(loginUser.fulfilled, (state, action) => {
-                const { access_token, refresh_token } = action.payload
+        builder.addCase(loginUser, (state, action) => {
+            const { access_token, refresh_token } = action.payload
 
-                if (access_token && refresh_token) {
-                    localStorage.setItem('access_token', access_token)
-                    localStorage.setItem('refresh_token', refresh_token)
+            if (access_token && refresh_token) {
+                localStorage.setItem('access_token', access_token)
+                localStorage.setItem('refresh_token', refresh_token)
 
-                    state.isLoggedIn = true
-                }
-            })
-            .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
-                state.errors = action.payload
-            })
+                state.isLoggedIn = true
+            }
+        })
 
         builder.addCase(onAuthLoad, (state, action) => {
             const { access_token, refresh_token } = action.payload
@@ -67,7 +63,7 @@ export const userSlice = createSlice({
         builder
             .addCase(refreshAccessToken.fulfilled, (state, action) => {
                 const { access_token, refresh_token } = action.payload
-                console.log({access_token})
+                console.log({ access_token })
 
                 state.isLoggedIn = true
 
@@ -79,7 +75,7 @@ export const userSlice = createSlice({
             .addCase(refreshAccessToken.rejected, (state, action) => {
                 console.log('LOGGIN OUT...')
                 state.isLoggedIn = false
-                
+
                 setupInterceptors(store)
 
                 localStorage.removeItem('access_token')

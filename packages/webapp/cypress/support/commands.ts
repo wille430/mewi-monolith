@@ -8,11 +8,13 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import { AuthTokens } from '@mewi/common/types'
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
-        login(): Chainable<string>
+        login(): Chainable<AuthTokens>
         authenticate(jwt: string): void
     }
 }
@@ -21,17 +23,18 @@ declare namespace Cypress {
 
 Cypress.Commands.add('login', () => {
     cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-        const { jwt, refreshToken } = res.body
+        const { access_token, refresh_token }: AuthTokens = res.body
 
-        window.localStorage.setItem('jwt', jwt)
-        window.localStorage.setItem('refreshToken', refreshToken)
+        window.localStorage.setItem('access_token', access_token)
+        window.localStorage.setItem('refresh_token', refresh_token)
 
-        return cy.wrap(jwt)
+        return cy.wrap({access_token, refresh_token})
     })
 })
 
-Cypress.Commands.add('authenticate', (jwt: string) => {
-    window.localStorage.setItem('jwt', jwt)
+Cypress.Commands.add('authenticate', ({ access_token, refresh_token }: AuthTokens) => {
+    window.localStorage.setItem('access_token', access_token)
+    window.localStorage.setItem('refresh_token', refresh_token)
 })
 
 //

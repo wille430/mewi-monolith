@@ -18,22 +18,14 @@ describe('login', () => {
         cy.get('[data-testid=passwordInput]').type(userInfo.password)
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.url().should('equal', Cypress.config('baseUrl') + 'minabevakningar')
+        cy.url().should('equal', Cypress.config('baseUrl') + '/minabevakningar')
     })
 
-    it('should display invalid password message', () => {
+    it('should display invalid generic error', () => {
         cy.get('[data-testid=emailInput]').type(userInfo.email)
         cy.get('[data-testid=passwordInput]').type(userInfo.password + '123')
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.get('span:contains(Felaktig epostaddress eller lösenord)').should('have.length', 2)
-    })
-
-    it('should display invalid email message', () => {
-        cy.get('[data-testid=emailInput]').type(userInfo.email + 'b')
-        cy.get('[data-testid=passwordInput]').type(userInfo.password)
-        cy.get('[data-testid=formSubmitButton]').click()
-
-        cy.get('span:contains(Felaktig epostaddress eller lösenord)').should('have.length', 2)
+        cy.contains('Felaktig e-postadress eller lösenord')
     })
 })

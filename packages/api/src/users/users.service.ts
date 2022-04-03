@@ -18,6 +18,7 @@ export class UsersService {
 
     async create(createUserDto: CreateUserDto): Promise<UserDocument> {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
+        createUserDto.email = createUserDto.email.toLowerCase()
 
         const newUser = new this.userModel(createUserDto)
         await newUser.save()

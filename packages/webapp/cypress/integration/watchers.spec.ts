@@ -1,9 +1,10 @@
-import { capitalize } from '@mewi/common/utils'
+import { Utils } from '@mewi/common'
+import { AuthTokens } from '@mewi/common/types'
 import _ from 'lodash'
 
 describe('watchers', () => {
-    let jwt: string
     const longWait = 1000
+    let authTokens: AuthTokens
 
     const formData = {
         keyword: 'volvo',
@@ -17,11 +18,14 @@ describe('watchers', () => {
     }
 
     before(() => {
-        cy.login().then((token) => (jwt = token))
+        cy.login().then((tokens: AuthTokens) => {
+            console.log({ tokens })
+            authTokens = tokens
+        })
     })
 
     beforeEach(() => {
-        cy.authenticate(jwt)
+        cy.authenticate(authTokens)
         cy.visit('/minabevakningar')
     })
 
@@ -34,9 +38,12 @@ describe('watchers', () => {
 
         // wait for region select to load fully
         cy.wait(longWait)
-        cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {
-            delay: 100,
-        })
+        cy.get('[data-testid=regionsSelect]').type(
+            Utils.capitalize(formData.regions[0]) + ' {enter}',
+            {
+                delay: 100,
+            }
+        )
         cy.get('[data-testid=regionsSelect]').should('have.text', _.capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
@@ -85,7 +92,9 @@ describe('watchers', () => {
                 default:
                     cy.get('[data-testid=watcherCard]')
                         .children()
-                        .contains(formData[key], { matchCase: false })
+                        .contains(formData[key as keyof typeof formData].toString(), {
+                            matchCase: false,
+                        })
             }
         })
     })

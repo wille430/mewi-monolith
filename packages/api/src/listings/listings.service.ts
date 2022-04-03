@@ -119,4 +119,14 @@ export class ListingsService {
 
         return randomDocs
     }
+
+    async autocomplete(keyword: string) {
+        const response = await this.listingModel.aggregate([
+            { $match: { $text: { $search: keyword } } },
+            { $limit: 5 },
+            { $project: { _id: 0, title: 1 } },
+        ])
+
+        return response.map((x) => x.title)
+    }
 }

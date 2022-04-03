@@ -5,6 +5,9 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import axios from 'axios'
 import { ApiErrorResponse } from 'types/types'
+import { useAppDispatch } from 'hooks/hooks'
+import { loginUser } from 'store/auth/creators'
+import { AuthTokens } from '@mewi/common/types'
 
 const Register = () => {
     interface FormData {
@@ -24,7 +27,11 @@ const Register = () => {
     const [formData, setFormData] = useState(initFormData)
     const { email, password, passwordConfirm } = formData
     const [errors, setErrors] = useState(initErrors)
+    const dispatch = useAppDispatch()
     const mutation = useMutation(async () => await axios.post('/auth/signup', formData), {
+        onSuccess: (res) => {
+            dispatch(loginUser(res.data as AuthTokens))
+        },
         onError: (err: ApiErrorResponse) => {
             setErrors(initErrors)
             const newErrors: Partial<typeof errors> = {}
@@ -53,12 +60,16 @@ const Register = () => {
                                 break
                             case 'isNotEmpty':
                                 newErrors.password = 'Fältet kan inte vara tomt'
+                                break
+                            case 'maxLength':
+                                newErrors.password = 'Lösenordet kan max vara 20 tecken långt'
                         }
                     }
                 } else if (
                     validationError.property === 'passwordConfirm' &&
-                    Object.keys(err.message.find((x) => x.property === 'password')?.constraints || [])
-                        .length === 0
+                    Object.keys(
+                        err.message.find((x) => x.property === 'password')?.constraints || []
+                    ).length === 0
                 ) {
                     for (const constraint of Object.keys(validationError.constraints)) {
                         switch (constraint) {
