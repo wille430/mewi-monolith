@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel'
 import ImageNav from './ImageNav'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
+import classNames from 'classnames'
 
 const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -27,10 +28,22 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
 
         return (
             <div className='absolute flex h-full w-full items-center justify-between p-2'>
-                <button className={className} onClick={(e) => OffsetSelected(-1)}>
+                <button
+                    className={classNames({
+                        [className]: true,
+                        ['pointer-events-none opacity-0']: selectedIndex === 0,
+                    })}
+                    onClick={(e) => OffsetSelected(-1)}
+                >
                     <FiArrowLeft />
                 </button>
-                <button className={className} onClick={(e) => OffsetSelected(1)}>
+                <button
+                    className={classNames({
+                        [className]: true,
+                        ['pointer-events-none opacity-0']: selectedIndex >= imageUrls.length - 1,
+                    })}
+                    onClick={(e) => OffsetSelected(1)}
+                >
                     <FiArrowRight />
                 </button>
             </div>
@@ -62,7 +75,14 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
         } else {
             return (
                 <div className='relative flex w-full flex-1 justify-center'>
-                    <div style={{ maxHeight: '500px', width: '100%', height: 'auto' }}>
+                    <div
+                        style={{
+                            maxHeight: '500px',
+                            width: '100%',
+                            height: 'auto',
+                            minHeight: '40vh',
+                        }}
+                    >
                         {imageUrls[selectedIndex] ? (
                             <DefaultImage
                                 className='w-full max-h-full object-contain'
@@ -70,7 +90,7 @@ const ImageDisplay = ({ imageUrls }: { imageUrls: string[] }) => {
                                 alt={imageUrls[selectedIndex]}
                             />
                         ) : (
-                            <div className='flex h-full items-center'>
+                            <div className='flex h-full w-full items-center justify-center'>
                                 <FiImage size='50' color='lightgray' />
                             </div>
                         )}

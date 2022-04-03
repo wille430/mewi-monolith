@@ -9,7 +9,7 @@ const ImageNav = ({ imageUrls, selectedIndex, setSelectedIndex }: Props) => {
         <div className='absolute bottom-0 flex space-x-1 py-2 opacity-50'>
             {imageUrls.map((x, i) => (
                 <div
-                    className={`h-2 w-2 rounded-full blur-sm ${
+                    className={`h-2 w-2 rounded-full ${
                         selectedIndex === i ? 'bg-green' : 'bg-gray-200'
                     }`}
                     onClick={(e) => setSelectedIndex(i)}
