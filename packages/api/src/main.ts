@@ -9,7 +9,7 @@
 // import FeaturedItemService from 'services/FeaturedItemsService'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { ValidationPipe } from '@nestjs/common'
+import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule)
@@ -17,6 +17,9 @@ const bootstrap = async () => {
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
+            exceptionFactory: (errors: ValidationError[] = []) => {
+                return new BadRequestException(errors)
+            }
         })
     )
     await app.listen(3001)

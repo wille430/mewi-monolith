@@ -1,38 +1,80 @@
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
-import { useDispatch } from 'react-redux'
-import { createUser, loadPage } from 'store/auth/creators'
-import { useAppSelector } from 'hooks/hooks'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useMutation } from 'react-query'
+import axios from 'axios'
+import { ApiErrorResponse } from 'types/types'
 
 const Register = () => {
     interface FormData {
         email?: string
         password?: string
-        repassword?: string
+        passwordConfirm?: string
     }
 
     const initFormData: FormData = {
         email: '',
         password: '',
-        repassword: '',
+        passwordConfirm: '',
     }
+
+    const initErrors = { ...initFormData, all: '' }
 
     const [formData, setFormData] = useState(initFormData)
-    const { email, password, repassword } = formData
-
-    const dispatch = useDispatch()
-    const errors = useAppSelector((state) => state.auth.errors)
-
-    const onFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        dispatch(createUser([email || '', password || '', repassword || '']))
-    }
-
-    useEffect(() => {
-        dispatch(loadPage())
-    }, [])
+    const { email, password, passwordConfirm } = formData
+    const [errors, setErrors] = useState(initErrors)
+    const mutation = useMutation(async () => await axios.post('/auth/signup', formData), {
+        onError: (err: ApiErrorResponse) => {
+            setErrors(initErrors)
+            const newErrors: Partial<typeof errors> = {}
+            for (const validationError of err.message) {
+                if (validationError.property === 'email') {
+                    for (const constraint of Object.keys(validationError.constraints)) {
+                        switch (constraint) {
+                            case 'isEmail':
+                                newErrors.email = 'E-postadressen är felaktig'
+                                break
+                            case 'isNotEmpty':
+                                newErrors.email = 'Fältet kan inte vara tomt'
+                                break
+                            case 'UniqueEmail':
+                                newErrors.email = 'E-postadressen är upptagen'
+                        }
+                    }
+                } else if (validationError.property === 'password') {
+                    for (const constraint of Object.keys(validationError.constraints)) {
+                        switch (constraint) {
+                            case 'matches':
+                                newErrors.password = 'Lösenordet är för svagt'
+                                break
+                            case 'minLength':
+                                newErrors.password = 'Lösenordet måste minsta vara 8 tecken långt'
+                                break
+                            case 'isNotEmpty':
+                                newErrors.password = 'Fältet kan inte vara tomt'
+                        }
+                    }
+                } else if (
+                    validationError.property === 'passwordConfirm' &&
+                    Object.keys(err.message.find((x) => x.property === 'password')?.constraints || [])
+                        .length === 0
+                ) {
+                    for (const constraint of Object.keys(validationError.constraints)) {
+                        switch (constraint) {
+                            case 'Match':
+                                newErrors.password = 'Lösenorden måste matcha'
+                                newErrors.passwordConfirm = 'Lösenorden måste matcha'
+                                break
+                            case 'isNotEmpty':
+                                newErrors.passwordConfirm = 'Fältet kan inte vara tomt'
+                        }
+                    }
+                }
+            }
+            setErrors({ ...initErrors, ...newErrors })
+        },
+    })
 
     return (
         <Layout>
@@ -43,7 +85,13 @@ const Register = () => {
                         <h3 className='pb-6 pt-4 text-center'>Skapa ett konto</h3>
                     </Container.Header>
                     <Container.Content>
-                        <form className='flex flex-col items-center space-y-4'>
+                        <form
+                            className='flex flex-col items-center space-y-4'
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                mutation.mutate()
+                            }}
+                        >
                             <div className='w-full'>
                                 <TextField
                                     onChange={(value) => {
@@ -85,22 +133,22 @@ const Register = () => {
                                     onChange={(value) => {
                                         setFormData((prevState) => ({
                                             ...prevState,
-                                            repassword: value,
+                                            passwordConfirm: value,
                                         }))
                                     }}
-                                    value={formData.repassword}
+                                    value={formData.passwordConfirm}
                                     name='repassword'
                                     placeholder='Bekräfta lösenord'
                                     type='password'
                                     data-testid='repasswordInput'
                                     fullWidth={true}
                                 />
-                                <span className='text-red-400'>{errors.repassword}</span>
+                                <span className='text-red-400'>{errors.passwordConfirm}</span>
                             </div>
                             <Button
                                 label='Registrera dig'
-                                onClick={onFormSubmit}
                                 data-testid='formSubmitButton'
+                                type='submit'
                             />
                             <span className='text-red-400'>{errors.all}</span>
                         </form>

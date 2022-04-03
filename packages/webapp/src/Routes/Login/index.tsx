@@ -1,26 +1,19 @@
 import { Link } from 'react-router-dom'
 import Layout from 'components/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
-import { useDispatch } from 'react-redux'
-import { loadPage, loginUser } from 'store/auth/creators'
-import { useAppSelector } from 'hooks/hooks'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useMutation } from 'react-query'
+import axios from 'axios'
 
 const Login = () => {
     const [email, setEmail] = useState<string | undefined>('')
     const [password, setPassword] = useState<string | undefined>('')
 
-    const dispatch = useDispatch()
-    const errors = useAppSelector((state) => state.auth.errors)
-
-    const onFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        dispatch(loginUser({ email: email || '', password: password || '' }))
-    }
-
-    useEffect(() => {
-        dispatch(loadPage())
-    }, [])
+    const [error, setError] = useState('')
+    const mutation = useMutation(async () => await axios.post('/auth/login', { email, password }), {
+        onError: () => setError('Felaktig e-postadress eller lösenord'),
+        onSuccess: () => setError(''),
+    })
 
     return (
         <Layout>
@@ -31,7 +24,13 @@ const Login = () => {
                         <h3 className='pb-6 pt-4 text-center'>Logga in</h3>
                     </Container.Header>
                     <Container.Content>
-                        <form className='flex flex-col items-center space-y-4'>
+                        <form
+                            className='flex flex-col items-center space-y-4'
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                mutation.mutate()
+                            }}
+                        >
                             <div className='w-full'>
                                 <TextField
                                     onChange={setEmail}
@@ -40,7 +39,6 @@ const Login = () => {
                                     data-testid='emailInput'
                                     fullWidth={true}
                                 />
-                                <span className='text-red-400'>{errors.email}</span>
                             </div>
                             <div className='w-full'>
                                 <TextField
@@ -54,15 +52,10 @@ const Login = () => {
                                 <Link className='block' to='/glomtlosenord'>
                                     Har du glömt lösenordet?
                                 </Link>
-                                <span className='text-red-400'>{errors.password}</span>
                             </div>
 
-                            <Button
-                                label='Logga in'
-                                onClick={onFormSubmit}
-                                data-testid='formSubmitButton'
-                            />
-                            <span className='text-red-400'>{errors.all}</span>
+                            <Button label='Logga in' type='submit' data-testid='formSubmitButton' />
+                            <span className='text-red-400'>{error}</span>
                         </form>
                     </Container.Content>
                     <Container.Footer>

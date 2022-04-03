@@ -19,7 +19,7 @@ import {history} from 'store/history'
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
 const Search = lazy(() => import('Routes/Search'))
-const Register = lazy(() => import('Routes/Register'))
+const Register = lazy(() => import('Routes/Register/Register'))
 const Categories = lazy(() => import('Routes/Categories'))
 const CategorySearch = lazy(() => import('Routes/CategorySearch'))
 

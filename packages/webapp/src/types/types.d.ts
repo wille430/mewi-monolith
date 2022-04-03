@@ -35,3 +35,16 @@ declare global {
         store: typeof store
     }
 }
+
+export interface ValidationError {
+    target: Record<string, any>
+    property: string
+    children: Array<any>
+    constraints: Record<string, string>
+}
+
+export interface ApiErrorResponse {
+    statusCode: number
+    message: ValidationError[],
+    error: string
+}
