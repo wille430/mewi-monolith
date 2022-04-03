@@ -10,7 +10,6 @@ const Page = ({ title, component, ...rest }: PageProps) => {
     // update title
     useEffect(() => {
         if (title && document.title !== title) {
-            console.log('Changing', document.title, 'to', title)
             document.title = title
         }
     }, [title])

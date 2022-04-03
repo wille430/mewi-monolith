@@ -1,6 +1,6 @@
 import { IsInstance, IsMongoId, IsObject } from 'class-validator'
 import { Metadata } from '@/watchers/watcher.schema'
-import { SearchFilterDataProps } from '@mewi/common/types'
+import { ListingSearchFilters } from '@mewi/common/types'
 
 export class CreateUserWatcherDto {
     @IsMongoId()
@@ -8,5 +8,5 @@ export class CreateUserWatcherDto {
 
     @IsObject()
     @IsInstance(Metadata)
-    metadata: SearchFilterDataProps
+    metadata: ListingSearchFilters
 }

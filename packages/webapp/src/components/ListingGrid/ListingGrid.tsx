@@ -8,11 +8,13 @@ import { useInfiniteQuery } from 'react-query'
 import useQuery from 'hooks/useQuery'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getSearchResults } from 'store/search/creators'
+import { useEffect } from 'react'
+import _ from 'lodash'
 
 const cx = classNames.bind(styles)
 
 const ListingGrid = () => {
-    const currentPage = +(useQuery().get('page') || 0)
+    const currentPage = +(useQuery().get('page') || 1)
     const filters = useAppSelector((state) => state.search.filters)
     const dispatch = useAppDispatch()
 
@@ -25,16 +27,25 @@ const ListingGrid = () => {
         isLoading,
         error,
         isFetching,
-    } = useInfiniteQuery<IListing[]>(['listings', { ...filters }], fetchListings, {
-        getNextPageParam: (lastPage, allPages) => currentPage + 1,
+        fetchNextPage,
+    } = useInfiniteQuery<IListing[]>(['listings', _.omit(filters, 'page')], fetchListings, {
+        getNextPageParam: () => currentPage + 1,
+        getPreviousPageParam: () => currentPage - 1,
         refetchOnWindowFocus: false,
     })
 
     const renderItems = () => {
-        return listings?.pages[currentPage].map((item, i: number) => (
+        return listings?.pages[currentPage - 1].map((item, i: number) => (
             <ArticleItem key={i} props={item} id={item.id} />
         ))
     }
+
+    useEffect(() => {
+        if (filters.page > listings?.pages?.length && filters.page > 0) {
+            console.log('fetching next...')
+            fetchNextPage()
+        }
+    }, [filters.page])
 
     if (isLoading || isFetching) {
         return (
@@ -48,18 +59,14 @@ const ListingGrid = () => {
         )
     } else if (error) {
         return (
-            <section className={cx({ [styles.center]: true })}>
+            <section className={styles.center}>
                 <span>Ett fel inträffade</span>
             </section>
         )
     } else {
-        if (listings?.pages[currentPage].length || 0 > 0) {
+        if (listings.pages[currentPage - 1] && listings?.pages[currentPage - 1].length) {
             return (
-                <section
-                    className={cx({
-                        [styles.grid]: true,
-                    })}
-                >
+                <section className={styles.grid}>
                     {renderItems()}
                     <ItemPopUp />
                 </section>

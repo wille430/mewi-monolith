@@ -1,18 +1,12 @@
-import { SearchFilterDataProps } from '@mewi/common/types'
+import { ListingSearchFilters } from '@mewi/common/types'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import SearchFilterArea, {
     SearchFilterAreaProps,
 } from 'components/SearchFilterArea/SearchFilterArea'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import {
-    clearFilters,
-    clearSearchResults,
-    getFiltersFromQueryParams,
-    setFilters,
-} from 'store/search/creators'
-import _ from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { clearFilters, getFiltersFromQueryParams, updateFilters } from 'store/search/creators'
+import { useEffect, useState } from 'react'
 import PopUp from 'components/PopUp/PopUp'
 import styles from './FilterArea.module.scss'
 import classNames from 'classnames'
@@ -23,7 +17,7 @@ import { screens } from 'themes/tailwindConfig'
 const cx = classNames.bind(styles)
 
 type FilterAreaProps = Omit<SearchFilterAreaProps, 'searchFilterData' | 'setSearchFilterData'> & {
-    defaultValues?: SearchFilterDataProps
+    defaultValues?: ListingSearchFilters
 }
 
 const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
@@ -31,44 +25,19 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const search = useAppSelector((state) => state.search)
     const windowWidth = useWindowWidth()
 
-    const [_filters, _setFilters] = useState(search.filters)
     const [showPopUp, setShowPopUp] = useState(false)
 
-    const location = useLocation()
     const dispatch = useAppDispatch()
 
-    const debounceSetFilters = useCallback(
-        _.debounce((_search: typeof search) => {
-            dispatch(setFilters(_search.filters))
-        }, 750),
-        []
-    )
-
     useEffect(() => {
+
         dispatch(getFiltersFromQueryParams())
 
         // clear filters on unmount
         return () => {
             dispatch(clearFilters())
         }
-    }, [location.search])
-
-    useEffect(() => {
-        if (!_.isEqual(_.omit(search.filters, 'category'), _filters)) {
-            _setFilters(search.filters)
-        }
-    }, [search.filters])
-
-    useEffect(() => {
-        dispatch(clearSearchResults())
-
-        if (!_.isEqual(_.omit(search.filters, 'category'), _filters)) {
-            debounceSetFilters({
-                ...search,
-                filters: _filters,
-            })
-        }
-    }, [_filters])
+    }, [])
 
     const handleReset = () => {
         dispatch(clearFilters(defaultValues))
@@ -76,20 +45,13 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
 
     const SearchFilterAreaArgs: SearchFilterAreaProps = {
         ...rest,
-        searchFilterData: _filters,
+        searchFilterData: search.filters,
         heading: 'Filtrera sökning',
         showSubmitButton: false,
         showResetButton: true,
         onReset: handleReset,
-        onChange: (key, value) => {
-            _setFilters((prevState) => ({
-                ...prevState,
-                [key]: value,
-            }))
-        },
-        onValueDelete: (key) => {
-            _setFilters((prevState) => _.omit(prevState, key))
-        },
+        onChange: (key, value) => dispatch(updateFilters({ [key]: value })),
+        onValueDelete: (key) => dispatch(updateFilters({ [key]: undefined })),
         actions: isLoggedIn ? (
             <AddWatcherButton searchFilters={search.filters} data-testid='addWatcherButton' />
         ) : (

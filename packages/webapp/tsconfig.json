@@ -9,7 +9,7 @@
         "baseUrl": "src",
         "esModuleInterop": true,
         "moduleResolution": "node",
-        "isolatedModules": true
+        "isolatedModules": true,
     },
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }],

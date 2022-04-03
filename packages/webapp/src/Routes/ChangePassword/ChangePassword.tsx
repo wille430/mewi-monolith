@@ -5,7 +5,7 @@ import { changePasswordErrorPayload } from 'store/auth/creators'
 import useQuery from 'hooks/useQuery'
 import FormTextField from 'components/FormTextField/FormTextField'
 import { pushToSnackbar } from 'store/snackbar/creators'
-import { useNavigate } from 'react-router'
+import { useHistory } from 'react-router'
 import { useMutation } from 'react-query'
 import axios from 'axios'
 import { useAppDispatch } from 'hooks/hooks'
@@ -20,7 +20,7 @@ const ForgottenPassword = () => {
     const [formData, setFormData] = useState(initialState)
     const [errors, setErrors] = useState<changePasswordErrorPayload>(initialState)
     const query = useQuery()
-    const navigate = useNavigate()
+    const history = useHistory()
     const dispatch = useAppDispatch()
 
     const mutation = useMutation(
@@ -32,7 +32,7 @@ const ForgottenPassword = () => {
             }),
         {
             onSuccess: () => {
-                navigate('/login')
+                history.push('/login')
                 dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
             },
             onError: () => {
@@ -46,7 +46,7 @@ const ForgottenPassword = () => {
 
     useEffect(() => {
         if (!query.get('userId') || !query.get('token')) {
-            navigate('/')
+            history('/')
         }
     }, [])
 

@@ -1,4 +1,3 @@
-import { Types } from '@mewi/common'
 import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import {
@@ -8,6 +7,7 @@ import {
     getFiltersFromQueryParams,
     getSearchResults,
     goToPage,
+    locationChange,
     openListing,
     setFilters,
     setSort,
@@ -16,14 +16,15 @@ import {
 } from './creators'
 import { SearchState } from './type'
 import queryString from 'query-string'
-import { SortData } from '@mewi/common/types'
+import { Sort } from '@mewi/common/types'
 
 const initialState: SearchState = {
     hits: [],
     totalHits: 0,
-    filters: {},
-    sort: Types.SortData.RELEVANCE,
-    page: 1,
+    filters: {
+        sort: Sort.RELEVANCE,
+        page: 1,
+    },
     searchParams: '',
 }
 
@@ -46,14 +47,11 @@ export const searchSlice = createSlice({
             } else {
                 state.filters = initialState.filters
             }
-
-            state.sort = initialState.sort
-            state.page = 1
         })
 
         builder.addCase(setFilters, (state, action) => {
             state.filters = action.payload
-            state.page = 1
+            state.filters.page = 1
         })
 
         builder.addCase(updateFilters, (state, action) => {
@@ -76,25 +74,19 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(setSort, (state, action) => {
-            state.sort = action.payload
-            state.page = 1
+            state.filters.sort = action.payload
+            state.filters.page = 1
         })
 
         builder.addCase(getFiltersFromQueryParams, (state, action) => {
-            console.log('Updating state from url search params...')
             state.filters = {
                 ...state.filters,
                 ...action.payload.filters,
             }
-
-            console.log('New filters:', state.filters)
-
-            state.sort = action.payload.sort
-            state.page = action.payload.page
         })
 
         builder.addCase(goToPage, (state, action) => {
-            state.page = action.payload
+            state.filters.page = action.payload
         })
 
         builder.addCase(clearSearchResults, (state) => {
@@ -103,8 +95,7 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(updateSearchParams.fulfilled, (state, action) => {
-            const { filters, page, sort } = action.payload
-            console.log('Updating search params with:', action.payload)
+            const { filters } = action.payload
 
             if (filters.keyword) {
                 document.title = `Sökning för "${filters.keyword}" - Mewi`
@@ -119,8 +110,8 @@ export const searchSlice = createSlice({
             const searchParams = _.omit(
                 {
                     ...filters,
-                    page: page > 1 ? page : undefined,
-                    sort: sort !== SortData.RELEVANCE ? sort : undefined,
+                    page: filters.page > 1 ? filters.page : undefined,
+                    sort: filters.sort !== Sort.RELEVANCE ? filters.sort : undefined,
                 },
                 keysToEmit
             )
@@ -134,6 +125,10 @@ export const searchSlice = createSlice({
         })
 
         builder.addCase(closeListing, (state) => {
+            state.selectedListing = initialState.selectedListing
+        })
+
+        builder.addCase(locationChange, (state) => {
             state.selectedListing = initialState.selectedListing
         })
     },

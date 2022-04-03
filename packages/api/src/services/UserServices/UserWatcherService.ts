@@ -3,7 +3,7 @@
  */
 
 import { Types } from 'bson'
-import { DatabaseErrorCodes, JoinedWatcher, Types.SearchFilterDataProps } from '@mewi/common'
+import { DatabaseErrorCodes, JoinedWatcher, Types.ListingSearchFilters } from '@mewi/common'
 import WatcherModel from 'models/WatcherModel'
 import WatcherService from 'services/WatcherService'
 import { UserService } from './index'
@@ -73,7 +73,7 @@ class UserWatcherService {
 
     static async addWatcher(
         userId: string,
-        metadata: Types.SearchFilterDataProps
+        metadata: Types.ListingSearchFilters
     ): Promise<JoinedWatcher> {
         const user = await UserService.userById(userId)
         const similarWatcher = await WatcherModel.findOne({ metadata })
@@ -128,7 +128,7 @@ class UserWatcherService {
     static async updateWatcher(
         userId: string,
         watcherId: string,
-        searchFilters: Types.SearchFilterDataProps
+        searchFilters: Types.ListingSearchFilters
     ): Promise<JoinedWatcher> {
         const query = SearchService.createDbFilters(searchFilters)
         const similarWatcher = await WatcherModel.findOne({ metadata: searchFilters })

@@ -21,7 +21,7 @@ const deleteWatcher = async (watcherId: string): Promise<void> => {
 }
 
 const createWatcher = async (
-    searchFilterData: Types.SearchFilterDataProps
+    searchFilterData: Types.ListingSearchFilters
 ): Promise<Types.JoinedWatcher> => {
     const body = {
         searchFilters: searchFilterData,
@@ -38,7 +38,7 @@ const createWatcher = async (
 
 const updateWatcher = async (
     watcherId: string,
-    newSearchFilterData: Types.SearchFilterDataProps
+    newSearchFilterData: Types.ListingSearchFilters
 ): Promise<Types.JoinedWatcher> => {
     const body = {
         searchFilters: newSearchFilterData,

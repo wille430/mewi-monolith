@@ -4,7 +4,13 @@ import { useAppSelector } from 'hooks/hooks'
 import { Link } from 'react-router-dom'
 import styles from './DrawerNavLink.module.scss'
 
-const DrawerNavLinkItem = ({ styling, path, name, sublinks }: NavLink) => {
+const DrawerNavLinkItem = ({
+    styling,
+    path,
+    name,
+    sublinks,
+    children,
+}: NavLink & { children: any }) => {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
     const linkAnimation = {
@@ -25,7 +31,11 @@ const DrawerNavLinkItem = ({ styling, path, name, sublinks }: NavLink) => {
             <ul className={styles.list}>
                 {sublinks?.map((link) => {
                     if (!link.private || (link.private && isLoggedIn)) {
-                        return <DrawerNavLinkItem {...link}>{link.name}</DrawerNavLinkItem>
+                        return (
+                            <DrawerNavLinkItem key={link.path} {...link}>
+                                {link.name}
+                            </DrawerNavLinkItem>
+                        )
                     }
                 })}
             </ul>

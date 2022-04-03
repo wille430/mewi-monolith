@@ -3,14 +3,14 @@ import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { Schema as MongooseSchema } from 'mongoose'
 import { UserWatcher } from '@/user-watchers/user-watcher.schema'
-import { IWatcher, SearchFilterDataProps } from '@mewi/common/types'
+import { IWatcher, ListingSearchFilters } from '@mewi/common/types'
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export type WatcherDocument = Watcher & Document
 
 export interface PopulatedWatcher extends Pick<Watcher, 'metadata'>, UserWatcher {}
 
-export class Metadata implements SearchFilterDataProps {
+export class Metadata implements ListingSearchFilters {
     @IsOptional()
     @IsString()
     keyword?: string
@@ -51,7 +51,7 @@ export class Watcher implements Partial<IWatcher> {
         required: true,
         unique: true,
     })
-    metadata: SearchFilterDataProps
+    metadata: ListingSearchFilters
 
     @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
     users: mongoose.Types.Array<mongoose.Types.ObjectId>

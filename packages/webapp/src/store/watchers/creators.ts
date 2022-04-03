@@ -7,7 +7,7 @@ import { WatchersActionType } from './types'
 
 export const createWatcher = createAsyncThunk(
     WatchersActionType.WATCHERS_ADD,
-    async (searchFilters: Types.SearchFilterDataProps, thunkApi) => {
+    async (searchFilters: Types.ListingSearchFilters, thunkApi) => {
         try {
             return await watcherApi.createWatcher(searchFilters)
         } catch (e: any) {

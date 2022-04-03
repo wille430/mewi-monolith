@@ -1,7 +1,7 @@
-import { SearchFilterDataProps } from '@mewi/common/types'
-import { IsOptional, IsNumber, IsString } from 'class-validator'
+import { Sort } from '@mewi/common/types'
+import { IsOptional, IsNumber, IsString, IsNumberString, IsBooleanString } from 'class-validator'
 
-export class FindAllListingsDto implements SearchFilterDataProps {
+export class FindAllListingsDto {
     @IsOptional()
     @IsNumber()
     limit = 24
@@ -17,16 +17,25 @@ export class FindAllListingsDto implements SearchFilterDataProps {
     category?: string
 
     @IsOptional()
-    @IsNumber()
-    priceRangeGte?: number
+    @IsNumberString()
+    priceRangeGte?: string
 
     @IsOptional()
-    @IsNumber()
-    priceRangeLte?: number
+    @IsNumberString()
+    priceRangeLte?: string
 
     @IsOptional()
-    auction?: boolean
+    @IsBooleanString()
+    auction?: string
 
     @IsOptional()
-    dateGte?: number
+    @IsNumberString()
+    dateGte?: string
+
+    @IsOptional()
+    @IsNumberString()
+    page?: string
+
+    @IsOptional()
+    sort?: Sort
 }

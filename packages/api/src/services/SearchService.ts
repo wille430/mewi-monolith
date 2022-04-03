@@ -1,4 +1,4 @@
-import { ItemData, Types.SearchFilterDataProps, SearchOptions, SortData } from '@mewi/common'
+import { ItemData, Types.ListingSearchFilters, SearchOptions, Sort } from '@mewi/common'
 import ListingModel from 'models/ListingModel'
 import { FilterQuery, QueryOptions } from 'mongoose'
 import { generateMockItemData } from '@mewi/common/utils'
@@ -8,23 +8,23 @@ export default class SearchService {
     static limit = 20
 
     static async search(
-        query?: Types.SearchFilterDataProps,
+        query?: Types.ListingSearchFilters,
         options?: SearchOptions
     ): Promise<{ hits: ItemData[]; totalHits: number }> {
         const filterQuery = this.createDbFilters(query)
         const queryOptions: QueryOptions = {}
 
         switch (options.sort) {
-            case SortData.DATE_ASC:
+            case Sort.DATE_ASC:
                 queryOptions.sort = { date: 1 }
                 break
-            case SortData.DATE_DESC:
+            case Sort.DATE_DESC:
                 queryOptions.sort = { date: -1 }
                 break
-            case SortData.PRICE_ASC:
+            case Sort.PRICE_ASC:
                 queryOptions.sort = { 'price.value': 1 }
                 break
-            case SortData.PRICE_DESC:
+            case Sort.PRICE_DESC:
                 queryOptions.sort = { 'price.value': -1 }
                 break
         }
@@ -78,13 +78,13 @@ export default class SearchService {
         }
     }
 
-    static createDbFilters(searchFilterData: Types.SearchFilterDataProps): FilterQuery<ItemData> {
+    static createDbFilters(searchFilterData: Types.ListingSearchFilters): FilterQuery<ItemData> {
         const filterQuery: FilterQuery<ItemData> = {}
 
         console.log('Creating query from ', JSON.stringify(searchFilterData))
 
         Object.keys(searchFilterData).forEach((key) => {
-            switch (key as keyof Types.SearchFilterDataProps) {
+            switch (key as keyof Types.ListingSearchFilters) {
                 case 'keyword':
                     if (!searchFilterData[key]) break
                     filterQuery.$text = {

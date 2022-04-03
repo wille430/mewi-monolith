@@ -1,33 +1,14 @@
 // import { categories } from '@mewi/common/types'
-import { Category, CategoryLabel } from '@mewi/common/types'
+import { Category, CategoryLabel, Sort } from '@mewi/common/types'
 import classNames from 'classnames'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import _ from 'lodash'
 import { ReactNode, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { updateFilters } from 'store/search/creators'
+import { setFilters } from 'store/search/creators'
 import styles from './CategorySelectionList.module.scss'
 
 const cx = classNames.bind(styles)
-
-// /**
-//  *
-//  * @param categoryPath An array of keys nested in categories
-//  * @returns null || {@link Category}
-//  */
-// const getNestedCategory = (categoryPath: string[]) => {
-//     let category = null
-
-//     for (const catKey of categoryPath) {
-//         if (!category) {
-//             category = categories[catKey]
-//         } else {
-//             category = category.subcat[catKey]
-//         }
-//     }
-
-//     return category
-// }
 
 const CategorySelectionList = () => {
     // /kategorier/:category_id/:subcat_id
@@ -52,8 +33,9 @@ const CategorySelectionList = () => {
 
         // on render, set category to current path
         dispatch(
-            updateFilters({
+            setFilters({
                 category: selectedCategory,
+                sort: Sort.RELEVANCE
             })
         )
 

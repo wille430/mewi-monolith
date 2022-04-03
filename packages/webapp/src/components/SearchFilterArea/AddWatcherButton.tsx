@@ -1,4 +1,4 @@
-import { IUserWatcher, SearchFilterDataProps } from '@mewi/common/types'
+import { IUserWatcher, ListingSearchFilters } from '@mewi/common/types'
 import { Error } from '@mewi/common'
 import { Button } from '@mewi/ui'
 import CreateWatcherConfirmationModal from './CreateWatcherConfirmationModal'
@@ -10,7 +10,7 @@ import classNames from 'classnames'
 const cx = classNames.bind({})
 
 type Props = {
-    searchFilters: SearchFilterDataProps
+    searchFilters: ListingSearchFilters
     onClick?: () => void
 }
 
@@ -19,7 +19,7 @@ const AddWatcherButton = ({ searchFilters, onClick, ...rest }: Props) => {
     const queryClient = useQueryClient()
 
     const mutation = useMutation(
-        async (newWatcher: SearchFilterDataProps) => {
+        async (newWatcher: ListingSearchFilters) => {
             return axios
                 .post<IUserWatcher>('/users/me/watchers', { metadata: newWatcher })
                 .then((res) => res.data)

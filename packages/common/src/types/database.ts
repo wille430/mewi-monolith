@@ -1,4 +1,4 @@
-import { SearchFilterDataProps } from './index'
+import { ListingSearchFilters } from './index'
 import { Types } from 'mongoose'
 import { Category } from './category.enum'
 
@@ -22,7 +22,7 @@ export interface IUser {
 
 export interface IWatcher {
     _id: string
-    metadata: SearchFilterDataProps
+    metadata: ListingSearchFilters
     users: Types.ObjectId[]
     createdAt: string
     updatedAt: string

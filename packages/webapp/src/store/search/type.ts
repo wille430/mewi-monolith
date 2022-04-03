@@ -1,13 +1,10 @@
-import { Types } from '@mewi/common'
-import { IListing } from '@mewi/common/types'
+import { IListing, ListingSearchFilters } from '@mewi/common/types'
 import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {
     hits: getSearchResultsReturnType['hits']
     totalHits: number
-    filters: Types.SearchFilterDataProps
-    sort: Types.SortData
-    page: number
+    filters: ListingSearchFilters
     searchParams: string
     selectedListing?: IListing
 }

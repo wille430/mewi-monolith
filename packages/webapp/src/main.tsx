@@ -3,7 +3,6 @@ import './styles.scss'
 import App from './App/App'
 import 'babel-polyfill'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from 'store'
 import setupInterceptors from 'api/setupInterceptors.'
@@ -32,9 +31,7 @@ const queryClient = new QueryClient({
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
                     {/* <Elements stripe={stripe}> */}
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
+                    <App />
                     {/* </Elements> */}
                 </QueryClientProvider>
             </Provider>

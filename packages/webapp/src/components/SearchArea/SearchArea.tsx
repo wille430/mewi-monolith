@@ -1,5 +1,5 @@
 import CategorySelectionList from 'components/CategorySelectionList/CategorySelectionList'
-import CategoryPathLabel, { ParamTypes } from './CategoryPathLabel'
+import CategoryPathLabel from './CategoryPathLabel'
 import FilterArea from 'components/FilterArea/FilterArea'
 import ListingGrid from 'components/ListingGrid/ListingGrid'
 import PageNav from 'components/PageNav/PageNav'
@@ -9,18 +9,17 @@ import { useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styles from './SearchArea.module.scss'
 import classNames from 'classnames'
-import { useAppDispatch, useAppSelector } from 'hooks/hooks'
-import { updateSearchParams } from 'store/search/creators'
+import { useAppSelector } from 'hooks/hooks'
+import { Category } from '@mewi/common/types'
 
 const cx = classNames.bind(styles)
 
 const SearchArea = () => {
-    const params = useParams<ParamTypes>()
+    const categoryValue = useParams()['category_id'] as undefined | Category
     const scrollEle = useRef<HTMLDivElement | null>(null)
-    const { searchParams, filters, page, sort } = useAppSelector((state) => state.search)
+    const { searchParams,  } = useAppSelector((state) => state.search)
     const history = useHistory()
     const isFirstRender = useRef(true)
-    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (isFirstRender.current) {
@@ -29,14 +28,9 @@ const SearchArea = () => {
         }
 
         if (history.location.search !== searchParams) {
-            console.log({ current: history.location.search, new: searchParams })
             history.push(window.location.pathname + searchParams)
         }
     }, [searchParams])
-
-    useEffect(() => {
-        dispatch(updateSearchParams())
-    }, [filters, page, sort])
 
     return (
         <section
@@ -50,7 +44,7 @@ const SearchArea = () => {
             </aside>
 
             <div className='flex flex-grow flex-col'>
-                <CategoryPathLabel categoryValues={params} />
+                <CategoryPathLabel categories={[categoryValue]} />
 
                 <div ref={scrollEle}>
                     <FilterArea exclude={{ category: true }} showKeywordField />

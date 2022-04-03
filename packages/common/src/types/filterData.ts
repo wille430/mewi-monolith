@@ -4,6 +4,8 @@
 //     subcat: CategoryHash
 // }
 
+import { Sort } from './sort.enum'
+
 // export interface CategoryHash {
 //     [key: string]: Category
 // }
@@ -506,33 +508,7 @@ export const regions = [
     { value: 'skåne', label: 'Skåne' },
 ]
 
-export interface SearchFilterDataProps {
-    keyword?: string
-    regions?: string[] | string
-    category?: string
-    priceRangeGte?: number
-    priceRangeLte?: number
-    auction?: boolean
-    dateGte?: number
-}
-export interface SearchPostRequestBody extends SearchOptions {
-    searchFilters?: SearchFilterDataProps
-}
-export interface SearchOptions {
-    page?: number
-    sort?: SortData
-    limit?: number
-}
-
-export enum SortData {
-    RELEVANCE = 'relevance',
-    PRICE_DESC = 'price_desc',
-    PRICE_ASC = 'price_asc',
-    DATE_ASC = 'date_asc',
-    DATE_DESC = 'date_desc',
-}
-
-export const sortableFields: Record<SortData, Record<string, number>> = {
+export const sortableFields: Record<Sort, Record<string, number>> = {
     relevance: {},
     price_desc: { 'price.value': -1 },
     price_asc: { 'price.value': 1 },

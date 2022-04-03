@@ -1,4 +1,4 @@
-import { categoriesOptions, regions, SearchFilterDataProps } from '@mewi/common/types'
+import { categoriesOptions, regions, ListingSearchFilters } from '@mewi/common/types'
 import { FormEvent, ReactNode } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
@@ -9,11 +9,11 @@ import { TextField, HorizontalLine } from '@mewi/ui'
 import { Button } from '@mewi/ui'
 
 export interface SearchFilterContentProps {
-    searchFilterData: SearchFilterDataProps
+    searchFilterData: ListingSearchFilters
     onSubmit?: () => void
     onChange?: (
-        key: keyof SearchFilterDataProps,
-        value: SearchFilterDataProps[keyof SearchFilterDataProps]
+        key: keyof ListingSearchFilters,
+        value: ListingSearchFilters[keyof ListingSearchFilters]
     ) => void
     onValueDelete?: (val: keyof SearchFilterContentProps['searchFilterData']) => void
     children?: ReactNode

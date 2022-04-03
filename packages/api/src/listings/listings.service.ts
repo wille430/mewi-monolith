@@ -3,8 +3,9 @@ import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, FilterQuery } from 'mongoose'
+import { Model, FilterQuery, QueryOptions } from 'mongoose'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
+import { Sort, sortableFields } from '@mewi/common/types'
 
 @Injectable()
 export class ListingsService {
@@ -17,6 +18,15 @@ export class ListingsService {
 
     async findAll(dto: FindAllListingsDto) {
         let filter: FilterQuery<ListingDocument> = { $and: [] }
+        const options: QueryOptions = { limit: dto.limit }
+
+        if (dto.page && +dto.page > 0) {
+            options.skip = (+dto.page - 1) * dto.limit
+        }
+
+        if (dto.sort && dto.sort !== Sort.RELEVANCE) {
+            options.sort = sortableFields[dto.sort]
+        }
 
         if (dto.priceRangeGte) {
             filter.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
@@ -54,13 +64,13 @@ export class ListingsService {
                     break
                 case key.match(/priceRange(Gte|Lte)/)?.input:
                     if (key.match(/(Gte)$/)) {
-                        filter.$and.push({ 'price.value': { $gte: value } })
+                        filter.$and.push({ 'price.value': { $gte: +value } })
                     } else if (key.match(/(Lte)$/)) {
-                        filter.$and.push({ 'price.value': { $lte: value } })
+                        filter.$and.push({ 'price.value': { $lte: +value } })
                     }
                     break
                 case 'dateGte':
-                    filter.$and.push({ date: { $gte: key } })
+                    filter.$and.push({ date: { $gte: +key } })
                     break
             }
         }
@@ -72,7 +82,7 @@ export class ListingsService {
         return {
             filters: dto,
             totalHits: await this.listingModel.count(filter),
-            hits: await this.listingModel.find(filter, {}, { limit: dto.limit }),
+            hits: await this.listingModel.find(filter, {}, options),
         }
     }
 

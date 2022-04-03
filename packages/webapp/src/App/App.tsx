@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import Nav from 'components/Nav/Nav'
 import Login from 'Routes/Login'
 import PrivateRoute from 'components/PrivateRoute'
@@ -12,6 +12,9 @@ import Page from 'components/Page'
 import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
 import ChangePassword from 'Routes/ChangePassword/ChangePassword'
 import SnackbarHandler from 'components/SnackbarHandler'
+import StyledLoader from 'components/StyledLoader'
+import { ConnectedRouter } from 'connected-react-router'
+import {history} from 'store/history'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))
@@ -30,9 +33,15 @@ function App() {
 
     return (
         <div className='min-h-screen w-full'>
-            <Router>
+            <ConnectedRouter history={history}>
                 <Nav />
-                <Suspense fallback={<div></div>}>
+                <Suspense
+                    fallback={
+                        <div className='h-full w-full flex items-center justify-center'>
+                            <StyledLoader />
+                        </div>
+                    }
+                >
                     <Switch>
                         <PublicRoute
                             title='Logga in - Mewi.se'
@@ -87,7 +96,7 @@ function App() {
                         </Route>
                     </Switch>
                 </Suspense>
-            </Router>
+            </ConnectedRouter>
             <SnackbarHandler />
         </div>
     )

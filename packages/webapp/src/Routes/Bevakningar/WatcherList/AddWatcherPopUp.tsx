@@ -1,6 +1,6 @@
 import PopUp from 'components/PopUp/PopUp'
 import { useState } from 'react'
-import { SearchFilterDataProps } from '@mewi/common/types'
+import { ListingSearchFilters } from '@mewi/common/types'
 import ResetButton from 'components/SearchFilterArea/ResetButton'
 import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
 import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'
@@ -9,7 +9,7 @@ import _ from 'lodash'
 const AddWatcherPopUp = ({ useShow }: any) => {
     const { show, setShow } = useShow
 
-    const [formData, setFormData] = useState<SearchFilterDataProps>({
+    const [formData, setFormData] = useState<ListingSearchFilters>({
         keyword: '',
     })
 
