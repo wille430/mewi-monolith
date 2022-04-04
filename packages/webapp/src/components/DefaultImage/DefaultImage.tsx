@@ -10,7 +10,7 @@ const DefaultImage = (
             alt=''
             onError={() => setError(true)}
             {...props}
-            src={error ? missingImage : props.src}
+            src={(error || !props.src) ? missingImage : props.src}
         />
     )
 }

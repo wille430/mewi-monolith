@@ -1,5 +1,5 @@
 const config = {
-    searchLimit: 21,
+    searchLimit: 24,
 }
 
 export default config

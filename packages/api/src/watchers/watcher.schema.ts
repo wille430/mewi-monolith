@@ -49,15 +49,11 @@ export class Watcher implements Partial<IWatcher> {
     @Prop({
         type: Metadata,
         required: true,
-        unique: true,
     })
     metadata: ListingSearchFilters
 
     @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'user', default: [] })
     users: mongoose.Types.Array<mongoose.Types.ObjectId>
-
-    @Prop({ type: MongooseSchema.Types.Date })
-    notifiedAt: string
 }
 
 export const WatcherSchema = SchemaFactory.createForClass(Watcher)

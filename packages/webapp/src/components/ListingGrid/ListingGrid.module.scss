@@ -1,5 +1,5 @@
 .grid {
-    @apply flex w-full flex-grow flex-wrap justify-center gap-4;
+    @apply flex w-full flex-none flex-wrap justify-center gap-4 mx-auto;
 }
 
 .center {

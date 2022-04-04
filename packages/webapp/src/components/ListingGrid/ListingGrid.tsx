@@ -3,20 +3,36 @@ import ArticleItem from 'components/ArticleItem/ArticleItem'
 import ItemPopUp from '../ItemPopUp/ItemPopUp'
 import styles from './ListingGrid.module.scss'
 import classNames from 'classnames'
-import { IListing } from '@mewi/common/types'
+import { IListing, ListingSearchFilters } from '@mewi/common/types'
 import { useInfiniteQuery } from 'react-query'
 import useQuery from 'hooks/useQuery'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { getSearchResults } from 'store/search/creators'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import _ from 'lodash'
 
 const cx = classNames.bind(styles)
+
+const NON_DEBOUNCED_FILTERS: (keyof ListingSearchFilters)[] = ['category']
 
 const ListingGrid = () => {
     const currentPage = +(useQuery().get('page') || 1)
     const filters = useAppSelector((state) => state.search.filters)
     const dispatch = useAppDispatch()
+    const [shouldFetch, setShouldFetch] = useState(false)
+    const [debouncedFilters, _setDebouncedFilters] = useState(filters)
+    const setDebouncedFilters = useCallback(
+        _.debounce((newFilters: typeof filters) => {
+            setShouldFetch(false)
+            _setDebouncedFilters(newFilters)
+        }, 500),
+        []
+    )
+
+    useEffect(() => {
+        setShouldFetch(true)
+        setDebouncedFilters(filters)
+    }, [filters])
 
     const fetchListings = async (): Promise<IListing[]> => {
         return (await dispatch(getSearchResults()).unwrap()).hits
@@ -28,11 +44,19 @@ const ListingGrid = () => {
         error,
         isFetching,
         fetchNextPage,
-    } = useInfiniteQuery<IListing[]>(['listings', _.omit(filters, 'page')], fetchListings, {
-        getNextPageParam: () => currentPage + 1,
-        getPreviousPageParam: () => currentPage - 1,
-        refetchOnWindowFocus: false,
-    })
+    } = useInfiniteQuery<IListing[]>(
+        [
+            'listings',
+            { ..._.omit(debouncedFilters, 'page'), ..._.pick(filters, NON_DEBOUNCED_FILTERS) },
+        ],
+        fetchListings,
+        {
+            getNextPageParam: () => currentPage + 1,
+            getPreviousPageParam: () => currentPage - 1,
+            refetchOnWindowFocus: false,
+            retry: false,
+        }
+    )
 
     const renderItems = () => {
         return listings?.pages[currentPage - 1].map((item, i: number) => (
@@ -42,12 +66,11 @@ const ListingGrid = () => {
 
     useEffect(() => {
         if (filters.page > listings?.pages?.length && filters.page > 0) {
-            console.log('fetching next...')
             fetchNextPage()
         }
     }, [filters.page])
 
-    if (isLoading || isFetching) {
+    if (isLoading || isFetching || shouldFetch) {
         return (
             <section
                 className={cx({

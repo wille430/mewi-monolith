@@ -1,0 +1,23 @@
+.container {
+    @apply mx-auto w-full max-w-6xl;
+    min-height: 22rem;
+}
+
+.scrollableView {
+    @apply flex space-x-2 py-2;
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar {
+        height: 0.5rem;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: gray;
+        border-radius: 1rem;
+    }
+}
+
+.loader, .errorText {
+    @apply mx-auto my-auto;
+}

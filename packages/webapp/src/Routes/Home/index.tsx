@@ -1,5 +1,5 @@
 import Hero from 'components/Hero/Hero'
-import FeaturedListings from 'Routes/Home/FeaturedListings'
+import FeaturedListings from 'Routes/Home/FeaturedListings/FeaturedListings'
 import ItemPopUp from 'components/ItemPopUp/ItemPopUp'
 
 const Home = () => {

@@ -22,7 +22,7 @@ export class UserWatchersService {
         let watcher: WatcherDocument
 
         // 1. Check if watcher with same metadata exists
-        if (await this.watchersService.exists(metadata)) {
+        if (await this.watcherModel.exists({ metadata })) {
             watcher = await this.watcherModel.findOne({ metadata })
         } else {
             // 2. If false, create watcher
@@ -55,10 +55,10 @@ export class UserWatchersService {
 
     async findAll(userId: string): Promise<PopulatedWatcher[]> {
         const pipeline: PipelineStage[] = [
-            { $limit: 1 },
             {
                 $match: { _id: new ObjectId(userId) },
             },
+            { $limit: 1 },
             {
                 $unwind: {
                     path: '$watchers',
