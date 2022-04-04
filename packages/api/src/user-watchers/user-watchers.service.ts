@@ -135,7 +135,7 @@ export class UserWatchersService {
         this.create({ metadata, userId })
     }
 
-    async remove(id: string, userId: string) {
+    async remove(id: string | ObjectId, userId: string | ObjectId) {
         id = new ObjectId(id)
         userId = new ObjectId(userId)
 
