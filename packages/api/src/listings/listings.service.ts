@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model, FilterQuery, QueryOptions } from 'mongoose'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { Sort, sortableFields } from '@mewi/common/types'
+import _ from 'lodash'
 
 @Injectable()
 export class ListingsService {
@@ -70,13 +71,13 @@ export class ListingsService {
                     }
                     break
                 case 'dateGte':
-                    filter.$and.push({ date: { $gte: +key } })
+                    filter.$and.push({ date: { $gte: +value } })
                     break
             }
         }
 
         if (!filter.$and.length) {
-            filter = {}
+            filter = _.omit(filter, '$and')
         }
 
         return {

@@ -38,7 +38,7 @@ const SearchArea = () => {
                 [styles.container]: true,
             })}
         >
-            <aside>
+            <aside className={styles.categoryFilters}>
                 <h4 className='pb-2'>Kategorier</h4>
                 <CategorySelectionList />
             </aside>

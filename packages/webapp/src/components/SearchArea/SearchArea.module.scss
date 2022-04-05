@@ -16,3 +16,10 @@
         }
     }
 }
+
+.categoryFilters {
+    margin-bottom: 2rem;
+    @screen lg {
+        margin: 0rem;
+    }
+}

@@ -1,5 +1,5 @@
+import { useAppDispatch } from 'hooks/hooks'
 import { ReactNode } from 'react'
-import { useDispatch } from 'react-redux'
 import { setFilters } from 'store/search/creators'
 
 interface AutoCompleteRowProps {
@@ -9,7 +9,7 @@ interface AutoCompleteRowProps {
 }
 
 const AutoCompleteRow = ({ children, keyword, onClick }: AutoCompleteRowProps) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const handleClick = () => {
         dispatch(setFilters({ keyword }))

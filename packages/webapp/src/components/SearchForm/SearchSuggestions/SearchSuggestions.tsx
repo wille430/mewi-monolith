@@ -1,6 +1,6 @@
 import searchApi from 'api/searchApi'
 import _ from 'lodash'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import AutoCompleteRow from '../AutoCompleteRow'
 import styles from './SearchSuggestions.module.scss'
 import classNames from 'classnames'
@@ -22,18 +22,13 @@ const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
     const [suggestions, setSuggestions] = useState<string[]>([])
 
-    const autocomplete = useMemo(
-        async (): Promise<string[]> => (query ? await searchApi.autocomplete(query) : []),
-        [query]
-    )
-
     const getSuggestions = useCallback(
         _.debounce((_query) => {
             if (!_query) {
                 setSuggestions([])
             }
 
-            autocomplete.then((v) => {
+            searchApi.autocomplete(_query).then((v) => {
                 setSuggestions(v)
             })
         }, 750),

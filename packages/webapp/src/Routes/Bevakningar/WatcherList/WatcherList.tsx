@@ -6,13 +6,20 @@ import styles from './WatcherList.module.scss'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import { IPopulatedWatcher } from '@mewi/common/types'
+import { useState } from 'react'
 
 const WatcherList = () => {
-    const { data: watchers, isLoading } = useQuery('watchers', () =>
-        axios.get<IPopulatedWatcher[]>('/users/me/watchers').then((res) => res.data)
+    const { data: watchers, isLoading } = useQuery(
+        'watchers',
+        () => axios.get<IPopulatedWatcher[]>('/users/me/watchers').then((res) => res.data),
+        {
+            onSuccess: (data) => {
+                setExpandedId(undefined)
+            },
+        }
     )
 
-    console.log(watchers)
+    const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
 
     const renderItems = () => {
         if (isLoading) {
@@ -29,7 +36,20 @@ const WatcherList = () => {
                     <>
                         {watchers.map(
                             (watcherObj, i) =>
-                                watcherObj && <WatcherCard key={i} watcher={watcherObj} />
+                                watcherObj && (
+                                    <WatcherCard
+                                        key={i}
+                                        watcher={watcherObj}
+                                        expand={expandedId === watcherObj._id}
+                                        onExpand={(val?: boolean) => {
+                                            if (val) {
+                                                setExpandedId(watcherObj._id)
+                                            } else {
+                                                setExpandedId(undefined)
+                                            }
+                                        }}
+                                    />
+                                )
                         )}
                     </>
                 )

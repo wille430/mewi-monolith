@@ -6,7 +6,7 @@ import { IListing, IPopulatedWatcher } from '@mewi/common/types'
 import { Button } from '@mewi/ui'
 import queryString from 'query-string'
 import _ from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { Dispatch, useEffect, useRef, useState } from 'react'
 import styles from './WatcherCard.module.scss'
 import { AnimatePresence } from 'framer-motion'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
@@ -14,12 +14,22 @@ import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 const WatcherCard = ({
     watcher,
     newItems,
+    expand,
+    onExpand,
 }: {
     watcher: IPopulatedWatcher
     newItems?: IListing[]
+    expand?: boolean
+    onExpand?: Dispatch<boolean>
 }) => {
     const history = useHistory()
-    const [expand, setExpand] = useState(false)
+    let [_expand, _setExpand] = [expand, onExpand]
+
+    if (expand == null && !onExpand) {
+        // eslint-disable-next-line @typescript-eslint/no-extra-semi
+        ;[_expand, _setExpand] = useState<boolean>(false)
+    }
+
     const scrollRef = useRef<HTMLDivElement>(null)
 
     const handleSearchButtonClick = () => {
@@ -37,7 +47,7 @@ const WatcherCard = ({
     }
 
     const handleExpand = () => {
-        setExpand(!expand)
+        _setExpand(!_expand)
     }
 
     const regionsString = () => {
@@ -47,8 +57,8 @@ const WatcherCard = ({
     }
 
     useEffect(() => {
-        if (expand) scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, [expand])
+        if (_expand) scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, [_expand])
 
     return (
         <div className={styles.watcherCardContainer} ref={scrollRef}>
@@ -119,12 +129,12 @@ const WatcherCard = ({
                         />
                         <RemoveButton watcherId={watcher._id} />
 
-                        <ExpandButton handleExpand={handleExpand} expand={expand} />
+                        <ExpandButton handleExpand={handleExpand} expand={_expand} />
                     </div>
                 </footer>
             </article>
             <AnimatePresence>
-                {expand && <NewItemsDrawer watcherId={watcher._id} newItems={newItems || []} />}
+                {_expand && <NewItemsDrawer watcher={watcher} newItems={newItems || []} />}
             </AnimatePresence>
         </div>
     )

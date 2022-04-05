@@ -35,7 +35,8 @@ const ListingGrid = () => {
     }, [filters])
 
     const fetchListings = async (): Promise<IListing[]> => {
-        return (await dispatch(getSearchResults()).unwrap()).hits
+        const listings = (await dispatch(getSearchResults()).unwrap())
+        return listings.hits
     }
 
     const {
@@ -53,8 +54,7 @@ const ListingGrid = () => {
         {
             getNextPageParam: () => currentPage + 1,
             getPreviousPageParam: () => currentPage - 1,
-            refetchOnWindowFocus: false,
-            retry: false,
+            refetchOnWindowFocus: false
         }
     )
 

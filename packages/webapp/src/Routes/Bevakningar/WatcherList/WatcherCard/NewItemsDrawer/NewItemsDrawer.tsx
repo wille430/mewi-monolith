@@ -1,24 +1,35 @@
 import ArticleItemRow from 'components/ArticleItemRow/ArticleItemRow'
-import { useAppDispatch, useAppSelector } from 'hooks/hooks'
+import { useAppDispatch } from 'hooks/hooks'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
 import { IListing } from '@mewi/common/types'
-import { useEffect, useState } from 'react'
-import { getNewItems } from 'store/watchers/creators'
 import StyledLoader from 'components/StyledLoader'
 import { openListing } from 'store/search/creators'
+import { useQuery } from 'react-query'
+import axios from 'axios'
+import { IPopulatedWatcher } from '@mewi/common/types'
+import queryString from 'query-string'
 
 interface NewItemsDrawerProps {
     newItems: IListing[]
-    watcherId: string
+    watcher: IPopulatedWatcher
 }
 
-const NewItemsDrawer = ({ watcherId, newItems }: NewItemsDrawerProps) => {
+const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
+    const LIMIT = 5
     const dispatch = useAppDispatch()
-    const [isLoading, setIsLoading] = useState(false)
-    const _newItems = useAppSelector((state) => state.watchers.newItems)[watcherId] as
-        | IListing[]
-        | undefined
+
+    const {
+        data: _newItems,
+        isLoading,
+        error,
+    } = useQuery(
+        ['watcherListings', { id: watcher._id }],
+        async () =>
+            await axios
+                .get('/listings?' + queryString.stringify({ dateGte: new Date(watcher.createdAt).getTime(), limit: LIMIT }))
+                .then((res) => res.data?.hits)
+    )
 
     const drawerVariants = {
         hidden: {
@@ -38,13 +49,6 @@ const NewItemsDrawer = ({ watcherId, newItems }: NewItemsDrawerProps) => {
             <ArticleItemRow key={item.id} item={item} onClick={() => handleClick(item.id)} />
         ))
     }
-
-    useEffect(() => {
-        setIsLoading(true)
-        dispatch(getNewItems(watcherId)).then(() => {
-            setIsLoading(false)
-        })
-    }, [])
 
     return (
         <motion.div

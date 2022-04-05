@@ -1,9 +1,9 @@
 import { Sort } from '@mewi/common/types'
-import { IsOptional, IsNumber, IsString, IsNumberString, IsBooleanString } from 'class-validator'
+import { IsOptional, IsString, IsNumberString, IsBooleanString } from 'class-validator'
 
 export class FindAllListingsDto {
     @IsOptional()
-    @IsNumber()
+    @IsNumberString()
     limit = 24
 
     @IsOptional()
