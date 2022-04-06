@@ -12,7 +12,7 @@ jobs:
             - image: 'mongo'
         steps:
             - checkout
-            - run: npm i pnpm -g
+            - run: sudo npm i pnpm -g
             - run:
                   command: pnpm i 
                   name: Install dependencies
