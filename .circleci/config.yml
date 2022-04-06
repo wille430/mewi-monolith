@@ -13,7 +13,7 @@ jobs:
         steps:
             - checkout
             - run:
-                  command: npm ci
+                  command: pnpm i 
                   name: Install dependencies
             # - run:
             #       command: sudo npm install pm2 -g
