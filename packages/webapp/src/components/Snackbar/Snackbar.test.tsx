@@ -1,7 +1,7 @@
 import Snackbar from './Snackbar'
 import '@testing-library/jest-dom'
 import { cleanup, fireEvent, render } from '@testing-library/react'
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 const testIds = {
     snackbar: 'snackbarContainer',
@@ -17,7 +17,7 @@ describe('Snackbar', () => {
     beforeEach(() => {
         title = faker.random.words()
         body = faker.lorem.paragraphs()
-        jest.useFakeTimers()
+        vi.useFakeTimers()
         cleanup()
     })
 
@@ -30,7 +30,7 @@ describe('Snackbar', () => {
         expect(queryByTestId(testIds.body)).toBeTruthy()
     })
 
-    describe('displays content', () => {
+    it('displays content', () => {
         const { queryAllByText } = render(<Snackbar open={true} title={title} body={body} />)
 
         expect(queryAllByText(title)).toBeTruthy()
@@ -57,15 +57,15 @@ describe('Snackbar', () => {
                 expect(snackbar).toBeVisible()
             }, 100)
 
-            jest.runAllTimers()
+            vi.runAllTimers()
         })
     })
 
     describe('callbacks when', () => {
-        let callback: jest.Mock
+        let callback: vi.Mock
 
         beforeEach(() => {
-            callback = jest.fn()
+            callback = vi.fn()
         })
 
         it('close button is pressed', () => {
@@ -100,7 +100,7 @@ describe('Snackbar', () => {
                 }, timeout + 100)
             )
 
-            jest.runAllTimers()
+            vi.runAllTimers()
         })
     })
 
@@ -110,7 +110,7 @@ describe('Snackbar', () => {
             const animationDuration = 0
             const autoHideDuration = 0
 
-            const callback = jest.fn(() => {
+            const callback = vi.fn(() => {
                 open = false
             })
 
@@ -131,7 +131,7 @@ describe('Snackbar', () => {
                 }, 0)
             )
 
-            jest.runAllTimers()
+            vi.runAllTimers()
 
             const button = queryByTestId(testIds.closeButton)
             if (!button) fail()
@@ -156,7 +156,7 @@ describe('Snackbar', () => {
                 }, autoHideDuration)
             )
 
-            jest.runAllTimers()
+            vi.runAllTimers()
         })
     })
 })

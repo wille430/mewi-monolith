@@ -1,0 +1,19 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["vitest/globals"],
+        "composite": true,
+        "paths": {
+            "@mewi/common/*": ["../common/src/*"],
+            "@mewi/common": ["../common/src/index.ts"]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.tsx"
+    ],
+    "exclude": ["node_modules"]
+}

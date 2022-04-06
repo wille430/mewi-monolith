@@ -35,7 +35,7 @@ const CategorySelectionList = () => {
         dispatch(
             setFilters({
                 category: selectedCategory,
-                sort: Sort.RELEVANCE
+                sort: Sort.RELEVANCE,
             })
         )
 
@@ -59,7 +59,7 @@ const CategorySelectionList = () => {
             const isSelected = isCategorySelected(Category[key])
 
             return (
-                <CategorySelectionList.ListItem
+                <CategoryListItem
                     key={key}
                     categoryKey={key as keyof typeof Category}
                     currentlySelected={isSelected}
@@ -90,24 +90,18 @@ interface ListItem {
  * @param currentlySelected Whether category is selected
  * @param categoryPath An array of keys to the category in {@link categories}
  */
-const CategoryListItem = ({ children, categoryKey, currentlySelected }: ListItem) => {
-    const getLink = () => {
-        return '/kategorier/' + Category[categoryKey] + window.location.search
-    }
-
-    return (
-        <li
-            className={cx({
-                [styles.selected]: currentlySelected,
-            })}
-            data-testid={`categoryListItem-${Category[categoryKey]}`}
-        >
-            <Link to={getLink()}>{CategoryLabel[categoryKey]}</Link>
-            <ul>{children}</ul>
-        </li>
-    )
-}
-
-CategorySelectionList.ListItem = CategoryListItem
+const CategoryListItem = ({ children, categoryKey, currentlySelected }: ListItem) => (
+    <li
+        className={cx({
+            [styles.selected]: currentlySelected,
+        })}
+        data-testid={`categoryListItem-${Category[categoryKey]}`}
+    >
+        <Link to={'/kategorier/' + Category[categoryKey] + window.location.search || ''}>
+            <span>{CategoryLabel[categoryKey]}</span>
+        </Link>
+        <ul>{children}</ul>
+    </li>
+)
 
 export default CategorySelectionList

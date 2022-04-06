@@ -7,7 +7,7 @@ export type getSearchResultsReturnType = {
     totalHits: SearchState['totalHits']
 }
 
-const getSearchResults = async (options?): Promise<getSearchResultsReturnType> => {
+export const getSearchResults = async (options?): Promise<getSearchResultsReturnType> => {
     const { hits, totalHits } = await axios
         .post('/search', {
             ...options,
@@ -17,19 +17,16 @@ const getSearchResults = async (options?): Promise<getSearchResultsReturnType> =
     return { hits, totalHits } as getSearchResultsReturnType
 }
 
-const autocomplete = async (keyword: string) => {
+export const autocomplete = async (keyword: string) => {
     if (keyword === '') return []
     const suggestions =
         (await axios.get('/listings/autocomplete/' + keyword).then((res) => res.data)) || []
     return suggestions
 }
-const getItemById = async (itemId: string) => {
+
+export const getItemById = async (itemId: string) => {
     const item: IListing | undefined = await axios.get('/items/' + itemId).then((res) => res.data)
     return item
 }
 
-export default {
-    getSearchResults,
-    autocomplete,
-    getItemById,
-}
+export default {getSearchResults, autocomplete, getItemById}

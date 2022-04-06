@@ -1,7 +1,9 @@
-import { defineConfig } from 'vite'
+import { defineConfig, configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { readdirSync } from 'fs'
 import * as path from 'path'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import { vitePluginCommonjs } from 'vite-plugin-commonjs'
 
 const absolutePathAliases: Record<string, string> = {}
 
@@ -19,7 +21,12 @@ for (const dir of srcRootContent) {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    test: {
+        ...configDefaults,
+        globals: true,
+        environment: 'jsdom',
+    },
+    plugins: [react(), tsconfigPaths(), vitePluginCommonjs()],
     server: {
         port: 4200,
     },

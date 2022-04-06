@@ -1,4 +1,4 @@
-import { categoriesOptions, regions, ListingSearchFilters } from '@mewi/common/types'
+import { regions, ListingSearchFilters } from '@mewi/common/types'
 import { FormEvent, ReactNode } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'
@@ -86,15 +86,15 @@ const SearchFilterContent = (props: SearchFilterContentProps) => {
             options: regions,
             'data-testid': 'regionsSelect',
         },
-        {
-            label: 'Välj kategori:',
-            name: 'category',
-            value: searchFilterData.category,
-            onChange: (val: string) => handleChange('category', val),
-            isMulti: false,
-            options: categoryOptions || categoriesOptions,
-            'data-testid': 'categorySelect',
-        },
+        // {
+        //     label: 'Välj kategori:',
+        //     name: 'category',
+        //     value: searchFilterData.category,
+        //     onChange: (val: string) => handleChange('category', val),
+        //     isMulti: false,
+        //     options: categoryOptions || categoriesOptions,
+        //     'data-testid': 'categorySelect',
+        // },
     ]
 
     return (

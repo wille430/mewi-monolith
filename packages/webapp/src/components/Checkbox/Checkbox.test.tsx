@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react'
 import Checkbox from './Checkbox'
-import { randomString } from '@mewi/common/utils'
+import { Utils } from '@mewi/common'
 
 it('renders correctly', () => {
-    const mockLabel = randomString(5)
+    const mockLabel = Utils.randomString(5)
 
     const { queryByTestId, queryByText } = render(<Checkbox label={mockLabel} />)
 
@@ -13,7 +13,7 @@ it('renders correctly', () => {
 
 describe('Checkbox', () => {
     it('should trigger on change function', () => {
-        const mockOnChange = jest.fn()
+        const mockOnChange = vi.fn()
         const { queryByTestId } = render(<Checkbox onChange={mockOnChange} />)
 
         const checkbox = queryByTestId('checkbox')
