@@ -12,6 +12,7 @@ jobs:
             - image: 'mongo'
         steps:
             - checkout
+            - run: npm i pnpm -g
             - run:
                   command: pnpm i 
                   name: Install dependencies
@@ -19,7 +20,7 @@ jobs:
             #       command: sudo npm install pm2 -g
             #       name: Installing pm2
             - run:
-                  command: pnbpm lint
+                  command: pnpm lint
                   name: Lint projects
             - run:
                   command: pnpm build
@@ -59,7 +60,7 @@ jobs:
                   name: Deploy to API server
             - run:
                   command: |
-                      npm i netlify-cli -g
+                      pnpm i netlify-cli -g
                       netlify deploy --auth $NETLIFY_TOKEN
                   name: Deploy to apps
 workflows:
