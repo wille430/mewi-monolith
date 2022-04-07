@@ -1,5 +1,5 @@
 {
-    "name": "@mewi/common",
+    "name": "@wille430/common",
     "version": "1.0.0",
     "description": "Shared package for Mewi monorepo",
     "main": "dist/index",
@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "git://github.com/wille430/mewi-monolith.git"
     },
     "typesVersions": {
         "*": {
@@ -34,10 +34,10 @@
         "build": "npx tsc",
         "build:watch": "npx tsc -w",
         "pack": "pnpm pack --pack-destination ../../archive",
-        "publish": "pnpm publish"
+        "publish": "pnpm publish --no-git-checks"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "@wille430:registry": "https://npm.pkg.github.com"
     },
     "author": "Mewi",
     "license": "ISC",
