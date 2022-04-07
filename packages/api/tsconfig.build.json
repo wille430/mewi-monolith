@@ -1,4 +1,16 @@
 {
     "extends": "./tsconfig.json",
-    "exclude": ["node_modules", "test", "dist", "**/*.spec.ts", "**/*.test.ts", "src/services"]
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "noEmit": false,
+        "incremental": false,
+        "removeComments": true,
+        "rootDir": "src",
+        "baseUrl": "src",
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "src/services"],
+    "include": ["src/**/*"]
 }

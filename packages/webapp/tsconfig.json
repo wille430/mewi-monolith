@@ -10,7 +10,7 @@
         "moduleResolution": "node",
         "isolatedModules": true,
         "incremental": true,
-        "outDir": "../../dist/webapp"
+        "outDir": "./dist"
     },
     "include": ["src/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.spec.json" }]

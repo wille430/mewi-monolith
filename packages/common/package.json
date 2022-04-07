@@ -1,9 +1,10 @@
 {
     "name": "@mewi/common",
     "version": "1.0.0",
-    "description": "",
+    "description": "Shared package for Mewi monorepo",
     "main": "dist/index",
     "types": "dist/index.d.ts",
+    "private": true,
     "exports": {
         ".": "./dist/index.js",
         "./types": "./dist/types/index.js",
@@ -28,7 +29,9 @@
     },
     "scripts": {
         "build": "npx tsc",
-        "build:watch": "npx tsc -w"
+        "build:watch": "npx tsc -w",
+        "pack": "pnpm pack --pack-destination ../../archive",
+        "publish": "pnpm publish"
     },
     "author": "Mewi",
     "license": "ISC",

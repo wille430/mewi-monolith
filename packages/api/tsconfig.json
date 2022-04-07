@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "target": "es2017",
         "declaration": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es2017",
         "sourceMap": true,
-        "outDir": "../../dist/api",
+        "outDir": "./dist",
         "baseUrl": "./",
         "incremental": true,
         "skipLibCheck": true,
@@ -18,16 +18,13 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "preserveSymlinks": true,
-        "types": ["node"],
         "esModuleInterop": true,
         "lib": ["es2019", "dom"],
         "paths": {
-            "@mewi/common": ["../common/src/index"],
-            "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
         }
     },
-    // "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*"],
+    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*", "node_modules"],
     "references": [
         {
             "path": "./tsconfig.spec.json"
