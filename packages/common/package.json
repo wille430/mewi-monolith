@@ -4,7 +4,6 @@
     "description": "Shared package for Mewi monorepo",
     "main": "dist/index",
     "types": "dist/index.d.ts",
-    "private": true,
     "exports": {
         ".": "./dist/index.js",
         "./types": "./dist/types/index.js",
