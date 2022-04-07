@@ -10,6 +10,10 @@
         "./error": "./dist/error/index.js",
         "./utils": "./dist/utils/index.js"
     },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
     "typesVersions": {
         "*": {
             "*": [
@@ -31,6 +35,9 @@
         "build:watch": "npx tsc -w",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish"
+    },
+    "publishConfig": {
+        "@wille430/registry": "https://npm.pkg.github.com"
     },
     "author": "Mewi",
     "license": "ISC",
