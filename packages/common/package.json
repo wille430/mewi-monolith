@@ -37,7 +37,7 @@
         "publish": "pnpm publish"
     },
     "publishConfig": {
-        "@wille430/registry": "https://npm.pkg.github.com"
+        "registry": "https://npm.pkg.github.com"
     },
     "author": "Mewi",
     "license": "ISC",
