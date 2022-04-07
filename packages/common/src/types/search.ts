@@ -1,4 +1,4 @@
-import { Sort } from "./sort.enum"
+import { Sort } from './sort.enum'
 
 export interface ListingSearchFilters {
     keyword?: string

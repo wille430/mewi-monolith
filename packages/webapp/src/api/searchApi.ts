@@ -29,4 +29,4 @@ export const getItemById = async (itemId: string) => {
     return item
 }
 
-export default {getSearchResults, autocomplete, getItemById}
+export default { getSearchResults, autocomplete, getItemById }

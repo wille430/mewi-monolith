@@ -30,7 +30,6 @@ const FilterArea = ({ defaultValues = {}, ...rest }: FilterAreaProps) => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-
         dispatch(getFiltersFromQueryParams())
 
         // clear filters on unmount

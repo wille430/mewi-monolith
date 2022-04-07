@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import LabeledDropdown from './LabeledDropdown'
-import {Utils} from '@mewi/common'
+import { Utils } from '@mewi/common'
 
 it('renders correctly', () => {
     const mockOptions = []

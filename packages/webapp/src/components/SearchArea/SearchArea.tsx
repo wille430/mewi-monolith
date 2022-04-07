@@ -17,7 +17,7 @@ const cx = classNames.bind(styles)
 const SearchArea = () => {
     const categoryValue = useParams()['category_id'] as undefined | Category
     const scrollEle = useRef<HTMLDivElement | null>(null)
-    const { searchParams,  } = useAppSelector((state) => state.search)
+    const { searchParams } = useAppSelector((state) => state.search)
     const history = useHistory()
     const isFirstRender = useRef(true)
 

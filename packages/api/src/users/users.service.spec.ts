@@ -8,7 +8,6 @@ import { factory } from 'fakingoose'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { randomEmail, randomPassword } from '@mewi/common/utils'
 import { ChangePasswordAuth } from './dto/change-password.dto'
-import _ from 'lodash'
 import { CreateUserDto } from './dto/create-user.dto'
 
 describe('UsersService', () => {

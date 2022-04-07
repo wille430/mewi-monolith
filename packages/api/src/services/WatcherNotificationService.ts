@@ -36,11 +36,7 @@ class WatcherNotificationService {
      * @param callback Called after user is notified
      * @returns {Promise<void>}
      */
-    static async notifyUser(
-        user: User,
-        watcher: IWatcher,
-        callback?: () => void
-    ): Promise<void> {
+    static async notifyUser(user: User, watcher: IWatcher, callback?: () => void): Promise<void> {
         // Get UserWatcher of user
         const watcherInUser = user.watchers.id(watcher._id)
 

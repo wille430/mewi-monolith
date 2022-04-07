@@ -23,7 +23,11 @@ const SortButton = () => {
     useEffect(() => console.log(sort), [sort])
 
     return (
-        <select onChange={handleChange} defaultValue={sort || Sort.RELEVANCE} value={sort || Sort.RELEVANCE}>
+        <select
+            onChange={handleChange}
+            defaultValue={sort || Sort.RELEVANCE}
+            value={sort || Sort.RELEVANCE}
+        >
             {options.map((obj, i) => (
                 <option key={i} value={obj.value}>
                     {obj.label}

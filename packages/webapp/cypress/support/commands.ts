@@ -28,7 +28,7 @@ Cypress.Commands.add('login', () => {
         window.localStorage.setItem('access_token', access_token)
         window.localStorage.setItem('refresh_token', refresh_token)
 
-        return cy.wrap({access_token, refresh_token})
+        return cy.wrap({ access_token, refresh_token })
     })
 })
 

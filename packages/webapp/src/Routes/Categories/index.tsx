@@ -8,7 +8,7 @@ const Categories = () => {
                 <Container>
                     <h3 className='pb-0 p-4'>Kategorier</h3>
                     <CategoryList />
-                    <div className='pb-8'/>
+                    <div className='pb-8' />
                 </Container>
             </main>
         </div>

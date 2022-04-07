@@ -17,7 +17,7 @@
         "paths": {
             "@mewi/common": ["packages/common/src/index.ts"],
             "@mewi/common/*": ["packages/common/src/*"],
-            "@mewi/ui": ["packages/ui/src/index.ts"],
+            "@mewi/ui": ["packages/ui/src/index.ts"]
         },
         "esModuleInterop": true
     },

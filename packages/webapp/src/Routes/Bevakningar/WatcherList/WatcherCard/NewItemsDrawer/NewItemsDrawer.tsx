@@ -27,7 +27,13 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
         ['watcherListings', { id: watcher._id }],
         async () =>
             await axios
-                .get('/listings?' + queryString.stringify({ dateGte: new Date(watcher.createdAt).getTime(), limit: LIMIT }))
+                .get(
+                    '/listings?' +
+                        queryString.stringify({
+                            dateGte: new Date(watcher.createdAt).getTime(),
+                            limit: LIMIT,
+                        })
+                )
                 .then((res) => res.data?.hits)
     )
 

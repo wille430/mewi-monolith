@@ -23,7 +23,7 @@ const CategoryListItem = ({
             animate={{
                 transform: 'scale(1)',
                 transition: {
-                    delay: (index * 2 % 3)*0.1,
+                    delay: ((index * 2) % 3) * 0.1,
                 },
             }}
             whileHover={{

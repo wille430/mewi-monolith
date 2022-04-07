@@ -14,7 +14,7 @@ import ChangePassword from 'Routes/ChangePassword/ChangePassword'
 import SnackbarHandler from 'components/SnackbarHandler'
 import StyledLoader from 'components/StyledLoader'
 import { ConnectedRouter } from 'connected-react-router'
-import {history} from 'store/history'
+import { history } from 'store/history'
 
 // Routes
 const Home = lazy(() => import('Routes/Home/index'))

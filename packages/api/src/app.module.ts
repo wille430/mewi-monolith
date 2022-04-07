@@ -8,7 +8,7 @@ import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import { WatchersModule } from './watchers/watchers.module'
 import { ConfigModule } from '@nestjs/config'
 import { TestModule } from './test/test.module'
-import { ScrapersModule } from './scrapers/scrapers.module';
+import { ScrapersModule } from './scrapers/scrapers.module'
 
 const getMongoUri = () => {
     const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env

@@ -12,9 +12,12 @@ export default (on, config) => {
             },
         })
     })
-    on('file:preprocessor', webpackPreprocessor({
-        webpackOptions: webpackConfig
-    }))
+    on(
+        'file:preprocessor',
+        webpackPreprocessor({
+            webpackOptions: webpackConfig,
+        })
+    )
 
     return config
 }

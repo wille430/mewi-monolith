@@ -7,7 +7,6 @@ import _ from 'lodash'
 import axios from 'axios'
 import { IListing, ListingSearchFilters, Sort } from '@mewi/common/types'
 import { LOCATION_CHANGE } from 'connected-react-router'
-import { keys as transformKeys } from 'ts-transformer-keys'
 
 export const updateSearchParams = createAsyncThunk(
     SearchActionTypes.UPDATE_SEARCH_PARAMS,

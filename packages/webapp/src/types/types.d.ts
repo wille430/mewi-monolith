@@ -45,6 +45,6 @@ export interface ValidationError {
 
 export interface ApiErrorResponse {
     statusCode: number
-    message: ValidationError[],
+    message: ValidationError[]
     error: string
 }

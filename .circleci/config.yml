@@ -14,7 +14,7 @@ jobs:
             - checkout
             - run: sudo npm i pnpm -g
             - run:
-                  command: pnpm i 
+                  command: pnpm i
                   name: Install dependencies
             # - run:
             #       command: sudo npm install pm2 -g

@@ -10,7 +10,6 @@ export type UserDocument = User & Document
 
 @Schema()
 export class User implements Omit<IUser, 'watchers'> {
-
     _id: string
 
     @Prop({ type: String })
