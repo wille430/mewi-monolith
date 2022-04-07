@@ -1,4 +1,2 @@
 packages:
     - 'packages/*'
-link-workspace-packages: deep
-prefer-workspace-packages: true

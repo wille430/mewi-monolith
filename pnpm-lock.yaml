@@ -47,7 +47,7 @@ importers:
       '@types/passport-jwt': ^3.0.6
       '@types/passport-local': ^1.0.34
       '@types/supertest': ^2.0.12
-      '@wille430/common': workspace:^1.0.0
+      '@wille430/common': workspace:^1.0.1
       axios: ^0.26.1
       bcryptjs: ^2.4.3
       cache-manager: ^3.6.0
@@ -211,7 +211,7 @@ importers:
       '@types/react-test-renderer': ^17.0.1
       '@types/tailwindcss': ^3.0.9
       '@vitejs/plugin-react': ^1.0.7
-      '@wille430/common': workspace:^1.0.0
+      '@wille430/common': workspace:^1.0.1
       autoprefixer: ^10.4.4
       axios: ^0.26.1
       babel-loader: ^8.2.4
@@ -5720,7 +5720,7 @@ packages:
   /axios/0.26.1:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
-      follow-redirects: 1.14.9
+      follow-redirects: 1.14.9_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -8665,16 +8665,6 @@ packages:
     dependencies:
       inherits: 2.0.4
       readable-stream: 2.3.7
-    dev: false
-
-  /follow-redirects/1.14.9:
-    resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
     dev: false
 
   /follow-redirects/1.14.9_debug@4.3.2:
@@ -15195,7 +15185,7 @@ packages:
       globrex: 0.1.2
       recrawl-sync: 2.2.2
       tsconfig-paths: 3.14.1
-      vite: 2.8.6
+      vite: 2.8.6_sass@1.49.9
     transitivePeerDependencies:
       - supports-color
     dev: true

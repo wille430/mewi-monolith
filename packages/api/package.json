@@ -17,7 +17,7 @@
         "@nestjs/testing": "^8.4.3",
         "@types/jsdom": "^16.2.14",
         "@types/lodash": "^4.14.180",
-        "@wille430/common": "workspace:^1.0.0",
+        "@wille430/common": "workspace:^1.0.1",
         "axios": "^0.26.1",
         "bcryptjs": "^2.4.3",
         "cache-manager": "^3.6.0",

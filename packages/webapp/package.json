@@ -16,7 +16,7 @@
         "@react-hook/window-size": "^3.0.7",
         "@reduxjs/toolkit": "^1.8.0",
         "@types/lodash": "^4.14.180",
-        "@wille430/common": "workspace:^1.0.0",
+        "@wille430/common": "workspace:^1.0.1",
         "axios": "^0.26.1",
         "babel-polyfill": "^6.26.0",
         "classnames": "^2.3.1",
