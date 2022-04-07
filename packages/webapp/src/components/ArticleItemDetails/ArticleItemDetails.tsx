@@ -1,4 +1,4 @@
-import { IListing } from '@mewi/common/types'
+import { IListing } from '@wille430/common/types'
 import styles from './ArticleItemDetails.module.scss'
 import classNames from 'classnames'
 import { Container } from '@mewi/ui'

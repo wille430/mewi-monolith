@@ -1,5 +1,5 @@
-import { IWatcher, WatcherMetadata } from '@mewi/common'
-import { toUnixTime } from '@mewi/common/utils'
+import { IWatcher, WatcherMetadata } from '@wille430/common'
+import { toUnixTime } from '@wille430/common/utils'
 import ListingModel from 'models/ListingModel'
 import { User } from 'models/UserModel'
 import EmailService from './EmailService'

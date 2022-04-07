@@ -1,6 +1,6 @@
 import { IsInstance, IsMongoId, IsObject } from 'class-validator'
 import { Metadata } from '@/watchers/watcher.schema'
-import { ListingSearchFilters } from '@mewi/common/types'
+import { ListingSearchFilters } from '@wille430/common/types'
 
 export class CreateUserWatcherDto {
     @IsMongoId()

@@ -1,4 +1,4 @@
-import { randomEmail } from '@mewi/common'
+import { randomEmail } from '@wille430/common'
 import EmailService from './EmailService'
 
 describe('Email Service', () => {

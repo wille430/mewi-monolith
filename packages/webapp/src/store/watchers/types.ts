@@ -1,4 +1,4 @@
-import { IListing, JoinedWatcher } from '@mewi/common/types'
+import { IListing, JoinedWatcher } from '@wille430/common/types'
 
 export interface WatchersState {
     watchers: JoinedWatcher[]

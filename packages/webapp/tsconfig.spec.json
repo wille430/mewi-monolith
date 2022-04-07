@@ -3,10 +3,10 @@
     "compilerOptions": {
         "types": ["vitest/globals"],
         "composite": true,
-        "paths": {
-            "@mewi/common/*": ["../common/src/*"],
-            "@mewi/common": ["../common/src/index.ts"]
-        }
+        // "paths": {
+        //     "@wille430/common/*": ["../common/src/*"],
+        //     "@wille430/common": ["../common/src/index.ts"]
+        // }
     },
     "include": [
         "src/**/*",

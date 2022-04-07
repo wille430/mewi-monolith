@@ -4,8 +4,8 @@ import mongoose from 'mongoose'
 import { Provider } from 'react-redux'
 import { store } from 'store'
 import faker from '@faker-js/faker'
-import { generateMockIListing } from '@mewi/common/utils'
-import { IListing } from '@mewi/common/types'
+import { generateMockIListing } from '@wille430/common/utils'
+import { IListing } from '@wille430/common/types'
 
 export default {
     component: WatcherCard,

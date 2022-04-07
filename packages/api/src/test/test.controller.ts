@@ -1,7 +1,7 @@
 import { Controller, Post } from '@nestjs/common'
 import { TestService } from './test.service'
 import { UsersService } from '@/users/users.service'
-import { Utils } from '@mewi/common'
+import { Utils } from '@wille430/common'
 import { AuthService } from '@/auth/auth.service'
 
 @Controller('test')

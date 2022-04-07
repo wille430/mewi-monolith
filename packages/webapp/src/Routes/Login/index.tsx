@@ -6,7 +6,7 @@ import { useMutation } from 'react-query'
 import axios from 'axios'
 import { useAppDispatch } from 'hooks/hooks'
 import { loginUser } from 'store/auth/creators'
-import { AuthTokens } from '@mewi/common/types'
+import { AuthTokens } from '@wille430/common/types'
 
 const Login = () => {
     const [email, setEmail] = useState<string | undefined>('')

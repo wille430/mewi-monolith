@@ -2,7 +2,7 @@ import faker from '@faker-js/faker'
 import { FormEvent, useState } from 'react'
 import { useQuery } from 'react-query'
 import axios from 'axios'
-import { IUser } from '@mewi/common/types'
+import { IUser } from '@wille430/common/types'
 import { Button, TextField } from '@mewi/ui'
 import styles from './AccountDetails.module.scss'
 

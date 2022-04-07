@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import CategorySelectionList from './CategorySelectionList'
-import { Category, CategoryLabel } from '@mewi/common/types'
+import { Category, CategoryLabel } from '@wille430/common/types'
 import _ from 'lodash'
 import { Provider } from 'react-redux'
 import { store } from 'store'

@@ -1,6 +1,6 @@
 import { PasswordService } from './index'
 import UserModel from 'models/UserModel'
-import { APIError, AuthErrorCodes, AuthTokens, JWT, ValidationErrorCodes } from '@mewi/common'
+import { APIError, AuthErrorCodes, AuthTokens, JWT, ValidationErrorCodes } from '@wille430/common'
 import * as jwt from 'jsonwebtoken'
 import UserEmailService from './UserEmailService'
 

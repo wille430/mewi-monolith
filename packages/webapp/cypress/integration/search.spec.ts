@@ -1,4 +1,4 @@
-import { Types, Utils } from '@mewi/common'
+import { Types, Utils } from '@wille430/common'
 import _ from 'lodash'
 import queryString from 'query-string'
 import { setFilters } from '../../../webapp/src/store/search/creators'

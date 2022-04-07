@@ -2,8 +2,6 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2017",
-        "declaration": true,
-        "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
@@ -12,19 +10,18 @@
         "baseUrl": "./",
         "incremental": true,
         "skipLibCheck": true,
-        "strictNullChecks": false,
-        "noImplicitAny": false,
-        "strictBindCallApply": false,
-        "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
-        "preserveSymlinks": true,
         "esModuleInterop": true,
+        "preserveSymlinks": true,
+        "isolatedModules": true,
+        "allowJs": true,
         "lib": ["es2019", "dom"],
         "paths": {
             "@/*": ["./src/*"]
         }
     },
     "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*", "node_modules"],
+    "include": ["src/**/*"],
     "references": [
         {
             "path": "./tsconfig.spec.json"

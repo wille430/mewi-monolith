@@ -1,5 +1,5 @@
-// import { categories } from '@mewi/common/types'
-import { Category, CategoryLabel, Sort } from '@mewi/common/types'
+// import { categories } from '@wille430/common/types'
+import { Category, CategoryLabel, Sort } from '@wille430/common/types'
 import classNames from 'classnames'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import _ from 'lodash'

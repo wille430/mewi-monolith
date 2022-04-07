@@ -8,7 +8,7 @@ import { PopulatedWatcher, Watcher, WatcherDocument } from '@/watchers/watcher.s
 import { Document } from 'mongoose'
 import { WatchersService } from '@/watchers/watchers.service'
 import { ObjectId } from 'mongodb'
-import { Error } from '@mewi/common'
+import { Error } from '@wille430/common'
 
 @Injectable()
 export class UserWatchersService {

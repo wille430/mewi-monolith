@@ -1,7 +1,7 @@
-import { ItemData, Types.ListingSearchFilters, SearchOptions, Sort } from '@mewi/common'
+import { ItemData, Types.ListingSearchFilters, SearchOptions, Sort } from '@wille430/common'
 import ListingModel from 'models/ListingModel'
 import { FilterQuery, QueryOptions } from 'mongoose'
-import { generateMockItemData } from '@mewi/common/utils'
+import { generateMockItemData } from '@wille430/common/utils'
 import ItemsService from 'services/ItemsService'
 
 export default class SearchService {

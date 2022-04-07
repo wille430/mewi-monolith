@@ -1,4 +1,4 @@
-import { Types } from '@mewi/common'
+import { Types } from '@wille430/common'
 import axios from 'axios'
 
 const getWatchers = async (): Promise<Types.JoinedWatcher[]> => {

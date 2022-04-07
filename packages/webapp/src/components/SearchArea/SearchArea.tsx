@@ -10,7 +10,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import styles from './SearchArea.module.scss'
 import classNames from 'classnames'
 import { useAppSelector } from 'hooks/hooks'
-import { Category } from '@mewi/common/types'
+import { Category } from '@wille430/common/types'
 
 const cx = classNames.bind(styles)
 

@@ -1,4 +1,4 @@
-// import { categories } from '@mewi/common/types'
+// import { categories } from '@wille430/common/types'
 
 // export const findNestedCategory = (categoryToFind: string): string[] => {
 //     for (const i in categories) {

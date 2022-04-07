@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Category, CategoryLabel } from '@mewi/common/types'
+import { Category, CategoryLabel } from '@wille430/common/types'
 import { motion } from 'framer-motion'
 
 interface Props {

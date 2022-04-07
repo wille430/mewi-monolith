@@ -1,4 +1,4 @@
-import { regions, ListingSearchFilters } from '@mewi/common/types'
+import { regions, ListingSearchFilters } from '@wille430/common/types'
 import { FormEvent, ReactNode } from 'react'
 import PriceRangeFilter from 'components/SearchFilterArea/PriceRangeFilter'
 import ResetButton from './ResetButton'

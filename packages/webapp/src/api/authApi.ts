@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AuthTokens } from '@mewi/common/types'
+import { AuthTokens } from '@wille430/common/types'
 
 export const signUp = async (
     email: string,

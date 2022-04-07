@@ -1,5 +1,5 @@
 {
-    "name": "@mewi/common",
+    "name": "@wille430/common",
     "version": "1.0.0",
     "description": "Shared package for Mewi monorepo",
     "main": "dist/index",
@@ -34,7 +34,8 @@
         "build": "npx tsc",
         "build:watch": "npx tsc -w",
         "pack": "pnpm pack --pack-destination ../../archive",
-        "publish": "pnpm publish --no-git-checks"
+        "publish": "pnpm publish --no-git-checks",
+        "prepare": "npm run build"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"

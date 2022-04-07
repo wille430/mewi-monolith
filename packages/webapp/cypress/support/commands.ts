@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import { AuthTokens } from '@mewi/common/types'
+import { AuthTokens } from '@wille430/common/types'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {

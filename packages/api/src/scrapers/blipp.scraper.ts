@@ -1,5 +1,5 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
-import { Category, ListingOrigins } from '@mewi/common/types'
+import { Category, ListingOrigins } from '@wille430/common/types'
 import { Scraper, ScraperOptions } from './scraper'
 import { Model } from 'mongoose'
 import puppeteer from 'puppeteer'

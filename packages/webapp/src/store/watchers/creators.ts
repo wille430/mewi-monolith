@@ -1,4 +1,4 @@
-import { Types } from '@mewi/common'
+import { Types } from '@wille430/common'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import searchApi from 'api/searchApi'
 import watcherApi from 'api/watcherApi'

@@ -1,4 +1,4 @@
-import { ListingOrigins } from '@mewi/common/types'
+import { ListingOrigins } from '@wille430/common/types'
 import { Matches } from 'class-validator'
 
 export class StartOneScraperDto {

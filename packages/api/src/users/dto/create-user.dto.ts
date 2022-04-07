@@ -1,4 +1,4 @@
-import { IUser } from '@mewi/common/types'
+import { IUser } from '@wille430/common/types'
 import { IsEmail, IsNotEmpty } from 'class-validator'
 
 export class CreateUserDto implements Partial<IUser> {

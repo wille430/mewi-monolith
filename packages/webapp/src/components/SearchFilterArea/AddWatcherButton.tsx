@@ -1,4 +1,4 @@
-import { IUserWatcher, ListingSearchFilters } from '@mewi/common/types'
+import { IUserWatcher, ListingSearchFilters } from '@wille430/common/types'
 import { Button } from '@mewi/ui'
 import CreateWatcherConfirmationModal from './CreateWatcherConfirmationModal'
 import { useMutation, useQueryClient } from 'react-query'

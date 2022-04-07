@@ -2,7 +2,7 @@ import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
 import { Scraper, ScraperOptions } from './scraper'
 import { TraderaItemData } from '@/types/types'
-import { Category, ListingOrigins } from '@mewi/common/types'
+import { Category, ListingOrigins } from '@wille430/common/types'
 import { Model } from 'mongoose'
 
 interface TraderaCategory {

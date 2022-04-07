@@ -2,7 +2,7 @@ import { FiTrash } from 'react-icons/fi'
 import { Button } from '@mewi/ui'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
-import { IUserWatcher } from '@mewi/common/types'
+import { IUserWatcher } from '@wille430/common/types'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
     const queryClient = useQueryClient()

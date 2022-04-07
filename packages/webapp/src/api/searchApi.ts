@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { SearchState } from 'store/search/type'
-import { IListing } from '@mewi/common/types'
+import { IListing } from '@wille430/common/types'
 
 export type getSearchResultsReturnType = {
     hits: IListing[]

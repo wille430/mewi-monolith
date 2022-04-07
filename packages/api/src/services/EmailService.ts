@@ -2,7 +2,7 @@ import NodeMailer from 'nodemailer'
 import EmailTemplate from 'email-templates'
 import fs from 'fs'
 import path from 'path'
-import { ItemData, IWatcher } from '@mewi/common'
+import { ItemData, IWatcher } from '@wille430/common'
 
 export default class EmailService {
     static googleAuth = {

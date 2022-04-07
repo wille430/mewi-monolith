@@ -1,6 +1,6 @@
 import WatcherModel from 'models/WatcherModel'
 import { UserService } from './UserServices'
-import { APIError, DatabaseErrorCodes, Types.ListingSearchFilters } from '@mewi/common'
+import { APIError, DatabaseErrorCodes, Types.ListingSearchFilters } from '@wille430/common'
 
 export default class WatcherService {
     watcher_id: string

@@ -1,4 +1,4 @@
-import { EditableUserFields, UserData } from '@mewi/common/types'
+import { EditableUserFields, UserData } from '@wille430/common/types'
 import axios from 'axios'
 
 const updateUserInfo = async (field: EditableUserFields, value: UserData[EditableUserFields]) =>

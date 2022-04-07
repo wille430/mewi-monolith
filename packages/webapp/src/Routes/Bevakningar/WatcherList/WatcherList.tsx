@@ -5,7 +5,7 @@ import { Container, HorizontalLine } from '@mewi/ui'
 import styles from './WatcherList.module.scss'
 import { useQuery } from 'react-query'
 import axios from 'axios'
-import { IPopulatedWatcher } from '@mewi/common/types'
+import { IPopulatedWatcher } from '@wille430/common/types'
 import { useState } from 'react'
 
 const WatcherList = () => {

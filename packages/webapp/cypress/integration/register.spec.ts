@@ -1,4 +1,4 @@
-import { Utils } from '@mewi/common'
+import { Utils } from '@wille430/common'
 
 describe('register', () => {
     const userInfo = {

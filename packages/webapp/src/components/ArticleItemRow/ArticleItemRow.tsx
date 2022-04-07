@@ -1,4 +1,4 @@
-import { IListing } from '@mewi/common/types'
+import { IListing } from '@wille430/common/types'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import styles from './ArticleItemRow.module.scss'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'

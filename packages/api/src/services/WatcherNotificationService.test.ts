@@ -1,11 +1,11 @@
 import faker from '@faker-js/faker'
-import { ItemData, IWatcher } from '@mewi/common'
+import { ItemData, IWatcher } from '@wille430/common'
 import UserModel from 'models/UserModel'
 import mongoose from 'mongoose'
 import WatcherNotificationService from './WatcherNotificationService'
 import EmailService from './EmailService'
 import * as mockingoose from 'mockingoose'
-import { generateMockItemData } from '@mewi/common/utils'
+import { generateMockItemData } from '@wille430/common/utils'
 import ListingModel from 'models/ListingModel'
 
 function randomDate(start: Date, end: Date) {

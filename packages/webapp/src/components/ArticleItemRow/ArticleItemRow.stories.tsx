@@ -1,5 +1,5 @@
-import { IListing } from '@mewi/common/types'
-import { generateMockIListing } from '@mewi/common/utils'
+import { IListing } from '@wille430/common/types'
+import { generateMockIListing } from '@wille430/common/utils'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import ArticleItemRow from './ArticleItemRow'
 

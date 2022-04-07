@@ -4,6 +4,7 @@ import { readdirSync } from 'fs'
 import * as path from 'path'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { vitePluginCommonjs } from 'vite-plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 const absolutePathAliases: Record<string, string> = {}
 
@@ -26,7 +27,7 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
     },
-    plugins: [react(), tsconfigPaths(), vitePluginCommonjs()],
+    plugins: [react()],
     server: {
         port: 4200,
     },
@@ -35,5 +36,4 @@ export default defineConfig({
             ...absolutePathAliases,
         },
     },
-    base: '/',
 })

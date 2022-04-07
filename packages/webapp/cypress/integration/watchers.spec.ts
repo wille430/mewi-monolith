@@ -1,5 +1,5 @@
-import { Utils } from '@mewi/common'
-import { AuthTokens } from '@mewi/common/types'
+import { Utils } from '@wille430/common'
+import { AuthTokens } from '@wille430/common/types'
 import _ from 'lodash'
 
 describe('watchers', () => {

@@ -1,5 +1,5 @@
-import { Error } from '@mewi/common'
-import { AuthTokens } from '@mewi/common/types'
+import { Error } from '@wille430/common'
+import { AuthTokens } from '@wille430/common/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { signUp } from 'api'
 import authApi from 'api/authApi'

@@ -1,4 +1,4 @@
-import { CategoryType } from '@mewi/common/types'
+import { CategoryType } from '@wille430/common/types'
 
 interface Props {
     categories: CategoryType

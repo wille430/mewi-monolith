@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
-import { AuthErrorCodes, UserData } from '@mewi/common'
-import { generateMockUserData } from '@mewi/common/utils'
+import { AuthErrorCodes, UserData } from '@wille430/common'
+import { generateMockUserData } from '@wille430/common/utils'
 import UserModel from 'models/UserModel'
 import PasswordService from './PasswordService'
 

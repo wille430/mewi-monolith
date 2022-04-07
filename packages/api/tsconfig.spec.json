@@ -6,8 +6,6 @@
         "types": ["vitest/globals", "node"],
         "baseUrl": ".",
         "paths": {
-            "@mewi/common": ["../common/src/index"],
-            "@mewi/common/*": ["../common/src/*"],
             "@/*": ["./src/*"]
         },
         "composite": true
