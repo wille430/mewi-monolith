@@ -72,6 +72,7 @@
         "coverage": "vitest run --coverage",
         "test:watch": "vitest watch",
         "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json",
-        "pack": "pnpm pack --pack-destination ../../archive"
+        "pack": "pnpm pack --pack-destination ../../archive",
+        "isolate": "npx pnpm-isolate-workspace --src-files-enable api"
     }
 }
