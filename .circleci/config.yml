@@ -60,7 +60,7 @@ jobs:
             - run:
                   command: |
                       cd ./packages/webapp
-                      netlify deploy --auth $NETLIFY_TOKEN
+                      npx netlify deploy --auth $NETLIFY_TOKEN --site $NETLIFY_SITE_ID --prod --dir=build
                   name: Deploy to apps
 workflows:
     version: 2
