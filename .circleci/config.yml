@@ -43,8 +43,8 @@ jobs:
                   paths:
                       - '*'
     deploy:
-        machine:
-            image: ubuntu-2004:202010-01
+        docker:
+            - image: 'cimg/node:14.17-browsers'
         steps:
             # TODO: deploy image
             - checkout
