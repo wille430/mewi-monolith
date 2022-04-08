@@ -1,4 +1,4 @@
-import { Error } from '@wille430/common'
+import * as Error from '@wille430/common/error'
 import { AuthTokens } from '@wille430/common/types'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { signUp } from 'api'
@@ -102,7 +102,6 @@ export const changePassword = createAsyncThunk(
     async (args: Parameters<typeof authApi.changePassword>, thunkApi) => {
         try {
             await authApi.changePassword(...args)
-            return
         } catch (e: any) {
             const errorMessages: changePasswordErrorPayload = {
                 password: '',

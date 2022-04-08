@@ -31,9 +31,17 @@ export default defineConfig({
     server: {
         port: 4200,
     },
+    optimizeDeps: {
+        include: ["@wille430/common"]
+    },
     resolve: {
         alias: {
             ...absolutePathAliases,
         },
     },
+    build: {
+        commonjsOptions: {
+            include: [/common\//, /node_modules\//]
+        }
+    }
 })
