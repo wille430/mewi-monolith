@@ -55,14 +55,11 @@ jobs:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
             - run: sudo npm i pnpm -g
             - run:
-                  command: |
-                      pnpm run isolate -F api
-                      scp -o StrictHostKeyChecking=accept-new -r ./packages/api/_isolated_/* root@$API_SERVER_HOST:/root/api
-                      ssh root@$API_SERVER_HOST "cd /root/api; npm i pnpm -g; pnpm i -r; pm2 delete main; pm2 start /root/api/dist/main.js"
+                  command: ./tools/deploy-api.sh
                   name: Deploy to API server
             - run:
                   command: |
-                      sudo pnpm i netlify-cli -g
+                      cd ./packages/webapp
                       netlify deploy --auth $NETLIFY_TOKEN
                   name: Deploy to apps
 workflows:

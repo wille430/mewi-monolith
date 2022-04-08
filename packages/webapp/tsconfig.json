@@ -11,7 +11,7 @@
         "isolatedModules": true,
         "incremental": true,
         "preserveSymlinks": true,
-        "outDir": "./dist",
+        "outDir": "./build",
         "strict": true
     },
     "include": ["src/**/*"]

@@ -24,18 +24,23 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
     },
-    plugins: [react({
-        exclude: /\.stories\.(t|j)sx?$/
-    })],
+    plugins: [
+        react({
+            exclude: /\.stories\.(t|j)sx?$/,
+        }),
+    ],
     server: {
         port: 4200,
     },
     optimizeDeps: {
-        exclude: ['@mewi/ui']
+        exclude: ['@mewi/ui'],
     },
     resolve: {
         alias: {
             ...absolutePathAliases,
         },
+    },
+    build: {
+        outDir: './build',
     },
 })
