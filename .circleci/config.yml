@@ -55,10 +55,8 @@ jobs:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
             - run: sudo npm i pnpm -g
             - run:
-                command: pnpm run isolate -F api
-                name: Isolate API package
-            - run:
                   command: |
+                      pnpm run isolate -F api
                       scp -r ./packages/api/isolate root@$API_SERVER_HOST:/root/api
                       ssh root@$API_SERVER_HOST "cd /root/api; npm i pnpm -g; pnpm i -r; pnpm build; pm2 delete main; pm2 start /root/api/dist/main.js"
                   name: Deploy to API server
