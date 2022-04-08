@@ -4,7 +4,7 @@ import { IsOptional, IsString, IsNumberString, IsBooleanString } from 'class-val
 export class FindAllListingsDto {
     @IsOptional()
     @IsNumberString()
-    limit = 24
+    limit = '24'
 
     @IsOptional()
     @IsString()
