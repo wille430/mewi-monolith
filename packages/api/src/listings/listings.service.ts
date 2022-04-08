@@ -19,10 +19,10 @@ export class ListingsService {
 
     async findAll(dto: FindAllListingsDto) {
         let filter: FilterQuery<ListingDocument> = { $and: [] }
-        const options: QueryOptions = { limit: dto.limit }
+        const options: QueryOptions = { limit: +dto.limit }
 
         if (dto.page && +dto.page > 0) {
-            options.skip = (+dto.page - 1) * dto.limit
+            options.skip = (+dto.page - 1) * +dto.limit
         }
 
         if (dto.sort && dto.sort !== Sort.RELEVANCE) {
