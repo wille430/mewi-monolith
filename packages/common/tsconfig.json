@@ -1,15 +1,23 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "esnext",
-        "lib": ["ESNext", "DOM"],
+        "module": "commonjs",
+        "target": "ES5",
         "outDir": "./dist",
-        "baseUrl": "src",
+        "declaration": true,
         "rootDir": "src",
-        "declaration": true
+        "baseUrl": "src",
+        "sourceRoot": "src",
+        "lib": ["ES2019"],
+        "strict": true,
+        "composite": true,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "noUnusedLocals": true
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"],
+    "include": ["src/"],
+    "exclude": ["node_modules", "!src/"],
     "references": [
         {
             "path": "./tsconfig.spec.json"

@@ -1,3 +1,3 @@
 export * as Error from './error'
-export * as Types from './types'
-export * as Utils from './utils'
+export * from './types'
+export * from './utils'

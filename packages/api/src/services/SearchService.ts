@@ -1,14 +1,14 @@
-import { ItemData, Types.ListingSearchFilters, SearchOptions, Sort } from '@wille430/common'
+import { ItemData, ListingSearchFilters, SearchOptions, Sort } from '@wille430/common'
 import ListingModel from 'models/ListingModel'
 import { FilterQuery, QueryOptions } from 'mongoose'
-import { generateMockItemData } from '@wille430/common/utils'
+import { generateMockItemData } from '@wille430/common'
 import ItemsService from 'services/ItemsService'
 
 export default class SearchService {
     static limit = 20
 
     static async search(
-        query?: Types.ListingSearchFilters,
+        query?: ListingSearchFilters,
         options?: SearchOptions
     ): Promise<{ hits: ItemData[]; totalHits: number }> {
         const filterQuery = this.createDbFilters(query)
@@ -78,13 +78,13 @@ export default class SearchService {
         }
     }
 
-    static createDbFilters(searchFilterData: Types.ListingSearchFilters): FilterQuery<ItemData> {
+    static createDbFilters(searchFilterData: ListingSearchFilters): FilterQuery<ItemData> {
         const filterQuery: FilterQuery<ItemData> = {}
 
         console.log('Creating query from ', JSON.stringify(searchFilterData))
 
         Object.keys(searchFilterData).forEach((key) => {
-            switch (key as keyof Types.ListingSearchFilters) {
+            switch (key as keyof ListingSearchFilters) {
                 case 'keyword':
                     if (!searchFilterData[key]) break
                     filterQuery.$text = {

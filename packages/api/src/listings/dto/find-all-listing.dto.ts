@@ -1,4 +1,4 @@
-import { Sort } from '@wille430/common/types'
+import { Sort } from '@wille430/common'
 import { IsOptional, IsString, IsNumberString, IsBooleanString } from 'class-validator'
 
 export class FindAllListingsDto {

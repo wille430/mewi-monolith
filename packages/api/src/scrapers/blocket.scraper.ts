@@ -3,8 +3,8 @@ import axios from 'axios'
 import { Scraper, ScraperOptions } from './scraper'
 import { JSDOM } from 'jsdom'
 import { BlocketItemData } from '@/types/types'
-import { Category, ListingOrigins } from '@wille430/common/types'
-import { stringSimilarity } from '@wille430/common/utils'
+import { Category, ListingOrigins } from '@wille430/common'
+import { stringSimilarity } from '@wille430/common'
 import { Model } from 'mongoose'
 
 export class BlocketScraper extends Scraper {

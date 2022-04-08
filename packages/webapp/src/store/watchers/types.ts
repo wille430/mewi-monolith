@@ -1,7 +1,7 @@
-import { IListing, JoinedWatcher } from '@wille430/common/types'
+import { IListing, IPopulatedWatcher } from '@wille430/common'
 
 export interface WatchersState {
-    watchers: JoinedWatcher[]
+    watchers: IPopulatedWatcher[]
     isLoading: boolean
     newItems: Record<string, IListing[]>
 }

@@ -1,6 +1,6 @@
 import PopUp from 'components/PopUp/PopUp'
 import { useState } from 'react'
-import { ListingSearchFilters } from '@wille430/common/types'
+import { ListingSearchFilters } from '@wille430/common'
 import ResetButton from 'components/SearchFilterArea/ResetButton'
 import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
 import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'

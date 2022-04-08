@@ -1,4 +1,4 @@
-import { Category, IListing, ListingOrigins } from '@wille430/common/types'
+import { Category, IListing, ListingOrigins } from '@wille430/common'
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 

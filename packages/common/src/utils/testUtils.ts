@@ -26,13 +26,13 @@ export const generateMockItemData = (
         items.push({
             id: faker.datatype.uuid(),
             title: faker.random.words(5),
-            category: [_.sample(Object.values(Category))],
+            category: [_.sample(Object.values(Category)) as Category],
             imageUrl: [faker.internet.url()],
             isAuction: faker.datatype.boolean(),
             date: faker.datatype.datetime().getTime(),
             redirectUrl: faker.internet.url(),
             region: faker.address.cityName(),
-            origin: _.sample(Object.values(ListingOrigins)),
+            origin: _.sample(Object.values(ListingOrigins)) as ListingOrigins,
             parameters: [],
             price: {
                 value: faker.datatype.number({ min: 10, max: 9999999 }),

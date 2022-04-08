@@ -2,7 +2,7 @@ import RedirectButton from './RedirectButton/RedirectButton'
 import ImageDisplay from '../../ImageDisplay/ImageDisplay'
 import ParamInfo from './ParamInfo'
 import CategoryString from './CategoryString'
-import { IListing } from '@wille430/common/types'
+import { IListing } from '@wille430/common'
 
 const ItemInfo = ({ article }: { article: IListing }): JSX.Element => {
     const priceString = `${article.price?.value || ''} ${article.price?.currency || ''}`

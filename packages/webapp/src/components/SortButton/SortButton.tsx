@@ -1,7 +1,7 @@
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { setSort } from 'store/search/creators'
-import { Sort } from '@wille430/common/types'
+import { Sort } from '@wille430/common'
 import { useEffect } from 'react'
 
 const SortButton = () => {

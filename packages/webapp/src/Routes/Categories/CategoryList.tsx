@@ -1,4 +1,4 @@
-import { Category } from '@wille430/common/types'
+import { Category } from '@wille430/common'
 import CategoryListItem from './CategoryListItem'
 
 const CategoryList = () => {

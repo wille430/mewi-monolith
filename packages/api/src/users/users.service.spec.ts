@@ -6,7 +6,7 @@ import { UsersService } from './users.service'
 import { Model } from 'mongoose'
 import { factory } from 'fakingoose'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { randomEmail, randomPassword } from '@wille430/common/utils'
+import { randomEmail, randomPassword } from '@wille430/common'
 import { ChangePasswordAuth } from './dto/change-password.dto'
 import { CreateUserDto } from './dto/create-user.dto'
 

@@ -1,4 +1,4 @@
-import { IListing, ListingSearchFilters } from '@wille430/common/types'
+import { IListing, ListingSearchFilters } from '@wille430/common'
 import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {

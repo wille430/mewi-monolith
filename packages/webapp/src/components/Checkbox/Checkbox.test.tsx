@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react'
 import Checkbox from './Checkbox'
-import { Utils } from '@wille430/common'
+import { randomString } from '@wille430/common'
 
 it('renders correctly', () => {
-    const mockLabel = Utils.randomString(5)
+    const mockLabel = randomString(5)
 
     const { queryByTestId, queryByText } = render(<Checkbox label={mockLabel} />)
 

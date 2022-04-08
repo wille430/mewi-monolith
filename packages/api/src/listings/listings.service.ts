@@ -5,7 +5,7 @@ import { UpdateListingDto } from './dto/update-listing.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, FilterQuery, QueryOptions } from 'mongoose'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
-import { Sort, sortableFields } from '@wille430/common/types'
+import { Sort, sortableFields } from '@wille430/common'
 import _ from 'lodash'
 
 @Injectable()

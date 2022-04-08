@@ -2,11 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "types": ["vitest/globals"],
-        "composite": true,
-        // "paths": {
-        //     "@wille430/common/*": ["../common/src/*"],
-        //     "@wille430/common": ["../common/src/index.ts"]
-        // }
+        "composite": true
     },
     "include": [
         "src/**/*",

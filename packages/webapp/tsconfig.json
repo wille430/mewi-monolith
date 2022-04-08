@@ -11,11 +11,8 @@
         "isolatedModules": true,
         "incremental": true,
         "preserveSymlinks": true,
-        "allowSyntheticDefaultImports": true,
         "outDir": "./dist",
-        "lib": ["ES2019"]
+        "strict": true
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"],
-    "references": [{ "path": "./tsconfig.spec.json" }]
+    "include": ["src/**/*"]
 }

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { scheduleJob } from 'node-schedule'
 import robotsParser from 'robots-parser'
 import { Model } from 'mongoose'
-import { ListingOrigins } from '@wille430/common/types'
+import { ListingOrigins } from '@wille430/common'
 import { validate } from 'class-validator'
 
 export interface ScraperOptions {

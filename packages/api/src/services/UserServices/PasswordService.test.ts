@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
 import { AuthErrorCodes, UserData } from '@wille430/common'
-import { generateMockUserData } from '@wille430/common/utils'
+import { generateMockUserData } from '@wille430/common'
 import UserModel from 'models/UserModel'
 import PasswordService from './PasswordService'
 

@@ -1,7 +1,7 @@
 import { Controller, Post } from '@nestjs/common'
 import { TestService } from './test.service'
 import { UsersService } from '@/users/users.service'
-import { Utils } from '@wille430/common'
+import { randomEmail, randomPassword } from '@wille430/common'
 import { AuthService } from '@/auth/auth.service'
 
 @Controller('test')
@@ -14,9 +14,9 @@ export class TestController {
 
     @Post('user')
     async create() {
-        const password = Utils.randomPassword()
+        const password = randomPassword()
         const user = await this.usersService.create({
-            email: Utils.randomEmail(),
+            email: randomEmail(),
             password: password,
         })
 

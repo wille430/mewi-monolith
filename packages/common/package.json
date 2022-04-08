@@ -2,37 +2,25 @@
     "name": "@wille430/common",
     "version": "1.0.1",
     "description": "Shared package for Mewi monorepo",
-    "main": "dist/index",
-    "types": "dist/index.d.ts",
+    "source": "src/index.ts",
     "exports": {
-        ".": "./dist/index.js",
-        "./types": "./dist/types/index.js",
-        "./error": "./dist/error/index.js",
-        "./utils": "./dist/utils/index.js"
+        "require": "./dist/index.js",
+        "default": "./dist/index.modern.js"
     },
+    "main": "dist/index.js",
+    "module": "dist/index.module.js",
+    "unpkg": "dist/index.umd.js",
+    "types": "dist/index.d.ts",
     "repository": {
         "type": "git",
         "url": "git://github.com/wille430/mewi-monolith.git"
     },
-    "typesVersions": {
-        "*": {
-            "*": [
-                "dist/index.d.ts"
-            ],
-            "types": [
-                "dist/types/index.d.ts"
-            ],
-            "error": [
-                "dist/error/index.d.ts"
-            ],
-            "utils": [
-                "dist/utils/index.d.ts"
-            ]
-        }
-    },
+    "files": [
+        "dist/**/*"
+    ],
     "scripts": {
-        "build": "npx tsc",
-        "build:watch": "npx tsc -w",
+        "build": "microbundle build --raw",
+        "dev": "microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
         "prepare": "npm run build"
@@ -52,6 +40,7 @@
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^1.0.7",
+        "microbundle": "^0.14.2",
         "vitest": "^0.8.1"
     }
 }

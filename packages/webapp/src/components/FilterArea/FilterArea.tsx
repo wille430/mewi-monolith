@@ -1,4 +1,4 @@
-import { ListingSearchFilters } from '@wille430/common/types'
+import { ListingSearchFilters } from '@wille430/common'
 import AddWatcherButton from '../SearchFilterArea/AddWatcherButton'
 import { Link } from 'react-router-dom'
 import SearchFilterArea, {

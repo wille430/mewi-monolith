@@ -16,7 +16,7 @@ import {
 } from './creators'
 import { SearchState } from './type'
 import queryString from 'query-string'
-import { Sort } from '@wille430/common/types'
+import { Sort } from '@wille430/common'
 
 const initialState: SearchState = {
     hits: [],

@@ -2,9 +2,6 @@ import { defineConfig, configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { readdirSync } from 'fs'
 import * as path from 'path'
-import tsconfigPaths from 'vite-tsconfig-paths'
-import { vitePluginCommonjs } from 'vite-plugin-commonjs'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 const absolutePathAliases: Record<string, string> = {}
 
@@ -27,21 +24,18 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
     },
-    plugins: [react()],
+    plugins: [react({
+        exclude: /\.stories\.(t|j)sx?$/
+    })],
     server: {
         port: 4200,
     },
     optimizeDeps: {
-        include: ["@wille430/common"]
+        exclude: ['@mewi/ui']
     },
     resolve: {
         alias: {
             ...absolutePathAliases,
         },
     },
-    build: {
-        commonjsOptions: {
-            include: [/common\//, /node_modules\//]
-        }
-    }
 })

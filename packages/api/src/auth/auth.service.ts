@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import SignUpDto from '@/auth/dto/sign-up.dto'
-import { AuthTokens } from '@wille430/common/types'
+import { AuthTokens } from '@wille430/common'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 
 @Injectable()

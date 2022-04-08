@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { Schema as MongooseSchema } from 'mongoose'
 import { UserWatcher } from '@/user-watchers/user-watcher.schema'
-import { IWatcher, ListingSearchFilters } from '@wille430/common/types'
+import { IWatcher, ListingSearchFilters } from '@wille430/common'
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export type WatcherDocument = Watcher & Document

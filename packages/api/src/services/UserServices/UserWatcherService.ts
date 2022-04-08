@@ -3,7 +3,7 @@
  */
 
 import { Types } from 'bson'
-import { DatabaseErrorCodes, JoinedWatcher, Types.ListingSearchFilters } from '@wille430/common'
+import { DatabaseErrorCodes, IPopulatedWatcher, Types.ListingSearchFilters } from '@wille430/common'
 import WatcherModel from 'models/WatcherModel'
 import WatcherService from 'services/WatcherService'
 import { UserService } from './index'
@@ -16,22 +16,22 @@ class UserWatcherService {
      * @param userId User ID
      * @returns Array of watchers
      */
-    static async getAll(userId: string): Promise<JoinedWatcher[]> {
+    static async getAll(userId: string): Promise<IPopulatedWatcher[]> {
         const user = await UserService.userById(userId)
         const userWatchers = user.watchers
 
-        const watchers: JoinedWatcher[] = await Promise.all(
+        const watchers: IPopulatedWatcher[] = await Promise.all(
             userWatchers.map(async (userWatcher: Watcher) => {
                 try {
                     const publicWatcher = await WatcherModel.findById(userWatcher._id)
 
-                    const joinedWatcher: JoinedWatcher = {
+                    const IPopulatedWatcher: IPopulatedWatcher = {
                         ...userWatcher.toObject(),
                         metadata: publicWatcher.metadata,
                         _id: userWatcher._id.toString(),
                     }
 
-                    return joinedWatcher
+                    return IPopulatedWatcher
                 } catch (e) {
                     console.log(e)
                 }
@@ -47,7 +47,7 @@ class UserWatcherService {
      * @param watcherId ID of watcher
      * @returns A user watcher
      */
-    static async get(userId: string, watcherId: string): Promise<JoinedWatcher> {
+    static async get(userId: string, watcherId: string): Promise<IPopulatedWatcher> {
         const user = await UserService.userById(userId)
         const userWatcher = user.watchers.id(watcherId)
         const publicWatcher = await WatcherModel.findById(watcherId)
@@ -73,8 +73,8 @@ class UserWatcherService {
 
     static async addWatcher(
         userId: string,
-        metadata: Types.ListingSearchFilters
-    ): Promise<JoinedWatcher> {
+        metadata: ListingSearchFilters
+    ): Promise<IPopulatedWatcher> {
         const user = await UserService.userById(userId)
         const similarWatcher = await WatcherModel.findOne({ metadata })
 
@@ -128,8 +128,8 @@ class UserWatcherService {
     static async updateWatcher(
         userId: string,
         watcherId: string,
-        searchFilters: Types.ListingSearchFilters
-    ): Promise<JoinedWatcher> {
+        searchFilters: ListingSearchFilters
+    ): Promise<IPopulatedWatcher> {
         const query = SearchService.createDbFilters(searchFilters)
         const similarWatcher = await WatcherModel.findOne({ metadata: searchFilters })
 

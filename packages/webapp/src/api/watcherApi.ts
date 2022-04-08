@@ -1,7 +1,7 @@
-import { Types } from '@wille430/common'
+import { IPopulatedWatcher, ListingSearchFilters } from '@wille430/common'
 import axios from 'axios'
 
-const getWatchers = async (): Promise<Types.JoinedWatcher[]> => {
+const getWatchers = async (): Promise<IPopulatedWatcher[]> => {
     const watchers = await axios
         .get('/user/watchers')
         .then((res) => res.data.watchers)
@@ -11,7 +11,7 @@ const getWatchers = async (): Promise<Types.JoinedWatcher[]> => {
     return watchers
 }
 
-const getWatcher = async (watcherId: string): Promise<Types.JoinedWatcher> => {
+const getWatcher = async (watcherId: string): Promise<IPopulatedWatcher> => {
     const watcher = await axios.get('/user/watchers/' + watcherId).then((res) => res.data.watcher)
     return watcher
 }
@@ -21,8 +21,8 @@ const deleteWatcher = async (watcherId: string): Promise<void> => {
 }
 
 const createWatcher = async (
-    searchFilterData: Types.ListingSearchFilters
-): Promise<Types.JoinedWatcher> => {
+    searchFilterData: ListingSearchFilters
+): Promise<IPopulatedWatcher> => {
     const body = {
         searchFilters: searchFilterData,
     }
@@ -38,8 +38,8 @@ const createWatcher = async (
 
 const updateWatcher = async (
     watcherId: string,
-    newSearchFilterData: Types.ListingSearchFilters
-): Promise<Types.JoinedWatcher> => {
+    newSearchFilterData: ListingSearchFilters
+): Promise<IPopulatedWatcher> => {
     const body = {
         searchFilters: newSearchFilterData,
     }

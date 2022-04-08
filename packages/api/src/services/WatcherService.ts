@@ -1,6 +1,6 @@
 import WatcherModel from 'models/WatcherModel'
 import { UserService } from './UserServices'
-import { APIError, DatabaseErrorCodes, Types.ListingSearchFilters } from '@wille430/common'
+import { Error, ListingSearchFilters } from '@wille430/common'
 
 export default class WatcherService {
     watcher_id: string
@@ -43,7 +43,7 @@ export default class WatcherService {
         return watcher
     }
 
-    static async create(metadata: Types.ListingSearchFilters) {
+    static async create(metadata: ListingSearchFilters) {
         const similarWatcher = await WatcherModel.findOne({ metadata })
 
         if (!similarWatcher) {
@@ -58,13 +58,13 @@ export default class WatcherService {
         } else {
             throw new APIError(
                 409,
-                DatabaseErrorCodes.CONFLICTING_RESOURCE,
+                Error.Database.CONFLICTING_RESOURCE,
                 'The query already exists on a watcher. The query must be unique.'
             )
         }
     }
 
-    static async isUserInWatcherWithQuery(userId: string, metadata: Types.ListingSearchFilters) {
+    static async isUserInWatcherWithQuery(userId: string, metadata: ListingSearchFilters) {
         const similarWatcher = await WatcherModel.findOne({ metadata }, { users: 1 })
 
         if (!similarWatcher) return false

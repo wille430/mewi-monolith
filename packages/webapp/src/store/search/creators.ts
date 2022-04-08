@@ -5,7 +5,7 @@ import { SearchActionTypes } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
 import axios from 'axios'
-import { IListing, ListingSearchFilters, Sort } from '@wille430/common/types'
+import { IListing, ListingSearchFilters, Sort } from '@wille430/common'
 import { LOCATION_CHANGE } from 'connected-react-router'
 
 export const updateSearchParams = createAsyncThunk(

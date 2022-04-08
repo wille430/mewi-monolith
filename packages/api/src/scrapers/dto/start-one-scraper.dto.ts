@@ -1,4 +1,4 @@
-import { ListingOrigins } from '@wille430/common/types'
+import { ListingOrigins } from '@wille430/common'
 import { Matches } from 'class-validator'
 
 export class StartOneScraperDto {

@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { UserWatcher, UserWatcherSchema } from '@/user-watchers/user-watcher.schema'
 import { v4 as uuidv4 } from 'uuid'
-import { IUser } from '@wille430/common/types'
+import { IUser } from '@wille430/common'
 
 export type UserDocument = User & Document
 

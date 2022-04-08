@@ -1,5 +1,5 @@
 import { IWatcher, WatcherMetadata } from '@wille430/common'
-import { toUnixTime } from '@wille430/common/utils'
+import { toUnixTime } from '@wille430/common'
 import ListingModel from 'models/ListingModel'
 import { User } from 'models/UserModel'
 import EmailService from './EmailService'

@@ -1,4 +1,4 @@
-import { Category, CategoryLabel } from '@wille430/common/types'
+import { Category, CategoryLabel } from '@wille430/common'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 

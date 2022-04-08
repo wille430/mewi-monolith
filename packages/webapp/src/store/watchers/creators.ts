@@ -1,5 +1,5 @@
-import { Types } from '@wille430/common'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { ListingSearchFilters } from '@wille430/common'
 import searchApi from 'api/searchApi'
 import watcherApi from 'api/watcherApi'
 import { RootState } from 'store'
@@ -7,7 +7,7 @@ import { WatchersActionType } from './types'
 
 export const createWatcher = createAsyncThunk(
     WatchersActionType.WATCHERS_ADD,
-    async (searchFilters: Types.ListingSearchFilters, thunkApi) => {
+    async (searchFilters: ListingSearchFilters, thunkApi) => {
         try {
             return await watcherApi.createWatcher(searchFilters)
         } catch (e: any) {

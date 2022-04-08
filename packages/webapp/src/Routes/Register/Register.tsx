@@ -7,7 +7,7 @@ import axios from 'axios'
 import { ApiErrorResponse } from 'types/types'
 import { useAppDispatch } from 'hooks/hooks'
 import { loginUser } from 'store/auth/creators'
-import { AuthTokens } from '@wille430/common/types'
+import { AuthTokens } from '@wille430/common'
 
 const Register = () => {
     interface FormData {

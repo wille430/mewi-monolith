@@ -1,5 +1,5 @@
 import { Listing } from '@/listings/listing.schema'
-import { Category, ListingOrigins } from '@wille430/common/types'
+import { Category, ListingOrigins } from '@wille430/common'
 import {
     IsArray,
     IsBoolean,

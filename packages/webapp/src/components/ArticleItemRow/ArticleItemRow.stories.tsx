@@ -1,5 +1,5 @@
-import { IListing } from '@wille430/common/types'
-import { generateMockIListing } from '@wille430/common/utils'
+import { IListing } from '@wille430/common'
+import { generateMockIListing } from '@wille430/common'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import ArticleItemRow from './ArticleItemRow'
 

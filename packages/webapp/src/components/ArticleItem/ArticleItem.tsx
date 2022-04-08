@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common/types'
+import { IListing } from '@wille430/common'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'

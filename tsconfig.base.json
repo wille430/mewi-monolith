@@ -1,24 +1,10 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "rootDir": ".",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "es2015",
-        "module": "esnext",
-        "lib": ["es2017", "dom", "es2019"],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "baseUrl": ".",
-        "paths": {
-            "@wille430/common": ["packages/common/src/index.ts"],
-            "@wille430/common/*": ["packages/common/src/*"],
-            "@mewi/ui": ["packages/ui/src/index.ts"]
-        },
+        "strict": true,
+        "allowUnusedLabels": false,
+        "noImplicitAny": false,
+        "strictPropertyInitialization": false,
         "esModuleInterop": true
     },
     "exclude": ["node_modules", "tmp"],

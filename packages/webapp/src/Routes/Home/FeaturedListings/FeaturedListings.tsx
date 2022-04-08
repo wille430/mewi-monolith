@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common/types'
+import { IListing } from '@wille430/common'
 import { Container } from '@mewi/ui'
 import axios from 'axios'
 import ArticleItem from 'components/ArticleItem/ArticleItem'

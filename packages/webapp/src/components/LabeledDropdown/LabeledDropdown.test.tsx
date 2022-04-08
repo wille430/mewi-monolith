@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react'
 import LabeledDropdown from './LabeledDropdown'
-import { Utils } from '@wille430/common'
+import { randomString } from '@wille430/common'
 
 it('renders correctly', () => {
     const mockOptions = []
-    const mockLabel = Utils.randomString(10)
+    const mockLabel = randomString(10)
     for (let i = 0; i < 10; i++) {
-        const label = Utils.randomString(10)
+        const label = randomString(10)
 
         mockOptions.push({
             value: label,

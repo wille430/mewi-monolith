@@ -1,5 +1,5 @@
-import * as Error from '@wille430/common/error'
-import { AuthTokens } from '@wille430/common/types'
+import * as Error from '@wille430/common'
+import { AuthTokens } from '@wille430/common'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { signUp } from 'api'
 import authApi from 'api/authApi'

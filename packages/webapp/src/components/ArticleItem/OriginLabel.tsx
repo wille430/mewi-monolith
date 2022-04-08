@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common/types'
+import { IListing } from '@wille430/common'
 
 interface Props {
     origin: IListing['origin']
