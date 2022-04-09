@@ -7,7 +7,24 @@ import { ListingOrigins } from '@wille430/common'
 import { TraderaScraper } from './tradera.scraper'
 import { SellpyScraper } from './sellpy.scraper'
 import { BlippScraper } from './blipp.scraper'
-import { Scraper } from './scraper'
+import { Scraper, ScraperOptions } from './scraper'
+
+const isProduction = process.env.NODE_ENV === 'production'
+
+export const ScraperOption: Record<ListingOrigins, ScraperOptions> = {
+    Blocket: {
+        limit: isProduction ? 5000 : 10,
+    },
+    Tradera: {
+        limit: isProduction ? 1000 : 10,
+    },
+    Sellpy: {
+        limit: isProduction ? 1000 : 10,
+    },
+    Blipp: {
+        limit: isProduction ? 250 : 10,
+    },
+}
 
 @Injectable()
 export class ScrapersService {
@@ -15,10 +32,10 @@ export class ScrapersService {
 
     constructor(@InjectModel(Listing.name) listingModel: Model<ListingDocument>) {
         this.scrapers = [
-            new BlocketScraper(listingModel),
-            new TraderaScraper(listingModel),
-            new SellpyScraper(listingModel),
-            new BlippScraper(listingModel),
+            new BlocketScraper(listingModel, ScraperOption.Blocket),
+            new TraderaScraper(listingModel, ScraperOption.Tradera),
+            new SellpyScraper(listingModel, ScraperOption.Sellpy),
+            new BlippScraper(listingModel, ScraperOption.Blipp),
         ]
     }
 
