@@ -11,6 +11,7 @@ export class BlippScraper extends Scraper {
     maxPages?: number
     scrapeUrl = 'https://bilar.blipp.se/vara-bilar/'
     useRobots = true
+    limit = 9
 
     constructor(
         @InjectModel(Listing.name) listingModel: Model<ListingDocument>,

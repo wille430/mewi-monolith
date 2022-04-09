@@ -23,8 +23,12 @@ export class TraderaScraper extends Scraper {
     currentCategoryIndex = 0
     categories: TraderaCategory[] | undefined
     itemsPerCategory: number
+    limit = 50
 
-    constructor(@InjectModel(Listing.name) listingModel: Model<ListingDocument>, configService: ConfigService) {
+    constructor(
+        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
+        configService: ConfigService
+    ) {
         super(listingModel, configService, ListingOrigins.Tradera, 'https://www.tradera.com/', {})
     }
 

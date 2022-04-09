@@ -66,7 +66,7 @@ export class Scraper {
         this.name = name
         this.baseUrl = baseUrl
 
-        this.limit =
+        this.maxEntries =
             this.configService.get<number>(`scraper.${this.name}.limit`) ??
             this.configService.get<number>('scraper.default.limit')
 

@@ -11,6 +11,7 @@ import { InjectModel } from '@nestjs/mongoose'
 
 export class BlocketScraper extends Scraper {
     page = 0
+    limit = 50
 
     constructor(
         @InjectModel(Listing.name) listingModel: Model<ListingDocument>,

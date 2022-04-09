@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config'
 
 export class SellpyScraper extends Scraper {
     page = 1
+    limit = 50
 
     constructor(
         @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
