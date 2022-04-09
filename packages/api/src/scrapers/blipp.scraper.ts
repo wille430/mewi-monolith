@@ -1,8 +1,10 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { Category, ListingOrigins } from '@wille430/common'
-import { Scraper, ScraperOptions } from './scraper'
+import { Scraper } from './scraper'
 import { Model } from 'mongoose'
 import puppeteer from 'puppeteer'
+import { ConfigService } from '@nestjs/config'
+import { InjectModel } from '@nestjs/mongoose'
 
 export class BlippScraper extends Scraper {
     currentPage = 1
@@ -10,8 +12,11 @@ export class BlippScraper extends Scraper {
     scrapeUrl = 'https://bilar.blipp.se/vara-bilar/'
     useRobots = true
 
-    constructor(listingModel: Model<ListingDocument>, options?: ScraperOptions) {
-        super(listingModel, ListingOrigins.Blipp, 'https://www.blipp.se/', options ?? {})
+    constructor(
+        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
+        configService: ConfigService
+    ) {
+        super(listingModel, configService, ListingOrigins.Blipp, 'https://www.blipp.se/', {})
     }
 
     /**

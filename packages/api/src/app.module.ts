@@ -13,6 +13,7 @@ import { EmailService } from './email/email.service'
 import { EmailModule } from './email/email.module'
 import configuration from './config/configuration'
 import { ThrottlerModule } from '@nestjs/throttler'
+import scraperConfig from './config/scraper.config'
 
 const getMongoUri = () => {
     const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
@@ -34,7 +35,7 @@ const getMongoUri = () => {
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
-            load: [configuration],
+            load: [configuration, scraperConfig],
         }),
         MongooseModule.forRoot(getMongoUri()),
         ThrottlerModule.forRoot({

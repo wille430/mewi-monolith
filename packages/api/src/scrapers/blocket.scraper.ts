@@ -1,18 +1,22 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
-import { Scraper, ScraperOptions } from './scraper'
+import { Scraper } from './scraper'
 import { JSDOM } from 'jsdom'
 import { BlocketItemData } from '@/types/types'
 import { Category, ListingOrigins } from '@wille430/common'
 import { stringSimilarity } from '@wille430/common'
 import { Model } from 'mongoose'
+import { ConfigService } from '@nestjs/config'
+import { InjectModel } from '@nestjs/mongoose'
 
 export class BlocketScraper extends Scraper {
     page = 0
-    limit = 40
 
-    constructor(listingModel: Model<ListingDocument>, options?: ScraperOptions) {
-        super(listingModel, ListingOrigins.Blocket, 'https://www.blocket.se/', options ?? {})
+    constructor(
+        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
+        configService: ConfigService
+    ) {
+        super(listingModel, configService, ListingOrigins.Blocket, 'https://www.blocket.se/', {})
     }
 
     async getBearerToken(): Promise<string> {

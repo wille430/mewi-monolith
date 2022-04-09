@@ -1,15 +1,20 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { Category, ListingOrigins } from '@wille430/common'
-import { Scraper, ScraperOptions } from './scraper'
+import { Scraper } from './scraper'
 import { Model } from 'mongoose'
 import { SellpyItemData } from '@/types/types'
 import axios from 'axios'
+import { InjectModel } from '@nestjs/mongoose'
+import { ConfigService } from '@nestjs/config'
 
 export class SellpyScraper extends Scraper {
     page = 1
 
-    constructor(listingModel: Model<ListingDocument>, options?: ScraperOptions) {
-        super(listingModel, ListingOrigins.Sellpy, 'https://www.sellpy.se/', options ?? {})
+    constructor(
+        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
+        configService: ConfigService
+    ) {
+        super(listingModel, configService, ListingOrigins.Sellpy, 'https://www.sellpy.se/', {})
     }
 
     async getListings(): Promise<Listing[]> {

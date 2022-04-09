@@ -7,35 +7,26 @@ import { ListingOrigins } from '@wille430/common'
 import { TraderaScraper } from './tradera.scraper'
 import { SellpyScraper } from './sellpy.scraper'
 import { BlippScraper } from './blipp.scraper'
-import { Scraper, ScraperOptions } from './scraper'
-
-const isProduction = process.env.NODE_ENV === 'production'
-
-export const ScraperOption: Record<ListingOrigins, ScraperOptions> = {
-    Blocket: {
-        limit: isProduction ? 5000 : 10,
-    },
-    Tradera: {
-        limit: isProduction ? 1000 : 10,
-    },
-    Sellpy: {
-        limit: isProduction ? 1000 : 10,
-    },
-    Blipp: {
-        limit: isProduction ? 250 : 10,
-    },
-}
+import { Scraper } from './scraper'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class ScrapersService {
     scrapers: Scraper[] = []
 
-    constructor(@InjectModel(Listing.name) listingModel: Model<ListingDocument>) {
+    constructor(
+        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
+        private readonly configService: ConfigService,
+        private blocketScraper: BlocketScraper,
+        private traderaScraper: TraderaScraper,
+        private blippScraper: BlippScraper,
+        private sellpyScraper: SellpyScraper
+    ) {
         this.scrapers = [
-            new BlocketScraper(listingModel, ScraperOption.Blocket),
-            new TraderaScraper(listingModel, ScraperOption.Tradera),
-            new SellpyScraper(listingModel, ScraperOption.Sellpy),
-            new BlippScraper(listingModel, ScraperOption.Blipp),
+            this.blocketScraper,
+            this.traderaScraper,
+            this.blippScraper,
+            this.sellpyScraper,
         ]
     }
 

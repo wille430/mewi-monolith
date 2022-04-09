@@ -5,11 +5,12 @@ import robotsParser from 'robots-parser'
 import { Model } from 'mongoose'
 import { ListingOrigins } from '@wille430/common'
 import { validate } from 'class-validator'
+import { ConfigService } from '@nestjs/config'
 
 export interface ScraperOptions {
-    limit?: number
     useRobots?: boolean
     deleteOlderThan?: number
+    limit?: number
 }
 
 export class Scraper {
@@ -57,14 +58,18 @@ export class Scraper {
 
     constructor(
         private listingModel: Model<ListingDocument>,
+        private configService: ConfigService,
         name: ListingOrigins,
         baseUrl: string,
-        { limit, useRobots }: ScraperOptions
+        { useRobots }: ScraperOptions
     ) {
         this.name = name
         this.baseUrl = baseUrl
 
-        this.limit = limit ?? this.limit
+        this.limit =
+            this.configService.get<number>(`scraper.${this.name}.limit`) ??
+            this.configService.get<number>('scraper.default.limit')
+
         this.useRobots = useRobots ?? this.useRobots
     }
 

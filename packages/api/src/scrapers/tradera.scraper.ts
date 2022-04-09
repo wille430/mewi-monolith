@@ -1,9 +1,11 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
-import { Scraper, ScraperOptions } from './scraper'
+import { Scraper } from './scraper'
 import { TraderaItemData } from '@/types/types'
 import { Category, ListingOrigins } from '@wille430/common'
 import { Model } from 'mongoose'
+import { ConfigService } from '@nestjs/config'
+import { InjectModel } from '@nestjs/mongoose'
 
 interface TraderaCategory {
     id: number
@@ -21,10 +23,9 @@ export class TraderaScraper extends Scraper {
     currentCategoryIndex = 0
     categories: TraderaCategory[] | undefined
     itemsPerCategory: number
-    limit = 20
 
-    constructor(listingModel: Model<ListingDocument>, options?: ScraperOptions) {
-        super(listingModel, ListingOrigins.Tradera, 'https://www.tradera.com/', options ?? {})
+    constructor(@InjectModel(Listing.name) listingModel: Model<ListingDocument>, configService: ConfigService) {
+        super(listingModel, configService, ListingOrigins.Tradera, 'https://www.tradera.com/', {})
     }
 
     async getListings(): Promise<Listing[]> {
