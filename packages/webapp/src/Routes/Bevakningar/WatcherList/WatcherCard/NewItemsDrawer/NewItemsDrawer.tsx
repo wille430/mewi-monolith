@@ -32,6 +32,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                         queryString.stringify({
                             dateGte: new Date(watcher.createdAt).getTime(),
                             limit: LIMIT,
+                            ...watcher.metadata,
                         })
                 )
                 .then((res) => res.data?.hits)
@@ -47,7 +48,10 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     }
 
     const handleClick = (id: string) => {
-        dispatch(openListing(newItems.find((x) => x.id === id)))
+        const itemToOpen = newItems.find((x) => x.id === id)
+        if (itemToOpen) {
+            dispatch(openListing(itemToOpen))
+        }
     }
 
     const renderItems = () => {

@@ -22,7 +22,7 @@ const ForgottenPassword = () => {
     const onFormSubmit = async (e: FormEvent) => {
         e.preventDefault()
 
-        setErrorMessage(undefined)
+        setErrorMessage('')
         setSuccessMessage('')
 
         if (!email) {

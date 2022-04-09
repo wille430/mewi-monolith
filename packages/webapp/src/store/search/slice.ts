@@ -110,7 +110,7 @@ export const searchSlice = createSlice({
             const searchParams = _.omit(
                 {
                     ...filters,
-                    page: filters.page > 1 ? filters.page : undefined,
+                    page: (filters.page || 0) > 1 ? filters.page : undefined,
                     sort: filters.sort !== Sort.RELEVANCE ? filters.sort : undefined,
                 },
                 keysToEmit

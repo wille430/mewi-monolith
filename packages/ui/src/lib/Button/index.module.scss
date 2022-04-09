@@ -8,6 +8,7 @@
     z-index: 1;
     overflow: hidden;
     position: relative;
+    display: block;
 
     &--outlined {
         @extend .button;

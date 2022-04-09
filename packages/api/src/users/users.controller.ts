@@ -9,6 +9,7 @@ import {
     UseGuards,
     Put,
     UnprocessableEntityException,
+    Res,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -22,11 +23,17 @@ import { Public } from '@/decorators/public.decorator'
 import { GetUser } from '@/decorators/user.decorator'
 import { UpdateEmailDto } from './dto/update-email.dto'
 import { UserPayload } from '@/auth/jwt-strategy'
+import { Response } from 'express'
+import { ConfigService } from '@nestjs/config'
+import { SuccessParam } from '@wille430/common'
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly configService: ConfigService
+    ) {}
 
     @Post()
     @Roles(Role.Admin)
@@ -54,6 +61,26 @@ export class UsersController {
             return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
         } else if (updateEmailDto.token) {
             return this.usersService.updateEmail(updateEmailDto)
+        }
+    }
+
+    @Post('email')
+    @Public()
+    @UseGuards(OptionalJwtAuthGuard)
+    async updateEmailPost(
+        @GetUser() user: UserPayload,
+        @Body() updateEmailDto: UpdateEmailDto,
+        @Res() res: Response
+    ) {
+        if (updateEmailDto.newEmail && user) {
+            return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
+        } else if (updateEmailDto.token) {
+            await this.usersService.updateEmail(updateEmailDto)
+
+            const webappUrl =
+                this.configService.get<string>('CLIENT_URL') +
+                `/?success=${SuccessParam.UpdatedEmail}`
+            res.redirect(webappUrl)
         }
     }
 

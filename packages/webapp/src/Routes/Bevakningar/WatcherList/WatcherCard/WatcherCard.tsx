@@ -23,12 +23,7 @@ const WatcherCard = ({
     onExpand?: Dispatch<boolean>
 }) => {
     const history = useHistory()
-    let [_expand, _setExpand] = [expand, onExpand]
-
-    if (expand == null && !onExpand) {
-        // eslint-disable-next-line @typescript-eslint/no-extra-semi
-        ;[_expand, _setExpand] = useState<boolean>(false)
-    }
+    const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
 
     const scrollRef = useRef<HTMLDivElement>(null)
 

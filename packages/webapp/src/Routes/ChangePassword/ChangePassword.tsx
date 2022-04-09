@@ -1,14 +1,13 @@
 import { Button, Container } from '@mewi/ui'
 import Layout from 'components/Layout'
 import { FormEvent, useEffect, useState } from 'react'
-import { changePasswordErrorPayload } from 'store/auth/creators'
-import useQuery from 'hooks/useQuery'
 import FormTextField from 'components/FormTextField/FormTextField'
 import { pushToSnackbar } from 'store/snackbar/creators'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from 'react-query'
 import axios from 'axios'
 import { useAppDispatch } from 'hooks/hooks'
+import useQuery from 'hooks/useQuery'
 
 const ForgottenPassword = () => {
     const initialState = {
@@ -18,17 +17,19 @@ const ForgottenPassword = () => {
     }
 
     const [formData, setFormData] = useState(initialState)
-    const [errors, setErrors] = useState<changePasswordErrorPayload>(initialState)
+    const [errors, setErrors] = useState(initialState)
     const query = useQuery()
+    const { token, email } = { token: query.get('token'), email: query.get('email') }
     const history = useHistory()
     const dispatch = useAppDispatch()
 
     const mutation = useMutation(
         async () =>
             axios.put('/users/password', {
-                token: query.get('token'),
+                token,
                 password: formData.password,
                 passwordConfirm: formData.repassword,
+                email,
             }),
         {
             onSuccess: () => {
@@ -45,17 +46,15 @@ const ForgottenPassword = () => {
     )
 
     useEffect(() => {
-        if (!query.get('userId') || !query.get('token')) {
-            history('/')
+        if (!email || !token) {
+            history.push('/')
         }
     }, [])
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault()
 
-        const { userId, token } = { userId: query.get('userId'), token: query.get('token') }
-
-        if (userId && token && formData.password && formData.repassword) {
+        if (email && token && formData.password && formData.repassword) {
             setErrors(initialState)
             setFormData(initialState)
             mutation.mutate()

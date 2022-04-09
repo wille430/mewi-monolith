@@ -20,8 +20,8 @@ export class EmailService {
         verifyEmail: path.resolve(__dirname, this.templatesDir, 'verifyEmail'),
     }
 
-    async transporter(test = false) {
-        if (test || process.env.NODE_ENV !== 'production') {
+    async transporter(real?: boolean) {
+        if (!real && process.env.NODE_ENV !== 'production') {
             const account = await nodeMailer.createTestAccount()
 
             return nodeMailer.createTransport({

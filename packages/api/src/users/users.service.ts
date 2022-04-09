@@ -119,7 +119,7 @@ export class UsersService {
                     from: this.emailService.googleAuth.email,
                 },
                 transport: transporter,
-                preview: false,
+                preview: true,
             })
 
             const emailInfo = await emailObj.send({
@@ -128,7 +128,9 @@ export class UsersService {
                     to: email,
                 },
                 locals: {
-                    link: this.configService.get<string>('API_URL') + '/users/email',
+                    link:
+                        this.configService.get<string>('CLIENT_URL') +
+                        `/nyttlosenord?email=${email}&token=${token}`,
                 },
             })
 
@@ -178,7 +180,7 @@ export class UsersService {
                 from: this.emailService.googleAuth.email,
             },
             transport: transporter,
-            preview: false,
+            preview: true,
         })
 
         const user = await this.userModel.findById(userId)
@@ -191,6 +193,7 @@ export class UsersService {
             locals: {
                 redirectUrl: this.configService.get<string>('API_URL') + '/users/email',
                 token,
+                oldEmail: user.email,
             },
         })
 

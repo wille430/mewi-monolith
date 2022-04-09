@@ -1,5 +1,15 @@
 {
     "collection": "@nestjs/schematics",
     "sourceRoot": "src",
-    "entryFile": "main"
+    "entryFile": "main",
+    "compilterOptions": {
+        "assets": [
+            {
+                "include": "src/emails",
+                "outDir": "dist/emails",
+                "watchAssets": true
+            }
+        ],
+        "watchAssets": true
+    }
 }

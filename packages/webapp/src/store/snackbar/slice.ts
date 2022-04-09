@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { uniqueId } from 'lodash'
-import { clearSnackbarQueue, pushToSnackbar } from 'store/snackbar/creators'
+import { checkSuccessParam, clearSnackbarQueue, pushToSnackbar } from 'store/snackbar/creators'
 import { nextSnackbar } from './creators'
 import { SnackbarState } from './type'
 
@@ -34,6 +34,11 @@ export const snackbarSlice = createSlice({
             .addCase(clearSnackbarQueue, (state) => {
                 state.queue = []
                 state.current = undefined
+            })
+            .addCase(checkSuccessParam, (state, action) => {
+                if (action.payload) {
+                    state.current = action.payload
+                }
             })
     },
 })
