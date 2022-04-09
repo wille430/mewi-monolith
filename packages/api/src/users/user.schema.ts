@@ -1,9 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Role } from '@/auth/role.enum'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { UserWatcher, UserWatcherSchema } from '@/user-watchers/user-watcher.schema'
-import { v4 as uuidv4 } from 'uuid'
 import { IUser } from '@wille430/common'
 
 export type UserDocument = User & Document
@@ -25,11 +24,36 @@ export class User implements Omit<IUser, 'watchers'> {
     //   TODO: FIX CORRECT TYPE
     watchers: mongoose.Types.DocumentArray<UserWatcher>
 
-    @Prop({ type: String, default: uuidv4(), select: false })
-    passwordResetSecret: string
-
     @Prop({ type: [String], enum: Role, default: [Role.User] })
     roles: Role[]
+
+    @Prop({
+        type: raw({
+            tokenHash: String,
+            expiration: Number,
+        }),
+        _id: false,
+        select: false,
+    })
+    passwordReset?: {
+        tokenHash: string
+        expiration: number
+    }
+
+    @Prop({
+        type: raw({
+            newEmail: String,
+            tokenHash: String,
+            expiration: Number,
+        }),
+        _id: false,
+        select: false,
+    })
+    emailUpdate?: {
+        newEmail: string
+        tokenHash: string
+        expiration: number
+    }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

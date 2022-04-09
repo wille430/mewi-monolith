@@ -19,6 +19,9 @@ export class ChangePasswordAuth extends OmitType(SignUpDto, ['email']) {
 export class ChangePasswordWithToken extends ChangePasswordAuth {
     @IsString()
     token: string
+
+    @IsEmail()
+    email: string
 }
 
 export default class ChangePasswordDto {

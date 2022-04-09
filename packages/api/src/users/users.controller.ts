@@ -20,6 +20,8 @@ import { RolesGuard } from '@/auth/roles.guard'
 import ChangePasswordDto from '@/users/dto/change-password.dto'
 import { Public } from '@/decorators/public.decorator'
 import { GetUser } from '@/decorators/user.decorator'
+import { UpdateEmailDto } from './dto/update-email.dto'
+import { UserPayload } from '@/auth/jwt-strategy'
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -40,8 +42,19 @@ export class UsersController {
     }
 
     @Get('me')
-    getMe(@GetUser() user) {
+    getMe(@GetUser() user: UserPayload) {
         return this.usersService.findOne(user.userId)
+    }
+
+    @Put('email')
+    @Public()
+    @UseGuards(OptionalJwtAuthGuard)
+    updateEmail(@GetUser() user: UserPayload, @Body() updateEmailDto: UpdateEmailDto) {
+        if (updateEmailDto.newEmail && user) {
+            return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
+        } else if (updateEmailDto.token) {
+            return this.usersService.updateEmail(updateEmailDto)
+        }
     }
 
     @Put('password')
@@ -50,7 +63,7 @@ export class UsersController {
     async changePassword(
         @Body()
         dto: ChangePasswordDto,
-        @GetUser() user
+        @GetUser() user: UserPayload
     ) {
         if (dto.password && dto.passwordConfirm) {
             if (user?.userId) {

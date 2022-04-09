@@ -3,8 +3,9 @@
     "include": ["**/*.spec.ts", "**/*.test.ts", "src/**/*", "src/*"],
     "exclude": ["src/services/*"],
     "compilerOptions": {
-        "types": ["vitest/globals", "node"],
+        "types": ["vitest/globals"],
         "baseUrl": ".",
+        "emitDecoratorMetadata": true,
         "paths": {
             "@/*": ["./src/*"]
         },

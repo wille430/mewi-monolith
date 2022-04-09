@@ -42,7 +42,28 @@ export default class EmailService {
      *
      * @param to Email of receiver
      * @param template Absolute path to email template
-     * @param locals Object of template variables
+     * @param locals Object        let transporter
+        if (test || process.env.NODE_ENV !== 'production') {
+            const account = await NodeMailer.createTestAccount()
+
+            transporter = NodeMailer.createTransport({
+                host: account.smtp.host,
+                port: account.smtp.port,
+                secure: account.smtp.secure,
+                auth: {
+                    user: account.user,
+                    pass: account.pass,
+                },
+            })
+        } else {
+            transporter = NodeMailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: this.googleAuth.email,
+                    pass: this.googleAuth.pass,
+                },
+            })
+        } of template variables
      * @param test True if email should be sent throught NodeMailer test account
      * @returns
      */

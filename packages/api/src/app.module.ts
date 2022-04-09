@@ -9,6 +9,9 @@ import { WatchersModule } from './watchers/watchers.module'
 import { ConfigModule } from '@nestjs/config'
 import { TestModule } from './test/test.module'
 import { ScrapersModule } from './scrapers/scrapers.module'
+import { EmailService } from './email/email.service'
+import { EmailModule } from './email/email.module'
+import configuration from './config/configuration'
 
 const getMongoUri = () => {
     const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
@@ -30,6 +33,7 @@ const getMongoUri = () => {
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
+            load: [configuration]
         }),
         MongooseModule.forRoot(getMongoUri()),
         ListingsModule,
@@ -39,7 +43,9 @@ const getMongoUri = () => {
         WatchersModule,
         TestModule,
         ScrapersModule,
+        EmailModule,
     ],
     controllers: [AppController],
+    providers: [EmailService],
 })
 export class AppModule {}
