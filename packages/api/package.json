@@ -15,6 +15,7 @@
         "@nestjs/passport": "^8.2.1",
         "@nestjs/platform-express": "^8.4.2",
         "@nestjs/testing": "^8.4.3",
+        "@nestjs/throttler": "^2.0.1",
         "@types/jsdom": "^16.2.14",
         "@types/lodash": "^4.14.180",
         "@wille430/common": "workspace:^1.0.1",
