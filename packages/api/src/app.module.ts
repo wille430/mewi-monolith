@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import { WatchersModule } from './watchers/watchers.module'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TestModule } from './test/test.module'
 import { ScrapersModule } from './scrapers/scrapers.module'
 import { EmailService } from './email/email.service'
@@ -14,30 +14,22 @@ import { EmailModule } from './email/email.module'
 import configuration from './config/configuration'
 import { ThrottlerModule } from '@nestjs/throttler'
 import scraperConfig from './config/scraper.config'
-
-const getMongoUri = () => {
-    const { MONGO_URI, MONGO_USERNAME, MONGO_PASSWORD } = process.env
-
-    let mongodbUri
-
-    if (!MONGO_USERNAME || !MONGO_PASSWORD) {
-        mongodbUri = 'mongodb://' + MONGO_URI || 'localhost'
-    } else {
-        mongodbUri = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URI}`
-    }
-
-    console.log({ mongodbUri })
-    return mongodbUri
-}
+import databaseConfig from './config/database.config'
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
-            load: [configuration, scraperConfig],
+            load: [configuration, scraperConfig, databaseConfig],
         }),
-        MongooseModule.forRoot(getMongoUri()),
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                uri: configService.get<string>('database.uri'),
+            }),
+            inject: [ConfigService],
+        }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
