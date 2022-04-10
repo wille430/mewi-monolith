@@ -43,7 +43,7 @@ const AccountDetails = () => {
         },
         onSuccess: () =>
             setSuccess(
-                `Ett meddelande har skickats till ${formData.email} för att verifiera adressen`
+                `Ett meddelande har skickats till ${user?.email} för att verifiera adressen`
             ),
     })
 
