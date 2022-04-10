@@ -23,6 +23,7 @@ export class ListingsService {
 
         if (dto.page && +dto.page > 0) {
             options.skip = (+dto.page - 1) * +dto.limit
+            console.log(options.skip)
         }
 
         if (dto.sort && dto.sort !== Sort.RELEVANCE) {

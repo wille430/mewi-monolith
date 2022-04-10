@@ -4,7 +4,9 @@ import { getSearchResultsReturnType } from 'api'
 export interface SearchState {
     hits: getSearchResultsReturnType['hits']
     totalHits: number
-    filters: ListingSearchFilters
+    filters: ListingSearchFilters & {
+        page: number
+    }
     searchParams: string
     selectedListing?: IListing
 }
