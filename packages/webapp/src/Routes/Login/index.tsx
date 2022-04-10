@@ -15,7 +15,10 @@ const Login = () => {
 
     const [error, setError] = useState('')
     const mutation = useMutation(async () => await axios.post('/auth/login', { email, password }), {
-        onError: () => setError('Felaktig e-postadress eller lösenord'),
+        onError: () => {
+            setError('Felaktig e-postadress eller lösenord')
+            setPassword('')
+        },
         onSuccess: (val) => {
             setError('')
             dispatch(loginUser(val.data as AuthTokens))
@@ -40,7 +43,11 @@ const Login = () => {
                         >
                             <div className='w-full'>
                                 <TextField
-                                    onChange={setEmail}
+                                    onChange={(val) => {
+                                        setEmail(val)
+                                        setError('')
+                                    }}
+                                    value={email}
                                     name='email'
                                     placeholder='E-postadress'
                                     data-testid='emailInput'
@@ -49,7 +56,11 @@ const Login = () => {
                             </div>
                             <div className='w-full'>
                                 <TextField
-                                    onChange={setPassword}
+                                    onChange={(val) => {
+                                        setPassword(val)
+                                        setError('')
+                                    }}
+                                    value={password}
                                     name='password'
                                     placeholder='Lösenord'
                                     type='password'
