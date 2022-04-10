@@ -46,12 +46,14 @@ export class BlippScraper extends Scraper {
      * @returns An array of listings
      */
     async getListingOnPage(pageNum: number): Promise<Listing[]> {
+        let listings: Listing[] = []
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        })
+
         try {
             const url = `https://bilar.blipp.se/vara-bilar/page/${pageNum}/`
 
-            const browser = await puppeteer.launch({
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            })
             const page = await browser.newPage()
 
             await page.goto(url)
@@ -59,7 +61,7 @@ export class BlippScraper extends Scraper {
             const listingsGrid = await page.waitForSelector('#listings-result')
             const listingHandles = await listingsGrid.$$('.listing_is_active')
 
-            let listings = await Promise.all(
+            const scrapedListings = await Promise.all(
                 listingHandles.map(async (eleHandle) => {
                     return await eleHandle.evaluate(
                         (ele, args) => {
@@ -102,12 +104,14 @@ export class BlippScraper extends Scraper {
                 })
             )
 
-            listings = listings.filter((x) => !!x)
-
-            return listings
+            listings = scrapedListings.filter((x) => !!x)
         } catch (e) {
-            return []
+            console.log(e)
+        } finally {
+            await browser.close()
         }
+
+        return listings
     }
 
     async getListings(): Promise<Listing[]> {
