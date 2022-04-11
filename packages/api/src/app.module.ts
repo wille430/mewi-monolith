@@ -15,6 +15,8 @@ import configuration from './config/configuration'
 import { ThrottlerModule } from '@nestjs/throttler'
 import scraperConfig from './config/scraper.config'
 import databaseConfig from './config/database.config'
+import {ServeStaticModule} from '@nestjs/serve-static'
+import { join } from 'path'
 
 @Module({
     imports: [
@@ -33,6 +35,9 @@ import databaseConfig from './config/database.config'
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'public')
         }),
         ListingsModule,
         AuthModule,

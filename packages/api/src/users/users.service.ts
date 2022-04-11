@@ -17,6 +17,7 @@ import { EmailService } from '@/email/email.service'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { EnvVars } from '@/config/configuration'
+import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 
 @Injectable()
 export class UsersService {
@@ -117,22 +118,20 @@ export class UsersService {
             const emailObj = new Email({
                 message: {
                     from: this.emailService.googleAuth.email,
+                    to: email,
+                    subject: 'Lösenordsåterställning',
+                    html: forgottenPasswordEmail(
+                        {
+                            link:  this.configService.get<string>('CLIENT_URL') +
+                                                `/nyttlosenord?email=${email}&token=${token}`
+                        }
+                    ).html
                 },
                 transport: transporter,
                 preview: true,
             })
 
-            const emailInfo = await emailObj.send({
-                template: this.emailService.templates.forgottenPassword,
-                message: {
-                    to: email,
-                },
-                locals: {
-                    link:
-                        this.configService.get<string>('CLIENT_URL') +
-                        `/nyttlosenord?email=${email}&token=${token}`,
-                },
-            })
+            const emailInfo = await emailObj.send()
 
             await transporter.sendMail(emailInfo.originalMessage)
         } catch (e) {

@@ -33,8 +33,6 @@ console.log('NODE ENV:', process.env.NODE_ENV)
     // scraper.schedule()
     // FeaturedItemService.schedule()
 
-    // TODO: Add fake data in development
-
     // if (process.env.NODE_ENV === 'production') {
     //     const lastScan = EndDate.getEndDateFor('blocket')
     //     if (Date.now() - toUnixTime(lastScan) > 30 * 60 * 1000) {
