@@ -10,11 +10,15 @@ export type UserWatcherDocument = UserWatcher & Document
     timestamps: true,
 })
 export class UserWatcher implements Partial<IUserWatcher> {
-    @Prop({ type: mongoose.Types.ObjectId, ref: Watcher.name })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Watcher.name })
     _id: string
 
     @Prop({ type: mongoose.Schema.Types.Date })
     notifiedAt?: string
+
+
+    createdAt?: string
+    updatedAt?: string
 }
 
 export const UserWatcherSchema = SchemaFactory.createForClass(UserWatcher)

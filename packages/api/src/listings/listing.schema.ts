@@ -6,47 +6,49 @@ export type ListingDocument = Listing & Document
 
 @Schema()
 export class Listing implements IListing {
-    @Prop({ unique: true })
+    @Prop({ type: String, unique: true })
     id: string
 
-    @Prop(String)
+    @Prop({ type: String })
     title: string
 
-    @Prop(String)
+    @Prop({ type: String })
     body?: string
 
     @Prop({ type: [String], enum: Category, default: [Category.OVRIGT] })
     category: Category[]
 
-    @Prop(Number)
+    @Prop({ type: Number })
     date: number
 
-    @Prop(String)
+    @Prop({ type: String })
     redirectUrl: string
 
-    @Prop([String])
+    @Prop({ type: [String] })
     imageUrl: string[]
 
-    @Prop(
-        raw({
+    @Prop({
+        type: raw({
             value: { type: String },
             currency: { type: String },
-        })
-    )
+        }),
+    })
     price?: {
         value: number
         currency: string
     }
 
-    @Prop(String)
+    @Prop({ type: String })
     region?: string
 
-    @Prop([
-        raw({
-            label: { type: String },
-            value: { type: String },
-        }),
-    ])
+    @Prop({
+        type: [
+            raw({
+                label: { type: String },
+                value: { type: String },
+            }),
+        ],
+    })
     parameters: { label: string; value: string }[]
 
     @Prop({ type: String, enum: ListingOrigins })
@@ -55,7 +57,9 @@ export class Listing implements IListing {
     @Prop({ type: Boolean, default: false })
     isAuction: boolean
 
-    @Prop(Number)
+    @Prop({
+        type: Number,
+    })
     endDate?: number
 }
 

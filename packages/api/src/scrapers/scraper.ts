@@ -1,6 +1,5 @@
 import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
-import { scheduleJob } from 'node-schedule'
 import robotsParser from 'robots-parser'
 import { Model } from 'mongoose'
 import { ListingOrigins } from '@wille430/common'
@@ -43,10 +42,6 @@ export class Scraper {
      * @param useRobots - Whether or not to check robots.txt. False by default.
      */
     useRobots = false
-    /**
-     * @param cronTimerSchedule - When to schedule this scraper in cron time
-     */
-    cronTimerSchedule = '30 * * * *'
     /**
      * @param canCrawl - If false, then the scraper wont start. Ignored if \@param useRobots is false.
      */
@@ -131,17 +126,17 @@ export class Scraper {
         console.log(`Scraping ended with a total of ${this.listingScraped} listings scraped`)
     }
 
-    schedule(callback?: () => void) {
-        console.log(
-            `Scheduling ${this.name}-scraper with cron time schedule (${this.cronTimerSchedule})`
-        )
-        scheduleJob(this.cronTimerSchedule, () => {
-            this.start().then(async () => {
-                await this.deleteOld()
-                callback && callback()
-            })
-        })
-    }
+    // schedule(callback?: () => void) {
+    //     console.log(
+    //         `Scheduling ${this.name}-scraper with cron time schedule (${this.cronTimerSchedule})`
+    //     )
+    //     scheduleJob(this.cronTimerSchedule, () => {
+    //         this.start().then(async () => {
+    //             await this.deleteOld()
+    //             callback && callback()
+    //         })
+    //     })
+    // }
 
     async deleteOld(): Promise<void> {
         const { deletedCount } = await this.listingModel.deleteMany({

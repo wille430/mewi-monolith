@@ -2,7 +2,6 @@ const fs = require('fs')
 const path = require('path')
 
 copyFolderRecursiveSync(path.resolve(__dirname, 'src/emails'), path.resolve(__dirname, 'dist'))
-copyFolderRecursiveSync(path.resolve(__dirname, 'src/assets'), path.resolve(__dirname, 'dist'))
 
 function copyFileSync(source, target) {
     let targetFile = target

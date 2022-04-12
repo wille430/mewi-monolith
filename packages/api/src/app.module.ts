@@ -17,13 +17,15 @@ import scraperConfig from './config/scraper.config'
 import databaseConfig from './config/database.config'
 import {ServeStaticModule} from '@nestjs/serve-static'
 import { join } from 'path'
+import notificationConfig from './config/notification.config'
+import { ScheduleModule } from '@nestjs/schedule'
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
-            load: [configuration, scraperConfig, databaseConfig],
+            load: [configuration, scraperConfig, databaseConfig, notificationConfig],
         }),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
@@ -39,6 +41,7 @@ import { join } from 'path'
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public')
         }),
+        ScheduleModule.forRoot(),
         ListingsModule,
         AuthModule,
         UsersModule,

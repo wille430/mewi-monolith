@@ -1,6 +1,6 @@
 import { ListingsModule } from '@/listings/listings.module'
 import { UsersModule } from '@/users/users.module'
-import { Module, OnModuleInit } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import Scrapers from './scrapers'
 import { ScrapersController } from './scrapers.controller'
@@ -12,12 +12,4 @@ import { ScrapersService } from './scrapers.service'
     controllers: [ScrapersController],
     exports: [ListingsModule],
 })
-export class ScrapersModule implements OnModuleInit {
-    constructor(private scrapersService: ScrapersService) {}
-
-    onModuleInit() {
-        console.log('Initializing scraper module...')
-
-        this.scrapersService.scheduleAll()
-    }
-}
+export class ScrapersModule {}

@@ -9,6 +9,7 @@ import { SellpyScraper } from './sellpy.scraper'
 import { BlippScraper } from './blipp.scraper'
 import { Scraper } from './scraper'
 import { ConfigService } from '@nestjs/config'
+import { Cron } from '@nestjs/schedule'
 
 @Injectable()
 export class ScrapersService {
@@ -30,12 +31,13 @@ export class ScrapersService {
         ]
     }
 
-    scheduleAll() {
-        for (const scraper of this.scrapers) {
-            scraper.schedule()
-        }
-    }
+    // scheduleAll() {
+    //     for (const scraper of this.scrapers) {
+    //         scraper.schedule()
+    //     }
+    // }
 
+    @Cron('* */45 * * * *')
     async startAll() {
         for (const scraper of this.scrapers) {
             await scraper.start()

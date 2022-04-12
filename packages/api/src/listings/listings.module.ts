@@ -19,7 +19,7 @@ import faker from '@faker-js/faker'
     ],
     controllers: [ListingsController],
     providers: [ListingsService],
-    exports: [MongooseModule],
+    exports: [MongooseModule, ListingsService],
 })
 export class ListingsModule implements OnModuleInit {
     constructor(@InjectModel(Listing.name) private listingModel: Model<ListingDocument>) {}

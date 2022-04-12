@@ -4,6 +4,8 @@ import { WatchersController } from './watchers.controller'
 import { Watcher, WatcherSchema } from '@/watchers/watcher.schema'
 import { MongooseModule } from '@nestjs/mongoose'
 import { UsersModule } from '@/users/users.module'
+import { EmailModule } from '@/email/email.module'
+import { ListingsModule } from '@/listings/listings.module'
 
 @Module({
     imports: [
@@ -14,6 +16,8 @@ import { UsersModule } from '@/users/users.module'
             },
         ]),
         UsersModule,
+        EmailModule,
+        ListingsModule,
     ],
     controllers: [WatchersController],
     providers: [WatchersService],

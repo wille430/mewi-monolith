@@ -18,23 +18,23 @@ export class FindAllListingsDto {
 
     @IsOptional()
     @IsNumberString()
-    priceRangeGte?: string
+    priceRangeGte?: string | number
 
     @IsOptional()
     @IsNumberString()
-    priceRangeLte?: string
+    priceRangeLte?: string | number
 
     @IsOptional()
     @IsBooleanString()
-    auction?: string
+    auction?: string | boolean
 
     @IsOptional()
     @IsNumberString()
-    dateGte?: string
+    dateGte?: string | number
 
     @IsOptional()
     @IsNumberString()
-    page?: string
+    page?: string | number
 
     @IsOptional()
     sort?: Sort

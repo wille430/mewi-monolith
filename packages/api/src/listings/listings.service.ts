@@ -18,7 +18,20 @@ export class ListingsService {
     }
 
     async findAll(dto: FindAllListingsDto) {
-        let filter: FilterQuery<ListingDocument> = { $and: [] }
+        const { filters, options } = this.createMongoFilters(dto)
+
+        return {
+            filters: dto,
+            totalHits: await this.listingModel.count(filters),
+            hits: await this.listingModel.find(filters, {}, options),
+        }
+    }
+
+    createMongoFilters(dto: Partial<FindAllListingsDto>): {
+        filters: FilterQuery<ListingDocument>
+        options: QueryOptions
+    } {
+        let filters: FilterQuery<ListingDocument> = { $and: [] }
         const options: QueryOptions = { limit: +dto.limit }
 
         if (dto.page && +dto.page > 0) {
@@ -31,61 +44,57 @@ export class ListingsService {
         }
 
         if (dto.priceRangeGte) {
-            filter.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
+            filters.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
         }
 
         if (dto.priceRangeLte) {
-            filter.$and.push({ 'price.value': { $lte: dto.priceRangeLte } })
+            filters.$and.push({ 'price.value': { $lte: dto.priceRangeLte } })
         }
 
         for (const key in dto) {
             const value = dto[key]
             switch (key as keyof typeof dto) {
                 case 'keyword':
-                    filter.$text = {
-                        ...(filter.$text || []),
+                    filters.$text = {
+                        ...(filters.$text || []),
                         $search: value,
                     }
                     break
                 case 'regions':
                     if (Array.isArray(value)) {
-                        filter.$and.push({ region: (value as string[]).join(', ') })
+                        filters.$and.push({ region: (value as string[]).join(', ') })
                     } else {
-                        filter.$and.push({ region: [value as string].join(', ') })
+                        filters.$and.push({ region: [value as string].join(', ') })
                     }
                     break
                 case 'category':
-                    filter.$and.push({
+                    filters.$and.push({
                         [key]: { $all: value },
                     })
                     break
                 case 'auction':
-                    filter.$and.push({
+                    filters.$and.push({
                         isAuction: value,
                     })
                     break
                 case key.match(/priceRange(Gte|Lte)/)?.input:
                     if (key.match(/(Gte)$/)) {
-                        filter.$and.push({ 'price.value': { $gte: +value } })
+                        filters.$and.push({ 'price.value': { $gte: +value } })
                     } else if (key.match(/(Lte)$/)) {
-                        filter.$and.push({ 'price.value': { $lte: +value } })
+                        filters.$and.push({ 'price.value': { $lte: +value } })
                     }
                     break
                 case 'dateGte':
-                    filter.$and.push({ date: { $gte: +value } })
+                    filters.$and.push({ date: { $gte: +value } })
                     break
             }
         }
 
-        if (!filter.$and.length) {
-            filter = _.omit(filter, '$and')
+        if (!filters.$and.length) {
+            filters = _.omit(filters, '$and')
         }
 
-        return {
-            filters: dto,
-            totalHits: await this.listingModel.count(filter),
-            hits: await this.listingModel.find(filter, {}, options),
-        }
+        return { filters, options }
     }
 
     async findOne(id: number) {
