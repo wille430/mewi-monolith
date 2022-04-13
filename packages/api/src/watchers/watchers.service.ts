@@ -127,14 +127,23 @@ export class WatchersService {
             const email = new Email({
                 message: {
                     from: this.emailService.googleAuth.email,
-                    to: user.email,
-                    html: `<h1>Du har ${newListings.length} nya bevakningar</h1>`,
                 },
                 transport: transporter,
                 preview: false,
             })
 
-            const emailInfo = await email.send()
+
+            const emailInfo = await email.send({
+                template: this.emailService.templatesDir + 'newItems',
+                message: {
+                    to: user.email,
+                },
+                locals: {
+                    newItemCount: await this.listingModel.count(filters),
+                    keyword: watcher.metadata.keyword,
+                    items: newListings
+                }
+            })
             await transporter.sendMail(emailInfo.originalMessage)
 
             await this.userModel.findByIdAndUpdate(
