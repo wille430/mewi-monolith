@@ -14,7 +14,7 @@ import _ from 'lodash'
 import { EmailService } from '../email/email.service'
 import { Transporter } from 'nodemailer'
 import { ListingsModule } from '../listings/listings.module'
-import { Listing, ListingDocument } from '../listings/listing.schema'
+import { Listing, ListingDocument, ListingSchema } from '../listings/listing.schema'
 import notificationConfig from '../config/notification.config'
 
 describe('WatchersService', () => {
@@ -36,6 +36,7 @@ describe('WatchersService', () => {
     const userFactory = factory(UserSchema, {}).setGlobalObjectIdOptions({
         tostring: false,
     })
+    const listingFactory = factory(ListingSchema)
 
     let user: UserDocument
 
@@ -99,7 +100,7 @@ describe('WatchersService', () => {
     describe('#notifyUserOfWatcher', () => {
         it('should send email to user and update user watcher', async () => {
             vi.spyOn(listingModel, 'find').mockResolvedValue(
-                Array(configService.get('notification.watcher.minListings'))
+                Array(configService.get('notification.watcher.minListings')).fill(listingFactory.generate())
             )
 
             const userWatcher = _.sample(user.watchers)

@@ -129,12 +129,12 @@ export class WatchersService {
                     from: this.emailService.googleAuth.email,
                 },
                 transport: transporter,
-                preview: false,
+                preview: true,
             })
 
 
             const emailInfo = await email.send({
-                template: this.emailService.templatesDir + 'newItems',
+                template: this.emailService.templates.newItems,
                 message: {
                     to: user.email,
                 },
