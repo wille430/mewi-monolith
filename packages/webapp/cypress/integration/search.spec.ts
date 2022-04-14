@@ -1,9 +1,9 @@
-import { Types, Utils } from '@wille430/common'
+import { ListingSearchFilters, randomString, regions } from '@wille430/common'
 import _ from 'lodash'
 import queryString from 'query-string'
 import { setFilters } from '../../../webapp/src/store/search/creators'
 
-interface FormData extends Types.ListingSearchFilters {
+interface FormData extends ListingSearchFilters {
     regions?: string
 }
 
@@ -16,7 +16,7 @@ describe('search', () => {
 
         formData = {
             // category: _.sample(Object.keys(categories)),
-            regions: _.sampleSize(Types.regions).map((regionOption) => regionOption.label)[0],
+            regions: _.sampleSize(regions).map((regionOption) => regionOption.label)[0],
             priceRangeGte: Math.round(Math.random() * 2000),
             priceRangeLte: Math.round((1 + Math.random()) * 2000),
             auction: Math.round(Math.random()) === 1 ? true : false,
@@ -102,7 +102,7 @@ describe('search', () => {
     })
 
     it('can search for a new keyword', () => {
-        const keyword = Utils.randomString(5)
+        const keyword = randomString(5)
 
         cy.getBySel('searchInput').type(keyword + '{enter}')
 

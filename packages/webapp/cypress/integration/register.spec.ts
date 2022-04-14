@@ -1,15 +1,15 @@
-import { Utils } from '@wille430/common'
+import { randomEmail, randomPassword, randomString } from '@wille430/common'
 
 describe('register', () => {
     const userInfo = {
-        email: Utils.randomEmail(),
-        password: Utils.randomPassword(),
+        email: randomEmail(),
+        password: randomPassword(),
     }
 
     beforeEach(() => {
         cy.visit('/register')
-        userInfo.email = Utils.randomEmail()
-        userInfo.password = Utils.randomPassword()
+        userInfo.email = randomEmail()
+        userInfo.password = randomPassword()
     })
 
     it('should register a new user', () => {
@@ -33,7 +33,7 @@ describe('register', () => {
     })
 
     it('should display invalid email message', () => {
-        cy.get('[data-testid=emailInput]').type(Utils.randomString(10))
+        cy.get('[data-testid=emailInput]').type(randomString(10))
         cy.get('[data-testid=passwordInput]').type(userInfo.password)
         cy.get('[data-testid=repasswordInput]').type(userInfo.password)
 

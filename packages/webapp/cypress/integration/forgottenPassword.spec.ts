@@ -1,4 +1,4 @@
-import { Utils } from '@wille430/common'
+import { randomEmail } from '@wille430/common'
 
 describe('forgotten password', () => {
     beforeEach(() => {
@@ -6,7 +6,7 @@ describe('forgotten password', () => {
     })
 
     it('should submit correctly with valid email', () => {
-        const email = Utils.randomEmail()
+        const email = randomEmail()
 
         cy.getBySel('emailInput').type(email)
         cy.getBySel('formSubmitButton').click()

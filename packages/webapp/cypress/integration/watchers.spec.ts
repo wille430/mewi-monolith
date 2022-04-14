@@ -1,5 +1,4 @@
-import { Utils } from '@wille430/common'
-import { AuthTokens } from '@wille430/common/types'
+import { AuthTokens, capitalize } from '@wille430/common'
 import _ from 'lodash'
 
 describe('watchers', () => {
@@ -39,7 +38,7 @@ describe('watchers', () => {
         // wait for region select to load fully
         cy.wait(longWait)
         cy.get('[data-testid=regionsSelect]').type(
-            Utils.capitalize(formData.regions[0]) + ' {enter}',
+            capitalize(formData.regions[0]) + ' {enter}',
             {
                 delay: 100,
             }
