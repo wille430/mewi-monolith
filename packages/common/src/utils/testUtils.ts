@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { IListing, ListingOrigins, IUser, Category } from '../types'
+import { IListing, ListingOrigins, IUser, Category, LoginStrategy } from '../types'
 import _ from 'lodash'
 
 export const randomEmail = () => {
@@ -60,4 +60,5 @@ export const generateMockUserData = (): IUser & {
     premium: faker.datatype.boolean(),
     watchers: [],
     passwordResetSecret: faker.random.alpha({ count: 256 }),
+    loginStrategy: _.sample(Object.values(LoginStrategy)) as LoginStrategy,
 })

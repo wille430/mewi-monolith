@@ -1,14 +1,15 @@
-import { HTMLAttributes, ReactNode, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import * as ReactLoader from 'react-loader-spinner'
 import styles from './index.module.scss'
 import utilities from '../utilities.module.scss'
 import classNames from 'classnames'
 import { Override } from '../types'
+import { HTMLMotionProps, motion } from 'framer-motion'
 
 const cx = classNames.bind(styles)
 
 export type ButtonProps = Override<
-    HTMLAttributes<HTMLButtonElement>,
+    HTMLMotionProps<'button'>,
     {
         onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void> | void
         label?: string
@@ -48,7 +49,7 @@ export const Button = (props: ButtonProps) => {
     }
 
     return (
-        <button
+        <motion.button
             className={cx({
                 [styles[`button--${variant}${isLoading || disabled ? '--disabled' : ''}`]]: true,
                 [styles[color]]: true,
@@ -56,6 +57,12 @@ export const Button = (props: ButtonProps) => {
             })}
             data-testid='button'
             onClick={handleClick}
+            whileHover={{
+                scale: 1.01,
+            }}
+            whileTap={{
+                scale: 0.99,
+            }}
             {...rest}
         >
             <div className='flex flex-row items-center justify-center'>
@@ -87,6 +94,6 @@ export const Button = (props: ButtonProps) => {
                     </div>
                 </div>
             </div>
-        </button>
+        </motion.button>
     )
 }
