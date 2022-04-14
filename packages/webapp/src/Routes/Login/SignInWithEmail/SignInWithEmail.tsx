@@ -6,7 +6,6 @@ import axios from 'axios'
 import { useAppDispatch } from 'hooks/hooks'
 import { loginUser } from 'store/auth/creators'
 import { AuthTokens } from '@wille430/common'
-import CustomGoogleLogin from 'components/CustomGoogleLogin/CustomGoogleLogin'
 import SmallContainer from 'components/SmallContainer/SmallContainer'
 
 export function SignInWithEmail() {
@@ -83,7 +82,6 @@ export function SignInWithEmail() {
                 </div>
 
                 <Button label='Logga in' type='submit' data-testid='formSubmitButton' />
-                <CustomGoogleLogin />
                 <span className='text-red-400'>{error}</span>
             </form>
         </SmallContainer>

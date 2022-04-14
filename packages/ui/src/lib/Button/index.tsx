@@ -4,7 +4,7 @@ import styles from './index.module.scss'
 import utilities from '../utilities.module.scss'
 import classNames from 'classnames'
 import { Override } from '../types'
-import { HTMLMotionProps, motion } from 'framer-motion'
+import { HTMLMotionProps, motion, useAnimation, Variants } from 'framer-motion'
 
 const cx = classNames.bind(styles)
 
@@ -39,6 +39,8 @@ export const Button = (props: ButtonProps) => {
         ...rest
     } = props
     const [isLoading, setLoading] = useState(false)
+    const [tapPos, setTapPos] = useState({ x: 0, y: 0 })
+    const rippleController = useAnimation()
 
     const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (onClick && !isLoading) {
@@ -46,6 +48,43 @@ export const Button = (props: ButtonProps) => {
             await onClick(e)
             setLoading(false)
         }
+    }
+
+    const rippleVariants: Variants = {
+        position: {
+            ...tapPos,
+        },
+        ripple: {
+            x: tapPos.x,
+            y: tapPos.y,
+            scale: [0, 5, 15],
+            opacity: [0, 0.33, 0],
+            transition: {
+                duration: 0.75,
+            },
+        },
+        hide: {
+            scale: 0,
+            opacity: 0,
+            x: 0,
+            y: 0,
+            transition: {
+                duration: 0.1,
+                delay: 0.75,
+            },
+        },
+    }
+
+    const buttonVariants: Variants = {
+        initial: {
+            scale: 1.0,
+        },
+        hover: {
+            scale: 1.01,
+        },
+        tap: {
+            scale: 0.99,
+        },
     }
 
     return (
@@ -56,15 +95,39 @@ export const Button = (props: ButtonProps) => {
                 [className || '']: true,
             })}
             data-testid='button'
+            variants={buttonVariants}
+            initial='initial'
+            whileHover='hover'
+            whileTap='tap'
             onClick={handleClick}
-            whileHover={{
-                scale: 1.01,
-            }}
-            whileTap={{
-                scale: 0.99,
+            onTapStart={(e: MouseEvent) => {
+                setTapPos({
+                    x: e.offsetX,
+                    y: e.offsetY,
+                })
+
+                rippleController.set('position')
+                rippleController.start('ripple')
             }}
             {...rest}
         >
+            <motion.div
+                className={styles.overlay}
+                variants={{
+                    initial: {
+                        opacity: 0,
+                    },
+                    tap: {
+                        opacity: [0, 0.33, 0.5],
+                    },
+                }}
+            />
+            <motion.div
+                className={styles.touchRipples}
+                variants={rippleVariants}
+                initial='hide'
+                animate={rippleController}
+            />
             <div className='flex flex-row items-center justify-center'>
                 {icon}
                 <div
@@ -80,6 +143,7 @@ export const Button = (props: ButtonProps) => {
                         className={cx({
                             [utilities['stackChild']]: true,
                             [utilities['hide']]: isLoading,
+                            'pointer-events-none': true,
                         })}
                     >
                         {defaultCasing ? label : label?.toUpperCase()}

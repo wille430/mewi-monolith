@@ -65,7 +65,7 @@ const ArticleItemDetails = ({
                                 <OriginLabel {...{ origin }} />
                             </h4>
                             <Button
-                                variant='text'
+                                color='secondary'
                                 label='Gå till artikeln >>'
                                 onClick={handleRedirect}
                             />

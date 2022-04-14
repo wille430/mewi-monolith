@@ -3,6 +3,7 @@
 @import '../animation.scss';
 
 .button {
+    @apply shadow;
     border-radius: 0.2rem;
     padding: 0.25rem 0.75rem;
     z-index: 1;
@@ -33,7 +34,6 @@
     &--contained {
         @extend .button;
         color: white;
-        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
         &--disabled {
             @extend .button;
@@ -74,4 +74,25 @@
             }
         }
     }
+}
+
+.touchRipples {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: black;
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.overlay {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    pointer-events: none;
 }

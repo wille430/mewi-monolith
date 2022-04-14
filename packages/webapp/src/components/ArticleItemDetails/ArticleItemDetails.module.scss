@@ -6,6 +6,12 @@
     display: flex;
     justify-content: space-between;
     padding: 0rem 1rem;
+
+    & > *:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 }
 
 .specifications {
