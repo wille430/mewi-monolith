@@ -1,5 +1,4 @@
-
-const Header = ({
+const Header = {
     tagName: 'mj-wrapper',
     attributes: {
         width: '100%',
@@ -9,12 +8,15 @@ const Header = ({
         {
             tagName: 'mj-image',
             attributes: {
-                src: 'http://localhost:3001/logo.png',
+                src:
+                    (process.env.NODE_ENV !== 'production'
+                        ? 'http://localhost:3001'
+                        : 'https://api.mewi.se') + '/logo.png',
                 height: 'auto',
                 width: '100px',
-            }
+            },
         },
-    ]
-})
+    ],
+}
 
 export default Header
