@@ -10,7 +10,7 @@ describe('login', () => {
 
     beforeEach(() => {
         cy.clearLocalStorage()
-        cy.visit('/login')
+        cy.visit('/login/email')
     })
 
     it('should login user with correct credentials', () => {

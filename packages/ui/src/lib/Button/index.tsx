@@ -128,12 +128,15 @@ export const Button = (props: ButtonProps) => {
                 initial='hide'
                 animate={rippleController}
             />
-            <div className='flex flex-row items-center justify-center'>
-                {icon}
+            <div className='flex flex-row items-center justify-center w-full'>
+                {icon && <div className={styles.icon}>
+                    {icon}
+                </div>}
                 <div
                     className={cx({
                         [utilities['stack']]: true,
                         [utilities['center']]: true,
+                        'flex-grow': true
                     })}
                 >
                     <span className={utilities['hide']}>
@@ -144,6 +147,7 @@ export const Button = (props: ButtonProps) => {
                             [utilities['stackChild']]: true,
                             [utilities['hide']]: isLoading,
                             'pointer-events-none': true,
+                            [styles.label]: true
                         })}
                     >
                         {defaultCasing ? label : label?.toUpperCase()}

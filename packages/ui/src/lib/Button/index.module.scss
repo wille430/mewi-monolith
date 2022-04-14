@@ -4,6 +4,8 @@
 
 .button {
     @apply shadow;
+    display: flex;
+    flex-direction: row;
     border-radius: 0.2rem;
     padding: 0.25rem 0.75rem;
     z-index: 1;
@@ -11,6 +13,7 @@
     position: relative;
     display: block;
     border: none;
+    font-size: 0.9rem;
 
     &--outlined {
         @extend .button;
@@ -95,4 +98,12 @@
     right: 0;
     opacity: 0;
     pointer-events: none;
+}
+
+.icon {
+    margin-right: 0.5rem;
+}
+
+.label {
+    flex-grow: 1;
 }
