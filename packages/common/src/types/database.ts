@@ -1,6 +1,7 @@
 import { ListingSearchFilters } from './index'
 import { Types } from 'mongoose'
 import { Category } from './category.enum'
+import { LoginStrategy } from 'types/login-strategy.enum'
 
 /**
  * Models
@@ -18,6 +19,7 @@ export interface IUser {
     email: string
     premium: boolean
     watchers: IUserWatcher[]
+    loginStrategy: LoginStrategy
 }
 
 export interface IWatcher {

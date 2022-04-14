@@ -2,7 +2,7 @@ import faker from '@faker-js/faker'
 import { FormEvent, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import axios from 'axios'
-import { IUser } from '@wille430/common'
+import { IUser, LoginStrategy } from '@wille430/common'
 import { Button, TextField } from '@mewi/ui'
 import styles from './AccountDetails.module.scss'
 import classNames from 'classnames'
@@ -79,7 +79,7 @@ const AccountDetails = () => {
                     <TextField
                         value={formData?.email}
                         onChange={(val) => setFormData((prev) => ({ ...prev, email: val }))}
-                        disabled={isLoading}
+                        disabled={(user?.loginStrategy !== LoginStrategy.Local) || isLoading}
                         fullWidth
                     />
                     <span className='text-red-400'>{errors.email}</span>

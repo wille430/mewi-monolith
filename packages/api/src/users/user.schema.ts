@@ -3,7 +3,7 @@ import { Role } from '@/auth/role.enum'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { UserWatcher, UserWatcherSchema } from '@/user-watchers/user-watcher.schema'
-import { IUser } from '@wille430/common'
+import { IUser, LoginStrategy } from '@wille430/common'
 
 export type UserDocument = User & Document
 
@@ -26,6 +26,9 @@ export class User implements Omit<IUser, 'watchers'> {
 
     @Prop({ type: [String], enum: Role, default: [Role.User] })
     roles: Role[]
+
+    @Prop({ type: Schema, enum: LoginStrategy, default: [LoginStrategy.Local] })
+    loginStrategy: LoginStrategy
 
     @Prop({
         type: raw({

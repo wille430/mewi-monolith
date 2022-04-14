@@ -1,7 +1,6 @@
 import { MutableRefObject } from 'react'
 import NavEndButton from './NavEndButton/NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
-import config from 'config'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { goToPage } from 'store/search/creators'
@@ -15,7 +14,7 @@ const PageNav = ({ anchorEle }: PageNavProps) => {
         totalHits,
         filters: { page },
     } = useAppSelector((state) => state.search)
-    const totalPages = Math.ceil(totalHits / config.searchLimit) || 1
+    const totalPages = Math.ceil(totalHits / 24) || 1
     const dispatch = useDispatch()
 
     const RenderButtons = () => {

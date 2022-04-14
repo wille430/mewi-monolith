@@ -1,11 +1,16 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common'
 import { User, UserDocument } from '@/users/user.schema'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import SignUpDto from '@/auth/dto/sign-up.dto'
-import { AuthTokens } from '@wille430/common'
+import { AuthTokens, LoginStrategy } from '@wille430/common'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 
 @Injectable()
@@ -69,6 +74,26 @@ export class AuthService {
             return this.createTokens(user)
         } catch (e) {
             throw new UnauthorizedException()
+        }
+    }
+
+    async googleLogin(req: any) {
+        if (!req.user) {
+            throw new NotFoundException('No user received from Google')
+        }
+
+        const existingUser = await this.userModel.findOne({ email: req.user.email })
+        if (existingUser) {
+            //    login
+            return this.createTokens(existingUser)
+        } else {
+            // create user
+            const newUser = new this.userModel({
+                email: req.user.email,
+                loginStrategy: LoginStrategy.Google,
+            })
+
+            return this.createTokens(await newUser.save())
         }
     }
 }

@@ -18,6 +18,7 @@ import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
+import { LoginStrategy } from '@wille430/common'
 
 @Injectable()
 export class UsersService {
@@ -98,6 +99,15 @@ export class UsersService {
 
     async sendPasswordResetEmail({ email }: ChangePasswordNoAuth) {
         try {
+            const user = await this.userModel.findOne({ email })
+
+            if (user.loginStrategy !== LoginStrategy.Local) {
+                console.log(
+                    `User ${user._id} is using a third-party login strategy and can't reset password.`
+                )
+                return
+            }
+
             const token = crypto.randomBytes(32).toString('hex')
 
             await this.userModel.updateOne(
@@ -120,12 +130,11 @@ export class UsersService {
                     from: this.emailService.googleAuth.email,
                     to: email,
                     subject: 'Lösenordsåterställning',
-                    html: forgottenPasswordEmail(
-                        {
-                            link:  this.configService.get<string>('CLIENT_URL') +
-                                                `/nyttlosenord?email=${email}&token=${token}`
-                        }
-                    ).html
+                    html: forgottenPasswordEmail({
+                        link:
+                            this.configService.get<string>('CLIENT_URL') +
+                            `/nyttlosenord?email=${email}&token=${token}`,
+                    }).html,
                 },
                 transport: transporter,
                 preview: true,
@@ -159,6 +168,15 @@ export class UsersService {
     }
 
     async verifyEmailUpdate({ newEmail }: VerifyEmailDto, userId: string) {
+        const user = await this.userModel.findById(userId)
+
+        if (user.loginStrategy !== LoginStrategy.Local) {
+            console.log(
+                `User ${user._id} is using a third-party login strategy and can't reset password.`
+            )
+            return
+        }
+
         const token = crypto.randomBytes(32).toString('hex')
 
         await this.userModel.findByIdAndUpdate(userId, {
@@ -181,8 +199,6 @@ export class UsersService {
             transport: transporter,
             preview: true,
         })
-
-        const user = await this.userModel.findById(userId)
 
         const emailInfo = await email.send({
             template: this.emailService.templates.verifyEmail,

@@ -37,7 +37,7 @@ export class ScrapersService {
     //     }
     // }
 
-    @Cron('* */45 * * * *')
+    @Cron('* */45 * * *')
     async startAll() {
         for (const scraper of this.scrapers) {
             await scraper.start()

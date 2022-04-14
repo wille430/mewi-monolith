@@ -9,6 +9,7 @@ import { JwtStrategy } from '@/auth/jwt-strategy'
 import { AuthController } from './auth.controller'
 import { UserExistsRule } from '@/rules/user-exists.rule'
 import { UniqueEmailRule } from '@/rules/unique-email.rule'
+import { GoogleStrategy } from '@/auth/google.strategy'
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { UniqueEmailRule } from '@/rules/unique-email.rule'
             signOptions: { expiresIn: '15m' },
         }),
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, UserExistsRule, UniqueEmailRule],
+    providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, UserExistsRule, UniqueEmailRule],
     exports: [AuthService],
     controllers: [AuthController],
 })
