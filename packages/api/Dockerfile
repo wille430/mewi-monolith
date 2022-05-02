@@ -33,8 +33,9 @@ RUN apt-get update \
 
 WORKDIR /build
 COPY . .
-RUN npm i
-RUN npm run isolate
+run npm i pnpm -g
+RUN pnpm i
+RUN pnpm run isolate
 COPY _isolated_ /app
 
 WORKDIR /app
