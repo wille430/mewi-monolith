@@ -32,11 +32,11 @@ RUN apt-get update \
 # USER pptruser
 
 WORKDIR /build
-COPY . .
-run npm i pnpm -g
+RUN npm i pnpm -g
 RUN pnpm i
 RUN pnpm run isolate
-COPY _isolated_ /app
+COPY packages/api/_isolated_ /app
 
+RUN rm -rf /build
 WORKDIR /app
 CMD node ./main.js
