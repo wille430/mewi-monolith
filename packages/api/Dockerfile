@@ -33,10 +33,13 @@ RUN apt-get update \
 
 WORKDIR /build
 RUN npm i pnpm -g
-RUN pnpm i
-RUN pnpm run isolate
-COPY packages/api/_isolated_ /app
+COPY . .
+RUN pnpm i -r || true
+RUN pnpm isolate
+COPY packages/api/_isolated_/* /app/
+COPY packages/api/node_modules/* /app/node_modules
 
 RUN rm -rf /build
 WORKDIR /app
-CMD node ./main.js
+RUN ls
+CMD pnpm run dev

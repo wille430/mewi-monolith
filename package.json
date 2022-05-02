@@ -9,7 +9,8 @@
         "build": "pnpm run build -r",
         "test": "pnpm run test -r",
         "format": "prettier -w .",
-        "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel"
+        "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
+        "isolate": "pnpm run isolate -r"
     },
     "private": true,
     "devDependencies": {
