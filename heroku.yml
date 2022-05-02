@@ -1,6 +1,5 @@
 build:
   docker:
-    web: Dockerfile
-    worker: packages/api/Dockerfile
+    web: packages/api/Dockerfile
 run:
   web: npm run start
