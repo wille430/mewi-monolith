@@ -31,8 +31,8 @@ RUN apt-get update \
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-
+RUN npm run isolate
 WORKDIR /app
-COPY ../../dist/packages/api .
+COPY _isolated_/* .
 RUN npm i
 CMD node ./main.js
