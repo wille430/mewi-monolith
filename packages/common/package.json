@@ -19,8 +19,8 @@
         "dist/**/*"
     ],
     "scripts": {
-        "build": "microbundle build --raw",
-        "dev": "microbundle watch",
+        "build": "npx microbundle build --raw",
+        "dev": "npx microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
         "prepare": "npm run build"
@@ -31,6 +31,7 @@
     "author": "Mewi",
     "license": "ISC",
     "dependencies": {
+        "microbundle": "^0.14.2",
         "@faker-js/faker": "^6.0.0",
         "@types/lodash": "^4.14.180",
         "lodash": "^4.17.21",
