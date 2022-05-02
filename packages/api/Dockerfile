@@ -33,6 +33,6 @@ RUN apt-get update \
 
 
 WORKDIR /app
-COPY /home/circleci/project/dist/packages/api .
+COPY ../../dist/packages/api .
 RUN npm i
 CMD node ./main.js
