@@ -23,8 +23,7 @@ jobs:
                   command: pnpm lint
                   name: Lint projects
             - run:
-                  command: pnpm buildhttps://pnpm.io
-
+                  command: pnpm build
                   name: Run Builds
             # - run:
             #       command: npx nx build api
