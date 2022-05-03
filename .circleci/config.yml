@@ -2,7 +2,7 @@ version: 2.1
 jobs:
     test:
         docker:
-            - image: 'cimg/node:16.15.0-browsers'
+            - image: 'cimg/node:14.17-browsers'
               environment:
                   MONGO_URI: localhost
                   TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
@@ -12,7 +12,7 @@ jobs:
             - image: 'mongo'
         steps:
             - checkout
-            - run: sudo npm i pnpm -g
+            - run: sudo npm i pnpm@latest-6 -g
             - run:
                   command: pnpm i
                   name: Install dependencies
@@ -23,7 +23,8 @@ jobs:
                   command: pnpm lint
                   name: Lint projects
             - run:
-                  command: pnpm build
+                  command: pnpm buildhttps://pnpm.io
+
                   name: Run Builds
             # - run:
             #       command: npx nx build api
@@ -53,7 +54,7 @@ jobs:
             - add_ssh_keys:
                   fingerprints:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
-            - run: sudo npm i pnpm -g
+            - run: sudo npm i pnpm@latest-6 -g
             - run:
                   command: ./packages/api/script/deploy-api.sh
                   name: Deploy to API server
