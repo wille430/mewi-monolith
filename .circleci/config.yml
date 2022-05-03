@@ -33,7 +33,7 @@ jobs:
             # - run:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
-            
+
             # TODO: UNCOMMENT
             # - run:
             #       command: pnpm test
@@ -45,7 +45,6 @@ jobs:
     deploy:
         docker:
             - image: 'cimg/node:14.17-browsers'
-            - image: 'docker:17.05.0-ce-git'
         steps:
             # TODO: deploy image
             - checkout
@@ -54,6 +53,9 @@ jobs:
             - add_ssh_keys:
                   fingerprints:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
+            - setup_remote_docker:
+                  version: 20.10.12
+                  docker_layer_caching: true
             - run: sudo npm i pnpm@latest-6 -g
             - run: sudo chmod +x ./tools/deploy_api.sh
             - run:
