@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+    api:
+        ports:
+            - '80:3001'
+        build:
+            context: .
+            dockerfile: packages/api/Dockerfile
