@@ -8,7 +8,6 @@ jobs:
                   TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
                   SEARCH_ENGINE_URL: localhost
                   SEARCH_ENGINE_PORT: 9200
-
             - image: 'mongo'
         steps:
             - checkout
@@ -46,6 +45,7 @@ jobs:
     deploy:
         docker:
             - image: 'cimg/node:14.17-browsers'
+            - image: 'docker:17.05.0-ce-git'
         steps:
             # TODO: deploy image
             - checkout
