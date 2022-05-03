@@ -2,7 +2,7 @@ version: 2.1
 jobs:
     test:
         docker:
-            - image: 'cimg/node:14.17-browsers'
+            - image: 'cimg/node:16.15.0-browsers'
               environment:
                   MONGO_URI: localhost
                   TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
