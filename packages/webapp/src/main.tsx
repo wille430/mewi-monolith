@@ -9,7 +9,7 @@ import setupInterceptors from 'api/setupInterceptors.'
 import { StrictMode } from 'react'
 import axios from 'axios'
 
-if (window.Cypress || import.meta.env.DEV) {
+if (window.Cypress || process.env.NODE_ENV !== 'production') {
     window.store = store
 }
 

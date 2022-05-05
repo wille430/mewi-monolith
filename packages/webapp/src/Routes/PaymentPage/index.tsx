@@ -3,8 +3,7 @@ import StyledLoader from 'components/StyledLoader'
 import { createRef, useEffect } from 'react'
 
 const PaymentPage = () => {
-    const sessionUrl =
-        import.meta.env.VITE_API_URL || 'http://localhost:3001' + '/payment/new_session'
+    const sessionUrl = process.env.VITE_API_URL || 'http://localhost:3001' + '/payment/new_session'
 
     const formRef = createRef<HTMLFormElement>()
 

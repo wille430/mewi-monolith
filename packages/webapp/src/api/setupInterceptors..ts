@@ -4,7 +4,7 @@ import { store as Store } from 'store/index'
 
 const setupInterceptors = (store: typeof Store) => {
     console.log('Updating axios config...')
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/'
+    axios.defaults.baseURL = process.env.VITE_API_URL || 'http://localhost:3001/'
 
     axios.interceptors.request.use((request) => {
         const accessToken = localStorage.getItem('access_token')
