@@ -14,6 +14,7 @@
     display: block;
     border: none;
     font-size: 0.9rem;
+    font-weight: 600;
 
     &--outlined {
         @extend .button;
@@ -54,6 +55,7 @@
 
         &.secondary {
             background-color: $secondary;
+            color: black;
         }
 
         &.error {

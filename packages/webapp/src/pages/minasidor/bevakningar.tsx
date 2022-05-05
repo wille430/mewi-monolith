@@ -1,19 +1,32 @@
-import Layout from 'components/Layout'
+import { IPopulatedWatcher } from '@wille430/common'
+import { Layout } from 'components/Layout/Layout'
 import SideNav from 'components/SideNav/SideNav'
 import WatcherList from 'components/WatcherList/WatcherList'
+import { GetServerSideProps } from 'next'
+import { ReactElement } from 'react'
 
-const Bevakningar = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+    return {
+        props: {
+            watchers: [] as IPopulatedWatcher[],
+        },
+    }
+}
+
+const Bevakningar = ({ watchers }) => {
     return (
-        <Layout>
+        <>
             <aside className='side-col'></aside>
             <main className='main pb-32'>
-                <WatcherList />
+                <WatcherList watchers={watchers} />
             </main>
             <aside className='side-col'>
                 <SideNav />
             </aside>
-        </Layout>
+        </>
     )
 }
+
+Bevakningar.getLayout = (page: ReactElement) => <Layout>{page}</Layout>
 
 export default Bevakningar

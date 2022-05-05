@@ -1,5 +1,5 @@
 import Hero from 'components/Hero/Hero'
-import FeaturedListings from 'Routes/Home/FeaturedListings/FeaturedListings'
+import FeaturedListings from 'old/Routes/Home/FeaturedListings/FeaturedListings'
 import ItemPopUp from 'components/ItemPopUp/ItemPopUp'
 import { useAppDispatch, useAppSelector } from 'hooks/hooks'
 import { useEffect } from 'react'

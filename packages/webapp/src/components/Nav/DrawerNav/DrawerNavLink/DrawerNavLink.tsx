@@ -1,7 +1,7 @@
 import { NavLink } from 'components/Nav/links'
 import { motion } from 'framer-motion'
 import { useAppSelector } from 'hooks/hooks'
-import { Link } from 'react-router-dom'
+import { ReactElement } from 'react'
 import styles from './DrawerNavLink.module.scss'
 
 const DrawerNavLinkItem = ({
@@ -10,7 +10,7 @@ const DrawerNavLinkItem = ({
     name,
     sublinks,
     children,
-}: NavLink & { children: any }) => {
+}: NavLink & { children?: ReactElement | string }) => {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
     const linkAnimation = {
@@ -27,7 +27,7 @@ const DrawerNavLinkItem = ({
 
     return (
         <motion.li className={styling} variants={linkAnimation}>
-            <Link to={path}>{name}</Link>{' '}
+            <a href={path}>{name}</a>{' '}
             <ul className={styles.list}>
                 {sublinks?.map((link) => {
                     if (!link.private || (link.private && isLoggedIn)) {

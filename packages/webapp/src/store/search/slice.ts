@@ -97,11 +97,11 @@ export const searchSlice = createSlice({
         builder.addCase(updateSearchParams.fulfilled, (state, action) => {
             const { filters } = action.payload
 
-            if (filters.keyword) {
-                document.title = `Sökning för "${filters.keyword}" - Mewi`
-            } else {
-                document.title = 'Sök - Mewi.se'
-            }
+            // if (filters.keyword) {
+            //     document.title = `Sökning för "${filters.keyword}" - Mewi`
+            // } else {
+            //     document.title = 'Sök - Mewi.se'
+            // }
 
             const keysToEmit = ['category']
 

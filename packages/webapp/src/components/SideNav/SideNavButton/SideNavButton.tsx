@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion'
-import { Link, LinkProps } from 'react-router-dom'
+import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react'
 import styles from './SideNavButton.module.scss'
 
-const SideNavButton = ({ children, ...rest }: LinkProps) => {
+const SideNavButton = ({
+    children,
+    ...rest
+}: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => {
     return (
         <motion.li
             className={styles.navItem}
@@ -10,7 +13,8 @@ const SideNavButton = ({ children, ...rest }: LinkProps) => {
                 backgroundColor: 'lightgrey',
             }}
         >
-            <Link {...rest}>{children}</Link>
+            <a />
+            <a {...rest}>{children}</a>
         </motion.li>
     )
 }

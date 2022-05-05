@@ -1,37 +1,15 @@
-module.exports = {
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        config.module = {
-            ...config.module,
-            rules: [
-                ...config.module.rules,
-                {
-                    test: /\.(tsx|ts)?$/,
-                    use: 'ts-loader',
-                    exclude: /node_modules/,
-                },
-                {
-                    test: /\.(ts|js)x?$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                '@babel/preset-env',
-                                '@babel/preset-react',
-                                '@babel/preset-typescript',
-                            ],
-                        },
-                    },
-                },
-            ],
-        }
+const { flowRight } = require('lodash')
 
-        config.resolve = {
-            ...config.resolve,
-            extensions: ['.tsx', '.ts', '.js'],
-        }
+const withTM = require('next-transpile-modules')(['@mewi/ui'])
 
-        // Important: return the modified config
-        return config
+const config = {
+    sassOptions: {
+        includePaths: ['./src'],
+        prependData: '@use "styles/_variables.scss" as *;',
+    },
+    experimental: {
+        externalDir: true,
     },
 }
+
+module.exports = flowRight([withTM])(config)

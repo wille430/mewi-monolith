@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common'
+import { Listing } from '@prisma/client'
 import DefaultImage from 'components/DefaultImage/DefaultImage'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
@@ -9,7 +9,7 @@ import OriginLabel from './OriginLabel'
 import TimeUntilDate from './TimeUntilDate'
 
 interface Props {
-    props: IListing
+    props: Listing
     id: string
 }
 
@@ -28,8 +28,8 @@ const ArticleItem = ({ props }: Props) => {
                 }).replace('ungefär', 'ca.')}
             </span>
         )
-    } else if (props.endDate) {
-        dateComponent = <TimeUntilDate endDate={props.endDate} />
+    } else if (props.auctionEnd) {
+        dateComponent = <TimeUntilDate endDate={props.auctionEnd.getTime()} />
     }
 
     return (

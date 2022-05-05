@@ -1,7 +1,7 @@
 import { SignInWithEmail } from './SignInWithEmail/SignInWithEmail'
 import Layout from 'components/Layout'
 import { Route } from 'react-router'
-import SignInWithList from 'Routes/Login/SignInWithList/SignInWithList'
+import SignInWithList from 'old/Routes/Login/SignInWithList/SignInWithList'
 
 const Login = () => {
     return (

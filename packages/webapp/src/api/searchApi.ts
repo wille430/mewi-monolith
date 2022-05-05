@@ -7,7 +7,7 @@ export type getSearchResultsReturnType = {
     totalHits: SearchState['totalHits']
 }
 
-export const getSearchResults = async (options?): Promise<getSearchResultsReturnType> => {
+export const getSearchResults = async (options?: any): Promise<getSearchResultsReturnType> => {
     const { hits, totalHits } = await axios
         .post('/search', {
             ...options,

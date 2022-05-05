@@ -1,7 +1,7 @@
-import { IListing } from '@wille430/common'
+import { ListingOrigin } from '@prisma/client'
 
 interface Props {
-    origin: IListing['origin']
+    origin: ListingOrigin
 }
 
 const OriginLabel = ({ origin }: Props) => {

@@ -32,7 +32,7 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
 
     const paddingAnimation = {
         animate: (active: boolean) => ({
-            height: active ? '2rem' : '0rem',
+            height: active ? '1rem' : '0rem',
             transition: {
                 duration: 0.2,
             },
@@ -40,8 +40,8 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
     }
 
     return (
-        <div>
-            <motion.div variants={paddingAnimation} animate='animate' custom={show} />
+        <div className='bg-primary'>
+            {/* <motion.div variants={paddingAnimation} animate='animate' custom={show} /> */}
             <AnimatePresence>
                 {show && (
                     <motion.ul
@@ -52,7 +52,7 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
                         exit={'hidden'}
                     >
                         {links.map((link) => (
-                            <DrawerNavLink {...link} />
+                            <DrawerNavLink key={link.path} {...link} />
                         ))}
                         <motion.li variants={linkAnimation}>{children}</motion.li>
                     </motion.ul>

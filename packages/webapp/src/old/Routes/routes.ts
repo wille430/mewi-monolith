@@ -7,17 +7,17 @@ const routes: (Omit<PageProps, 'component'> & {
     {
         title: 'Mina bevakningar - Mewi.se',
         path: 'minabevakningar',
-        component: lazy(() => import('Routes/Bevakningar')),
+        component: lazy(() => import('old/Routes/Bevakningar')),
     },
     {
         title: 'Premium - Mewi.se',
         path: 'premium',
-        component: lazy(() => import('Routes/PaymentPage')),
+        component: lazy(() => import('old/Routes/PaymentPage')),
     },
     {
         title: 'Mitt Konto - Mewi.se',
         path: 'mittkonto',
-        component: lazy(() => import('Routes/MyAccount/MyAccount')),
+        component: lazy(() => import('old/Routes/MyAccount/MyAccount')),
     },
 ]
 

@@ -3,8 +3,6 @@ import { rootReducer } from './reducer'
 import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { configureStore } from '@reduxjs/toolkit'
-import { history } from './history'
-import { routerMiddleware } from 'connected-react-router'
 import { createEpicMiddleware } from 'redux-observable'
 import { rootEpic } from './epic'
 
@@ -13,7 +11,7 @@ const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware, ep
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware(history)),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     enhancers: [composedEnhancer],
 })
 

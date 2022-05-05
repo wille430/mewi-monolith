@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import './styles.scss'
-import App from './App/App'
+import App from './old/App/App'
 import 'babel-polyfill'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'

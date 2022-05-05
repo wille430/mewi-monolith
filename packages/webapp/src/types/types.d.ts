@@ -48,3 +48,5 @@ export interface ApiErrorResponse {
     message: ValidationError[]
     error: string
 }
+
+export type PromiseResolvedType<T> = Awaited<ReturnType<T>>

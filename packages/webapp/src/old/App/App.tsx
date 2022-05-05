@@ -1,27 +1,27 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import Nav from 'components/Nav/Nav'
-import Login from 'Routes/Login'
+import Login from 'old/Routes/Login'
 import PrivateRoute from 'components/PrivateRoute'
 import PublicRoute from 'components/PublicRoute'
-import ProtectedRoutes from 'Routes/ProtectedRoutes'
+import ProtectedRoutes from 'old/Routes/ProtectedRoutes'
 import { useAppSelector } from 'hooks/hooks'
 import { useDispatch } from 'react-redux'
 import { onAuthLoad } from 'store/auth/creators'
 import Page from 'components/Page'
-import ForgottenPassword from 'Routes/ForgottenPassword/ForgottenPassword'
-import ChangePassword from 'Routes/ChangePassword/ChangePassword'
+import ForgottenPassword from 'old/Routes/ForgottenPassword/ForgottenPassword'
+import ChangePassword from 'old/Routes/ChangePassword/ChangePassword'
 import SnackbarHandler from 'components/SnackbarHandler'
 import StyledLoader from 'components/StyledLoader'
 import { ConnectedRouter } from 'connected-react-router'
 import { history } from 'store/history'
 
 // Routes
-const Home = lazy(() => import('Routes/Home/index'))
-const Search = lazy(() => import('Routes/Search'))
-const Register = lazy(() => import('Routes/Register/Register'))
-const Categories = lazy(() => import('Routes/Categories'))
-const CategorySearch = lazy(() => import('Routes/CategorySearch'))
+const Home = lazy(() => import('old/Routes/Home/index'))
+const Search = lazy(() => import('old/Routes/Search'))
+const Register = lazy(() => import('old/Routes/Register/Register'))
+const Categories = lazy(() => import('old/Routes/Categories'))
+const CategorySearch = lazy(() => import('old/Routes/CategorySearch'))
 
 function App() {
     const isAuthenticated = useAppSelector((state) => state.auth.isLoggedIn)

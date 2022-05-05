@@ -1,0 +1,67 @@
+.card {
+    @apply shadow border border-gray-100 rounded-sm;
+    width: 16rem;
+    height: 16rem;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.card :global(img) {
+    object-fit: cover;
+    width: 100%;
+    height: 11rem;
+}
+
+.details {
+    padding: 0.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    flex-grow: 1;
+    font-size: small;
+    overflow: hidden;
+}
+
+.title {
+    font-size: small;
+    flex-grow: 2;
+    max-lines: 2;
+    margin-right: 0.5rem;
+    max-height: 5ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
+
+.region {
+    @apply text-gray-600;
+    font-size: smaller;
+    flex: none;
+    min-width: 4rem;
+    max-width: 6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bottom {
+    flex: none;
+    width: 100%;
+    font-size: small;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.timestamp {
+    @apply text-gray-600;
+}

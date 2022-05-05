@@ -1,4 +1,5 @@
-import { IListing, ListingSearchFilters } from '@wille430/common'
+import { Listing } from '@prisma/client'
+import { ListingSearchFilters } from '@wille430/common'
 import { getSearchResultsReturnType } from 'api'
 
 export interface SearchState {
@@ -8,7 +9,7 @@ export interface SearchState {
         page: number
     }
     searchParams: string
-    selectedListing?: IListing
+    selectedListing?: Listing
 }
 
 export enum SearchActionTypes {

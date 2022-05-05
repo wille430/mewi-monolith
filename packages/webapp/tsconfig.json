@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "es5",
         "module": "esnext",
         "allowJs": true,
         "skipLibCheck": true,
@@ -12,13 +12,13 @@
         "incremental": true,
         "preserveSymlinks": true,
         "outDir": "./build",
-        "strict": true,
+        "strict": false,
         "noImplicitAny": false,
         "lib": ["dom", "dom.iterable", "esnext"],
         "forceConsistentCasingInFileNames": true,
         "noEmit": false,
         "resolveJsonModule": true
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "next-end.d.ts", "./prisma/*.ts"],
     "exclude": ["node_modules"]
 }

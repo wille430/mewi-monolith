@@ -1,9 +1,10 @@
-import { IListing, IPopulatedWatcher } from '@wille430/common'
+import { Listing } from '@prisma/client'
+import { IPopulatedWatcher } from '@wille430/common'
 
 export interface WatchersState {
     watchers: IPopulatedWatcher[]
     isLoading: boolean
-    newItems: Record<string, IListing[]>
+    newItems: Record<string, Listing[]>
 }
 
 export enum WatchersActionType {

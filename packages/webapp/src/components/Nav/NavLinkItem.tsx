@@ -1,18 +1,17 @@
-import { PropsWithChildren, ReactNode } from 'react'
-import { Link, LinkProps } from 'react-router-dom'
+import { AnchorHTMLAttributes, PropsWithChildren, ReactNode } from 'react'
 
 export type NavLinkItemProps = PropsWithChildren<{
     children: ReactNode
     to: string
 }> &
-    LinkProps
+    AnchorHTMLAttributes<HTMLAnchorElement>
 
 const NavLinkItem = ({ children, to, ...props }: NavLinkItemProps) => {
     return (
         <li>
-            <Link to={to} {...props}>
+            <a href={to} {...props}>
                 {children}
-            </Link>
+            </a>
         </li>
     )
 }

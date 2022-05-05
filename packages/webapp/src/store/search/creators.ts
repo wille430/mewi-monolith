@@ -5,8 +5,9 @@ import { SearchActionTypes } from './type'
 import queryString from 'query-string'
 import _ from 'lodash'
 import axios from 'axios'
-import { IListing, ListingSearchFilters, Sort } from '@wille430/common'
+import { ListingSearchFilters, Sort } from '@wille430/common'
 import { LOCATION_CHANGE } from 'connected-react-router'
+import { Listing } from '@prisma/client'
 
 export const updateSearchParams = createAsyncThunk(
     SearchActionTypes.UPDATE_SEARCH_PARAMS,
@@ -122,7 +123,7 @@ export const goToPage = createAction(SearchActionTypes.SET_PAGE, (page: number) 
 
 export const clearSearchResults = createAction(SearchActionTypes.CLEAR_RESULTS)
 
-export const openListing = createAction(SearchActionTypes.OPEN_LISTING, (listing: IListing) => ({
+export const openListing = createAction(SearchActionTypes.OPEN_LISTING, (listing: Listing) => ({
     payload: listing,
 }))
 

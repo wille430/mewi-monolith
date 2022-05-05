@@ -18,17 +18,7 @@ export default function Document() {
                 ></script>
                 <script src='https://apis.google.com/js/platform.js' async defer></script>
 
-                <meta charSet='utf-8' />
                 <link rel='icon' href='./favicon.ico' />
-                <meta name='viewport' content='width=device-width, initial-scale=1' />
-                <meta name='theme-color' content='#000000' />
-                <meta name='description' content='Web site created using create-react-app' />
-                <title>Mewi - begagnade produker på ett enda ställe</title>
-
-                <meta
-                    name='google-signin-client_id'
-                    content='988378722186-sad5450gog2mdrlef5jrd8ohii22om24.apps.googleusercontent.com'
-                ></meta>
             </Head>
             <body>
                 <Main />

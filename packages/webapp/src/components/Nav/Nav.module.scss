@@ -5,8 +5,7 @@
     display: none;
     grid-area: na;
 
-    @screen lg {
-        // big screen
+    @media screen and (min-width: $screen-md) {
         @apply mx-auto flex w-full max-w-xl flex-row rounded-full bg-white p-2.5 px-4 text-sm text-black;
 
         & header {
@@ -55,7 +54,7 @@
         height: 100%;
     }
 
-    @screen lg {
+    @media screen and (min-width: $screen-md) {
         display: grid;
         grid-template-columns: 15rem 1fr 15rem;
         grid-gap: 0.75rem;
@@ -72,7 +71,7 @@
     grid-area: mb;
     margin-left: auto;
 
-    @screen lg {
+    @media screen and (min-width: $screen-md) {
         display: none;
     }
 }
@@ -84,7 +83,7 @@
         @apply py-4;
     }
 
-    @screen lg {
+    @media screen and (min-width: $screen-md) {
         display: none;
     }
 }
@@ -95,7 +94,7 @@
 
     @apply text-white;
 
-    @screen lg {
+    @media screen and (min-width: $screen-md) {
         display: none;
     }
 }
