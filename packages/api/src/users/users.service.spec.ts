@@ -20,7 +20,7 @@ import { ConfigModule } from '@nestjs/config'
 import configuration from '../config/configuration'
 import * as crypto from 'crypto'
 import bcrypt from 'bcryptjs'
-import { LoginStrategy } from '../auth/login-strategy.enum'
+import { LoginStrategy } from '@wille430/common'
 
 describe('UsersService', () => {
     let usersService: UsersService

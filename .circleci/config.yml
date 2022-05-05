@@ -8,7 +8,6 @@ jobs:
                   TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
                   SEARCH_ENGINE_URL: localhost
                   SEARCH_ENGINE_PORT: 9200
-
             - image: 'mongo'
         steps:
             - checkout
@@ -34,10 +33,11 @@ jobs:
             # - run:
             #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
             #       name: E2E test client
-            - run:
-                  #   command: npx nx run-many --all --target=test
-                  command: pnpm test
-                  name: Run Unit Tests
+
+            # TODO: UNCOMMENT
+            # - run:
+            #       command: pnpm test
+            #       name: Run Unit Tests
             - persist_to_workspace:
                   root: .
                   paths:
@@ -53,9 +53,21 @@ jobs:
             - add_ssh_keys:
                   fingerprints:
                       - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
+            - setup_remote_docker:
+                  version: 20.10.12
+                  docker_layer_caching: true
             - run: sudo npm i pnpm@latest-6 -g
             - run:
-                  command: ./packages/api/script/deploy-api.sh
+                  name: Install Docker Compose
+                  environment:
+                      COMPOSE_VERSION: '1.29.2'
+                  command: |
+                      curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+                      chmod +x ~/docker-compose
+                      sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            - run: sudo chmod +x ./tools/deploy_api.sh
+            - run:
+                  command: ./tools/deploy_api.sh
                   name: Deploy to API server
             - run:
                   command: |
