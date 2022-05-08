@@ -19,7 +19,7 @@ import { RolesGuard } from '@/auth/roles.guard'
 import { Roles } from '@/auth/roles.decorator'
 import { Role } from '@prisma/client'
 
-@Controller('/api/watchers')
+@Controller('/watchers')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class WatchersController {
     constructor(private readonly watchersService: WatchersService) {}

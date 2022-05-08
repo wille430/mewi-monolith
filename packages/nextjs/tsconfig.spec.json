@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["vitest/globals"],
+        "composite": true
+    },
+    "include": [
+        "src/**/*",
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.tsx"
+    ],
+    "paths": {
+        "@/*": ["./src/*"]
+    },
+    "exclude": ["node_modules"]
+}

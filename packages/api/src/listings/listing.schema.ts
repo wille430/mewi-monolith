@@ -1,6 +1,7 @@
-import { Category, IListing, ListingOrigins } from '@wille430/common'
+import { IListing } from '@wille430/common'
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
+import { Category, ListingOrigin } from '@prisma/client'
 
 export type ListingDocument = Listing & Document
 
@@ -51,7 +52,7 @@ export class Listing implements IListing {
     })
     parameters: { label: string; value: string }[]
 
-    @Prop({ type: String, enum: ListingOrigins })
+    @Prop({ type: String, enum: ListingOrigin })
     origin: IListing['origin']
 
     @Prop({ type: Boolean, default: false })

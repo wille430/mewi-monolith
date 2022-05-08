@@ -1,0 +1,7 @@
+import type { CreateFactoryOptions, CreateFactoryHooks, CreateFactoryReturn } from "prisma-factory";
+import type { ObjectWithMaybeCallbacks } from "prisma-factory";
+import { Prisma, Watcher, UserWatcher, User, Listing } from "/home/william/Documents/mewi-monolith/packages/common/src/prisma/client";
+export declare function createWatcherFactory(requiredAttrs?: ObjectWithMaybeCallbacks<Partial<Prisma.WatcherCreateInput>>, options?: CreateFactoryOptions, hooks?: CreateFactoryHooks<Prisma.WatcherCreateInput, Watcher>): CreateFactoryReturn<Prisma.WatcherCreateInput, Watcher>;
+export declare function createUserWatcherFactory(requiredAttrs?: ObjectWithMaybeCallbacks<Partial<Prisma.UserWatcherCreateInput>>, options?: CreateFactoryOptions, hooks?: CreateFactoryHooks<Prisma.UserWatcherCreateInput, UserWatcher>): CreateFactoryReturn<Prisma.UserWatcherCreateInput, UserWatcher>;
+export declare function createUserFactory(requiredAttrs?: ObjectWithMaybeCallbacks<Partial<Prisma.UserCreateInput>>, options?: CreateFactoryOptions, hooks?: CreateFactoryHooks<Prisma.UserCreateInput, User>): CreateFactoryReturn<Prisma.UserCreateInput, User>;
+export declare function createListingFactory(requiredAttrs?: ObjectWithMaybeCallbacks<Partial<Prisma.ListingCreateInput>>, options?: CreateFactoryOptions, hooks?: CreateFactoryHooks<Prisma.ListingCreateInput, Listing>): CreateFactoryReturn<Prisma.ListingCreateInput, Listing>;

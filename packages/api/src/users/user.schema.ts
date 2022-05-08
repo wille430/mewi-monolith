@@ -1,9 +1,9 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Role } from '@prisma/client'
+import { LoginStrategy, Role } from '@prisma/client'
 import mongoose from 'mongoose'
 import { Document } from 'mongoose'
 import { UserWatcher, UserWatcherSchema } from '@/user-watchers/user-watcher.schema'
-import { IUser, LoginStrategy } from '@wille430/common'
+import { IUser } from '@wille430/common'
 
 export type UserDocument = User & Document
 
@@ -27,7 +27,7 @@ export class User implements Omit<IUser, 'watchers'> {
     @Prop({ type: [String], enum: Role, default: [Role.USER] })
     roles: Role[]
 
-    @Prop({ type: Schema, enum: LoginStrategy, default: [LoginStrategy.Local] })
+    @Prop({ type: Schema, enum: LoginStrategy, default: [LoginStrategy.LOCAL] })
     loginStrategy: LoginStrategy
 
     @Prop({

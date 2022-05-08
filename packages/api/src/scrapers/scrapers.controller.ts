@@ -1,14 +1,13 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { Role } from '@prisma/client'
+import { ListingOrigin, Role } from '@prisma/client'
 import { Roles } from '@/auth/roles.decorator'
 import { RolesGuard } from '@/auth/roles.guard'
-import { ListingOrigins } from '@wille430/common'
 import { Controller, Param, Post, UseGuards } from '@nestjs/common'
 import { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import { ScrapersService } from './scrapers.service'
 import { capitalize } from 'lodash'
 
-@Controller('/api/scrapers')
+@Controller('/scrapers')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ScrapersController {
     constructor(private readonly scrapersService: ScrapersService) {}
@@ -23,7 +22,7 @@ export class ScrapersController {
     @Roles(Role.ADMIN)
     start(@Param() startOneScraperDto: StartOneScraperDto) {
         const started = this.scrapersService.start(
-            capitalize(startOneScraperDto.scraperName) as ListingOrigins
+            capitalize(startOneScraperDto.scraperName) as ListingOrigin
         )
 
         if (!started) {

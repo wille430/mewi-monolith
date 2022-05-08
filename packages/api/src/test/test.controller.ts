@@ -4,7 +4,7 @@ import { UsersService } from '@/users/users.service'
 import { randomEmail, randomPassword } from '@wille430/common'
 import { AuthService } from '@/auth/auth.service'
 
-@Controller('/api/test')
+@Controller('/test')
 export class TestController {
     constructor(
         private readonly testService: TestService,

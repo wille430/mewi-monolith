@@ -18,9 +18,6 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 import notificationConfig from './config/notification.config'
 import { ScheduleModule } from '@nestjs/schedule'
-import { RenderModule } from 'nest-next'
-import Next from 'next'
-import { resolve } from 'path'
 import { PrismaService } from './prisma/prisma.service'
 
 @Module({
@@ -30,13 +27,6 @@ import { PrismaService } from './prisma/prisma.service'
             isGlobal: true,
             load: [configuration, scraperConfig, databaseConfig, notificationConfig],
         }),
-        // MongooseModule.forRootAsync({
-        //     imports: [ConfigModule],
-        //     useFactory: async (configService: ConfigService) => ({
-        //         uri: configService.get<string>('database.uri'),
-        //     }),
-        //     inject: [ConfigService],
-        // }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
@@ -44,16 +34,6 @@ import { PrismaService } from './prisma/prisma.service'
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public'),
         }),
-        RenderModule.forRootAsync(
-            Next({
-                dev: process.env.NODE_ENV !== 'production',
-                dir: resolve(__dirname, '..'),
-            }),
-            {
-                viewsDir: null,
-                passthrough404: true,
-            }
-        ),
         ScheduleModule.forRoot(),
         ListingsModule,
         AuthModule,

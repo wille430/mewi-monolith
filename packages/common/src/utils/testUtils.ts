@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { IListing, ListingOrigins, IUser, Category, LoginStrategy } from '../types'
+import { IListing, IUser } from '../types'
 import _ from 'lodash'
+import { Category, ListingOrigin, LoginStrategy } from 'prisma'
 
 export const randomEmail = () => {
     return `${faker.name.firstName()}.${faker.name.lastName()}@${faker.internet.domainName()}`.toLowerCase()
@@ -32,7 +33,7 @@ export const generateMockItemData = (
             date: faker.datatype.datetime().getTime(),
             redirectUrl: faker.internet.url(),
             region: faker.address.cityName(),
-            origin: _.sample(Object.values(ListingOrigins)) as ListingOrigins,
+            origin: _.sample(Object.values(ListingOrigin)) as ListingOrigin,
             parameters: [],
             price: {
                 value: faker.datatype.number({ min: 10, max: 9999999 }),

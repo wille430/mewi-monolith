@@ -1,7 +1,6 @@
 import { ListingSearchFilters } from './index'
 import { Types } from 'mongoose'
-import { Category } from './category.enum'
-import { LoginStrategy } from 'types/login-strategy.enum'
+import { Category, ListingOrigin, LoginStrategy } from '../prisma'
 
 /**
  * Models
@@ -67,7 +66,7 @@ export interface IListing {
         label: string
         value: string
     }[]
-    origin: ListingOrigins
+    origin: ListingOrigin
 }
 
 export type ListingPrice = {
@@ -81,10 +80,3 @@ export interface AuthTokens {
 }
 
 export type EditableUserFields = keyof Pick<IUser, 'email'>
-
-export enum ListingOrigins {
-    Blocket = 'Blocket',
-    Tradera = 'Tradera',
-    Sellpy = 'Sellpy',
-    Blipp = 'Blipp',
-}

@@ -23,7 +23,8 @@
         "dev": "npx microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
-        "prepare": "npm run build"
+        "prepare": "npm run prisma:generate && npm run build",
+        "prisma:generate": "pnpx prisma generate --schema=./src/prisma/schema.prisma"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"
@@ -31,11 +32,14 @@
     "author": "Mewi",
     "license": "ISC",
     "dependencies": {
-        "microbundle": "^0.14.2",
         "@faker-js/faker": "^6.0.0",
+        "@prisma/client": "^3.13.0",
         "@types/lodash": "^4.14.180",
         "lodash": "^4.17.21",
+        "microbundle": "^0.14.2",
         "mongoose": "6.2.9",
+        "prisma": "^3.13.0",
+        "prisma-factory": "^0.1.12",
         "query-string": "^7.1.1",
         "tslib": "^2.3.1"
     },
@@ -43,5 +47,8 @@
         "@vitejs/plugin-react": "^1.0.7",
         "microbundle": "^0.14.2",
         "vitest": "^0.8.1"
+    },
+    "prisma": {
+        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
     }
 }

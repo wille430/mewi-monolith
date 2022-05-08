@@ -15,7 +15,6 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Roles } from '@/auth/roles.decorator'
-import { Role } from '@prisma/client'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
 import ChangePasswordDto from '@/users/dto/change-password.dto'
@@ -26,8 +25,9 @@ import { UserPayload } from '@/auth/jwt-strategy'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { SuccessParam } from '@wille430/common'
+import { Role } from '@prisma/client'
 
-@Controller('/api/users')
+@Controller('/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
     constructor(

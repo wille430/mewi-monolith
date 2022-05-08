@@ -10,7 +10,7 @@ import { UserPayload } from '@/auth/jwt-strategy'
 import { GetUser } from '@/common/decorators/user.decorator'
 
 @UseGuards(JwtAuthGuard)
-@Controller('/api/users/me/watchers')
+@Controller('/users/me/watchers')
 export class MyWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
@@ -48,7 +48,7 @@ export class MyWatchersController {
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('/api/users/:user_id/watchers')
+@Controller('/users/:user_id/watchers')
 export class UserWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 

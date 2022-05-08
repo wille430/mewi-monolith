@@ -9,19 +9,21 @@ import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/client'
 
-@Controller('/api/auth')
+@Controller('/apiv2/auth')
 export class AuthController {
     constructor(private authService: AuthService, private readonly configService: ConfigService) {}
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req: ReqObj & { user: User }) {
-        return this.authService.login(req.user)
+    async login(@Request() req: ReqObj & { user: User }, @Res() res: Response) {
+        const tokens = await this.authService.login(req.user)
+        res.cookie('token', tokens.access_token, { expires: new Date() })
     }
 
     @Post('signup')
-    async signUp(@Body() signUpDto: SignUpDto) {
-        return this.authService.signUp(signUpDto)
+    async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
+        const tokens = await this.authService.signUp(signUpDto)
+        res.cookie('token', tokens.access_token, { expires: new Date() })
     }
 
     @Post('token')

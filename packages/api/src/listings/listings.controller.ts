@@ -16,7 +16,7 @@ import { UpdateListingDto } from './dto/update-listing.dto'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { Cache } from 'cache-manager'
 
-@Controller('/api/listings')
+@Controller('/listings')
 export class ListingsController {
     constructor(private readonly listingsService: ListingsService) {}
     @Inject(CACHE_MANAGER) private cacheManager: Cache

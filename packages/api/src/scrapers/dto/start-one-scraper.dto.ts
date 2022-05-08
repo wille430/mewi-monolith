@@ -1,12 +1,12 @@
-import { ListingOrigins } from '@wille430/common'
+import { ListingOrigin } from '@prisma/client'
 import { Matches } from 'class-validator'
 
 export class StartOneScraperDto {
     @Matches(
-        `^${Object.values(ListingOrigins)
+        `^${Object.values(ListingOrigin)
             .filter((v) => typeof v !== 'number')
             .join('|')}$`,
         'i'
     )
-    scraperName: ListingOrigins
+    scraperName: ListingOrigin
 }

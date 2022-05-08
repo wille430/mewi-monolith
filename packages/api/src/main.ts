@@ -15,7 +15,7 @@ const bootstrap = async () => {
         })
     )
     useContainer(app.select(AppModule), { fallbackOnErrors: true })
-    await app.listen(3000)
+    await app.listen(3001)
 }
 
 console.log('NODE ENV:', process.env.NODE_ENV)
