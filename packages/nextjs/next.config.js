@@ -7,9 +7,6 @@ const config = {
         includePaths: ['./src'],
         prependData: '@use "styles/_variables.scss" as *;',
     },
-    experimental: {
-        externalDir: true,
-    },
 }
 
 module.exports = flowRight([withTM])(config)
