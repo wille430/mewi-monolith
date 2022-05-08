@@ -1,10 +1,9 @@
-import { Listing, ListingDocument } from '@/listings/listing.schema'
-import { Category, ListingOrigins } from '@wille430/common'
 import { Scraper } from './scraper'
-import { Model } from 'mongoose'
 import puppeteer from 'puppeteer'
 import { ConfigService } from '@nestjs/config'
-import { InjectModel } from '@nestjs/mongoose'
+import { Inject } from '@nestjs/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Category, Listing, ListingOrigin, Currency } from '@prisma/client'
 
 export class BlippScraper extends Scraper {
     currentPage = 1
@@ -13,11 +12,8 @@ export class BlippScraper extends Scraper {
     useRobots = true
     limit = 9
 
-    constructor(
-        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
-        configService: ConfigService
-    ) {
-        super(listingModel, configService, ListingOrigins.Blipp, 'https://www.blipp.se/', {})
+    constructor(@Inject(PrismaService) prisma, configService: ConfigService) {
+        super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {})
     }
 
     /**
@@ -34,11 +30,11 @@ export class BlippScraper extends Scraper {
         // wait for items
         const listings = await page.waitForSelector('#listings-result')
 
-        const pageCount = await listings.$$eval('li > a', (elements) => {
+        const pageCount = await listings?.$$eval('li > a', (elements) => {
             return elements[elements.length - 2].textContent
         })
 
-        return parseInt(pageCount)
+        return parseInt(pageCount ?? '0')
     }
 
     /**
@@ -59,52 +55,51 @@ export class BlippScraper extends Scraper {
             await page.goto(url)
 
             const listingsGrid = await page.waitForSelector('#listings-result')
-            const listingHandles = await listingsGrid.$$('.listing_is_active')
+            const listingHandles = (await listingsGrid?.$$('.listing_is_active')) ?? []
 
             const scrapedListings = await Promise.all(
                 listingHandles.map(async (eleHandle) => {
                     return await eleHandle.evaluate(
                         (ele, args) => {
                             return {
-                                id: ele
-                                    .querySelector('a')
-                                    .getAttribute('href')
+                                id: (ele
+                                    ?.querySelector('a')
+                                    ?.getAttribute('href')
                                     // eslint-disable-next-line no-useless-escape
-                                    .match(/\/([^\/])+\/$/g)[0]
-                                    .slice(1, -1),
+                                    ?.match(/\/([^\/])+\/$/g) ?? [])[0].slice(1, -1),
                                 title: ele
                                     .querySelector('.car-title')
-                                    .textContent.match(/\S+/g)
-                                    .join(' ')
+                                    ?.textContent?.match(/\S+/g)
+                                    ?.join(' ')
                                     .trim(),
-                                category: [args.Category.FORDON],
+                                category: args.Category.FORDON,
                                 date: Date.now(),
                                 imageUrl: ele.querySelector('.image')
-                                    ? [ele.querySelector('.image img').getAttribute('data-src')]
+                                    ? [ele.querySelector('.image img')?.getAttribute('data-src')]
                                     : [],
                                 isAuction: false,
-                                redirectUrl: ele.querySelector('a').getAttribute('href'),
+                                redirectUrl: ele.querySelector('a')?.getAttribute('href'),
                                 parameters: [],
                                 price: {
                                     value: parseInt(
                                         ele
                                             .querySelector('.sale-price')
-                                            .textContent.replace(' ', '')
+                                            ?.textContent?.replace(' ', '') ?? '0'
                                     ),
-                                    currency: 'kr',
+                                    currency: args.Currency.SEK,
                                 },
                                 region:
-                                    ele.querySelector('.car-meta-bottom span').textContent ??
+                                    ele.querySelector('.car-meta-bottom span')?.textContent ??
                                     undefined,
-                                origin: args.ListingOrigins.Blipp,
+                                origin: args.ListingOrigin.Blipp,
                             }
                         },
-                        { ListingOrigins, Category }
+                        { ListingOrigin, Category, Currency }
                     )
                 })
             )
 
-            listings = scrapedListings.filter((x) => !!x)
+            listings = scrapedListings.filter((x) => !!x) as unknown as Listing[]
         } catch (e) {
             console.log(e)
         } finally {

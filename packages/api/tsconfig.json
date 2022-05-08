@@ -16,17 +16,26 @@
         "preserveSymlinks": true,
         "isolatedModules": true,
         "allowJs": true,
-        "lib": ["es2019", "dom"],
+        "lib": ["es2019", "dom", "esnext"],
         "strict": false,
+        "strictNullChecks": true,
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": false,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "jsx": "preserve",
+        "types": ["vitest/globals"],
+        "skipDefaultLibCheck": true
     },
-    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/services/**/*", "node_modules"],
-    "include": ["src/**/*"],
-    "references": [
-        {
-            "path": "./tsconfig.spec.json"
-        }
-    ]
+    "exclude": [
+        "src/**/*.test.ts",
+        "src/**/*.spec.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.tsx",
+        "node_modules"
+    ],
+    "include": ["src/**/*", "./prisma/*.ts"]
 }

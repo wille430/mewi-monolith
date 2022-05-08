@@ -1,143 +1,135 @@
-import { MongooseModule, getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { User, UserDocument, UserSchema } from '../users/user.schema'
-import { Model } from 'mongoose'
-import { factory } from 'fakingoose'
 import { randomEmail } from '@wille430/common'
 import { EmailModule } from '../email/email.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import configuration from '../config/configuration'
 import { WatchersService } from './watchers.service'
-import { Watcher, WatcherDocument, WatcherSchema } from './watcher.schema'
-import _ from 'lodash'
 import { EmailService } from '../email/email.service'
 import { Transporter } from 'nodemailer'
 import { ListingsModule } from '../listings/listings.module'
-import { Listing, ListingDocument, ListingSchema } from '../listings/listing.schema'
 import notificationConfig from '../config/notification.config'
+import {
+    createListingFactory,
+    createUserFactory,
+    createWatcherFactory,
+} from 'prisma-factory/generated'
+import { User } from '@prisma/client'
+import { vi } from 'vitest'
+import { PrismaService } from '../prisma/prisma.service'
+import { faker } from '@faker-js/faker'
 
 describe('WatchersService', () => {
     let watchersService: WatchersService
     let emailService: EmailService
     let configService: ConfigService
-
-    let mongod: MongoMemoryServer
-
-    let userModel: Model<UserDocument>
-    let watcherModel: Model<WatcherDocument>
-    let listingModel: Model<ListingDocument>
+    let prisma: PrismaService
 
     let mockTransporter: Transporter
 
-    const watcherFactory = factory(WatcherSchema, {}).setGlobalObjectIdOptions({
-        tostring: false,
+    const watcherFactory = createWatcherFactory({ metadata: { keyword: faker.random.word() } })
+    const userFactory = createUserFactory({
+        email: randomEmail(),
     })
-    const userFactory = factory(UserSchema, {}).setGlobalObjectIdOptions({
-        tostring: false,
-    })
-    const listingFactory = factory(ListingSchema)
+    const listingFactory = createListingFactory({})
 
-    let user: UserDocument
+    let user: User
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
-
         const module: TestingModule = await Test.createTestingModule({
             imports: [
-                MongooseModule.forRootAsync({
-                    useFactory: async () => {
-                        const uri = mongod.getUri()
-                        return {
-                            uri: uri,
-                        }
-                    },
-                }),
-                MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-                MongooseModule.forFeature([{ name: Watcher.name, schema: WatcherSchema }]),
                 EmailModule,
                 ListingsModule,
                 ConfigModule.forRoot({ load: [configuration, notificationConfig] }),
             ],
-            providers: [WatchersService],
+            providers: [WatchersService, PrismaService],
         }).compile()
 
         watchersService = module.get<WatchersService>(WatchersService)
         emailService = module.get<EmailService>(EmailService)
         configService = module.get<ConfigService>(ConfigService)
-
-        userModel = module.get<Model<UserDocument>>(getModelToken(User.name))
-        watcherModel = module.get<Model<WatcherDocument>>(getModelToken(Watcher.name))
-        listingModel = module.get<Model<ListingDocument>>(getModelToken(Listing.name))
+        prisma = module.get<PrismaService>(PrismaService)
     })
 
     beforeEach(async () => {
-        const mockUser = userFactory.generate({
-            email: randomEmail(),
-            'watchers.notifiedAt': new Date(Date.now() - 7 * 24 * 60 * 60 * 10000),
-        })
-        user = await userModel.create(mockUser)
-        await user.save()
+        const watcher = await watcherFactory.create()
 
-        for (const watcherId of user.watchers) {
-            const mockWatcher = watcherFactory.generate({
-                _id: watcherId,
-            })
-            await (await watcherModel.create(mockWatcher)).save()
-        }
+        user = await userFactory.create({
+            email: randomEmail(),
+            watchers: {
+                create: {
+                    watcherId: watcher.id,
+                    notifiedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 10000),
+                },
+            },
+        })
 
         mockTransporter = await emailService.transporter()
         mockTransporter.sendMail = vi.fn()
         emailService.transporter = vi.fn().mockResolvedValue(mockTransporter)
     })
 
-    afterEach(() => {
-        userModel.remove({})
-        watcherModel.remove({})
+    afterEach(async () => {
         vi.clearAllMocks()
+    })
+
+    afterAll(async () => {
+        await prisma.userWatcher.deleteMany()
+        await prisma.user.deleteMany()
+        await prisma.watcher.deleteMany()
+
+        await prisma.$disconnect()
     })
 
     describe('#notifyUserOfWatcher', () => {
         it('should send email to user and update user watcher', async () => {
-            vi.spyOn(listingModel, 'find').mockResolvedValue(
-                Array(configService.get('notification.watcher.minListings')).fill(listingFactory.generate())
+            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue(
+                Array(configService.get('notification.watcher.minListings')).fill(
+                    listingFactory.build()
+                )
             )
 
-            const userWatcher = _.sample(user.watchers)
+            let userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
             watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(true)
 
-            await watchersService.notifyUserOfWatcher(user._id, userWatcher._id.toString())
+            await watchersService.notifyUserOfWatcher(user.id, userWatcher.watcherId)
 
             expect(mockTransporter.sendMail).toBeCalledTimes(1)
 
-            user = await userModel.findById(user._id)
-            expect(user.watchers.id(userWatcher._id).notifiedAt).toBeTruthy()
-            expect(
-                new Date(user.watchers.id(userWatcher._id).notifiedAt).getTime()
-            ).toBeGreaterThan(Date.now() - 10 * 1000)
+            // Get updated data
+            user = await prisma.user.findUnique({
+                where: { id: user.id },
+            })
+
+            userWatcher = await prisma.userWatcher.findFirst({
+                where: {
+                    userId: user.id,
+                },
+            })
+
+            expect(userWatcher).toHaveProperty('notifiedAt')
+            expect(userWatcher.notifiedAt.getTime()).toBeGreaterThan(Date.now() - 10 * 1000)
         })
 
         it('should not send email to user if no new listings were found', async () => {
-            vi.spyOn(listingModel, 'find').mockResolvedValue([])
+            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue([])
 
-            const userWatcher = _.sample(user.watchers)
+            const userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
             watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(true)
 
-            await watchersService.notifyUserOfWatcher(user._id, userWatcher._id.toString())
+            await watchersService.notifyUserOfWatcher(user.id, userWatcher.id)
 
             expect(mockTransporter.sendMail).toBeCalledTimes(0)
         })
 
         it('should not send email to user if #shouldNotifyUser returns false', async () => {
-            vi.spyOn(listingModel, 'find').mockResolvedValue(
+            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue(
                 Array(configService.get('notification.watcher.minListings'))
             )
 
-            const userWatcher = _.sample(user.watchers)
+            const userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
+            watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(false)
 
-            vi.spyOn(watchersService, 'shouldNotifyUser').mockResolvedValue(false)
-
-            await watchersService.notifyUserOfWatcher(user._id, userWatcher._id.toString())
+            await watchersService.notifyUserOfWatcher(user.id, userWatcher.watcherId)
 
             expect(mockTransporter.sendMail).not.toBeCalled()
         })
@@ -145,41 +137,31 @@ describe('WatchersService', () => {
 
     describe('#notifyUsersInWatcher', () => {
         it('should try to notify all users in watcher', async () => {
-            const watcher = await watcherModel.create(watcherFactory.generate())
-            await watcher.save()
+            const watcher = await watcherFactory.create()
 
             const notifyMock = vi
                 .spyOn(watchersService, 'notifyUserOfWatcher')
                 .mockResolvedValue(true)
 
-            await watchersService.notifyUsersInWatcher(watcher._id.toString())
+            await watchersService.notifyUsersInWatcher(watcher.id)
 
-            expect(notifyMock).toBeCalledTimes(watcher.users.length)
+            expect(notifyMock).toBeCalledTimes(await watchersService.subscriberCount(watcher.id))
         })
     })
 
     describe('#notifyAll', () => {
         it('should notify all users in all watchers', async () => {
+            let userCount = 0
+
             // generate multiple watchers
-            while ((await watcherModel.countDocuments()) < 12) {
-                await (await watcherModel.create(watcherFactory.generate())).save()
+            while ((await prisma.watcher.count()) < 12) {
+                await watcherFactory.create()
             }
 
-            const userCount = await watcherModel
-                .aggregate([
-                    {
-                        $unwind: '$users',
-                    },
-                    {
-                        $group: {
-                            _id: null,
-                            userCount: {
-                                $count: {},
-                            },
-                        },
-                    },
-                ])
-                .then((x) => x[0].userCount)
+            // find total numbers of subscribers
+            for (const { id } of await prisma.watcher.findMany()) {
+                userCount += await watchersService.subscriberCount(id)
+            }
 
             watchersService.notifyUserOfWatcher = vi.fn()
             await watchersService.notifyAll()

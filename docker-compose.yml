@@ -6,15 +6,23 @@ services:
         build:
             context: .
             dockerfile: packages/api/Dockerfile
-            environment:
-                GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
-                NODE_ENV: production
-                TOKEN_KEY: $TOKEN_KEY
-                GMAIL_MAIL: $GMAIL_MAIL
-                GMAIL_PASS: $GMAIL_PASS
-                MONGO_URI: $MONGO_URI
-                MONGO_USERNAME: $MONGO_USERNAME
-                MONGO_PASSWORD: $MONGO_PASSWORD
-                GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
-                GOOGLE_SECRET: $GOOGLE_SECRET
-
+        environment:
+            GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
+            NODE_ENV: production
+            TOKEN_KEY: $TOKEN_KEY
+            GMAIL_MAIL: $GMAIL_MAIL
+            GMAIL_PASS: $GMAIL_PASS
+            MONGO_URI: $MONGO_URI
+            MONGO_USERNAME: $MONGO_USERNAME
+            MONGO_PASSWORD: $MONGO_PASSWORD
+            GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
+            GOOGLE_SECRET: $GOOGLE_SECRET
+    db:
+        image: mongo:5.0.8
+        restart: always
+        container_name: integration-tests-prisma
+        ports:
+            - '27017:27017'
+        environment:
+            MONGO_USERNAME: prisma
+            MONGO_PASSWORD: prisma

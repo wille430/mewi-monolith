@@ -12,7 +12,7 @@ const checkEnv = () => {
     }
 
     // Check required envs
-    const missingRequired = []
+    const missingRequired: any[] = []
     envs.required.forEach((env) => {
         if (!process.env[env]) missingRequired.push(env)
     })
@@ -22,7 +22,7 @@ const checkEnv = () => {
     }
 
     // Check optional envs
-    const missingOptional = []
+    const missingOptional: any[] = []
     envs.optional.forEach((env) => {
         if (!process.env[env]) missingOptional.push(env)
     })

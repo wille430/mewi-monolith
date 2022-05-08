@@ -1,152 +1,138 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { Model, PipelineStage } from 'mongoose'
-import { User } from '@/users/user.schema'
-import { PopulatedWatcher, Watcher, WatcherDocument } from '@/watchers/watcher.schema'
-import { Document } from 'mongoose'
 import { WatchersService } from '@/watchers/watchers.service'
-import { ObjectId } from 'mongodb'
 import { Error } from '@wille430/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { UserWatcher, Watcher } from '@prisma/client'
 
 @Injectable()
 export class UserWatchersService {
-    constructor(
-        @InjectModel(User.name) private userModel: Model<User>,
-        @InjectModel(Watcher.name) private watcherModel: Model<Watcher>,
-        private watchersService: WatchersService
-    ) {}
+    constructor(private watchersService: WatchersService, private prisma: PrismaService) {}
 
-    async create({ userId, metadata }: CreateUserWatcherDto): Promise<PopulatedWatcher> {
-        let watcher: WatcherDocument
+    async create({
+        userId,
+        metadata,
+    }: CreateUserWatcherDto): Promise<(UserWatcher & { watcher: Watcher }) | null> {
+        let watcher = await this.prisma.watcher.findFirst({ where: { metadata } })
 
-        // 1. Check if watcher with same metadata exists
-        if (await this.watcherModel.exists({ metadata })) {
-            watcher = await this.watcherModel.findOne({ metadata })
-        } else {
-            // 2. If false, create watcher
-            watcher = await this.watcherModel.create({ metadata })
+        // 1. Create new watcher if watcher doesn't exist already
+        if (!watcher) {
+            watcher = await this.prisma.watcher.create({ data: { metadata } })
         }
 
-        // 3. Append user watcher to user
-        const user = await this.userModel.findById(userId)
-        const userWatcher = user.watchers.create({ _id: watcher._id })
+        // 2. Append user watcher to user
+        const user = await this.prisma.user.findUnique({ where: { id: userId } })
+        if (!user) return null
 
-        user.watchers.addToSet(userWatcher)
-        const addedWatcher = watcher.users.addToSet(user._id)
-
-        if (!addedWatcher.length) {
+        // 2. If user is already subscribed to the watcher, throw error
+        if (
+            await this.prisma.userWatcher.count({
+                where: {
+                    userId: user.id,
+                    watcherId: watcher.id,
+                },
+            })
+        ) {
             throw new ConflictException({
                 statusCode: HttpStatus.CONFLICT,
                 message: ['You are already subscribed to a similar watcher'],
                 error: Error.Database.CONFLICTING_RESOURCE,
             })
-        }
+        } else {
+            const userWatcher = await this.prisma.userWatcher.create({
+                data: {
+                    userId: user.id,
+                    watcherId: watcher.id,
+                },
+                include: {
+                    watcher: true,
+                },
+            })
 
-        await user.save()
-        await watcher.save()
-
-        return {
-            ...user.watchers.id(watcher._id).toJSON(),
-            metadata,
+            return userWatcher
         }
     }
 
-    async findAll(userId: string): Promise<PopulatedWatcher[]> {
-        const pipeline: PipelineStage[] = [
-            {
-                $match: { _id: new ObjectId(userId) },
-            },
-            { $limit: 1 },
-            {
-                $unwind: {
-                    path: '$watchers',
-                },
-            },
-            {
-                $group: {
-                    _id: '$_id',
-                    watchers: {
-                        $push: '$watchers',
-                    },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'watchers',
-                    localField: 'watchers._id',
-                    foreignField: '_id',
-                    as: 'watchers',
-                },
-            },
-        ]
-
+    async findAll(userId: string): Promise<(UserWatcher & { watcher: Watcher })[] | null> {
         try {
-            const agg = await this.userModel.aggregate(pipeline)
-            return agg[0].watchers as PopulatedWatcher[]
+            return await this.prisma.userWatcher.findMany({
+                where: {
+                    userId: userId,
+                },
+                include: {
+                    watcher: true,
+                },
+            })
         } catch (e) {
             return []
         }
     }
 
-    async findOne(id: string, userId: string): Promise<PopulatedWatcher & Document> | undefined {
+    async findOne(
+        id: string,
+        userId: string
+    ): Promise<(UserWatcher & { watcher: Watcher }) | null> {
         try {
-            // TODO: dont return users
-            const agg = await this.userModel.aggregate([
-                { $limit: 1 },
-                {
-                    $match: { _id: new ObjectId(userId) },
+            return await this.prisma.userWatcher.findFirst({
+                where: {
+                    id: id,
+                    userId: userId,
                 },
-                {
-                    $unwind: {
-                        path: '$watchers',
-                    },
+                include: {
+                    watcher: true,
                 },
-                { $match: { 'watchers._id': new ObjectId(id) } },
-                {
-                    $lookup: {
-                        from: 'watchers',
-                        localField: 'watchers._id',
-                        foreignField: '_id',
-                        as: 'watchers.watcher',
-                    },
-                },
-                {
-                    $group: {
-                        _id: '$_id',
-                        watchers: {
-                            $push: '$watchers',
-                        },
-                    },
-                },
-            ])
-
-            const watcher = agg[0].watchers[0]
-
-            return watcher
+            })
         } catch (e) {
-            return undefined
+            return null
         }
     }
 
-    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+    async update(
+        id: string,
+        { userId, metadata }: UpdateUserWatcherDto
+    ): Promise<(UserWatcher & { watcher: Watcher }) | null> {
         this.remove(id, userId)
-        this.create({ metadata, userId })
+        return this.create({ metadata, userId })
     }
 
-    async remove(id: string | ObjectId, userId: string | ObjectId) {
-        id = new ObjectId(id)
-        userId = new ObjectId(userId)
+    /**
+     * Unsubscribe a user from a watcher
+     *
+     * @param id - The id of the user watcher
+     * @param userId - The id of the user
+     * @returns True if the user watcher was deleted, else false
+     */
+    async remove(id: string, userId: string): Promise<boolean> {
+        const { watcherId } =
+            (await this.prisma.userWatcher.findFirst({
+                where: {
+                    id,
+                    userId,
+                },
+            })) ?? {}
+        if (!watcherId) return false
 
         // delete from user
-        await this.userModel.updateOne({ _id: userId }, { $pull: { watchers: { _id: id } } })
+        await this.prisma.userWatcher.deleteMany({
+            where: {
+                id,
+                userId,
+            },
+        })
 
-        // delete from watcher
-        await this.watcherModel.updateOne({ _id: id }, { $pull: { users: userId } })
+        // delete watcher if no one is subscribed
 
-        if (!(await this.watcherModel.findById(id)).users.length) {
-            this.watcherModel.deleteOne({ _id: id })
+        const subCount = await this.watchersService.subscriberCount(watcherId)
+
+        if (subCount <= 0) {
+            await this.prisma.watcher.delete({
+                where: {
+                    id: watcherId,
+                },
+            })
         }
+
+        return true
     }
 }

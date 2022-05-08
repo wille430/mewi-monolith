@@ -1,15 +1,5 @@
-import { Listing } from '@/listings/listing.schema'
-import { Category, ListingOrigins } from '@wille430/common'
-import {
-    IsArray,
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsObject,
-    IsOptional,
-    IsString,
-    Min,
-} from 'class-validator'
+import { Category, Currency, Listing, ListingOrigin } from '@prisma/client'
+import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 
 export class CreateListingDto implements Listing {
     id: string
@@ -18,16 +8,15 @@ export class CreateListingDto implements Listing {
     title: string
 
     @IsString()
-    body?: string
+    body: string
 
     @IsArray()
     @IsString({ each: true })
     @IsEnum(Category)
-    category: Category[]
+    category: Category
 
-    @IsNumber()
-    @Min(0)
-    date: number
+    @IsDate()
+    date: Date
 
     @IsString()
     redirectUrl: string
@@ -37,10 +26,9 @@ export class CreateListingDto implements Listing {
 
     // TODO: check object props
     @IsObject()
-    @IsOptional()
-    price?: {
+    price: {
         value: number
-        currency: string
+        currency: Currency
     }
 
     @IsString()
@@ -51,13 +39,14 @@ export class CreateListingDto implements Listing {
     @IsObject({ each: true })
     parameters: { id: string; label: string; value: string }[]
 
-    @IsEnum(ListingOrigins)
-    origin: ListingOrigins
+    @IsEnum(ListingOrigin)
+    origin: ListingOrigin
 
     @IsBoolean()
     @IsOptional()
     isAuction = false
 
     @IsOptional()
-    endDate: number
+    @IsDate()
+    auctionEnd: Date
 }

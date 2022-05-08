@@ -1,15 +1,13 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { InjectModel } from '@nestjs/mongoose'
-import { Role } from '@/auth/role.enum'
 import { ROLES_KEY } from '@/auth/roles.decorator'
-import { User, UserDocument } from '@/users/user.schema'
-import { Model } from 'mongoose'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @Inject(PrismaService) private prisma: PrismaService,
         private reflector: Reflector
     ) {}
 
@@ -20,7 +18,7 @@ export class RolesGuard implements CanActivate {
         }
 
         const request = context.switchToHttp().getRequest()
-        const user = await this.userModel.findOne({ _id: request.user.userId })
+        const user = await this.prisma.user.findUnique({ where: { id: request.user.userId } })
 
         if (!user) {
             return false

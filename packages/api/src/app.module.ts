@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common'
-import { MongooseModule } from '@nestjs/mongoose'
 import { AppController } from './app.controller'
 import { ListingsModule } from '@/listings/listings.module'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import { WatchersModule } from './watchers/watchers.module'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { TestModule } from './test/test.module'
 import { ScrapersModule } from './scrapers/scrapers.module'
 import { EmailService } from './email/email.service'
@@ -15,10 +14,14 @@ import configuration from './config/configuration'
 import { ThrottlerModule } from '@nestjs/throttler'
 import scraperConfig from './config/scraper.config'
 import databaseConfig from './config/database.config'
-import {ServeStaticModule} from '@nestjs/serve-static'
+import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 import notificationConfig from './config/notification.config'
 import { ScheduleModule } from '@nestjs/schedule'
+import { RenderModule } from 'nest-next'
+import Next from 'next'
+import { resolve } from 'path'
+import { PrismaService } from './prisma/prisma.service'
 
 @Module({
     imports: [
@@ -27,20 +30,30 @@ import { ScheduleModule } from '@nestjs/schedule'
             isGlobal: true,
             load: [configuration, scraperConfig, databaseConfig, notificationConfig],
         }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: async (configService: ConfigService) => ({
-                uri: configService.get<string>('database.uri'),
-            }),
-            inject: [ConfigService],
-        }),
+        // MongooseModule.forRootAsync({
+        //     imports: [ConfigModule],
+        //     useFactory: async (configService: ConfigService) => ({
+        //         uri: configService.get<string>('database.uri'),
+        //     }),
+        //     inject: [ConfigService],
+        // }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
         }),
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'public')
+            rootPath: join(__dirname, '..', 'public'),
         }),
+        RenderModule.forRootAsync(
+            Next({
+                dev: process.env.NODE_ENV !== 'production',
+                dir: resolve(__dirname, '..'),
+            }),
+            {
+                viewsDir: null,
+                passthrough404: true,
+            }
+        ),
         ScheduleModule.forRoot(),
         ListingsModule,
         AuthModule,
@@ -52,6 +65,6 @@ import { ScheduleModule } from '@nestjs/schedule'
         EmailModule,
     ],
     controllers: [AppController],
-    providers: [EmailService],
+    providers: [EmailService, PrismaService],
 })
 export class AppModule {}

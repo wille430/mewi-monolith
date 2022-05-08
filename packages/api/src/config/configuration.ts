@@ -8,13 +8,13 @@ export interface EnvVars {
 export default (): EnvVars => {
     if (isProduction) {
         return {
-            API_URL: 'https://api.mewi.se',
+            API_URL: 'https://mewi.se/api',
             CLIENT_URL: 'https://mewi.se',
         }
     } else {
         return {
-            API_URL: 'http://localhost:3001',
-            CLIENT_URL: 'http://localhost:4200',
+            API_URL: 'http://localhost:3000/api',
+            CLIENT_URL: 'http://localhost:3000',
         }
     }
 }

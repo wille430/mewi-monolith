@@ -1,128 +1,220 @@
 import { Injectable } from '@nestjs/common'
-import { Listing, ListingDocument } from '@/listings/listing.schema'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model, FilterQuery, QueryOptions } from 'mongoose'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Listing, Prisma } from '@prisma/client'
 import { Sort, sortableFields } from '@wille430/common'
-import _ from 'lodash'
 
 @Injectable()
 export class ListingsService {
-    constructor(@InjectModel(Listing.name) private listingModel: Model<ListingDocument>) {}
+    constructor(private prisma: PrismaService) {}
 
     async create(createListingDto: CreateListingDto): Promise<Listing> {
-        const createdListing = new this.listingModel(createListingDto)
-        return createdListing.save()
+        const createdListing = await this.prisma.listing.create({ data: createListingDto })
+        return createdListing
     }
 
     async findAll(dto: FindAllListingsDto) {
-        const { filters, options } = this.createMongoFilters(dto)
+        const { where } = this.metadataToWhereInput(dto)
+        // TODO: fix sort
 
         return {
             filters: dto,
-            totalHits: await this.listingModel.count(filters),
-            hits: await this.listingModel.find(filters, {}, options),
+            totalHits: await this.prisma.listing.count({
+                where,
+            }),
+            hits: await this.prisma.listing.findMany({
+                where,
+            }),
         }
     }
 
-    createMongoFilters(dto: Partial<FindAllListingsDto>): {
-        filters: FilterQuery<ListingDocument>
-        options: QueryOptions
-    } {
-        let filters: FilterQuery<ListingDocument> = { $and: [] }
-        const options: QueryOptions = { limit: +dto.limit }
+    metadataToWhereInput(dto: Partial<FindAllListingsDto>): Prisma.ListingFindFirstArgs {
+        const args: Prisma.ListingFindFirstArgs & {
+            where: Prisma.ListingWhereInput & {
+                OR: Prisma.ListingWhereInput[]
+            }
+        } = {
+            where: {
+                OR: [],
+            },
+        }
 
         if (dto.page && +dto.page > 0) {
-            options.skip = (+dto.page - 1) * +dto.limit
+            args.skip = (+dto.page - 1) * +(dto.limit ?? 20)
         }
 
         if (dto.sort && dto.sort !== Sort.RELEVANCE) {
-            options.sort = sortableFields[dto.sort]
+            args.orderBy = {
+                ...sortableFields[dto.sort],
+            }
         }
 
         if (dto.priceRangeGte) {
-            filters.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
+            args.where.price = {
+                value: {
+                    gt: dto.priceRangeGte,
+                    ...((args.where.price?.value as any) ?? {}),
+                } as any,
+            }
         }
 
         if (dto.priceRangeLte) {
-            filters.$and.push({ 'price.value': { $lte: dto.priceRangeLte } })
+            args.where.price = {
+                value: {
+                    lt: dto.priceRangeLte,
+                    ...((args.where.price?.value as any) ?? {}),
+                } as any,
+            }
         }
 
         for (const key in dto) {
             const value = dto[key]
+            if (!value) continue
             switch (key as keyof typeof dto) {
                 case 'keyword':
-                    filters.$text = {
-                        ...(filters.$text || []),
-                        $search: value,
+                    args.where.title = {
+                        contains: value,
                     }
                     break
                 case 'regions':
                     if (Array.isArray(value)) {
-                        filters.$and.push({ region: (value as string[]).join(', ') })
+                        for (const region of value)
+                            args.where.OR.push({
+                                region,
+                            })
                     } else {
-                        filters.$and.push({ region: [value as string].join(', ') })
+                        args.where.OR.push({
+                            region: value,
+                        })
                     }
                     break
                 case 'category':
-                    filters.$and.push({
-                        [key]: { $all: value },
-                    })
+                    args.where.category = value
                     break
                 case 'auction':
-                    filters.$and.push({
-                        isAuction: value,
-                    })
+                    args.where.isAuction = value
                     break
-                case key.match(/priceRange(Gte|Lte)/)?.input:
-                    if (key.match(/(Gte)$/)) {
-                        filters.$and.push({ 'price.value': { $gte: +value } })
-                    } else if (key.match(/(Lte)$/)) {
-                        filters.$and.push({ 'price.value': { $lte: +value } })
-                    }
-                    break
+                // case key.match(/priceRange(Gte|Lte)/)?.input:
+                //     if (key.match(/(Gte)$/)) {
+                //         .$and.push({ 'price.value': { $gte: +value } })
+                //         args.where
+                //     } else if (key.match(/(Lte)$/)) {
+                //         filters.$and.push({ 'price.value': { $lte: +value } })
+                //     }
+                //     break
                 case 'dateGte':
-                    filters.$and.push({ date: { $gte: +value } })
+                    args.where.date = {
+                        gte: new Date(+value),
+                    }
                     break
             }
         }
 
-        if (!filters.$and.length) {
-            filters = _.omit(filters, '$and')
-        }
-
-        return { filters, options }
+        return args
     }
 
-    async findOne(id: number) {
-        return await this.listingModel.findById(id)
+    // createMongoFilters(dto: Partial<FindAllListingsDto>): {
+    //     filters: Partial<Record<keyof Listing, any>>
+    //     options: QueryOptions
+    // } {
+    //     let filters: FilterQuery<ListingDocument> = { $and: [] }
+    //     const options: QueryOptions = { limit: +dto.limit }
+
+    //     if (dto.page && +dto.page > 0) {
+    //         options.skip = (+dto.page - 1) * +dto.limit
+    //     }
+
+    //     if (dto.sort && dto.sort !== Sort.RELEVANCE) {
+    //         options.sort = sortableFields[dto.sort]
+    //     }
+
+    //     if (dto.priceRangeGte) {
+    //         filters.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
+    //     }
+
+    //     if (dto.priceRangeLte) {
+    //         filters.$and.push({ 'price.value': { $lte: dto.priceRangeLte } })
+    //     }
+
+    //     for (const key in dto) {
+    //         const value = dto[key]
+    //         switch (key as keyof typeof dto) {
+    //             case 'keyword':
+    //                 filters.$text = {
+    //                     ...(filters.$text || []),
+    //                     $search: value,
+    //                 }
+    //                 break
+    //             case 'regions':
+    //                 if (Array.isArray(value)) {
+    //                     filters.$and.push({ region: (value as string[]).join(', ') })
+    //                 } else {
+    //                     filters.$and.push({ region: [value as string].join(', ') })
+    //                 }
+    //                 break
+    //             case 'category':
+    //                 filters.$and.push({
+    //                     [key]: { $all: value },
+    //                 })
+    //                 break
+    //             case 'auction':
+    //                 filters.$and.push({
+    //                     isAuction: value,
+    //                 })
+    //                 break
+    //             case key.match(/priceRange(Gte|Lte)/)?.input:
+    //                 if (key.match(/(Gte)$/)) {
+    //                     filters.$and.push({ 'price.value': { $gte: +value } })
+    //                 } else if (key.match(/(Lte)$/)) {
+    //                     filters.$and.push({ 'price.value': { $lte: +value } })
+    //                 }
+    //                 break
+    //             case 'dateGte':
+    //                 filters.$and.push({ date: { $gte: +value } })
+    //                 break
+    //         }
+    //     }
+
+    //     if (!filters.$and.length) {
+    //         filters = _.omit(filters, '$and')
+    //     }
+
+    //     return { filters, options }
+    // }
+
+    async findOne(id: string) {
+        return await this.prisma.listing.findUnique({ where: { id } })
     }
 
-    async update(id: number, updateListingDto: UpdateListingDto): Promise<Listing> {
-        await this.listingModel.updateOne({ _id: id }, updateListingDto)
-        const updatedListing = this.listingModel.findById(id)
+    async update(id: string, updateListingDto: UpdateListingDto): Promise<Listing> {
+        const updatedListing = await this.prisma.listing.update({
+            where: { id },
+            data: updateListingDto,
+        })
         return updatedListing
     }
 
-    async remove(id: number) {
-        await this.listingModel.deleteOne({ _id: id })
+    async remove(id: string) {
+        await this.prisma.listing.delete({ where: { id } })
     }
 
     async sample(count = 1) {
-        const totalDocs = await this.listingModel.count()
+        const totalDocs = await this.prisma.listing.count()
 
         const randomNums = Array.from({ length: count }, () =>
             Math.floor(Math.random() * totalDocs)
         )
 
-        const randomDocs = []
-        const addedDocNums = []
+        const randomDocs: Listing[] = []
+        const addedDocNums: number[] = []
 
         for (const i of randomNums) {
             if (!addedDocNums.includes(i)) {
-                randomDocs.push(await this.listingModel.findOne().skip(i))
+                const listing = await this.prisma.listing.findFirst({ skip: i })
+
+                if (listing) randomDocs.push()
                 addedDocNums.push(i)
             }
         }
@@ -130,12 +222,15 @@ export class ListingsService {
         return randomDocs
     }
 
-    async autocomplete(keyword: string) {
-        const response = await this.listingModel.aggregate([
-            { $match: { $text: { $search: keyword } } },
-            { $limit: 5 },
-            { $project: { _id: 0, title: 1 } },
-        ])
+    async autocomplete(keyword: string): Promise<string[]> {
+        const response = await this.prisma.listing.findMany({
+            where: {
+                title: {
+                    contains: keyword,
+                },
+            },
+            take: 5,
+        })
 
         return response.map((x) => x.title)
     }

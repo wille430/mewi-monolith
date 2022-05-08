@@ -7,9 +7,10 @@ import { JwtModule } from '@nestjs/jwt'
 import { jwtConstants } from '@/auth/constants'
 import { JwtStrategy } from '@/auth/jwt-strategy'
 import { AuthController } from './auth.controller'
-import { UserExistsRule } from '@/rules/user-exists.rule'
-import { UniqueEmailRule } from '@/rules/unique-email.rule'
+import { UserExistsRule } from '@/common/rules/user-exists.rule'
+import { UniqueEmailRule } from '@/common/rules/unique-email.rule'
 import { GoogleStrategy } from '@/auth/google.strategy'
+import { PrismaService } from '@/prisma/prisma.service'
 
 @Module({
     imports: [
@@ -20,7 +21,15 @@ import { GoogleStrategy } from '@/auth/google.strategy'
             signOptions: { expiresIn: '15m' },
         }),
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, UserExistsRule, UniqueEmailRule],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        JwtStrategy,
+        GoogleStrategy,
+        UserExistsRule,
+        UniqueEmailRule,
+        PrismaService,
+    ],
     exports: [AuthService],
     controllers: [AuthController],
 })

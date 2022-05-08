@@ -1,11 +1,14 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["**/*.spec.ts", "**/*.test.ts", "src/**/*", "src/*"],
-    "exclude": ["src/services/*"],
+    "include": [
+        "src/**/*",
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.tsx"
+    ],
     "compilerOptions": {
         "types": ["vitest/globals"],
-        "baseUrl": ".",
-        "emitDecoratorMetadata": true,
         "paths": {
             "@/*": ["./src/*"]
         },

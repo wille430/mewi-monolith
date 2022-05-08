@@ -4,7 +4,7 @@ import { UsersService } from '@/users/users.service'
 import { randomEmail, randomPassword } from '@wille430/common'
 import { AuthService } from '@/auth/auth.service'
 
-@Controller('test')
+@Controller('/api/test')
 export class TestController {
     constructor(
         private readonly testService: TestService,
@@ -22,6 +22,6 @@ export class TestController {
 
         const accessTokens = this.authService.createTokens(user)
 
-        return { ...user.toJSON(), password: password, ...accessTokens }
+        return { ...user, password: password, ...accessTokens }
     }
 }

@@ -1,9 +1,7 @@
-import { IsInstance, IsObject } from 'class-validator'
-import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
-import { IWatcher, ListingSearchFilters } from '@wille430/common'
+import { IsObject } from 'class-validator'
+import { Watcher } from '@prisma/client'
 
-export class CreateWatcherDto implements Partial<IWatcher> {
+export class CreateWatcherDto implements Partial<Watcher> {
     @IsObject()
-    @IsInstance(FindAllListingsDto)
-    metadata: ListingSearchFilters
+    metadata: Watcher['metadata']
 }

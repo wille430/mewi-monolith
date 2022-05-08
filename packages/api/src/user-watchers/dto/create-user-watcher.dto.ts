@@ -1,6 +1,6 @@
 import { IsInstance, IsMongoId, IsObject } from 'class-validator'
 import { Metadata } from '@/watchers/watcher.schema'
-import { ListingSearchFilters } from '@wille430/common'
+import { Watcher } from '@prisma/client'
 
 export class CreateUserWatcherDto {
     @IsMongoId()
@@ -8,5 +8,5 @@ export class CreateUserWatcherDto {
 
     @IsObject()
     @IsInstance(Metadata)
-    metadata: ListingSearchFilters
+    metadata: Watcher['metadata']
 }

@@ -1,17 +1,18 @@
+import { Role } from '@prisma/client'
 import { IPopulatedWatcher } from '@wille430/common'
 import { Layout } from 'components/Layout/Layout'
 import SideNav from 'components/SideNav/SideNav'
 import WatcherList from 'components/WatcherList/WatcherList'
-import { GetServerSideProps } from 'next'
+import { withAuth } from 'lib/auth'
 import { ReactElement } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps = withAuth(async () => {
     return {
         props: {
             watchers: [] as IPopulatedWatcher[],
         },
     }
-}
+}, [Role.USER])
 
 const Bevakningar = ({ watchers }) => {
     return (

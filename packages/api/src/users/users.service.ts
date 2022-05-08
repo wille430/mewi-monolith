@@ -1,16 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { InjectModel } from '@nestjs/mongoose'
-import { User, UserDocument } from '@/users/user.schema'
-import { Model } from 'mongoose'
 import bcrypt from 'bcryptjs'
 import {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
     ChangePasswordWithToken,
 } from '@/users/dto/change-password.dto'
-import { ObjectId } from 'mongodb'
 import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
 import * as crypto from 'crypto'
 import { EmailService } from '@/email/email.service'
@@ -18,41 +14,47 @@ import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
-import { LoginStrategy } from '@wille430/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { LoginStrategy, User } from '@prisma/client'
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @Inject(PrismaService) private prisma: PrismaService,
         @Inject(EmailService) private readonly emailService: EmailService,
         @Inject(ConfigService) private configService: ConfigService<EnvVars>
     ) {}
 
-    async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+    async create(createUserDto: CreateUserDto): Promise<User> {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
         createUserDto.email = createUserDto.email.toLowerCase()
 
-        const newUser = new this.userModel(createUserDto)
-        await newUser.save()
-
-        return newUser
+        return this.prisma.user.create({ data: createUserDto })
     }
 
     async findAll() {
-        return await this.userModel.find({})
+        return await this.prisma.user.findMany()
     }
 
-    async findOne(id: string): Promise<UserDocument> {
-        return await this.userModel.findById(id)
+    async findOne(id: string): Promise<User | null> {
+        return await this.prisma.user.findFirst({ where: { id: id } })
     }
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
-        await this.userModel.findOneAndUpdate({ _id: id }, updateUserDto)
+    async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+        await this.prisma.user.update({
+            where: { id },
+            data: {
+                ...updateUserDto,
+            },
+        })
+
         return await this.findOne(id)
     }
 
     async remove(id: string) {
-        await this.userModel.deleteOne({ _id: new ObjectId(id) })
+        await this.prisma.user.delete({
+            where: { id },
+        })
     }
 
     async changePassword(
@@ -62,12 +64,12 @@ export class UsersService {
         if (password === passwordConfirm) {
             const newPasswordHash = await bcrypt.hash(password, 10)
 
-            await this.userModel.updateOne(
-                { _id: new ObjectId(userId) },
-                { password: newPasswordHash }
-            )
-
-            return
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: {
+                    password: newPasswordHash,
+                },
+            })
         } else {
             throw new Error('Passwords must match')
         }
@@ -80,16 +82,20 @@ export class UsersService {
         email,
     }: ChangePasswordWithToken) {
         if (password === passwordConfirm) {
-            const user = await this.userModel.findOne({ email }, '+passwordReset')
+            const user = await this.prisma.user.findFirst({ where: { email } })
+            if (!user) return
 
             if (
                 user.passwordReset &&
-                (await bcrypt.compare(token, user.passwordReset.tokenHash)) &&
-                user.passwordReset.expiration > Date.now()
+                user.passwordReset.expiration > Date.now() &&
+                (await bcrypt.compare(token, user.passwordReset.tokenHash))
             ) {
-                await this.userModel.findByIdAndUpdate(user._id, {
-                    $set: { password: await bcrypt.hash(password, 10) },
-                    $unset: { passwordReset: '' },
+                await this.prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        password: await bcrypt.hash(password, 10),
+                        passwordReset: null,
+                    },
                 })
             } else {
                 throw Error('Invalid token')
@@ -99,29 +105,28 @@ export class UsersService {
 
     async sendPasswordResetEmail({ email }: ChangePasswordNoAuth) {
         try {
-            const user = await this.userModel.findOne({ email })
+            const user = await this.prisma.user.findFirst({ where: { email } })
+            if (!user) return
 
-            if (user.loginStrategy !== LoginStrategy.Local) {
+            if (user.loginStrategy !== LoginStrategy.LOCAL) {
                 console.log(
-                    `User ${user._id} is using a third-party login strategy and can't reset password.`
+                    `User ${user.id} is using a third-party login strategy and can't reset password.`
                 )
                 return
             }
 
             const token = crypto.randomBytes(32).toString('hex')
 
-            await this.userModel.updateOne(
-                { email },
-                {
-                    $set: {
-                        passwordReset: {
-                            tokenHash: await bcrypt.hash(token, 10),
-                            // expire in 15 minutes
-                            expiration: Date.now() + 15 * 60 * 60 * 1000,
-                        },
+            await this.prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    passwordReset: {
+                        tokenHash: await bcrypt.hash(token, 10),
+                        // expire in 15 minutes
+                        expiration: Date.now() + 15 * 60 * 60 * 1000,
                     },
-                }
-            )
+                },
+            })
 
             const transporter = await this.emailService.transporter()
 
@@ -137,7 +142,6 @@ export class UsersService {
                     }).html,
                 },
                 transport: transporter,
-                preview: true,
             })
 
             const emailInfo = await emailObj.send()
@@ -149,18 +153,20 @@ export class UsersService {
     }
 
     async updateEmail({ token, oldEmail }: AuthorizedUpdateEmailDto) {
-        const user = await this.userModel.findOne({ email: oldEmail }, ['+emailUpdate'])
+        const user = await this.prisma.user.findFirst({ where: { email: oldEmail } })
+        if (!user) return
 
         if (
             user.emailUpdate &&
-            user.emailUpdate.expiration > Date.now() &&
+            user.emailUpdate.expiration.getTime() > Date.now() &&
             (await bcrypt.compare(token, user.emailUpdate?.tokenHash))
         ) {
-            await this.userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            await this.prisma.user.update({
+                where: { id: user.id },
+                data: {
                     email: user.emailUpdate.newEmail,
+                    emailUpdate: null,
                 },
-                $unset: { emailUpdate: '' },
             })
         } else {
             throw new Error('Invalid token')
@@ -168,24 +174,26 @@ export class UsersService {
     }
 
     async verifyEmailUpdate({ newEmail }: VerifyEmailDto, userId: string) {
-        const user = await this.userModel.findById(userId)
+        const user = await this.prisma.user.findUnique({ where: { id: userId } })
+        if (!user) return
 
-        if (user.loginStrategy !== LoginStrategy.Local) {
+        if (user.loginStrategy !== LoginStrategy.LOCAL) {
             console.log(
-                `User ${user._id} is using a third-party login strategy and can't reset password.`
+                `User ${user.id} is using a third-party login strategy and can't reset password.`
             )
             return
         }
 
         const token = crypto.randomBytes(32).toString('hex')
 
-        await this.userModel.findByIdAndUpdate(userId, {
-            $set: {
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: {
                 emailUpdate: {
                     tokenHash: await bcrypt.hash(token, 10),
                     newEmail,
                     // expire in 15 minutes
-                    expiration: Date.now() + 15 * 60 * 60 * 1000,
+                    expiration: new Date(Date.now() + 15 * 60 * 60 * 1000),
                 },
             },
         })
@@ -197,7 +205,6 @@ export class UsersService {
                 from: this.emailService.googleAuth.email,
             },
             transport: transporter,
-            preview: true,
         })
 
         const emailInfo = await email.send({

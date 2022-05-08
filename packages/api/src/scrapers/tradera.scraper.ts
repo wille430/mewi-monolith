@@ -1,11 +1,10 @@
-import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
 import { Scraper } from './scraper'
 import { TraderaItemData } from '@/types/types'
-import { Category, ListingOrigins } from '@wille430/common'
-import { Model } from 'mongoose'
 import { ConfigService } from '@nestjs/config'
-import { InjectModel } from '@nestjs/mongoose'
+import { Inject } from '@nestjs/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Category, Currency, Listing, ListingOrigin } from '@prisma/client'
 
 interface TraderaCategory {
     id: number
@@ -25,11 +24,8 @@ export class TraderaScraper extends Scraper {
     itemsPerCategory: number
     limit = 50
 
-    constructor(
-        @InjectModel(Listing.name) listingModel: Model<ListingDocument>,
-        configService: ConfigService
-    ) {
-        super(listingModel, configService, ListingOrigins.Tradera, 'https://www.tradera.com/', {})
+    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
+        super(prisma, configService, ListingOrigin.Tradera, 'https://www.tradera.com/', {})
     }
 
     async getListings(): Promise<Listing[]> {
@@ -60,11 +56,13 @@ export class TraderaScraper extends Scraper {
                 (item): Listing => ({
                     id: item.itemId.toString(),
                     title: item.shortDescription,
-                    category: [
-                        this.parseCategories(this.categories[this.currentCategoryIndex].title),
-                    ],
-                    date: item.startDate ? new Date(item.startDate).getTime() : Date.now(),
-                    endDate: new Date(item.endDate).getTime(),
+                    category: this.parseCategories(
+                        (this.categories ?? {})[this.currentCategoryIndex].title
+                    ),
+                    date: item.startDate ? new Date(item.startDate) : new Date(),
+                    auctionEnd: new Date(item.endDate),
+                    body: null,
+                    region: null,
                     imageUrl: [item.imageUrl],
                     isAuction: !!item.endDate || item.itemType === 'auction',
                     redirectUrl: this.baseUrl + item.itemUrl,
@@ -72,10 +70,10 @@ export class TraderaScraper extends Scraper {
                     price: item.price
                         ? {
                               value: item.price,
-                              currency: 'kr',
+                              currency: Currency.SEK,
                           }
-                        : undefined,
-                    origin: ListingOrigins.Tradera,
+                        : null,
+                    origin: ListingOrigin.Tradera,
                 })
             )
 

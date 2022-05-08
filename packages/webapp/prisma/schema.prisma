@@ -65,6 +65,7 @@ model Listing {
 enum Role {
   USER
   ADMIN
+  GUEST
 }
 
 enum LoginStrategy {

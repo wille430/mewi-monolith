@@ -13,7 +13,7 @@ interface IndexPageProps {
 
 export const getStaticProps: GetStaticProps = async () => {
     const prisma = new PrismaClient()
-    const listings = JSON.stringify(await prisma.listing.findMany({ take: 5 }))
+    const listings = JSON.stringify(await prisma.listing.findMany({ take: 10 }))
 
     return {
         props: {
@@ -39,6 +39,6 @@ const Index = ({ featuredListings }: IndexPageProps) => {
     )
 }
 
-Index.getLayout = (page: ReactElement) => <Layout>{page}</Layout>
+Index.getLayout = (page: ReactElement) => <Layout decorations={false}>{page}</Layout>
 
 export default Index

@@ -1,7 +1,7 @@
 import SignUpDto from '@/auth/dto/sign-up.dto'
-import { Match } from '@/decorators/match.decorator'
-import { IsPassword } from '@/decorators/password.decorator'
-import { OmitType } from '@nestjs/mapped-types'
+import { Match } from '@/common/decorators/match.decorator'
+import { IsPassword } from '@/common/decorators/password.decorator'
+import { PickType } from '@nestjs/mapped-types'
 import { Expose } from 'class-transformer'
 import { IsEmail, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator'
 
@@ -11,9 +11,11 @@ export class ChangePasswordNoAuth {
     email: string
 }
 
-export class ChangePasswordAuth extends OmitType(SignUpDto, ['email']) {
+export class ChangePasswordAuth extends PickType(SignUpDto, ['passwordConfirm', 'password']) {
     @Expose({ groups: ['user'] })
     password: string
+
+    passwordConfirm: string
 }
 
 export class ChangePasswordWithToken extends ChangePasswordAuth {

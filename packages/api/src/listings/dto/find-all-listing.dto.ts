@@ -1,36 +1,45 @@
+import { Watcher } from '@prisma/client'
 import { Sort } from '@wille430/common'
-import { IsOptional, IsString, IsNumberString, IsBooleanString } from 'class-validator'
+import {
+    IsOptional,
+    IsString,
+    IsNumberString,
+    IsBooleanString,
+    IsDateString,
+} from 'class-validator'
 
-export class FindAllListingsDto {
+type Metadata = Watcher['metadata']
+
+export class FindAllListingsDto implements Partial<Metadata> {
     @IsOptional()
     @IsNumberString()
     limit = '24'
 
     @IsOptional()
     @IsString()
-    keyword?: string
+    keyword: string | null
 
     @IsOptional()
-    regions?: string[] | string
+    regions: string[]
 
     @IsOptional()
     category?: string
 
     @IsOptional()
     @IsNumberString()
-    priceRangeGte?: string | number
+    priceRangeGte?: number
 
     @IsOptional()
     @IsNumberString()
-    priceRangeLte?: string | number
+    priceRangeLte?: number
 
     @IsOptional()
     @IsBooleanString()
-    auction?: string | boolean
+    auction?: boolean
 
     @IsOptional()
-    @IsNumberString()
-    dateGte?: string | number
+    @IsDateString()
+    dateGte?: Date
 
     @IsOptional()
     @IsNumberString()

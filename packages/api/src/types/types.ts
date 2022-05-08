@@ -87,7 +87,7 @@ export interface BlocketItemData {
             phone: true
             sms: true
             name: string
-            type: 'store'
+            type: '@/store'
         }
     }
     body: string

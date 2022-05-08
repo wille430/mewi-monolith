@@ -1,11 +1,16 @@
-import { defineConfig, configDefaults } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-    plugins: [tsconfigPaths()],
+    plugins: [react(), tsconfigPaths()],
     test: {
-        exclude: [...configDefaults.exclude, './src/services/**/*'],
-        environment: 'node',
+        environment: 'jsdom',
         globals: true,
+    },
+    resolve: {
+        alias: {
+            'prisma-factory/generated': './node_modules/prisma-factory/generated',
+        },
     },
 })

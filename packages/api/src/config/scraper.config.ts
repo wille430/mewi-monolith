@@ -1,10 +1,10 @@
 import { ScraperOptions } from '@/scrapers/scraper'
 import { registerAs } from '@nestjs/config'
-import { ListingOrigins } from '@wille430/common'
+import { ListingOrigin } from '@prisma/client'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-type ScraperConfig = Partial<Record<ListingOrigins, ScraperOptions>> & { default: ScraperOptions }
+type ScraperConfig = Partial<Record<ListingOrigin, ScraperOptions>> & { default: ScraperOptions }
 
 export default registerAs('scraper', (): ScraperConfig => {
     if (isProduction) {

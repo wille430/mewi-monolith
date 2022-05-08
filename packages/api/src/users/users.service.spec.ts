@@ -1,10 +1,5 @@
-import { MongooseModule, getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { User, UserDocument, UserSchema } from './user.schema'
 import { UsersService } from './users.service'
-import { Model } from 'mongoose'
-import { factory } from 'fakingoose'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { randomEmail, randomPassword } from '@wille430/common'
 import {
@@ -20,56 +15,37 @@ import { ConfigModule } from '@nestjs/config'
 import configuration from '../config/configuration'
 import * as crypto from 'crypto'
 import bcrypt from 'bcryptjs'
-import { LoginStrategy } from '@wille430/common'
+import { PrismaService } from '../prisma/prisma.service'
+import { User } from '@prisma/client'
+import { createUserFactory } from 'prisma-factory/generated'
+import { vi } from 'vitest'
 
 describe('UsersService', () => {
     let usersService: UsersService
     let emailService: EmailService
 
-    let mongod: MongoMemoryServer
-    let userModel: Model<UserDocument>
-    const userFactory = factory(UserSchema, {}).setGlobalObjectIdOptions({
-        tostring: false,
+    let prisma: PrismaService
+    let user: User
+    const userFactory = createUserFactory({
+        email: randomEmail(),
     })
 
-    let user: UserDocument
-
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
-
         const module: TestingModule = await Test.createTestingModule({
-            imports: [
-                MongooseModule.forRootAsync({
-                    useFactory: async () => {
-                        const uri = mongod.getUri()
-                        return {
-                            uri: uri,
-                        }
-                    },
-                }),
-                MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-                EmailModule,
-                ConfigModule.forRoot({ load: [configuration] }),
-            ],
-            providers: [UsersService],
+            imports: [EmailModule, ConfigModule.forRoot({ load: [configuration] })],
+            providers: [UsersService, PrismaService],
         }).compile()
 
         usersService = module.get<UsersService>(UsersService)
         emailService = module.get<EmailService>(EmailService)
-        userModel = module.get<Model<UserDocument>>(getModelToken(User.name))
+        prisma = module.get<PrismaService>(PrismaService)
     })
 
     beforeEach(async () => {
-        const mockUser = userFactory.generate({
-            email: randomEmail(),
-            loginStrategy: LoginStrategy.Local,
+        user = await userFactory.create({
+            emailUpdate: null,
+            passwordReset: null,
         })
-        user = await userModel.create(mockUser)
-        await user.save()
-    })
-
-    afterEach(() => {
-        userModel.remove({})
     })
 
     it('should be defined', () => {
@@ -87,26 +63,25 @@ describe('UsersService', () => {
 
             expect(newUser).toHaveProperty('email', createUserDto.email)
             expect(newUser).toHaveProperty('premium', false)
-            expect(newUser).toHaveProperty('watchers', [])
         })
     })
 
     describe('#findAll', () => {
         it('should return an array of users', async () => {
-            expect(await usersService.findAll()).toEqual(await userModel.find({}))
+            expect(await usersService.findAll()).toEqual(await prisma.user.findMany())
         })
     })
 
     describe('#findOne', () => {
         it('should return one user', async () => {
-            expect(await usersService.findOne(user._id)).toBeInstanceOf(Object)
+            expect(await usersService.findOne(user.id)).toBeInstanceOf(Object)
         })
     })
 
     describe('#update', () => {
         it('should return updated user', async () => {
             const updateUserDto: UpdateUserDto = { email: randomEmail() }
-            const updatedUser = await usersService.update(user._id, updateUserDto)
+            const updatedUser = await usersService.update(user.id, updateUserDto)
 
             expect(updatedUser).toHaveProperty('email', updateUserDto.email)
         })
@@ -114,11 +89,11 @@ describe('UsersService', () => {
 
     describe('#remove', () => {
         it('should remove user', async () => {
-            expect(await usersService.findOne(user._id)).toBeTruthy()
+            expect(await usersService.findOne(user.id)).toBeTruthy()
 
-            await usersService.remove(user._id)
+            await usersService.remove(user.id)
 
-            expect(await usersService.findOne(user._id)).toBeNull()
+            expect(await usersService.findOne(user.id)).toBeNull()
         })
     })
 
@@ -128,15 +103,15 @@ describe('UsersService', () => {
                 password: randomPassword(),
                 passwordConfirm: '',
             }
-            changePasswordDto.passwordConfirm = changePasswordDto.password
 
+            changePasswordDto.passwordConfirm = changePasswordDto.password
             const originalPassHash = user.password
 
-            await usersService.changePassword(changePasswordDto, user._id)
+            await usersService.changePassword(changePasswordDto, user.id)
 
-            expect(
-                (await userModel.findOne({ _id: user._id }, { password: 1 })).password
-            ).not.toEqual(originalPassHash)
+            expect((await prisma.user.findUnique({ where: { id: user.id } })).password).not.toEqual(
+                originalPassHash
+            )
         })
     })
 
@@ -152,8 +127,9 @@ describe('UsersService', () => {
             }
             changePasswordDto.passwordConfirm = changePasswordDto.password
 
-            await userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
                     passwordReset: {
                         tokenHash: await bcrypt.hash(token, 10),
                         expiration: Date.now() + 15 * 60 * 60 * 1000,
@@ -165,9 +141,9 @@ describe('UsersService', () => {
 
             await usersService.changePasswordWithToken(changePasswordDto)
 
-            expect(
-                (await userModel.findOne({ _id: user._id }, { password: 1 })).password
-            ).not.toEqual(originalPassHash)
+            expect((await prisma.user.findUnique({ where: { id: user.id } })).password).not.toEqual(
+                originalPassHash
+            )
         })
 
         it('should throw with invalid token', async () => {
@@ -181,8 +157,9 @@ describe('UsersService', () => {
             }
             changePasswordDto.passwordConfirm = changePasswordDto.password
 
-            await userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
                     passwordReset: {
                         tokenHash: await bcrypt.hash(token, 10),
                         expiration: Date.now() - 1000,
@@ -209,8 +186,9 @@ describe('UsersService', () => {
 
             await usersService.sendPasswordResetEmail(passwordResetDto)
 
-            user = await userModel.findById(user._id, ['+passwordReset'])
+            user = await prisma.user.findFirst({ where: { email: user.email } })
 
+            expect(user.passwordReset).toBeTruthy()
             expect(user.passwordReset?.expiration).toBeGreaterThan(Date.now())
             expect(typeof user.passwordReset?.tokenHash).toBe('string')
 
@@ -226,13 +204,13 @@ describe('UsersService', () => {
             mockTransporter.sendMail = vi.fn()
             emailService.transporter = vi.fn().mockResolvedValue(mockTransporter)
 
-            await usersService.verifyEmailUpdate(sendEmailUpdateDto, user._id)
+            await usersService.verifyEmailUpdate(sendEmailUpdateDto, user.id)
 
-            user = await userModel.findById(user._id, { emailUpdate: 1 })
+            user = await prisma.user.findUnique({ where: { id: user.id } })
 
             expect(user.emailUpdate.newEmail).toBe(sendEmailUpdateDto.newEmail)
             expect(typeof user.emailUpdate.tokenHash).toBe('string')
-            expect(user.emailUpdate?.expiration).toBeGreaterThan(Date.now())
+            expect(user.emailUpdate?.expiration?.getTime()).toBeGreaterThan(Date.now())
 
             expect(mockTransporter.sendMail).toBeCalledTimes(1)
         })
@@ -244,12 +222,13 @@ describe('UsersService', () => {
             const token = crypto.randomBytes(32).toString('hex')
             const tokenHash = await bcrypt.hash(token, 10)
 
-            await userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            user = await prisma.user.update({
+                where: { id: user.id },
+                data: {
                     emailUpdate: {
                         newEmail,
                         tokenHash,
-                        expiration: Date.now() + 1000,
+                        expiration: new Date(Date.now() + 1000),
                     },
                 },
             })
@@ -258,10 +237,12 @@ describe('UsersService', () => {
 
             await usersService.updateEmail(updateEmailDto)
 
-            user = await userModel.findById(user._id, '+emailUpdate')
+            user = await prisma.user.findUnique({
+                where: { id: user.id },
+            })
 
             expect(user.email).toBe(newEmail)
-            expect(typeof user.emailUpdate).toBe('undefined')
+            expect(user.emailUpdate).not.toBeTruthy()
         })
 
         it('should throw with invalid token', async () => {
@@ -269,12 +250,13 @@ describe('UsersService', () => {
             const token = crypto.randomBytes(16).toString('hex')
             const tokenHash = await bcrypt.hash(token, 10)
 
-            await userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            user = await prisma.user.update({
+                where: { id: user.id },
+                data: {
                     emailUpdate: {
                         newEmail,
                         tokenHash,
-                        expiration: Date.now(),
+                        expiration: new Date(),
                     },
                 },
             })
@@ -297,12 +279,13 @@ describe('UsersService', () => {
             const token = crypto.randomBytes(16).toString('hex')
             const tokenHash = await bcrypt.hash(token, 10)
 
-            await userModel.findByIdAndUpdate(user._id, {
-                $set: {
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
                     emailUpdate: {
                         newEmail,
                         tokenHash,
-                        expiration: Date.now() - 1000,
+                        expiration: new Date(Date.now() - 1000),
                     },
                 },
             })

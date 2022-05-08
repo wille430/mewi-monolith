@@ -1,4 +1,4 @@
-import { UniqueEmailRule } from '@/rules/unique-email.rule'
+import { UniqueEmailRule } from '@/common/rules/unique-email.rule'
 import { PickType } from '@nestjs/mapped-types'
 import { IsEmail, IsString, Validate, ValidateIf } from 'class-validator'
 

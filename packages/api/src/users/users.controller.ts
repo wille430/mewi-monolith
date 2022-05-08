@@ -15,19 +15,19 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Roles } from '@/auth/roles.decorator'
-import { Role } from '@/auth/role.enum'
+import { Role } from '@prisma/client'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
 import ChangePasswordDto from '@/users/dto/change-password.dto'
-import { Public } from '@/decorators/public.decorator'
-import { GetUser } from '@/decorators/user.decorator'
+import { Public } from '@/common/decorators/public.decorator'
+import { GetUser } from '@/common/decorators/user.decorator'
 import { UpdateEmailDto } from './dto/update-email.dto'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { SuccessParam } from '@wille430/common'
 
-@Controller('users')
+@Controller('/api/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
     constructor(
@@ -36,15 +36,14 @@ export class UsersController {
     ) {}
 
     @Post()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto)
     }
 
     @Get()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findAll() {
-        console.log(this.usersService)
         return this.usersService.findAll()
     }
 
@@ -106,19 +105,19 @@ export class UsersController {
     }
 
     @Get(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
         return this.usersService.findOne(id)
     }
 
     @Patch(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
         return this.usersService.update(id, updateUserDto)
     }
 
     @Delete(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
         return this.usersService.remove(id)
     }

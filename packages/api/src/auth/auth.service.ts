@@ -4,34 +4,39 @@ import {
     NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common'
-import { User, UserDocument } from '@/users/user.schema'
-import { Model } from 'mongoose'
-import { InjectModel } from '@nestjs/mongoose'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import SignUpDto from '@/auth/dto/sign-up.dto'
-import { AuthTokens, LoginStrategy } from '@wille430/common'
+import { AuthTokens } from '@wille430/common'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
+import { LoginStrategy, User } from '@prisma/client'
+import { PrismaService } from '@/prisma/prisma.service'
+
+interface UserPayload {
+    email: string
+    sub: string
+}
 
 @Injectable()
 export class AuthService {
-    constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-        private jwtService: JwtService
-    ) {}
+    constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
-    async validateUser(email: string, pass: string): Promise<User | undefined> {
-        const user = await this.userModel.findOne({ email }).select('+password')
+    async validateUser(email: string, pass: string): Promise<User | null> {
+        const user = await this.prisma.user.findFirst({
+            where: {
+                email,
+            },
+        })
 
-        if (user && (await compare(pass, user.password))) {
-            return this.userModel.findOne({ email })
+        if (user?.password && (await compare(pass, user.password))) {
+            return user
         }
 
-        return undefined
+        return null
     }
 
     createTokens(user: User): AuthTokens {
-        const payload = { email: user.email, sub: user._id }
+        const payload: UserPayload = { email: user.email, sub: user.id }
         return {
             access_token: this.jwtService.sign(payload),
             refresh_token: this.jwtService.sign(payload, {
@@ -48,7 +53,7 @@ export class AuthService {
     async signUp(signUpDto: SignUpDto) {
         const { password, email } = signUpDto
 
-        if (await this.userModel.findOne({ email })) {
+        if (await this.prisma.user.findFirst({ where: { email } })) {
             throw new ConflictException({
                 statusCode: 409,
                 message: ['Email is already taken'],
@@ -57,19 +62,25 @@ export class AuthService {
         }
 
         const hashedPassword = await hash(password, 10)
-        const newUser = new this.userModel({ email, password: hashedPassword })
+        const newUser = await this.prisma.user.create({
+            data: { email, password: hashedPassword },
+        })
 
-        return this.createTokens(await newUser.save())
+        return this.createTokens(newUser)
     }
 
     async refreshToken(refreshTokenDto: RefreshTokenDto) {
         const { refresh_token } = refreshTokenDto
 
         try {
-            const payload = this.jwtService.verify(refresh_token, {
+            const payload: UserPayload = this.jwtService.verify(refresh_token, {
                 secret: process.env.REFRESH_TOKEN_SECRET,
             })
-            const user = await this.userModel.findOne({ email: payload.user })
+            const user = await this.prisma.user.findFirst({ where: { email: payload.email } })
+
+            if (!user) {
+                return null
+            }
 
             return this.createTokens(user)
         } catch (e) {
@@ -82,18 +93,20 @@ export class AuthService {
             throw new NotFoundException('No user received from Google')
         }
 
-        const existingUser = await this.userModel.findOne({ email: req.user.email })
+        const existingUser = await this.prisma.user.findFirst({ where: { email: req.user.email } })
         if (existingUser) {
             //    login
             return this.createTokens(existingUser)
         } else {
             // create user
-            const newUser = new this.userModel({
-                email: req.user.email,
-                loginStrategy: LoginStrategy.Google,
+            const newUser = await this.prisma.user.create({
+                data: {
+                    email: req.user.email,
+                    loginStrategy: LoginStrategy.GOOGLE,
+                },
             })
 
-            return this.createTokens(await newUser.save())
+            return this.createTokens(newUser)
         }
     }
 }

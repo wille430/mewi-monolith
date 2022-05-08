@@ -1,0 +1,39 @@
+.container {
+    @apply mx-auto w-full;
+    min-height: 22rem;
+    max-width: $screen-xl;
+}
+
+.scrollableView {
+    @apply space-x-2 py-2 w-full;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    display: flex;
+
+    &::-webkit-scrollbar {
+        height: 0.5rem;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: gray;
+        border-radius: 1rem;
+    }
+
+    & > * {
+        scroll-snap-align: start;
+        flex: none;
+    }
+}
+
+.loader,
+.errorText,
+.emptyText {
+    @apply mx-auto my-auto text-gray-600;
+}
+
+.emptyText {
+    height: 6rem;
+    text-align: center;
+    max-width: 18rem;
+}

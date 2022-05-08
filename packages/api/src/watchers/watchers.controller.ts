@@ -17,21 +17,21 @@ import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
 import { Roles } from '@/auth/roles.decorator'
-import { Role } from '@/auth/role.enum'
+import { Role } from '@prisma/client'
 
-@Controller('watchers')
+@Controller('/api/watchers')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class WatchersController {
     constructor(private readonly watchersService: WatchersService) {}
 
     @Post()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     create(@Body() createWatcherDto: CreateWatcherDto) {
         return this.watchersService.create(createWatcherDto)
     }
 
     @Get()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findAll(
         @Query(
             new ValidationPipe({
@@ -46,20 +46,20 @@ export class WatchersController {
     }
 
     @Get(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
-        return this.watchersService.findOne(+id)
+        return this.watchersService.findOne(id)
     }
 
     @Patch(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateWatcherDto: UpdateWatcherDto) {
-        return this.watchersService.update(+id, updateWatcherDto)
+        return this.watchersService.update(id, updateWatcherDto)
     }
 
     @Delete(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
-        return this.watchersService.remove(+id)
+        return this.watchersService.remove(id)
     }
 }

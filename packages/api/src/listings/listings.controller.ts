@@ -16,7 +16,7 @@ import { UpdateListingDto } from './dto/update-listing.dto'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { Cache } from 'cache-manager'
 
-@Controller('listings')
+@Controller('/api/listings')
 export class ListingsController {
     constructor(private readonly listingsService: ListingsService) {}
     @Inject(CACHE_MANAGER) private cacheManager: Cache
@@ -50,16 +50,16 @@ export class ListingsController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.listingsService.findOne(+id)
+        return this.listingsService.findOne(id)
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateListingDto: UpdateListingDto) {
-        return this.listingsService.update(+id, updateListingDto)
+        return this.listingsService.update(id, updateListingDto)
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
-        return this.listingsService.remove(+id)
+        return this.listingsService.remove(id)
     }
 }

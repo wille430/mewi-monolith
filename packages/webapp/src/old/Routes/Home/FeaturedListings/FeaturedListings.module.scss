@@ -1,11 +1,13 @@
 .container {
-    @apply mx-auto w-full max-w-6xl;
+    @apply mx-auto w-full;
     min-height: 22rem;
+    max-width: $screen-xl;
 }
 
 .scrollableView {
     @apply flex space-x-2 py-2;
     overflow-x: scroll;
+    scroll-snap-type: x mandatory;
 
     &::-webkit-scrollbar {
         height: 0.5rem;
@@ -15,6 +17,10 @@
     &::-webkit-scrollbar-thumb {
         background-color: gray;
         border-radius: 1rem;
+    }
+
+    & > * {
+        scroll-snap-align: start;
     }
 }
 

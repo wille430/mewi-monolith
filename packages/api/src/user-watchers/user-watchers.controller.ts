@@ -4,13 +4,13 @@ import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/auth/roles.decorator'
-import { Role } from '@/auth/role.enum'
+import { Role } from '@prisma/client'
 import { RolesGuard } from '@/auth/roles.guard'
 import { UserPayload } from '@/auth/jwt-strategy'
-import { GetUser } from '@/decorators/user.decorator'
+import { GetUser } from '@/common/decorators/user.decorator'
 
 @UseGuards(JwtAuthGuard)
-@Controller('users/me/watchers')
+@Controller('/api/users/me/watchers')
 export class MyWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
@@ -48,36 +48,36 @@ export class MyWatchersController {
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('users/:user_id/watchers')
+@Controller('/api/users/:user_id/watchers')
 export class UserWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
     @Post()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     create(@Body() createUserWatcherDto: CreateUserWatcherDto) {
         return this.userWatchersService.create(createUserWatcherDto)
     }
 
     @Get()
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findAll(@Param('user_id') userId: string) {
         return this.userWatchersService.findAll(userId)
     }
 
     @Get(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     findOne(@Param('id') id: string, @Param('user_id') userId: string) {
         return this.userWatchersService.findOne(id, userId)
     }
 
     @Patch(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
         return this.userWatchersService.update(id, updateUserWatcherDto)
     }
 
     @Delete(':id')
-    @Roles(Role.Admin)
+    @Roles(Role.ADMIN)
     remove(@Param('id') id: string, @Param('user_id') userId: string) {
         return this.userWatchersService.remove(id, userId)
     }

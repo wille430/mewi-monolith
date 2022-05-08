@@ -1,10 +1,8 @@
-import { Listing, ListingDocument } from '@/listings/listing.schema'
 import axios from 'axios'
 import robotsParser from 'robots-parser'
-import { Model } from 'mongoose'
-import { ListingOrigins } from '@wille430/common'
-import { validate } from 'class-validator'
 import { ConfigService } from '@nestjs/config'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Listing, ListingOrigin } from '@prisma/client'
 
 export interface ScraperOptions {
     useRobots?: boolean
@@ -24,7 +22,7 @@ export class Scraper {
     /**
      * @param name - The name of the \{Scraper\}, preferably the name of the domain that is scraped
      */
-    name: ListingOrigins
+    name: ListingOrigin
     /**
      * @param limit - Number of listings that are fetched each iteration, default 10
      */
@@ -52,9 +50,9 @@ export class Scraper {
     deleteOlderThan = Date.now() - 2 * 24 * 60 * 60 * 1000
 
     constructor(
-        private listingModel: Model<ListingDocument>,
+        private prisma: PrismaService,
         private configService: ConfigService,
-        name: ListingOrigins,
+        name: ListingOrigin,
         baseUrl: string,
         { useRobots }: ScraperOptions
     ) {
@@ -63,7 +61,8 @@ export class Scraper {
 
         this.maxEntries =
             this.configService.get<number>(`scraper.${this.name}.limit`) ??
-            this.configService.get<number>('scraper.default.limit')
+            this.configService.get<number>('scraper.default.limit') ??
+            0
 
         this.useRobots = useRobots ?? this.useRobots
     }
@@ -100,25 +99,31 @@ export class Scraper {
     async start() {
         let scrapedListings = await this.getListings()
         let remainingEntries =
-            this.maxEntries - (await this.listingModel.count({ origin: ListingOrigins[this.name] }))
+            this.maxEntries -
+            (await this.prisma.listing.count({ where: { origin: ListingOrigin[this.name] } }))
         const errors: Record<string, string> = {}
 
         console.log(`Remaining listings to add: ${remainingEntries}`)
 
         let i = 0
         while (scrapedListings.length && remainingEntries > 0) {
-            const validListings = await this.getValidListings(scrapedListings)
-            const listingCountToAdd = Math.min(remainingEntries, validListings.length)
+            const listingCountToAdd = Math.min(remainingEntries, scrapedListings.length)
 
-            validListings.slice(0, listingCountToAdd)
+            scrapedListings.slice(0, listingCountToAdd)
 
-            await this.listingModel.insertMany(validListings).catch((e) => {
-                errors[i] = e
-            })
+            for (const listing of scrapedListings) {
+                await this.prisma.listing
+                    .create({
+                        data: listing,
+                    })
+                    .catch((e) => {
+                        errors[i] = e
+                    })
+            }
 
             scrapedListings = await this.getListings()
-            remainingEntries -= validListings.length
-            this.listingScraped += validListings.length
+            remainingEntries -= scrapedListings.length
+            this.listingScraped += scrapedListings.length
             i += 1
         }
 
@@ -139,24 +144,28 @@ export class Scraper {
     // }
 
     async deleteOld(): Promise<void> {
-        const { deletedCount } = await this.listingModel.deleteMany({
-            date: { $lte: this.deleteOlderThan },
+        const { count } = await this.prisma.listing.deleteMany({
+            where: {
+                date: {
+                    lte: new Date(this.deleteOlderThan),
+                },
+            },
         })
 
-        console.log(`Successfully deleted ${deletedCount} items with origin ${this.name}`)
+        console.log(`Successfully deleted ${count} items with origin ${this.name}`)
     }
 
-    private async getValidListings(listings: Listing[]) {
-        const validListings: Listing[] = []
+    // private async getValidListings(listings: Listing[]) {
+    //     const validListings: Listing[] = []
 
-        for (const listing of listings) {
-            const errors = await validate(Listing.name, listing)
+    //     for (const listing of listings) {
+    //         const errors = await validate(Listing.name, listing)
 
-            if (!errors.length) {
-                validListings.push(listing)
-            }
-        }
+    //         if (!errors.length) {
+    //             validListings.push(listing)
+    //         }
+    //     }
 
-        return validListings
-    }
+    //     return validListings
+    // }
 }

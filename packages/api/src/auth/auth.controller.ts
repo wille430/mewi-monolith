@@ -2,14 +2,14 @@ import { Controller, Request, Post, UseGuards, Body, Get, Req, Res } from '@nest
 import { AuthService } from '@/auth/auth.service'
 import SignUpDto from '@/auth/dto/sign-up.dto'
 import { LocalAuthGuard } from '@/auth/local-auth.guard'
-import { User } from '@/users/user.schema'
 import { Request as ReqObj } from 'express'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { GoogleAuthGuard } from '@/auth/google-auth.guard'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
+import { User } from '@prisma/client'
 
-@Controller('auth')
+@Controller('/api/auth')
 export class AuthController {
     constructor(private authService: AuthService, private readonly configService: ConfigService) {}
 
