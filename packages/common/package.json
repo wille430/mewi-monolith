@@ -24,7 +24,7 @@
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
         "prepare": "npm run prisma:generate && npm run build",
-        "prisma:generate": "pnpx prisma generate --schema=./src/prisma/schema.prisma"
+        "prisma:generate": "dotenv -- prisma generate"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"
@@ -45,6 +45,7 @@
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^1.0.7",
+        "dotenv-cli": "^5.1.0",
         "microbundle": "^0.14.2",
         "vitest": "^0.8.1"
     },

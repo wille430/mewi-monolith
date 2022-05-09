@@ -7,11 +7,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         await this.$connect()
 
         this.$use(async (params, next) => {
-            if (params.model === 'User') {
+            if (params.model === 'User' && params.action === 'create') {
+                if (!params.args.data.roles) {
+                    params.args.data.roles = []
+                }
+
                 if (params.args.data.roles.indexOf(Role.USER) === -1) {
                     params.args.data.roles = [...params.args.data.roles, Role.USER]
-                } else if (!params.args.data.roles) {
-                    params.args.data.roles = [Role.USER]
                 }
 
                 const result = await next(params)

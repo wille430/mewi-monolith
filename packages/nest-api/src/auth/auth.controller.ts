@@ -9,7 +9,7 @@ import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@wille430/common'
 
-@Controller('/apiv2/auth')
+@Controller('/auth')
 export class AuthController {
     constructor(private authService: AuthService, private readonly configService: ConfigService) {}
 

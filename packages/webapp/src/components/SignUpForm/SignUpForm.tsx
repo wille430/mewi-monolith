@@ -36,10 +36,12 @@ export const SignUpForm = () => {
             onSuccess: () => {
                 dispatch(setLoggedInStatus(true))
             },
-            onError: (err) => {
+            onError: ({ data: { message } }: any) => {
                 setErrors(initErrors)
+
                 const newErrors: Partial<typeof errors> = {}
-                for (const validationError of (err as any).message) {
+
+                for (const validationError of message) {
                     if (validationError.property === 'email') {
                         for (const constraint of Object.keys(validationError.constraints)) {
                             switch (constraint) {
@@ -73,8 +75,7 @@ export const SignUpForm = () => {
                     } else if (
                         validationError.property === 'passwordConfirm' &&
                         Object.keys(
-                            (err as any).message.find((x) => x.property === 'password')
-                                ?.constraints || []
+                            message.find((x) => x.property === 'password')?.constraints || []
                         ).length === 0
                     ) {
                         for (const constraint of Object.keys(validationError.constraints)) {
@@ -89,6 +90,7 @@ export const SignUpForm = () => {
                         }
                     }
                 }
+
                 setErrors({ ...initErrors, ...newErrors })
             },
         }
