@@ -201,6 +201,145 @@ importers:
       '@vitejs/plugin-react': 1.2.0
       vitest: 0.8.1
 
+  packages/nest-api:
+    specifiers:
+      '@faker-js/faker': ^6.0.0-alpha.6
+      '@nestjs/cli': ^8.2.4
+      '@nestjs/common': ^8.4.2
+      '@nestjs/config': ^2.0.0
+      '@nestjs/core': ^8.4.2
+      '@nestjs/jwt': ^8.0.0
+      '@nestjs/mapped-types': ^1.0.1
+      '@nestjs/mongoose': ^9.0.3
+      '@nestjs/passport': ^8.2.1
+      '@nestjs/platform-express': ^8.4.2
+      '@nestjs/schedule': ^1.1.0
+      '@nestjs/serve-static': ^2.2.2
+      '@nestjs/testing': ^8.4.3
+      '@nestjs/throttler': ^2.0.1
+      '@types/bcryptjs': ^2.4.2
+      '@types/email-templates': ^8.0.4
+      '@types/jsdom': ^16.2.14
+      '@types/jsonwebtoken': ^8.5.6
+      '@types/lodash': ^4.14.180
+      '@types/mjml': ^4.7.0
+      '@types/node-schedule': ^1.3.2
+      '@types/passport-google-oauth20': ^2.0.11
+      '@types/passport-jwt': ^3.0.6
+      '@types/passport-local': ^1.0.34
+      '@types/supertest': ^2.0.12
+      '@types/uuid': ^8.3.4
+      '@wille430/common': workspace:^1.0.1
+      axios: ^0.26.1
+      bcryptjs: ^2.4.3
+      cache-manager: ^3.6.0
+      class-transformer: ^0.5.1
+      class-validator: ^0.13.2
+      commander: ^9.1.0
+      cors: ^2.8.5
+      dotenv: ^10.0.0
+      email-templates: ^8.0.8
+      eslint-plugin-tsdoc: ^0.2.14
+      express: ^4.17.3
+      fakingoose: ^2.2.1
+      jsdom: ^19.0.0
+      lodash: ^4.17.21
+      mjml: ^4.12.0
+      mockingoose: ^2.15.2
+      mongodb: ^4.4.1
+      mongodb-memory-server: ^8.4.2
+      mongoose: 6.2.9
+      node-schedule: ^2.1.0
+      nodemailer: ^6.7.2
+      passport: ^0.5.2
+      passport-google-oauth20: ^2.0.0
+      passport-jwt: ^4.0.0
+      passport-local: ^1.0.0
+      prisma-factory: ^0.1.12
+      puppeteer: 13.3.2
+      reflect-metadata: ^0.1.13
+      robots-parser: ^3.0.0
+      rxjs: ^7.5.5
+      source-map-support: ^0.5.21
+      supertest: ^6.2.2
+      tsc-alias: ^1.6.6
+      tslib: ^2.3.1
+      typescript: ^4.6.3
+      unplugin-auto-import: ^0.6.8
+      uuid: ^8.3.2
+      vite: ^2.8.0
+      vite-tsconfig-paths: ^3.4.1
+      vitest: ^0.8.1
+    dependencies:
+      '@faker-js/faker': 6.0.0
+      '@nestjs/cli': 8.2.4
+      '@nestjs/common': 8.4.3_add13df2cdecb4b62cd3f7664ea82e18
+      '@nestjs/config': 2.0.0_00edab75de3d00160109b98add317aa9
+      '@nestjs/core': 8.4.3_c2aa74453c5108161d7d668927d51cc5
+      '@nestjs/jwt': 8.0.0_@nestjs+common@8.4.3
+      '@nestjs/mapped-types': 1.0.1_d8d8a930f4ff3c017ccc0319fdb79137
+      '@nestjs/mongoose': 9.0.3_742992f5dab0042c776e60419b3a70aa
+      '@nestjs/passport': 8.2.1_bdc4c6d4e53181e1a525c1b5bd912ba2
+      '@nestjs/platform-express': 8.4.3_2da8a9968be4406723e870d9d23c8df0
+      '@nestjs/schedule': 1.1.0_e3707db3f627f8174363a48cb9102e98
+      '@nestjs/serve-static': 2.2.2_2da8a9968be4406723e870d9d23c8df0
+      '@nestjs/testing': 8.4.3_f3535ac88edb13f3afdbc086f65fb7f4
+      '@nestjs/throttler': 2.0.1_e3707db3f627f8174363a48cb9102e98
+      '@types/jsdom': 16.2.14
+      '@types/lodash': 4.14.181
+      '@wille430/common': link:../common
+      axios: 0.26.1
+      bcryptjs: 2.4.3
+      cache-manager: 3.6.0
+      class-transformer: 0.5.1
+      class-validator: 0.13.2
+      commander: 9.1.0
+      cors: 2.8.5
+      dotenv: 10.0.0
+      email-templates: 8.1.0
+      express: 4.17.3
+      fakingoose: 2.2.1
+      jsdom: 19.0.0
+      lodash: 4.17.21
+      mjml: 4.12.0
+      mongodb: 4.4.1
+      mongoose: 6.2.9
+      node-schedule: 2.1.0
+      nodemailer: 6.7.3
+      passport: 0.5.2
+      passport-google-oauth20: 2.0.0
+      passport-jwt: 4.0.0
+      passport-local: 1.0.0
+      prisma-factory: 0.1.12_typescript@4.6.3
+      puppeteer: 13.3.2
+      reflect-metadata: 0.1.13
+      robots-parser: 3.0.0
+      rxjs: 7.5.5
+      source-map-support: 0.5.21
+      tslib: 2.3.1
+      uuid: 8.3.2
+      vite: 2.9.8
+    devDependencies:
+      '@types/bcryptjs': 2.4.2
+      '@types/email-templates': 8.0.4
+      '@types/jsonwebtoken': 8.5.8
+      '@types/mjml': 4.7.0
+      '@types/node-schedule': 1.3.2
+      '@types/passport-google-oauth20': 2.0.11
+      '@types/passport-jwt': 3.0.6
+      '@types/passport-local': 1.0.34
+      '@types/supertest': 2.0.12
+      '@types/uuid': 8.3.4
+      eslint-plugin-tsdoc: 0.2.14
+      mockingoose: 2.15.2_mongoose@6.2.9
+      mongodb-memory-server: 8.4.2
+      supertest: 6.2.2
+      tsc-alias: 1.6.6
+      typescript: 4.6.3
+      unplugin-auto-import: 0.6.8_vite@2.9.8
+      vite-tsconfig-paths: 3.4.1_vite@2.9.8
+      vitest: 0.8.1_jsdom@19.0.0
+
   packages/nextjs:
     specifiers:
       '@babel/preset-env': ^7.16.11
@@ -17271,7 +17410,7 @@ packages:
       he: 1.2.0
       param-case: 2.1.1
       relateurl: 0.2.7
-      uglify-js: 3.15.3
+      uglify-js: 3.15.4
     dev: false
 
   /html-tags/3.2.0:
@@ -22744,6 +22883,23 @@ packages:
       - supports-color
     dev: false
 
+  /prisma-factory/0.1.12_typescript@4.6.3:
+    resolution: {integrity: sha512-/oZSWnM8FpwVGBQW0o47HRyqNn9+9efmQQ1Qeag5in5rhEtlI9zGgIaWJwQnPFonUyUpNo85KZjv0CUWeCPPGQ==}
+    hasBin: true
+    peerDependencies:
+      '@prisma/client': ^3.11.0
+      typescript: '>4.5.2'
+    dependencies:
+      '@prisma/generator-helper': 3.13.0
+      '@prisma/sdk': 3.13.0
+      camel-case: 4.1.2
+      ts-morph: 14.0.0
+      typescript: 4.6.3
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
   /prisma/3.13.0:
     resolution: {integrity: sha512-oO1auBnBtieGdiN+57IgsA9Vr7Sy4HkILi1KSaUG4mpKfEbnkTGnLOxAqjLed+K2nsG/GtE1tJBtB7JxN1a78Q==}
     engines: {node: '>=12.6'}
@@ -26541,19 +26697,11 @@ packages:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
     dev: false
 
-  /uglify-js/3.15.3:
-    resolution: {integrity: sha512-6iCVm2omGJbsu3JWac+p6kUiOpg3wFO2f8lIXjfEb8RrmLjzog1wTPMmwKB7swfzzqxj9YM+sGUM++u1qN4qJg==}
-    engines: {node: '>=0.8.0'}
-    hasBin: true
-    requiresBuild: true
-    dev: false
-
   /uglify-js/3.15.4:
     resolution: {integrity: sha512-vMOPGDuvXecPs34V74qDKk4iJ/SN4vL3Ow/23ixafENYvtrNvtbcgUeugTcUGRGsOF/5fU8/NYSL5Hyb3l1OJA==}
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true
-    optional: true
 
   /uid-safe/2.1.5:
     resolution: {integrity: sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA==}
@@ -26746,7 +26894,7 @@ packages:
         optional: true
     dependencies:
       '@antfu/utils': 0.5.0
-      '@rollup/pluginutils': 4.2.0
+      '@rollup/pluginutils': 4.2.1
       local-pkg: 0.4.1
       magic-string: 0.26.1
       resolve: 1.22.0

@@ -1,6 +1,6 @@
 import { ListingSearchFilters } from './index'
 import { Types } from 'mongoose'
-import { Category, ListingOrigin, LoginStrategy } from '../prisma'
+import { Category, ListingOrigin, LoginStrategy } from '@prisma/client'
 
 /**
  * Models
