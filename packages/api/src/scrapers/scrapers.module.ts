@@ -8,7 +8,7 @@ import { ScrapersController } from './scrapers.controller'
 import { ScrapersService } from './scrapers.service'
 
 @Module({
-    imports: [ListingsModule, ListingsModule, UsersModule],
+    imports: [ListingsModule, UsersModule],
     providers: [ScrapersService, ConfigService, PrismaService, ...Scrapers],
     controllers: [ScrapersController],
     exports: [ListingsModule],

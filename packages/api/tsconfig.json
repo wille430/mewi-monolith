@@ -1,5 +1,4 @@
 {
-    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2017",
@@ -16,26 +15,12 @@
         "preserveSymlinks": true,
         "isolatedModules": true,
         "allowJs": true,
-        "lib": ["es2019", "dom", "esnext"],
+        "lib": ["es2019", "dom"],
         "strict": false,
-        "strictNullChecks": true,
         "paths": {
             "@/*": ["./src/*"]
-        },
-        "forceConsistentCasingInFileNames": true,
-        "noEmit": false,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "jsx": "preserve",
-        "types": ["vitest/globals"],
-        "skipDefaultLibCheck": true
+        }
     },
-    "exclude": [
-        "src/**/*.test.ts",
-        "src/**/*.spec.ts",
-        "src/**/*.test.tsx",
-        "src/**/*.spec.tsx",
-        "node_modules"
-    ],
-    "include": ["src/**/*", "./prisma/*.ts"]
+    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "node_modules"],
+    "include": ["src/**/*"]
 }

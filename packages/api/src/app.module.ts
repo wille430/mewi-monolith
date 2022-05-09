@@ -18,7 +18,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 import notificationConfig from './config/notification.config'
 import { ScheduleModule } from '@nestjs/schedule'
-import { PrismaService } from './prisma/prisma.service'
+import { PrismaModule } from './prisma/prisma.module'
 
 @Module({
     imports: [
@@ -42,9 +42,10 @@ import { PrismaService } from './prisma/prisma.service'
         WatchersModule,
         TestModule,
         ScrapersModule,
+        PrismaModule,
         EmailModule,
     ],
     controllers: [AppController],
-    providers: [EmailService, PrismaService],
+    providers: [EmailService],
 })
 export class AppModule {}

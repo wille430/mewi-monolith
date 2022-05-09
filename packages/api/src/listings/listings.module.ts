@@ -1,12 +1,12 @@
 import { CacheModule, Module } from '@nestjs/common'
 import { ListingsService } from './listings.service'
 import { ListingsController } from './listings.controller'
-import { PrismaService } from '@/prisma/prisma.service'
+import { PrismaModule } from '@/prisma/prisma.module'
 
 @Module({
-    imports: [CacheModule.register()],
+    imports: [CacheModule.register(), PrismaModule],
     controllers: [ListingsController],
-    providers: [ListingsService, PrismaService],
+    providers: [ListingsService],
     exports: [ListingsService],
 })
 export class ListingsModule {}

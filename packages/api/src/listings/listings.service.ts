@@ -56,8 +56,12 @@ export class ListingsService {
                 value: {
                     gt: dto.priceRangeGte,
                     ...((args.where.price?.value as any) ?? {}),
-                } as any,
-            }
+                },
+            } as Prisma.Without<
+                Prisma.PriceObjectEqualityInput,
+                Prisma.PriceNullableCompositeFilter
+            > &
+                Prisma.PriceNullableCompositeFilter
         }
 
         if (dto.priceRangeLte) {
@@ -65,8 +69,12 @@ export class ListingsService {
                 value: {
                     lt: dto.priceRangeLte,
                     ...((args.where.price?.value as any) ?? {}),
-                } as any,
-            }
+                },
+            } as Prisma.Without<
+                Prisma.PriceObjectEqualityInput,
+                Prisma.PriceNullableCompositeFilter
+            > &
+                Prisma.PriceNullableCompositeFilter
         }
 
         for (const key in dto) {
@@ -114,75 +122,6 @@ export class ListingsService {
 
         return args
     }
-
-    // createMongoFilters(dto: Partial<FindAllListingsDto>): {
-    //     filters: Partial<Record<keyof Listing, any>>
-    //     options: QueryOptions
-    // } {
-    //     let filters: FilterQuery<ListingDocument> = { $and: [] }
-    //     const options: QueryOptions = { limit: +dto.limit }
-
-    //     if (dto.page && +dto.page > 0) {
-    //         options.skip = (+dto.page - 1) * +dto.limit
-    //     }
-
-    //     if (dto.sort && dto.sort !== Sort.RELEVANCE) {
-    //         options.sort = sortableFields[dto.sort]
-    //     }
-
-    //     if (dto.priceRangeGte) {
-    //         filters.$and.push({ 'price.value': { $gte: dto.priceRangeGte } })
-    //     }
-
-    //     if (dto.priceRangeLte) {
-    //         filters.$and.push({ 'price.value': { $lte: dto.priceRangeLte } })
-    //     }
-
-    //     for (const key in dto) {
-    //         const value = dto[key]
-    //         switch (key as keyof typeof dto) {
-    //             case 'keyword':
-    //                 filters.$text = {
-    //                     ...(filters.$text || []),
-    //                     $search: value,
-    //                 }
-    //                 break
-    //             case 'regions':
-    //                 if (Array.isArray(value)) {
-    //                     filters.$and.push({ region: (value as string[]).join(', ') })
-    //                 } else {
-    //                     filters.$and.push({ region: [value as string].join(', ') })
-    //                 }
-    //                 break
-    //             case 'category':
-    //                 filters.$and.push({
-    //                     [key]: { $all: value },
-    //                 })
-    //                 break
-    //             case 'auction':
-    //                 filters.$and.push({
-    //                     isAuction: value,
-    //                 })
-    //                 break
-    //             case key.match(/priceRange(Gte|Lte)/)?.input:
-    //                 if (key.match(/(Gte)$/)) {
-    //                     filters.$and.push({ 'price.value': { $gte: +value } })
-    //                 } else if (key.match(/(Lte)$/)) {
-    //                     filters.$and.push({ 'price.value': { $lte: +value } })
-    //                 }
-    //                 break
-    //             case 'dateGte':
-    //                 filters.$and.push({ date: { $gte: +value } })
-    //                 break
-    //         }
-    //     }
-
-    //     if (!filters.$and.length) {
-    //         filters = _.omit(filters, '$and')
-    //     }
-
-    //     return { filters, options }
-    // }
 
     async findOne(id: string) {
         return await this.prisma.listing.findUnique({ where: { id } })

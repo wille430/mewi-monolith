@@ -10,7 +10,6 @@ import { AuthController } from './auth.controller'
 import { UserExistsRule } from '@/common/rules/user-exists.rule'
 import { UniqueEmailRule } from '@/common/rules/unique-email.rule'
 import { GoogleStrategy } from '@/auth/google.strategy'
-import { PrismaService } from '@/prisma/prisma.service'
 
 @Module({
     imports: [
@@ -28,7 +27,6 @@ import { PrismaService } from '@/prisma/prisma.service'
         GoogleStrategy,
         UserExistsRule,
         UniqueEmailRule,
-        PrismaService,
     ],
     exports: [AuthService],
     controllers: [AuthController],

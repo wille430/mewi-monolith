@@ -3,6 +3,8 @@ import { AppModule } from './app.module'
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 import { useContainer } from 'class-validator'
 
+console.log('NODE ENV:', process.env.NODE_ENV)
+
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule)
     app.enableCors()
@@ -18,7 +20,6 @@ const bootstrap = async () => {
     await app.listen(3001)
 }
 
-console.log('NODE ENV:', process.env.NODE_ENV)
 ;(async () => {
     bootstrap()
 })()
