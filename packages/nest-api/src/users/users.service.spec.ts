@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { UsersService } from './users.service'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { randomEmail, randomPassword } from '@wille430/common'
+import { randomEmail, randomPassword } from '@mewi/prisma'
 import {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
@@ -16,7 +16,7 @@ import configuration from '../config/configuration'
 import * as crypto from 'crypto'
 import bcrypt from 'bcryptjs'
 import { PrismaService } from '../prisma/prisma.service'
-import { User } from '@wille430/common'
+import { User } from '@mewi/prisma'
 import { createUserFactory } from 'prisma-factory/generated'
 import { vi } from 'vitest'
 

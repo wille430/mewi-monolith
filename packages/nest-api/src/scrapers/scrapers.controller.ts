@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { ListingOrigin, Role } from '@wille430/common'
+import { ListingOrigin, Role } from '@mewi/prisma'
 import { Roles } from '@/auth/roles.decorator'
 import { RolesGuard } from '@/auth/roles.guard'
 import { Controller, Param, Post, UseGuards } from '@nestjs/common'

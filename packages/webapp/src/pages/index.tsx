@@ -4,9 +4,12 @@ import { Layout } from '@/components/Layout/Layout'
 import Head from 'next/head'
 import { ReactElement, useEffect } from 'react'
 import { GetStaticProps } from 'next'
-import { Listing, PrismaClient } from '@mewi/prisma/dist/index-browser'
+import { PrismaClient } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
 import { useAppSelector } from '@/hooks'
+
+console.log(Listing)
 
 interface IndexPageProps {
     featuredListings: Listing[]

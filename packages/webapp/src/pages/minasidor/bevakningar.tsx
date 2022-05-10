@@ -3,6 +3,7 @@ import { Layout } from '@/components/Layout/Layout'
 import SideNav from '@/components/SideNav/SideNav'
 import { withAuth } from '@/lib/auth'
 import { ReactElement } from 'react'
+import WatcherList from '@/components/WatcherList/WatcherList'
 
 export const getServerSideProps = withAuth(
     async (req, res) => {
@@ -29,7 +30,9 @@ const Bevakningar = ({ watchers }) => {
     return (
         <>
             <aside className='side-col'></aside>
-            <main className='main pb-32'>{/* <WatcherList watchers={watchers} /> */}</main>
+            <main className='main pb-32'>
+                <WatcherList watchers={watchers} />
+            </main>
             <aside className='side-col'>
                 <SideNav />
             </aside>

@@ -2,11 +2,11 @@ import axios from 'axios'
 import { Scraper } from './scraper'
 import { JSDOM } from 'jsdom'
 import { BlocketListing } from './types/blocketListing'
-// import { stringSimilarity } from "@wille430/common";
+// import { stringSimilarity } from "@mewi/prisma";
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@wille430/common'
+import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
 
 export class BlocketScraper extends Scraper {
     page = 0

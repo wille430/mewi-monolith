@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@wille430/common'
+import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
 
 export class SellpyScraper extends Scraper {
     page = 1

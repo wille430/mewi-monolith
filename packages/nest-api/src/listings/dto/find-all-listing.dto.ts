@@ -1,5 +1,5 @@
 import { ListingSort } from '@/common/types/listingSort'
-import { Watcher } from '@wille430/common'
+import { Watcher } from '@mewi/prisma'
 import {
     IsOptional,
     IsString,

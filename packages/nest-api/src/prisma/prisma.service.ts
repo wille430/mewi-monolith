@@ -1,5 +1,5 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
-import { PrismaClient, Role } from '@wille430/common'
+import { PrismaClient, Role } from '@mewi/prisma'
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -19,6 +19,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
                 const result = await next(params)
 
                 return result
+            } else {
+                return await next(params)
             }
         })
     }

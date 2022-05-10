@@ -1,37 +1,4 @@
-import { ListingSearchFilters } from './index'
-import { Types } from 'mongoose'
-import { Category, ListingOrigin, LoginStrategy } from '@prisma/client'
-
-/**
- * Models
- */
-
-export interface IUserWatcher {
-    _id: string
-    notifiedAt?: string
-    createdAt: string
-    updatedAt: string
-}
-
-export interface IUser {
-    _id: string
-    email: string
-    premium: boolean
-    watchers: IUserWatcher[]
-    loginStrategy: LoginStrategy
-}
-
-export interface IWatcher {
-    _id: string
-    metadata: ListingSearchFilters
-    users: Types.ObjectId[]
-    createdAt: string
-    updatedAt: string
-}
-
-export interface IPopulatedWatcher extends Omit<IWatcher, 'users' | '_id'>, IUserWatcher {}
-
-export type withId<T> = T & { _id: Types.ObjectId }
+import { Category, ListingOrigin, User } from '@mewi/prisma'
 
 export interface FilterStates {
     regionState: { state: string; setState: any }
@@ -79,4 +46,4 @@ export interface AuthTokens {
     refresh_token: string
 }
 
-export type EditableUserFields = keyof Pick<IUser, 'email'>
+export type EditableUserFields = keyof Pick<User, 'email'>

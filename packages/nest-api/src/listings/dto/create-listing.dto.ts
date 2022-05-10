@@ -1,4 +1,4 @@
-import { Category, Currency, Listing, ListingOrigin } from '@wille430/common'
+import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 
 export class CreateListingDto implements Listing {

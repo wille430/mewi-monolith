@@ -2,33 +2,27 @@
     "name": "@wille430/common",
     "version": "1.0.1",
     "description": "Shared package for Mewi monorepo",
+    "source": "src/index.ts",
     "exports": {
-        ".": "./dist/index.js",
-        "./prisma": "./dist/prismaClient.js"
-    },
-    "typesVersions": {
-        "*": {
-            ".": [
-                "./dist/index.d.ts"
-            ],
-            "./prismaClient": [
-                "./dist/prismaClient.d.ts"
-            ]
-        }
+        "require": "./dist/index.js",
+        "default": "./dist/index.modern.js"
     },
     "main": "dist/index.js",
+    "module": "dist/index.module.js",
+    "types": "dist/index.d.ts",
     "repository": {
         "type": "git",
         "url": "git://github.com/wille430/mewi-monolith.git"
     },
+    "files": [
+        "dist/**/*"
+    ],
     "scripts": {
-        "build": "microbundle -f cjs src/*.ts --no-compress",
+        "build": "microbundle build",
         "dev": "microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
-        "prepare": "npm run prisma:generate && npm run build",
-        "postinstall": "npm run prisma:generate",
-        "prisma:generate": "dotenv -- prisma generate"
+        "prepare": "npm run build"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"
@@ -37,13 +31,7 @@
     "license": "ISC",
     "dependencies": {
         "@faker-js/faker": "^6.0.0",
-        "@prisma/client": "^3.13.0",
-        "@types/lodash": "^4.14.180",
         "lodash": "^4.17.21",
-        "microbundle": "^0.14.2",
-        "mongoose": "6.2.9",
-        "prisma": "^3.13.0",
-        "prisma-factory": "^0.1.12",
         "query-string": "^7.1.1",
         "tslib": "^2.3.1"
     },
@@ -51,9 +39,7 @@
         "@vitejs/plugin-react": "^1.0.7",
         "dotenv-cli": "^5.1.0",
         "microbundle": "^0.14.2",
-        "vitest": "^0.8.1"
-    },
-    "prisma": {
-        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
+        "vitest": "^0.8.1",
+        "@types/lodash": "^4.14.180"
     }
 }

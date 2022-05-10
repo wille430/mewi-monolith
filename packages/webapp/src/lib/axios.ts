@@ -11,4 +11,6 @@ export const setupAxios = () => {
             return Promise.reject(err.response ?? err)
         }
     )
+
+    axios.defaults.withCredentials = true
 }

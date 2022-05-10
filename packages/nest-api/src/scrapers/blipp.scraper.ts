@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Listing, ListingOrigin, Currency } from '@wille430/common'
+import { Category, Listing, ListingOrigin, Currency } from '@mewi/prisma'
 
 export class BlippScraper extends Scraper {
     currentPage = 1

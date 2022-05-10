@@ -6,7 +6,7 @@ import { BlippScraper } from './blipp.scraper'
 import { Scraper } from './scraper'
 import { ConfigService } from '@nestjs/config'
 import { Cron } from '@nestjs/schedule'
-import { ListingOrigin } from '@wille430/common'
+import { ListingOrigin } from '@mewi/prisma'
 
 @Injectable()
 export class ScrapersService {

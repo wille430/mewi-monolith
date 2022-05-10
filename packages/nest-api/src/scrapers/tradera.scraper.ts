@@ -4,7 +4,7 @@ import { TraderaListing } from './types/traderaListing'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@wille430/common'
+import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
 
 interface TraderaCategory {
     id: number

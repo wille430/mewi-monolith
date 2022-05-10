@@ -1,4 +1,4 @@
-import { User } from '@wille430/common'
+import { User } from '@mewi/prisma'
 import { IsEmail, IsNotEmpty } from 'class-validator'
 
 export class CreateUserDto implements Partial<User> {

@@ -1,0 +1,26 @@
+{
+    "name": "@mewi/schemas",
+    "version": "1.0.1",
+    "description": "Shared prisma schema",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/wille430/mewi-monolith.git"
+    },
+    "scripts": {
+        "postinstall": "npm run prisma:generate",
+        "prisma:generate": "dotenv -- prisma generate"
+    },
+    "author": "Mewi",
+    "license": "ISC",
+    "prisma": {
+        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
+    },
+    "devDependencies": {
+        "dotenv-cli": "^5.1.0",
+        "prisma": "^3.13.0",
+        "prisma-factory": "^0.1.12"
+    },
+    "dependencies": {
+        "@prisma/client": "^3.13.0"
+    }
+}

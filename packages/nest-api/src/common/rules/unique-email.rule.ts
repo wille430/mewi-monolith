@@ -9,9 +9,8 @@ export class UniqueEmailRule implements ValidatorConstraintInterface {
 
     async validate(value: string): Promise<boolean> {
         try {
-            const userCount = (await this.prisma.user.count({ where: { email: value } })) ?? 0
-
-            console.log(`Found ${userCount} users wuth email ${value}`)
+            const userCount =
+                (await this.prisma.user.count({ where: { email: value.toLowerCase() } })) ?? 0
 
             if (userCount === 0) {
                 return true
@@ -19,8 +18,6 @@ export class UniqueEmailRule implements ValidatorConstraintInterface {
                 return false
             }
         } catch (e) {
-            console.log(e)
-
             return false
         }
     }

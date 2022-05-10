@@ -8,7 +8,7 @@ import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import SignUpDto from '@/auth/dto/sign-up.dto'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
-import { LoginStrategy, User } from '@wille430/common'
+import { LoginStrategy, User } from '@mewi/prisma'
 import { PrismaService } from '@/prisma/prisma.service'
 import { AuthTokens } from '@/common/types/authTokens'
 

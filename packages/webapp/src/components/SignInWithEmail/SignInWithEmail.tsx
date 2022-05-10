@@ -2,27 +2,32 @@ import { Button, TextField } from '@mewi/ui'
 import { useState } from 'react'
 import SmallContainer from '@/components/SmallContainer/SmallContainer'
 import { useMutation } from 'react-query'
-import axios from 'axios'
+import { useAppDispatch } from '@/hooks'
+import { setLoggedInStatus } from '@/store/user'
+import { useRouter } from 'next/router'
 
 export function SignInWithEmail() {
     const [email, setEmail] = useState<string | undefined>('')
     const [password, setPassword] = useState<string | undefined>('')
     const [error, setError] = useState('')
 
+    const dispatch = useAppDispatch()
+    const Router = useRouter()
+
     const mutation = useMutation(
         () =>
-            axios({
+            fetch('/api/login', {
                 method: 'post',
-                url: '/auth/login',
-                data: { email, password },
+                body: JSON.stringify({ email, password }),
             }),
         {
             onError: () => {
                 setError('Felaktig e-postadress eller lösenord')
                 setPassword('')
             },
-            onSuccess: (val) => {
-                setError('success')
+            onSuccess: () => {
+                dispatch(setLoggedInStatus(true))
+                Router.push('/minasidor')
             },
         }
     )

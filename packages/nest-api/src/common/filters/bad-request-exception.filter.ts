@@ -1,4 +1,5 @@
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter } from '@nestjs/common'
+import { BadRequestResponse } from '@wille430/common'
 
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter implements ExceptionFilter {
@@ -13,6 +14,6 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
             timestamp: new Date().toISOString(),
             message: [],
             path: request.url,
-        })
+        } as BadRequestResponse)
     }
 }

@@ -1,6 +1,6 @@
 const { flowRight } = require('lodash')
 
-const withTM = require('next-transpile-modules')(['@mewi/ui'])
+const withTM = require('next-transpile-modules')(['@mewi/ui', '@wille430/common'])
 
 const config = {
     sassOptions: {

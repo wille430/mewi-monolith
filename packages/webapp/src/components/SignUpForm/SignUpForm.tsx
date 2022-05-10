@@ -4,6 +4,7 @@ import { useMutation } from 'react-query'
 import axios from 'axios'
 import { setLoggedInStatus } from '@/store/user/creators'
 import { useAppDispatch } from '@/hooks'
+import { useRouter } from 'next/router'
 
 export const SignUpForm = () => {
     interface FormData {
@@ -24,6 +25,7 @@ export const SignUpForm = () => {
     const [errors, setErrors] = useState(initErrors)
 
     const dispatch = useAppDispatch()
+    const Router = useRouter()
 
     const mutation = useMutation(
         () =>
@@ -35,6 +37,7 @@ export const SignUpForm = () => {
         {
             onSuccess: () => {
                 dispatch(setLoggedInStatus(true))
+                Router.push('/minasidor')
             },
             onError: ({ data: { message } }: any) => {
                 setErrors(initErrors)

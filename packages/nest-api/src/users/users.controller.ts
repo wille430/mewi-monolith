@@ -24,7 +24,7 @@ import { UpdateEmailDto } from './dto/update-email.dto'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { Role } from '@wille430/common'
+import { Role } from '@mewi/prisma'
 import { SuccessParam } from '@/common/enum/successParam'
 
 @Controller('/users')

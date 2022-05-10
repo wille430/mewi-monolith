@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config'
 import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 import { PrismaService } from '@/prisma/prisma.service'
-import { LoginStrategy, User } from '@wille430/common'
+import { LoginStrategy, User } from '@mewi/prisma'
 
 @Injectable()
 export class UsersService {

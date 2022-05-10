@@ -1,4 +1,4 @@
-import { Listing, Prisma } from '@wille430/common'
+import { Listing, Prisma } from '@mewi/prisma'
 
 export type ListingSort = {
     [key in keyof Listing]: Prisma.SortOrder

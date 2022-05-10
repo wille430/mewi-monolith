@@ -7,7 +7,8 @@ import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { GoogleAuthGuard } from '@/auth/google-auth.guard'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { User } from '@wille430/common'
+import { User } from '@mewi/prisma'
+import { setJWTCookies } from './utils/setJWTCookies'
 
 @Controller('/auth')
 export class AuthController {
@@ -15,15 +16,24 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req: ReqObj & { user: User }, @Res() res: Response) {
+    async login(
+        @Request() req: ReqObj & { user: User },
+        @Res({ passthrough: true }) res: Response
+    ) {
         const tokens = await this.authService.login(req.user)
-        res.cookie('token', tokens.access_token, { expires: new Date() })
+
+        setJWTCookies(res, tokens)
+
+        return tokens
     }
 
     @Post('signup')
-    async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
+    async signUp(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: Response) {
         const tokens = await this.authService.signUp(signUpDto)
-        res.cookie('token', tokens.access_token, { expires: new Date() })
+
+        setJWTCookies(res, tokens)
+
+        return tokens
     }
 
     @Post('token')
