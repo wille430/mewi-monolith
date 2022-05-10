@@ -262,7 +262,6 @@ importers:
       '@faker-js/faker': ^6.0.0-alpha.6
       '@mewi/ui': workspace:^1.0.0
       '@originjs/vite-plugin-commonjs': ^1.0.3
-      '@prisma/client': ^3.13.0
       '@react-hook/window-size': ^3.0.7
       '@reduxjs/toolkit': ^1.8.0
       '@rollup/plugin-commonjs': ^21.0.3
@@ -298,7 +297,6 @@ importers:
       next-redux-wrapper: ^7.0.5
       next-transpile-modules: ^9.0.0
       postcss: 8.4.5
-      prisma: ^3.13.0
       query-string: ^7.1.1
       react: ^17.0.2
       react-device-detect: ^2.1.2
@@ -337,7 +335,6 @@ importers:
       '@babel/preset-react': 7.16.7
       '@faker-js/faker': 6.0.0
       '@mewi/ui': link:../ui
-      '@prisma/client': 3.13.0_prisma@3.13.0
       '@react-hook/window-size': 3.0.7_react@17.0.2
       '@reduxjs/toolkit': 1.8.0_react-redux@7.2.6+react@17.0.2
       '@types/lodash': 4.14.180
@@ -405,7 +402,6 @@ importers:
       cypress: 9.5.2
       netlify-cli: 9.16.4
       postcss: 8.4.5
-      prisma: 3.13.0
       react-test-renderer: 17.0.2_react@17.0.2
       tailwindcss: 3.0.23_b89136460714832cdda11d1e9d57d1ff
       ts-loader: 9.2.8_typescript@4.6.3
@@ -6363,6 +6359,7 @@ packages:
   /@prisma/engines/3.13.0-17.efdf9b1183dddfd4258cd181a72125755215ab7b:
     resolution: {integrity: sha512-Ip9CcCeUocH61eXu4BUGpvl5KleQyhcUVLpWCv+0ZmDv44bFaDpREqjGHHdRupvPN/ugB6gTlD9b9ewdj02yVA==}
     requiresBuild: true
+    dev: false
 
   /@prisma/fetch-engine/3.13.0-17.efdf9b1183dddfd4258cd181a72125755215ab7b:
     resolution: {integrity: sha512-3b67yARheDUUP3mvjo11isFwhuHyUhVtszsUpDgCslru5mxXbJJmTDl6OaxEWZ3Dn/I/1p7saNRV2MrukeEcNw==}
@@ -21789,6 +21786,7 @@ packages:
     dependencies:
       '@prisma/engines': 3.13.0-17.efdf9b1183dddfd4258cd181a72125755215ab7b
       ts-pattern: 4.0.2
+    dev: false
 
   /prismjs/1.27.0:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
@@ -25073,6 +25071,7 @@ packages:
 
   /ts-pattern/4.0.2:
     resolution: {integrity: sha512-eHqR/7A6fcw05vCOfnL6RwgGJbVi9G/YHTdYdjYmElhDdJ1SMn7pWs+6+YuxygaFwQS/g+cIDlu+UD8IVpur1A==}
+    dev: false
 
   /ts-pnp/1.2.0:
     resolution: {integrity: sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==}

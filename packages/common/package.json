@@ -24,6 +24,7 @@
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
         "prepare": "npm run prisma:generate && npm run build",
+        "postinstall": "npm run prisma:generate",
         "prisma:generate": "dotenv -- prisma generate"
     },
     "publishConfig": {

@@ -1,5 +1,5 @@
 // import { jwtVerify, SignJWT } from 'jose'
-import { Role } from '@prisma/client/index-browser'
+import { Role } from '@wille430/common/index-browser'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withSessionSsr } from './withSession'
 

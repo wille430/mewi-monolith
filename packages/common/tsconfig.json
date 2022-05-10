@@ -6,7 +6,7 @@
         "outDir": "./dist",
         "declaration": true,
         "rootDir": "src",
-        "baseUrl": "src",
+        "baseUrl": ".",
         "sourceRoot": "src",
         "lib": ["ES2019"],
         "strict": true,
@@ -16,7 +16,7 @@
         "esModuleInterop": true,
         "noUnusedLocals": true
     },
-    "include": ["src/**/*", "prisma"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "!src/"],
     "references": [
         {

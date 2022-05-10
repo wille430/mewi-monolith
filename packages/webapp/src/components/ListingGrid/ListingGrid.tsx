@@ -1,7 +1,7 @@
 import styles from './ListingGrid.module.scss'
 import classNames from 'classnames'
 import { ListingSearchFilters } from '@wille430/common'
-import { Listing } from '@prisma/client'
+import { Listing } from '@wille430/common'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
 
 const cx = classNames.bind(styles)
