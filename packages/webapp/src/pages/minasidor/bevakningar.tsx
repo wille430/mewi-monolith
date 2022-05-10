@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@wille430/common'
+import { PrismaClient, Role } from '@mewi/prisma'
 import { Layout } from '@/components/Layout/Layout'
 import SideNav from '@/components/SideNav/SideNav'
 import { withAuth } from '@/lib/auth'

@@ -1,4 +1,4 @@
-import type { ListingOrigin } from '@wille430/common'
+import type { ListingOrigin } from '@mewi/prisma'
 
 export const OriginLabel = ({ origin }: { origin: ListingOrigin }) => {
     const originColors: Record<ListingOrigin, string> = {

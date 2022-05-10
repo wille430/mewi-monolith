@@ -1,7 +1,7 @@
 import { Container } from '@mewi/ui'
 import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
 import style from './FeaturedListings.module.scss'
-import { Listing } from '@wille430/common'
+import { Listing } from '@mewi/prisma'
 
 const FeaturedListings = ({ listings }: { listings: Listing[] }) => {
     return (

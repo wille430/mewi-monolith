@@ -1,0 +1,30 @@
+{
+    "name": "@mewi/prisma-browser",
+    "version": "1.0.1",
+    "description": "Shared prisma client for browser runtime",
+    "types": "../dist/browser/index.d.ts",
+    "main": "../dist/browser/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/wille430/mewi-monolith.git"
+    },
+    "scripts": {
+        "build": "microbundle -f cjs ./*.ts --no-compress",
+        "dev": "microbundle watch",
+        "pack": "pnpm pack --pack-destination ../../../archive"
+    },
+    "author": "Mewi",
+    "license": "ISC",
+    "dependencies": {
+        "@prisma/client": "^3.13.0",
+        "prisma-factory": "^0.1.12"
+    },
+    "devDependencies": {
+        "dotenv-cli": "^5.1.0",
+        "microbundle": "^0.14.2",
+        "prisma": "^3.13.0"
+    },
+    "prisma": {
+        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
+    }
+}

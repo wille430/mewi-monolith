@@ -4,7 +4,7 @@ import { Layout } from '@/components/Layout/Layout'
 import Head from 'next/head'
 import { ReactElement, useEffect } from 'react'
 import { GetStaticProps } from 'next'
-import { Listing, PrismaClient } from '@wille430/common'
+import { Listing, PrismaClient } from '@mewi/prisma/dist/index-browser'
 import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
 import { useAppSelector } from '@/hooks'
 

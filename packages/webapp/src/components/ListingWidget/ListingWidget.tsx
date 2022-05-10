@@ -3,7 +3,7 @@ import { OriginLabel } from '@/components/OriginLabel/OriginLabel'
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
 import style from './ListingWidget.module.scss'
-import { Listing } from '@wille430/common'
+import { Listing } from '@mewi/prisma'
 
 interface ListingProps {
     listing: Listing

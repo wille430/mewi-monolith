@@ -2,25 +2,28 @@
     "name": "@wille430/common",
     "version": "1.0.1",
     "description": "Shared package for Mewi monorepo",
-    "source": "src/index.ts",
     "exports": {
-        "require": "./dist/index.js",
-        "default": "./dist/index.modern.js"
+        ".": "./dist/index.js",
+        "./prisma": "./dist/prismaClient.js"
+    },
+    "typesVersions": {
+        "*": {
+            ".": [
+                "./dist/index.d.ts"
+            ],
+            "./prismaClient": [
+                "./dist/prismaClient.d.ts"
+            ]
+        }
     },
     "main": "dist/index.js",
-    "module": "dist/index.module.js",
-    "unpkg": "dist/index.umd.js",
-    "types": "dist/index.d.ts",
     "repository": {
         "type": "git",
         "url": "git://github.com/wille430/mewi-monolith.git"
     },
-    "files": [
-        "dist/**/*"
-    ],
     "scripts": {
-        "build": "npx microbundle build --raw",
-        "dev": "npx microbundle watch",
+        "build": "microbundle -f cjs src/*.ts --no-compress",
+        "dev": "microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
         "prepare": "npm run prisma:generate && npm run build",
