@@ -1,9 +1,9 @@
-import PopUp from 'components/PopUp/PopUp'
+import { PopUp } from '@/components/PopUp/PopUp'
 import { useState } from 'react'
 import { ListingSearchFilters } from '@wille430/common'
-import ResetButton from 'components/SearchFilterArea/ResetButton'
-import AddWatcherButton from 'components/SearchFilterArea/AddWatcherButton'
-import SearchFilterContent from 'components/SearchFilterArea/SearchFilterContent'
+// import ResetButton from '@/components/SearchFilterArea/ResetButton'
+// import AddWatcherButton from '@/components/SearchFilterArea/AddWatcherButton'
+// import SearchFilterContent from '@/components/SearchFilterArea/SearchFilterContent'
 import _ from 'lodash'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
@@ -33,7 +33,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                     }}
                     data-testid='addWatcherPopUp'
                 >
-                    <SearchFilterContent
+                    {/* <SearchFilterContent
                         searchFilterData={formData}
                         onChange={(key, value) => {
                             setFormData((prevState) => ({
@@ -47,10 +47,10 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                         onReset={() => setFormData({ keyword: '' })}
                         showKeywordField={true}
                         heading='Lägg till en bevakning:'
-                    />
+                    /> */}
                     <footer className='flex justify-end pt-4'>
                         <div className='flex flex-col-reverse gap-2 sm:flex-row'>
-                            <ResetButton onClick={clearInputs} />
+                            {/* <ResetButton onClick={clearInputs} />
                             <AddWatcherButton
                                 searchFilters={formData}
                                 onClick={() => {
@@ -58,7 +58,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                                     clearInputs()
                                 }}
                                 data-testid='sendButton'
-                            />
+                            /> */}
                         </div>
                     </footer>
                 </section>
