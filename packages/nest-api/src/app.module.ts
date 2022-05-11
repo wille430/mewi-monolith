@@ -16,6 +16,8 @@ import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { ScrapersModule } from './scrapers/scrapers.module'
 import { TestModule } from './test/test.module'
+import { WatchersModule } from './watchers/watchers.module'
+import { UserWatchersModule } from './user-watchers/user-watchers.module'
 
 @Module({
     imports: [
@@ -39,6 +41,8 @@ import { TestModule } from './test/test.module'
         UsersModule,
         ScrapersModule,
         TestModule,
+        WatchersModule,
+        UserWatchersModule,
     ],
     controllers: [AppController],
 })

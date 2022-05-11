@@ -1,8 +1,8 @@
 import ExpandButton from './ExpandButton/ExpandButton'
 import { useHistory } from 'react-router-dom'
-import { capitalize } from '@wille430/common'
+import { capitalize, PopulatedUserWatcher } from '@wille430/common'
+import { Listing } from '@mewi/prisma'
 import RemoveButton from './RemoveWatcherButton'
-import { IListing, IPopulatedWatcher } from '@wille430/common'
 import { Button } from '@mewi/ui'
 import queryString from 'query-string'
 import _ from 'lodash'
@@ -12,18 +12,19 @@ import { AnimatePresence } from 'framer-motion'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 
 const WatcherCard = ({
-    watcher,
+    userWatcher,
     newItems,
     expand,
     onExpand,
 }: {
-    watcher: IPopulatedWatcher
-    newItems?: IListing[]
+    userWatcher: PopulatedUserWatcher
+    newItems?: Listing[]
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
     const history = useHistory()
     const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
+    const { watcher } = userWatcher
 
     const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -113,7 +114,7 @@ const WatcherCard = ({
                 <footer className='mt-2 flex flex-col-reverse items-center justify-between sm:flex-row'>
                     <div className='w-full text-sm opacity-70 sm:w-auto'>
                         <label className='label'>Lades till:</label>
-                        <span>{new Date(watcher.createdAt).toLocaleDateString('se-SV')}</span>
+                        <span>{new Date(userWatcher.createdAt).toLocaleDateString('se-SV')}</span>
                     </div>
                     <div className='flex w-full justify-end space-x-2 sm:w-auto sm:justify-start'>
                         <Button
@@ -122,14 +123,14 @@ const WatcherCard = ({
                             data-testid='watcherSearchButton'
                             variant='text'
                         />
-                        <RemoveButton watcherId={watcher._id} />
+                        <RemoveButton watcherId={userWatcher.id} />
 
                         <ExpandButton handleExpand={handleExpand} expand={_expand} />
                     </div>
                 </footer>
             </article>
             <AnimatePresence>
-                {_expand && <NewItemsDrawer watcher={watcher} newItems={newItems || []} />}
+                {_expand && <NewItemsDrawer watcher={userWatcher} newItems={newItems || []} />}
             </AnimatePresence>
         </div>
     )

@@ -67,6 +67,7 @@
         @extend .button;
         background-color: transparent;
         color: $primary;
+        box-shadow: none;
 
         &--disabled {
             @extend .button;

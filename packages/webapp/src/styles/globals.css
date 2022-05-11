@@ -84,3 +84,8 @@ p.body2 {
 caption {
     font-size: 0.75rem;
 }
+
+/* REACT SELECT */
+.Select__control {
+    min-height: 42px !important;
+}

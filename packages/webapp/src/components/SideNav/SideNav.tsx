@@ -8,7 +8,7 @@ const SideNav = () => {
             <h4>Mina Sidor</h4>
 
             <ul>
-                <SideNavButton href='/minasidor/minabevakningar'>Mina Bevakningar</SideNavButton>
+                <SideNavButton href='/minasidor/bevakningar'>Mina Bevakningar</SideNavButton>
                 <SideNavButton href='/minasidor/konto'>Mitt Konto</SideNavButton>
             </ul>
         </Container>

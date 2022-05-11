@@ -1,18 +1,17 @@
-import ArticleItemRow from '@/components/ArticleItemRow/ArticleItemRow'
-import { useAppDispatch } from 'hooks/hooks'
+import { ListingRow } from '@/components/ListingRow/ListingRow'
+import { useAppDispatch } from '@/hooks'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
-import { IListing } from '@wille430/common'
+import { Listing, PopulatedUserWatcher } from '@wille430/common'
 import StyledLoader from '@/components/StyledLoader'
-import { openListing } from 'store/search/creators'
+// import { openListing } from '@/store/search/creators'
 import { useQuery } from 'react-query'
 import axios from 'axios'
-import { IPopulatedWatcher } from '@wille430/common'
 import queryString from 'query-string'
 
 interface NewItemsDrawerProps {
-    newItems: IListing[]
-    watcher: IPopulatedWatcher
+    newItems: Listing[]
+    watcher: PopulatedUserWatcher
 }
 
 const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
@@ -56,7 +55,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
 
     const renderItems = () => {
         return [...newItems, ...(_newItems || [])].map((item) => (
-            <ArticleItemRow key={item.id} item={item} onClick={() => handleClick(item.id)} />
+            <ListingRow key={item.id} item={item} onClick={() => handleClick(item.id)} />
         ))
     }
 

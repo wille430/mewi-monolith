@@ -5,9 +5,10 @@ import { FiMenu } from 'react-icons/fi'
 import styles from './Nav.module.scss'
 import { privateLinks, publicLinks } from './links'
 import DrawerNav from './DrawerNav/DrawerNav'
+import { useAppSelector } from '@/hooks'
 
 const Nav = () => {
-    const { isLoggedIn } = { isLoggedIn: false }
+    const { isLoggedIn } = useAppSelector((state) => state.user)
     const [showMenu, setShowMenu] = useState(false)
 
     return (

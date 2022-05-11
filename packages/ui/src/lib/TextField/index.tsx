@@ -18,6 +18,7 @@ export type TextFieldProps = Override<
         fullWidth?: boolean
         debounced?: boolean
         endComponent?: ReactNode[]
+        showLabel?: boolean
     }
 > & {
     'data-testid'?: string
@@ -33,6 +34,7 @@ export const TextField = ({
     fullWidth,
     type,
     debounced = false,
+    showLabel = true,
     endComponent,
     disabled,
     ...rest
@@ -65,7 +67,6 @@ export const TextField = ({
         }
 
         if (_value !== value) {
-            console.log(`Syncing internal state of TextField with placeholder "${placeholder}"`)
             _setValue(value)
         }
     }, [value])
@@ -81,7 +82,7 @@ export const TextField = ({
 
     const ClearButton = () => {
         const handleClick = () => {
-            _setValue('')
+            _setValue(undefined)
             onReset && onReset()
         }
 
@@ -109,6 +110,7 @@ export const TextField = ({
                     [styles['isActive']]: _value || isActive,
                 })}
             >
+                {showLabel && placeholder &&
                 <label
                     className={cx({
                         [styles['label']]: true,
@@ -116,10 +118,10 @@ export const TextField = ({
                     })}
                 >
                     {placeholder}
-                </label>
+                </label>}
                 <hr
                     className={cx({
-                        [styles['noLabel']]: !placeholder,
+                        [styles['noLabel']]: !(showLabel && placeholder),
                     })}
                 />
             </header>
@@ -156,9 +158,10 @@ export const TextField = ({
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={_value || ''}
+                value={_value}
                 type={type}
                 disabled={disabled}
+                placeholder={(isActive && showLabel) ? '' : placeholder}
             />
             <ClearButton />
             {endComponent}

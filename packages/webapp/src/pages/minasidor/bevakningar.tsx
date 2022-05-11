@@ -1,25 +1,26 @@
 import { PrismaClient, Role } from '@mewi/prisma'
-import { Layout } from '@/components/Layout/Layout'
-import SideNav from '@/components/SideNav/SideNav'
 import { withAuth } from '@/lib/auth'
 import { ReactElement } from 'react'
 import WatcherList from '@/components/WatcherList/WatcherList'
+import { MyAccountLayout } from '@/components/MyAccountLayout/MyAccountLayout'
+import { serialize } from '@/lib/serialize'
 
 export const getServerSideProps = withAuth(
-    async (req, res) => {
+    async (req) => {
         const prisma = new PrismaClient()
         const { id } = req.session.user
 
-        const watchers = await prisma.userWatcher.findMany({
-            where: { userId: id },
-            include: {
-                watcher: true,
-            },
-        })
+        const watchers =
+            (await prisma.userWatcher.findMany({
+                where: { userId: id },
+                include: {
+                    watcher: true,
+                },
+            })) ?? []
 
         return {
             props: {
-                watchers: watchers,
+                watchers: serialize(watchers),
             },
         }
     },
@@ -28,18 +29,12 @@ export const getServerSideProps = withAuth(
 
 const Bevakningar = ({ watchers }) => {
     return (
-        <>
-            <aside className='side-col'></aside>
-            <main className='main pb-32'>
-                <WatcherList watchers={watchers} />
-            </main>
-            <aside className='side-col'>
-                <SideNav />
-            </aside>
-        </>
+        <main>
+            <WatcherList watchers={watchers} />
+        </main>
     )
 }
 
-Bevakningar.getLayout = (page: ReactElement) => <Layout>{page}</Layout>
+Bevakningar.getLayout = (page: ReactElement) => <MyAccountLayout>{page}</MyAccountLayout>
 
 export default Bevakningar

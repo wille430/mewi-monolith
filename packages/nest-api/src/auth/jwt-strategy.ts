@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 import { jwtConstants } from './constants'
 import { Request } from 'express'
+import { ACCESS_TOKEN_COOKIE } from '@wille430/common'
 
 export type UserPayload = {
     userId: string
@@ -23,8 +24,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     private static extractJWT(req: Request): string | null {
-        if (req.cookies && 'access_token' in req.cookies && req.cookies.user_token.length > 0) {
-            return req.cookies.token
+        if (
+            req.cookies &&
+            ACCESS_TOKEN_COOKIE in req.cookies &&
+            req.cookies[ACCESS_TOKEN_COOKIE].length > 0
+        ) {
+            return req.cookies[ACCESS_TOKEN_COOKIE]
         } else {
             return null
         }

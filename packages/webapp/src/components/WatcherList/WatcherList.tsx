@@ -3,14 +3,26 @@ import WatcherPopUpButton from './WatcherPopUpButton'
 import { Container, HorizontalLine } from '@mewi/ui'
 import styles from './WatcherList.module.scss'
 import { ReactElement, useState } from 'react'
-import { Watcher, UserWatcher } from '@mewi/prisma'
+import { PopulatedUserWatcher } from '@wille430/common'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 
 interface WatcherListProps {
-    watchers: (UserWatcher & { watcher: Watcher })[]
+    watchers: PopulatedUserWatcher[]
 }
 
 const WatcherList = ({ watchers }: WatcherListProps) => {
     const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
+
+    const { data } = useQuery(
+        'watchers',
+        () => axios.get<PopulatedUserWatcher[]>('/users/me/watchers').then((res) => res.data),
+        {
+            initialData: watchers ?? [],
+            enabled: false,
+            keepPreviousData: true,
+        }
+    )
 
     const withWrapper = (component: ReactElement) => (
         <Container className={styles.watcherList}>
@@ -25,7 +37,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
         </Container>
     )
 
-    if (watchers.length === 0) {
+    if (data.length === 0) {
         return withWrapper(
             <div className='flex flex-grow items-center justify-center'>
                 <div className='h-32'>
@@ -37,12 +49,12 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     return withWrapper(
         <>
-            {watchers.map(
+            {data.map(
                 (watcherObj, i) =>
                     watcherObj && (
                         <WatcherCard
                             key={i}
-                            watcher={watcherObj}
+                            userWatcher={watcherObj}
                             expand={expandedId === watcherObj.id}
                             onExpand={(val?: boolean) => {
                                 if (val) {

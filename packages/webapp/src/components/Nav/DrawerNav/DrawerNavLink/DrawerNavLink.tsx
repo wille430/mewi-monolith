@@ -1,4 +1,5 @@
 import { NavLink } from '@/components/Nav/links'
+import { useAppSelector } from '@/hooks'
 import { motion } from 'framer-motion'
 import { ReactElement } from 'react'
 import styles from './DrawerNavLink.module.scss'
@@ -10,7 +11,7 @@ const DrawerNavLinkItem = ({
     sublinks,
     children,
 }: NavLink & { children?: ReactElement | string }) => {
-    const isLoggedIn = false
+    const { isLoggedIn } = useAppSelector((state) => state.user)
 
     const linkAnimation = {
         hidden: {

@@ -1,11 +1,14 @@
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.css'
 import { Store, wrapper } from '@/store'
 import { setupAxios } from '@/lib/axios'
+import { checkLoggedInStatus } from '@/lib/session'
+import { SWRConfig } from 'swr'
+import { fetchJson } from '@/lib/fetchJson'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -21,8 +24,10 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
-    const queryClient = new QueryClient()
+    const [queryClient] = useState(() => new QueryClient())
+
     setupAxios()
+    checkLoggedInStatus()
 
     return (
         <>
@@ -36,9 +41,16 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
                     content='988378722186-sad5450gog2mdrlef5jrd8ohii22om24.apps.googleusercontent.com'
                 ></meta>
             </Head>
-            <QueryClientProvider client={queryClient}>
-                {getLayout(<Component {...pageProps} />)}
-            </QueryClientProvider>
+            <SWRConfig
+                value={{
+                    fetcher: fetchJson,
+                    onError: (err) => console.log(err),
+                }}
+            >
+                <QueryClientProvider client={queryClient}>
+                    {getLayout(<Component {...pageProps} />)}
+                </QueryClientProvider>
+            </SWRConfig>
         </>
     )
 }

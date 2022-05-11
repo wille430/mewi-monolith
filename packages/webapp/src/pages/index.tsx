@@ -2,14 +2,11 @@ import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
 import { Hero } from '@/components/Hero/Hero'
 import { Layout } from '@/components/Layout/Layout'
 import Head from 'next/head'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import { GetStaticProps } from 'next'
 import { PrismaClient } from '@mewi/prisma'
 import { Listing } from '@mewi/prisma/index-browser'
 import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
-import { useAppSelector } from '@/hooks'
-
-console.log(Listing)
 
 interface IndexPageProps {
     featuredListings: Listing[]
@@ -28,12 +25,6 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Index = ({ featuredListings }: IndexPageProps) => {
-    const loggedIn = useAppSelector((state) => state.user.isLoggedIn)
-
-    useEffect(() => {
-        alert(loggedIn)
-    }, [])
-
     return (
         <>
             <Head>

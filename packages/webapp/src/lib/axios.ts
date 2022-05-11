@@ -7,8 +7,28 @@ export const setupAxios = () => {
         (res) => {
             return res
         },
-        (err) => {
-            return Promise.reject(err.response ?? err)
+        async (err) => {
+            const config = err.config
+
+            console.log('ERR:', err)
+
+            console.log('Intercepting response error...', config.url, err.status)
+            if (err.status === 401 && config.url !== '/auth/login' && !config._retry) {
+                config._retry = true
+
+                // refetch jwt token
+                console.log('Refreshing tokens...')
+                await fetch('/api/refreshjwt', {
+                    credentials: 'include',
+                }).catch(() => {
+                    // when an error occured on this route, the session is destroyed
+                    window.location.href = '/loggain'
+                })
+
+                return config
+            } else {
+                return Promise.reject(err.response ?? err)
+            }
         }
     )
 

@@ -1,0 +1,10 @@
+.form {
+    margin-top: 1rem;
+    & > * + * {
+        margin-top: 1rem;
+    }
+}
+
+.container {
+    max-width: 24rem;
+}

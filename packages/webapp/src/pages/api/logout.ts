@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 export default withSessionRoute(logoutRoute)
 
-function logoutRoute(req: NextApiRequest, res: NextApiResponse<User>) {
+function logoutRoute(req: NextApiRequest, res: NextApiResponse) {
     req.session.destroy()
-    res.json({ isLoggedIn: false, login: '', avatarUrl: '' })
+    res.redirect('/')
 }

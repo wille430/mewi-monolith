@@ -2,7 +2,7 @@ import { FiTrash } from 'react-icons/fi'
 import { Button } from '@mewi/ui'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
-import { IUserWatcher } from '@wille430/common'
+import { PopulatedUserWatcher } from '@wille430/common'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
     const queryClient = useQueryClient()
@@ -10,8 +10,8 @@ const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
         async () => await axios.delete(`/users/me/watchers/${watcherId}`),
         {
             onSuccess: async () =>
-                queryClient.setQueryData('watchers', (old: IUserWatcher[]) =>
-                    old.filter((x) => x._id !== watcherId)
+                queryClient.setQueryData('watchers', (old: PopulatedUserWatcher[]) =>
+                    old.filter((x) => x.id !== watcherId)
                 ),
         }
     )

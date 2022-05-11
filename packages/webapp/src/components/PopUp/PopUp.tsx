@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useRef } from 'react'
 import classNames from 'classnames'
 
 interface PopUpProps {
@@ -11,19 +11,25 @@ export const PopUp = ({
     onOutsideClick,
     show = true,
     ...props
-}: HTMLAttributes<HTMLDivElement> & PopUpProps) => (
-    <div
-        {...props}
-        onClick={(e) => {
-            e.isPropagationStopped()
-            onOutsideClick && onOutsideClick()
-        }}
-        className={classNames({
-            ['absolute top-0 left-0 w-full h-screen']: true,
-            ['hidden']: !show,
-            [props.className]: Boolean(props.className),
-        })}
-    >
-        {children}
-    </div>
-)
+}: HTMLAttributes<HTMLDivElement> & PopUpProps) => {
+    const popUpRef = useRef()
+
+    return (
+        <div
+            {...props}
+            ref={popUpRef}
+            onClick={(e) => {
+                e.isPropagationStopped()
+
+                if (e.target === popUpRef.current) onOutsideClick && onOutsideClick()
+            }}
+            className={classNames({
+                ['absolute top-0 left-0 w-full h-screen bg-black/25 z-20']: true,
+                ['hidden']: !show,
+                [props.className]: Boolean(props.className),
+            })}
+        >
+            {children}
+        </div>
+    )
+}

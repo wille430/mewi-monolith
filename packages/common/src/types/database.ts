@@ -1,4 +1,5 @@
-import { Category, ListingOrigin, User } from '@mewi/prisma'
+import { User, UserWatcher } from '@mewi/prisma'
+import { Watcher } from 'error'
 
 export interface FilterStates {
     regionState: { state: string; setState: any }
@@ -17,25 +18,6 @@ export type CategoryType = string[]
 
 // TODO: export enum Category {}
 
-export interface IListing {
-    id: string
-    title: string
-    body?: string
-    category: Category[]
-    date: number
-    endDate?: number
-    imageUrl: string[]
-    isAuction: boolean
-    redirectUrl: string
-    price?: ListingPrice
-    region?: string
-    parameters: {
-        label: string
-        value: string
-    }[]
-    origin: ListingOrigin
-}
-
 export type ListingPrice = {
     value: number
     currency: string
@@ -47,3 +29,5 @@ export interface AuthTokens {
 }
 
 export type EditableUserFields = keyof Pick<User, 'email'>
+
+export type PopulatedUserWatcher = UserWatcher & { watcher: Watcher }

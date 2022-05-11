@@ -1,5 +1,3 @@
-import { Sort } from './sort.enum'
-
 export const regions = [
     { value: 'norrbotten', label: 'Norrbotten' },
     { value: 'västerbotten', label: 'Västerbotten' },
@@ -25,11 +23,3 @@ export const regions = [
     { value: 'blekinge', label: 'Blekinge' },
     { value: 'skåne', label: 'Skåne' },
 ]
-
-export const sortableFields: Record<Sort, Record<string, number>> = {
-    relevance: {},
-    price_desc: { 'price.value': -1 },
-    price_asc: { 'price.value': 1 },
-    date_asc: { date: 1 },
-    date_desc: { date: -1 },
-}

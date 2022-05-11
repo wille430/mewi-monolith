@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactElement } from 'react'
 import { Container } from '../Container'
 import { HorizontalLine } from '../HorizontalLine'
-// import styles from './index.module.scss'
 
-interface ModalProps {
-    actions?: ReactNode[]
+export interface ModalProps {
+    actions?: ReactElement
     bodyText?: string
     heading?: string
 }

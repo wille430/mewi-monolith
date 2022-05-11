@@ -1,7 +1,6 @@
-import { Parameters } from '@storybook/react'
 import { IronSessionOptions } from 'iron-session'
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next'
-import { NextApiHandler } from 'next'
+import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next'
 import * as crypto from 'crypto'
 
 const sessionOptions: IronSessionOptions = {
@@ -16,6 +15,10 @@ export const withSessionRoute = (handler: NextApiHandler<any>) => {
     return withIronSessionApiRoute(handler, sessionOptions)
 }
 
-export const withSessionSsr = (handler: Parameters<typeof withIronSessionSsr>[0]) => {
+export function withSessionSsr<P extends { [key: string]: unknown } = { [key: string]: unknown }>(
+    handler: (
+        context: GetServerSidePropsContext
+    ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
+) {
     return withIronSessionSsr(handler, sessionOptions)
 }

@@ -1,13 +1,16 @@
-import { Sort } from './sort.enum'
+import { ListingSort } from './listingSort'
+import { Watcher } from '@mewi/prisma'
 
-export interface ListingSearchFilters {
+type Metadata = Watcher['metadata']
+
+export interface ListingSearchFilters extends Partial<Metadata> {
     keyword?: string
-    regions?: string[] | string
+    regions?: string[]
     category?: string
     priceRangeGte?: number
     priceRangeLte?: number
     auction?: boolean
-    dateGte?: number
+    dateGte?: Date
     page?: number
-    sort?: Sort
+    sort?: ListingSort
 }
