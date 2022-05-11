@@ -2,7 +2,8 @@ import { ListingRow } from '@/components/ListingRow/ListingRow'
 import { useAppDispatch } from '@/hooks'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
-import { Listing, PopulatedUserWatcher } from '@wille430/common'
+import { PopulatedUserWatcher } from '@wille430/common'
+import { Listing } from '@mewi/prisma'
 import StyledLoader from '@/components/StyledLoader'
 // import { openListing } from '@/store/search/creators'
 import { useQuery } from 'react-query'
@@ -23,7 +24,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
         isLoading,
         error,
     } = useQuery(
-        ['watcherListings', { id: watcher._id }],
+        ['watcherListings', { id: watcher.id }],
         async () =>
             await axios
                 .get(
@@ -31,7 +32,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                         queryString.stringify({
                             dateGte: new Date(watcher.createdAt).getTime(),
                             limit: LIMIT,
-                            ...watcher.metadata,
+                            ...watcher.watcher.metadata,
                         })
                 )
                 .then((res) => res.data?.hits)
@@ -49,7 +50,8 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     const handleClick = (id: string) => {
         const itemToOpen = newItems.find((x) => x.id === id)
         if (itemToOpen) {
-            dispatch(openListing(itemToOpen))
+            // TODO:
+            // dispatch(openListing(itemToOpen))
         }
     }
 

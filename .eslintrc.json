@@ -26,5 +26,5 @@
             "rules": {}
         }
     ],
-    "ignorePatterns": ["*-lock.json", "dist/*", "_isolated_"]
+    "ignorePatterns": ["*-lock.json", "dist/*", "_isolated_", "*.js"]
 }

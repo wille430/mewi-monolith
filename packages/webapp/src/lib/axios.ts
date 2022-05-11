@@ -25,7 +25,7 @@ export const setupAxios = () => {
                     window.location.href = '/loggain'
                 })
 
-                return config
+                return axios(config)
             } else {
                 return Promise.reject(err.response ?? err)
             }

@@ -1,4 +1,4 @@
-import type { Override } from 'types/types'
+import type { Override } from '@/types/types'
 import { createRef, HTMLAttributes } from 'react'
 
 export type CheckboxProps = Override<

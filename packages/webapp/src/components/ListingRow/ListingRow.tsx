@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common'
+import { Listing } from '@mewi/prisma'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
 import styles from './ListingRow.module.scss'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Button } from '@mewi/ui'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
-    item: IListing
+    item: Listing
 }
 
 export const ListingRow = ({ item, ...rest }: ListingRowprops) => {

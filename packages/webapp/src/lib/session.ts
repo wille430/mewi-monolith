@@ -2,7 +2,6 @@
 import { useAppDispatch } from '@/hooks'
 import { setLoggedInStatus } from '@/store/user'
 import type { IronSessionOptions } from 'iron-session'
-import { NextApiRequest } from 'next'
 import { useEffect } from 'react'
 import { USER_TOKEN } from './constants'
 import { fetchJson } from './fetchJson'
@@ -22,7 +21,7 @@ export const sessionOptions: IronSessionOptions = {
  * @param req The API request object
  * @returns A Next redirect object with destination route '/loggain'
  */
-export const logoutSession = (req: NextApiRequest) => {
+export const logoutSession = (req: any) => {
     req.session.destroy()
 
     return {

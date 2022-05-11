@@ -32,7 +32,11 @@ export const getServerSideProps = withAuth(
 const Konto = ({ user }: KontoPageProps) => {
     return (
         <main>
-            <Container>
+            <Container
+                style={{
+                    minHeight: '50vh',
+                }}
+            >
                 <Container.Header>
                     <h3>Mitt Konto</h3>
                     <HorizontalLine />

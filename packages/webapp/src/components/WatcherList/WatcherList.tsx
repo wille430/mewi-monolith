@@ -20,7 +20,6 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
         {
             initialData: watchers ?? [],
             enabled: false,
-            keepPreviousData: true,
         }
     )
 

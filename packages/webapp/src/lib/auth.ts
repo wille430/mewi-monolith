@@ -1,6 +1,7 @@
 // import { jwtVerify, SignJWT } from 'jose'
 import { Role } from '@mewi/prisma/index-browser'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { IncomingMessage, ServerResponse } from 'http'
+import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { withSessionSsr } from './withSession'
 
 export interface UserJwtPayload {
@@ -10,10 +11,13 @@ export interface UserJwtPayload {
 }
 
 export const withAuth = (
-    handler: (req: NextApiRequest, res: NextApiResponse) => void,
+    handler: (
+        req: IncomingMessage & { cookies: NextApiRequestCookies },
+        res: ServerResponse
+    ) => any,
     allowedRoles?: Role[]
 ) => {
-    return withSessionSsr(async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
+    return withSessionSsr(async ({ req, res }) => {
         const { roles } = req.session?.user ?? {}
 
         if (allowedRoles && (!roles || !allowedRoles.some((x) => roles.includes(x)))) {

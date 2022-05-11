@@ -1,33 +1,20 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import WatcherCard from './WatcherCard'
-import mongoose from 'mongoose'
-import { Provider } from 'react-redux'
-import { store } from 'store'
-import faker from '@faker-js/faker'
-import { generateMockIListing } from '@wille430/common'
-import { IListing } from '@wille430/common'
+import { createUserWatcherFactory, createListingFactory } from '@mewi/prisma/factory'
+import { Listing } from '@mewi/prisma'
 
 export default {
     component: WatcherCard,
     title: 'Watcher Card',
 } as ComponentMeta<typeof WatcherCard>
 
-const Template: ComponentStory<typeof WatcherCard> = (args) => (
-    <Provider store={store}>
-        <WatcherCard {...args} />
-    </Provider>
-)
+const Template: ComponentStory<typeof WatcherCard> = (args) => <WatcherCard {...args} />
+
+const userWatcherFactory = createUserWatcherFactory()
+const listingFactory = createListingFactory()
 
 export const Primary = Template.bind({})
 Primary.args = {
-    watcher: {
-        _id: new mongoose.Types.ObjectId().toString(),
-        metadata: {
-            keyword: faker.random.words(3),
-        },
-        createdAt: new Date().toString(),
-        notifiedAt: new Date().toString(),
-        updatedAt: new Date().toString(),
-    },
-    newItems: generateMockIListing(5) as IListing[],
+    watcher: userWatcherFactory.build(),
+    newItems: Array(5).fill(listingFactory.build()) as Listing[],
 }
