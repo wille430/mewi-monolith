@@ -5,7 +5,9 @@ import classNames from 'classnames'
 
 const cx = classNames.bind(styles)
 
-export const Container = ({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) => (
+export type ContainerProps = HTMLAttributes<HTMLDivElement>
+
+export const Container = ({ className, children, ...rest }: ContainerProps) => (
     <section
         className={classNames({
             [styles['container']]: true,

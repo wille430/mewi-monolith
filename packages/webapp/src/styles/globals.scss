@@ -85,6 +85,15 @@ caption {
     font-size: 0.75rem;
 }
 
+.basic-layout {
+    @apply flex flex-col gap-4 p-4;
+    grid-template-columns: 1fr $screen-lg 1fr;
+
+    @screen xl {
+        display: grid;
+    }
+}
+
 /* REACT SELECT */
 .Select__control {
     min-height: 42px !important;

@@ -32,7 +32,7 @@ export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
     )
 
     return (
-        <section className='max-w-4xl mx-auto'>
+        <section className='w-full'>
             <Container className='mb-12'>
                 <ListingFilters filters={filters} setFilters={setFilters} />
             </Container>

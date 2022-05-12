@@ -2,7 +2,7 @@ import { PrismaClient, Role } from '@mewi/prisma'
 import { withAuth } from '@/lib/auth'
 import { ReactElement } from 'react'
 import WatcherList from '@/components/WatcherList/WatcherList'
-import { MyAccountLayout } from '@/components/MyAccountLayout/MyAccountLayout'
+import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { serialize } from '@/lib/serialize'
 
 export const getServerSideProps = withAuth(

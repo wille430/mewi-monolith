@@ -67,7 +67,7 @@ export const useListingFilters = (
     // eslint-disable-next-line no-constant-condition
     if (typeof window === 'undefined') {
         return {
-            filters: {},
+            filters: {} as ListingSearchFilters,
         }
     }
 
@@ -90,12 +90,12 @@ export const useListingFilters = (
     const filters = useRef(_filters)
 
     const throttleUpdateParams = useCallback(
-        _.debounce((new_filters: typeof _filters) => {
-            filters.current = new_filters
+        _.debounce((newFilters: typeof _filters) => {
+            filters.current = newFilters
             router.push(
                 window.location.pathname +
                     '?' +
-                    queryString.stringify(_.omit(new_filters, excludeInParams)),
+                    queryString.stringify(_.omit(newFilters, excludeInParams)),
                 undefined,
                 { shallow: true }
             )
@@ -104,12 +104,17 @@ export const useListingFilters = (
     )
 
     useEffect(() => {
-        // On first render, update filters from URL search params
-        _setFilters({
-            ...parseSearchParams(window.location.search, excludeInParams),
-            ...defaults,
-        })
-    }, [])
+        // Update filters from URL search params
+        if (shouldUpdate()) {
+            const newFilters = {
+                ...parseSearchParams(window.location.search, excludeInParams),
+                ...defaults,
+            }
+
+            filters.current = newFilters
+            _setFilters(newFilters)
+        }
+    }, [router.query])
 
     useEffect(() => {
         if (shouldUpdate()) throttleUpdateParams(_filters)

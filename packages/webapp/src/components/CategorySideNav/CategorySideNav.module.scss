@@ -1,0 +1,15 @@
+.selected {
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.container {
+    min-height: none;
+    max-width: none;
+    margin-left: auto;
+
+    @screen xl {
+        min-height: 45vh;
+        max-width: 16rem;
+    }
+}

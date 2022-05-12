@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { Role, PrismaClient, User } from '@mewi/prisma'
 import { logoutSession } from '@/lib/session'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
-import { MyAccountLayout } from '@/components/MyAccountLayout/MyAccountLayout'
+import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 
 interface KontoPageProps {
     user: User
