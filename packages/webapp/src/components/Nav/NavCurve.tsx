@@ -1,6 +1,6 @@
 const NavCurve = () => {
     return (
-        <div className='pb-24'>
+        <div className='pb-2'>
             <svg
                 className='w-full fill-primary'
                 style={{

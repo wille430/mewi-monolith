@@ -1,12 +1,11 @@
 import { useRef } from 'react'
 import { useEffect } from 'react'
-import { DetailedHTMLProps, ImgHTMLAttributes, useState } from 'react'
+import { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
 
 const DefaultImage = ({
     src,
     ...props
 }: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
-    const [error, setError] = useState(false)
     const imgRef = useRef<any>()
 
     const replaceImg = (e) => {

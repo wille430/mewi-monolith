@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import Nav from '../Nav/Nav'
+import NavCurve from '../Nav/NavCurve'
 import style from './Layout.module.scss'
 
 interface LayoutProps {
@@ -13,7 +14,7 @@ export const Layout = ({ children, decorations = true }: LayoutProps) => {
             <header className={style.header}>
                 <Nav />
             </header>
-            {decorations && <div>deco</div>}
+            {decorations && <NavCurve />}
             <main className='flex-grow'>{children}</main>
         </div>
     )

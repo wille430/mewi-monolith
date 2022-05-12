@@ -7,7 +7,7 @@ export const SearchInput = () => {
                 <input
                     className='p-2 rounded-l-md px-4 w-full max-w-sm text-black'
                     type='text'
-                    name='query'
+                    name='keyword'
                     placeholder='Vad letar du efter?'
                 />
                 <Button className='rounded-l-none' color='secondary' type='submit' label='Sök' />
