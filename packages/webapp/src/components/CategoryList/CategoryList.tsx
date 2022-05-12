@@ -7,7 +7,7 @@ export const CategoryList = () => (
         data-testid='categoryList'
     >
         {Object.keys(Category).map((key, i) => (
-            <CategoryListItem categoryKey={key as keyof typeof Category} index={i} />
+            <CategoryListItem key={key} categoryKey={key as keyof typeof Category} index={i} />
         ))}
     </div>
 )

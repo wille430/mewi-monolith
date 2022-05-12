@@ -35,7 +35,9 @@ export const checkLoggedInStatus = () => {
     const dispatch = useAppDispatch()
     const { user, mutateUser } = useUser()
 
-    mutateUser(fetchJson('/api/user'))
+    useEffect(() => {
+        mutateUser(fetchJson('/api/user'))
+    }, [])
 
     useEffect(() => {
         dispatch(setLoggedInStatus(Boolean(user)))

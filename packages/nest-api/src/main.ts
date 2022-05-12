@@ -15,6 +15,7 @@ const bootstrap = async () => {
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
+            whitelist: true,
             exceptionFactory: (errors: ValidationError[] = []) => {
                 return new BadRequestException(errors)
             },

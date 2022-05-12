@@ -5,7 +5,7 @@ import { IsOptional, IsString, IsNumber, IsBoolean, IsDate, Min } from 'class-va
 export class FindAllListingsDto implements ListingSearchFilters {
     @IsOptional()
     @IsNumber()
-    @Transform((val) => Number.parseInt(val as any))
+    @Transform(({ value }) => Number.parseInt(value))
     @Min(0)
     limit = 24
 
@@ -24,27 +24,27 @@ export class FindAllListingsDto implements ListingSearchFilters {
 
     @IsOptional()
     @IsNumber()
-    @Transform((val) => Number.parseInt(val as any))
+    @Transform(({ value }) => Number.parseInt(value))
     priceRangeGte?: number
 
     @IsOptional()
     @IsNumber()
-    @Transform((val) => Number.parseInt(val as any))
+    @Transform(({ value }) => Number.parseInt(value))
     priceRangeLte?: number
 
     @IsOptional()
     @IsBoolean()
-    @Transform((val) => (val as any) === 'true')
+    @Transform(({ value }) => value === 'true')
     auction?: boolean
 
     @IsOptional()
     @IsDate()
-    @Transform((val) => new Date(val as any))
+    @Transform(({ value }) => new Date(value))
     dateGte?: Date
 
     @IsOptional()
     @IsNumber()
-    @Transform((val) => Number.parseInt(val as any))
+    @Transform(({ value }) => Number.parseInt(value))
     page?: number
 
     @IsOptional()

@@ -4,6 +4,7 @@ import { UpdateListingDto } from './dto/update-listing.dto'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Listing, Prisma } from '@mewi/prisma'
+import _ from 'lodash'
 
 @Injectable()
 export class ListingsService {
@@ -18,6 +19,8 @@ export class ListingsService {
 
     async findAll(dto: FindAllListingsDto) {
         const { where } = this.metadataToWhereInput(dto)
+
+        console.log({ where })
         // TODO: fix sort
 
         return {
@@ -27,14 +30,15 @@ export class ListingsService {
             }),
             hits: await this.prisma.listing.findMany({
                 where,
+                take: dto.limit,
             }),
         }
     }
 
-    metadataToWhereInput(dto: Partial<FindAllListingsDto>): Prisma.ListingFindFirstArgs {
-        const args: Prisma.ListingFindFirstArgs & {
+    metadataToWhereInput(dto: Partial<FindAllListingsDto>): Prisma.ListingFindManyArgs {
+        const args: Prisma.ListingFindManyArgs & {
             where: Prisma.ListingWhereInput & {
-                OR: Prisma.ListingWhereInput[]
+                OR?: Prisma.ListingWhereInput[]
             }
         } = {
             where: {
@@ -53,29 +57,30 @@ export class ListingsService {
         // }
 
         if (dto.priceRangeGte) {
-            args.where.price = {
-                value: {
-                    gt: dto.priceRangeGte,
-                    ...((args.where.price?.value as any) ?? {}),
+            args.where = {
+                ...args.where,
+                price: {
+                    is: {
+                        value: {
+                            gte: dto.priceRangeGte,
+                        },
+                    },
                 },
-            } as Prisma.Without<
-                Prisma.PriceObjectEqualityInput,
-                Prisma.PriceNullableCompositeFilter
-            > &
-                Prisma.PriceNullableCompositeFilter
+            }
         }
 
         if (dto.priceRangeLte) {
-            args.where.price = {
-                value: {
-                    lt: dto.priceRangeLte,
-                    ...((args.where.price?.value as any) ?? {}),
+            args.where = {
+                ...args.where,
+                price: {
+                    is: {
+                        value: {
+                            ...((args.where.price?.is.value as any) ?? {}),
+                            lte: dto.priceRangeLte,
+                        },
+                    },
                 },
-            } as Prisma.Without<
-                Prisma.PriceObjectEqualityInput,
-                Prisma.PriceNullableCompositeFilter
-            > &
-                Prisma.PriceNullableCompositeFilter
+            }
         }
 
         for (const key in dto) {
@@ -120,6 +125,9 @@ export class ListingsService {
                     break
             }
         }
+
+        // Remove unnecessary keys
+        if (!args.where.OR.length) args.where = _.omit(args.where, 'OR')
 
         return args
     }

@@ -34,78 +34,14 @@
         border-top: none;
     }
 
-    &.fullWidth {
-        width: 100%;
-    }
-
-    &.hidden {
-        display: none;
-    }
-
-    &.disabled {
-        background-color: rgb(216, 212, 212);
-    }
-}
-
-.clearButton {
-    color: gray;
-    pointer-events: inherit;
-
-    &:hover > * {
-        transition: all 500ms ease;
-        transform: rotateZ(90deg);
-    }
-}
-
-.label {
-    transition: translate 1s linear;
-    pointer-events: none;
-    font-size: 1rem;
-    color: gray;
-    flex: none;
-
-    &.isActive {
+    &.isActive .label {
         font-size: 0.75rem;
         color: $primary;
         transform: translateY(-1.1rem);
         transition: none;
-
-        // &:after {
-        //     content: '';
-        //     display: block;
-        //     position: absolute;
-        //     z-index: -1;
-        //     height: 0.5rem;
-        //     width: 100%;
-        //     left: 0px;
-        //     background-color: red;
-        // }
-
-        // &:after {
-        //     content: '';
-        //     height: 1px;
-        //     position: absolute;
-        //     width: 100%;
-        //     background-color: $primary;
-        //     top: 0.5rem;
-        //     right: 0px;
-        // }
-    }
-}
-
-.header {
-    position: absolute;
-    width: 100%;
-    display: block;
-    pointer-events: none;
-
-    & hr {
-        display: none;
-        background-color: transparent;
-        border: none;
     }
 
-    &.isActive {
+    &.isActive .header {
         display: flex;
         & hr {
             display: block;
@@ -140,6 +76,49 @@
                 }
             }
         }
+    }
+
+    &.fullWidth {
+        width: 100%;
+    }
+
+    &.hidden {
+        display: none;
+    }
+
+    &.disabled {
+        background-color: rgb(216, 212, 212);
+    }
+}
+
+.clearButton {
+    color: gray;
+    pointer-events: inherit;
+
+    &:hover > * {
+        transition: all 500ms ease;
+        transform: rotateZ(90deg);
+    }
+}
+
+.label {
+    transition: translate 1s linear;
+    pointer-events: none;
+    font-size: 1rem;
+    color: gray;
+    flex: none;
+}
+
+.header {
+    position: absolute;
+    width: 100%;
+    display: block;
+    pointer-events: none;
+
+    & hr {
+        display: none;
+        background-color: transparent;
+        border: none;
     }
 }
 

@@ -3,10 +3,8 @@ import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
 import styles from './index.module.scss'
-import classNames from 'classnames'
+import cx from 'classnames'
 import { debounce } from 'lodash'
-
-const cx = classNames.bind(styles)
 
 export type TextFieldProps = Override<
     DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
@@ -39,7 +37,7 @@ export const TextField = ({
     disabled,
     ...rest
 }: TextFieldProps) => {
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(true)
     const [_value, _setValue] = useState<TextFieldProps['value']>(value)
 
     const syncValues = useCallback(
@@ -59,13 +57,14 @@ export const TextField = ({
 
     const firstRender = useRef(true)
 
+    useEffect(() => {
+        if (!value) {
+            setIsActive(false)
+        }
+    }, [])
+
     // sync _value with value
     useEffect(() => {
-        if (firstRender.current) {
-            firstRender.current = false
-            return
-        }
-
         if (_value !== value) {
             _setValue(value)
         }
@@ -107,18 +106,17 @@ export const TextField = ({
             <header
                 className={cx({
                     [styles['header']]: true,
-                    [styles['isActive']]: _value || isActive,
                 })}
             >
-                {showLabel && placeholder &&
-                <label
-                    className={cx({
-                        [styles['label']]: true,
-                        [styles['isActive']]: _value || isActive,
-                    })}
-                >
-                    {placeholder}
-                </label>}
+                {showLabel && placeholder && (
+                    <label
+                        className={cx({
+                            [styles['label']]: true,
+                        })}
+                    >
+                        {placeholder}
+                    </label>
+                )}
                 <hr
                     className={cx({
                         [styles['noLabel']]: !(showLabel && placeholder),
@@ -144,9 +142,9 @@ export const TextField = ({
         <div
             className={cx({
                 [styles['container']]: true,
-                [styles['isActive']]: (_value || isActive) && placeholder,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
+                [styles['isActive']]: _value || isActive,
                 [className || '']: true,
                 [styles['disabled']]: disabled,
             })}
@@ -158,10 +156,10 @@ export const TextField = ({
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={_value}
+                value={_value ?? ''}
                 type={type}
                 disabled={disabled}
-                placeholder={(isActive && showLabel) ? '' : placeholder}
+                placeholder={isActive && showLabel ? '' : placeholder}
             />
             <ClearButton />
             {endComponent}

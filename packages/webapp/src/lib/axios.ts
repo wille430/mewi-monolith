@@ -26,6 +26,9 @@ export const setupAxios = () => {
                 })
 
                 return axios(config)
+            } else if (config._retry && err.status === 401) {
+                // Log out when retried request returns 401 again
+                window.location.href = '/loggain'
             } else {
                 return Promise.reject(err.response ?? err)
             }

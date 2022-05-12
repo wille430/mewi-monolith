@@ -125,25 +125,13 @@ export class WatchersService {
             return false
         }
 
-        await this.prisma.listing.findMany({
-            where: {
-                price: {
-                    value: {
-                        gt: 10,
-                    },
-                } as any,
-            },
-        })
-
         const user = (await this.prisma.user.findUnique({ where: { id: userId } })) as User
 
-        // const { filters } = this.listingsService.createMongoFilters(watcher.metadata)
+        const { where } = this.listingService.metadataToWhereInput(watcher.metadata)
 
         // TODO
         const newListings = await this.prisma.listing.findMany({
-            where: {
-                ...(watcher.metadata as any),
-            },
+            where,
             take: 7,
         })
 
