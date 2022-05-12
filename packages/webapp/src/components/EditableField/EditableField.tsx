@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 interface EditableFieldProps extends TextFieldProps {
     label: string
-    onEditComplete?: (val?: string) => void
+    onEditComplete?: (val?: TextFieldProps['value']) => void
 }
 
 const EditableField = ({ label, onEditComplete, disabled, ...rest }: EditableFieldProps) => {
@@ -31,7 +31,7 @@ const EditableField = ({ label, onEditComplete, disabled, ...rest }: EditableFie
                     {...rest}
                     className={styles.editable}
                     value={_value}
-                    onChange={(val) => _setValue(val)}
+                    onChange={(e) => _setValue(e.target.value)}
                     endComponent={[<Button onClick={handleEditComplete} icon={<FiCheck />} />]}
                 />
             ) : (

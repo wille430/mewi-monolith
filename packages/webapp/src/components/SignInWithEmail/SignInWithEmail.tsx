@@ -56,8 +56,8 @@ export function SignInWithEmail() {
             >
                 <div className='w-full'>
                     <TextField
-                        onChange={(val) => {
-                            setEmail(val)
+                        onChange={(e) => {
+                            setEmail(e.target.value)
                             setError('')
                         }}
                         value={email}
@@ -70,8 +70,8 @@ export function SignInWithEmail() {
                 </div>
                 <div className='w-full'>
                     <TextField
-                        onChange={(val) => {
-                            setPassword(val)
+                        onChange={(e) => {
+                            setPassword(e.target.value)
                             setError('')
                         }}
                         value={password}

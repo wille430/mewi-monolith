@@ -71,7 +71,9 @@ const AccountDetails = ({ user }: AccountDetailsProps) => {
                     <label>E-postaddress</label>
                     <TextField
                         value={formData?.email}
-                        onChange={(val) => setFormData((prev) => ({ ...prev, email: val }))}
+                        onChange={(e) =>
+                            setFormData((prev) => ({ ...prev, email: e.target.value }))
+                        }
                         disabled={user?.loginStrategy !== LoginStrategy.LOCAL || mutation.isLoading}
                         fullWidth
                     />

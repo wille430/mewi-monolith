@@ -114,10 +114,10 @@ export const SignUpForm = () => {
                 >
                     <div className='w-full'>
                         <TextField
-                            onChange={(value) => {
+                            onChange={(e) => {
                                 setFormData((prevState) => ({
                                     ...prevState,
-                                    email: value,
+                                    email: e.target.value,
                                 }))
                             }}
                             value={formData.email}
@@ -130,10 +130,10 @@ export const SignUpForm = () => {
                     </div>
                     <div className='w-full'>
                         <TextField
-                            onChange={(value) => {
+                            onChange={(e) => {
                                 setFormData((prevState) => ({
                                     ...prevState,
-                                    password: value,
+                                    password: e.target.value,
                                 }))
                             }}
                             value={formData.password}
@@ -150,10 +150,10 @@ export const SignUpForm = () => {
                     </div>
                     <div className='w-full'>
                         <TextField
-                            onChange={(value) => {
+                            onChange={(e) => {
                                 setFormData((prevState) => ({
                                     ...prevState,
-                                    passwordConfirm: value,
+                                    passwordConfirm: e.target.value,
                                 }))
                             }}
                             value={formData.passwordConfirm}

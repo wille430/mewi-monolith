@@ -17,10 +17,10 @@ export const ListingFilters = ({ filters, setFilters }) => (
             placeholder='Filtrera efter produktnamn...'
             showLabel={false}
             name='keyword'
-            onChange={(val) =>
+            onChange={(e) =>
                 setFilters({
                     ...filters,
-                    keyword: val,
+                    keyword: e.target.value,
                 })
             }
             value={filters.keyword}

@@ -16,7 +16,9 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
                     className='input'
                     value={gte?.toString()}
                     placeholder='Från (kr)'
-                    onChange={(value) => onChange('priceRangeGte', parseFloat(value) || undefined)}
+                    onChange={(e) =>
+                        onChange('priceRangeGte', parseFloat(e.target.value) || undefined)
+                    }
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
@@ -25,7 +27,9 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
                     className='input'
                     value={lte?.toString()}
                     placeholder='Till (kr)'
-                    onChange={(value) => onChange('priceRangeLte', parseFloat(value) || undefined)}
+                    onChange={(e) =>
+                        onChange('priceRangeLte', parseFloat(e.target.value) || undefined)
+                    }
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}

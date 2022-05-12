@@ -1,20 +1,16 @@
-import react, { ReactNode, useCallback, useEffect, useRef } from 'react'
+import react, { ReactNode } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Override } from '../types'
 import styles from './index.module.scss'
 import cx from 'classnames'
-import { debounce } from 'lodash'
 
 export type TextFieldProps = Override<
     DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     {
         showClearButton?: boolean
         onReset?: () => void
-        value?: string
-        onChange?: (value?: string) => void
         fullWidth?: boolean
-        debounced?: boolean
         endComponent?: ReactNode[]
         showLabel?: boolean
     }
@@ -23,65 +19,18 @@ export type TextFieldProps = Override<
 }
 
 export const TextField = ({
-    onChange,
-    className,
-    onReset,
-    placeholder,
     showClearButton,
-    value,
+    onReset,
     fullWidth,
-    type,
-    debounced = false,
-    showLabel = true,
     endComponent,
-    disabled,
+    showLabel = true,
     ...rest
 }: TextFieldProps) => {
-    const [isActive, setIsActive] = useState(true)
-    const [_value, _setValue] = useState<TextFieldProps['value']>(value)
-
-    const syncValues = useCallback(
-        debounced
-            ? debounce(() => {
-                  if (_value !== value) {
-                      onChange && onChange(_value)
-                  }
-              }, 1000)
-            : () => {
-                  if (_value !== value) {
-                      onChange && onChange(_value)
-                  }
-              },
-        [_value, value]
-    )
-
-    const firstRender = useRef(true)
-
-    useEffect(() => {
-        if (!value) {
-            setIsActive(false)
-        }
-    }, [])
-
-    // sync _value with value
-    useEffect(() => {
-        if (_value !== value) {
-            _setValue(value)
-        }
-    }, [value])
-
-    useEffect(() => {
-        if (firstRender.current) {
-            firstRender.current = false
-            return
-        }
-
-        syncValues()
-    }, [_value])
+    const { placeholder, value, disabled, className, type } = rest
+    const [isActive, setIsActive] = useState(Boolean(value))
 
     const ClearButton = () => {
         const handleClick = () => {
-            _setValue(undefined)
             onReset && onReset()
         }
 
@@ -126,10 +75,6 @@ export const TextField = ({
         )
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        _setValue(e.currentTarget.value)
-    }
-
     const handleFocus = () => {
         setIsActive(true)
     }
@@ -144,7 +89,7 @@ export const TextField = ({
                 [styles['container']]: true,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
-                [styles['isActive']]: _value || isActive,
+                [styles['isActive']]: value || isActive,
                 [className || '']: true,
                 [styles['disabled']]: disabled,
             })}
@@ -153,10 +98,9 @@ export const TextField = ({
             <input
                 {...rest}
                 className={styles['input']}
-                onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={_value ?? ''}
+                value={value}
                 type={type}
                 disabled={disabled}
                 placeholder={isActive && showLabel ? '' : placeholder}
