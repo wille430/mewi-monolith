@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import Nav from '../Nav/Nav'
 import NavCurve from '../Nav/NavCurve'
@@ -8,11 +9,22 @@ interface LayoutProps {
     decorations?: boolean
 }
 
+const routesToNotShowLogo = ['/']
+
 export const Layout = ({ children, decorations = true }: LayoutProps) => {
+    const router = useRouter()
+
     return (
         <div className='h-screen flex flex-col'>
             <header className={style.header}>
-                <Nav />
+                <div className={style.innerHeader}>
+                    <div className={style.logo}>
+                        {!routesToNotShowLogo.includes(router.pathname) && (
+                            <img src='/img/logo.png' alt='Mewi logo' />
+                        )}
+                    </div>
+                    <Nav />
+                </div>
             </header>
             {decorations && <NavCurve />}
             <main className='flex-grow'>{children}</main>

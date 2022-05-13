@@ -11,18 +11,20 @@
 .card :global(img) {
     object-fit: cover;
     width: 100%;
-    height: auto;
 }
 
 .image-wrapper {
-    position: relative;
     flex-grow: 1;
+    height: auto;
+    overflow: hidden;
+    display: flex;
 }
 
 .details {
     padding: 0.25rem;
     display: flex;
     flex-direction: column;
+    height: auto;
     flex: none;
 }
 

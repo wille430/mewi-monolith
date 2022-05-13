@@ -1,11 +1,23 @@
 .grid {
     @apply flex w-full flex-none flex-wrap justify-center gap-4 mx-auto;
 
+    & > * {
+        aspect-ratio: 1 / 1;
+    }
+
     @media (max-width: theme('screens.md')) {
         & > * {
             width: 45% !important;
             height: auto !important;
-            aspect-ratio: 1 / 1;
+        }
+    }
+    @media (max-width: calc(theme('screens.sm') * 0.75)) {
+        padding: 0 1rem;
+        gap: 2rem;
+
+        & > * {
+            width: 100% !important;
+            height: auto !important;
         }
     }
 }

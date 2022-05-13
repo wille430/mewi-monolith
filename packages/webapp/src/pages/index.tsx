@@ -4,16 +4,15 @@ import { Layout } from '@/components/Layout/Layout'
 import Head from 'next/head'
 import { ReactElement } from 'react'
 import { GetStaticProps } from 'next'
-import { PrismaClient } from '@mewi/prisma'
 import { Listing } from '@mewi/prisma/index-browser'
 import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
+import prisma from '@/lib/prisma'
 
 interface IndexPageProps {
     featuredListings: Listing[]
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-    const prisma = new PrismaClient()
     const listings = JSON.stringify(await prisma.listing.findMany({ take: 10 }))
 
     return {

@@ -13,7 +13,7 @@ const Nav = () => {
 
     return (
         <>
-            <div className={styles.nav}>
+            <nav className={styles.nav}>
                 <ul>
                     {publicLinks.map((link) => (
                         <NavLinkItem key={link.path} to={link.path}>
@@ -28,7 +28,7 @@ const Nav = () => {
                     ))}
                     {isLoggedIn && <LogOutButton />}
                 </ul>
-            </div>
+            </nav>
 
             <MenuButton onClick={() => setShowMenu(!showMenu)} className={styles.menuButton} />
 

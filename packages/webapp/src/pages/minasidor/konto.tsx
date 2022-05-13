@@ -1,18 +1,18 @@
 import { withAuth } from '@/lib/auth'
 import { Container, HorizontalLine } from '@mewi/ui'
 import { ReactElement } from 'react'
-import { Role, PrismaClient, User } from '@mewi/prisma'
+import { Role, User } from '@mewi/prisma'
 import { logoutSession } from '@/lib/session'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
+import prisma from '@/lib/prisma'
 
 interface KontoPageProps {
     user: User
 }
 
 export const getServerSideProps = withAuth(
-    async (req, res) => {
-        const prisma = new PrismaClient()
+    async (req) => {
         const userId = req.session.user.id
         const user = await prisma.user.findUnique({ where: { id: userId } })
 

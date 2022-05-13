@@ -6,7 +6,7 @@
     grid-area: na;
 
     @media screen and (min-width: $screen-md) {
-        @apply mx-auto flex w-full max-w-xl flex-row rounded-full bg-white p-2.5 px-4 text-sm text-black;
+        @apply mx-auto flex w-screen max-w-xl flex-row rounded-full bg-white p-2.5 px-4 text-sm text-black;
 
         & header {
             display: none;

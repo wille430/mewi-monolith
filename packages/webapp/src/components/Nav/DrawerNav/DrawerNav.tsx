@@ -2,7 +2,12 @@ import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
 import links from '../links'
 import DrawerNavLink from './DrawerNavLink/DrawerNavLink'
 
-const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show: boolean }) => {
+const DrawerNav = ({
+    children,
+    show,
+    className,
+    ...props
+}: HTMLMotionProps<'ul'> & { show: boolean }) => {
     const drawerAnimation = {
         hidden: {
             height: '0',
@@ -40,8 +45,8 @@ const DrawerNav = ({ children, show, ...props }: HTMLMotionProps<'ul'> & { show:
     }
 
     return (
-        <div className='bg-primary'>
-            {/* <motion.div variants={paddingAnimation} animate='animate' custom={show} /> */}
+        <div className={className}>
+            <motion.div variants={paddingAnimation} animate='animate' custom={show} />
             <AnimatePresence>
                 {show && (
                     <motion.ul

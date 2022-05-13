@@ -88,9 +88,13 @@ caption {
 .basic-layout {
     @apply flex flex-col gap-4 p-4;
     grid-template-columns: 1fr calc($screen-md + 2rem) 1fr;
+    max-width: $screen-lg;
+    margin: 0 auto;
 
     @screen xl {
         display: grid;
+        max-width: none;
+        margin: none;
     }
 }
 

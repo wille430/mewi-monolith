@@ -1,10 +1,8 @@
+import prisma from '@/lib/prisma'
 import { withSessionRoute } from '@/lib/withSession'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@mewi/prisma'
 
 export default withSessionRoute(userRoute)
-
-const prisma = new PrismaClient()
 
 async function userRoute(req: NextApiRequest, res: NextApiResponse) {
     if (!req.session.user) {
