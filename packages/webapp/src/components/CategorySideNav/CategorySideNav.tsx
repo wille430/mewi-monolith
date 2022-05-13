@@ -4,12 +4,17 @@ import classNames from 'classnames'
 import styles from './CategorySideNav.module.scss'
 import Link from 'next/link'
 import { Container, ContainerProps } from '@mewi/ui'
+import { useRouter } from 'next/router'
+import queryString from 'query-string'
+import _ from 'lodash'
 
 export interface CategorySideNavProps extends ContainerProps {
     selectedCategory?: Category
 }
 
 export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavProps) => {
+    const router = useRouter()
+
     const isSelected = (key: Category) => {
         return selectedCategory === key
     }
@@ -34,7 +39,11 @@ export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavPr
                                 [styles.selected]: isSelected(key),
                             })}
                         >
-                            <Link href={`/kategorier/${key.toLowerCase()}`}>
+                            <Link
+                                href={`/kategorier/${key.toLowerCase()}?${queryString.stringify(
+                                    _.omit(router.query, ['category'])
+                                )}`}
+                            >
                                 {CategoryLabel[key]}
                             </Link>
                         </li>

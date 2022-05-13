@@ -1,6 +1,6 @@
 import { ListingFilters } from '@/components/ListingFilters/ListingFilters'
 import ListingGrid from '@/components/ListingGrid/ListingGrid'
-import { Container } from '@mewi/ui'
+import { Button, Container } from '@mewi/ui'
 import { useQuery } from 'react-query'
 import queryString from 'query-string'
 import { Listing } from '@mewi/prisma'
@@ -34,7 +34,21 @@ export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
     return (
         <section className='w-full'>
             <Container className='mb-12'>
-                <ListingFilters filters={filters} setFilters={setFilters} />
+                <Container.Content>
+                    <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
+                        <ListingFilters filters={filters} setFilters={setFilters} />
+                    </div>
+                </Container.Content>
+                <Container.Footer className='flex justify-end'>
+                    <Button
+                        label='Rensa'
+                        onClick={(e) =>
+                            setFilters({
+                                ...defaultFilters,
+                            })
+                        }
+                    />
+                </Container.Footer>
             </Container>
             <ListingGrid listings={listings} />
         </section>
