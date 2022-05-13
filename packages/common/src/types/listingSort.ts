@@ -1,5 +1,7 @@
-import { Listing, Prisma } from '@mewi/prisma'
-
-export type ListingSort = {
-    [key in keyof Listing]: Prisma.SortOrder
+export enum ListingSort {
+    RELEVANCE,
+    PRICE_ASC,
+    PRICE_DESC,
+    DATE_ASC,
+    DATE_DESC,
 }

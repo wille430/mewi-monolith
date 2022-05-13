@@ -5,6 +5,7 @@ import { CategorySideNav } from '@/components/CategorySideNav/CategorySideNav'
 import { useRouter } from 'next/router'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { Category } from '@mewi/prisma'
+import { ListingFiltersProvider } from '@/hooks/useListingFilters'
 
 export const getStaticPaths: GetStaticPaths<{ category: Category }> = () => {
     return {
@@ -30,15 +31,15 @@ const CategoryPage = () => {
     const category = (router.query.category as string | undefined)?.toUpperCase()
 
     return (
-        <>
+        <ListingFiltersProvider defaults={{ category }} excludeInParams={['category']}>
             <aside>
                 <CategorySideNav selectedCategory={category} />
             </aside>
             <main>
-                <SearchSection defaultFilters={{ category }} />
+                <SearchSection />
             </main>
             <aside></aside>
-        </>
+        </ListingFiltersProvider>
     )
 }
 

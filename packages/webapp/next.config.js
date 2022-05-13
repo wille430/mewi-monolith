@@ -24,7 +24,7 @@ const config = {
         config.module.rules = [
             ...(config.module?.rules ?? []),
             {
-                test: /\.ts$/,
+                test: /\.(ts|tsx)$/,
                 loader: 'ts-loader', // or 'awesome-typescript-loader'
                 options: {
                     // make sure not to set `transpileOnly: true` here, otherwise it will not work

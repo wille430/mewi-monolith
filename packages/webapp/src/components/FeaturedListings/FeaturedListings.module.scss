@@ -1,7 +1,7 @@
 .container {
     @apply mx-auto w-full;
     min-height: 22rem;
-    max-width: $screen-xl;
+    max-width: theme('screens.xl');
 }
 
 .scrollableView {

@@ -9,11 +9,11 @@
     grid-template-rows: auto auto;
     grid-template-areas: 'lg . mb' 'me me me';
 
-    @media (min-width: $screen-md) {
+    @media (min-width: theme('screens.md')) {
         grid-template-columns: 1fr auto 1fr;
         grid-template-rows: auto;
         grid-template-areas: 'lg na .';
-        max-width: $screen-lg;
+        max-width: theme('screens.lg');
         margin: 0 auto;
     }
 }

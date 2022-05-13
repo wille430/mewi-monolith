@@ -7,23 +7,27 @@ import { Listing } from '@mewi/prisma'
 import { useListingFilters } from '@/hooks/useListingFilters'
 import axios from 'axios'
 import { ListingSearchFilters } from '@wille430/common'
+import PageNav from '../PageNav/PageNav'
+import { useRef } from 'react'
+import { ListingResultText } from '../ListingResultText/ListingResultText'
+import SortButton from '../SortButton/SortButton'
 
 export interface SearchSectionProps {
     defaultFilters?: Partial<ListingSearchFilters>
 }
 
-export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
-    const { filters, debouncedFilters, setFilters } = useListingFilters(
-        defaultFilters,
-        Object.keys(defaultFilters) as Array<keyof ListingSearchFilters>
-    )
+export const SearchSection = () => {
+    const { filters, debouncedFilters, setFilters, defaults: defaultFilters } = useListingFilters()
+    const scrollUpRef = useRef()
 
-    const { data: listings } = useQuery(
+    const { data } = useQuery(
         ['listings', debouncedFilters],
         () =>
             axios
-                .get<{ hits: Listing[] }>('/listings?' + queryString.stringify(debouncedFilters))
-                .then((res) => res.data?.hits),
+                .get<{ hits: Listing[]; totalHits: number } | undefined>(
+                    '/listings?' + queryString.stringify(debouncedFilters)
+                )
+                .then((res) => res.data),
         {
             refetchOnMount: false,
             refetchOnWindowFocus: false,
@@ -33,7 +37,8 @@ export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
 
     return (
         <section className='w-full'>
-            <Container className='mb-12'>
+            <div ref={scrollUpRef} />
+            <Container>
                 <Container.Content>
                     <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
                         <ListingFilters filters={filters} setFilters={setFilters} />
@@ -42,7 +47,7 @@ export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
                 <Container.Footer className='flex justify-end'>
                     <Button
                         label='Rensa'
-                        onClick={(e) =>
+                        onClick={() =>
                             setFilters({
                                 ...defaultFilters,
                             })
@@ -50,7 +55,12 @@ export const SearchSection = ({ defaultFilters = {} }: SearchSectionProps) => {
                     />
                 </Container.Footer>
             </Container>
-            <ListingGrid listings={listings} />
+            <div className='mb-4 flex justify-between py-1'>
+                <ListingResultText totalHits={data?.totalHits} />
+                <SortButton />
+            </div>
+            <ListingGrid />
+            <PageNav anchorEle={scrollUpRef} totalHits={data?.totalHits} />
         </section>
     )
 }

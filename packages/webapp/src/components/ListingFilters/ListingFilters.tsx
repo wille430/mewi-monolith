@@ -23,7 +23,7 @@ export const ListingFilters = ({ filters, setFilters }) => (
                     keyword: e.target.value,
                 })
             }
-            value={filters.keyword}
+            value={filters.keyword ?? ''}
             data-testid='keywordInput'
             fullWidth
         />

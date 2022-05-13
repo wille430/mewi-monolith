@@ -5,6 +5,7 @@ import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Listing, Prisma } from '@mewi/prisma'
 import _ from 'lodash'
+import { ListingSort } from '@wille430/common'
 
 @Injectable()
 export class ListingsService {
@@ -18,18 +19,17 @@ export class ListingsService {
     }
 
     async findAll(dto: FindAllListingsDto) {
-        const { where } = this.metadataToWhereInput(dto)
+        const args = this.metadataToWhereInput(dto)
 
-        console.log({ where })
         // TODO: fix sort
 
         return {
             filters: dto,
             totalHits: await this.prisma.listing.count({
-                where,
+                where: args.where,
             }),
             hits: await this.prisma.listing.findMany({
-                where,
+                ...args,
                 take: dto.limit,
             }),
         }
@@ -46,15 +46,37 @@ export class ListingsService {
             },
         }
 
-        if (dto.page && +dto.page > 0) {
-            args.skip = (+dto.page - 1) * +(dto.limit ?? 20)
+        if (dto.page && dto.page > 0) {
+            args.skip = (dto.page - 1) * (dto.limit ?? 20)
         }
 
-        // if (dto.sort && dto.sort !== Sort.RELEVANCE) {
-        //   args.orderBy = {
-        //     ...sortableFields[dto.sort],
-        //   };
-        // }
+        const listingSortToOrderBy: Record<ListingSort, Prisma.ListingOrderByWithRelationInput> = {
+            [ListingSort.DATE_ASC]: {
+                date: 'asc',
+            },
+            [ListingSort.DATE_DESC]: {
+                date: 'desc',
+            },
+            [ListingSort.PRICE_ASC]: {
+                price: {
+                    value: 'asc',
+                },
+            },
+            [ListingSort.PRICE_DESC]: {
+                price: {
+                    value: 'desc',
+                },
+            },
+            [ListingSort.RELEVANCE]: undefined,
+        }
+
+        // TODO: SORT
+        if (dto.sort !== ListingSort.RELEVANCE) {
+            args.orderBy = {
+                ...listingSortToOrderBy[dto.sort],
+            }
+            console.log(args.orderBy)
+        }
 
         if (dto.priceRangeGte) {
             args.where = {

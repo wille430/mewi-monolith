@@ -10,7 +10,7 @@
         min-width: none;
 
         @screen lg {
-            min-width: $screen-md;
+            min-width: theme('screens.md');
         }
     }
 }

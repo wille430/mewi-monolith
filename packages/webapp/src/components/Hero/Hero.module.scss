@@ -10,7 +10,7 @@
 .inner-hero {
     display: flex;
     width: 100%;
-    max-width: $screen-lg;
+    max-width: theme('screens.lg');
     align-items: center;
     justify-content: space-between;
 
@@ -18,7 +18,7 @@
         margin-left: 2rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    @media screen and (max-width: theme('screens.lg')) {
         flex-direction: column;
         justify-content: center;
         align-items: center;

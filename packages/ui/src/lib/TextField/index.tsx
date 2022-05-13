@@ -1,20 +1,22 @@
-import react, { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Override } from '../types'
 import styles from './index.module.scss'
 import cx from 'classnames'
+import { Override } from '../types'
 
 export type TextFieldProps = Override<
-    DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+    DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     {
-        showClearButton?: boolean
-        onReset?: () => void
-        fullWidth?: boolean
-        endComponent?: ReactNode[]
-        showLabel?: boolean
+        value: string
     }
 > & {
+    showClearButton?: boolean
+    onReset?: () => void
+    fullWidth?: boolean
+    endComponent?: ReactNode[]
+    showLabel?: boolean
+} & {
     'data-testid'?: string
 }
 
@@ -28,6 +30,8 @@ export const TextField = ({
 }: TextFieldProps) => {
     const { placeholder, value, disabled, className, type } = rest
     const [isActive, setIsActive] = useState(Boolean(value))
+
+    useEffect(() => console.log('VALUE: ', value), [value])
 
     const ClearButton = () => {
         const handleClick = () => {
@@ -100,9 +104,6 @@ export const TextField = ({
                 className={styles['input']}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                value={value}
-                type={type}
-                disabled={disabled}
                 placeholder={isActive && showLabel ? '' : placeholder}
             />
             <ClearButton />

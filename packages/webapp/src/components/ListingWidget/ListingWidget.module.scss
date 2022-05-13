@@ -1,5 +1,5 @@
 .card {
-    @apply shadow border border-gray-100 rounded-sm;
+    @apply shadow-md border-2 border-gray-100 rounded-sm bg-paper;
     width: 16rem;
     height: 16rem;
     cursor: pointer;

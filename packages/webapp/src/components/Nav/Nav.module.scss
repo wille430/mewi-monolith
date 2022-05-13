@@ -5,7 +5,7 @@
     display: none;
     grid-area: na;
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: theme('screens.md')) {
         @apply mx-auto flex w-screen max-w-xl flex-row rounded-full bg-white p-2.5 px-4 text-sm text-black;
 
         & header {
@@ -54,7 +54,7 @@
         height: 100%;
     }
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: theme('screens.md')) {
         display: grid;
         grid-template-columns: 15rem 1fr 15rem;
         grid-gap: 0.75rem;
@@ -71,7 +71,7 @@
     grid-area: mb;
     margin-left: auto;
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: theme('screens.md')) {
         display: none;
     }
 }
@@ -83,7 +83,7 @@
         @apply py-4;
     }
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: theme('screens.md')) {
         display: none;
     }
 }
@@ -94,7 +94,7 @@
 
     @apply text-white;
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: theme('screens.md')) {
         display: none;
     }
 }

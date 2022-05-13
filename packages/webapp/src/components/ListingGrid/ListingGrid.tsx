@@ -1,36 +1,40 @@
 import styles from './ListingGrid.module.scss'
 import classNames from 'classnames'
-import { ListingSearchFilters } from '@wille430/common'
-import { Listing } from '@mewi/prisma'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
+import { useListingFilters } from '@/hooks/useListingFilters'
+import { useQueryClient } from 'react-query'
+import { Listing } from '@mewi/prisma/index-browser'
+import StyledLoader from '../StyledLoader'
 
 const cx = classNames.bind(styles)
 
-const NON_DEBOUNCED_FILTERS: (keyof ListingSearchFilters)[] = ['category', 'page']
+const ListingGrid = () => {
+    const { debouncedFilters } = useListingFilters()
+    const queryClient = useQueryClient()
 
-interface ListingGridProps {
-    listings: Listing[]
-}
+    const { data, isFetching, error } = queryClient.getQueryState<any>([
+        'listings',
+        debouncedFilters,
+    ])
+    const listings = data?.hits as Listing[]
 
-const ListingGrid = ({ listings }: ListingGridProps) => {
-    // if (isLoading || isFetching || shouldFetch) {
-    //     return (
-    //         <section
-    //             className={cx({
-    //                 [styles.center]: true,
-    //             })}
-    //         >
-    //             <StyledLoader />
-    //         </section>
-    //     )
-    // } else if (error) {
-    //     return (
-    //         <section className={styles.center}>
-    //             <span>Ett fel inträffade</span>
-    //         </section>
-    //     )
-    // } else {
-    if (listings?.length) {
+    if (isFetching) {
+        return (
+            <section
+                className={cx({
+                    [styles.center]: true,
+                })}
+            >
+                <StyledLoader />
+            </section>
+        )
+    } else if (error) {
+        return (
+            <section className={styles.center}>
+                <span>Ett fel inträffade</span>
+            </section>
+        )
+    } else if (listings?.length) {
         return (
             <section className={styles.grid}>
                 {listings.map((listing) => (

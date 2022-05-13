@@ -41,7 +41,7 @@ export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavPr
                         >
                             <Link
                                 href={`/kategorier/${key.toLowerCase()}?${queryString.stringify(
-                                    _.omit(router.query, ['category'])
+                                    _.omit(router.query, ['category', 'page'])
                                 )}`}
                             >
                                 {CategoryLabel[key]}

@@ -14,7 +14,7 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
             <div className='flex flex-col space-y-3 text-black'>
                 <TextField
                     className='input'
-                    value={gte?.toString()}
+                    value={(gte ?? '').toString()}
                     placeholder='Från (kr)'
                     onChange={(e) =>
                         onChange('priceRangeGte', parseFloat(e.target.value) || undefined)
@@ -25,7 +25,7 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
                 ></TextField>
                 <TextField
                     className='input'
-                    value={lte?.toString()}
+                    value={(lte ?? '').toString()}
                     placeholder='Till (kr)'
                     onChange={(e) =>
                         onChange('priceRangeLte', parseFloat(e.target.value) || undefined)

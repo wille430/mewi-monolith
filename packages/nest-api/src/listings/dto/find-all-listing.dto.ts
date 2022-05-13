@@ -1,6 +1,6 @@
 import { ListingSearchFilters, ListingSort } from '@wille430/common'
 import { Transform } from 'class-transformer'
-import { IsOptional, IsString, IsNumber, IsBoolean, IsDate, Min } from 'class-validator'
+import { IsOptional, IsString, IsNumber, IsBoolean, IsDate, Min, IsEnum } from 'class-validator'
 
 export class FindAllListingsDto implements ListingSearchFilters {
     @IsOptional()
@@ -48,5 +48,7 @@ export class FindAllListingsDto implements ListingSearchFilters {
     page?: number
 
     @IsOptional()
+    @IsEnum(ListingSort)
+    @Transform(({ value }) => Number.parseInt(value))
     sort?: ListingSort
 }

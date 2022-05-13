@@ -1,5 +1,5 @@
 import type { Override } from '@/types/types'
-import { createRef, HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 
 export type CheckboxProps = Override<
     HTMLAttributes<HTMLInputElement>,
@@ -11,9 +11,7 @@ export type CheckboxProps = Override<
     }
 >
 
-const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => {
-    const inputRef = createRef<HTMLInputElement>()
-
+const Checkbox = ({ onClick, label, name, checked = false, ...rest }: CheckboxProps) => {
     const handleClick = () => {
         onClick && onClick(!checked)
     }
@@ -23,7 +21,6 @@ const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => 
             <input
                 type='checkbox'
                 name={name}
-                ref={inputRef}
                 data-testid='checkbox'
                 className='cursor-pointer'
                 checked={checked}
