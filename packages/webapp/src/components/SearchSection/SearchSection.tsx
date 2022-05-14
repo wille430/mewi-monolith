@@ -11,6 +11,9 @@ import PageNav from '../PageNav/PageNav'
 import { useRef } from 'react'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import ListingPopUp from '../ListingPopUp/ListingPopUp'
+import { closeListing } from '@/store/listings'
 
 export interface SearchSectionProps {
     defaultFilters?: Partial<ListingSearchFilters>
@@ -19,6 +22,8 @@ export interface SearchSectionProps {
 export const SearchSection = () => {
     const { filters, debouncedFilters, setFilters, defaults: defaultFilters } = useListingFilters()
     const scrollUpRef = useRef()
+    const openedListing = useAppSelector((state) => state.listings.opened)
+    const dispatch = useAppDispatch()
 
     const { data } = useQuery(
         ['listings', debouncedFilters],
@@ -36,7 +41,7 @@ export const SearchSection = () => {
     )
 
     return (
-        <section className='w-full'>
+        <section className='w-full h-full flex flex-col'>
             <div ref={scrollUpRef} />
             <Container>
                 <Container.Content>
@@ -55,12 +60,18 @@ export const SearchSection = () => {
                     />
                 </Container.Footer>
             </Container>
-            <div className='mb-4 flex justify-between py-1'>
+            <div className='my-4 flex justify-between'>
                 <ListingResultText totalHits={data?.totalHits} />
                 <SortButton />
             </div>
             <ListingGrid />
             <PageNav anchorEle={scrollUpRef} totalHits={data?.totalHits} />
+            {openedListing && (
+                <ListingPopUp
+                    onClose={() => dispatch(closeListing())}
+                    listing={openedListing}
+                ></ListingPopUp>
+            )}
         </section>
     )
 }

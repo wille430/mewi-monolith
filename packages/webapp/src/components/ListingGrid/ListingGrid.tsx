@@ -5,12 +5,15 @@ import { useListingFilters } from '@/hooks/useListingFilters'
 import { useQueryClient } from 'react-query'
 import { Listing } from '@mewi/prisma/index-browser'
 import StyledLoader from '../StyledLoader'
+import { useAppDispatch } from '@/hooks'
+import { openListing } from '@/store/listings'
 
 const cx = classNames.bind(styles)
 
 const ListingGrid = () => {
     const { debouncedFilters } = useListingFilters()
     const queryClient = useQueryClient()
+    const dispatch = useAppDispatch()
 
     const { data, isFetching, error } = queryClient.getQueryState<any>([
         'listings',
@@ -38,7 +41,10 @@ const ListingGrid = () => {
         return (
             <section className={styles.grid}>
                 {listings.map((listing) => (
-                    <ListingWidget listing={listing} />
+                    <ListingWidget
+                        onClick={() => dispatch(openListing(listing))}
+                        listing={listing}
+                    />
                 ))}
             </section>
         )
@@ -49,7 +55,6 @@ const ListingGrid = () => {
             </section>
         )
     }
-    // }
 }
 
 export default ListingGrid

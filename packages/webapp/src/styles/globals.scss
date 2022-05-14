@@ -90,11 +90,16 @@ caption {
     grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
     max-width: theme('screens.lg');
     margin: 0 auto;
+    height: 100%;
 
     @screen xl {
         display: grid;
         max-width: none;
         margin: none;
+    }
+
+    & > main {
+        flex-grow: 1;
     }
 }
 

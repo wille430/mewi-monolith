@@ -24,7 +24,7 @@ export const PopUp = ({
                 if (e.target === popUpRef.current) onOutsideClick && onOutsideClick()
             }}
             className={classNames({
-                ['absolute top-0 left-0 w-full h-screen bg-black/25 z-20']: true,
+                ['fixed top-0 left-0 w-full h-screen bg-black/25 z-20']: true,
                 ['hidden']: !show,
                 [props.className]: Boolean(props.className),
             })}

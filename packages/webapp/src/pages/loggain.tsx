@@ -5,14 +5,14 @@ import { ReactElement } from 'react'
 
 const Login = () => {
     return (
-        <>
+        <main>
             <Head>
                 <title>Logga in | Mewi.se</title>
             </Head>
             <section style={{ paddingTop: '15vh' }}>
                 <SignInWithEmail />
             </section>
-        </>
+        </main>
     )
 }
 

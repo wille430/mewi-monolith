@@ -4,11 +4,12 @@ import Head from 'next/head'
 import { ReactElement, ReactNode, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
-import { Store, wrapper } from '@/store'
+import { wrapper } from '@/store'
 import { setupAxios } from '@/lib/axios'
 import { checkLoggedInStatus } from '@/lib/session'
 import { SWRConfig } from 'swr'
 import { fetchJson } from '@/lib/fetchJson'
+import { useStore } from 'react-redux'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -19,15 +20,19 @@ type AppPropsWithLayout = AppProps & {
     pageProps: AppProps['pageProps'] & {
         initialReduxState: any
     }
-    store: Store
 }
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
     const [queryClient] = useState(() => new QueryClient())
+    const store = useStore()
 
     setupAxios()
     checkLoggedInStatus()
+
+    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+        window.store = store
+    }
 
     return (
         <>

@@ -4,13 +4,21 @@ import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
 import style from './ListingWidget.module.scss'
 import { Listing } from '@mewi/prisma'
+import { HTMLAttributes } from 'react'
+import classNames from 'classnames'
 
-interface ListingProps {
+interface ListingProps extends HTMLAttributes<HTMLElement> {
     listing: Listing
 }
 
-export const ListingWidget = ({ listing }: ListingProps) => (
-    <article className={style['card']}>
+export const ListingWidget = ({ listing, ...rest }: ListingProps) => (
+    <article
+        {...rest}
+        className={classNames({
+            [style['card']]: true,
+            [rest.className]: !!rest.className,
+        })}
+    >
         <div className={style['image-wrapper']}>
             <DefaultImage src={listing.imageUrl[0]} alt={listing.title} />
         </div>

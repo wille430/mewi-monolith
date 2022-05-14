@@ -7,6 +7,9 @@ import { GetStaticProps } from 'next'
 import { Listing } from '@mewi/prisma/index-browser'
 import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
 import prisma from '@/lib/prisma'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import ListingPopUp from '@/components/ListingPopUp/ListingPopUp'
+import { closeListing } from '@/store/listings'
 
 interface IndexPageProps {
     featuredListings: Listing[]
@@ -24,8 +27,11 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Index = ({ featuredListings }: IndexPageProps) => {
+    const openedListing = useAppSelector((state) => state.listings.opened)
+    const dispatch = useAppDispatch()
+
     return (
-        <>
+        <main>
             <Head>
                 <title>Mewi.se - Sök efter beggagnade produkter på ett enda ställe</title>
             </Head>
@@ -35,7 +41,13 @@ const Index = ({ featuredListings }: IndexPageProps) => {
             </section>
             <FeaturedListings listings={featuredListings} />
             <div className='h-32' />
-        </>
+            {openedListing && (
+                <ListingPopUp
+                    onClose={() => dispatch(closeListing())}
+                    listing={openedListing}
+                ></ListingPopUp>
+            )}
+        </main>
     )
 }
 

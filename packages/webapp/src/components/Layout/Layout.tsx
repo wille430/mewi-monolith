@@ -27,7 +27,7 @@ export const Layout = ({ children, decorations = true }: LayoutProps) => {
                 </div>
             </header>
             {decorations && <NavCurve />}
-            <main className='flex-grow'>{children}</main>
+            <div className='flex-grow'>{children}</div>
         </div>
     )
 }

@@ -93,12 +93,12 @@ export const TextField = ({
                 [styles['container']]: true,
                 [styles['fullWidth']]: fullWidth,
                 [styles['hidden']]: type === 'hidden',
-                [styles['isActive']]: value || isActive,
+                [styles['isActive']]: !!value || isActive,
                 [className || '']: true,
                 [styles['disabled']]: disabled,
             })}
         >
-            {placeholder && <Label />}
+            <Label />
             <input
                 {...rest}
                 className={styles['input']}

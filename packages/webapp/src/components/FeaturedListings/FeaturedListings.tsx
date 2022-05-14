@@ -2,8 +2,12 @@ import { Container } from '@mewi/ui'
 import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
 import style from './FeaturedListings.module.scss'
 import { Listing } from '@mewi/prisma'
+import { useAppDispatch } from '@/hooks'
+import { openListing } from '@/store/listings'
 
 const FeaturedListings = ({ listings }: { listings: Listing[] }) => {
+    const dispatch = useAppDispatch()
+
     return (
         <Container className={style.container}>
             <h3>Produkter i blickfånget</h3>
@@ -14,8 +18,12 @@ const FeaturedListings = ({ listings }: { listings: Listing[] }) => {
             ) : (
                 <>
                     <div className={style.scrollableView}>
-                        {listings?.map((x) => (
-                            <ListingWidget key={x.id} listing={x} />
+                        {listings?.map((listing) => (
+                            <ListingWidget
+                                key={listing.id}
+                                onClick={() => dispatch(openListing(listing))}
+                                listing={listing}
+                            />
                         ))}
                     </div>
                 </>
