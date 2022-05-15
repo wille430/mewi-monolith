@@ -33,18 +33,56 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
             startNum = filters.page - 2
         }
 
+        const showFirstPageSkip = startNum > 1
+        const showLastPageSkip = totalPages > startNum + maxNumButtons - 1
+
         return (
             <>
                 {Array(totalNumButtons)
                     .fill(startNum)
-                    .map((num, i) => (
-                        <NavButton
-                            key={num + i}
-                            label={num + i}
-                            selected={filters.page === num + i || (!filters.page && num + i === 1)}
-                            onClick={handleClick}
-                        />
-                    ))}
+                    .map((num, i) => {
+                        const currentNumber = num + i
+
+                        if (i === totalNumButtons - 1 && showLastPageSkip) {
+                            return (
+                                <>
+                                    <span className='block mt-auto mx-2'>...</span>
+                                    <NavButton
+                                        key={totalPages}
+                                        label={totalPages}
+                                        selected={
+                                            filters.page === totalPages ||
+                                            (!filters.page && totalPages === 1)
+                                        }
+                                        onClick={handleClick}
+                                    />
+                                </>
+                            )
+                        } else if (i === 0 && showFirstPageSkip) {
+                            return (
+                                <>
+                                    <NavButton
+                                        key={1}
+                                        label={1}
+                                        selected={false}
+                                        onClick={handleClick}
+                                    />
+                                    <span className='block mt-auto mx-2'>...</span>
+                                </>
+                            )
+                        }
+                        return (
+                            <NavButton
+                                key={currentNumber}
+                                label={currentNumber}
+                                selected={
+                                    filters.page === currentNumber ||
+                                    (!filters.page && currentNumber === 1)
+                                }
+                                onClick={handleClick}
+                            />
+                        )
+                    })}
             </>
         )
     }
