@@ -8,7 +8,7 @@
     },
     "scripts": {
         "postinstall": "npm run prisma:generate",
-        "prisma:generate": "dotenv -- prisma generate",
+        "prisma:generate": "dotenv -- prisma generate --schema ./prisma/schema.prisma",
         "prisma:seed": "dotenv -- prisma db seed"
     },
     "author": "Mewi",
