@@ -12,7 +12,8 @@
         "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
         "isolate": "pnpm run isolate -r",
         "db:up": "docker-compose up db -d || docker compose up db -d",
-        "db:down": "docker-compose down db || docker compose down db"
+        "db:down": "docker-compose down db || docker compose down db",
+        "postinstall": "sh ./tools/copy_packages.sh"
     },
     "private": true,
     "devDependencies": {
