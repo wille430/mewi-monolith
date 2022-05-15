@@ -44,7 +44,6 @@
         "passport-google-oauth20": "^2.0.0",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
-        "prisma-factory": "^0.1.12",
         "puppeteer": "13.3.2",
         "reflect-metadata": "^0.1.13",
         "robots-parser": "^3.0.0",
