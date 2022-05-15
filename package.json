@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@types/lodash": "^4.14.181",
-        "pnpm": "^6.32.4"
+        "pnpm": "^6.32.4",
+        "next": "^12.1.6"
     }
 }
