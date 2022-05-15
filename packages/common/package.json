@@ -22,7 +22,8 @@
         "dev": "microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "preinstall": "pnpm run prisma:generate -r"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"
