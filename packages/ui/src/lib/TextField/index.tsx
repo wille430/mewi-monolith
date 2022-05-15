@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import styles from './index.module.scss'
@@ -30,8 +30,6 @@ export const TextField = ({
 }: TextFieldProps) => {
     const { placeholder, value, disabled, className, type } = rest
     const [isActive, setIsActive] = useState(Boolean(value))
-
-    useEffect(() => console.log('VALUE: ', value), [value])
 
     const ClearButton = () => {
         const handleClick = () => {

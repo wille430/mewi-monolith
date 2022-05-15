@@ -7,7 +7,7 @@ describe('register', () => {
     }
 
     beforeEach(() => {
-        cy.visit('/register')
+        cy.visit('/nyttkonto')
         userInfo.email = randomEmail()
         userInfo.password = randomPassword()
     })
@@ -19,7 +19,7 @@ describe('register', () => {
 
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.url().should('equal', Cypress.config('baseUrl') + '/minabevakningar')
+        cy.url().should('equal', Cypress.config('baseUrl') + '/minasidor/bevakningar')
     })
 
     it('should display too weak password message', () => {

@@ -1,7 +1,6 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
-import axios from 'axios'
 import { setLoggedInStatus } from '@/store/user/creators'
 import { useAppDispatch } from '@/hooks'
 import { useRouter } from 'next/router'
@@ -29,17 +28,24 @@ export const SignUpForm = () => {
 
     const mutation = useMutation(
         () =>
-            axios({
+            fetch('/api/signup', {
                 method: 'post',
-                url: '/auth/signup',
-                data: formData,
+                body: JSON.stringify(formData),
+            }).then(async (res) => {
+                if (res.ok) {
+                    return await res.json()
+                } else {
+                    throw await res.json()
+                }
             }),
         {
             onSuccess: () => {
                 dispatch(setLoggedInStatus(true))
                 Router.push('/minasidor')
             },
-            onError: ({ data: { message } }: any) => {
+            onError: (err: any) => {
+                const message = err.message
+                console.log({ err })
                 setErrors(initErrors)
 
                 const newErrors: Partial<typeof errors> = {}

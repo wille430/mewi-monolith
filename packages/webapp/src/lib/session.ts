@@ -36,7 +36,7 @@ export const checkLoggedInStatus = () => {
     const { user, mutateUser } = useUser()
 
     useEffect(() => {
-        mutateUser(fetchJson('/api/user'))
+        mutateUser(fetchJson('/api/user')).catch((e) => console.log(e))
     }, [])
 
     useEffect(() => {

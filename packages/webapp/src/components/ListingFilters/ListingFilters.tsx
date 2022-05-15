@@ -1,4 +1,4 @@
-import { ListingSearchFilters, regions } from '@wille430/common'
+import { ListingSearchFilters, regions, categories } from '@wille430/common'
 import { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 import LabeledDropdown from '../LabeledDropdown/LabeledDropdown'
@@ -8,9 +8,14 @@ import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 export interface ListingFilterFormProps {
     filters: ListingSearchFilters
     setFilters: Dispatch<SetStateAction<ListingSearchFilters>>
+    showCategory?: boolean
 }
 
-export const ListingFilters = ({ filters, setFilters }) => (
+export const ListingFilters = ({
+    filters,
+    setFilters,
+    showCategory = false,
+}: ListingFilterFormProps) => (
     <>
         <LabeledTextField
             label='Sökord'
@@ -41,6 +46,22 @@ export const ListingFilters = ({ filters, setFilters }) => (
             options={regions}
             data-testid='regionsSelect'
         />
+        {showCategory && (
+            <LabeledDropdown
+                label='Kategori'
+                name='category'
+                value={filters.category}
+                onChange={(val) =>
+                    setFilters({
+                        ...filters,
+                        category: val,
+                    })
+                }
+                options={categories}
+                data-testid='categorySelect'
+            />
+        )}
+
         <PriceRangeFilter
             gte={filters.priceRangeGte}
             lte={filters.priceRangeLte}

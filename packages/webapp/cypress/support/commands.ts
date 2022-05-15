@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import { AuthTokens } from '@wille430/common/types'
+import { AuthTokens } from '@wille430/common'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
@@ -23,18 +23,27 @@ declare namespace Cypress {
 
 Cypress.Commands.add('login', () => {
     cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-        const { access_token, refresh_token }: AuthTokens = res.body
+        const { email, password }: AuthTokens & { email: string; password: string } = res.body
 
-        window.localStorage.setItem('access_token', access_token)
-        window.localStorage.setItem('refresh_token', refresh_token)
+        console.log({ email, password })
 
-        return cy.wrap({ access_token, refresh_token })
+        cy.request(
+            'post',
+            Cypress.config('baseUrl') + '/api/login',
+            JSON.stringify({ email, password })
+        ).then((res) => {
+            const { access_token, refresh_token } = res.body
+            return cy.wrap({ access_token, refresh_token, email, password })
+        })
     })
 })
 
-Cypress.Commands.add('authenticate', ({ access_token, refresh_token }: AuthTokens) => {
-    window.localStorage.setItem('access_token', access_token)
-    window.localStorage.setItem('refresh_token', refresh_token)
+Cypress.Commands.add('authenticate', ({ email, password }: { email: string; password: string }) => {
+    cy.request(
+        'post',
+        Cypress.config('baseUrl') + '/api/login',
+        JSON.stringify({ email, password })
+    )
 })
 
 //

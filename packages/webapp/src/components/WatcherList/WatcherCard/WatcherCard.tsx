@@ -1,6 +1,5 @@
 import ExpandButton from './ExpandButton/ExpandButton'
-import { useHistory } from 'react-router-dom'
-import { capitalize, PopulatedUserWatcher } from '@wille430/common'
+import { capitalize, CategoryLabel, PopulatedUserWatcher } from '@wille430/common'
 import { Listing } from '@mewi/prisma'
 import RemoveButton from './RemoveWatcherButton'
 import { Button } from '@mewi/ui'
@@ -10,6 +9,7 @@ import { Dispatch, useEffect, useRef, useState } from 'react'
 import styles from './WatcherCard.module.scss'
 import { AnimatePresence } from 'framer-motion'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
+import { useRouter } from 'next/router'
 
 const WatcherCard = ({
     userWatcher,
@@ -22,7 +22,7 @@ const WatcherCard = ({
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
-    const history = useHistory()
+    const router = useRouter()
     const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
     const { watcher } = userWatcher
 
@@ -33,10 +33,10 @@ const WatcherCard = ({
         let pathname = '/search'
 
         if (watcher.metadata.category) {
-            pathname = `/kategorier/${watcher.metadata.category}`
+            pathname = `/kategorier/${watcher.metadata.category}`.toLowerCase()
         }
 
-        history.push({
+        router.push({
             pathname,
             search: queryString.stringify(filters),
         })
@@ -82,7 +82,7 @@ const WatcherCard = ({
                         {watcher.metadata.category ? (
                             <div className='mr-6'>
                                 <label className='label'>Kategori:</label>
-                                <span>{capitalize(watcher.metadata.category)}</span>
+                                <span>{CategoryLabel[watcher.metadata.category]}</span>
                             </div>
                         ) : (
                             <div></div>

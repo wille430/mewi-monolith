@@ -18,6 +18,8 @@ export const getServerSideProps = withAuth(
                 },
             })) ?? []
 
+        console.log(watchers.map((x) => x.watcher.metadata))
+
         return {
             props: {
                 watchers: serialize(watchers),

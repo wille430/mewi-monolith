@@ -1,6 +1,6 @@
 import { Controller, Post } from '@nestjs/common'
 import { AuthService } from '@/auth/auth.service'
-import { createUserFactory } from '@mewi/prisma/factory'
+import { randomEmail, randomPassword } from '@wille430/common'
 
 @Controller('/test')
 export class TestController {
@@ -9,12 +9,15 @@ export class TestController {
     @Post('user')
     async create() {
         // TODO
-        const userFactory = createUserFactory()
-        const user = await userFactory.create({
-            email: '123',
-            password: '123',
+        const email = randomEmail()
+        const password = randomPassword()
+
+        const accessTokens = await this.authService.signUp({
+            email,
+            password,
+            passwordConfirm: password,
         })
-        const accessTokens = this.authService.createTokens(user)
-        return { ...user, password: '123', ...accessTokens }
+
+        return { email, password, ...accessTokens }
     }
 }

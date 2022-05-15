@@ -19,6 +19,12 @@ export function SignInWithEmail() {
             fetch('/api/login', {
                 method: 'post',
                 body: JSON.stringify({ email, password }),
+            }).then((res) => {
+                if (res.ok) {
+                    return res.json()
+                } else {
+                    throw res.json()
+                }
             }),
         {
             onError: () => {

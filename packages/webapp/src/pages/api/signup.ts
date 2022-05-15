@@ -4,11 +4,11 @@ import Cookies from 'cookies'
 import { withSessionRoute } from '@/lib/withSession'
 import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 
-export default withSessionRoute(loginRoute)
+export default withSessionRoute(signupRoute)
 
-async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
+async function signupRoute(req: NextApiRequest, res: NextApiResponse) {
     // Get POST body data
-    const { email, password } = JSON.parse(await req.body)
+    const { email, password, passwordConfirm } = JSON.parse(await req.body)
 
     const handleSuccess = async (apiRes: Response) => {
         const tokens: AuthTokens = await apiRes.json()
@@ -41,13 +41,13 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // get tokens from Nest API
-    const apiRes = await fetch(process.env.NEXT_PUBLIC_API_URL + 'auth/login', {
+    const apiRes = await fetch(process.env.NEXT_PUBLIC_API_URL + 'auth/signup', {
         method: 'post',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, passwordConfirm }),
     })
 
     if (apiRes.ok) {

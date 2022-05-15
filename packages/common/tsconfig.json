@@ -8,7 +8,7 @@
         "rootDir": "src",
         "baseUrl": "src",
         "sourceRoot": "src",
-        "lib": ["esnext"],
+        "lib": ["esnext", "es2019"],
         "strict": true,
         "composite": true,
         "sourceMap": true,

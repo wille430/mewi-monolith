@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { Category } from '@mewi/prisma/index-browser'
 import { ParsedUrlQuery } from 'querystring'
 
-interface ListingFiltersContext {
+export interface ListingFiltersContext {
     filters: ListingFilters
     setFilters: (
         value: Parameters<React.Dispatch<React.SetStateAction<ListingFilters>>>[0],

@@ -10,7 +10,7 @@ describe('login', () => {
 
     beforeEach(() => {
         cy.clearLocalStorage()
-        cy.visit('/login/email')
+        cy.visit('/loggain')
     })
 
     it('should login user with correct credentials', () => {
@@ -18,7 +18,7 @@ describe('login', () => {
         cy.get('[data-testid=passwordInput]').type(userInfo.password)
         cy.get('[data-testid=formSubmitButton]').click()
 
-        cy.url().should('equal', Cypress.config('baseUrl') + '/minabevakningar')
+        cy.url().should('equal', Cypress.config('baseUrl') + '/minasidor/bevakningar')
     })
 
     it('should display invalid generic error', () => {

@@ -1,9 +1,10 @@
-import { AuthTokens, capitalize } from '@wille430/common'
+import { capitalize } from '@wille430/common'
 import _ from 'lodash'
 
 describe('watchers', () => {
     const longWait = 1000
-    let authTokens: AuthTokens
+    let email: string
+    let password: string
 
     const formData = {
         keyword: 'volvo',
@@ -17,15 +18,15 @@ describe('watchers', () => {
     }
 
     before(() => {
-        cy.login().then((tokens: AuthTokens) => {
-            console.log({ tokens })
-            authTokens = tokens
+        cy.login().then((data) => {
+            email = data.email
+            password = data.password
         })
     })
 
     beforeEach(() => {
-        cy.authenticate(authTokens)
-        cy.visit('/minabevakningar')
+        cy.authenticate({ email, password })
+        cy.visit('/minasidor/bevakningar')
     })
 
     it('can create a new watcher and display it', () => {
@@ -37,16 +38,13 @@ describe('watchers', () => {
 
         // wait for region select to load fully
         cy.wait(longWait)
-        cy.get('[data-testid=regionsSelect]').type(
-            capitalize(formData.regions[0]) + ' {enter}',
-            {
-                delay: 100,
-            }
-        )
-        cy.get('[data-testid=regionsSelect]').should('have.text', _.capitalize(formData.regions[0]))
+        cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {
+            delay: 100,
+        })
+        cy.get('[data-testid=regionsSelect]').contains(_.capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
-        cy.get('[data-testid=categorySelect]').should('have.text', _.capitalize(formData.category))
+        cy.get('[data-testid=categorySelect]').contains(_.capitalize(formData.category))
 
         cy.get('[data-testid=priceGte]').type(formData.price.gte)
         cy.get('[data-testid=priceGte]').should('have.value', formData.price.gte)
@@ -58,12 +56,12 @@ describe('watchers', () => {
         if (formData.isAuction) cy.get('[data-testid=auctionCheckbox]').click()
 
         // submit
-        cy.get('[data-testid=sendButton]').click()
+        cy.get('[data-testid=addWatcherButton]').click()
 
         // accept in modal
         cy.get('[data-testid=modalAccept]').click()
 
-        cy.get('[data-testid=addWatcherPopUp]').should('not.exist')
+        cy.get('[data-testid=addWatcherPopUp]').should('not.be.visible')
 
         // Validate displayed created watcher
         Object.keys(formData).forEach((key) => {
@@ -104,6 +102,8 @@ describe('watchers', () => {
             .children()
             .get('[data-testid=watcherSearchButton]')
             .click()
+
+        cy.wait(2000)
 
         if (formData.category) {
             cy.url().should('contain', '/kategorier')

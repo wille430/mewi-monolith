@@ -10,5 +10,5 @@
     "screenshotsFolder": "../../dist/cypress/packages/webapp/screenshots",
     "chromeWebSecurity": false,
     "projectId": "i37rci",
-    "baseUrl": "http://localhost:4200"
+    "baseUrl": "http://localhost:3000"
 }

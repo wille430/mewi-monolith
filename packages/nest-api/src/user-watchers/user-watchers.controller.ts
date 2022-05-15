@@ -15,10 +15,7 @@ export class MyWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
     @Post()
-    create(
-        @Body() createUserWatcherDto: Omit<CreateUserWatcherDto, 'userId'>,
-        @GetUser() user: UserPayload
-    ) {
+    create(@Body() createUserWatcherDto: CreateUserWatcherDto, @GetUser() user: UserPayload) {
         return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
     }
 
@@ -33,11 +30,7 @@ export class MyWatchersController {
     }
 
     @Patch(':id')
-    update(
-        @Param('id') id: string,
-        @Body() updateUserWatcherDto: UpdateUserWatcherDto,
-        @GetUser() user: UserPayload
-    ) {
+    update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
         return this.userWatchersService.update(id, updateUserWatcherDto)
     }
 

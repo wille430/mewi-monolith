@@ -34,7 +34,7 @@ export class FindAllListingsDto implements ListingSearchFilters {
 
     @IsOptional()
     @IsBoolean()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => (typeof value === 'string' ? value === 'true' : Boolean(value)))
     auction?: boolean
 
     @IsOptional()

@@ -16,6 +16,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import { ListingFiltersContext } from '../../src/hooks/useListingFilters'
 
 declare global {
     namespace Cypress {
@@ -33,5 +34,8 @@ declare global {
                 >
             ): Chainable<JQuery<HTMLElement>>
         }
+    }
+    interface Window {
+        ListingFilterContext: React.Context<ListingFiltersContext | undefined>
     }
 }

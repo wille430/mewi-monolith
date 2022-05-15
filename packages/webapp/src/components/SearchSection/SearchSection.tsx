@@ -8,12 +8,13 @@ import { useListingFilters } from '@/hooks/useListingFilters'
 import axios from 'axios'
 import { ListingSearchFilters } from '@wille430/common'
 import PageNav from '../PageNav/PageNav'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import ListingPopUp from '../ListingPopUp/ListingPopUp'
 import { closeListing } from '@/store/listings'
+import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 
 export interface SearchSectionProps {
     defaultFilters?: Partial<ListingSearchFilters>
@@ -24,6 +25,7 @@ export const SearchSection = () => {
     const scrollUpRef = useRef()
     const openedListing = useAppSelector((state) => state.listings.opened)
     const dispatch = useAppDispatch()
+    const [error, setError] = useState('')
 
     const { data } = useQuery(
         ['listings', debouncedFilters],
@@ -49,7 +51,15 @@ export const SearchSection = () => {
                         <ListingFilters filters={filters} setFilters={setFilters} />
                     </div>
                 </Container.Content>
-                <Container.Footer className='flex justify-end'>
+                <Container.Footer className='flex justify-end space-x-2'>
+                    <span className='text-red-400'>{error}</span>
+                    <CreateWatcherButton
+                        label='Bevaka sökning'
+                        variant='outlined'
+                        filters={filters}
+                        setError={setError}
+                        onSuccess={() => setError('')}
+                    />
                     <Button
                         label='Rensa'
                         onClick={() =>

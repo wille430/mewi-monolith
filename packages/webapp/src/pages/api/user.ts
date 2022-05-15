@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default withSessionRoute(userRoute)
 
 async function userRoute(req: NextApiRequest, res: NextApiResponse) {
-    if (!req.session.user) {
+    if (!req.session.user?.id) {
         return res.status(401).json({
             statusCode: 401,
             message: 'Unauthorized',
