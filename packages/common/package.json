@@ -18,7 +18,7 @@
         "dist/**/*"
     ],
     "scripts": {
-        "build": "microbundle build",
+        "build": "cp ../../node_modules/@mewi/prisma/* ./node_modules/@mewi/prisma/ -r && microbundle build",
         "dev": "microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
