@@ -50,6 +50,14 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            -run:
+                name: Login to Heroku
+                command: |
+                    (
+                        echo "$HEROKU_EMAIL"
+                        echo "$HEROKU_PASSWORD"
+                    ) | heroku login
+                    heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
             - run:
                   name: Isolate API workspace
                   command: |
@@ -61,8 +69,8 @@ jobs:
             - run:
                   name: Push API Docker image
                   command: |
-                      docker tag api "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
-                      docker push "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
+                      docker tag api registry.heroku.com/mewi-api/web
+                      docker push registry.heroku.com/mewi-api/web
 workflows:
     version: 2
     build_test_and_deploy:

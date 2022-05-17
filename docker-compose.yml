@@ -7,16 +7,13 @@ services:
             context: .
             dockerfile: packages/nest-api/Dockerfile
         environment:
-            GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
             NODE_ENV: production
             TOKEN_KEY: $TOKEN_KEY
             GMAIL_MAIL: $GMAIL_MAIL
             GMAIL_PASS: $GMAIL_PASS
-            MONGO_URI: $MONGO_URI
-            MONGO_USERNAME: $MONGO_USERNAME
-            MONGO_PASSWORD: $MONGO_PASSWORD
             GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
             GOOGLE_SECRET: $GOOGLE_SECRET
+            DATABASE_URL: $DATABASE_URL
     db:
         image: mongo:5.0.8
         restart: always
