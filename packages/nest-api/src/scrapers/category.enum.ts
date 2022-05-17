@@ -1,5 +1,4 @@
 import { Category } from '@mewi/prisma'
-import { BlocketListing } from './types/blocketListing'
 
 export const parseTraderaCategories = (category: string): Category => {
     return traderaKeyValuePair[category] || []
