@@ -5,6 +5,7 @@
     "main": "src/main.ts",
     "dependencies": {
         "@faker-js/faker": "^6.0.0-alpha.6",
+        "@mewi/schemas": "workspace:^1.0.1",
         "@nestjs/cli": "^8.2.4",
         "@nestjs/common": "^8.4.2",
         "@nestjs/config": "^2.0.0",

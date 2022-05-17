@@ -8,8 +8,8 @@
     },
     "scripts": {
         "postinstall": "npm run prisma:generate",
-        "prisma:generate": "dotenv -- prisma generate --schema ./prisma/schema.prisma",
-        "prisma:seed": "dotenv -- prisma db seed"
+        "prisma:generate": "npx dotenv -- npx prisma generate --schema ./prisma/schema.prisma",
+        "prisma:seed": "npx dotenv -- prisma db seed"
     },
     "author": "Mewi",
     "license": "ISC",
@@ -17,13 +17,13 @@
         "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
     },
     "devDependencies": {
-        "dotenv-cli": "^5.1.0",
-        "prisma": "^3.13.0",
-        "prisma-factory": "^0.1.12",
         "ts-node": "^10.7.0"
     },
     "dependencies": {
         "@faker-js/faker": "^6.3.1",
-        "@prisma/client": "^3.13.0"
+        "@prisma/client": "^3.13.0",
+        "dotenv-cli": "^5.1.0",
+        "prisma": "^3.13.0",
+        "prisma-factory": "^0.1.12"
     }
 }

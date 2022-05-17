@@ -5,7 +5,7 @@ services:
             - '80:3001'
         build:
             context: .
-            dockerfile: packages/api/Dockerfile
+            dockerfile: packages/nest-api/Dockerfile
         environment:
             GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
             NODE_ENV: production

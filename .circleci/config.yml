@@ -15,24 +15,12 @@ jobs:
             - run:
                   command: pnpm i
                   name: Install dependencies
-            # - run:
-            #       command: sudo npm install pm2 -g
-            #       name: Installing pm2
             - run:
                   command: pnpm lint
                   name: Lint projects
             - run:
                   command: pnpm build
                   name: Run Builds
-            # - run:
-            #       command: npx nx build api
-            #       name: Build API
-            # - run:
-            #       command: npx pm2 start dist/packages/api/main.js
-            #       name: Start API in background
-            # - run:
-            #       command: npx nx e2e webapp-e2e --record --key $CYPRESS_KEY
-            #       name: E2E test client
 
             # TODO: UNCOMMENT
             # - run:
@@ -50,9 +38,6 @@ jobs:
             - checkout
             - attach_workspace:
                   at: .
-            - add_ssh_keys:
-                  fingerprints:
-                      - 'b0:88:e6:4a:98:e3:71:07:c1:4a:ee:2f:c9:6b:98:e1'
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
@@ -65,15 +50,20 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-            - run: sudo chmod +x ./tools/deploy_api.sh
+                  name: Build Nest API docker image
             - run:
-                  command: ./tools/deploy_api.sh
-                  name: Deploy to API server
-            - run:
+                  name: Isolate API workspace
                   command: |
-                      cd ./packages/webapp
-                      npx netlify deploy --auth $NETLIFY_TOKEN --site $NETLIFY_SITE_ID --prod --dir=build
-                  name: Deploy to apps
+                      pnpm isolate -F nest-api
+            - run:
+                  name: Build API Docker image
+                  command: |
+                        sudo docker-compose build -d api
+            - run:
+                  name: Push API Docker image
+                  command: |
+                        docker tag api "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
+                        docker push "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
 workflows:
     version: 2
     build_test_and_deploy:

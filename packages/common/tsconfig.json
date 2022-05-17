@@ -1,5 +1,4 @@
 {
-    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2018",
@@ -13,7 +12,10 @@
         "composite": true,
         "sourceMap": true,
         "esModuleInterop": true,
-        "noUnusedLocals": true
+        "noUnusedLocals": true,
+        "allowUnusedLabels": false,
+        "noImplicitAny": false,
+        "strictPropertyInitialization": false
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "!src/"]

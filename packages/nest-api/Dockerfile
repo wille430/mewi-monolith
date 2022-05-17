@@ -5,7 +5,7 @@ FROM node:17.3.0
 # installs, work.
 
 
-# 
+# TODO: uncomment
 # RUN apt-get update \
 #     && apt-get install -y wget gnupg \
 #     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -35,19 +35,21 @@ FROM node:17.3.0
 # USER pptruser
 
 # build and package local dependencies
-WORKDIR /build
-RUN npm i pnpm -g
-COPY . /build
-RUN pnpm i -r || true
-RUN pnpm run isolate -F api
-RUN cd packages/api/_isolated_
-RUN cd /build
-COPY packages/api/_isolated_/ /app/
+# WORKDIR /build
+# RUN npm i pnpm -g
+# COPY . /build
+# RUN pnpm i -r || true
+# RUN pnpm run isolate -F nest-api
+# RUN cd packages/nest-api/_isolated_
+# RUN cd /build
+# COPY packages/nest-api/_isolated_/ /app/
 
 # run app
 WORKDIR /app
-RUN pnpm i
-RUN rm -rf /build
+COPY packages/nest-api/_isolated_/ /app/
+RUN npm i pnpm -g
+RUN pnpm i -F schemas || exit 0
+RUN pnpm i --production=false || exit 0
 
 EXPOSE 3001
-CMD node ./dist/main.js
+CMD node /app/dist/main.js
