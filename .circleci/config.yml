@@ -51,6 +51,9 @@ jobs:
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
             - run:
+                 name: Install Heroku cli
+                 command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            - run:
                   name: Login to Heroku
                   command: |
                       (
