@@ -50,7 +50,6 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-                  name: Build Nest API docker image
             - run:
                   name: Isolate API workspace
                   command: |
@@ -58,12 +57,12 @@ jobs:
             - run:
                   name: Build API Docker image
                   command: |
-                        sudo docker-compose build -d api
+                      sudo docker-compose build -d api
             - run:
                   name: Push API Docker image
                   command: |
-                        docker tag api "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
-                        docker push "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
+                      docker tag api "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
+                      docker push "${DOCKER_REGISTRY_ENDPOINT}/mewi-api:${CIRCLE_SHA1}"
 workflows:
     version: 2
     build_test_and_deploy:
