@@ -50,14 +50,14 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-            -run:
-                name: Login to Heroku
-                command: |
-                    (
-                        echo "$HEROKU_EMAIL"
-                        echo "$HEROKU_PASSWORD"
-                    ) | heroku login
-                    heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
+            - run:
+                  name: Login to Heroku
+                  command: |
+                      (
+                          echo "$HEROKU_EMAIL"
+                          echo "$HEROKU_PASSWORD"
+                      ) | heroku login
+                      heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
             - run:
                   name: Isolate API workspace
                   command: |
