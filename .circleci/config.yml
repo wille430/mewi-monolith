@@ -45,6 +45,7 @@ jobs:
             - run:
                   name: Login to Heroku registry
                   command: heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
+            - run: pnpm i 
             - run:
                   name: Isolate API workspace
                   command: |
