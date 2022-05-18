@@ -44,7 +44,7 @@ jobs:
                  command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
             - run:
                   name: Login to Heroku registry
-                  command: heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
+                  command: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
             - run: pnpm i 
             - run:
                   name: Isolate API workspace
@@ -52,12 +52,11 @@ jobs:
                       pnpm isolate -F nest-api
             - run:
                   name: Build API Docker image
-                  command: |
-                      sudo docker-compose build api
+                  command: docker-compose build
             - run:
                   name: Push API Docker image
                   command: |
-                      docker tag api registry.heroku.com/mewi-api/web
+                      docker tag project_api registry.heroku.com/mewi-api/web
                       docker push registry.heroku.com/mewi-api/web
 workflows:
     version: 2
