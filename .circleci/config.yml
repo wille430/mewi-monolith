@@ -58,7 +58,7 @@ jobs:
                   command: |
                       docker tag project_api registry.heroku.com/mewi-api/web
                       docker push registry.heroku.com/mewi-api/web
-                      heroku container:release web
+                      heroku container:release web --app mewi-api
 workflows:
     version: 2
     build_test_and_deploy:
