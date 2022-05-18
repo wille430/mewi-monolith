@@ -32,7 +32,7 @@ const ForgottenPassword = () => {
             }),
         {
             onSuccess: () => {
-                router.push('/login')
+                router.push('/loggain')
                 dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
             },
             onError: () => {

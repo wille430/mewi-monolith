@@ -72,7 +72,7 @@ const ForgottenPassword = () => {
                 </Container.Content>
                 <Container.Footer>
                     <div className='pt-6'>
-                        <Link href='/login' className='text-center underline'>
+                        <Link href='/loggain' className='text-center underline'>
                             Logga in istället
                         </Link>
                     </div>

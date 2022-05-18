@@ -1,5 +1,4 @@
 import { ListingRow } from '@/components/ListingRow/ListingRow'
-import { useAppDispatch } from '@/hooks'
 import { motion } from 'framer-motion'
 import styles from './NewItemsDrawer.module.scss'
 import { PopulatedUserWatcher } from '@wille430/common'
@@ -15,9 +14,14 @@ interface NewItemsDrawerProps {
     watcher: PopulatedUserWatcher
 }
 
+const removeNullValues = (obj: Record<any, any>) => {
+    return Object.keys(obj)
+        .filter((key) => !!obj[key])
+        .reduce((o, v) => ((o[v] = obj[v]), o), {})
+}
+
 const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     const LIMIT = 5
-    const dispatch = useAppDispatch()
 
     const {
         data: _newItems,
@@ -30,9 +34,9 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                 .get(
                     '/listings?' +
                         queryString.stringify({
-                            dateGte: new Date(watcher.createdAt).getTime(),
+                            dateGte: watcher.createdAt,
                             limit: LIMIT,
-                            ...watcher.watcher.metadata,
+                            ...removeNullValues(watcher.watcher.metadata),
                         })
                 )
                 .then((res) => res.data?.hits)
@@ -83,6 +87,8 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                     <div className='align-center flex w-full justify-center'>
                         <StyledLoader />
                     </div>
+                ) : error ? (
+                    <span className='mx-auto mt-2'>Ett fel inträffade</span>
                 ) : (
                     <span className='py-2 text-center'>Inga nya föremål hittades</span>
                 )}

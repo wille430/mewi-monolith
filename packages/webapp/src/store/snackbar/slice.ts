@@ -15,7 +15,6 @@ export const snackbarSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(pushToSnackbar, (state, action) => {
-                console.log('Snackbars in queue:', state.queue.length)
                 if (state.current) {
                     state.queue = [...state.queue, action.payload]
                 } else {

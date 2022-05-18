@@ -75,7 +75,6 @@ export class ListingsService {
             args.orderBy = {
                 ...listingSortToOrderBy[dto.sort],
             }
-            console.log(args.orderBy)
         }
 
         if (dto.priceRangeGte) {

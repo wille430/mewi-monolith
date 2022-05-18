@@ -109,9 +109,6 @@ export class UsersService {
             if (!user) return
 
             if (user.loginStrategy !== LoginStrategy.LOCAL) {
-                console.log(
-                    `User ${user.id} is using a third-party login strategy and can't reset password.`
-                )
                 return
             }
 
@@ -178,9 +175,6 @@ export class UsersService {
         if (!user) return
 
         if (user.loginStrategy !== LoginStrategy.LOCAL) {
-            console.log(
-                `User ${user.id} is using a third-party login strategy and can't reset password.`
-            )
             return
         }
 

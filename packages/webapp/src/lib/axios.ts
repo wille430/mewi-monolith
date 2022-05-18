@@ -10,14 +10,10 @@ export const setupAxios = () => {
         async (err) => {
             const config = err.config
 
-            console.log('ERR:', err)
-
-            console.log('Intercepting response error...', config.url, err.status)
             if (err.status === 401 && config.url !== '/auth/login' && !config._retry) {
                 config._retry = true
 
                 // refetch jwt token
-                console.log('Refreshing tokens...')
                 await fetch('/api/refreshjwt', {
                     credentials: 'include',
                 }).catch(() => {

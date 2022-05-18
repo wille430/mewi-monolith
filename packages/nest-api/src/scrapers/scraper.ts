@@ -131,18 +131,6 @@ export class Scraper {
         console.log(`Scraping ended with a total of ${this.listingScraped} listings scraped`)
     }
 
-    // schedule(callback?: () => void) {
-    //     console.log(
-    //         `Scheduling ${this.name}-scraper with cron time schedule (${this.cronTimerSchedule})`
-    //     )
-    //     scheduleJob(this.cronTimerSchedule, () => {
-    //         this.start().then(async () => {
-    //             await this.deleteOld()
-    //             callback && callback()
-    //         })
-    //     })
-    // }
-
     async deleteOld(): Promise<void> {
         const { count } = await this.prisma.listing.deleteMany({
             where: {
