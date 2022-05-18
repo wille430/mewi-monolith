@@ -4,10 +4,8 @@ jobs:
         docker:
             - image: 'cimg/node:14.17-browsers'
               environment:
-                  MONGO_URI: localhost
+                  DATABASE_URL: mongodb://localhost:27017/test
                   TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
-                  SEARCH_ENGINE_URL: localhost
-                  SEARCH_ENGINE_PORT: 9200
             - image: 'mongo'
         steps:
             - checkout
@@ -18,26 +16,17 @@ jobs:
             - run:
                   command: pnpm lint
                   name: Lint projects
-            - run:
-                  command: pnpm build
-                  name: Run Builds
 
             # TODO: UNCOMMENT
             # - run:
             #       command: pnpm test
             #       name: Run Unit Tests
-            - persist_to_workspace:
-                  root: .
-                  paths:
-                      - '*'
     deploy:
         docker:
             - image: 'cimg/node:14.17-browsers'
         steps:
             # TODO: deploy image
             - checkout
-            - attach_workspace:
-                  at: .
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
