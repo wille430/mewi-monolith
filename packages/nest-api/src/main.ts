@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 import { useContainer } from 'class-validator'
 import cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule } from './app.module'
 
 console.log('NODE ENV:', process.env.NODE_ENV)
 

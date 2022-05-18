@@ -1,11 +1,11 @@
-import WatcherCard from './WatcherCard/WatcherCard'
-import WatcherPopUpButton from './WatcherPopUpButton'
 import { Container, HorizontalLine } from '@mewi/ui'
-import styles from './WatcherList.module.scss'
 import { ReactElement, useState } from 'react'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import styles from './WatcherList.module.scss'
+import WatcherPopUpButton from './WatcherPopUpButton'
+import WatcherCard from './WatcherCard/WatcherCard'
 
 interface WatcherListProps {
     watchers: PopulatedUserWatcher[]

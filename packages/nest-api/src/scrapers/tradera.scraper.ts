@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { Scraper } from './scraper'
-import { TraderaListing } from './types/traderaListing'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
-import { PrismaService } from '@/prisma/prisma.service'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
+import { Scraper } from './scraper'
+import { TraderaListing } from './types/traderaListing'
+import { PrismaService } from '@/prisma/prisma.service'
 
 interface TraderaCategory {
     id: number

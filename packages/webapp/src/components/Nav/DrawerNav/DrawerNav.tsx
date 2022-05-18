@@ -1,6 +1,6 @@
 import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
-import links from '../links'
 import DrawerNavLink from './DrawerNavLink/DrawerNavLink'
+import links from '../links'
 
 const DrawerNav = ({
     children,

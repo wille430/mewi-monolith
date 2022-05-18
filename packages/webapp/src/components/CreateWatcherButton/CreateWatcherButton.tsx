@@ -2,11 +2,11 @@ import { Button, ButtonProps } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
-import { useAppDispatch, useAppSelector } from '@/hooks'
-import { PopUpModal } from '../PopUpModal/PopUpModal'
-import { pushToSnackbar } from '@/store/snackbar'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
+import { PopUpModal } from '../PopUpModal/PopUpModal'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import { pushToSnackbar } from '@/store/snackbar'
 
 type CreateWatcherButtonProps = ButtonProps & {
     error?: string

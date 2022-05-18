@@ -10,11 +10,11 @@ import {
     Inject,
     Query,
 } from '@nestjs/common'
+import { Cache } from 'cache-manager'
 import { ListingsService } from './listings.service'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
-import { Cache } from 'cache-manager'
 
 @Controller('/listings')
 export class ListingsController {

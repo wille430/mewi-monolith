@@ -1,10 +1,10 @@
 import { ReactNode, useState } from 'react'
 import * as ReactLoader from 'react-loader-spinner'
+import classNames from 'classnames'
+import { HTMLMotionProps, motion, useAnimation, Variants } from 'framer-motion'
 import styles from './index.module.scss'
 import utilities from '../utilities.module.scss'
-import classNames from 'classnames'
 import { Override } from '../types'
-import { HTMLMotionProps, motion, useAnimation, Variants } from 'framer-motion'
 
 const cx = classNames.bind(styles)
 

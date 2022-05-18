@@ -1,9 +1,9 @@
-import SignUpDto from '@/auth/dto/sign-up.dto'
-import { Match } from '@/common/decorators/match.decorator'
-import { IsPassword } from '@/common/decorators/password.decorator'
 import { PickType } from '@nestjs/mapped-types'
 import { Expose } from 'class-transformer'
 import { IsEmail, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator'
+import SignUpDto from '@/auth/dto/sign-up.dto'
+import { Match } from '@/common/decorators/match.decorator'
+import { IsPassword } from '@/common/decorators/password.decorator'
 
 export class ChangePasswordNoAuth {
     @IsString()

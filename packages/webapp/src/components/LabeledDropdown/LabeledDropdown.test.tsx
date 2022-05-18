@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import LabeledDropdown from './LabeledDropdown'
 import { randomString } from '@wille430/common'
+import LabeledDropdown from './LabeledDropdown'
 
 it('renders correctly', () => {
     const mockOptions = []

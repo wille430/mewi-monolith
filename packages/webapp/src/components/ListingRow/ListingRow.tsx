@@ -1,9 +1,9 @@
 import { Listing } from '@mewi/prisma'
-import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import styles from './ListingRow.module.scss'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@mewi/ui'
+import styles from './ListingRow.module.scss'
+import DefaultImage from '@/components/DefaultImage/DefaultImage'
 import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 

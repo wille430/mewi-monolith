@@ -1,7 +1,7 @@
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'
-import { rootReducer } from './reducer'
 import { configureStore } from '@reduxjs/toolkit'
 import { AnyAction, Store as ReduxStore } from 'redux'
+import { rootReducer } from './reducer'
 
 const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
     if (action.type === HYDRATE) {

@@ -1,14 +1,14 @@
 import { Controller, Request, Post, UseGuards, Body, Get, Req, Res } from '@nestjs/common'
-import { AuthService } from '@/auth/auth.service'
-import SignUpDto from '@/auth/dto/sign-up.dto'
-import { LocalAuthGuard } from '@/auth/local-auth.guard'
 import { Request as ReqObj } from 'express'
-import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
-import { GoogleAuthGuard } from '@/auth/google-auth.guard'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@mewi/prisma'
 import { setJWTCookies } from './utils/setJWTCookies'
+import { AuthService } from '@/auth/auth.service'
+import SignUpDto from '@/auth/dto/sign-up.dto'
+import { LocalAuthGuard } from '@/auth/local-auth.guard'
+import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
+import { GoogleAuthGuard } from '@/auth/google-auth.guard'
 
 @Controller('/auth')
 export class AuthController {

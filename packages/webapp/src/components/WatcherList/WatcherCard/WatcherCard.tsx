@@ -1,15 +1,15 @@
-import ExpandButton from './ExpandButton/ExpandButton'
 import { capitalize, CategoryLabel, PopulatedUserWatcher } from '@wille430/common'
 import { Listing } from '@mewi/prisma'
-import RemoveButton from './RemoveWatcherButton'
 import { Button } from '@mewi/ui'
 import queryString from 'query-string'
 import _ from 'lodash'
 import { Dispatch, useEffect, useRef, useState } from 'react'
-import styles from './WatcherCard.module.scss'
 import { AnimatePresence } from 'framer-motion'
-import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 import { useRouter } from 'next/router'
+import styles from './WatcherCard.module.scss'
+import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
+import RemoveButton from './RemoveWatcherButton'
+import ExpandButton from './ExpandButton/ExpandButton'
 
 const WatcherCard = ({
     userWatcher,

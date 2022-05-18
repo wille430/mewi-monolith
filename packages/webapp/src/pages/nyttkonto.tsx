@@ -1,8 +1,8 @@
+import Head from 'next/head'
+import { ReactElement } from 'react'
 import { Layout } from '@/components/Layout/Layout'
 import { SignUpForm } from '@/components/SignUpForm/SignUpForm'
 import { useUser } from '@/lib/useUser'
-import Head from 'next/head'
-import { ReactElement } from 'react'
 
 const NyttKonto = () => {
     useUser({

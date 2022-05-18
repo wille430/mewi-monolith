@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { User } from '@mewi/prisma'
 import Cookies from 'cookies'
-import { withSessionRoute } from '@/lib/withSession'
 import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
+import { withSessionRoute } from '@/lib/withSession'
 
 export default withSessionRoute(loginRoute)
 

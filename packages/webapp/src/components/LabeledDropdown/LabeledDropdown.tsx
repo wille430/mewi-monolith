@@ -1,5 +1,5 @@
-import DropdownMenu, { DropDownMenuProps } from '@/components/DropdownMenu/DropdownMenu'
 import { HTMLAttributes } from 'react'
+import DropdownMenu, { DropDownMenuProps } from '@/components/DropdownMenu/DropdownMenu'
 import { Override } from '@/types/types'
 
 export type LabeledDropdownProps = Override<

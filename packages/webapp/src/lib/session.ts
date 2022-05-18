@@ -1,11 +1,11 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
-import { useAppDispatch } from '@/hooks'
-import { setLoggedInStatus } from '@/store/user'
 import type { IronSessionOptions } from 'iron-session'
 import { useEffect } from 'react'
 import { USER_TOKEN } from './constants'
 import { fetchJson } from './fetchJson'
 import { useUser } from './useUser'
+import { setLoggedInStatus } from '@/store/user'
+import { useAppDispatch } from '@/hooks'
 
 export const sessionOptions: IronSessionOptions = {
     password: process.env.SESSION_PASSWORD,

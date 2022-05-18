@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import style from './Layout.module.scss'
 import Nav from '../Nav/Nav'
 import NavCurve from '../Nav/NavCurve'
-import style from './Layout.module.scss'
 
 interface LayoutProps {
     children: ReactNode

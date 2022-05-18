@@ -1,7 +1,7 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint", "unused-imports", "prettier"],
+    "plugins": ["@typescript-eslint", "unused-imports", "prettier", "eslint-plugin-import"],
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
@@ -18,7 +18,11 @@
         ],
         "react-hooks/exhaustive-deps": "off",
         "no-control-regex": "off",
-        "semi": ["error", "never"]
+        "semi": ["error", "never"],
+        "import/order": [
+            1,
+            { "groups": ["external", "builtin", "internal", "sibling", "parent", "index"] }
+        ]
     },
     "overrides": [
         {

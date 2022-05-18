@@ -1,7 +1,7 @@
-import { Layout } from '@/components/Layout/Layout'
 import Head from 'next/head'
-import SignInWithEmail from '@/components/SignInWithEmail/SignInWithEmail'
 import { ReactElement } from 'react'
+import { Layout } from '@/components/Layout/Layout'
+import SignInWithEmail from '@/components/SignInWithEmail/SignInWithEmail'
 import { useUser } from '@/lib/useUser'
 
 const Login = () => {

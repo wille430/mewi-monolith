@@ -1,8 +1,8 @@
-import Checkbox from '@/components/Checkbox/Checkbox'
 import { ListingOrigin } from '@mewi/prisma/index-browser'
 import { Button } from '@mewi/ui'
 import axios from 'axios'
 import { useMemo, useState } from 'react'
+import Checkbox from '@/components/Checkbox/Checkbox'
 
 export const ScraperPanel = () => {
     const [selectedScrapers, setSelectedScrapers] = useState<Record<ListingOrigin, boolean>>({})

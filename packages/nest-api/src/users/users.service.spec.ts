@@ -1,7 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { randomEmail, randomPassword } from '@mewi/prisma'
+import { ConfigModule } from '@nestjs/config'
+import bcrypt from 'bcryptjs'
+import { User } from '@mewi/prisma'
+import { createUserFactory } from 'prisma-factory/generated'
+import { vi } from 'vitest'
+import * as crypto from 'crypto'
 import { UsersService } from './users.service'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { randomEmail, randomPassword } from '@mewi/prisma'
 import {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
@@ -11,14 +17,8 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
 import { EmailService } from '../email/email.service'
 import { EmailModule } from '../email/email.module'
-import { ConfigModule } from '@nestjs/config'
 import configuration from '../config/configuration'
-import * as crypto from 'crypto'
-import bcrypt from 'bcryptjs'
 import { PrismaService } from '../prisma/prisma.service'
-import { User } from '@mewi/prisma'
-import { createUserFactory } from 'prisma-factory/generated'
-import { vi } from 'vitest'
 
 describe('UsersService', () => {
     let usersService: UsersService

@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { Cron } from '@nestjs/schedule'
+import { ListingOrigin } from '@mewi/prisma'
 import { BlocketScraper } from './blocket.scraper'
 import { TraderaScraper } from './tradera.scraper'
 import { SellpyScraper } from './sellpy.scraper'
 import { BlippScraper } from './blipp.scraper'
 import { Scraper } from './scraper'
-import { ConfigService } from '@nestjs/config'
-import { Cron } from '@nestjs/schedule'
-import { ListingOrigin } from '@mewi/prisma'
 
 @Injectable()
 export class ScrapersService {

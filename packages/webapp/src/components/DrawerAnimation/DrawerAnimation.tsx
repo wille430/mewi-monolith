@@ -1,7 +1,7 @@
-import styles from './DrawerAnimation.module.scss'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { ReactNode } from 'react'
+import styles from './DrawerAnimation.module.scss'
 
 const cx = classNames.bind(styles)
 

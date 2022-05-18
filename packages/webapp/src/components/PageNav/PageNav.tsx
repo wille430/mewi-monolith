@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react'
-import NavEndButton from './NavEndButton/NavEndButton'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
+import NavEndButton from './NavEndButton/NavEndButton'
 import { useListingFilters } from '@/hooks/useListingFilters'
 
 interface PageNavProps {

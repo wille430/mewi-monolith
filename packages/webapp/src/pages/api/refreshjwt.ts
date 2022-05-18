@@ -1,8 +1,8 @@
-import { logoutSession } from '@/lib/session'
-import { withSessionRoute } from '@/lib/withSession'
 import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import Cookies from 'cookies'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withSessionRoute } from '@/lib/withSession'
+import { logoutSession } from '@/lib/session'
 
 export default withSessionRoute(refreshJwtRoute)
 

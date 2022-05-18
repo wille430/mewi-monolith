@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react'
-import { Button } from './index'
 import { FiPlus } from 'react-icons/fi'
+import { Button } from './index'
 
 export default {
     component: Button,

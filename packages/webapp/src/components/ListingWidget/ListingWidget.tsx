@@ -1,11 +1,11 @@
-import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import { OriginLabel } from '@/components/OriginLabel/OriginLabel'
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import style from './ListingWidget.module.scss'
 import { Listing } from '@mewi/prisma'
 import { HTMLAttributes } from 'react'
 import classNames from 'classnames'
+import style from './ListingWidget.module.scss'
+import { OriginLabel } from '@/components/OriginLabel/OriginLabel'
+import DefaultImage from '@/components/DefaultImage/DefaultImage'
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
     listing: Listing

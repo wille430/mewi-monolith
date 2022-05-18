@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
+import styles from './MyPagesLayout.module.scss'
 import { Layout } from '../Layout/Layout'
 import SideNav from '../SideNav/SideNav'
-import styles from './MyPagesLayout.module.scss'
 
 export const MyAccountLayout = ({ children }: { children: ReactElement }) => {
     return (

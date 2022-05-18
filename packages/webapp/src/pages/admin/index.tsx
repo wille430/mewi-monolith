@@ -1,11 +1,11 @@
+import { GetServerSideProps } from 'next'
+import { Role } from '@mewi/prisma/index-browser'
+import { ReactElement } from 'react'
+import { Container } from '@mewi/ui'
 import { EditRolePanel } from './../../components/EditRolePanel/EditRolePanel'
 import { ScraperPanel } from './../../components/ScraperPanel/ScraperPanel'
 import { withAuth } from '@/lib/auth'
-import { GetServerSideProps } from 'next'
-import { Role } from '@mewi/prisma/index-browser'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { ReactElement } from 'react'
-import { Container } from '@mewi/ui'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {

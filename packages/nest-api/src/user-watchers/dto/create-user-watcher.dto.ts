@@ -1,7 +1,7 @@
 import { IsMongoId, IsObject, IsOptional, ValidateNested } from 'class-validator'
-import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { OmitType } from '@nestjs/mapped-types'
 import { Type } from 'class-transformer'
+import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 
 export class Metadata extends OmitType(FindAllListingsDto, ['page', 'limit', 'sort']) {}
 

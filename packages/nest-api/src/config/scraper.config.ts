@@ -1,6 +1,6 @@
-import { ScraperOptions } from '@/common/types/scraperOptions'
 import { registerAs } from '@nestjs/config'
 import { ListingOrigin } from '@mewi/prisma'
+import { ScraperOptions } from '@/common/types/scraperOptions'
 
 const isProduction = process.env.NODE_ENV === 'production'
 

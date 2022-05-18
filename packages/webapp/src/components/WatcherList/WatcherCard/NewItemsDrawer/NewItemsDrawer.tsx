@@ -1,16 +1,16 @@
-import { ListingRow } from '@/components/ListingRow/ListingRow'
 import { motion } from 'framer-motion'
-import styles from './NewItemsDrawer.module.scss'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { Listing } from '@mewi/prisma'
-import StyledLoader from '@/components/StyledLoader'
 // import { openListing } from '@/store/search/creators'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import queryString from 'query-string'
+import classNames from 'classnames'
+import styles from './NewItemsDrawer.module.scss'
 import { openListing } from '@/store/listings'
 import { useAppDispatch } from '@/hooks'
-import classNames from 'classnames'
+import StyledLoader from '@/components/StyledLoader'
+import { ListingRow } from '@/components/ListingRow/ListingRow'
 
 interface NewItemsDrawerProps {
     newItems: Listing[]

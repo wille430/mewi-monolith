@@ -1,6 +1,6 @@
-import { UniqueEmailRule } from '@/common/rules/unique-email.rule'
 import { PickType } from '@nestjs/mapped-types'
 import { IsEmail, IsString, Validate, ValidateIf } from 'class-validator'
+import { UniqueEmailRule } from '@/common/rules/unique-email.rule'
 
 export class UpdateEmailDto {
     @ValidateIf((obj) => !obj.token)

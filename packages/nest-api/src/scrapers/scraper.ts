@@ -1,8 +1,8 @@
 import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingOrigin, Prisma } from '@mewi/prisma'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export interface ScraperOptions {
     useRobots?: boolean

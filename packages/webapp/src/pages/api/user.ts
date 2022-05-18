@@ -1,6 +1,6 @@
+import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
 import { withSessionRoute } from '@/lib/withSession'
-import { NextApiRequest, NextApiResponse } from 'next'
 
 export default withSessionRoute(userRoute)
 

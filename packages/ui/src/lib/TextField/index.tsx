@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
 import React, { DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import styles from './index.module.scss'
 import cx from 'classnames'
+import styles from './index.module.scss'
 import { Override } from '../types'
 
 export type TextFieldProps = Override<

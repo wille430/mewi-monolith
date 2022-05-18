@@ -1,9 +1,9 @@
 import { Button, TextField, TextFieldProps } from '@mewi/ui'
 import { useEffect, useState } from 'react'
 import { MdOutlineModeEditOutline } from 'react-icons/md'
-import styles from './EditableField.module.scss'
 import { FiCheck } from 'react-icons/fi'
 import _ from 'lodash'
+import styles from './EditableField.module.scss'
 
 interface EditableFieldProps extends TextFieldProps {
     label: string

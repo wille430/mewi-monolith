@@ -1,8 +1,8 @@
-import { useUser } from '@/lib/useUser'
 import { Container } from '@mewi/ui'
 import { Role } from '@mewi/prisma/index-browser'
 import styles from './SideNav.module.scss'
 import SideNavButton from './SideNavButton/SideNavButton'
+import { useUser } from '@/lib/useUser'
 
 const SideNav = () => {
     const { user } = useUser()

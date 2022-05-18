@@ -1,9 +1,9 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
+import { useRouter } from 'next/router'
 import { setLoggedInStatus } from '@/store/user/creators'
 import { useAppDispatch } from '@/hooks'
-import { useRouter } from 'next/router'
 
 export const SignUpForm = () => {
     interface FormData {

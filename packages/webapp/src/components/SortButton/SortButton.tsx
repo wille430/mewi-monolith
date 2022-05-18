@@ -1,5 +1,5 @@
-import { useListingFilters } from '@/hooks/useListingFilters'
 import { ListingSort } from '@wille430/common'
+import { useListingFilters } from '@/hooks/useListingFilters'
 
 const SortButton = () => {
     const { setFilters, debouncedFilters } = useListingFilters()

@@ -1,10 +1,10 @@
-import styles from './ListingGrid.module.scss'
 import classNames from 'classnames'
-import { ListingWidget } from '../ListingWidget/ListingWidget'
-import { useListingFilters } from '@/hooks/useListingFilters'
 import { useQueryClient } from 'react-query'
 import { Listing } from '@mewi/prisma/index-browser'
+import styles from './ListingGrid.module.scss'
+import { ListingWidget } from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
+import { useListingFilters } from '@/hooks/useListingFilters'
 import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 

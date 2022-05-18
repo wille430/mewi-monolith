@@ -1,6 +1,6 @@
 import { Controller, Post } from '@nestjs/common'
-import { AuthService } from '@/auth/auth.service'
 import { randomEmail, randomPassword } from '@wille430/common'
+import { AuthService } from '@/auth/auth.service'
 
 @Controller('/test')
 export class TestController {

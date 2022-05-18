@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import Checkbox from './Checkbox'
 import { randomString } from '@wille430/common'
+import Checkbox from './Checkbox'
 
 it('renders correctly', () => {
     const mockLabel = randomString(5)

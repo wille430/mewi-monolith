@@ -1,9 +1,9 @@
-import { Layout } from '@/components/Layout/Layout'
 import { Button, Container, TextField } from '@mewi/ui'
 import axios from 'axios'
 import Link from 'next/link'
 import { FormEvent, ReactElement, useState } from 'react'
 import { useMutation } from 'react-query'
+import { Layout } from '@/components/Layout/Layout'
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()

@@ -1,9 +1,9 @@
-import { Scraper } from './scraper'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
-import { PrismaService } from '@/prisma/prisma.service'
 import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
 import axios from 'axios'
+import { Scraper } from './scraper'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends Scraper {
     maxPages?: number

@@ -1,8 +1,8 @@
-import { NavLink } from '@/components/Nav/links'
-import { useAppSelector } from '@/hooks'
 import { motion } from 'framer-motion'
 import { ReactElement } from 'react'
 import styles from './DrawerNavLink.module.scss'
+import { useAppSelector } from '@/hooks'
+import { NavLink } from '@/components/Nav/links'
 
 const DrawerNavLinkItem = ({
     styling,

@@ -1,12 +1,12 @@
 import { CategoryLabel } from '@wille430/common'
 import { Category } from '@mewi/prisma/index-browser'
 import classNames from 'classnames'
-import styles from './CategorySideNav.module.scss'
 import Link from 'next/link'
 import { Container, ContainerProps } from '@mewi/ui'
 import { useRouter } from 'next/router'
 import queryString from 'query-string'
 import _ from 'lodash'
+import styles from './CategorySideNav.module.scss'
 
 export interface CategorySideNavProps extends ContainerProps {
     selectedCategory?: Category

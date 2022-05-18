@@ -1,5 +1,5 @@
-import { ListingSort } from './listingSort'
 import { Watcher } from '@mewi/prisma'
+import { ListingSort } from './listingSort'
 
 type Metadata = Watcher['metadata']
 

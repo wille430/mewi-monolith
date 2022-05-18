@@ -1,9 +1,9 @@
-import { PopUp } from '@/components/PopUp/PopUp'
 import { useState } from 'react'
 import { ListingSearchFilters } from '@wille430/common'
-import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { Button, Container, HorizontalLine } from '@mewi/ui'
+import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
+import { PopUp } from '@/components/PopUp/PopUp'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
     const { show, setShow } = useShow

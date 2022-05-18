@@ -1,10 +1,10 @@
 import { Button, TextField } from '@mewi/ui'
 import { useState } from 'react'
-import SmallContainer from '@/components/SmallContainer/SmallContainer'
 import { useMutation } from 'react-query'
+import { useRouter } from 'next/router'
+import SmallContainer from '@/components/SmallContainer/SmallContainer'
 import { useAppDispatch } from '@/hooks'
 import { setLoggedInStatus } from '@/store/user'
-import { useRouter } from 'next/router'
 
 export function SignInWithEmail() {
     const [email, setEmail] = useState<string | undefined>('')

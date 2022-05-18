@@ -1,7 +1,7 @@
 import { HTMLAttributes, useState } from 'react'
+import { FiMenu } from 'react-icons/fi'
 import NavLinkItem from './NavLinkItem'
 import LogOutButton from './LogOutButton'
-import { FiMenu } from 'react-icons/fi'
 import styles from './Nav.module.scss'
 import { privateLinks, publicLinks } from './links'
 import DrawerNav from './DrawerNav/DrawerNav'

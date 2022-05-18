@@ -1,22 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common'
+import bcrypt from 'bcryptjs'
+import Email from 'email-templates'
+import { ConfigService } from '@nestjs/config'
+import { LoginStrategy, User } from '@mewi/prisma'
+import * as crypto from 'crypto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import bcrypt from 'bcryptjs'
+import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
+import { FindAllUserDto } from './dto/find-all-user.dto'
 import {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
     ChangePasswordWithToken,
 } from '@/users/dto/change-password.dto'
-import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
-import * as crypto from 'crypto'
 import { EmailService } from '@/email/email.service'
-import Email from 'email-templates'
-import { ConfigService } from '@nestjs/config'
 import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 import { PrismaService } from '@/prisma/prisma.service'
-import { LoginStrategy, User } from '@mewi/prisma'
-import { FindAllUserDto } from './dto/find-all-user.dto'
 
 @Injectable()
 export class UsersService {

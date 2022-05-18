@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common'
+import Email from 'email-templates'
+import { ConfigService } from '@nestjs/config'
+import { Cron } from '@nestjs/schedule'
+import { Prisma, User, Watcher } from '@mewi/prisma'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 import { EmailService } from '@/email/email.service'
-import Email from 'email-templates'
-import { ConfigService } from '@nestjs/config'
-import { Cron } from '@nestjs/schedule'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Prisma, User, Watcher } from '@mewi/prisma'
 import { ListingsService } from '@/listings/listings.service'
 
 @Injectable()

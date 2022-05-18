@@ -1,10 +1,10 @@
-import { SearchSection } from '@/components/SearchSection/SearchSection'
 import { ReactElement } from 'react'
-import { BasicLayout } from '@/components/BasicLayout/BasicLayout'
-import { CategorySideNav } from '@/components/CategorySideNav/CategorySideNav'
 import { useRouter } from 'next/router'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { Category } from '@mewi/prisma'
+import { CategorySideNav } from '@/components/CategorySideNav/CategorySideNav'
+import { BasicLayout } from '@/components/BasicLayout/BasicLayout'
+import { SearchSection } from '@/components/SearchSection/SearchSection'
 import { ListingFiltersProvider } from '@/hooks/useListingFilters'
 
 export const getStaticPaths: GetStaticPaths<{ category: Category }> = () => {

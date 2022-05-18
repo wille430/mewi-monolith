@@ -1,6 +1,6 @@
-import { AuthTokens } from '@/common/types/authTokens'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import { Response } from 'express'
+import { AuthTokens } from '@/common/types/authTokens'
 
 export const setJWTCookies = (res: Response, tokens: AuthTokens) => {
     res.cookie(ACCESS_TOKEN_COOKIE, tokens.access_token, {

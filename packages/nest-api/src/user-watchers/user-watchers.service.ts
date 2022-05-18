@@ -1,10 +1,10 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common'
+import { Error } from '@wille430/common'
+import { UserWatcher, Watcher } from '@mewi/prisma'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { WatchersService } from '@/watchers/watchers.service'
-import { Error } from '@wille430/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { UserWatcher, Watcher } from '@mewi/prisma'
 
 @Injectable()
 export class UserWatchersService {

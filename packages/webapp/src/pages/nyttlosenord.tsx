@@ -1,11 +1,11 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { FormEvent, ReactElement, useEffect, useState } from 'react'
-import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useMutation } from 'react-query'
 import axios from 'axios'
+import { useRouter } from 'next/router'
+import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useAppDispatch } from '@/hooks'
 import { Layout } from '@/components/Layout/Layout'
-import { useRouter } from 'next/router'
 
 const ForgottenPassword = () => {
     const initialState = {

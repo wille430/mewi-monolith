@@ -4,12 +4,12 @@ import Head from 'next/head'
 import { ReactElement, ReactNode, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
+import { SWRConfig } from 'swr'
+import { useStore } from 'react-redux'
 import { wrapper } from '@/store'
 import { setupAxios } from '@/lib/axios'
 import { checkLoggedInStatus } from '@/lib/session'
-import { SWRConfig } from 'swr'
 import { fetchJson } from '@/lib/fetchJson'
-import { useStore } from 'react-redux'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode

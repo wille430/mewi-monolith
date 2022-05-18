@@ -1,13 +1,13 @@
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { ListingOrigin, Role } from '@mewi/prisma'
-import { Roles } from '@/auth/roles.decorator'
-import { RolesGuard } from '@/auth/roles.guard'
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common'
+import { capitalize } from 'lodash'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import { ScrapersService } from './scrapers.service'
-import { capitalize } from 'lodash'
 import { StartScrapersDto } from './dto/start-scrapers.dto'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { RolesGuard } from '@/auth/roles.guard'
+import { Roles } from '@/auth/roles.decorator'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 
 @Controller('/scrapers')
 @UseGuards(JwtAuthGuard, RolesGuard)

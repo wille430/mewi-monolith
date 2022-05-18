@@ -1,7 +1,7 @@
 import { Container } from '@mewi/ui'
-import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
-import style from './FeaturedListings.module.scss'
 import { Listing } from '@mewi/prisma'
+import style from './FeaturedListings.module.scss'
+import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
 import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 
