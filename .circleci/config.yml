@@ -54,13 +54,8 @@ jobs:
                  name: Install Heroku cli
                  command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
             - run:
-                  name: Login to Heroku
-                  command: |
-                      (
-                          echo "$HEROKU_EMAIL"
-                          echo "$HEROKU_PASSWORD"
-                      ) | heroku login
-                      heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
+                  name: Login to Heroku registry
+                  command: heroku auth:token | sudo docker login --username=_ registry.heroku.com --password-stdin
             - run:
                   name: Isolate API workspace
                   command: |
