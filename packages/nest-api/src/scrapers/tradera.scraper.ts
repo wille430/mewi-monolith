@@ -4,7 +4,7 @@ import { TraderaListing } from './types/traderaListing'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
+import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 
 interface TraderaCategory {
     id: number
@@ -28,7 +28,7 @@ export class TraderaScraper extends Scraper {
         super(prisma, configService, ListingOrigin.Tradera, 'https://www.tradera.com/', {})
     }
 
-    async getListings(): Promise<Listing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         if (!this.categories) this.categories = await this.getCategories()
 
         if (!this.categories[this.currentCategoryIndex]?.href) return []
@@ -52,9 +52,9 @@ export class TraderaScraper extends Scraper {
 
             traderaListing = traderaListing.slice(0, this.itemsPerCategory)
 
-            const listings: Listing[] = traderaListing.map(
-                (item): Listing => ({
-                    id: item.itemId.toString(),
+            const listings: Prisma.ListingCreateInput[] = traderaListing.map(
+                (item): Prisma.ListingCreateInput => ({
+                    origin_id: item.itemId.toString(),
                     title: item.shortDescription,
                     category: this.parseCategories(
                         (this.categories ?? {})[this.currentCategoryIndex].title

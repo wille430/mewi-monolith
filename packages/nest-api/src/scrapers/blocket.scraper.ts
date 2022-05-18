@@ -6,7 +6,8 @@ import { BlocketListing } from './types/blocketListing'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
+import { Category, Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
+import { stringSimilarity } from '@wille430/common'
 
 export class BlocketScraper extends Scraper {
     page = 0
@@ -47,7 +48,7 @@ export class BlocketScraper extends Scraper {
         return null
     }
 
-    async getListings(): Promise<Listing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         try {
             const url = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
@@ -63,9 +64,9 @@ export class BlocketScraper extends Scraper {
 
             const data = dom.data.data
 
-            const items: Listing[] = data.map(
-                (item: BlocketListing): Listing => ({
-                    id: item.ad_id,
+            const items: Prisma.ListingCreateInput[] = data.map(
+                (item: BlocketListing): Prisma.ListingCreateInput => ({
+                    origin_id: item.ad_id,
                     title: item.subject,
                     body: item.body,
                     category: this.parseCategory(item.category),
@@ -110,11 +111,10 @@ export class BlocketScraper extends Scraper {
         const mainCategory = blocketCategory[0]
 
         for (const category of Object.values(Category)) {
-            // TODO!!!
-            //   const similarity = stringSimilarity(category, mainCategory.name) * 2;
-            //   if (similarity >= 0.7) {
-            //     return category as Category;
-            //   }
+            const similarity = stringSimilarity(category, mainCategory.name) * 2
+            if (similarity >= 0.7) {
+                return category as Category
+            }
         }
 
         return Category.OVRIGT

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
+import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 
 export class SellpyScraper extends Scraper {
     page = 1
@@ -14,7 +14,7 @@ export class SellpyScraper extends Scraper {
         super(prisma, configService, ListingOrigin.Sellpy, 'https://www.sellpy.se/', {})
     }
 
-    async getListings(): Promise<Listing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         try {
             const url = `https://m6wnfr0lvi-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.8.0)%3B%20Browser%20(lite)%3B%20JS%20Helper%20(3.2.2)%3B%20react%20(16.13.1)%3B%20react-instantsearch%20(6.7.0)&x-algolia-api-key=313e09c3b00b6e2da5dbe382cd1c8f4b&x-algolia-application-id=M6WNFR0LVI`
 
@@ -33,9 +33,9 @@ export class SellpyScraper extends Scraper {
 
             const data = dom.data.results[0].hits
 
-            const listings: Listing[] = data.map(
-                (item: SellpyListing): Listing => ({
-                    id: item.objectID,
+            const listings: Prisma.ListingCreateInput[] = data.map(
+                (item: SellpyListing): Prisma.ListingCreateInput => ({
+                    origin_id: item.objectID,
                     title: item.metadata.brand ?? item.metadata.type,
                     category: Category.PERSONLIGT,
                     date: item.createdAt ? new Date(item.createdAt * 1000) : new Date(),
@@ -47,8 +47,10 @@ export class SellpyScraper extends Scraper {
                     redirectUrl: `https://sellpy.com/item/${item.objectID}`,
                     price: item.pricing
                         ? {
-                              value: item.pricing.amount || 0,
-                              currency: Currency.SEK,
+                              set: {
+                                  value: item.pricing.amount || 0,
+                                  currency: Currency.SEK,
+                              },
                           }
                         : null,
                     origin: ListingOrigin.Sellpy,

@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { User } from '@mewi/prisma'
 
 export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
-    const { data: user, mutate: mutateUser } = useSWR<User>('/api/user')
+    const { data: user, mutate: mutateUser } = useSWR<User | undefined>('/api/user')
 
     const router = useRouter()
 

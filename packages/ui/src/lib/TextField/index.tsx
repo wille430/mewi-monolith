@@ -8,7 +8,7 @@ import { Override } from '../types'
 export type TextFieldProps = Override<
     DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     {
-        value: string
+        value?: string
     }
 > & {
     showClearButton?: boolean

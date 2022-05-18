@@ -16,6 +16,7 @@ import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 import { PrismaService } from '@/prisma/prisma.service'
 import { LoginStrategy, User } from '@mewi/prisma'
+import { FindAllUserDto } from './dto/find-all-user.dto'
 
 @Injectable()
 export class UsersService {
@@ -32,8 +33,10 @@ export class UsersService {
         return this.prisma.user.create({ data: createUserDto })
     }
 
-    async findAll() {
-        return await this.prisma.user.findMany()
+    async findAll(findAllUserDto: FindAllUserDto) {
+        return await this.prisma.user.findMany({
+            where: findAllUserDto,
+        })
     }
 
     async findOne(id: string): Promise<User | null> {

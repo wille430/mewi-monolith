@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { Category, Currency, ListingOrigin, PrismaClient } from '@prisma/client'
+import { Category, Currency, ListingOrigin, PrismaClient } from '@mewi/prisma'
 import _ from 'lodash'
 
 const prisma = new PrismaClient()
@@ -10,6 +10,7 @@ const main = async () => {
     for (let i = 0; i < LISTING_COUNT; i++) {
         await prisma.listing.create({
             data: {
+                origin_id: faker.datatype.string(32),
                 title: faker.commerce.product(),
                 body: faker.lorem.sentences(2),
                 category: _.sample(Object.values(Category)) as Category,

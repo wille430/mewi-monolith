@@ -1,0 +1,36 @@
+.role-label {
+    background-color: theme('colors.primary');
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.25rem;
+    color: white;
+    cursor: pointer;
+
+    &::after {
+        content: '+';
+        margin-left: 0.25rem;
+        display: inline-block;
+        transform: rotate(45deg);
+    }
+}
+
+.user-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 24rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.email-text {
+    flex-grow: 1;
+}
+
+.role-selection {
+}
+
+.user-roles {
+    @apply space-x-2;
+    margin-top: 0.5rem;
+}

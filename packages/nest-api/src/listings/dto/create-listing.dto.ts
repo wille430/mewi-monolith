@@ -5,6 +5,9 @@ export class CreateListingDto implements Listing {
     id: string
 
     @IsString()
+    origin_id: string
+
+    @IsString()
     title: string
 
     @IsString()

@@ -10,6 +10,7 @@ import {
     Put,
     UnprocessableEntityException,
     Res,
+    Query,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -26,6 +27,7 @@ import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { Role } from '@mewi/prisma'
 import { SuccessParam } from '@/common/enum/successParam'
+import { FindAllUserDto } from './dto/find-all-user.dto'
 
 @Controller('/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -43,8 +45,8 @@ export class UsersController {
 
     @Get()
     @Roles(Role.ADMIN)
-    findAll() {
-        return this.usersService.findAll()
+    findAll(@Query() findAllUserDto: FindAllUserDto) {
+        return this.usersService.findAll(findAllUserDto)
     }
 
     @Get('me')

@@ -55,6 +55,7 @@ model User {
 
 model Listing {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  origin_id   String        @unique()
   title       String
   body        String?
   category    Category

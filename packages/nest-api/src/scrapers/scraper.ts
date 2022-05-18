@@ -2,7 +2,7 @@ import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Listing, ListingOrigin } from '@mewi/prisma'
+import { ListingOrigin, Prisma } from '@mewi/prisma'
 
 export interface ScraperOptions {
     useRobots?: boolean
@@ -89,7 +89,7 @@ export class Scraper {
      * Scrape next listings
      * @returns \{Array\<Listing[]\>\}
      */
-    async getListings(): Promise<Listing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         return []
     }
 

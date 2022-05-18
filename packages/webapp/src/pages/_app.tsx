@@ -24,7 +24,18 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
-    const [queryClient] = useState(() => new QueryClient())
+    const [queryClient] = useState(
+        () =>
+            new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        refetchOnMount: false,
+                        refetchOnReconnect: false,
+                        refetchOnWindowFocus: false,
+                    },
+                },
+            })
+    )
     const store = useStore()
 
     setupAxios()

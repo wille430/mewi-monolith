@@ -20,11 +20,19 @@ export const withAuth = (
     return withSessionSsr(async ({ req, res }) => {
         const { roles } = req.session?.user ?? {}
 
-        if (allowedRoles && (!roles || !allowedRoles.some((x) => roles.includes(x)))) {
-            // redirect
+        if (!roles) {
             return {
                 redirect: {
                     destination: '/loggain',
+                },
+            }
+        }
+
+        if (allowedRoles && !allowedRoles.some((x) => roles.includes(x))) {
+            // redirect
+            return {
+                redirect: {
+                    destination: '/',
                 },
             }
         }

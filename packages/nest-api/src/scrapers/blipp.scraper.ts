@@ -1,16 +1,15 @@
 import { Scraper } from './scraper'
-import puppeteer from 'puppeteer'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Category, Listing, ListingOrigin, Currency } from '@mewi/prisma'
+import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
+import axios from 'axios'
 
 export class BlippScraper extends Scraper {
-    currentPage = 1
     maxPages?: number
-    scrapeUrl = 'https://bilar.blipp.se/vara-bilar/'
-    useRobots = true
-    limit = 9
+    apiUrl = 'https://blipp.se/_next/data/KtgJTNWoe2qa3eea8gABt/fordon.json'
+    currentPage = 1
+    perPage = 40
 
     constructor(@Inject(PrismaService) prisma, configService: ConfigService) {
         super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {})
@@ -20,98 +19,68 @@ export class BlippScraper extends Scraper {
      * Get the number of pages of products that are available
      */
     async numberOfPages(): Promise<number> {
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        })
-        const page = await browser.newPage()
+        const payload = await axios
+            .get(this.apiUrl)
+            .then((res) => res.data.pageProps?.data?.payload)
 
-        await page.goto(this.scrapeUrl)
+        this.perPage = payload.per_page
+        this.maxPages = payload.pages
 
-        // wait for items
-        const listings = await page.waitForSelector('#listings-result')
-
-        const pageCount = await listings?.$$eval('li > a', (elements) => {
-            return elements[elements.length - 2].textContent
-        })
-
-        return parseInt(pageCount ?? '0')
+        return this.maxPages
     }
 
     /**
      * @param pageNum - the apge to scrape. pageNum \>= 1
      * @returns An array of listings
      */
-    async getListingOnPage(pageNum: number): Promise<Listing[]> {
-        let listings: Listing[] = []
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        })
-
+    async getListingOnPage(pageNum: number): Promise<Prisma.ListingCreateInput[]> {
+        let listings: Prisma.ListingCreateInput[] = []
         try {
-            const url = `https://bilar.blipp.se/vara-bilar/page/${pageNum}/`
+            const url = `${this.apiUrl}?page=${pageNum}/`
 
-            const page = await browser.newPage()
+            const rawListings = (await axios
+                .get(url)
+                .then((res) => res.data.pageProps?.data?.payload.items)) as any[]
 
-            await page.goto(url)
-
-            const listingsGrid = await page.waitForSelector('#listings-result')
-            const listingHandles = (await listingsGrid?.$$('.listing_is_active')) ?? []
-
-            const scrapedListings = await Promise.all(
-                listingHandles.map(async (eleHandle) => {
-                    return await eleHandle.evaluate(
-                        (ele, args) => {
-                            return {
-                                id: (ele
-                                    ?.querySelector('a')
-                                    ?.getAttribute('href')
-                                    // eslint-disable-next-line no-useless-escape
-                                    ?.match(/\/([^\/])+\/$/g) ?? [])[0].slice(1, -1),
-                                title: ele
-                                    .querySelector('.car-title')
-                                    ?.textContent?.match(/\S+/g)
-                                    ?.join(' ')
-                                    .trim(),
-                                category: args.Category.FORDON,
-                                date: Date.now(),
-                                imageUrl: ele.querySelector('.image')
-                                    ? [ele.querySelector('.image img')?.getAttribute('data-src')]
-                                    : [],
-                                isAuction: false,
-                                redirectUrl: ele.querySelector('a')?.getAttribute('href'),
-                                parameters: [],
-                                price: {
-                                    value: parseInt(
-                                        ele
-                                            .querySelector('.sale-price')
-                                            ?.textContent?.replace(' ', '') ?? '0'
-                                    ),
-                                    currency: args.Currency.SEK,
-                                },
-                                region:
-                                    ele.querySelector('.car-meta-bottom span')?.textContent ??
-                                    undefined,
-                                origin: args.ListingOrigin.Blipp,
-                            }
-                        },
-                        { ListingOrigin, Category, Currency }
-                    )
+            listings = rawListings.map(
+                ({
+                    vehicle,
+                    published_date,
+                    cover_photo,
+                    entity_id,
+                    municipality,
+                }): Prisma.ListingCreateInput => ({
+                    origin_id: `${(vehicle.brand as string).toLowerCase()}_${vehicle.entity_id}`,
+                    title: vehicle.car_name,
+                    body: null,
+                    category: Category.FORDON,
+                    date: new Date(published_date),
+                    imageUrl: [cover_photo.full_path],
+                    redirectUrl: `https://blipp.se/fordon/${entity_id}`,
+                    isAuction: false,
+                    price: vehicle.monthly_cost?.car_info_valuation
+                        ? {
+                              value: parseFloat(vehicle.monthly_cost.car_info_valuation),
+                              currency: Currency.SEK,
+                          }
+                        : null,
+                    region: municipality.name,
+                    // TODO: parse parameters
+                    parameters: [],
+                    origin: ListingOrigin.Blipp,
+                    auctionEnd: null,
                 })
             )
-
-            listings = scrapedListings.filter((x) => !!x) as unknown as Listing[]
         } catch (e) {
             console.log(e)
-        } finally {
-            await browser.close()
         }
 
         return listings
     }
 
-    async getListings(): Promise<Listing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         if (!this.maxPages) {
-            this.maxPages = await this.numberOfPages()
+            await this.numberOfPages()
         }
 
         if (this.currentPage > this.maxPages) {
