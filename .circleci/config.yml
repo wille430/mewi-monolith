@@ -53,7 +53,7 @@ jobs:
             - run:
                   name: Build API Docker image
                   command: |
-                      sudo docker-compose build -d api
+                      sudo docker-compose build api
             - run:
                   name: Push API Docker image
                   command: |
