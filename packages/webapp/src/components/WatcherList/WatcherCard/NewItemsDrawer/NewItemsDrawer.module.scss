@@ -1,20 +1,30 @@
 .itemDrawer {
+    @apply rounded-md bg-gray-200 shadow-sm;
+
     position: relative;
-    transform: translateY(-4rem);
     z-index: -1;
     overflow: hidden;
-
-    @apply rounded-md bg-gray-200 shadow-sm;
+    transform: translateY(-0.5rem);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding-top: 0.5rem;
 
     ul {
         @apply p-2;
-        padding-top: 4.5rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        width: min-content;
+        flex-grow: 1;
 
         article + article {
             margin-top: 0.5rem;
         }
+    }
+
+    &.empty {
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
 }

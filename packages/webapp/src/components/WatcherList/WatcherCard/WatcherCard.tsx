@@ -30,7 +30,7 @@ const WatcherCard = ({
 
     const handleSearchButtonClick = () => {
         const filters = _.omit(watcher.metadata, ['category'])
-        let pathname = '/search'
+        let pathname = '/sok'
 
         if (watcher.metadata.category) {
             pathname = `/kategorier/${watcher.metadata.category}`.toLowerCase()

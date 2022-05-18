@@ -11,7 +11,7 @@ const cx = classNames.bind(styles)
 export type ButtonProps = Override<
     HTMLMotionProps<'button'>,
     {
-        onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void> | void
+        onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<any> | any
         label?: string
         variant?: 'text' | 'outlined' | 'contained'
         icon?: ReactNode

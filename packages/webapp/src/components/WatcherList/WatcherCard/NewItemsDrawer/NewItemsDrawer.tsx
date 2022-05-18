@@ -8,6 +8,9 @@ import StyledLoader from '@/components/StyledLoader'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import queryString from 'query-string'
+import { openListing } from '@/store/listings'
+import { useAppDispatch } from '@/hooks'
+import classNames from 'classnames'
 
 interface NewItemsDrawerProps {
     newItems: Listing[]
@@ -22,6 +25,8 @@ const removeNullValues = (obj: Record<any, any>) => {
 
 const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     const LIMIT = 5
+
+    const dispatch = useAppDispatch()
 
     const {
         data: _newItems,
@@ -47,15 +52,14 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
             height: 0,
         },
         show: {
-            height: !isLoading && (_newItems?.length || newItems.length) ? 'auto' : '7.5rem',
+            height: _newItems?.length || newItems.length ? 'auto' : '3.5rem',
         },
     }
 
     const handleClick = (id: string) => {
         const itemToOpen = newItems.find((x) => x.id === id)
         if (itemToOpen) {
-            // TODO:
-            // dispatch(openListing(itemToOpen))
+            dispatch(openListing(itemToOpen))
         }
     }
 
@@ -67,7 +71,10 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
 
     return (
         <motion.div
-            className={styles.itemDrawer}
+            className={classNames({
+                [styles.itemDrawer]: true,
+                [styles.empty]: !(_newItems?.length && newItems.length),
+            })}
             variants={drawerVariants}
             initial='hidden'
             animate='show'
@@ -77,22 +84,20 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                 duration: 0.25,
             }}
         >
-            <ul>
-                {(newItems.length || _newItems?.length) && !isLoading ? (
-                    <>
-                        <span className='mb-1'>Nya föremål:</span>
-                        {renderItems()}
-                    </>
-                ) : isLoading ? (
-                    <div className='align-center flex w-full justify-center'>
-                        <StyledLoader />
-                    </div>
-                ) : error ? (
-                    <span className='mx-auto mt-2'>Ett fel inträffade</span>
-                ) : (
-                    <span className='py-2 text-center'>Inga nya föremål hittades</span>
-                )}
-            </ul>
+            {(newItems.length || _newItems?.length) && !isLoading ? (
+                <ul>
+                    <span className='mb-1'>Nya föremål:</span>
+                    {renderItems()}
+                </ul>
+            ) : isLoading ? (
+                <div className='align-center flex w-full justify-center'>
+                    <StyledLoader />
+                </div>
+            ) : error ? (
+                <span className='mx-auto mt-2'>Ett fel inträffade</span>
+            ) : (
+                <span className='py-2 text-center'>Inga nya föremål hittades</span>
+            )}
         </motion.div>
     )
 }

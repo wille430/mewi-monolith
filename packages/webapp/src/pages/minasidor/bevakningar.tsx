@@ -5,6 +5,7 @@ import WatcherList from '@/components/WatcherList/WatcherList'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { serialize } from '@/lib/serialize'
 import prisma from '@/lib/prisma'
+import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUp'
 
 export const getServerSideProps = withAuth(
     async (req) => {
@@ -31,6 +32,7 @@ const Bevakningar = ({ watchers }) => {
     return (
         <main>
             <WatcherList watchers={watchers} />
+            <ListingPopUpContainer />
         </main>
     )
 }

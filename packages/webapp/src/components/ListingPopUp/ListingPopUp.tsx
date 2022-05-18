@@ -10,16 +10,31 @@ import Description from './Description/Description'
 import { CategoryPathLabel } from '@/components/CategoryPathLabel/CategoryPathLabel'
 import { PopUp } from '../PopUp/PopUp'
 import DefaultImage from '../DefaultImage/DefaultImage'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import { closeListing } from '@/store/listings'
 
 const cx = classNames.bind(styles)
 
-interface ArticleItemDetails {
+interface ListingPopUp {
     onClose?: () => void
     listing: Listing
 }
 
+export const ListingPopUpContainer = () => {
+    const listing = useAppSelector((state) => state.listings.opened)
+    const dispatch = useAppDispatch()
+
+    const handleClose = () => dispatch(closeListing())
+
+    if (!listing) {
+        return null
+    }
+
+    return <ListingPopUp onClose={handleClose} listing={listing} />
+}
+
 // TODO: disable scroll outside element
-const ArticleItemDetails = ({ onClose, listing }: ArticleItemDetails) => {
+const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
     const { category, imageUrl, title, body, region, price, origin, parameters, redirectUrl } =
         listing
     const handleClose = () => {
@@ -107,4 +122,4 @@ const Specifications = ({ specs }: { specs: Listing['parameters'] }) => (
     </table>
 )
 
-export default ArticleItemDetails
+export default ListingPopUp

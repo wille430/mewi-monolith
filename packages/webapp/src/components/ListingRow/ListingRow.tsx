@@ -4,6 +4,8 @@ import styles from './ListingRow.module.scss'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@mewi/ui'
+import { useAppDispatch } from '@/hooks'
+import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
     item: Listing
@@ -11,6 +13,7 @@ interface ListingRowprops extends HTMLMotionProps<'article'> {
 
 export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
+    const dispatch = useAppDispatch()
 
     const fadeVariants: AnimationProps['variants'] = {
         hide: {
@@ -29,13 +32,9 @@ export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
         scale: { scale: 1.0025 },
     }
 
-    const handleRedirect = () => {
-        window.open(item.redirectUrl, '_blank')
-    }
-
     return (
         <motion.article
-            className={styles.articleContainer}
+            className={styles.listingContainer}
             onHoverStart={() => setHovered(true)}
             onHoverEnd={() => setHovered(false)}
             variants={scaleVariants}
@@ -74,7 +73,7 @@ export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
                     initial={'hide'}
                     animate={isHovered ? 'show' : 'hide'}
                 >
-                    <Button label='>>' onClick={handleRedirect} />
+                    <Button label='>>' onClick={() => dispatch(openListing(item))} />
                 </motion.div>
             </motion.div>
 
