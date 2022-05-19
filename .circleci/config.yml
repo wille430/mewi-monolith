@@ -11,7 +11,7 @@ jobs:
             - checkout
             - run: sudo npm i pnpm@latest-6 -g
             - run:
-                  command: pnpm i
+                  command: pnpm i -F schemas && pnpm i
                   name: Install dependencies
             - run:
                   command: pnpm lint
@@ -40,12 +40,12 @@ jobs:
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
             - run:
-                 name: Install Heroku cli
-                 command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+                  name: Install Heroku cli
+                  command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
             - run:
                   name: Login to Heroku registry
                   command: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
-            - run: pnpm i 
+            - run: pnpm i -F schemas && pnpm i
             - run:
                   name: Isolate API workspace
                   command: |
