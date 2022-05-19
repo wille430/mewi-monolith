@@ -9,7 +9,8 @@
         "start": "next start",
         "cy:run": "cypress open",
         "e2e": "pnpm run dev & pnpm run cy:run",
-        "test": "vitest run"
+        "test": "vitest run",
+        "postinstall": "mkdir -p ./node_modules/@mewi/prisma && cp ../../node_modules/@mewi/prisma/* ./node_modules/@mewi/prisma/ -r"
     },
     "dependencies": {
         "@babel/preset-react": "^7.16.7",

@@ -8,7 +8,6 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.18.0
       '@typescript-eslint/parser': ^5.18.0
       cypress: ^9.5.3
-      dotenv-cli: ^5.1.0
       eslint: ^8.12.0
       eslint-plugin-prettier: ^4.0.0
       eslint-plugin-unused-imports: ^2.0.0
@@ -24,7 +23,6 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.18.0_665c91c9d1c66199a6b04f67f276f064
       '@typescript-eslint/parser': 5.18.0_eslint@8.12.0
       cypress: 9.5.3
-      dotenv-cli: 5.1.0
       eslint: 8.12.0
       eslint-plugin-prettier: 4.0.0_eslint@8.12.0+prettier@2.6.2
       eslint-plugin-unused-imports: 2.0.0_c735c75cf6c247871ad73fdc37022bd1
@@ -36,7 +34,6 @@ importers:
       '@faker-js/faker': ^6.0.0
       '@types/lodash': ^4.14.180
       '@vitejs/plugin-react': ^1.0.7
-      dotenv-cli: ^5.1.0
       lodash: ^4.17.21
       microbundle: ^0.14.2
       query-string: ^7.1.1
@@ -52,7 +49,6 @@ importers:
     devDependencies:
       '@types/lodash': 4.14.180
       '@vitejs/plugin-react': 1.2.0
-      dotenv-cli: 5.1.0
       microbundle: 0.14.2
       vitest: 0.8.1
 
@@ -11476,7 +11472,7 @@ packages:
   /axios/0.26.1:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
-      follow-redirects: 1.14.9
+      follow-redirects: 1.14.9_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -14325,6 +14321,7 @@ packages:
       dotenv: 16.0.0
       dotenv-expand: 8.0.2
       minimist: 1.2.6
+    dev: false
 
   /dotenv-expand/5.1.0:
     resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
@@ -14332,6 +14329,7 @@ packages:
   /dotenv-expand/8.0.2:
     resolution: {integrity: sha512-vKKAk+VOzAWOV/dPIeSYqhgC/TQY+6L6Ibkzfsr8xd1stdBsTuGu9asCOXgbYbBeS+f2Y6lqqEuw7riOA+xEUQ==}
     engines: {node: '>=12'}
+    dev: false
 
   /dotenv/10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
@@ -15670,16 +15668,6 @@ packages:
     dependencies:
       from2: 2.3.0
     dev: true
-
-  /follow-redirects/1.14.9:
-    resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: false
 
   /follow-redirects/1.14.9_debug@4.3.2:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
