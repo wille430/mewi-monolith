@@ -12,6 +12,7 @@ module.exports = {
                     light: '#8FE8A5',
                     DEFAULT: '#4CEB74',
                     dark: '#3CCC5C',
+                    paper: 'hsl(0, 100%, 99%)',
                 },
                 primary: '#253C4C',
                 secondary: '#4CEB74',

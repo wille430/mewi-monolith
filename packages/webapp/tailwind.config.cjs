@@ -13,6 +13,9 @@ module.exports = {
                     DEFAULT: '#4CEB74',
                     dark: '#3CCC5C',
                 },
+                gray: {
+                    150: 'rgb(235, 237, 240)',
+                },
                 primary: '#253C4C',
                 secondary: '#4CEB74',
                 paper: 'hsl(0, 100%, 99%)',

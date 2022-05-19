@@ -5,8 +5,10 @@ import { useMemo, useState } from 'react'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
 export const ScraperPanel = () => {
-    const [selectedScrapers, setSelectedScrapers] = useState<Record<ListingOrigin, boolean>>({})
-    const [scraperStatus, setScraperStatus] = useState<Record<ListingOrigin, boolean>>({})
+    const [selectedScrapers, setSelectedScrapers] = useState<
+        Partial<Record<ListingOrigin, boolean>>
+    >({})
+    const [scraperStatus, setScraperStatus] = useState<Partial<Record<ListingOrigin, boolean>>>({})
 
     const startScrapers = async () => {
         const scraperTargetsArray = Object.keys(selectedScrapers).filter(
@@ -34,7 +36,7 @@ export const ScraperPanel = () => {
     return (
         <div className='p-2 space-y-2'>
             <h4>Webbskrapare</h4>
-            <div className='space-y-4 rounded bg-gray-100'>
+            <div className='space-y-4 rounded bg-gray-150 p-2'>
                 <ul>
                     {Object.keys(ListingOrigin).map((key) => (
                         <li className='flex'>

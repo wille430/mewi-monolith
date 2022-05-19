@@ -17,7 +17,7 @@ const AdminIndex = () => {
     return (
         <Container
             style={{
-                minHeight: '40vh',
+                minHeight: '40vw',
             }}
         >
             <Container.Header>

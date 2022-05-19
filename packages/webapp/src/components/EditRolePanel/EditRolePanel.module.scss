@@ -4,12 +4,20 @@
     padding: 0.125rem 0.25rem;
     color: white;
     cursor: pointer;
+    font-size: small;
 
     &::after {
         content: '+';
         margin-left: 0.25rem;
         display: inline-block;
         transform: rotate(45deg);
+    }
+
+    &.unselected {
+        border: 2px solid theme('colors.primary');
+        background-color: theme('colors.gray.200');
+        color: theme('colors.black');
+        opacity: 0.5;
     }
 }
 
@@ -20,17 +28,13 @@
     max-width: 24rem;
     padding: 0.25rem;
     border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .email-text {
     flex-grow: 1;
 }
 
-.role-selection {
-}
-
 .user-roles {
     @apply space-x-2;
-    margin-top: 0.5rem;
 }

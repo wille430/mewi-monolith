@@ -1,17 +1,66 @@
 import { Button, TextField } from '@mewi/ui'
 import { capitalize } from 'lodash'
 import { Role, User } from '@mewi/prisma/index-browser'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import axios from 'axios'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
+import StyledLoader from '../StyledLoader'
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
 
-    const { data, refetch } = useQuery('user', () =>
+    const { data, refetch, isLoading } = useQuery('users', () =>
         axios.get<User[]>(`/users?email=${email}`).then((res) => res.data)
     )
+
+    return (
+        <div className='p-2 spce-y-2'>
+            <h4 className='mb-2'>Hantera roller</h4>
+            <div className='space-y-4 rounded bg-gray-150 p-2'>
+                <form
+                    className='flex max-w-sm'
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        refetch()
+                    }}
+                >
+                    <TextField
+                        placeholder='E-postaddress'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        fullWidth
+                    />
+                    <Button label='Sök' className='ml-1' type='submit' />
+                </form>
+                <div className='p-2 w-ful'>
+                    {isLoading ? (
+                        <div className='w-full flex justify-center'>
+                            <StyledLoader />
+                        </div>
+                    ) : !data?.length ? (
+                        <span>Inga användare hittades</span>
+                    ) : (
+                        <ul>
+                            {data?.map((user) => (
+                                <UserRolesWidget user={user} />
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+interface UserRolesWidgetProps {
+    user: User
+}
+
+export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
+    const queryClient = useQueryClient()
+    const data = queryClient.getQueryData<User[] | undefined>('users')
 
     const updateUserMutation = useMutation(
         ({ user, newRole }: { user: User; newRole: Role }) =>
@@ -23,6 +72,7 @@ export function EditRolePanel() {
                 const userIndex = data.findIndex((u) => u.id === user.id)
 
                 data[userIndex] = res.data
+                queryClient.setQueryData('users', data)
             },
         }
     )
@@ -37,70 +87,58 @@ export function EditRolePanel() {
                 const userIndex = data.findIndex((u) => u.id === user.id)
 
                 data[userIndex] = res.data
+                queryClient.setQueryData('users', data)
             },
         }
     )
 
+    const missingRoles = useMemo(() => {
+        const roles = user.roles
+        const rolesNotInUser = []
+
+        for (const role of Object.keys(Role)) {
+            if (!roles.includes(role as Role)) {
+                rolesNotInUser.push(role)
+            }
+        }
+
+        return rolesNotInUser
+    }, [user.roles])
+
     return (
-        <div className='p-2 spce-y-2'>
-            <h4 className='mb-2'>Hantera roller</h4>
-            <div className='space-y-4 rounded bg-gray-100'>
-                <div className='flex max-w-sm'>
-                    <TextField
-                        placeholder='E-postaddress'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        fullWidth
-                    />
-                    <Button label='Sök' className='ml-1' onClick={() => refetch()} />
-                </div>
-                <div className='p-2'>
-                    {!data?.length ? (
-                        <span>Inga användare hittades</span>
-                    ) : (
-                        <ul>
-                            {data?.map((user) => (
-                                <div className={styles['user-card']}>
-                                    <div className='flex'>
-                                        <span className={styles['email-text']}>{user.email}</span>
-                                        <select
-                                            className={styles['role-selection']}
-                                            disabled={updateUserMutation.isLoading}
-                                            onChange={(e) =>
-                                                updateUserMutation.mutate({
-                                                    user,
-                                                    newRole: e.target.value as Role,
-                                                })
-                                            }
-                                        >
-                                            <option selected>Välj en roll...</option>
-                                            {Object.keys(Role)
-                                                .filter((role) => !user.roles.includes(role))
-                                                .map((key) => (
-                                                    <option value={key}>{capitalize(key)}</option>
-                                                ))}
-                                        </select>
-                                    </div>
-                                    <div className={styles['user-roles']}>
-                                        {user.roles.map((key) => (
-                                            <span
-                                                className={styles['role-label']}
-                                                onClick={() =>
-                                                    deleteUserRoleMutation.mutate({
-                                                        user,
-                                                        roleToDelete: key,
-                                                    })
-                                                }
-                                            >
-                                                {capitalize(key)}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+        <div className={styles['user-card']}>
+            <span className={styles['email-text']}>{user.email}</span>
+            <div className={styles['user-roles']}>
+                {user.roles.map((key) => (
+                    <span
+                        className={styles['role-label']}
+                        onClick={() =>
+                            deleteUserRoleMutation.mutate({
+                                user,
+                                roleToDelete: key,
+                            })
+                        }
+                    >
+                        {capitalize(key)}
+                    </span>
+                ))}
+
+                {missingRoles.map((key) => (
+                    <span
+                        className={classNames({
+                            [styles['role-label']]: true,
+                            [styles['unselected']]: true,
+                        })}
+                        onClick={() =>
+                            updateUserMutation.mutate({
+                                user,
+                                newRole: key,
+                            })
+                        }
+                    >
+                        {capitalize(key)}
+                    </span>
+                ))}
             </div>
         </div>
     )
