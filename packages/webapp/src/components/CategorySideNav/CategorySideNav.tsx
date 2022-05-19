@@ -36,7 +36,7 @@ export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavPr
                         <li
                             key={key}
                             className={classNames({
-                                [styles.selected]: isSelected(key),
+                                [styles.selected]: isSelected(key as Category),
                             })}
                         >
                             <Link

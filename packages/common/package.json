@@ -22,8 +22,7 @@
         "dev": "npx microbundle watch",
         "pack": "pnpm pack --pack-destination ../../archive",
         "publish": "pnpm publish --no-git-checks",
-        "prepare": "npm run build",
-        "preinstall": "cd ../schemas && pnpm i -F schemas && pnpm run prisma:generate"
+        "prepare": "npm run build"
     },
     "publishConfig": {
         "@wille430:registry": "https://npm.pkg.github.com"
@@ -40,7 +39,6 @@
     "devDependencies": {
         "@types/lodash": "^4.14.180",
         "@vitejs/plugin-react": "^1.0.7",
-        "dotenv-cli": "^5.1.0",
         "microbundle": "^0.14.2",
         "vitest": "^0.8.1"
     }

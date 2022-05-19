@@ -17,7 +17,6 @@ type CreateWatcherButtonProps = ButtonProps & {
 }
 
 export const CreateWatcherButton = ({
-    error,
     setError,
     onSuccess,
     onError,
