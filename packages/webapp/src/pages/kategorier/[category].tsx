@@ -33,7 +33,7 @@ const CategoryPage = () => {
     return (
         <ListingFiltersProvider defaults={{ category }} excludeInParams={['category']}>
             <aside>
-                <CategorySideNav selectedCategory={category} />
+                <CategorySideNav selectedCategory={category as Category} />
             </aside>
             <main>
                 <SearchSection />

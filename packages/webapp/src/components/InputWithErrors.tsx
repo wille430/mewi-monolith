@@ -16,7 +16,7 @@ const InputWithErrors = ({ errorMessage, ...rest }: Props) => {
         <div>
             <input
                 className='w-full rounded-sm p-2 text-black'
-                onFocus={(e) => setError(null)}
+                onFocus={() => setError(null)}
                 {...rest}
             />
             <br />

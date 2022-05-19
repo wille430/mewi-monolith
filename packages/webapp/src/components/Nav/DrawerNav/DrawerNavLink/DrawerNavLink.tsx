@@ -9,7 +9,6 @@ const DrawerNavLinkItem = ({
     path,
     name,
     sublinks,
-    children,
 }: NavLink & { children?: ReactElement | string }) => {
     const { isLoggedIn } = useAppSelector((state) => state.user)
 
