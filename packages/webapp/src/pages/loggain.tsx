@@ -15,6 +15,7 @@ const Login = () => {
             <Head>
                 <title>Logga in | Mewi.se</title>
             </Head>
+
             <section style={{ paddingTop: '15vh' }}>
                 <SignInWithEmail />
             </section>

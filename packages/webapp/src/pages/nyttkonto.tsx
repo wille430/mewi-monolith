@@ -15,6 +15,7 @@ const NyttKonto = () => {
             <Head>
                 <title>Skapa ett konto | Mewi.se</title>
             </Head>
+
             <section style={{ paddingTop: '15vh' }}>
                 <SignUpForm />
             </section>

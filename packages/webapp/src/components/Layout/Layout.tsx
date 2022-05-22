@@ -18,11 +18,11 @@ export const Layout = ({ children, decorations = true }: LayoutProps) => {
         <div className='h-screen flex flex-col'>
             <header className={style.header}>
                 <div className={style.innerHeader}>
-                    <div className={style.logo}>
+                    <a className={style.logo} href='/'>
                         {!routesToNotShowLogo.includes(router.pathname) && (
                             <img src='/img/logo.png' alt='Mewi logo' />
                         )}
-                    </div>
+                    </a>
                     <Nav />
                 </div>
             </header>

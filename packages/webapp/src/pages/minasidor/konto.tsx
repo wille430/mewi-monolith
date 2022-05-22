@@ -1,6 +1,7 @@
 import { Container, HorizontalLine } from '@mewi/ui'
 import { ReactElement } from 'react'
 import { Role, User } from '@mewi/prisma'
+import Head from 'next/head'
 import { withAuth } from '@/lib/auth'
 import { logoutSession } from '@/lib/session'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
@@ -31,23 +32,29 @@ export const getServerSideProps = withAuth(
 
 const Konto = ({ user }: KontoPageProps) => {
     return (
-        <main>
-            <Container
-                style={{
-                    minHeight: '50vh',
-                }}
-            >
-                <Container.Header>
-                    <h3>Mitt Konto</h3>
-                    <HorizontalLine />
-                </Container.Header>
+        <>
+            <Head>
+                <title>Mitt konto | Mewi.se</title>
+            </Head>
 
-                <Container.Content>
-                    <AccountDetails user={user} />
-                </Container.Content>
-                <Container.Footer></Container.Footer>
-            </Container>
-        </main>
+            <main>
+                <Container
+                    style={{
+                        minHeight: '50vh',
+                    }}
+                >
+                    <Container.Header>
+                        <h3>Mitt Konto</h3>
+                        <HorizontalLine />
+                    </Container.Header>
+
+                    <Container.Content>
+                        <AccountDetails user={user} />
+                    </Container.Content>
+                    <Container.Footer></Container.Footer>
+                </Container>
+            </main>
+        </>
     )
 }
 

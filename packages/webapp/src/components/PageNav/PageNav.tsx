@@ -46,7 +46,9 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                         if (i === totalNumButtons - 1 && showLastPageSkip) {
                             return (
                                 <>
-                                    <span className='block mt-auto mx-2'>...</span>
+                                    <span key='dots-1' className='block mt-auto mx-2'>
+                                        ...
+                                    </span>
                                     <NavButton
                                         key={totalPages}
                                         label={totalPages}
@@ -67,7 +69,9 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                                         selected={false}
                                         onClick={handleClick}
                                     />
-                                    <span className='block mt-auto mx-2'>...</span>
+                                    <span key='dots-0' className='block mt-auto mx-2'>
+                                        ...
+                                    </span>
                                 </>
                             )
                         }

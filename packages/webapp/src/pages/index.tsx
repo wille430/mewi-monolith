@@ -31,23 +31,26 @@ const Index = ({ featuredListings }: IndexPageProps) => {
     const dispatch = useAppDispatch()
 
     return (
-        <main>
+        <>
             <Head>
                 <title>Mewi.se - Sök efter beggagnade produkter på ett enda ställe</title>
             </Head>
-            <section>
-                <Hero />
-                <DecorativeWaves />
-            </section>
-            <FeaturedListings listings={featuredListings} />
-            <div className='h-32' />
-            {openedListing && (
-                <ListingPopUp
-                    onClose={() => dispatch(closeListing())}
-                    listing={openedListing}
-                ></ListingPopUp>
-            )}
-        </main>
+
+            <main>
+                <section>
+                    <Hero />
+                    <DecorativeWaves />
+                </section>
+                <FeaturedListings listings={featuredListings} />
+                <div className='h-32' />
+                {openedListing && (
+                    <ListingPopUp
+                        onClose={() => dispatch(closeListing())}
+                        listing={openedListing}
+                    ></ListingPopUp>
+                )}
+            </main>
+        </>
     )
 }
 

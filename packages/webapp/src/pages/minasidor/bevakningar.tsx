@@ -1,5 +1,6 @@
 import { Role } from '@mewi/prisma'
 import { ReactElement } from 'react'
+import Head from 'next/head'
 import { withAuth } from '@/lib/auth'
 import WatcherList from '@/components/WatcherList/WatcherList'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
@@ -30,10 +31,15 @@ export const getServerSideProps = withAuth(
 
 const Bevakningar = ({ watchers }) => {
     return (
-        <main>
-            <WatcherList watchers={watchers} />
-            <ListingPopUpContainer />
-        </main>
+        <>
+            <Head>
+                <title>Mina bevakningar | Mewi.se</title>
+            </Head>
+            <main>
+                <WatcherList watchers={watchers} />
+                <ListingPopUpContainer />
+            </main>
+        </>
     )
 }
 

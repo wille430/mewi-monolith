@@ -1,5 +1,5 @@
 import { ListingSearchFilters as ListingFilters } from '@wille430/common'
-import React from 'react'
+import React, { useRef } from 'react'
 import queryString from 'query-string'
 import _ from 'lodash'
 import { keys } from 'ts-transformer-keys'
@@ -26,7 +26,7 @@ declare global {
 const defaultContext = React.createContext<ListingFiltersContext | undefined>(undefined)
 
 /**
- * Get listing filter context in memory
+ * Get listing filter context from the memory
  *
  * @returns Listing filters context
  */
@@ -64,6 +64,7 @@ export const ListingFiltersProvider = ({
     const Context = getListingFilterContext()
 
     const router = useRouter()
+    const isFirstRender = useRef(true)
 
     const shouldUpdate = () => {
         return !_.isEqual(
@@ -118,6 +119,10 @@ export const ListingFiltersProvider = ({
     )
 
     React.useEffect(() => {
+        if (!isFirstRender.current) {
+            isFirstRender.current = false
+        }
+
         // Update filters from URL search params
         if (shouldUpdate()) {
             const newFilters = {
@@ -131,7 +136,7 @@ export const ListingFiltersProvider = ({
     }, [router.query])
 
     React.useEffect(() => {
-        if (shouldUpdate()) throttleUpdateParams(_filters)
+        if (shouldUpdate() && !isFirstRender) throttleUpdateParams(_filters)
     }, [_filters])
 
     return (

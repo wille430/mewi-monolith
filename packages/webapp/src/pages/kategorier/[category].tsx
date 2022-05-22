@@ -2,6 +2,8 @@ import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { Category } from '@mewi/prisma'
+import Head from 'next/head'
+import { CategoryLabel } from '@wille430/common'
 import { CategorySideNav } from '@/components/CategorySideNav/CategorySideNav'
 import { BasicLayout } from '@/components/BasicLayout/BasicLayout'
 import { SearchSection } from '@/components/SearchSection/SearchSection'
@@ -31,15 +33,21 @@ const CategoryPage = () => {
     const category = (router.query.category as string | undefined)?.toUpperCase()
 
     return (
-        <ListingFiltersProvider defaults={{ category }} excludeInParams={['category']}>
-            <aside>
-                <CategorySideNav selectedCategory={category as Category} />
-            </aside>
-            <main>
-                <SearchSection />
-            </main>
-            <aside></aside>
-        </ListingFiltersProvider>
+        <>
+            <Head>
+                <title>{CategoryLabel[category]} | Mewi.se</title>
+            </Head>
+
+            <ListingFiltersProvider defaults={{ category }} excludeInParams={['category']}>
+                <aside>
+                    <CategorySideNav selectedCategory={category as Category} />
+                </aside>
+                <main>
+                    <SearchSection />
+                </main>
+                <aside></aside>
+            </ListingFiltersProvider>
+        </>
     )
 }
 
