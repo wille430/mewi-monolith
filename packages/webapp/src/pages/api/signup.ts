@@ -34,10 +34,7 @@ async function signupRoute(req: NextApiRequest, res: NextApiResponse) {
         await req.session.save()
 
         // res.redirect(308, '/minasidor')
-        res.status(200).json({
-            statusCode: 200,
-            message: 'OK',
-        })
+        res.status(200).json(tokens)
     }
 
     // get tokens from Nest API

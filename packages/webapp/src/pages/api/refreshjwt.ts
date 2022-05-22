@@ -36,10 +36,7 @@ async function refreshJwtRoute(req: NextApiRequest, res: NextApiResponse) {
         cookies.set(REFRESH_TOKEN_COOKIE, newJwt.refresh_token)
 
         // Return ok response or error
-        res.status(200).json({
-            statusCode: 200,
-            message: 'OK',
-        })
+        res.status(200).json(newJwt)
     } catch (e) {
         console.log(e)
 

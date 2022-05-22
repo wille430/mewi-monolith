@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import SmallContainer from '@/components/SmallContainer/SmallContainer'
 import { useAppDispatch } from '@/hooks'
 import { setLoggedInStatus } from '@/store/user'
+import { setJwt } from '@/lib/jwt'
 
 export function SignInWithEmail() {
     const [email, setEmail] = useState<string | undefined>('')
@@ -31,7 +32,8 @@ export function SignInWithEmail() {
                 setError('Felaktig e-postadress eller lösenord')
                 setPassword('')
             },
-            onSuccess: () => {
+            onSuccess: (res) => {
+                setJwt(res)
                 dispatch(setLoggedInStatus(true))
                 Router.push('/minasidor')
             },

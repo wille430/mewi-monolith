@@ -39,7 +39,7 @@ export const ScraperPanel = () => {
             <div className='space-y-4 rounded bg-gray-150 p-2'>
                 <ul>
                     {Object.keys(ListingOrigin).map((key) => (
-                        <li className='flex'>
+                        <li className='flex' key={key}>
                             <div className='w-32'>
                                 <Checkbox
                                     label={key}

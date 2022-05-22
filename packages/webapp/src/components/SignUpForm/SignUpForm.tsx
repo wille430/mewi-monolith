@@ -4,6 +4,7 @@ import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import { setLoggedInStatus } from '@/store/user/creators'
 import { useAppDispatch } from '@/hooks'
+import { setJwt } from '@/lib/jwt'
 
 export const SignUpForm = () => {
     interface FormData {
@@ -39,7 +40,8 @@ export const SignUpForm = () => {
                 }
             }),
         {
-            onSuccess: () => {
+            onSuccess: (res) => {
+                setJwt(res)
                 dispatch(setLoggedInStatus(true))
                 Router.push('/minasidor')
             },

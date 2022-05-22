@@ -1,7 +1,10 @@
 import axios from 'axios'
+import { getJwt } from './jwt'
 
 export const setupAxios = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL
+
+    setHeaders()
 
     axios.interceptors.response.use(
         (res) => {
@@ -32,4 +35,9 @@ export const setupAxios = () => {
     )
 
     axios.defaults.withCredentials = true
+}
+
+export const setHeaders = () => {
+    const authTokens = getJwt()
+    axios.defaults.headers.common['Authorization'] = `Bearer ${authTokens?.access_token}`
 }
