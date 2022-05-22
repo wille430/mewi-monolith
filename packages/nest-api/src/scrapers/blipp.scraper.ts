@@ -17,8 +17,6 @@ export class BlippScraper extends Scraper {
     }
 
     async apiUrl() {
-        console.log('TOKEN:', await this.getBuildId())
-
         return `https://blipp.se/_next/data/${await this.getBuildId()}/fordon.json`
     }
 
@@ -26,7 +24,9 @@ export class BlippScraper extends Scraper {
         if (this.buildId) {
             return this.buildId
         } else {
-            const browser = await puppeteer.launch()
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox'],
+            })
             let token: string | undefined
             try {
                 const page = await browser.newPage()
