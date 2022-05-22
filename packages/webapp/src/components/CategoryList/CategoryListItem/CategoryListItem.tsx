@@ -37,10 +37,13 @@ export const CategoryListItem = ({
     return (
         <motion.div
             data-testid={`categoryListItem-${subCatIndex}`}
+            initial={{
+                transform: 'scale(0)',
+            }}
             animate={{
                 transform: 'scale(1)',
                 transition: {
-                    delay: ((index * 2) % 3) * 0.1,
+                    delay: ((index * 2) % 3) * 0.1 + 0.5,
                 },
             }}
             whileHover={{
