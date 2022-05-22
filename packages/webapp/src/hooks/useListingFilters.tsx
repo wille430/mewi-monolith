@@ -119,10 +119,6 @@ export const ListingFiltersProvider = ({
     )
 
     React.useEffect(() => {
-        if (!isFirstRender.current) {
-            isFirstRender.current = false
-        }
-
         // Update filters from URL search params
         if (shouldUpdate()) {
             const newFilters = {
@@ -136,7 +132,11 @@ export const ListingFiltersProvider = ({
     }, [router.query])
 
     React.useEffect(() => {
-        if (shouldUpdate() && !isFirstRender) throttleUpdateParams(_filters)
+        if (shouldUpdate() && !isFirstRender.current) throttleUpdateParams(_filters)
+
+        if (isFirstRender.current) {
+            isFirstRender.current = false
+        }
     }, [_filters])
 
     return (
