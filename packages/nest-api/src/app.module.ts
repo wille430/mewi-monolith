@@ -17,6 +17,7 @@ import { ScrapersModule } from './scrapers/scrapers.module'
 import { TestModule } from './test/test.module'
 import { WatchersModule } from './watchers/watchers.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
+import authConfig from './config/auth.config'
 import { ListingsModule } from '@/listings/listings.module'
 
 @Module({
@@ -24,7 +25,7 @@ import { ListingsModule } from '@/listings/listings.module'
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
-            load: [configuration, scraperConfig, databaseConfig, notificationConfig],
+            load: [configuration, scraperConfig, databaseConfig, notificationConfig, authConfig],
         }),
         ThrottlerModule.forRoot({
             ttl: 60,

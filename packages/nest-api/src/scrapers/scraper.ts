@@ -48,6 +48,10 @@ export class Scraper {
      * @param deleteOlderThan - Date in unix time
      */
     deleteOlderThan = Date.now() - 2 * 24 * 60 * 60 * 1000
+    /**
+     * @param started - Whether or not the scraper is running
+     */
+    isScraping = false
 
     constructor(
         private prisma: PrismaService,
@@ -97,6 +101,8 @@ export class Scraper {
      * Initializing scraping
      */
     async start() {
+        this.isScraping = true
+
         let scrapedListings = await this.getListings()
         let remainingEntries =
             this.maxEntries -
@@ -129,6 +135,8 @@ export class Scraper {
 
         console.log(`Following errors occurred when scraping ${this.name}:`, errors)
         console.log(`Scraping ended with a total of ${this.listingScraped} listings scraped`)
+
+        this.isScraping = false
     }
 
     async deleteOld(): Promise<void> {

@@ -7,6 +7,7 @@ import {
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { LoginStrategy, User } from '@mewi/prisma'
+import { ConfigService } from '@nestjs/config'
 import SignUpDto from '@/auth/dto/sign-up.dto'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { PrismaService } from '@/prisma/prisma.service'
@@ -19,7 +20,11 @@ interface UserPayload {
 
 @Injectable()
 export class AuthService {
-    constructor(private jwtService: JwtService, private prisma: PrismaService) {}
+    constructor(
+        private jwtService: JwtService,
+        private prisma: PrismaService,
+        private configService: ConfigService
+    ) {}
 
     async validateUser(email: string, pass: string): Promise<User | null> {
         const user = await this.prisma.user.findFirst({
@@ -40,8 +45,8 @@ export class AuthService {
         return {
             access_token: this.jwtService.sign(payload),
             refresh_token: this.jwtService.sign(payload, {
-                expiresIn: '7d',
-                secret: process.env.REFRESH_TOKEN_SECRET,
+                expiresIn: this.configService.get('auth.refreshToken.expiresIn'),
+                secret: this.configService.get('auth.refreshToken.secret'),
             }),
         }
     }
@@ -74,7 +79,7 @@ export class AuthService {
 
         try {
             const payload: UserPayload = this.jwtService.verify(refresh_token, {
-                secret: process.env.REFRESH_TOKEN_SECRET,
+                secret: this.configService.get('auth.refreshToken.secret'),
             })
             const user = await this.prisma.user.findFirst({
                 where: { email: payload.email },

@@ -1,5 +1,6 @@
+import { AuthTokens } from '@wille430/common'
 import axios from 'axios'
-import { getJwt } from './jwt'
+import { getJwt, setJwt } from './jwt'
 
 export const setupAxios = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL
@@ -19,10 +20,14 @@ export const setupAxios = () => {
                 // refetch jwt token
                 await fetch('/api/refreshjwt', {
                     credentials: 'include',
-                }).catch(() => {
-                    // when an error occured on this route, the session is destroyed
-                    window.location.href = '/loggain'
                 })
+                    .then(async (res) => {
+                        setJwt((await res.json()) as AuthTokens)
+                    })
+                    .catch(() => {
+                        // when an error occured on this route, the session is destroyed
+                        window.location.href = '/loggain'
+                    })
 
                 return axios(config)
             } else if (config._retry && err.status === 401) {

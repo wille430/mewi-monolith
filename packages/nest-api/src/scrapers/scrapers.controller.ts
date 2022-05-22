@@ -1,7 +1,8 @@
 import { ListingOrigin, Role } from '@mewi/prisma'
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { capitalize } from 'lodash'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ScraperStatus } from '@wille430/common'
 import { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import { ScrapersService } from './scrapers.service'
 import { StartScrapersDto } from './dto/start-scrapers.dto'
@@ -22,10 +23,10 @@ export class ScrapersController {
     })
     async startAll(@Body() { scrapers }: StartScrapersDto) {
         if (scrapers) {
-            const startStatusMap: Partial<Record<ListingOrigin, boolean>> = {}
+            const startStatusMap: Partial<Record<ListingOrigin, ScraperStatus>> = {}
 
             for (const scraper of scrapers) {
-                startStatusMap[scraper] = this.scrapersService.start(scraper)
+                startStatusMap[scraper] = await this.scrapersService.start(scraper)
             }
 
             return {
@@ -49,5 +50,11 @@ export class ScrapersController {
         } else {
             return `Initializing ${startOneScraperDto.scraperName}-scraper`
         }
+    }
+
+    @Get('status')
+    @Roles(Role.ADMIN)
+    async status() {
+        return this.scrapersService.status()
     }
 }
