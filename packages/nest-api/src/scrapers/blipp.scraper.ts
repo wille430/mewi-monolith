@@ -2,17 +2,50 @@ import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
 import axios from 'axios'
+import puppeteer from 'puppeteer'
 import { Scraper } from './scraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends Scraper {
     maxPages?: number
-    apiUrl = 'https://blipp.se/_next/data/KtgJTNWoe2qa3eea8gABt/fordon.json'
     currentPage = 1
     perPage = 40
+    buildId?: string
 
-    constructor(@Inject(PrismaService) prisma, configService: ConfigService) {
+    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
         super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {})
+    }
+
+    async apiUrl() {
+        console.log('TOKEN:', await this.getBuildId())
+
+        return `https://blipp.se/_next/data/${await this.getBuildId()}/fordon.json`
+    }
+
+    async getBuildId(): Promise<string | undefined> {
+        if (this.buildId) {
+            return this.buildId
+        } else {
+            const browser = await puppeteer.launch()
+            let token: string | undefined
+            try {
+                const page = await browser.newPage()
+                await page.goto('https://blipp.se/fordon')
+
+                token = await page.evaluate(() => {
+                    const text = document.querySelector('#__NEXT_DATA__').textContent
+                    const json: Record<any, any> = JSON.parse(text)
+
+                    return json.buildId
+                })
+            } catch (e) {
+                console.log('Could not find token')
+            } finally {
+                await browser.close()
+            }
+
+            return token
+        }
     }
 
     /**
@@ -20,7 +53,7 @@ export class BlippScraper extends Scraper {
      */
     async numberOfPages(): Promise<number> {
         const payload = await axios
-            .get(this.apiUrl)
+            .get(await this.apiUrl())
             .then((res) => res.data.pageProps?.data?.payload)
 
         this.perPage = payload.per_page
@@ -30,13 +63,15 @@ export class BlippScraper extends Scraper {
     }
 
     /**
-     * @param pageNum - the apge to scrape. pageNum \>= 1
+     * @param pageNum - the page to scrape. pageNum \>= 1
      * @returns An array of listings
      */
     async getListingOnPage(pageNum: number): Promise<Prisma.ListingCreateInput[]> {
+        if (pageNum < 1) pageNum = 1
+
         let listings: Prisma.ListingCreateInput[] = []
         try {
-            const url = `${this.apiUrl}?page=${pageNum}/`
+            const url = `${await this.apiUrl()}?page=${pageNum}/`
 
             const rawListings = (await axios
                 .get(url)

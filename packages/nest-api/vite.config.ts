@@ -6,9 +6,4 @@ export default defineConfig({
     test: {
         globals: true,
     },
-    resolve: {
-        alias: {
-            'prisma-factory/generated': './node_modules/prisma-factory/generated',
-        },
-    },
 })
