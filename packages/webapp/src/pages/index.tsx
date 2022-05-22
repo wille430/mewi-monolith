@@ -41,7 +41,9 @@ const Index = ({ featuredListings }: IndexPageProps) => {
                     <Hero />
                     <DecorativeWaves />
                 </section>
-                <FeaturedListings listings={featuredListings} />
+                <div className='p-4'>
+                    <FeaturedListings listings={featuredListings} />
+                </div>
                 <div className='h-32' />
                 {openedListing && (
                     <ListingPopUp
