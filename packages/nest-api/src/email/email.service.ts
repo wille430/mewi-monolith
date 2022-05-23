@@ -7,7 +7,7 @@ export class EmailService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {}
 
-    googleAuth = {
+    credentials = {
         email: process.env.GMAIL_MAIL,
         pass: process.env.GMAIL_PASS,
     }
@@ -35,10 +35,12 @@ export class EmailService {
             })
         } else {
             return nodeMailer.createTransport({
-                service: 'gmail',
+                host: 'send.one.com',
+                port: 465,
+                secure: true,
                 auth: {
-                    user: this.googleAuth.email,
-                    pass: this.googleAuth.pass,
+                    user: this.credentials.email,
+                    pass: this.credentials.pass,
                 },
             })
         }

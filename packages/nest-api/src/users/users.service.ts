@@ -132,7 +132,7 @@ export class UsersService {
 
             const emailObj = new Email({
                 message: {
-                    from: this.emailService.googleAuth.email,
+                    from: this.emailService.credentials.email,
                     to: email,
                     subject: 'Lösenordsåterställning',
                     html: forgottenPasswordEmail({
@@ -199,7 +199,7 @@ export class UsersService {
 
         const email = new Email({
             message: {
-                from: this.emailService.googleAuth.email,
+                from: this.emailService.credentials.email,
             },
             transport: transporter,
         })

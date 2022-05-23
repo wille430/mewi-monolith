@@ -138,7 +138,7 @@ export class WatchersService {
         if (newListings.length >= this.configService.get('notification.watcher.minListings')) {
             const email = new Email({
                 message: {
-                    from: this.emailService.googleAuth.email,
+                    from: this.emailService.credentials.email,
                 },
                 transport: transporter,
             })
