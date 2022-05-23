@@ -70,6 +70,21 @@ model Listing {
   auctionEnd  DateTime?
 }
 
+model ScrapingLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  added_count Int
+  error_count Int
+
+  total_count Int
+
+  target       ListingOrigin
+  triggered_by ScraperTrigger
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum Role {
   USER
   ADMIN
@@ -137,4 +152,9 @@ enum ListingOrigin {
   Tradera
   Sellpy
   Blipp
+}
+
+enum ScraperTrigger {
+  Manual
+  Scheduled
 }

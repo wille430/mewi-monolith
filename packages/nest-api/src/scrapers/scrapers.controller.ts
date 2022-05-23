@@ -1,4 +1,4 @@
-import { ListingOrigin, Role } from '@mewi/prisma'
+import { ListingOrigin, Role, Prisma } from '@mewi/prisma'
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { capitalize } from 'lodash'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -56,5 +56,11 @@ export class ScrapersController {
     @Roles(Role.ADMIN)
     async status() {
         return this.scrapersService.status()
+    }
+
+    @Get('logs')
+    @Roles(Role.ADMIN)
+    async logs(@Body() dto: Prisma.ScrapingLogFindManyArgs) {
+        return this.scrapersService.getLogs(dto)
     }
 }

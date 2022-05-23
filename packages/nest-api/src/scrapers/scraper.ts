@@ -1,7 +1,7 @@
 import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
-import { ListingOrigin, Prisma } from '@mewi/prisma'
+import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export interface ScraperOptions {
@@ -133,8 +133,16 @@ export class Scraper {
             i += 1
         }
 
-        console.log(`Following errors occurred when scraping ${this.name}:`, errors)
-        console.log(`Scraping ended with a total of ${this.listingScraped} listings scraped`)
+        // Create scrape logs
+        await this.prisma.scrapingLog.create({
+            data: {
+                added_count: this.listingScraped,
+                error_count: Object.keys(errors).length,
+                target: this.name,
+                total_count: await this.prisma.listing.count({ where: { origin: this.name } }),
+                triggered_by: ScraperTrigger.Scheduled,
+            },
+        })
 
         this.isScraping = false
     }

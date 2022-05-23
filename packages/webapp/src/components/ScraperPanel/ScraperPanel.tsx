@@ -1,9 +1,10 @@
 import { ListingOrigin } from '@mewi/prisma/index-browser'
-import { Button } from '@mewi/ui'
+import { Button, ButtonProps } from '@mewi/ui'
 import axios from 'axios'
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ScraperStatus } from '@wille430/common'
+import { ScraperLogs } from '../ScraperLogs/ScraperLogs'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
 export const ScraperPanel = () => {
@@ -31,8 +32,6 @@ export const ScraperPanel = () => {
         () => axios.get('/scrapers/status').then((res) => res.data),
         {
             initialData: initialScraperStatus,
-            refetchOnMount: true,
-            refetchOnWindowFocus: true,
         }
     )
 
@@ -117,33 +116,63 @@ export const ScraperPanel = () => {
                         onClick={() => startScrapers.mutate()}
                     />
 
-                    {
-                        // True if all scrapers are selected
-                        isAllSelected ? (
-                            <Button
-                                label='Avmarkera'
-                                variant='outlined'
-                                onClick={async () => {
-                                    setSelectedScrapers({})
-                                }}
-                            />
-                        ) : (
-                            <Button
-                                label='Välj alla'
-                                variant='outlined'
-                                onClick={async () => {
-                                    setSelectedScrapers(
-                                        Object.keys(ListingOrigin).reduce(
-                                            (o, key) => ((o[key] = true), o),
-                                            {}
-                                        )
+                    {isAllSelected ? (
+                        <Button
+                            label='Avmarkera'
+                            variant='outlined'
+                            onClick={async () => {
+                                setSelectedScrapers({})
+                            }}
+                        />
+                    ) : (
+                        <Button
+                            label='Välj alla'
+                            variant='outlined'
+                            onClick={async () => {
+                                setSelectedScrapers(
+                                    Object.keys(ListingOrigin).reduce(
+                                        (o, key) => ((o[key] = true), o),
+                                        {}
                                     )
-                                }}
-                            />
-                        )
-                    }
+                                )
+                            }}
+                        />
+                    )}
+
+                    <DeleteButton
+                        selected={
+                            Object.keys(selectedScrapers).filter(
+                                (key) => selectedScrapers[key] === true
+                            ) as ListingOrigin[]
+                        }
+                    />
                 </div>
+
+                <ScraperLogs />
             </div>
         </div>
+    )
+}
+
+export const DeleteButton = ({
+    selected,
+    ...props
+}: ButtonProps & { selected: ListingOrigin[] }) => {
+    const mutation = useMutation(async () => {
+        await axios.delete('/listings', {
+            params: {
+                origin: ListingOrigin.Blipp,
+            },
+        })
+    })
+
+    return (
+        <Button
+            {...props}
+            label='Töm'
+            color='error'
+            onClick={() => mutation.mutate()}
+            disabled={mutation.isLoading}
+        />
     )
 }

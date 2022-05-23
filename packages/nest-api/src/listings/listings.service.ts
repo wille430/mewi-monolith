@@ -203,4 +203,8 @@ export class ListingsService {
 
         return response.map((x) => x.title)
     }
+
+    async deleteMany(dto: Prisma.ListingDeleteManyArgs) {
+        return await this.prisma.listing.deleteMany(dto)
+    }
 }

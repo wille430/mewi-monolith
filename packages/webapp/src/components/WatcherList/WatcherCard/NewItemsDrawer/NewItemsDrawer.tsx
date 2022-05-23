@@ -44,7 +44,12 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                             ...removeNullValues(watcher.watcher.metadata),
                         })
                 )
-                .then((res) => res.data?.hits)
+                .then((res) => res.data?.hits),
+        {
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+        }
     )
 
     const drawerVariants = {

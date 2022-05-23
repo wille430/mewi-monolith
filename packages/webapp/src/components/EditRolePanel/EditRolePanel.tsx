@@ -11,8 +11,14 @@ import StyledLoader from '../StyledLoader'
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
 
-    const { data, refetch, isLoading } = useQuery('users', () =>
-        axios.get<User[]>(`/users?email=${email}`).then((res) => res.data)
+    const { data, refetch, isLoading } = useQuery(
+        'users',
+        () => axios.get<User[]>(`/users?email=${email}`).then((res) => res.data),
+        {
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+        }
     )
 
     return (

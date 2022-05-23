@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
-import { ListingOrigin } from '@mewi/prisma'
+import { ListingOrigin, Prisma } from '@mewi/prisma'
 import { ScraperStatus } from '@wille430/common'
 import { BlocketScraper } from './blocket.scraper'
 import { TraderaScraper } from './tradera.scraper'
@@ -92,5 +92,9 @@ export class ScrapersService {
         }
 
         return allScraperStatus as ReturnType<typeof this.status>
+    }
+
+    async getLogs(dto: Prisma.ScrapingLogFindManyArgs) {
+        return await this.prisma.scrapingLog.findMany(dto)
     }
 }

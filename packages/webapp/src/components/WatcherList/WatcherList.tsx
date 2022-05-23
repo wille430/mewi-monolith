@@ -20,6 +20,9 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
         {
             initialData: watchers ?? [],
             enabled: false,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
         }
     )
 
