@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
-import { ListingOrigin, Prisma } from '@mewi/prisma'
+import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
 import { ScraperStatus } from '@wille430/common'
 import { BlocketScraper } from './blocket.scraper'
 import { TraderaScraper } from './tradera.scraper'
 import { SellpyScraper } from './sellpy.scraper'
 import { BlippScraper } from './blipp.scraper'
 import { Scraper } from './scraper'
+import { StartScraperOptions } from './types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
@@ -28,20 +29,17 @@ export class ScrapersService {
         ]
     }
 
-    // scheduleAll() {
-    //     for (const scraper of this.scrapers) {
-    //         scraper.schedule()
-    //     }
-    // }
-
     @Cron('* */45 * * *')
-    async startAll() {
+    async startAll(...args: Parameters<Scraper['start']>) {
         for (const scraper of this.scrapers) {
-            await scraper.start()
+            await scraper.start(...args)
         }
     }
 
-    async start(scraperName: ListingOrigin): Promise<ScraperStatus> {
+    async start(
+        scraperName: ListingOrigin,
+        options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
+    ): Promise<ScraperStatus> {
         let foundScraper: typeof this.scrapers[number] | undefined = undefined
 
         for (const scraper of this.scrapers) {
@@ -51,7 +49,7 @@ export class ScrapersService {
         }
 
         if (foundScraper) {
-            foundScraper.start()
+            foundScraper.start(options)
             const listingCount = await this.prisma.listing.count({
                 where: {
                     origin: foundScraper.name,

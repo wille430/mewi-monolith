@@ -2,6 +2,7 @@ import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
+import { StartScraperOptions } from './types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export interface ScraperOptions {
@@ -100,7 +101,7 @@ export class Scraper {
     /**
      * Initializing scraping
      */
-    async start() {
+    async start({ triggeredBy }: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }) {
         this.isScraping = true
 
         let scrapedListings = await this.getListings()
@@ -140,7 +141,7 @@ export class Scraper {
                 error_count: Object.keys(errors).length,
                 target: this.name,
                 total_count: await this.prisma.listing.count({ where: { origin: this.name } }),
-                triggered_by: ScraperTrigger.Scheduled,
+                triggered_by: triggeredBy,
             },
         })
 
