@@ -15,6 +15,10 @@ async function refreshJwtRoute(req: NextApiRequest, res: NextApiResponse) {
         // Send refresh request to API server
         const apiRes = await fetch(process.env.NEXT_PUBLIC_API_URL + 'auth/token', {
             method: 'post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
             body: JSON.stringify({
                 refresh_token,
