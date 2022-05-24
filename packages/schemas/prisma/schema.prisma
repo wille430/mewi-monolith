@@ -51,6 +51,9 @@ model User {
   loginStrategy LoginStrategy  @default(LOCAL)
   passwordReset PasswordReset?
   emailUpdate   EmailUpdate?
+
+  likedListingIDs String[]  @db.ObjectId
+  likedListings   Listing[] @relation(fields: [likedListingIDs], references: [id])
 }
 
 model Listing {
@@ -68,6 +71,9 @@ model Listing {
   origin      ListingOrigin
   isAuction   Boolean       @default(false)
   auctionEnd  DateTime?
+
+  likedByUserIDs String[] @db.ObjectId
+  likedBy        User[]   @relation(fields: [likedByUserIDs], references: [id])
 }
 
 model ScrapingLog {

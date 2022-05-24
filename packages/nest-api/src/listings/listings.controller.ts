@@ -20,30 +20,34 @@ import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { Roles } from '@/auth/roles.decorator'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
+import { Public } from '@/common/decorators/public.decorator'
 
 @Controller('/listings')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ListingsController {
     constructor(private readonly listingsService: ListingsService) {}
     @Inject(CACHE_MANAGER) private cacheManager: Cache
 
     @Post()
+    @Roles(Role.ADMIN)
     create(@Body() createListingDto: CreateListingDto) {
         return this.listingsService.create(createListingDto)
     }
 
     @Get()
+    @Public()
     findAll(@Query() findAllListingsDto: FindAllListingsDto) {
         return this.listingsService.findAll(findAllListingsDto)
     }
 
     @Delete()
     @Roles(Role.ADMIN)
-    @UseGuards(JwtAuthGuard, RolesGuard)
     deleteMany(@Body() dto: Prisma.ListingDeleteManyArgs) {
         return this.listingsService.deleteMany(dto)
     }
 
     @Get('featured')
+    @Public()
     async featured() {
         if (!(await this.cacheManager.get('featured'))) {
             console.log('Caching random listings...')
@@ -56,21 +60,25 @@ export class ListingsController {
     }
 
     @Get('autocomplete/:keyword')
+    @Public()
     async autocomplete(@Param('keyword') keyword: string) {
         return this.listingsService.autocomplete(keyword)
     }
 
     @Get(':id')
+    @Public()
     findOne(@Param('id') id: string) {
         return this.listingsService.findOne(id)
     }
 
     @Patch(':id')
+    @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateListingDto: UpdateListingDto) {
         return this.listingsService.update(id, updateListingDto)
     }
 
     @Delete(':id')
+    @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
         return this.listingsService.remove(id)
     }

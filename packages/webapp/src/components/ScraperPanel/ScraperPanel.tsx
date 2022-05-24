@@ -1,10 +1,11 @@
-import { ListingOrigin } from '@mewi/prisma/index-browser'
+import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
 import { Button, ButtonProps } from '@mewi/ui'
 import axios from 'axios'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ScraperStatus } from '@wille430/common'
 import { ScraperLogs } from '../ScraperLogs/ScraperLogs'
+import StyledLoader from '../StyledLoader'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
 export const ScraperPanel = () => {
@@ -32,6 +33,8 @@ export const ScraperPanel = () => {
         () => axios.get('/scrapers/status').then((res) => res.data),
         {
             initialData: initialScraperStatus,
+            refetchInterval: 15000,
+            refetchIntervalInBackground: true,
         }
     )
 
@@ -61,6 +64,10 @@ export const ScraperPanel = () => {
         [selectedScrapers]
     )
 
+    useEffect(() => {
+        queryClient.fetchQuery('scraperLogs')
+    }, [scraperStatus])
+
     return (
         <div className='p-2 space-y-2'>
             <h4>Webbskrapare</h4>
@@ -81,16 +88,23 @@ export const ScraperPanel = () => {
                             return (
                                 <tr key={key}>
                                     <td>
-                                        <Checkbox
-                                            label={key}
-                                            onClick={() =>
-                                                setSelectedScrapers((prev) => ({
-                                                    ...prev,
-                                                    [key]: !selectedScrapers[key],
-                                                }))
-                                            }
-                                            checked={selectedScrapers[key]}
-                                        />
+                                        {scraperStatus[key as ListingOrigin].started ? (
+                                            <div className='flex items-center space-x-2'>
+                                                <StyledLoader height='1rem' width='1rem' />
+                                                <span>{key}</span>
+                                            </div>
+                                        ) : (
+                                            <Checkbox
+                                                label={key}
+                                                onClick={() =>
+                                                    setSelectedScrapers((prev) => ({
+                                                        ...prev,
+                                                        [key]: !selectedScrapers[key],
+                                                    }))
+                                                }
+                                                checked={selectedScrapers[key]}
+                                            />
+                                        )}
                                     </td>
 
                                     <td className='px-4'>
@@ -158,13 +172,23 @@ export const DeleteButton = ({
     selected,
     ...props
 }: ButtonProps & { selected: ListingOrigin[] }) => {
-    const mutation = useMutation(async () => {
-        await axios.delete('/listings', {
-            params: {
-                origin: ListingOrigin.Blipp,
-            },
-        })
-    })
+    const queryClient = useQueryClient()
+    const mutation = useMutation(
+        async () =>
+            // Delete listings from selected origins
+            await axios.delete('/listings', {
+                data: {
+                    where: {
+                        origin: {
+                            in: selected,
+                        },
+                    },
+                } as Prisma.ListingDeleteManyArgs,
+            }),
+        {
+            onMutate: () => queryClient.refetchQueries('scrapers'),
+        }
+    )
 
     return (
         <Button

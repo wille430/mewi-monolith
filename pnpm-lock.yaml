@@ -5955,7 +5955,7 @@ packages:
       '@storybook/core-events': 6.5.3
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/docs-tools': 6.5.3_react@17.0.2
-      '@storybook/mdx1-csf': 0.0.1-canary.1.867dcd5.0_@babel+core@7.17.12
+      '@storybook/mdx1-csf': 0.0.1-canary.1.eed86d7.0_@babel+core@7.17.12
       '@storybook/node-logger': 6.5.3
       '@storybook/postinstall': 6.5.3
       '@storybook/preview-web': 6.5.3_react@17.0.2
@@ -7287,25 +7287,6 @@ packages:
       - vue-template-compiler
       - webpack-cli
       - webpack-command
-    dev: true
-
-  /@storybook/mdx1-csf/0.0.1-canary.1.867dcd5.0_@babel+core@7.17.12:
-    resolution: {integrity: sha512-VnlE825M9SpjyJCPLCXbo+RbvqllsqXqRDCouzHKSpCE3Q79KR7MMURBsJo/vrTG1zeNG68Z4TZrLAu6IoyYaA==}
-    dependencies:
-      '@babel/generator': 7.17.12
-      '@babel/parser': 7.17.12
-      '@babel/preset-env': 7.17.12_@babel+core@7.17.12
-      '@babel/types': 7.17.12
-      '@mdx-js/mdx': 1.6.22
-      '@types/lodash': 4.14.182
-      js-string-escape: 1.0.1
-      loader-utils: 2.0.2
-      lodash: 4.17.21
-      prettier: 2.3.0
-      ts-dedent: 2.2.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
     dev: true
 
   /@storybook/mdx1-csf/0.0.1-canary.1.eed86d7.0_@babel+core@7.17.12:
@@ -11860,8 +11841,8 @@ packages:
       d3-color: 2.0.0
     dev: false
 
-  /d3-path/2.0.0:
-    resolution: {integrity: sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==}
+  /d3-path/1.0.9:
+    resolution: {integrity: sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==}
     dev: false
 
   /d3-scale/3.3.0:
@@ -11877,7 +11858,7 @@ packages:
   /d3-shape/2.1.0:
     resolution: {integrity: sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==}
     dependencies:
-      d3-path: 2.0.0
+      d3-path: 1.0.9
     dev: false
 
   /d3-time-format/3.0.0:

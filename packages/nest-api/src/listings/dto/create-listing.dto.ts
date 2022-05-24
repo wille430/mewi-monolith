@@ -52,4 +52,6 @@ export class CreateListingDto implements Listing {
     @IsOptional()
     @IsDate()
     auctionEnd: Date
+
+    likedByUserIDs: string[] = []
 }
