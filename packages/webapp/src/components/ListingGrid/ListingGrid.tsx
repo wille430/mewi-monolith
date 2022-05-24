@@ -50,8 +50,8 @@ const ListingGrid = () => {
         )
     } else {
         return (
-            <section className={cx({ [styles.center]: true })}>
-                <span>Inga resultat hittades för din sökning.</span>
+            <section className={cx({ [styles.center]: true, [styles.section]: true })}>
+                <span>Inget resultat hittades för din sökning.</span>
             </section>
         )
     }

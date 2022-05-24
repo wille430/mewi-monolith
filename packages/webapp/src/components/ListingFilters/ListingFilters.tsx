@@ -5,7 +5,7 @@ import LabeledDropdown from '../LabeledDropdown/LabeledDropdown'
 import { LabeledTextField } from '../LabeledTextField/LabeledTextField'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 
-export interface ListingFilterFormProps {
+export interface ListingFiltersProps {
     filters: ListingSearchFilters
     setFilters: Dispatch<SetStateAction<ListingSearchFilters>>
     showCategory?: boolean
@@ -15,7 +15,7 @@ export const ListingFilters = ({
     filters,
     setFilters,
     showCategory = false,
-}: ListingFilterFormProps) => (
+}: ListingFiltersProps) => (
     <>
         <LabeledTextField
             label='Sökord'

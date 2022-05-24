@@ -209,3 +209,21 @@ export const parseSearchParams = (
 
     return validatedFilters
 }
+
+export const stringifySearchPath = (filters: ListingFilters) => {
+    const excludeFilters: (keyof ListingFilters)[] = ['category']
+
+    const omittedFilters = _.omit(filters, excludeFilters)
+
+    let path = '/sok'
+
+    if (filters.category) {
+        path = `/kategorier/${filters.category.toLowerCase()}`
+    }
+
+    if (Object.keys(omittedFilters).length) {
+        path += `?${queryString.stringify(omittedFilters)}`
+    }
+
+    return path
+}

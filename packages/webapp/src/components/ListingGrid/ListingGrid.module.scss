@@ -22,6 +22,10 @@
     }
 }
 
+.section {
+    min-height: 24rem;
+}
+
 .center {
     @apply flex-grow flex justify-center items-center;
 }
