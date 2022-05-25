@@ -58,13 +58,13 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
-            - gcp-cli/install_and_initialize_cli:
-                  executor: gcp-cli/default
             - test:
                   filters:
                       branches:
                           only:
                               - main
+            - gcp-cli/install_and_initialize_cli:
+                  executor: gcp-cli/default
             - deploy:
                   filters:
                       branches:
