@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+    gcp-cli: circleci/gcp-cli@2.4.1
 jobs:
     test:
         docker:
@@ -27,6 +29,9 @@ jobs:
         steps:
             # TODO: deploy image
             - checkout
+            - gcp-cli/install_and_initialize_cli:
+                  context: myContext
+                  executor: gcp-cli/default
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
@@ -39,12 +44,6 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-            - run:
-                  name: Install Heroku cli
-                  command: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-            - run:
-                  name: Login to Heroku registry
-                  command: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
             - run: pnpm i -F schemas && pnpm i
             - run:
                   name: Isolate API workspace
@@ -56,9 +55,8 @@ jobs:
             - run:
                   name: Push API Docker image
                   command: |
-                      docker tag project_api registry.heroku.com/mewi-api/web
-                      docker push registry.heroku.com/mewi-api/web
-                      heroku container:release web --app mewi-api
+                      docker tag project_api europe-north1-docker.pkg.dev/mewi-347117/mewi-docker-repo/mewi-api
+                      docker push europe-north1-docker.pkg.dev/mewi-347117/mewi-docker-repo/mewi-api
 workflows:
     version: 2
     build_test_and_deploy:
