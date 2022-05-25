@@ -16,7 +16,7 @@ jobs:
                 key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
                 paths:
                     - node_modules
-                    - packages/nest-api/node_modules
+                    - ./packages/nest-api/node_modules
     build:
         docker:
             - image: cl00e9ment/node.js-builder
@@ -42,7 +42,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             # TODO: run tests
             - run:
                 name: Test and lint
@@ -83,14 +83,16 @@ workflows:
                     branches:
                         only:
                             - main
+            - gcp-cli/install_and_initialize_cli:
+                  executor: gcp-cli/default
             - test:
                 requires:
                     - setup
+                    - gcp-cli/install_and_initialize_cli
             - build:
                 requires:
                     - setup
-            - gcp-cli/install_and_initialize_cli:
-                  executor: gcp-cli/default
+                    - gcp-cli/install_and_initialize_cli
             - deploy:
                   filters:
                       branches:
