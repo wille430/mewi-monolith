@@ -7,7 +7,7 @@ jobs:
             - image: 'cimg/node:14.17-browsers'
         steps:
             - checkout
-            - run: sudo npm i -g pnpm
+            - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
                 key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
@@ -23,7 +23,7 @@ jobs:
             - image: 'cimg/node:14.17-browsers'
         steps:
             - checkout
-            - run: sudo npm i -g pnpm
+            - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
                 key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
@@ -43,7 +43,7 @@ jobs:
             - image: 'mongo'
         steps:
             - checkout
-            - run: sudo npm i -g pnpm
+            - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
                 key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             # TODO: run tests
