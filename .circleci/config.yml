@@ -77,12 +77,16 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
-            - lint
             - test:
-                  filters:
-                      branches:
-                          only:
-                              - main
+                    filters:
+                        branches:
+                            only:
+                                - main
+            - build:
+                    filters:
+                        branches:
+                            only:
+                                - main
             - gcp-cli/install_and_initialize_cli:
                   executor: gcp-cli/default
             - deploy:
@@ -92,6 +96,7 @@ workflows:
                               - main
                   requires:
                       - test
+                      - build
     build_and_test:
         jobs:
             - hold:
