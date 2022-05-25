@@ -26,7 +26,7 @@ jobs:
             - run:
                   name: Isolate API workspace
                   command: |
-                      pnpm run isolate -F nest-api
+                      pnpm isolate -F nest-api
             - save_cache:
                 key: build-output-{{ .Environment.CIRCLE_SHA1 }}
                 paths:
@@ -77,16 +77,17 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
+            - setup:
+                filters:
+                    branches:
+                        only:
+                            - main
             - test:
-                    filters:
-                        branches:
-                            only:
-                                - main
+                requires:
+                    - setup
             - build:
-                    filters:
-                        branches:
-                            only:
-                                - main
+                requires:
+                    - setup
             - gcp-cli/install_and_initialize_cli:
                   executor: gcp-cli/default
             - deploy:
@@ -105,6 +106,9 @@ workflows:
                       branches:
                           only:
                               - dev
-            - test:
+            - setup:
                   requires:
                       - hold
+            - test:
+                    requires:
+                        - setup
