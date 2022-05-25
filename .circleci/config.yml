@@ -26,7 +26,7 @@ jobs:
             - run:
                   name: Isolate API workspace
                   command: |
-                      pnpm isolate -F nest-api
+                      pnpm run isolate -F nest-api
             - save_cache:
                 key: build-output-{{ .Environment.CIRCLE_SHA1 }}
                 paths:
