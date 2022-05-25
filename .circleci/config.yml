@@ -50,9 +50,6 @@ jobs:
     deploy:
         docker:
             - image: google/cloud-sdk
-              auth:
-                  username: _json_key
-                  password: $GCLOUD_SERVICE_KEY
         steps:
             - checkout
             - restore_cache:
@@ -61,7 +58,15 @@ jobs:
                   version: 20.10.12
                   docker_layer_caching: true
             - run: ls
-            - run: gcloud auth configure-docker europe-north1-docker.pkg.dev
+            - run:
+                name: Authenticate Google Cloud
+                command: |
+                    touch service-account.json
+                    echo $GCLOUD_SERVICE_KEY >> service-account.json
+                    gcloud auth activate-service-account --key-file=service-account.json
+                    gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+                    gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+                    gcloud auth configure-docker europe-north1-docker.pkg.dev
             - run:
                   name: Install Docker Compose
                   command: |
