@@ -49,7 +49,7 @@ jobs:
                 command: pnpm run lint
     deploy:
         docker:
-            - image: 'google/cloud-sdk'
+            - image: google/cloud-sdk
               auth:
                   username: _json_key
                   password: $GCLOUD_SERVICE_KEY
