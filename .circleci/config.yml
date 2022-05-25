@@ -32,6 +32,7 @@ jobs:
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
+            - run: gcloud auth configure-docker europe-north1-docker.pkg.dev
             - run: sudo npm i pnpm@latest-6 -g
             - run:
                   name: Install Docker Compose
