@@ -4,7 +4,7 @@ orbs:
 jobs:
     setup:
         docker:
-            - image: cl00e9ment/node.js-builder
+            - image: 'cimg/node:14.17-browsers'
         steps:
             - checkout
             - restore_cache:
@@ -19,7 +19,7 @@ jobs:
                     - ./packages/nest-api/node_modules
     build:
         docker:
-            - image: cl00e9ment/node.js-builder
+            - image: 'cimg/node:14.17-browsers'
         steps:
             - checkout
             - restore_cache:
@@ -37,7 +37,7 @@ jobs:
                 destination: nest-api
     test:
         docker:
-            - image: cl00e9ment/node.js-builder
+            - image: 'cimg/node:14.17-browsers'
             - image: 'mongo'
         steps:
             - checkout
