@@ -54,6 +54,8 @@ jobs:
             - checkout
             - restore_cache:
                 key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+            - restore_cache:
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
