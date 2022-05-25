@@ -4,7 +4,7 @@ orbs:
 jobs:
     setup:
         docker:
-            - image: znck/pnpm:latest
+            - image: cl00e9ment/node.js-builder
         steps:
             - checkout
             - restore_cache:
@@ -18,7 +18,7 @@ jobs:
                     - node_modules
     build:
         docker:
-            - image: znck/pnpm:latest
+            - image: cl00e9ment/node.js-builder
         steps:
             - checkout
             - restore_cache:
@@ -36,7 +36,7 @@ jobs:
                 destination: nest-api
     test:
         docker:
-            - image: znck/pnpm:latest
+            - image: cl00e9ment/node.js-builder
             - image: 'mongo'
         steps:
             - checkout
