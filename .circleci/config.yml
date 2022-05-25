@@ -50,6 +50,9 @@ jobs:
     deploy:
         docker:
             - image: 'google/cloud-sdk'
+              auth:
+                  username: _json_key
+                  password: $GCLOUD_SERVICE_KEY
         steps:
             - checkout
             - restore_cache:
