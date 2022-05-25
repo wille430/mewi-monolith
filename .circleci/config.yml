@@ -2,40 +2,61 @@ version: 2.1
 orbs:
     gcp-cli: circleci/gcp-cli@2.4.1
 jobs:
+    setup:
+        docker:
+            - image: znck/pnpm:latest
+        steps:
+            - checkout
+            - restore_cache:
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+            - run:
+                name: Install
+                command: pnpm i -F schemas --frozen-lockfile && pnpm i --frozen-lockfile
+            - save_cache:
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                paths:
+                    - node_modules
+    build:
+        docker:
+            - image: znck/pnpm:latest
+        steps:
+            - checkout
+            - restore_cache:
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+            - run:
+                  name: Isolate API workspace
+                  command: |
+                      pnpm isolate -F nest-api
+            - save_cache:
+                key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+                paths:
+                    - ./packages/nest-api/_isolated_
+            - store_artifacts:
+                path: ./packages/nest-api/_isolated_
+                destination: nest-api
     test:
         docker:
-            - image: 'cimg/node:14.17-browsers'
-              environment:
-                  DATABASE_URL: mongodb://localhost:27017/test
-                  TOKEN_KEY: fjAJ4mv0WRlc7ob1Dq7J
+            - image: znck/pnpm:latest
             - image: 'mongo'
         steps:
             - checkout
-            - run: sudo npm i pnpm@latest-6 -g
+            - restore_cache:
+                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }
+            # TODO: run tests
             - run:
-                  command: pnpm i -F schemas && pnpm i
-                  name: Install dependencies
-            - run:
-                  command: pnpm lint
-                  name: Lint projects
-
-            # TODO: UNCOMMENT
-            # - run:
-            #       command: pnpm test
-            #       name: Run Unit Tests
+                name: Test and lint
+                command: pnpm run lint
     deploy:
         docker:
-            - image: 'cimg/node:14.17-browsers'
+            - image: 'google/cloud-sdk'
         steps:
-            # TODO: deploy image
-            - checkout
+            - restore_cache:
+                key: build-output-{{ .Environment.CIRCLE_SHA1 }}
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
-            - install_and_initialize_cli:
-                  executor: gcp-cli/default
+            - run: ls
             - run: gcloud auth configure-docker europe-north1-docker.pkg.dev
-            - run: sudo npm i pnpm@latest-6 -g
             - run:
                   name: Install Docker Compose
                   environment:
@@ -44,11 +65,6 @@ jobs:
                       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
                       chmod +x ~/docker-compose
                       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-            - run: pnpm i -F schemas && pnpm i
-            - run:
-                  name: Isolate API workspace
-                  command: |
-                      pnpm isolate -F nest-api
             - run:
                   name: Build API Docker image
                   command: docker-compose build
@@ -61,11 +77,14 @@ workflows:
     version: 2
     build_test_and_deploy:
         jobs:
+            - lint
             - test:
                   filters:
                       branches:
                           only:
                               - main
+            - gcp-cli/install_and_initialize_cli:
+                  executor: gcp-cli/default
             - deploy:
                   filters:
                       branches:
