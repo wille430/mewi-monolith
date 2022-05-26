@@ -62,6 +62,7 @@ importers:
       '@nestjs/common': ^8.4.2
       '@nestjs/config': ^2.0.0
       '@nestjs/core': ^8.4.2
+      '@nestjs/event-emitter': ^1.1.1
       '@nestjs/jwt': ^8.0.0
       '@nestjs/mapped-types': ^1.0.1
       '@nestjs/mongoose': ^9.0.3
@@ -134,6 +135,7 @@ importers:
       '@nestjs/common': 8.4.5_dfe66c9ba8b6225d6c50131375b16935
       '@nestjs/config': 2.0.1_74a5f58103aca90eb73831b6f499f41f
       '@nestjs/core': 8.4.5_9530c9e4e8c33b27551732908d05d2fb
+      '@nestjs/event-emitter': 1.1.1_adb290c44aae1a5232c1721323e87db8
       '@nestjs/jwt': 8.0.1_@nestjs+common@8.4.5
       '@nestjs/mapped-types': 1.0.1_02a67a579971fd947b1425e9cb6a9d31
       '@nestjs/mongoose': 9.1.0_9e4577dc236be9468fb7725625d113b3
@@ -3967,6 +3969,19 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@nestjs/event-emitter/1.1.1_adb290c44aae1a5232c1721323e87db8:
+    resolution: {integrity: sha512-fOcV1sjOSeLA6hj7c++Ga3pZG62BcmSKn5sAE/M0fYwuKn3T3Bx9BQm9siLTRLwSY/kJjwHbhTgfnL1bfEqY3w==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 8.4.5_dfe66c9ba8b6225d6c50131375b16935
+      '@nestjs/core': 8.4.5_9530c9e4e8c33b27551732908d05d2fb
+      eventemitter2: 6.4.5
+      reflect-metadata: 0.1.13
     dev: false
 
   /@nestjs/jwt/8.0.1_@nestjs+common@8.4.5:
@@ -9793,7 +9808,7 @@ packages:
   /axios/0.26.1:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
-      follow-redirects: 1.15.0_debug@4.3.2
+      follow-redirects: 1.15.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -9801,7 +9816,7 @@ packages:
   /axios/0.27.2:
     resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
-      follow-redirects: 1.15.0_debug@4.3.2
+      follow-redirects: 1.15.0
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -13498,7 +13513,6 @@ packages:
 
   /eventemitter2/6.4.5:
     resolution: {integrity: sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==}
-    dev: true
 
   /eventemitter3/4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
@@ -14112,6 +14126,16 @@ packages:
     dependencies:
       from2: 2.3.0
     dev: true
+
+  /follow-redirects/1.15.0:
+    resolution: {integrity: sha512-aExlJShTV4qOUOL7yF1U5tvLCB0xQuudbf6toyYA0E/acBNw71mvjFTnLaRp50aQaYocMR0a/RMMBIHeZnGyjQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
 
   /follow-redirects/1.15.0_debug@4.3.2:
     resolution: {integrity: sha512-aExlJShTV4qOUOL7yF1U5tvLCB0xQuudbf6toyYA0E/acBNw71mvjFTnLaRp50aQaYocMR0a/RMMBIHeZnGyjQ==}

@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ScheduleModule } from '@nestjs/schedule'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 import { join } from 'path'
 import configuration from './config/configuration'
 import scraperConfig from './config/scraper.config'
@@ -34,6 +35,7 @@ import { ListingsModule } from '@/listings/listings.module'
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public'),
         }),
+        EventEmitterModule.forRoot(),
         ScheduleModule.forRoot(),
         ListingsModule,
         PrismaModule,

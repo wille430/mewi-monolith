@@ -11,8 +11,8 @@
         "format": "prettier -w .",
         "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
         "isolate": "pnpm run isolate -r",
-        "db:up": "docker-compose up db -d || docker compose up db -d",
-        "db:down": "docker-compose down db || docker compose down db"
+        "db:up": "docker-compose up db -d || sudo docker compose up db -d",
+        "db:down": "docker-compose down db || sudo docker compose down db"
     },
     "private": true,
     "devDependencies": {
