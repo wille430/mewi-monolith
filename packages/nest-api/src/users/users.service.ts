@@ -33,7 +33,7 @@ export class UsersService {
         return this.prisma.user.create({ data: createUserDto })
     }
 
-    async findAll(findAllUserDto: FindAllUserDto) {
+    async findAll(findAllUserDto: FindAllUserDto = {}) {
         return await this.prisma.user.findMany({
             where: findAllUserDto,
         })
@@ -87,6 +87,8 @@ export class UsersService {
         if (password === passwordConfirm) {
             const user = await this.prisma.user.findFirst({ where: { email } })
             if (!user) return
+
+            console.log(`Comparing ${token} and ${user.passwordReset.tokenHash}`)
 
             if (
                 user.passwordReset &&
