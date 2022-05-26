@@ -70,7 +70,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
 
     const renderItems = () => {
         return [...newItems, ...(_newItems || [])].map((item) => (
-            <ListingRow key={item.id} item={item} onClick={() => handleClick(item.id)} />
+            <ListingRow key={item.id} listing={item} onClick={() => handleClick(item.id)} />
         ))
     }
 

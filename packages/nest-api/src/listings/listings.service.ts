@@ -207,4 +207,39 @@ export class ListingsService {
     async deleteMany(dto: Prisma.ListingDeleteManyArgs) {
         return await this.prisma.listing.deleteMany(dto)
     }
+
+    async like(userId: string, listingId: string) {
+        // Check if user already has liked the listing
+        const listing = await this.prisma.listing.findUnique({ where: { id: listingId } })
+
+        if (listing.likedByUserIDs.includes(userId)) {
+            return listing
+        } else {
+            return await this.prisma.listing.update({
+                where: {
+                    id: listingId,
+                },
+                data: {
+                    likedByUserIDs: {
+                        push: userId,
+                    },
+                },
+            })
+        }
+    }
+
+    async unlike(userId: string, listingId: string) {
+        // Check if user already has liked the listing
+        const listing = await this.prisma.listing.findUnique({ where: { id: listingId } })
+        const likedByUserIDs = listing.likedByUserIDs.filter((x) => x != userId)
+
+        return await this.prisma.listing.update({
+            where: {
+                id: listingId,
+            },
+            data: {
+                likedByUserIDs,
+            },
+        })
+    }
 }

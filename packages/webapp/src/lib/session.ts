@@ -2,9 +2,7 @@
 import type { IronSessionOptions } from 'iron-session'
 import { useEffect } from 'react'
 import { USER_TOKEN } from './constants'
-import { fetchJson } from './fetchJson'
-import { useUser } from './useUser'
-import { setLoggedInStatus } from '@/store/user'
+import { fetchUser } from '@/store/user'
 import { useAppDispatch } from '@/hooks'
 
 export const sessionOptions: IronSessionOptions = {
@@ -33,13 +31,8 @@ export const logoutSession = (req: any) => {
 
 export const checkLoggedInStatus = () => {
     const dispatch = useAppDispatch()
-    const { user, mutateUser } = useUser()
 
     useEffect(() => {
-        mutateUser(fetchJson('/api/user')).catch((e) => console.log(e))
+        dispatch(fetchUser())
     }, [])
-
-    useEffect(() => {
-        dispatch(setLoggedInStatus(Boolean(user)))
-    }, [user])
 }

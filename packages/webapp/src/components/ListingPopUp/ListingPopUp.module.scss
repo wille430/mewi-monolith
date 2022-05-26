@@ -74,7 +74,7 @@
     @screen md {
         min-height: 70vh;
         padding: 0;
-        max-width: theme('screens.md');
+        max-width: theme('screens.lg');
         width: 100%;
         margin: 0 auto;
         margin-top: 10vh;
@@ -93,5 +93,14 @@
         height: 100%;
         object-fit: contain;
         margin: 0 auto;
+    }
+}
+
+.popUp {
+    overflow-y: scroll;
+
+    @screen md {
+        padding: 1rem;
+        padding-bottom: 12rem;
     }
 }

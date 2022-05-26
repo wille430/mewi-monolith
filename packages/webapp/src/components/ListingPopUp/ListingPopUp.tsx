@@ -46,7 +46,7 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
     }
 
     return (
-        <PopUp onOutsideClick={onClose}>
+        <PopUp onOutsideClick={onClose} className={styles.popUp}>
             <Container className={styles.container}>
                 <Container.Header className={styles.header}>
                     <span

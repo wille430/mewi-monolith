@@ -1,4 +1,6 @@
 .listingContainer {
+    @apply border-2 border-gray-200;
+
     display: grid;
     background-color: white;
     border-radius: 0.75rem;

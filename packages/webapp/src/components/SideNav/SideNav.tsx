@@ -2,19 +2,20 @@ import { Container } from '@mewi/ui'
 import { Role } from '@mewi/prisma/index-browser'
 import styles from './SideNav.module.scss'
 import SideNavButton from './SideNavButton/SideNavButton'
-import { useUser } from '@/lib/useUser'
+import { useAppSelector } from '@/hooks'
 
 const SideNav = () => {
-    const { user } = useUser()
+    const { user } = useAppSelector((state) => state.user)
 
     return (
         <Container className={styles.container}>
             <h4>Mina Sidor</h4>
 
             <ul>
-                <SideNavButton href='/minasidor/bevakningar'>Mina Bevakningar</SideNavButton>
-                <SideNavButton href='/minasidor/konto'>Mitt Konto</SideNavButton>
-                {user?.roles.includes(Role.ADMIN) && (
+                <SideNavButton href='/minasidor/bevakningar'>Bevakningar</SideNavButton>
+                <SideNavButton href='/minasidor/konto'>Konto</SideNavButton>
+                <SideNavButton href='/minasidor/gillade'>Gillade produkter</SideNavButton>
+                {user?.roles?.includes(Role.ADMIN) && (
                     <SideNavButton href='/admin'>Admin</SideNavButton>
                 )}
             </ul>

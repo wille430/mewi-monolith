@@ -1,3 +1,10 @@
+$card-overlay-z-index: 1;
+
+$like-button-z-index: 5;
+$like-button-padding: 0.25rem;
+
+$fade-transition: all 150ms linear;
+
 .card {
     @apply shadow-md border-2 border-gray-100 rounded-sm bg-paper;
     width: 16rem;
@@ -6,6 +13,17 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    position: relative;
+
+    .like-button,
+    .overlay {
+        opacity: 0;
+    }
+
+    &:hover > .like-button,
+    &:hover > .overlay {
+        opacity: 1;
+    }
 }
 
 .card :global(img) {
@@ -71,4 +89,35 @@
 
 .timestamp {
     @apply text-gray-600;
+}
+
+.like-button {
+    position: absolute;
+    color: white;
+    top: $like-button-padding;
+    right: $like-button-padding;
+    z-index: $like-button-z-index;
+
+    transition: $fade-transition;
+}
+
+.overlay {
+    @apply rounded-sm;
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: hsla(0, 0%, 20%, 0.2);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    transition: $fade-transition;
+}
+
+.like-button.liked {
+    opacity: 0.75;
 }

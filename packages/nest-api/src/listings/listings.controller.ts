@@ -10,6 +10,7 @@ import {
     Inject,
     Query,
     UseGuards,
+    Put,
 } from '@nestjs/common'
 import { Cache } from 'cache-manager'
 import { Role, Prisma } from '@mewi/prisma'
@@ -21,6 +22,8 @@ import { Roles } from '@/auth/roles.decorator'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
 import { Public } from '@/common/decorators/public.decorator'
+import { GetUser } from '@/common/decorators/user.decorator'
+import { UserPayload } from '@/auth/jwt-strategy'
 
 @Controller('/listings')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -81,5 +84,16 @@ export class ListingsController {
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
         return this.listingsService.remove(id)
+    }
+
+    @Put(':id/like')
+    @Roles(Role.USER)
+    likeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
+        return this.listingsService.like(user.userId, id)
+    }
+    @Put(':id/unlike')
+    @Roles(Role.USER)
+    unlikeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
+        return this.listingsService.unlike(user.userId, id)
     }
 }

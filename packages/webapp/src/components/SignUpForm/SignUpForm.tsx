@@ -1,10 +1,8 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
-import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
-import { setLoggedInStatus } from '@/store/user/creators'
 import { useAppDispatch } from '@/hooks'
-import { setJwt } from '@/lib/jwt'
+import { signup } from '@/store/user'
 
 export const SignUpForm = () => {
     interface FormData {
@@ -27,25 +25,17 @@ export const SignUpForm = () => {
     const dispatch = useAppDispatch()
     const Router = useRouter()
 
-    const mutation = useMutation(
-        () =>
-            fetch('/api/signup', {
-                method: 'post',
-                body: JSON.stringify(formData),
-            }).then(async (res) => {
-                if (res.ok) {
-                    return await res.json()
+    const createAccount = () =>
+        dispatch(signup(formData))
+            .then((res) => {
+                if (res.meta.requestStatus === 'fulfilled') {
+                    alert(JSON.stringify(res))
+                    Router.push('/minasidor')
                 } else {
-                    throw await res.json()
+                    throw res.payload
                 }
-            }),
-        {
-            onSuccess: (res) => {
-                setJwt(res)
-                dispatch(setLoggedInStatus(true))
-                Router.push('/minasidor')
-            },
-            onError: (err: any) => {
+            })
+            .catch((err: any) => {
                 const message = err.message
                 console.log({ err })
                 setErrors(initErrors)
@@ -103,9 +93,7 @@ export const SignUpForm = () => {
                 }
 
                 setErrors({ ...initErrors, ...newErrors })
-            },
-        }
-    )
+            })
 
     return (
         <Container className='mx-auto max-w-lg'>
@@ -115,10 +103,7 @@ export const SignUpForm = () => {
             <Container.Content>
                 <form
                     className='flex flex-col items-center space-y-4'
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        mutation.mutate()
-                    }}
+                    onSubmit={(e) => e.preventDefault()}
                 >
                     <div className='w-full'>
                         <TextField
@@ -173,7 +158,12 @@ export const SignUpForm = () => {
                         />
                         <span className='text-red-400'>{errors.passwordConfirm}</span>
                     </div>
-                    <Button label='Registrera dig' data-testid='formSubmitButton' type='submit' />
+                    <Button
+                        label='Registrera dig'
+                        data-testid='formSubmitButton'
+                        type='submit'
+                        onClick={() => createAccount()}
+                    />
                     <span className='text-red-400'>{errors.all}</span>
                 </form>
             </Container.Content>

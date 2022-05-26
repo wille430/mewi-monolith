@@ -5,7 +5,7 @@ import { rootReducer } from './reducer'
 
 const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
     if (action.type === HYDRATE) {
-        const nextState = {
+        const nextState: ReturnType<typeof rootReducer> = {
             ...state, // use previous state
             ...action.payload, // apply delta from hydration
         }
@@ -18,7 +18,9 @@ const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
 export const makeStore = () =>
     configureStore({
         reducer,
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     })
+
 export type Store = ReturnType<typeof makeStore>
 export type RootState = ReturnType<Store['getState']>
 export type AppDispatch = Store['dispatch']

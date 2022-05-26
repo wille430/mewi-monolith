@@ -5,8 +5,14 @@ import { FormEvent, ReactElement, useState } from 'react'
 import { useMutation } from 'react-query'
 import Head from 'next/head'
 import { Layout } from '@/components/Layout/Layout'
+import { useUser } from '@/hooks/useUser'
 
 const ForgottenPassword = () => {
+    useUser({
+        redirectIfFound: true,
+        redirectTo: '/minasidor',
+    })
+
     const [email, setEmail] = useState<string | undefined>()
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')

@@ -2,12 +2,12 @@ import Head from 'next/head'
 import { ReactElement } from 'react'
 import { Layout } from '@/components/Layout/Layout'
 import { SignUpForm } from '@/components/SignUpForm/SignUpForm'
-import { useUser } from '@/lib/useUser'
+import { useUser } from '@/hooks/useUser'
 
 const NyttKonto = () => {
     useUser({
         redirectIfFound: true,
-        redirectTo: '/',
+        redirectTo: '/minasidor',
     })
 
     return (

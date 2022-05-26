@@ -1,11 +1,9 @@
 import { Button, TextField } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
-import { useRouter } from 'next/router'
 import SmallContainer from '@/components/SmallContainer/SmallContainer'
 import { useAppDispatch } from '@/hooks'
-import { setLoggedInStatus } from '@/store/user'
-import { setJwt } from '@/lib/jwt'
+import { login } from '@/store/user'
 
 export function SignInWithEmail() {
     const [email, setEmail] = useState<string | undefined>('')
@@ -13,32 +11,13 @@ export function SignInWithEmail() {
     const [error, setError] = useState('')
 
     const dispatch = useAppDispatch()
-    const Router = useRouter()
 
-    const mutation = useMutation(
-        () =>
-            fetch('/api/login', {
-                method: 'post',
-                body: JSON.stringify({ email, password }),
-            }).then((res) => {
-                if (res.ok) {
-                    return res.json()
-                } else {
-                    throw res.json()
-                }
-            }),
-        {
-            onError: () => {
-                setError('Felaktig e-postadress eller lösenord')
-                setPassword('')
-            },
-            onSuccess: (res) => {
-                setJwt(res)
-                dispatch(setLoggedInStatus(true))
-                Router.push('/minasidor')
-            },
-        }
-    )
+    const mutation = useMutation(() => dispatch(login({ email, password })), {
+        onError: () => {
+            setError('Felaktig e-postadress eller lösenord')
+            setPassword('')
+        },
+    })
 
     return (
         <SmallContainer

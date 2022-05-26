@@ -8,10 +8,10 @@ import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
-    item: Listing
+    listing: Listing
 }
 
-export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
+export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
     const dispatch = useAppDispatch()
 
@@ -41,10 +41,10 @@ export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
             animate={isHovered ? 'scale' : 'initial'}
             {...rest}
         >
-            <DefaultImage className={styles.image} src={item.imageUrl[0]} alt={item.title} />
+            <DefaultImage className={styles.image} src={listing.imageUrl[0]} alt={listing.title} />
             <motion.div className={styles.description}>
-                <h4>{item.title}</h4>
-                <p>{item.body}</p>
+                <h4>{listing.title}</h4>
+                <p>{listing.body}</p>
             </motion.div>
 
             <motion.div className='relative h-full'>
@@ -53,11 +53,11 @@ export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
                     variants={fadeVariants}
                     animate={isHovered ? 'hide' : 'show'}
                 >
-                    <span className={styles.regionText}>{item.region}</span>
-                    {item.price && (
+                    <span className={styles.regionText}>{listing.region}</span>
+                    {listing.price && (
                         <span
                             className={styles.priceText}
-                        >{`${item.price?.value} ${item.price?.currency}`}</span>
+                        >{`${listing.price?.value} ${listing.price?.currency}`}</span>
                     )}
                 </motion.div>
 
@@ -73,7 +73,7 @@ export const ListingRow = ({ item, ...rest }: ListingRowprops) => {
                     initial={'hide'}
                     animate={isHovered ? 'show' : 'hide'}
                 >
-                    <Button label='>>' onClick={() => dispatch(openListing(item))} />
+                    <Button label='>>' onClick={() => dispatch(openListing(listing))} />
                 </motion.div>
             </motion.div>
 

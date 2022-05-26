@@ -7,8 +7,14 @@ import Head from 'next/head'
 import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useAppDispatch } from '@/hooks'
 import { Layout } from '@/components/Layout/Layout'
+import { useUser } from '@/hooks/useUser'
 
 const ForgottenPassword = () => {
+    useUser({
+        redirectIfFound: true,
+        redirectTo: '/minasidor',
+    })
+
     const initialState = {
         password: '',
         repassword: '',

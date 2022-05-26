@@ -33,7 +33,7 @@ const Index = ({ featuredListings }: IndexPageProps) => {
     return (
         <>
             <Head>
-                <title>Mewi.se - Sök efter beggagnade produkter på ett enda ställe</title>
+                <title>Mewi.se - Sök efter begagnade produkter på ett enda ställe</title>
             </Head>
 
             <main>

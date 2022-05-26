@@ -2,12 +2,12 @@ import Head from 'next/head'
 import { ReactElement } from 'react'
 import { Layout } from '@/components/Layout/Layout'
 import SignInWithEmail from '@/components/SignInWithEmail/SignInWithEmail'
-import { useUser } from '@/lib/useUser'
+import { useUser } from '@/hooks/useUser'
 
 const Login = () => {
     useUser({
         redirectIfFound: true,
-        redirectTo: '/',
+        redirectTo: '/minasidor',
     })
 
     return (

@@ -5,7 +5,7 @@ import styles from './ListingGrid.module.scss'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
 import { useListingFilters } from '@/hooks/useListingFilters'
-import { useAppDispatch } from '@/hooks'
+import { useAppDispatch, useAppSelector } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 const cx = classNames.bind(styles)
@@ -15,11 +15,39 @@ const ListingGrid = () => {
     const queryClient = useQueryClient()
     const dispatch = useAppDispatch()
 
+    const { user } = useAppSelector((state) => state.user)
     const { data, isFetching, error } = queryClient.getQueryState<any>([
         'listings',
         debouncedFilters,
     ])
     const listings = data?.hits as Listing[]
+
+    const handleLike = (id: string, action: 'like' | 'unlike') => {
+        const oldListings = data.hits as Listing[]
+
+        const listingIndex = oldListings.findIndex((x) => x.id === id)
+        const listingToUpdate = oldListings.find((x) => x.id === id)
+        const newHits = oldListings
+
+        if (action === 'like' && !listingToUpdate.likedByUserIDs.includes(user?.id)) {
+            listingToUpdate.likedByUserIDs.push(user?.id)
+        } else {
+            listingToUpdate.likedByUserIDs = listingToUpdate.likedByUserIDs.filter(
+                (x) => x !== user?.id
+            )
+        }
+
+        console.log({ listingToUpdate })
+
+        newHits[listingIndex] = listingToUpdate
+
+        const newData = {
+            ...data,
+            hits: newHits,
+        }
+
+        queryClient.setQueryData(['listings', debouncedFilters], newData)
+    }
 
     if (isFetching) {
         return (
@@ -44,6 +72,8 @@ const ListingGrid = () => {
                     <ListingWidget
                         onClick={() => dispatch(openListing(listing))}
                         listing={listing}
+                        onLike={(id) => handleLike(id, 'like')}
+                        onUnlike={(id) => handleLike(id, 'unlike')}
                     />
                 ))}
             </section>
