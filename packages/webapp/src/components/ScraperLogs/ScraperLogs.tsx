@@ -33,10 +33,9 @@ export const ScraperLogs = () => {
                         })
                     }
 
-                    console.log(series)
-
                     return series
-                }),
+                })
+                .catch((e) => []),
         {
             initialData: [],
         }
