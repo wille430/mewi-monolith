@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import Scrapers from './scrapers'
 import { ScrapersController } from './scrapers.controller'
@@ -13,4 +13,19 @@ import { ListingsModule } from '@/listings/listings.module'
     controllers: [ScrapersController],
     exports: [ListingsModule],
 })
-export class ScrapersModule {}
+export class ScrapersModule implements OnModuleInit {
+    startScraperAfterMs = 60 * 60 * 1000
+
+    constructor(private scraperService: ScrapersService, private prisma: PrismaService) {}
+
+    async onModuleInit() {
+        const lastScrape = await this.prisma.scrapingLog.findFirst({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        })
+
+        if (Date.now() - lastScrape.createdAt.getTime() > this.startScraperAfterMs)
+            await this.scraperService.startAll()
+    }
+}

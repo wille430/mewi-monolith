@@ -48,7 +48,7 @@ export class Scraper {
     /**
      * @param deleteOlderThan - Date in unix time
      */
-    deleteOlderThan = Date.now() - 2 * 24 * 60 * 60 * 1000
+    deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
     /**
      * @param started - Whether or not the scraper is running
      */
@@ -110,8 +110,6 @@ export class Scraper {
             (await this.prisma.listing.count({ where: { origin: ListingOrigin[this.name] } }))
         const errors: Record<string, string> = {}
 
-        console.log(`Remaining listings to add: ${remainingEntries}`)
-
         let i = 0
         while (scrapedListings.length && remainingEntries > 0) {
             const listingCountToAdd = Math.min(remainingEntries, scrapedListings.length)
@@ -149,15 +147,13 @@ export class Scraper {
     }
 
     async deleteOld(): Promise<void> {
-        const { count } = await this.prisma.listing.deleteMany({
+        await this.prisma.listing.deleteMany({
             where: {
                 date: {
                     lte: new Date(this.deleteOlderThan),
                 },
             },
         })
-
-        console.log(`Successfully deleted ${count} items with origin ${this.name}`)
     }
 
     // private async getValidListings(listings: Listing[]) {

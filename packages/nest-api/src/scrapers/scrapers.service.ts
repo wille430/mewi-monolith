@@ -44,8 +44,12 @@ export class ScrapersService {
             currentIndex += 1
 
             console.log(`[${currentIndex}/${totalScraperCount}] Scraping ${name}...`)
-
             await this.scrapers[name].start(args)
+
+            console.log(
+                `[${currentIndex}/${totalScraperCount}] Deleting old listings from ${name}...`
+            )
+            await this.scrapers[name].deleteOld()
         }
 
         if (payload.count === -1) {
