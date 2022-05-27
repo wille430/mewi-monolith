@@ -61,7 +61,7 @@ export class ScrapersController {
         return this.scrapersService.status()
     }
 
-    @Get('logs')
+    @Post('logs')
     @Roles(Role.ADMIN)
     async logs(@Body() dto: Prisma.ScrapingLogFindManyArgs) {
         return this.scrapersService.getLogs(dto)

@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
-import { Scraper } from './scraper'
+import { Scraper } from '../scraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends Scraper {

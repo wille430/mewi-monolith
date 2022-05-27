@@ -3,25 +3,34 @@ import { Cron } from '@nestjs/schedule'
 import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
 import { ScraperStatus } from '@wille430/common'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
-import { BlocketScraper } from './blocket.scraper'
-import { TraderaScraper } from './tradera.scraper'
-import { SellpyScraper } from './sellpy.scraper'
-import { BlippScraper } from './blipp.scraper'
+import { BlocketScraper } from './scrapers/blocket.scraper'
+import { SellpyScraper } from './scrapers/sellpy.scraper'
+import { TraderaScraper } from './scrapers/tradera.scraper'
+import { BlippScraper } from './scrapers/blipp.scraper'
 import { Scraper } from './scraper'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { RunPipelineEvent } from './events/run-pipeline.event'
+import { CitiboardScraper } from './scrapers/citiboard.scraper'
 import { PrismaService } from '@/prisma/prisma.service'
+
+const pipelineQueue: RunPipelineEvent[] = []
+const scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
 
 @Injectable()
 export class ScrapersService {
     scrapers: Partial<Record<ListingOrigin, Scraper>> = {}
-    scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
+    /**
+     * The current index in the scraper pipeline, is null if pipeline is not running
+     * @see {@link scraperPipeline}
+     */
+    pipelineIndex: number | null = null
 
     constructor(
         private blocketScraper: BlocketScraper,
         private traderaScraper: TraderaScraper,
         private blippScraper: BlippScraper,
         private sellpyScraper: SellpyScraper,
+        private citiboardScraper: CitiboardScraper,
         private prisma: PrismaService,
         private eventEmitter: EventEmitter2
     ) {
@@ -30,45 +39,74 @@ export class ScrapersService {
             Tradera: this.traderaScraper,
             Blipp: this.blippScraper,
             Sellpy: this.sellpyScraper,
+            Citiboard: this.citiboardScraper,
         }
+    }
+
+    logPipeline(total: number, msg: string) {
+        console.log(`[${this.pipelineIndex}/${total}] ${msg}`)
     }
 
     @OnEvent('pipeline.run')
     async handlePipelineRunEvent(payload: RunPipelineEvent) {
-        const totalScraperCount = this.scraperPipeline.length
-        let currentIndex = 0
+        if (this.pipelineIndex != null) {
+            // Push to queue if pipeline is already running
+            pipelineQueue.push(payload)
+            return
+        }
 
-        const nextScraper = () => this.scraperPipeline.shift()
+        this.pipelineIndex = 0
+        const totalScrapers = scraperPipeline.length
+
         const startScraperNext = async () => {
-            const [name, args] = nextScraper()
-            currentIndex += 1
+            const [name, args] = scraperPipeline.shift()
+            this.pipelineIndex += 1
 
-            console.log(`[${currentIndex}/${totalScraperCount}] Scraping ${name}...`)
-            await this.scrapers[name].start(args)
+            const scraper = this.scrapers[name]
 
-            console.log(
-                `[${currentIndex}/${totalScraperCount}] Deleting old listings from ${name}...`
+            this.logPipeline(
+                totalScrapers,
+                `Scraping ${await scraper.getQuantityToScrape} listings from ${name}...`
             )
-            await this.scrapers[name].deleteOld()
+            await scraper.start(args)
+
+            this.logPipeline(
+                totalScrapers,
+                `Successfully scraped ${scraper.listingScraped} from ${name}`
+            )
+
+            this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
+            await scraper.deleteOld()
+
+            this.logPipeline(totalScrapers, `Done!`)
         }
 
         if (payload.count === -1) {
             // run all
-            while (this.scraperPipeline.length > 0) {
+            while (this.pipelineIndex < totalScrapers) {
                 await startScraperNext()
             }
         } else {
-            while (payload.count > 0 && this.scraperPipeline.length > 0) {
+            while (payload.count > 0 && this.pipelineIndex < totalScrapers) {
                 await startScraperNext()
                 payload.count -= 1
             }
+        }
+
+        this.pipelineIndex = null
+
+        if (pipelineQueue.length) {
+            console.log('Running next pipeline in queue...')
+            this.eventEmitter.emit('pipeline.run', pipelineQueue.shift())
+        } else {
+            console.log('Pipeline queue is empty!')
         }
     }
 
     @Cron('* */45 * * *')
     async startAll(...args: Parameters<Scraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
-            this.scraperPipeline.push([
+            scraperPipeline.push([
                 name as ListingOrigin,
                 { triggeredBy: ScraperTrigger.Scheduled, ...args },
             ])
@@ -81,29 +119,17 @@ export class ScrapersService {
         scraperName: ListingOrigin,
         options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
     ): Promise<ScraperStatus> {
-        let foundScraper: Scraper | undefined = undefined
+        const scraper: Scraper | undefined = this.scrapers[scraperName]
 
-        for (const [name, scraper] of Object.entries(this.scrapers)) {
-            if (name === scraperName) {
-                foundScraper = scraper
-            }
-        }
-
-        if (foundScraper) {
-            this.scraperPipeline.push([scraperName, options])
-
-            const listingCount = await this.prisma.listing.count({
-                where: {
-                    origin: foundScraper.name,
-                },
-            })
+        if (scraper) {
+            scraperPipeline.push([scraperName, options])
 
             this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
 
             return {
                 started: true,
-                listings_current: listingCount,
-                listings_remaining: foundScraper.maxEntries - listingCount,
+                listings_current: await scraper.getListingCount,
+                listings_remaining: await scraper.getQuantityToScrape,
             }
         } else {
             throw new NotFoundException({

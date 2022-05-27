@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { stringSimilarity } from '@wille430/common'
-import { BlocketListing } from './types/blocketListing'
-import { Scraper } from './scraper'
+import { BlocketListing } from '../types/blocketListing'
+import { Scraper } from '../scraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlocketScraper extends Scraper {
@@ -22,7 +22,7 @@ export class BlocketScraper extends Scraper {
         const maxTries = 3
         while (tries < maxTries) {
             try {
-                const { data } = await axios.get(this.baseUrl)
+                const { data } = await axios.get(this.scrapeUrl)
 
                 const dom = new JSDOM(data)
                 const { document } = dom.window
@@ -56,7 +56,7 @@ export class BlocketScraper extends Scraper {
             if (!authToken) throw Error('Missing authentication token')
 
             const dom = await axios.get(url, {
-                baseURL: this.baseUrl,
+                baseURL: this.scrapeUrl,
                 headers: {
                     authorization: 'Bearer ' + authToken,
                 },

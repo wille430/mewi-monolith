@@ -158,6 +158,7 @@ enum ListingOrigin {
   Tradera
   Sellpy
   Blipp
+  Citiboard
 }
 
 enum ScraperTrigger {

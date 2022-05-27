@@ -36,7 +36,7 @@ export class Scraper {
     /**
      * @param baseUrl - e.g. https://www.blocket.se/
      */
-    baseUrl: string
+    scrapeUrl: string
     /**
      * @param useRobots - Whether or not to check robots.txt. False by default.
      */
@@ -54,6 +54,9 @@ export class Scraper {
      */
     isScraping = false
 
+    private quantityToScrape: number | null
+    private listingCount: number | null
+
     constructor(
         private prisma: PrismaService,
         private configService: ConfigService,
@@ -62,7 +65,7 @@ export class Scraper {
         { useRobots }: ScraperOptions
     ) {
         this.name = name
-        this.baseUrl = baseUrl
+        this.scrapeUrl = baseUrl
 
         this.maxEntries =
             this.configService.get<number>(`scraper.${this.name}.limit`) ??
@@ -79,11 +82,11 @@ export class Scraper {
             return
         }
 
-        const robotsTxt = await axios.get(this.baseUrl).then((res) => res.data)
+        const robotsTxt = await axios.get(this.scrapeUrl).then((res) => res.data)
 
-        const robots = robotsParser(this.baseUrl + 'robots.txt', robotsTxt)
+        const robots = robotsParser(this.scrapeUrl + 'robots.txt', robotsTxt)
 
-        if (robots.isAllowed(this.baseUrl)) {
+        if (robots.isAllowed(this.scrapeUrl)) {
             this.canCrawl = true
         } else {
             this.canCrawl = false
@@ -103,25 +106,26 @@ export class Scraper {
      */
     async start({ triggeredBy }: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }) {
         this.isScraping = true
+        this.listingScraped = 0
 
         let scrapedListings = await this.getListings()
-        let remainingEntries =
-            this.maxEntries -
-            (await this.prisma.listing.count({ where: { origin: ListingOrigin[this.name] } }))
+        let remainingEntries = await this.getQuantityToScrape
         const errors: Record<string, string> = {}
 
         let i = 0
         while (scrapedListings.length && remainingEntries > 0) {
             const listingCountToAdd = Math.min(remainingEntries, scrapedListings.length)
 
-            scrapedListings.slice(0, listingCountToAdd)
+            scrapedListings = scrapedListings.slice(0, listingCountToAdd)
 
+            // Insert to database
             for (const listing of scrapedListings) {
                 await this.prisma.listing
                     .create({
                         data: listing,
                     })
                     .catch((e) => {
+                        console.log(e.message)
                         errors[i] = e
                     })
             }
@@ -144,6 +148,8 @@ export class Scraper {
         })
 
         this.isScraping = false
+        this.quantityToScrape = null
+        this.listingCount += this.listingScraped
     }
 
     async deleteOld(): Promise<void> {
@@ -156,17 +162,31 @@ export class Scraper {
         })
     }
 
-    // private async getValidListings(listings: Listing[]) {
-    //     const validListings: Listing[] = []
+    /**
+     * Get number of listings to scrape
+     * @returns Number of listings to scrape
+     */
+    get getQuantityToScrape(): Promise<number> {
+        if (this.quantityToScrape) {
+            return new Promise((resolve) => resolve(this.quantityToScrape))
+        }
 
-    //     for (const listing of listings) {
-    //         const errors = await validate(Listing.name, listing)
+        return new Promise((resolve) => {
+            this.getListingCount.then((count) => {
+                this.quantityToScrape = Math.max(0, this.maxEntries - count)
+                resolve(this.quantityToScrape)
+            })
+        })
+    }
 
-    //         if (!errors.length) {
-    //             validListings.push(listing)
-    //         }
-    //     }
+    /**
+     *
+     */
+    get getListingCount(): Promise<number> {
+        if (this.listingCount) {
+            return new Promise((resolve) => resolve(this.listingCount))
+        }
 
-    //     return validListings
-    // }
+        return this.prisma.listing.count({ where: { origin: this.name } })
+    }
 }

@@ -14,15 +14,14 @@ export const ScraperLogs = () => {
         'scraperLogs',
         (): Promise<Series[]> =>
             axios
-                .get<ScrapingLog[]>('/scrapers/logs', {
-                    params: {
-                        where: {
-                            createdAt: {
-                                gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toDateString(),
-                            },
+                .post<ScrapingLog[]>('/scrapers/logs', {
+                    where: {
+                        createdAt: {
+                            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
                         },
-                    } as Prisma.ScrapingLogFindManyArgs,
-                })
+                    },
+                    take: 20,
+                } as Prisma.ScrapingLogFindManyArgs)
                 .then(({ data }) => {
                     const series: Series[] = []
 

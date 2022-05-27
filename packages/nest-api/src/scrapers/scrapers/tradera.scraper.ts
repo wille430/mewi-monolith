@@ -2,8 +2,8 @@ import axios from 'axios'
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
-import { Scraper } from './scraper'
-import { TraderaListing } from './types/traderaListing'
+import { Scraper } from '../scraper'
+import { TraderaListing } from '../types/traderaListing'
 import { PrismaService } from '@/prisma/prisma.service'
 
 interface TraderaCategory {
@@ -65,7 +65,7 @@ export class TraderaScraper extends Scraper {
                     region: null,
                     imageUrl: [item.imageUrl],
                     isAuction: !!item.endDate || item.itemType === 'auction',
-                    redirectUrl: this.baseUrl + item.itemUrl,
+                    redirectUrl: this.scrapeUrl + item.itemUrl,
                     parameters: [],
                     price: item.price
                         ? {

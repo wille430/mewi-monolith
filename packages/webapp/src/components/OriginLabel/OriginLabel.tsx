@@ -6,6 +6,7 @@ export const OriginLabel = ({ origin }: { origin: ListingOrigin }) => {
         Blipp: 'green',
         Tradera: 'green',
         Sellpy: 'black',
+        Citiboard: 'green',
     }
 
     return <span style={{ color: originColors[origin] }}>{origin}</span>

@@ -23,6 +23,9 @@ export default registerAs('scraper', (): ScraperConfig => {
             Sellpy: {
                 limit: 500,
             },
+            Citiboard: {
+                limit: 1000,
+            },
             default: {
                 limit: 200,
             },

@@ -4,6 +4,7 @@ import { AuthTokens } from '@wille430/common'
 import axios from 'axios'
 import { UserActionTypes } from './types'
 import { setJwt } from '@/lib/jwt'
+import { setHeaders } from '@/lib/axios'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
@@ -26,6 +27,7 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
     await fetch('/api/logout')
+    setHeaders()
 })
 
 export const login = createAsyncThunk(

@@ -1,8 +1,9 @@
-import { BlippScraper } from './blipp.scraper'
-import { BlocketScraper } from './blocket.scraper'
-import { SellpyScraper } from './sellpy.scraper'
-import { TraderaScraper } from './tradera.scraper'
+import { BlippScraper } from './scrapers/blipp.scraper'
+import { BlocketScraper } from './scrapers/blocket.scraper'
+import { CitiboardScraper } from './scrapers/citiboard.scraper'
+import { SellpyScraper } from './scrapers/sellpy.scraper'
+import { TraderaScraper } from './scrapers/tradera.scraper'
 
-const Scrapers = [BlippScraper, TraderaScraper, SellpyScraper, BlocketScraper]
+const Scrapers = [BlippScraper, TraderaScraper, SellpyScraper, BlocketScraper, CitiboardScraper]
 
 export default Scrapers

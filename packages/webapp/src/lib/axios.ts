@@ -14,6 +14,8 @@ export const setupAxios = () => {
         async (err) => {
             const config = err.config
 
+            console.log(err.status)
+
             if (err.status === 401 && config.url !== '/auth/login' && !config._retry) {
                 config._retry = true
 
