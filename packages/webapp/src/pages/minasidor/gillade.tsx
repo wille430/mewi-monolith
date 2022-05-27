@@ -45,7 +45,7 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                     </Container.Header>
                     <Container.Content className='space-y-4'>
                         {listings.map((listing) => (
-                            <ListingRow listing={listing} />
+                            <ListingRow key={listing.id} listing={listing} />
                         ))}
                     </Container.Content>
                 </Container>

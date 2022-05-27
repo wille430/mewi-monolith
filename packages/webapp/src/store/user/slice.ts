@@ -36,9 +36,10 @@ export const userSlice = createSlice({
             .addCase(signup.rejected, (state) => {
                 state.isLoggedIn = false
             })
-            .addCase(logout.fulfilled, () => {
+            .addCase(logout.fulfilled, (state) => {
                 setJwt()
-                return initialState
+                state.isLoggedIn = false
+                state.user = undefined
             })
     },
 })

@@ -10,7 +10,10 @@ async function refreshJwtRoute(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Retreive refresh token from cookie
         const cookies = new Cookies(req, res)
-        const refresh_token = cookies.get(REFRESH_TOKEN_COOKIE)
+        let refresh_token = cookies.get(REFRESH_TOKEN_COOKIE)
+        if (!refresh_token) {
+            refresh_token = JSON.parse(req.body).refresh_token
+        }
 
         // Send refresh request to API server
         const apiRes = await fetch(process.env.NEXT_PUBLIC_API_URL + 'auth/token', {

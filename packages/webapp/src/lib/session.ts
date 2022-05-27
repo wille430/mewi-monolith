@@ -1,6 +1,7 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
 import type { IronSessionOptions } from 'iron-session'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { USER_TOKEN } from './constants'
 import { fetchUser } from '@/store/user'
 import { useAppDispatch } from '@/hooks'
@@ -31,8 +32,9 @@ export const logoutSession = (req: any) => {
 
 export const checkLoggedInStatus = () => {
     const dispatch = useAppDispatch()
+    const router = useRouter()
 
     useEffect(() => {
         dispatch(fetchUser())
-    }, [])
+    }, [router.events])
 }

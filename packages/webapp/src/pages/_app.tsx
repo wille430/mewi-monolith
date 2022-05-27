@@ -1,15 +1,16 @@
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { ReactElement, ReactNode, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
-import { wrapper } from '@/store'
-import { setupAxios } from '@/lib/axios'
+import axios from 'axios'
+import { Store, wrapper } from '@/store'
 import { checkLoggedInStatus } from '@/lib/session'
 import { fetchJson } from '@/lib/fetchJson'
+import { setupAxios } from '@/lib/axios'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -24,14 +25,21 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
-    const [queryClient] = useState(() => new QueryClient())
-    const store = useStore()
 
-    setupAxios()
+    const [queryClient] = useState(() => new QueryClient())
+
+    const store = useStore() as Store
+    const { user } = store.getState().user
+
+    useEffect(() => {
+        setupAxios()
+    }, [user])
+
     checkLoggedInStatus()
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store
+        window.axios = axios
     }
 
     return (

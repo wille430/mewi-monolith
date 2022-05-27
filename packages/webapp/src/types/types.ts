@@ -1,3 +1,4 @@
+import { Axios } from 'axios'
 import { Store } from '@/store'
 
 // TODO: create category enum in common lib
@@ -388,6 +389,7 @@ declare global {
     interface Window {
         Cypress?: any
         store: Store
+        axios?: Axios
     }
 }
 
