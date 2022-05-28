@@ -4,8 +4,6 @@ import { Listing } from '@mewi/prisma'
 import { HTMLAttributes, useEffect } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { useMutation } from 'react-query'
-import axios from 'axios'
 import style from './ListingWidget.module.scss'
 import { LikeButton } from '../LikeButton/LikeButton'
 import { OriginLabel } from '@/components/OriginLabel/OriginLabel'
@@ -20,16 +18,7 @@ interface ListingProps extends HTMLAttributes<HTMLElement> {
 
 export const ListingWidget = ({ listing, onClick, onLike, onUnlike, ...rest }: ListingProps) => {
     const { user, isLoggedIn } = useAppSelector((state) => state.user)
-    const isLiked = listing.likedByUserIDs.includes(user?.id)
-    const likeMutation = useMutation((id: string) => {
-        if (isLiked) {
-            onUnlike && onUnlike(id)
-            return axios.put(`/listings/${id}/unlike`)
-        } else {
-            onLike && onLike(id)
-            return axios.put(`/listings/${id}/like`)
-        }
-    })
+    const isLiked = user && listing.likedByUserIDs.includes(user.id)
 
     useEffect(() => {
         console.log(isLiked)
@@ -40,7 +29,7 @@ export const ListingWidget = ({ listing, onClick, onLike, onUnlike, ...rest }: L
             {...rest}
             className={classNames({
                 [style['card']]: true,
-                [rest.className]: !!rest.className,
+                [rest.className ?? '']: !!rest.className,
             })}
         >
             <div
@@ -58,8 +47,13 @@ export const ListingWidget = ({ listing, onClick, onLike, onUnlike, ...rest }: L
                         [style['liked']]: isLiked,
                     })}
                     liked={isLiked}
-                    onClick={() => likeMutation.mutate(listing.id)}
-                    disabled={likeMutation.isLoading}
+                    onClick={() => {
+                        if (isLiked) {
+                            onUnlike && onUnlike(listing.id)
+                        } else {
+                            onLike && onLike(listing.id)
+                        }
+                    }}
                 />
             ) : (
                 <Link href='/loggain'>

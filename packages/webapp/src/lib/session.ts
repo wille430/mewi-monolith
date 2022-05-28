@@ -2,7 +2,7 @@
 import type { IronSessionOptions } from 'iron-session'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { USER_TOKEN } from './constants'
+import { REFRESH_TOKEN_EXPIRES, USER_TOKEN } from './constants'
 import { fetchUser } from '@/store/user'
 import { useAppDispatch } from '@/hooks'
 
@@ -11,6 +11,7 @@ export const sessionOptions: IronSessionOptions = {
     cookieName: USER_TOKEN,
     cookieOptions: {
         secure: process.env.NODE_ENV === 'production',
+        expires: REFRESH_TOKEN_EXPIRES(),
     },
 }
 
@@ -36,5 +37,5 @@ export const checkLoggedInStatus = () => {
 
     useEffect(() => {
         dispatch(fetchUser())
-    }, [router.events])
+    }, [router.events, router.asPath])
 }

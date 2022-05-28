@@ -3,7 +3,7 @@ import { randomString } from '@wille430/common'
 import LabeledDropdown from './LabeledDropdown'
 
 it('renders correctly', () => {
-    const mockOptions = []
+    const mockOptions: { value: string; label: string }[] = []
     const mockLabel = randomString(10)
     for (let i = 0; i < 10; i++) {
         const label = randomString(10)

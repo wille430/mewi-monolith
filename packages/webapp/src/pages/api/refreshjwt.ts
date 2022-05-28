@@ -3,6 +3,7 @@ import Cookies from 'cookies'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withSessionRoute } from '@/lib/withSession'
 import { logoutSession } from '@/lib/session'
+import { REFRESH_TOKEN_EXPIRES } from '@/lib/constants'
 
 export default withSessionRoute(refreshJwtRoute)
 
@@ -40,7 +41,9 @@ async function refreshJwtRoute(req: NextApiRequest, res: NextApiResponse) {
 
         // Set jwt in cookies in response
         cookies.set(ACCESS_TOKEN_COOKIE, newJwt.access_token)
-        cookies.set(REFRESH_TOKEN_COOKIE, newJwt.refresh_token)
+        cookies.set(REFRESH_TOKEN_COOKIE, newJwt.refresh_token, {
+            expires: REFRESH_TOKEN_EXPIRES(),
+        })
 
         // Return ok response or error
         res.status(200).json(newJwt)

@@ -3,17 +3,21 @@ import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@mewi/ui'
 import styles from './ListingRow.module.scss'
+import { LikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import { useAppDispatch } from '@/hooks'
+import { useAppDispatch, useAppSelector } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
     listing: Listing
+    onLike?: (id: string) => any
+    onUnlike?: (id: string) => any
 }
 
-export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
+export const ListingRow = ({ listing, onLike, onUnlike, ...rest }: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
     const dispatch = useAppDispatch()
+    const { user } = useAppSelector((state) => state.user)
 
     const fadeVariants: AnimationProps['variants'] = {
         hide: {
@@ -62,7 +66,7 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
                 </motion.div>
 
                 <motion.div
-                    className={styles.redirectButton}
+                    className={styles.actions}
                     variants={{
                         ...fadeVariants,
                         hide: {
@@ -73,7 +77,22 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
                     initial={'hide'}
                     animate={isHovered ? 'show' : 'hide'}
                 >
-                    <Button label='>>' onClick={() => dispatch(openListing(listing))} />
+                    <LikeButton
+                        className='ml-auto'
+                        liked={user && listing.likedByUserIDs.includes(user.id)}
+                        onClick={() => {
+                            if (user && listing.likedByUserIDs.includes(user.id)) {
+                                onUnlike && onUnlike(listing.id)
+                            } else {
+                                onLike && onLike(listing.id)
+                            }
+                        }}
+                    />
+                    <Button
+                        className={styles.redirect}
+                        label='>>'
+                        onClick={() => dispatch(openListing(listing))}
+                    />
                 </motion.div>
             </motion.div>
 

@@ -75,6 +75,9 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
             }),
         {
             onSuccess: (res, { user }) => {
+                if (!data) {
+                    return
+                }
                 const userIndex = data.findIndex((u) => u.id === user.id)
 
                 data[userIndex] = res.data
@@ -90,6 +93,9 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
             }),
         {
             onSuccess: (res, { user }) => {
+                if (!data) {
+                    return
+                }
                 const userIndex = data.findIndex((u) => u.id === user.id)
 
                 data[userIndex] = res.data
@@ -100,11 +106,11 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
 
     const missingRoles = useMemo(() => {
         const roles = user.roles
-        const rolesNotInUser = []
+        const rolesNotInUser: Role[] = []
 
         for (const role of Object.keys(Role)) {
             if (!roles.includes(role as Role)) {
-                rolesNotInUser.push(role)
+                rolesNotInUser.push(role as Role)
             }
         }
 

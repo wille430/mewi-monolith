@@ -56,7 +56,7 @@ export const CreateWatcherButton = ({
 
                 setError(error)
                 setShowModal(false)
-                onError()
+                onError && onError()
             },
             onSuccess: (data) => {
                 onSuccess && onSuccess()

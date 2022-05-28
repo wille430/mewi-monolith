@@ -39,7 +39,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
         </Container>
     )
 
-    if (data.length === 0) {
+    if (data?.length === 0) {
         return withWrapper(
             <div className='flex flex-grow items-center justify-center'>
                 <div className='h-32'>
@@ -51,7 +51,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     return withWrapper(
         <>
-            {data.map(
+            {data?.map(
                 (watcherObj, i) =>
                     watcherObj && (
                         <WatcherCard

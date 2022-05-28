@@ -23,7 +23,7 @@ export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavPr
         <Container
             className={classNames({
                 [styles.container]: true,
-                [rest.className]: true,
+                [rest.className ?? '']: true,
             })}
             {...rest}
         >

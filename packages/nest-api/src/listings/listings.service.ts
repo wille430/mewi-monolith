@@ -77,7 +77,7 @@ export class ListingsService {
         if (dto.priceRangeGte) {
             args.where = merge(args.where, {
                 price: {
-                    is: { value: { gte: dto.priceRangeLte } },
+                    is: { value: { gte: dto.priceRangeGte } },
                 },
             })
         }

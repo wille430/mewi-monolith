@@ -5,28 +5,32 @@ import { Listing } from '@mewi/prisma/index-browser'
 import { Layout } from '@/components/Layout/Layout'
 import { Hero } from '@/components/Hero/Hero'
 import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
-import FeaturedListings from '@/components/FeaturedListings/FeaturedListings'
+import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings'
 import prisma from '@/lib/prisma'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import ListingPopUp from '@/components/ListingPopUp/ListingPopUp'
-import { closeListing } from '@/store/listings'
+import { closeListing, setFeatured } from '@/store/listings'
+import { wrapper } from '@/store'
+import { serialize } from '@/lib/serialize'
 
 interface IndexPageProps {
     featuredListings: Listing[]
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-    const listings = JSON.stringify(await prisma.listing.findMany({ take: 10 }))
+export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => async () => {
+    const listings = await prisma.listing.findMany({ take: 10 })
+
+    store.dispatch(setFeatured(serialize(listings)))
 
     return {
         props: {
-            featuredListings: JSON.parse(listings),
+            featuredListings: serialize(listings),
         } as IndexPageProps,
         revalidate: 15 * 60 * 60,
     }
-}
+})
 
-const Index = ({ featuredListings }: IndexPageProps) => {
+const Index = () => {
     const openedListing = useAppSelector((state) => state.listings.opened)
     const dispatch = useAppDispatch()
 
@@ -42,7 +46,7 @@ const Index = ({ featuredListings }: IndexPageProps) => {
                     <DecorativeWaves />
                 </section>
                 <div className='p-4'>
-                    <FeaturedListings listings={featuredListings} />
+                    <FeaturedListings />
                 </div>
                 <div className='h-32' />
                 {openedListing && (

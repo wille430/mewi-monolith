@@ -27,10 +27,10 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
         let startNum = 1
 
-        if (filters.page + 1 >= totalPages) {
+        if (filters.page ?? 1 + 1 >= totalPages) {
             startNum = totalPages - totalNumButtons + 1
-        } else if (filters.page >= 3) {
-            startNum = filters.page - 2
+        } else if (filters.page ?? 1 >= 3) {
+            startNum = filters.page ?? 1 - 2
         }
 
         const showFirstPageSkip = startNum > 1
@@ -92,7 +92,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
     }
 
     const changePage = (increment: number) => {
-        const newPage = filters.page + increment
+        const newPage = filters.page ?? 1 + increment
         if (newPage <= totalPages && newPage >= 1) {
             scrollToAnchorEle()
             setFilters((prev) => ({ ...prev, page: newPage }), true)

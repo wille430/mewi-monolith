@@ -17,13 +17,20 @@ const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
 
 export const makeStore = () =>
     configureStore({
+        // @ts-ignore
         reducer,
+        // @ts-ignore
         middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     })
 
 export type Store = ReturnType<typeof makeStore>
 export type RootState = ReturnType<Store['getState']>
 export type AppDispatch = Store['dispatch']
+
+export type ResourceType = {
+    isLoading: boolean
+    error: boolean
+}
 
 export const wrapper = createWrapper<ReduxStore<RootState>>(makeStore, {
     debug: process.env.NODE_ENV !== 'production',

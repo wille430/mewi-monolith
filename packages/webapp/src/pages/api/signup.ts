@@ -3,6 +3,7 @@ import { User } from '@mewi/prisma'
 import Cookies from 'cookies'
 import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import { withSessionRoute } from '@/lib/withSession'
+import { REFRESH_TOKEN_EXPIRES } from '@/lib/constants'
 
 export default withSessionRoute(signupRoute)
 
@@ -16,7 +17,9 @@ async function signupRoute(req: NextApiRequest, res: NextApiResponse) {
         // Pass cookies
         const cookies = new Cookies(req, res)
         cookies.set(ACCESS_TOKEN_COOKIE, tokens.access_token)
-        cookies.set(REFRESH_TOKEN_COOKIE, tokens.refresh_token)
+        cookies.set(REFRESH_TOKEN_COOKIE, tokens.refresh_token, {
+            expires: REFRESH_TOKEN_EXPIRES(),
+        })
 
         const user: User = await fetch(process.env.NEXT_PUBLIC_API_URL + 'users/me', {
             method: 'get',

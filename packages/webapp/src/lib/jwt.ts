@@ -2,8 +2,8 @@ import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430
 import { setHeaders } from './axios'
 
 export const setJwt = (tokens: AuthTokens | undefined = undefined) => {
-    window.sessionStorage.setItem(ACCESS_TOKEN_COOKIE, tokens?.access_token)
-    window.localStorage.setItem(REFRESH_TOKEN_COOKIE, tokens?.refresh_token)
+    window.sessionStorage.setItem(ACCESS_TOKEN_COOKIE, tokens?.access_token ?? '')
+    window.localStorage.setItem(REFRESH_TOKEN_COOKIE, tokens?.refresh_token ?? '')
 
     // update axios
     setHeaders()
@@ -15,8 +15,8 @@ export const getJwt = (): AuthTokens | undefined => {
     }
 
     const authTokens: Partial<AuthTokens> = {
-        access_token: window.sessionStorage.getItem(ACCESS_TOKEN_COOKIE),
-        refresh_token: window.localStorage.getItem(REFRESH_TOKEN_COOKIE),
+        access_token: window.sessionStorage.getItem(ACCESS_TOKEN_COOKIE) ?? undefined,
+        refresh_token: window.localStorage.getItem(REFRESH_TOKEN_COOKIE) ?? undefined,
     }
 
     if (!authTokens.access_token || !authTokens.refresh_token) {

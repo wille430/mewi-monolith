@@ -1,28 +1,41 @@
 import { Container } from '@mewi/ui'
-import { Listing } from '@mewi/prisma'
 import style from './FeaturedListings.module.scss'
 import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
-import { useAppDispatch } from '@/hooks'
-import { openListing } from '@/store/listings'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import { likeListing, openListing, unlikeListing } from '@/store/listings'
 
-const FeaturedListings = ({ listings }: { listings: Listing[] }) => {
+export const FeaturedListings = () => {
     const dispatch = useAppDispatch()
+    const { featured } = useAppSelector((state) => state.listings)
+    const { user } = useAppSelector((state) => state.user)
 
     return (
         <Container className={style.container}>
             <h3>Produkter i blickfånget</h3>
-            {listings.length === 0 ? (
+            {featured.length === 0 ? (
                 <span className={style.emptyText}>
                     Det finns inga produkter i blickfånget för tillfället
                 </span>
             ) : (
                 <>
                     <div className={style.scrollableView}>
-                        {listings?.map((listing) => (
+                        {featured?.map((listing) => (
                             <ListingWidget
                                 key={listing.id}
                                 onClick={() => dispatch(openListing(listing))}
                                 listing={listing}
+                                onLike={() =>
+                                    user &&
+                                    dispatch(
+                                        likeListing({ listingId: listing.id, userId: user.id })
+                                    )
+                                }
+                                onUnlike={() =>
+                                    user &&
+                                    dispatch(
+                                        unlikeListing({ listingId: listing.id, userId: user.id })
+                                    )
+                                }
                             />
                         ))}
                     </div>
@@ -31,5 +44,3 @@ const FeaturedListings = ({ listings }: { listings: Listing[] }) => {
         </Container>
     )
 }
-
-export default FeaturedListings

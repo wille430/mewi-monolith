@@ -2,7 +2,7 @@ import { ListingOrigin, Prisma, ScrapingLog } from '@mewi/prisma/index-browser'
 import axios from 'axios'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { Chart, AxisOptions } from 'react-charts'
+import { Chart, AxisOptions, UserSerie } from 'react-charts'
 
 type Series = {
     label: string
@@ -57,7 +57,7 @@ export const ScraperLogs = () => {
         []
     )
 
-    if (isLoading || !data.length) {
+    if (isLoading || !data || !data?.length) {
         return null
     }
 
@@ -71,7 +71,7 @@ export const ScraperLogs = () => {
         >
             <Chart
                 options={{
-                    data,
+                    data: data as UserSerie<ScrapingLog>[],
                     primaryAxis,
                     secondaryAxes,
                 }}

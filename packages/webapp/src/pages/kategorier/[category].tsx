@@ -17,7 +17,7 @@ export const getStaticPaths: GetStaticPaths<{ category: Category }> = () => {
 }
 
 export const getStaticProps: GetStaticProps = (context) => {
-    if (context.params?.category.toString().toUpperCase() in Category) {
+    if (context.params?.category && context.params.category.toString().toUpperCase() in Category) {
         return {
             props: {},
         }
@@ -35,7 +35,7 @@ const CategoryPage = () => {
     return (
         <>
             <Head>
-                <title>{CategoryLabel[category]} | Mewi.se</title>
+                <title>{CategoryLabel[category as Category]} | Mewi.se</title>
             </Head>
 
             <ListingFiltersProvider defaults={{ category }} excludeInParams={['category']}>

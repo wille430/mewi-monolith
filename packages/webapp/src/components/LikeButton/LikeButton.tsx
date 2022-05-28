@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { motion, HTMLMotionProps, useAnimation, Variants } from 'framer-motion'
 
@@ -9,29 +9,32 @@ type LikeButtonProps = HTMLMotionProps<'button'> & {
 export const LikeButton = ({ liked, onClick, ...rest }: LikeButtonProps) => {
     const controller = useAnimation()
 
-    const variants: Variants = {
-        like: {
-            scale: [1.4, 1.2],
-            color: 'red',
-            transition: {
-                type: 'spring',
-                duration: 0.5,
+    const variants: Variants = useMemo(
+        () => ({
+            like: {
+                scale: [1.4, 1.2],
+                color: 'red',
+                transition: {
+                    type: 'spring',
+                    duration: 0.5,
+                },
             },
-        },
-        hovered: {
-            scale: 1.1,
-        },
-        hold: {
-            scale: 1.2,
-            transition: {
-                duration: 1,
+            hovered: {
+                scale: 1.1,
             },
-        },
-        initial: {
-            color: liked ? 'red' : 'white',
-            scale: liked ? 1.05 : 1,
-        },
-    }
+            hold: {
+                scale: 1.2,
+                transition: {
+                    duration: 1,
+                },
+            },
+            initial: {
+                color: liked ? 'red' : 'white',
+                scale: liked ? 1.05 : 1,
+            },
+        }),
+        [liked]
+    )
 
     return (
         <motion.button
@@ -46,7 +49,11 @@ export const LikeButton = ({ liked, onClick, ...rest }: LikeButtonProps) => {
                 onClick && onClick(e)
             }}
         >
-            {liked ? <AiFillHeart className='h-7 w-7' /> : <AiOutlineHeart className='h-7 w-7' />}
+            {liked ? (
+                <AiFillHeart className='h-7 w-7' color={liked ? 'red' : 'white'} />
+            ) : (
+                <AiOutlineHeart className='h-7 w-7' color={liked ? 'red' : 'white'} />
+            )}
         </motion.button>
     )
 }

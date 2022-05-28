@@ -12,12 +12,15 @@ export function SignInWithEmail() {
 
     const dispatch = useAppDispatch()
 
-    const mutation = useMutation(() => dispatch(login({ email, password })), {
-        onError: () => {
-            setError('Felaktig e-postadress eller lösenord')
-            setPassword('')
-        },
-    })
+    const mutation = useMutation(
+        () => dispatch(login({ email: email ?? '', password: password ?? '' })),
+        {
+            onError: () => {
+                setError('Felaktig e-postadress eller lösenord')
+                setPassword('')
+            },
+        }
+    )
 
     return (
         <SmallContainer

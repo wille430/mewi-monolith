@@ -12,7 +12,7 @@ export const PopUp = ({
     show = true,
     ...props
 }: HTMLAttributes<HTMLDivElement> & PopUpProps) => {
-    const popUpRef = useRef()
+    const popUpRef = useRef<HTMLDivElement | null>(null)
 
     return (
         <div
@@ -26,7 +26,7 @@ export const PopUp = ({
             className={classNames({
                 ['fixed top-0 left-0 w-full h-screen bg-black/25 z-20']: true,
                 ['hidden']: !show,
-                [props.className]: Boolean(props.className),
+                [props.className ?? '']: Boolean(props.className),
             })}
         >
             {children}

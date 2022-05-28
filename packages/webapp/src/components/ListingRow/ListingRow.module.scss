@@ -9,10 +9,6 @@
     grid-template-rows: none;
     height: 6rem;
     position: relative;
-
-    .hover {
-        background-color: red;
-    }
 }
 
 .image {
@@ -88,14 +84,22 @@
     height: 100%;
     background-color: hsla(0, 0%, 0%, 0.075);
     border-radius: 0.75rem;
+    pointer-events: none;
 }
 
-.redirectButton {
+.actions {
     position: absolute;
-    right: 0.75rem;
-    bottom: 0.75rem;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    z-index: 5;
+}
 
-    button {
-        width: 6rem;
-    }
+.redirect {
+    margin-top: auto;
+    width: 6rem;
 }

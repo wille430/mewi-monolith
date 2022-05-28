@@ -82,7 +82,8 @@ export const ScraperPanel = () => {
                     </thead>
 
                     <tbody>
-                        {Object.keys(scraperStatus).map((key) => {
+                        {Object.keys(scraperStatus ?? []).map((key) => {
+                            if (!scraperStatus) return null
                             const status = scraperStatus[key as ListingOrigin]
 
                             return (
