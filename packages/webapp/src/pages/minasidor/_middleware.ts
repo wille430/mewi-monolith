@@ -1,6 +1,8 @@
-import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import { NextRequest, NextResponse } from 'next/server'
 import { USER_TOKEN } from '@/lib/constants'
+
+const ACCESS_TOKEN_COOKIE = 'access-token'
+const REFRESH_TOKEN_COOKIE = 'refresh-token'
 
 const handler = async (req: NextRequest) => {
     if (
@@ -9,8 +11,6 @@ const handler = async (req: NextRequest) => {
             Object.keys(req.cookies).includes(USER_TOKEN)
         )
     ) {
-        console.log('Not logged in')
-
         if (req.cookies[REFRESH_TOKEN_COOKIE]) {
             console.log('Refreshing token')
             return await fetch(new URL('/api/refreshjwt', req.url).toString(), {
@@ -19,7 +19,7 @@ const handler = async (req: NextRequest) => {
                 body: JSON.stringify({ refresh_token: req.cookies[REFRESH_TOKEN_COOKIE] }),
             })
                 .then(async (r) => {
-                    const tokens: AuthTokens = await r.json()
+                    const tokens = await r.json()
 
                     const res = NextResponse.next()
 
