@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
-import _ from 'lodash'
+import _, { merge } from 'lodash'
 import { ListingSort } from '@wille430/common'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
@@ -20,8 +20,6 @@ export class ListingsService {
 
     async findAll(dto: FindAllListingsDto) {
         const args = this.metadataToWhereInput(dto)
-
-        // TODO: fix sort
 
         return {
             filters: dto,
@@ -70,7 +68,6 @@ export class ListingsService {
             [ListingSort.RELEVANCE]: undefined,
         }
 
-        // TODO: SORT
         if (dto.sort !== ListingSort.RELEVANCE) {
             args.orderBy = {
                 ...listingSortToOrderBy[dto.sort],
@@ -78,30 +75,19 @@ export class ListingsService {
         }
 
         if (dto.priceRangeGte) {
-            args.where = {
-                ...args.where,
+            args.where = merge(args.where, {
                 price: {
-                    is: {
-                        value: {
-                            gte: dto.priceRangeGte,
-                        },
-                    },
+                    is: { value: { gte: dto.priceRangeLte } },
                 },
-            }
+            })
         }
 
         if (dto.priceRangeLte) {
-            args.where = {
-                ...args.where,
+            args.where = merge(args.where, {
                 price: {
-                    is: {
-                        value: {
-                            ...((args.where.price?.is.value as any) ?? {}),
-                            lte: dto.priceRangeLte,
-                        },
-                    },
+                    is: { value: { lte: dto.priceRangeLte } },
                 },
-            }
+            })
         }
 
         for (const key in dto) {
@@ -110,6 +96,7 @@ export class ListingsService {
             switch (key as keyof typeof dto) {
                 case 'keyword':
                     args.where.title = {
+                        mode: 'insensitive',
                         contains: value,
                     }
                     break
@@ -121,7 +108,10 @@ export class ListingsService {
                             })
                     } else {
                         args.where.OR.push({
-                            region: value,
+                            region: {
+                                contains: value,
+                                mode: 'insensitive',
+                            },
                         })
                     }
                     break
@@ -131,14 +121,6 @@ export class ListingsService {
                 case 'auction':
                     args.where.isAuction = value
                     break
-                // case key.match(/priceRange(Gte|Lte)/)?.input:
-                //     if (key.match(/(Gte)$/)) {
-                //         .$and.push({ 'price.value': { $gte: +value } })
-                //         args.where
-                //     } else if (key.match(/(Lte)$/)) {
-                //         filters.$and.push({ 'price.value': { $lte: +value } })
-                //     }
-                //     break
                 case 'dateGte':
                     args.where.date = {
                         gte: new Date(+value),

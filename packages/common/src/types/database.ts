@@ -16,8 +16,6 @@ export interface PriceRangeProps {
 
 export type CategoryType = string[]
 
-// TODO: export enum Category {}
-
 export type ListingPrice = {
     value: number
     currency: string

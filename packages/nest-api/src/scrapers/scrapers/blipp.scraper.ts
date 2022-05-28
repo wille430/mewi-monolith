@@ -95,7 +95,12 @@ export class BlippScraper extends Scraper {
                     isAuction: false,
                     price: vehicle.monthly_cost?.car_info_valuation
                         ? {
-                              value: parseFloat(vehicle.monthly_cost.car_info_valuation),
+                              value: parseFloat(
+                                  (vehicle.monthly_cost.car_info_valuation as string).replace(
+                                      ' ',
+                                      ''
+                                  )
+                              ),
                               currency: Currency.SEK,
                           }
                         : null,
