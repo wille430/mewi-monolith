@@ -9,15 +9,17 @@ jobs:
             - checkout
             - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                  key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
-                name: Install
-                command: pnpm i -F schemas --frozen-lockfile && pnpm i --frozen-lockfile
+                  name: Install
+                  command: pnpm i -F schemas --frozen-lockfile && pnpm i --frozen-lockfile
             - save_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
-                paths:
-                    - node_modules
-                    - ./packages/nest-api/node_modules
+                  key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                  paths:
+                      - node_modules
+                      - ./packages/nest-api/node_modules
+                      - ./packages/common/node_modules
+                      - ./packages/schemas/node_modules
     build:
         docker:
             - image: 'cimg/node:14.17-browsers'
@@ -25,18 +27,18 @@ jobs:
             - checkout
             - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                  key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
                   name: Isolate API workspace
                   command: |
                       pnpm isolate -F nest-api
             - save_cache:
-                key: build-output-{{ .Environment.CIRCLE_SHA1 }}
-                paths:
-                    - ./packages/nest-api/_isolated_
+                  key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+                  paths:
+                      - ./packages/nest-api/_isolated_
             - store_artifacts:
-                path: ./packages/nest-api/_isolated_
-                destination: nest-api
+                  path: ./packages/nest-api/_isolated_
+                  destination: nest-api
     test:
         docker:
             - image: 'cimg/node:14.17-browsers'
@@ -45,33 +47,33 @@ jobs:
             - checkout
             - run: sudo npm i -g pnpm@latest-6
             - restore_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                  key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             # TODO: run tests
             - run:
-                name: Test and lint
-                command: pnpm run lint
+                  name: Test and lint
+                  command: pnpm run lint
     deploy:
         docker:
             - image: google/cloud-sdk
         steps:
             - checkout
             - restore_cache:
-                key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+                  key: build-output-{{ .Environment.CIRCLE_SHA1 }}
             - restore_cache:
-                key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+                  key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
             - run: ls
             - run:
-                name: Authenticate Google Cloud
-                command: |
-                    touch service-account.json
-                    echo $GCLOUD_SERVICE_KEY >> service-account.json
-                    gcloud auth activate-service-account --key-file=service-account.json
-                    gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-                    gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-                    gcloud auth configure-docker europe-north1-docker.pkg.dev
+                  name: Authenticate Google Cloud
+                  command: |
+                      touch service-account.json
+                      echo $GCLOUD_SERVICE_KEY >> service-account.json
+                      gcloud auth activate-service-account --key-file=service-account.json
+                      gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+                      gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+                      gcloud auth configure-docker europe-north1-docker.pkg.dev
             - run:
                   name: Install Docker Compose
                   command: |
@@ -92,20 +94,20 @@ workflows:
     build_test_and_deploy:
         jobs:
             - setup:
-                filters:
-                    branches:
-                        only:
-                            - main
+                  filters:
+                      branches:
+                          only:
+                              - main
             - gcp-cli/install_and_initialize_cli:
                   executor: gcp-cli/default
             - test:
-                requires:
-                    - setup
-                    - gcp-cli/install_and_initialize_cli
+                  requires:
+                      - setup
+                      - gcp-cli/install_and_initialize_cli
             - build:
-                requires:
-                    - setup
-                    - gcp-cli/install_and_initialize_cli
+                  requires:
+                      - setup
+                      - gcp-cli/install_and_initialize_cli
             - deploy:
                   filters:
                       branches:
@@ -126,5 +128,5 @@ workflows:
                   requires:
                       - hold
             - test:
-                    requires:
-                        - setup
+                  requires:
+                      - setup
