@@ -7,10 +7,11 @@ import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import { Store, wrapper } from '@/store'
-import { checkLoggedInStatus } from '@/lib/session'
 import { fetchJson } from '@/lib/fetchJson'
 import { setupAxios } from '@/lib/axios'
+import { fetchUser } from '@/store/user'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -27,15 +28,15 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
 
     const [queryClient] = useState(() => new QueryClient())
+    const router = useRouter()
 
     const store = useStore() as Store
     const { user } = store.getState().user
 
     useEffect(() => {
         setupAxios()
-    }, [user])
-
-    checkLoggedInStatus()
+        store.dispatch(fetchUser())
+    }, [user, router.events, router.asPath])
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store
