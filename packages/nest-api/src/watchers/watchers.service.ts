@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { Cron } from '@nestjs/schedule'
-import { Prisma, User, Watcher } from '@mewi/prisma'
+import { Prisma, User, Watcher, EmailType } from '@mewi/prisma'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
@@ -143,22 +143,34 @@ export class WatchersService {
                 transport: transporter,
             })
 
+            const locals = {
+                newItemCount: await this.prisma.listing.count({
+                    where: this.listingService.metadataToWhereInput(watcher.metadata as any)[
+                        'where'
+                    ],
+                }),
+                keyword: watcher.metadata.keyword,
+                items: newListings,
+            }
+
             const emailInfo = await email.send({
                 template: this.emailService.templates.newItems,
                 message: {
                     to: user.email,
                 },
-                locals: {
-                    newItemCount: await this.prisma.listing.count({
-                        where: this.listingService.metadataToWhereInput(watcher.metadata as any)[
-                            'where'
-                        ],
-                    }),
-                    keyword: watcher.metadata.keyword,
-                    items: newListings,
-                },
+                locals: locals,
             })
             await transporter.sendMail(emailInfo.originalMessage)
+
+            // Save email record
+            await this.prisma.emailRecord.create({
+                data: {
+                    from: this.emailService.credentials.email,
+                    to: user.email,
+                    userId: user.id,
+                    type: EmailType.WATCHER,
+                },
+            })
 
             // Set new notifiedAt date
             await this.prisma.userWatcher.updateMany({

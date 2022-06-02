@@ -7,13 +7,7 @@ const SideNavButton = ({
     ...rest
 }: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => {
     return (
-        <motion.li
-            className={styles.navItem}
-            whileHover={{
-                color: 'lightgray',
-            }}
-        >
-            <a />
+        <motion.li className={styles.navItem}>
             <a {...rest}>{children}</a>
         </motion.li>
     )

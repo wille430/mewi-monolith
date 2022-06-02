@@ -56,7 +56,7 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                 <title>Mina gillade | Mewi.se</title>
             </Head>
             <main>
-                <Container>
+                <Container style={{ minHeight: '36rem' }}>
                     <Container.Header>
                         <h3>Mina gillade produkter</h3>
                         <HorizontalLine />

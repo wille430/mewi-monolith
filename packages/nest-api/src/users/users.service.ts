@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import bcrypt from 'bcryptjs'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
-import { LoginStrategy, User } from '@mewi/prisma'
+import { LoginStrategy, User, EmailType } from '@mewi/prisma'
 import * as crypto from 'crypto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -149,6 +149,16 @@ export class UsersService {
             const emailInfo = await emailObj.send()
 
             await transporter.sendMail(emailInfo.originalMessage)
+
+            // Create email record
+            await this.prisma.emailRecord.create({
+                data: {
+                    to: user.email,
+                    from: this.emailService.credentials.email,
+                    userId: user.id,
+                    type: EmailType.PASSWORD_RESET,
+                },
+            })
         } catch (e) {
             console.log(e)
         }

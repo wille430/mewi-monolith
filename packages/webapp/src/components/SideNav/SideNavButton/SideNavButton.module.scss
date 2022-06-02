@@ -5,4 +5,8 @@
         padding: 0.5rem;
         background-color: inherit;
     }
+
+    &:hover {
+        background-color: rgba(128, 128, 128, 0.2);
+    }
 }
