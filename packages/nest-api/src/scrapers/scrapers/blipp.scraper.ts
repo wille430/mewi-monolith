@@ -133,4 +133,8 @@ export class BlippScraper extends Scraper {
 
         return items
     }
+    reset(): void {
+        super.reset()
+        this.currentPage = 1
+    }
 }

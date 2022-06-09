@@ -3,8 +3,7 @@ import { JSDOM } from 'jsdom'
 // import { stringSimilarity } from "@mewi/prisma";
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
-import { Category, Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
-import { stringSimilarity } from '@wille430/common'
+import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { Scraper } from '../scraper'
 import { PrismaService } from '@/prisma/prisma.service'
@@ -69,7 +68,7 @@ export class BlocketScraper extends Scraper {
                     origin_id: item.ad_id,
                     title: item.subject,
                     body: item.body,
-                    category: this.parseCategory(item.category),
+                    category: this.parseCategory(item.category[0].name),
                     date: new Date(item.list_time),
                     imageUrl: item.images
                         ? item.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
@@ -107,19 +106,6 @@ export class BlocketScraper extends Scraper {
         }
     }
 
-    parseCategory(blocketCategory: BlocketListing['category']): Category {
-        const mainCategory = blocketCategory[0]
-
-        for (const category of Object.values(Category)) {
-            const similarity = stringSimilarity(category, mainCategory.name) * 2
-            if (similarity >= 0.7) {
-                return category as Category
-            }
-        }
-
-        return Category.OVRIGT
-    }
-
     parseParameters(parameterGroups: BlocketListing['parameter_groups']) {
         const parameters: Listing['parameters'] = []
 
@@ -137,5 +123,10 @@ export class BlocketScraper extends Scraper {
         }
 
         return parameters
+    }
+
+    reset(): void {
+        super.reset()
+        this.page = 0
     }
 }

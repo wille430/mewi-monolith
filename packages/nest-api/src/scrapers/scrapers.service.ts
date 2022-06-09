@@ -77,6 +77,7 @@ export class ScrapersService {
 
             this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
             await scraper.deleteOld()
+            scraper.reset()
 
             this.logPipeline(totalScrapers, `Done!`)
         }
@@ -164,5 +165,11 @@ export class ScrapersService {
 
     async getLogs(dto: Prisma.ScrapingLogFindManyArgs) {
         return await this.prisma.scrapingLog.findMany(dto)
+    }
+
+    async resetAll() {
+        for (const scraper of Object.values(this.scrapers)) {
+            scraper.reset()
+        }
     }
 }

@@ -124,4 +124,9 @@ export class TraderaScraper extends Scraper {
 
         return categoriesData
     }
+
+    reset(): void {
+        super.reset()
+        this.currentCategoryIndex = 0
+    }
 }

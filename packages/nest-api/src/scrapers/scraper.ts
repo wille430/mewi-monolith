@@ -1,7 +1,8 @@
 import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
-import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
+import { ListingOrigin, Prisma, ScraperTrigger, Category } from '@mewi/prisma'
+import { stringSimilarity } from '@wille430/common'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -188,5 +189,23 @@ export class Scraper {
         }
 
         return this.prisma.listing.count({ where: { origin: this.name } })
+    }
+
+    reset() {
+        this.listingScraped = 0
+        this.isScraping = false
+    }
+
+    parseCategory(string: string): Category {
+        if (Category[string.toUpperCase()]) return string.toUpperCase() as Category
+
+        for (const category of Object.values(Category)) {
+            const similarity = stringSimilarity(category, string) * 2
+            if (similarity >= 0.7) {
+                return category as Category
+            }
+        }
+
+        return Category.OVRIGT
     }
 }

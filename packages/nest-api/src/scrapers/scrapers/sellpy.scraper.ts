@@ -64,4 +64,9 @@ export class SellpyScraper extends Scraper {
             return []
         }
     }
+
+    reset(): void {
+        super.reset()
+        this.page = 1
+    }
 }
