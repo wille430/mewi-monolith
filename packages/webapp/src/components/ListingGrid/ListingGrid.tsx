@@ -32,9 +32,10 @@ const ListingGrid = () => {
     } else if (hits?.length) {
         return (
             <section className={styles.grid}>
-                {hits.map((listing) => (
+                {hits.map((listing, i) => (
                     <ListingWidget
                         onClick={() => dispatch(openListing(listing))}
+                        data-testid={`listing-${i}`}
                         listing={listing}
                     />
                 ))}

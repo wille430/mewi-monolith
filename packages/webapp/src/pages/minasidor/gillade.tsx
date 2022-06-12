@@ -49,8 +49,12 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                         <HorizontalLine />
                     </Container.Header>
                     <Container.Content className='space-y-4'>
-                        {_listings.current.map((listing) => (
-                            <ListingRow key={listing.id} listing={listing} />
+                        {_listings.current.map((listing, i) => (
+                            <ListingRow
+                                key={listing.id}
+                                data-testid={`listing-${i}`}
+                                listing={listing}
+                            />
                         ))}
                     </Container.Content>
                 </Container>

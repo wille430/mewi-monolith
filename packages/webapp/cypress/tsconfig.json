@@ -9,7 +9,7 @@
     ],
     "compilerOptions": {
         "sourceMap": false,
-        "types": ["cypress", "node"],
+        "types": ["cypress", "node", "cypress-real-events"],
         "strict": true,
         "baseUrl": "../src",
         "target": "ES6"

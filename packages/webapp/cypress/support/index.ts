@@ -16,6 +16,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import 'cypress-real-events'
 import { ListingFiltersContext } from '../../src/hooks/useListingFilters'
 
 declare global {

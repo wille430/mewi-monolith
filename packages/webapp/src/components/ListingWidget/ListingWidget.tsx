@@ -24,6 +24,7 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                 [style['card']]: true,
                 [rest.className ?? '']: !!rest.className,
             })}
+            data-id={listing.id}
         >
             <div
                 className={style['overlay']}
@@ -42,7 +43,7 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                 />
             ) : (
                 <Link href='/loggain'>
-                    <LikeButton className={style['like-button']} />
+                    <LikeButton data-testid='like-button' className={style['like-button']} />
                 </Link>
             )}
             <div className={style['image-wrapper']}>

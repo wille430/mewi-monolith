@@ -18,9 +18,10 @@ export const FeaturedListings = () => {
             ) : (
                 <>
                     <div className={style.scrollableView}>
-                        {featured?.map((listing) => (
+                        {featured?.map((listing, i) => (
                             <ListingWidget
                                 key={listing.id}
+                                data-testid={`listing-${i}`}
                                 onClick={() => dispatch(openListing(listing))}
                                 listing={listing}
                             />

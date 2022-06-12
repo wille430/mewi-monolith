@@ -19,7 +19,7 @@ export const ListingLikeButton = ({
 
     useEffect(() => {
         setLiked(user && listing.likedByUserIDs.includes(user.id))
-    }, [listing.likedByUserIDs])
+    }, [listing.likedByUserIDs, user])
 
     const likeMutation = useMutation(() => axios.put(`/listings/${listing.id}/like`), {
         onMutate: () => setLiked(true),
@@ -30,6 +30,7 @@ export const ListingLikeButton = ({
 
     return (
         <LikeButton
+            data-testid='like-button'
             {...rest}
             liked={liked}
             onClick={() => {

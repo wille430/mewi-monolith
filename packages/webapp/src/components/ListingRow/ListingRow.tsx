@@ -41,6 +41,7 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
             onHoverEnd={() => setHovered(false)}
             variants={scaleVariants}
             animate={isHovered ? 'scale' : 'initial'}
+            data-id={listing.id}
             {...rest}
         >
             <DefaultImage className={styles.image} src={listing.imageUrl[0]} alt={listing.title} />
