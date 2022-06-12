@@ -2,16 +2,15 @@ import { motion } from 'framer-motion'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { Listing } from '@mewi/prisma'
 // import { openListing } from '@/store/search/creators'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import axios from 'axios'
 import queryString from 'query-string'
 import classNames from 'classnames'
 import styles from './NewItemsDrawer.module.scss'
 import { openListing } from '@/store/listings'
-import { useAppDispatch, useAppSelector } from '@/hooks'
+import { useAppDispatch } from '@/hooks'
 import StyledLoader from '@/components/StyledLoader'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
-import { like, unlike } from '@/lib/listings'
 
 interface NewItemsDrawerProps {
     newItems: Listing[]
@@ -27,9 +26,7 @@ const removeNullValues = (obj: Record<any, any>) => {
 const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     const LIMIT = 5
 
-    const { user } = useAppSelector((state) => state.user)
     const dispatch = useAppDispatch()
-    const queryClient = useQueryClient()
 
     const {
         data: _newItems,
@@ -55,23 +52,6 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
         }
     )
 
-    const likeMutation = useMutation((id: string) => axios.put(`/listings/${id}/like`), {
-        onMutate: (id) => {
-            queryClient.setQueryData(
-                ['watcherListings', { id: watcher.id }],
-                like(id, user?.id, _newItems)
-            )
-        },
-    })
-    const unlikeMutation = useMutation((id: string) => axios.put(`/listings/${id}/unlike`), {
-        onMutate: (id) => {
-            queryClient.setQueryData(
-                ['watcherListings', { id: watcher.id }],
-                unlike(id, user?.id, _newItems)
-            )
-        },
-    })
-
     const drawerVariants = {
         hidden: {
             height: 0,
@@ -90,13 +70,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
 
     const renderItems = () => {
         return [...newItems, ...(_newItems || [])].map((item) => (
-            <ListingRow
-                key={item.id}
-                listing={item}
-                onClick={() => handleClick(item.id)}
-                onLike={likeMutation.mutate}
-                onUnlike={unlikeMutation.mutate}
-            />
+            <ListingRow key={item.id} listing={item} onClick={() => handleClick(item.id)} />
         ))
     }
 

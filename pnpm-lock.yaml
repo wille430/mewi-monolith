@@ -295,7 +295,8 @@ importers:
       '@rollup/plugin-node-resolve': ^13.1.3
       '@storybook/react': ^6.4.19
       '@testing-library/jest-dom': ^5.16.3
-      '@testing-library/react': ^12.1.4
+      '@testing-library/react': ^13.3.0
+      '@testing-library/user-event': ^14.2.0
       '@types/cookies': ^0.7.7
       '@types/lodash': ^4.14.180
       '@types/node': ^17.0.31
@@ -421,7 +422,8 @@ importers:
       '@rollup/plugin-node-resolve': 13.3.0
       '@storybook/react': 6.5.5_fa55f916c60423cc76a1d308c32f8df1
       '@testing-library/jest-dom': 5.16.4
-      '@testing-library/react': 12.1.5_react-dom@17.0.2+react@17.0.2
+      '@testing-library/react': 13.3.0_react-dom@17.0.2+react@17.0.2
+      '@testing-library/user-event': 14.2.0
       '@types/cookies': 0.7.7
       '@types/node': 17.0.35
       '@types/react': 17.0.45
@@ -7912,16 +7914,16 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/react/12.1.5_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-OfTXCJUFgjd/digLUuPxa0+/3ZxsQmE7ub9kcbW/wi96Bh3o/p5vrETcBGfP17NWPGqeYYl5LTRpwyGoMC4ysg==}
+  /@testing-library/react/13.3.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-DB79aA426+deFgGSjnf5grczDPiL4taK3hFaa+M5q7q20Kcve9eQottOG5kZ74KEr55v0tU2CQormSSDK87zYQ==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: <18.0.0
-      react-dom: <18.0.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
     dependencies:
       '@babel/runtime': 7.18.3
       '@testing-library/dom': 8.13.0
-      '@types/react-dom': 17.0.17
+      '@types/react-dom': 18.0.5
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: true
@@ -7934,6 +7936,13 @@ packages:
     dependencies:
       '@babel/runtime': 7.18.3
       '@testing-library/dom': 8.13.0
+    dev: true
+
+  /@testing-library/user-event/14.2.0:
+    resolution: {integrity: sha512-+hIlG4nJS6ivZrKnOP7OGsDu9Fxmryj9vCl8x0ZINtTJcCHs2zLsYif5GzuRiBF2ck5GZG2aQr7Msg+EHlnYVQ==}
+    engines: {node: '>=12', npm: '>=6'}
+    peerDependencies:
+      '@testing-library/dom': '>=7.21.4'
     dev: true
 
   /@timsuchanek/copy/1.4.5:
@@ -8175,7 +8184,7 @@ packages:
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 17.0.45
+      '@types/react': 18.0.9
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -8405,11 +8414,17 @@ packages:
     dependencies:
       '@types/react': 17.0.45
 
+  /@types/react-dom/18.0.5:
+    resolution: {integrity: sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==}
+    dependencies:
+      '@types/react': 18.0.9
+    dev: true
+
   /@types/react-redux/7.1.24:
     resolution: {integrity: sha512-7FkurKcS1k0FHZEtdbbgN8Oc6b+stGSfZYjQGicofJ0j4U0qIn/jaSvnP2pLwZKiai3/17xqqxkkrxTgN8UNbQ==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 17.0.45
+      '@types/react': 18.0.9
       hoist-non-react-statics: 3.3.2
       redux: 4.2.0
     dev: false
@@ -8443,7 +8458,7 @@ packages:
   /@types/react-transition-group/4.4.4:
     resolution: {integrity: sha512-7gAPz7anVK5xzbeQW9wFBDg7G++aPLAFY0QaSMOou9rJZpbuI58WAuJrgu+qR92l61grlnCUe7AFX8KGahAgug==}
     dependencies:
-      '@types/react': 17.0.45
+      '@types/react': 18.0.9
     dev: false
 
   /@types/react/17.0.45:
@@ -12209,7 +12224,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   /default-browser-id/1.0.4:
-    resolution: {integrity: sha1-5Z0JpdFXuCi4dsJoFuYcPSosIDo=}
+    resolution: {integrity: sha512-qPy925qewwul9Hifs+3sx1ZYn14obHxpkX+mPD369w4Rzg+YkJBgi3SOvwUq81nWSjqGUegIgEPwD8u+HUnxlw==}
     engines: {node: '>=0.10.0'}
     hasBin: true
     requiresBuild: true
@@ -17110,7 +17125,7 @@ packages:
     resolution: {integrity: sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==}
 
   /lz-string/1.4.4:
-    resolution: {integrity: sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=}
+    resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}
     hasBin: true
     dev: true
 
@@ -19645,7 +19660,7 @@ packages:
     dev: true
 
   /path-name/1.0.0:
-    resolution: {integrity: sha1-jKBjpj3nmC36lXYO2v/RAhRJTyQ=}
+    resolution: {integrity: sha512-/dcAb5vMXH0f51yvMuSUqFpxUcA8JelbRmE5mW/p4CUJxrNgK24IkstnV7ENtg2IDGBOu6izKTG6eilbnbNKWQ==}
     dev: true
 
   /path-parse/1.0.7:

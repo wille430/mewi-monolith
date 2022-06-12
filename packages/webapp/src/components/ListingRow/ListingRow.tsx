@@ -3,18 +3,16 @@ import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@mewi/ui'
 import styles from './ListingRow.module.scss'
-import { LikeButton } from '../LikeButton/LikeButton'
+import { ListingLikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
     listing: Listing
-    onLike?: (id: string) => any
-    onUnlike?: (id: string) => any
 }
 
-export const ListingRow = ({ listing, onLike, onUnlike, ...rest }: ListingRowprops) => {
+export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
     const dispatch = useAppDispatch()
     const { user } = useAppSelector((state) => state.user)
@@ -77,17 +75,7 @@ export const ListingRow = ({ listing, onLike, onUnlike, ...rest }: ListingRowpro
                     initial={'hide'}
                     animate={isHovered ? 'show' : 'hide'}
                 >
-                    <LikeButton
-                        className='ml-auto'
-                        liked={user && listing.likedByUserIDs.includes(user.id)}
-                        onClick={() => {
-                            if (user && listing.likedByUserIDs.includes(user.id)) {
-                                onUnlike && onUnlike(listing.id)
-                            } else {
-                                onLike && onLike(listing.id)
-                            }
-                        }}
-                    />
+                    <ListingLikeButton listing={listing} className='ml-auto' />
                     <Button
                         className={styles.redirect}
                         label='>>'

@@ -93,7 +93,6 @@ $fade-transition: all 150ms linear;
 
 .like-button {
     position: absolute;
-    color: white;
     top: $like-button-padding;
     right: $like-button-padding;
     z-index: $like-button-z-index;
@@ -118,6 +117,6 @@ $fade-transition: all 150ms linear;
     transition: $fade-transition;
 }
 
-.like-button.liked {
+.like-button[data-liked='true'] {
     opacity: 0.75;
 }

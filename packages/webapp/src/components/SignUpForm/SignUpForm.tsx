@@ -29,7 +29,6 @@ export const SignUpForm = () => {
         dispatch(signup(formData))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    alert(JSON.stringify(res))
                     Router.push('/minasidor')
                 } else {
                     throw res.payload
@@ -37,7 +36,6 @@ export const SignUpForm = () => {
             })
             .catch((err: any) => {
                 const message = err.message
-                console.log({ err })
                 setErrors(initErrors)
 
                 const newErrors: Partial<typeof errors> = {}

@@ -3,7 +3,7 @@ import styles from './ListingGrid.module.scss'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
 import { useAppDispatch, useAppSelector } from '@/hooks'
-import { likeListing, openListing, unlikeListing } from '@/store/listings'
+import { openListing } from '@/store/listings'
 
 const cx = classNames.bind(styles)
 
@@ -36,14 +36,6 @@ const ListingGrid = () => {
                     <ListingWidget
                         onClick={() => dispatch(openListing(listing))}
                         listing={listing}
-                        onLike={() =>
-                            user &&
-                            dispatch(likeListing({ listingId: listing.id, userId: user.id }))
-                        }
-                        onUnlike={() =>
-                            user &&
-                            dispatch(unlikeListing({ listingId: listing.id, userId: user.id }))
-                        }
                     />
                 ))}
             </section>
