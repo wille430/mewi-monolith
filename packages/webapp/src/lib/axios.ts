@@ -19,22 +19,25 @@ export const setupAxios = () => {
             if (err.status === 401 && config.url !== '/auth/login' && !config._retry) {
                 config._retry = true
 
-                // refetch jwt token
-                await fetch('/api/refreshjwt', {
-                    credentials: 'include',
-                })
-                    .then(async (res) => {
-                        setJwt((await res.json()) as AuthTokens)
+                try {
+                    // refetch jwt token
+                    await fetch('/api/refreshjwt', {
+                        credentials: 'include',
                     })
-                    .catch(() => {
-                        // when an error occured on this route, the session is destroyed
-                        window.location.href = '/loggain'
-                    })
+                        .then(async (res) => {
+                            setJwt((await res.json()) as AuthTokens)
+                        })
+                        .catch((e) => {
+                            throw e
+                        })
 
-                return axios(config)
-            } else if (config._retry && err.status === 401) {
-                // Log out when retried request returns 401 again
-                window.location.href = '/loggain'
+                    return axios(config)
+                } catch (e) {
+                    return Promise.reject(err.response ?? err)
+                }
+                // } else if (config._retry && err.status === 401) {
+                //     // Log out when retried request returns 401 again
+                //     window.location.href = '/loggain'
             } else {
                 return Promise.reject(err.response ?? err)
             }

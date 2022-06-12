@@ -1,7 +1,6 @@
-import { ListingSearchFilters, randomString, regions } from '@wille430/common'
+import { ListingSearchFilters, regions } from '@wille430/common'
 import _ from 'lodash'
 import queryString from 'query-string'
-import React from 'react'
 
 describe('search', () => {
     let formData: ListingSearchFilters = {}
@@ -32,9 +31,7 @@ describe('search', () => {
             // FIXME: fix detached from DOM error
             // TODO: insert multiple regions
             for (const region of formData.regions ?? []) {
-                cy.getBySel('regionsSelect').type(region + ' {enter}', {
-                    delay: 150,
-                })
+                cy.getBySel('regionsSelect').type(region + ' {enter}')
 
                 cy.getBySel('regionsSelect').contains(region)
             }

@@ -15,7 +15,12 @@ export function SignInWithEmail() {
     const router = useRouter()
 
     const mutation = useMutation(
-        () => dispatch(login({ email: email ?? '', password: password ?? '' })),
+        () =>
+            dispatch(login({ email: email ?? '', password: password ?? '' })).then((res) => {
+                if (res.meta.requestStatus === 'rejected') {
+                    throw res.payload
+                }
+            }),
         {
             onError: () => {
                 setError('Felaktig e-postadress eller lösenord')
