@@ -171,7 +171,7 @@ export class UsersService {
         if (
             user.emailUpdate &&
             user.emailUpdate.expiration.getTime() > Date.now() &&
-            (await bcrypt.compare(token, user.emailUpdate?.tokenHash))
+            (await bcrypt.compare(token, user.emailUpdate?.tokenHash ?? ''))
         ) {
             await this.prisma.user.update({
                 where: { id: user.id },

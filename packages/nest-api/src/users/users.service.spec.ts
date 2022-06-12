@@ -30,7 +30,7 @@ describe('UsersService', () => {
         email: randomEmail(),
     })
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [EmailModule, ConfigModule.forRoot({ load: [configuration] })],
             providers: [UsersService, PrismaService],
@@ -39,9 +39,7 @@ describe('UsersService', () => {
         usersService = module.get<UsersService>(UsersService)
         emailService = module.get<EmailService>(EmailService)
         prisma = module.get<PrismaService>(PrismaService)
-    })
 
-    beforeEach(async () => {
         user = await userFactory.create({
             emailUpdate: null,
             passwordReset: null,
@@ -127,7 +125,7 @@ describe('UsersService', () => {
             }
             changePasswordDto.passwordConfirm = changePasswordDto.password
 
-            await prisma.user.update({
+            user = await prisma.user.update({
                 where: { id: user.id },
                 data: {
                     passwordReset: {
@@ -136,6 +134,7 @@ describe('UsersService', () => {
                     },
                 },
             })
+            prisma.user.findFirst = vi.fn().mockResolvedValue(user)
 
             const originalPassHash = user.password
 
@@ -234,6 +233,8 @@ describe('UsersService', () => {
             })
 
             const updateEmailDto: AuthorizedUpdateEmailDto = { token: token, oldEmail: user.email }
+
+            prisma.user.findFirst = vi.fn().mockResolvedValue(user)
 
             await usersService.updateEmail(updateEmailDto)
 

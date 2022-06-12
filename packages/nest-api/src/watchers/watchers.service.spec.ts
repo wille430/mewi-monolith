@@ -78,10 +78,8 @@ describe('WatchersService', () => {
 
     describe('#notifyUserOfWatcher', () => {
         it('should send email to user and update user watcher', async () => {
-            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue(
-                Array(configService.get('notification.watcher.minListings')).fill(
-                    listingFactory.build()
-                )
+            vi.spyOn(watchersService, 'newListings').mockImplementation(
+                () => Array(12).fill(listingFactory.build()) as any
             )
 
             let userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })

@@ -129,11 +129,7 @@ export class WatchersService {
 
         const { where } = this.listingService.metadataToWhereInput(watcher.metadata)
 
-        // TODO
-        const newListings = await this.prisma.listing.findMany({
-            where,
-            take: 7,
-        })
+        const newListings = await this.newListings(where)
 
         if (newListings.length >= this.configService.get('notification.watcher.minListings')) {
             const email = new Email({
@@ -187,6 +183,13 @@ export class WatchersService {
         } else {
             return false
         }
+    }
+
+    async newListings(where: Prisma.ListingWhereInput) {
+        return await this.prisma.listing.findMany({
+            where,
+            take: 7,
+        })
     }
 
     async shouldNotifyUser(userId: string, watcherId: string): Promise<boolean> {

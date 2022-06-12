@@ -8,7 +8,7 @@ export class EmailService {
     constructor() {}
 
     credentials = {
-        email: process.env.GMAIL_MAIL,
+        email: process.env.GMAIL_MAIL ?? 'email@test.com',
         pass: process.env.GMAIL_PASS,
     }
 
