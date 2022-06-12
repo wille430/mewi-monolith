@@ -54,7 +54,7 @@ export class ShpockScraper extends Scraper {
     }
 
     async getListings(): Promise<Prisma.ListingCreateInput[]> {
-        const limit = Math.min(this.limit, await this.getQuantityToScrape)
+        const limit = Math.min(this.limit, await this.quantityToScrape)
 
         const data = await axios
             .post('https://www.shpock.com/graphql', {

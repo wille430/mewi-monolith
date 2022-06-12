@@ -175,6 +175,7 @@ enum ListingOrigin {
   Blipp
   Citiboard
   Shpock
+  Bytbil
 }
 
 enum ScraperTrigger {

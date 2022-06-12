@@ -55,7 +55,7 @@ export class Scraper {
      */
     isScraping = false
 
-    private quantityToScrape: number | null
+    private _quantityToScrape: number | null
     private listingCount: number | null
 
     constructor(
@@ -110,7 +110,7 @@ export class Scraper {
         this.listingScraped = 0
 
         let scrapedListings = await this.getListings()
-        let remainingEntries = await this.getQuantityToScrape
+        let remainingEntries = await this.quantityToScrape
         const errors: Record<string, string> = {}
 
         let i = 0
@@ -149,7 +149,7 @@ export class Scraper {
         })
 
         this.isScraping = false
-        this.quantityToScrape = null
+        this._quantityToScrape = null
         this.listingCount += this.listingScraped
     }
 
@@ -167,17 +167,28 @@ export class Scraper {
      * Get number of listings to scrape
      * @returns Number of listings to scrape
      */
-    get getQuantityToScrape(): Promise<number> {
-        if (this.quantityToScrape) {
-            return new Promise((resolve) => resolve(this.quantityToScrape))
+    get quantityToScrape(): Promise<number> {
+        if (this._quantityToScrape) {
+            return new Promise((resolve) => resolve(this._quantityToScrape))
         }
 
         return new Promise((resolve) => {
             this.getListingCount.then((count) => {
-                this.quantityToScrape = Math.max(0, this.maxEntries - count)
-                resolve(this.quantityToScrape)
+                this._quantityToScrape = Math.max(0, this.maxEntries - count)
+                resolve(this._quantityToScrape)
             })
         })
+    }
+
+    set quantityToScrape(count: number | Promise<number>) {
+        if (typeof count === 'number') {
+            this._quantityToScrape = count
+        } else {
+            // is promise
+            count.then((c) => {
+                this._quantityToScrape = c
+            })
+        }
     }
 
     /**

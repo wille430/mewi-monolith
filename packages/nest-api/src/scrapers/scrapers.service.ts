@@ -66,7 +66,7 @@ export class ScrapersService {
 
             this.logPipeline(
                 totalScrapers,
-                `Scraping ${await scraper.getQuantityToScrape} listings from ${name}...`
+                `Scraping ${await scraper.quantityToScrape} listings from ${name}...`
             )
             await scraper.start(args)
 
@@ -130,7 +130,7 @@ export class ScrapersService {
             return {
                 started: true,
                 listings_current: await scraper.getListingCount,
-                listings_remaining: await scraper.getQuantityToScrape,
+                listings_remaining: await scraper.quantityToScrape,
             }
         } else {
             throw new NotFoundException({
