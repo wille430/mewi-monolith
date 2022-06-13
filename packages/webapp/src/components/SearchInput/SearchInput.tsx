@@ -1,8 +1,9 @@
 import { Button } from '@mewi/ui'
+import { HTMLAttributes } from 'react'
 
-export const SearchInput = () => {
+export const SearchInput = (props: HTMLAttributes<HTMLDivElement>) => {
     return (
-        <div className='flex flex-col w-full items-end'>
+        <div className='flex flex-col w-full items-end' {...props}>
             <form className='flex mx-auto w-full' action='/sok'>
                 <input
                     className='p-2 rounded-l-md px-4 w-full max-w-sm text-black'

@@ -10,7 +10,7 @@ export const Hero = () => {
                 </div>
                 <div className={style['search-box']}>
                     <h3>Hitta begagnade produkter på ett enda ställe</h3>
-                    <SearchInput />
+                    <SearchInput data-testid='search-input' />
                 </div>
             </div>
         </section>
