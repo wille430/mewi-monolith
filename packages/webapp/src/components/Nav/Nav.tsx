@@ -13,10 +13,10 @@ const Nav = () => {
 
     return (
         <>
-            <nav className={styles.nav}>
+            <nav className={styles.nav} data-testid='nav'>
                 <ul>
-                    {publicLinks.map((link) => (
-                        <NavLinkItem key={link.path} to={link.path}>
+                    {publicLinks.map((link, i) => (
+                        <NavLinkItem key={link.path} to={link.path} data-testid={`nav-link-${i}`}>
                             {link.name}
                         </NavLinkItem>
                     ))}
