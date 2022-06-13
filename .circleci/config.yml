@@ -51,7 +51,7 @@ jobs:
             # TODO: run tests
             - run:
                   name: Test and lint
-                  command: pnpm run lint
+                  command: pnpm run lint || pnpm run test
     deploy:
         docker:
             - image: google/cloud-sdk

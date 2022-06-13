@@ -1,8 +1,7 @@
-import Snackbar from './Snackbar'
-import '@testing-library/jest-dom'
 import { cleanup, render } from '@testing-library/react'
 import { faker } from '@faker-js/faker'
 import { vi } from 'vitest'
+import Snackbar from './Snackbar'
 
 const testIds = {
     snackbar: 'snackbarContainer',
