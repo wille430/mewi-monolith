@@ -30,6 +30,7 @@ export const ListingLikeButton = ({
 
     return (
         <LikeButton
+            aria-label='Gilla'
             data-testid='like-button'
             {...rest}
             liked={liked}

@@ -17,7 +17,7 @@ const DefaultImage = ({
         imgRef.current.src = src
     }, [])
 
-    return <img ref={imgRef} onError={replaceImg} {...props} />
+    return <img ref={imgRef} onError={replaceImg} loading='lazy' {...props} />
 }
 
 export default DefaultImage

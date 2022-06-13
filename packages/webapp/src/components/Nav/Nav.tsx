@@ -30,7 +30,11 @@ const Nav = () => {
                 </ul>
             </nav>
 
-            <MenuButton onClick={() => setShowMenu(!showMenu)} className={styles.menuButton} />
+            <MenuButton
+                aria-label='Öppna menyn'
+                onClick={() => setShowMenu(!showMenu)}
+                className={styles.menuButton}
+            />
 
             <DrawerNav className={styles.drawer} show={showMenu}>
                 {isLoggedIn && <LogOutButton />}
