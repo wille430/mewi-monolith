@@ -57,6 +57,7 @@ export class Scraper {
 
     private _quantityToScrape: number | null
     private listingCount: number | null
+    private stringToCategoryMap = {}
 
     constructor(
         private prisma: PrismaService,
@@ -208,15 +209,19 @@ export class Scraper {
     }
 
     parseCategory(string: string): Category {
+        if (this.stringToCategoryMap[string]) return this.stringToCategoryMap[string]
+
         if (Category[string.toUpperCase()]) return string.toUpperCase() as Category
 
         for (const category of Object.values(Category)) {
             const similarity = stringSimilarity(category, string) * 2
             if (similarity >= 0.7) {
+                this.stringToCategoryMap[string] = category as Category
                 return category as Category
             }
         }
 
+        this.stringToCategoryMap[string] = Category.OVRIGT
         return Category.OVRIGT
     }
 }
