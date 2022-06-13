@@ -18,7 +18,7 @@ export default function Document() {
                 ></script>
                 <script src='https://apis.google.com/js/platform.js' async defer></script>
 
-                <link rel='icon' href='./favicon.ico' />
+                <link rel='icon' href='/favicon.ico' />
             </Head>
             <body>
                 <Main />

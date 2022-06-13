@@ -38,6 +38,11 @@ const Index = () => {
         <>
             <Head>
                 <title>Mewi.se - Sök efter begagnade produkter på ett enda ställe</title>
+                <meta
+                    name='description'
+                    content='Sök och hitta begagnade produkter på ett enda ställe'
+                />
+                <meta name='keywords' content='Begagnat' />
             </Head>
 
             <main>
