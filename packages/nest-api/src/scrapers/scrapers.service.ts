@@ -11,6 +11,8 @@ import { Scraper } from './scraper'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { RunPipelineEvent } from './events/run-pipeline.event'
 import { CitiboardScraper } from './scrapers/citiboard.scraper'
+import { ShpockScraper } from './scrapers/shpock.scraper'
+import { BytbilScraper } from './scrapers/bytbil.scraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 const pipelineQueue: RunPipelineEvent[] = []
@@ -18,7 +20,7 @@ const scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Partial<Record<ListingOrigin, Scraper>> = {}
+    scrapers: Record<ListingOrigin, Scraper>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -31,6 +33,8 @@ export class ScrapersService {
         private blippScraper: BlippScraper,
         private sellpyScraper: SellpyScraper,
         private citiboardScraper: CitiboardScraper,
+        private shpockScraper: ShpockScraper,
+        private bytbilScraper: BytbilScraper,
         private prisma: PrismaService,
         private eventEmitter: EventEmitter2
     ) {
@@ -40,6 +44,8 @@ export class ScrapersService {
             Blipp: this.blippScraper,
             Sellpy: this.sellpyScraper,
             Citiboard: this.citiboardScraper,
+            Shpock: this.shpockScraper,
+            Bytbil: this.bytbilScraper,
         }
     }
 
@@ -145,7 +151,7 @@ export class ScrapersService {
         const allScraperStatus: Partial<ReturnType<typeof this.status>> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
-            const scraper = this.scrapers[key]
+            const scraper: Scraper = this.scrapers[key]
 
             const listingCount = await this.prisma.listing.count({
                 where: {

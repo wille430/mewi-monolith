@@ -27,7 +27,7 @@ export class BytbilScraper extends Scraper {
         @Inject(PrismaService) prisma: PrismaService,
         @Inject(ConfigService) configService: ConfigService
     ) {
-        super(prisma, configService, ListingOrigin.Shpock, 'https://bytbil.com/', {})
+        super(prisma, configService, ListingOrigin.Bytbil, 'https://bytbil.com/', {})
     }
 
     get calculatedScrapeCount() {
