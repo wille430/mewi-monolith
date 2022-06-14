@@ -1,5 +1,6 @@
 import { BlippScraper } from './scrapers/blipp.scraper'
 import { BlocketScraper } from './scrapers/blocket.scraper'
+import { BytbilScraper } from './scrapers/bytbil.scraper'
 import { CitiboardScraper } from './scrapers/citiboard.scraper'
 import { SellpyScraper } from './scrapers/sellpy.scraper'
 import { ShpockScraper } from './scrapers/shpock.scraper'
@@ -12,6 +13,7 @@ const Scrapers = [
     BlocketScraper,
     CitiboardScraper,
     ShpockScraper,
+    BytbilScraper,
 ]
 
 export default Scrapers
