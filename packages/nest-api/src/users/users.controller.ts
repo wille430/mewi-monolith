@@ -53,8 +53,8 @@ export class UsersController {
     }
 
     @Get('me')
-    getMe(@GetUser() user: UserPayload) {
-        return _.omit(this.usersService.findOne(user.userId), ...hiddenUserFields)
+    async getMe(@GetUser() user: UserPayload) {
+        return _.omit(await this.usersService.findOne(user.userId), ...hiddenUserFields)
     }
 
     @Put('email')
