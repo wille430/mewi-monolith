@@ -155,6 +155,8 @@ export class ScrapersService {
             },
         })
 
+        if (!lastScrape) return
+
         if (Date.now() - lastScrape.createdAt.getTime() > this.startScraperAfterMs)
             await this.startAll()
     }

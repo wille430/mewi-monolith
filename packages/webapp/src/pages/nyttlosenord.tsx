@@ -2,7 +2,7 @@ import { Button, Container, TextField } from '@mewi/ui'
 import { FormEvent, ReactElement, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import axios from 'axios'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import Head from 'next/head'
 import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useAppDispatch } from '@/hooks'
@@ -39,7 +39,7 @@ const ForgottenPassword = () => {
             }),
         {
             onSuccess: () => {
-                router.push('/loggain')
+                Router.push('/loggain')
                 dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
             },
             onError: () => {

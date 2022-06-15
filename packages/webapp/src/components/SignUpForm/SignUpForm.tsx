@@ -1,6 +1,6 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 import { useAppDispatch } from '@/hooks'
 import { signup } from '@/store/user'
 
@@ -23,7 +23,6 @@ export const SignUpForm = () => {
     const [errors, setErrors] = useState(initErrors)
 
     const dispatch = useAppDispatch()
-    const Router = useRouter()
 
     const createAccount = () =>
         dispatch(signup(formData))

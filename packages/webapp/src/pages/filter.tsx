@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ListingSearchFilters } from '@wille430/common'
 import { Button } from '@mewi/ui'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 import ListingFiltersArea from '@/components/ListingFiltersArea/ListingFiltersArea'
 import { NextPageWithLayout } from '@/types/next'
 import { stringifySearchPath } from '@/hooks/useListingFilters'
@@ -9,10 +9,9 @@ import { BasicLayout } from '@/components/BasicLayout/BasicLayout'
 
 const Filter: NextPageWithLayout = () => {
     const [filters, setFilters] = useState<ListingSearchFilters>({})
-    const router = useRouter()
 
     const handleClick = () => {
-        router.push(stringifySearchPath(filters))
+        Router.push(stringifySearchPath(filters))
     }
 
     return (

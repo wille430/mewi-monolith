@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import _ from 'lodash'
 import { Dispatch, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 import styles from './WatcherCard.module.scss'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 import RemoveButton from './RemoveWatcherButton'
@@ -22,7 +22,6 @@ const WatcherCard = ({
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
-    const router = useRouter()
     const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
     const { watcher } = userWatcher
 
@@ -36,7 +35,7 @@ const WatcherCard = ({
             pathname = `/kategorier/${watcher.metadata.category}`.toLowerCase()
         }
 
-        router.push({
+        Router.push({
             pathname,
             search: queryString.stringify(filters),
         })

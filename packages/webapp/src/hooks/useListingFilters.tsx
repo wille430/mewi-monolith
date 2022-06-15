@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import queryString from 'query-string'
 import _ from 'lodash'
 import { keys } from 'ts-transformer-keys'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { Category } from '@mewi/prisma/index-browser'
 import { ParsedUrlQuery } from 'querystring'
 
@@ -77,7 +77,7 @@ export const ListingFiltersProvider = ({
     }
 
     const updateSearchParams = (filters: ListingFilters) => {
-        router.push(
+        Router.push(
             window.location.pathname +
                 '?' +
                 queryString.stringify(_.omit(filters, excludeInParams)),

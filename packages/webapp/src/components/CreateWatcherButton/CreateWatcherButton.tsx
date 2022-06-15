@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 import { PopUpModal } from '../PopUpModal/PopUpModal'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
@@ -24,7 +24,6 @@ export const CreateWatcherButton = ({
     ...rest
 }: CreateWatcherButtonProps) => {
     const [showModal, setShowModal] = useState(false)
-    const router = useRouter()
 
     const dispatch = useAppDispatch()
     const queryClient = useQueryClient()
@@ -80,7 +79,7 @@ export const CreateWatcherButton = ({
                     if (isLoggedIn) {
                         setShowModal(true)
                     } else {
-                        router.push('/loggain')
+                        Router.push('/loggain')
                     }
                 }}
                 disabled={mutation.isLoading}
