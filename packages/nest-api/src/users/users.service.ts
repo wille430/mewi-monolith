@@ -39,8 +39,10 @@ export class UsersService {
         })
     }
 
-    async findOne(id: string): Promise<User | null> {
-        return await this.prisma.user.findFirst({ where: { id: id } })
+    async findOne(id: string): Promise<User> | null {
+        return await this.prisma.user.findFirst({
+            where: { id: id },
+        })
     }
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {

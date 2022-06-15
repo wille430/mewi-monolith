@@ -14,7 +14,8 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { Role } from '@mewi/prisma'
+import { Role, User } from '@mewi/prisma'
+import _ from 'lodash'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -28,6 +29,8 @@ import { Public } from '@/common/decorators/public.decorator'
 import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { SuccessParam } from '@/common/enum/successParam'
+
+export const hiddenUserFields: (keyof User)[] = ['emailUpdate', 'password', 'passwordReset']
 
 @Controller('/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -51,7 +54,7 @@ export class UsersController {
 
     @Get('me')
     getMe(@GetUser() user: UserPayload) {
-        return this.usersService.findOne(user.userId)
+        return _.omit(this.usersService.findOne(user.userId), ...hiddenUserFields)
     }
 
     @Put('email')
