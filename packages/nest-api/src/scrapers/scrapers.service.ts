@@ -194,7 +194,7 @@ export class ScrapersService {
                         createdAt: 'desc',
                     },
                 })
-                .then((o) => o.createdAt),
+                .then((o) => o?.createdAt ?? undefined),
         }
     }
 

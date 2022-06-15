@@ -119,10 +119,16 @@ export const ScraperPanel = () => {
                                     </td>
 
                                     <td>
-                                        {formatDistance(new Date(status.last_scraped), new Date(), {
-                                            addSuffix: true,
-                                            locale: sv,
-                                        }).replace('ungefär', 'ca.')}
+                                        {status.last_scraped
+                                            ? formatDistance(
+                                                  new Date(status.last_scraped),
+                                                  new Date(),
+                                                  {
+                                                      addSuffix: true,
+                                                      locale: sv,
+                                                  }
+                                              ).replace('ungefär', 'ca.')
+                                            : 'Aldrig'}
                                     </td>
 
                                     <td>
