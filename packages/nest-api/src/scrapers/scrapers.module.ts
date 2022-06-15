@@ -14,18 +14,9 @@ import { ListingsModule } from '@/listings/listings.module'
     exports: [ListingsModule],
 })
 export class ScrapersModule implements OnModuleInit {
-    startScraperAfterMs = 60 * 60 * 1000
-
     constructor(private scraperService: ScrapersService, private prisma: PrismaService) {}
 
     async onModuleInit() {
-        const lastScrape = await this.prisma.scrapingLog.findFirst({
-            orderBy: {
-                createdAt: 'desc',
-            },
-        })
-
-        if (Date.now() - lastScrape.createdAt.getTime() > this.startScraperAfterMs)
-            await this.scraperService.startAll()
+        this.scraperService.conditionalScrape()
     }
 }

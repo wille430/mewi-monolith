@@ -26,6 +26,7 @@ export class ScrapersService {
      * @see {@link scraperPipeline}
      */
     pipelineIndex: number | null = null
+    startScraperAfterMs = 60 * 60 * 1000
 
     constructor(
         private blocketScraper: BlocketScraper,
@@ -144,6 +145,18 @@ export class ScrapersService {
                 error: 'Not Found',
             })
         }
+    }
+
+    @Cron('* */5 * * *')
+    async conditionalScrape() {
+        const lastScrape = await this.prisma.scrapingLog.findFirst({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        })
+
+        if (Date.now() - lastScrape.createdAt.getTime() > this.startScraperAfterMs)
+            await this.startAll()
     }
 
     async status(): Promise<Record<ListingOrigin, ScraperStatus>> {
