@@ -37,11 +37,11 @@ export const login = createAsyncThunk(
             const tokens: AuthTokens = await fetch('/api/login', {
                 method: 'post',
                 body: JSON.stringify({ email, password }),
-            }).then((res) => {
+            }).then(async (res) => {
                 if (res.ok) {
-                    return res.json()
+                    return await res.json()
                 } else {
-                    throw res.json()
+                    throw await res.json()
                 }
             })
 

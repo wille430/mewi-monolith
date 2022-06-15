@@ -97,9 +97,12 @@ export class BytbilScraper extends Scraper {
                                 .getAttribute('data-model-id')}`,
                             title: href.split('/')[2],
                             category: Category.FORDON,
-                            date: new Date(),
                             // TODO
-                            imageUrl: [ele.style.backgroundImage.split("('")[1]],
+                            // imageUrl: [
+                            //     ele
+                            //         .querySelector('.car-image')
+                            //         .style.backgroundImage.split("('")[1],
+                            // ],
                             redirectUrl: scrapeUrl.slice(0, -1) + href,
                             isAuction: false,
                             price: ele.querySelector('car-price-main')?.textContent
@@ -128,7 +131,12 @@ export class BytbilScraper extends Scraper {
             )
 
             await browser.close()
-            return rawListings
+
+            // Can't use date class inside puppeteer eval
+            return rawListings.map((o) => {
+                o.date = new Date()
+                return o
+            })
         } catch (e) {
             console.error(e)
             await browser.close()
@@ -140,6 +148,9 @@ export class BytbilScraper extends Scraper {
     reset(): void {
         super.reset()
         this._calculatedScrapeCount = undefined
+
+        console.log('Setting index to', this._typeIndex)
+
         this._typeIndex = 0
     }
 }

@@ -35,8 +35,11 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     useEffect(() => {
         setupAxios()
+    }, [user])
+
+    useEffect(() => {
         store.dispatch(fetchUser())
-    }, [user, router.events, router.asPath])
+    }, [router.events, router.asPath])
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store

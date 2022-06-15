@@ -20,6 +20,16 @@ describe('register', () => {
         cy.get('[data-testid=formSubmitButton]').click()
 
         cy.url().should('equal', Cypress.config('baseUrl') + '/minasidor/bevakningar')
+
+        // wait for side nav to load
+        cy.getBySel('side-nav')
+
+        cy.reload()
+
+        // wait for side nav to load
+        cy.getBySel('side-nav')
+        cy.location('pathname').should('equal', '/minasidor/bevakningar')
+        cy.location('pathname').should('not.equal', '/loggain')
     })
 
     it('should display too weak password message', () => {

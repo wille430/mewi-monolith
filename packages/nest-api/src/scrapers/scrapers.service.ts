@@ -133,11 +133,10 @@ export class ScrapersService {
 
             this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
 
-            return {
-                started: true,
-                listings_current: await scraper.getListingCount,
-                listings_remaining: await scraper.quantityToScrape,
-            }
+            const status = await this.statusOf(scraperName)
+            status.started = true
+
+            return status
         } else {
             throw new NotFoundException({
                 statusCode: 404,
@@ -151,22 +150,37 @@ export class ScrapersService {
         const allScraperStatus: Partial<ReturnType<typeof this.status>> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
-            const scraper: Scraper = this.scrapers[key]
-
-            const listingCount = await this.prisma.listing.count({
-                where: {
-                    origin: key as ListingOrigin,
-                },
-            })
-
-            allScraperStatus[key] = {
-                started: scraper.isScraping,
-                listings_current: listingCount,
-                listings_remaining: scraper.maxEntries - listingCount,
-            }
+            allScraperStatus[key] = await this.statusOf(key as ListingOrigin)
         }
 
         return allScraperStatus as ReturnType<typeof this.status>
+    }
+
+    async statusOf(target: ListingOrigin) {
+        const scraper: Scraper = this.scrapers[target]
+
+        const listingCount = await this.prisma.listing.count({
+            where: {
+                origin: target,
+            },
+        })
+
+        return {
+            started: scraper.isScraping,
+            listings_current: listingCount,
+            listings_remaining: scraper.maxEntries - listingCount,
+            last_scraped: await this.prisma.scrapingLog
+                .findFirst({
+                    where: {
+                        target: scraper.name,
+                    },
+                    take: 1,
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                })
+                .then((o) => o.createdAt),
+        }
     }
 
     async getLogs(dto: Prisma.ScrapingLogFindManyArgs) {

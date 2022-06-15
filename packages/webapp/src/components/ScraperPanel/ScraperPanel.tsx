@@ -1,10 +1,12 @@
 import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
-import { Button, ButtonProps } from '@mewi/ui'
+import { Button, ButtonProps, Table } from '@mewi/ui'
 import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ScraperStatus } from '@wille430/common'
-import { ScraperLogs } from '../ScraperLogs/ScraperLogs'
+import { formatDistance } from 'date-fns'
+import { sv } from 'date-fns/locale'
+import { GiPauseButton } from 'react-icons/gi'
 import StyledLoader from '../StyledLoader'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
@@ -22,6 +24,7 @@ export const ScraperPanel = () => {
                 started: false,
                 listings_current: 0,
                 listings_remaining: 0,
+                last_scraped: new Date(),
             }
         }
 
@@ -33,7 +36,7 @@ export const ScraperPanel = () => {
         () => axios.get('/scrapers/status').then((res) => res.data),
         {
             initialData: initialScraperStatus,
-            refetchInterval: 15000,
+            refetchInterval: 1000,
             refetchIntervalInBackground: true,
         }
     )
@@ -69,15 +72,16 @@ export const ScraperPanel = () => {
     }, [scraperStatus])
 
     return (
-        <div className='p-2 space-y-2'>
+        <div className='p-4 space-y-2'>
             <h4>Webbskrapare</h4>
-            <div className='space-y-4 rounded bg-gray-150 p-2'>
-                <table className='table-auto'>
+            <div className='rounded bg-gray-150 overflow-hidden'>
+                <Table className='table-auto'>
                     <thead>
-                        <tr className='text-gray-500 font-thin text-sm '>
+                        <tr>
                             <th className='w-32 text-left'>Skrapare</th>
                             <th>Produkter</th>
-                            <th></th>
+                            <th>Senast skrapad</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
 
@@ -108,23 +112,35 @@ export const ScraperPanel = () => {
                                         )}
                                     </td>
 
-                                    <td className='px-4'>
+                                    <td>
                                         {`${status.listings_current} / ${
                                             status.listings_current + status.listings_remaining
                                         }`}
                                     </td>
 
                                     <td>
-                                        {status.started === true && (
+                                        {formatDistance(new Date(status.last_scraped), new Date(), {
+                                            addSuffix: true,
+                                            locale: sv,
+                                        }).replace('ungefär', 'ca.')}
+                                    </td>
+
+                                    <td>
+                                        {status.started ? (
                                             <span className='text-green-600'>Skrapar...</span>
+                                        ) : (
+                                            <span className='text-gray-400 flex items-center'>
+                                                <GiPauseButton className='mr-2' />
+                                                Pausad
+                                            </span>
                                         )}
                                     </td>
                                 </tr>
                             )
                         })}
                     </tbody>
-                </table>
-                <div className='flex space-x-2'>
+                </Table>
+                <div className='flex space-x-2 p-4'>
                     <Button
                         label='Starta valda'
                         disabled={!Object.keys(selectedScrapers).length}
@@ -162,8 +178,6 @@ export const ScraperPanel = () => {
                         }
                     />
                 </div>
-
-                <ScraperLogs />
             </div>
         </div>
     )

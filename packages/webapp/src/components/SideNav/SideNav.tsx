@@ -8,7 +8,7 @@ const SideNav = () => {
     const { user } = useAppSelector((state) => state.user)
 
     return (
-        <Container className={styles.container}>
+        <Container className={styles.container} data-testid='side-nav'>
             <h4>Mina Sidor</h4>
 
             <ul>

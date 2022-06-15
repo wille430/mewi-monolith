@@ -1,0 +1,32 @@
+.table {
+    @apply table-fixed;
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        @apply text-white text-sm bg-gray-400;
+    }
+
+    td,
+    th {
+        padding: 0.4rem 0.75rem;
+        text-align: left;
+
+        border: 2px solid theme('colors.gray.400');
+        border-right: 0;
+        border-left: 0;
+
+        &:first-child {
+            border-left: 2px solid theme('colors.gray.400');
+        }
+
+        &:last-child {
+            border-right: 2px solid theme('colors.gray.400');
+        }
+    }
+
+    thead,
+    tbody {
+        width: 100%;
+    }
+}
