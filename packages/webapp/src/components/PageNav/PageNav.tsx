@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react'
+import { memo, MutableRefObject, useMemo } from 'react'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
 import { useListingFilters } from '@/hooks/useListingFilters'
@@ -11,12 +11,12 @@ interface PageNavProps {
 const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
     const { setFilters, filters } = useListingFilters()
 
-    const totalPages = Math.ceil(totalHits / 24) || 1
+    const totalPages = useMemo(() => Math.ceil(totalHits / 24) ?? 1, [totalHits])
 
     const scrollToAnchorEle = () =>
         anchorEle?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-    const RenderButtons = () => {
+    const RenderButtons = memo(() => {
         const maxNumButtons = 5
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
@@ -27,10 +27,10 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
         let startNum = 1
 
-        if (filters.page ?? 1 + 1 >= totalPages) {
+        if ((filters.page ?? 1) + 1 >= totalPages) {
             startNum = totalPages - totalNumButtons + 1
-        } else if (filters.page ?? 1 >= 3) {
-            startNum = filters.page ?? 1 - 2
+        } else if ((filters.page ?? 1) >= 3) {
+            startNum = (filters.page ?? 1) - 2
         }
 
         const showFirstPageSkip = startNum > 1
@@ -66,7 +66,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                                     <NavButton
                                         key={1}
                                         label={1}
-                                        selected={false}
+                                        selected={filters.page === 1 || !filters.page}
                                         onClick={handleClick}
                                     />
                                     <span key='dots-0' className='block mt-auto mx-2'>
@@ -89,7 +89,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                     })}
             </>
         )
-    }
+    })
 
     const changePage = (increment: number) => {
         const newPage = filters.page ?? 1 + increment
@@ -106,7 +106,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                 onClick={() => changePage(-1)}
                 icon={FiArrowLeft}
             />
-            {RenderButtons()}
+            <RenderButtons />
             <NavEndButton
                 data-testid='pageNavNext'
                 onClick={() => changePage(1)}
