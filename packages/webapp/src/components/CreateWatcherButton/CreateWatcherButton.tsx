@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { PopUpModal } from '../PopUpModal/PopUpModal'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
@@ -28,6 +28,7 @@ export const CreateWatcherButton = ({
     const dispatch = useAppDispatch()
     const queryClient = useQueryClient()
     const { isLoggedIn } = useAppSelector((state) => state.user)
+    const router = useRouter()
 
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
@@ -79,7 +80,7 @@ export const CreateWatcherButton = ({
                     if (isLoggedIn) {
                         setShowModal(true)
                     } else {
-                        Router.push('/loggain')
+                        router.push('/loggain')
                     }
                 }}
                 disabled={mutation.isLoading}

@@ -48,6 +48,8 @@ export const login = createAsyncThunk(
 
             setJwt(tokens)
 
+            await thunkApi.dispatch(fetchUser())
+
             return tokens
         } catch (e) {
             return thunkApi.rejectWithValue(e)

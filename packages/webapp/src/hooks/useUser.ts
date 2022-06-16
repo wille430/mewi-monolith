@@ -1,4 +1,3 @@
-import Router from 'next/router'
 import { useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '.'
 import { fetchUser } from '@/store/user'
@@ -16,7 +15,7 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
         if (!redirectTo || !isLoggedIn || isFirstRender.current) return
 
         if ((redirectTo && !redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
-            Router.push(redirectTo)
+            window.location.replace('/minasidor')
         }
     }, [user, redirectIfFound, redirectTo])
 }

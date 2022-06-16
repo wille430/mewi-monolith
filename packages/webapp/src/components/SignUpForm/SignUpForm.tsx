@@ -1,6 +1,6 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { useState } from 'react'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { useAppDispatch } from '@/hooks'
 import { signup } from '@/store/user'
 
@@ -23,12 +23,13 @@ export const SignUpForm = () => {
     const [errors, setErrors] = useState(initErrors)
 
     const dispatch = useAppDispatch()
+    const router = useRouter()
 
     const createAccount = () =>
         dispatch(signup(formData))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    Router.push('/minasidor')
+                    router.push('/minasidor')
                 } else {
                     throw res.payload
                 }

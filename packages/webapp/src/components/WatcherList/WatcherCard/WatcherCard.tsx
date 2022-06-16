@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import _ from 'lodash'
 import { Dispatch, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import styles from './WatcherCard.module.scss'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 import RemoveButton from './RemoveWatcherButton'
@@ -26,6 +26,7 @@ const WatcherCard = ({
     const { watcher } = userWatcher
 
     const scrollRef = useRef<HTMLDivElement>(null)
+    const router = useRouter()
 
     const handleSearchButtonClick = () => {
         const filters = _.omit(watcher.metadata, ['category'])
@@ -35,7 +36,7 @@ const WatcherCard = ({
             pathname = `/kategorier/${watcher.metadata.category}`.toLowerCase()
         }
 
-        Router.push({
+        router.push({
             pathname,
             search: queryString.stringify(filters),
         })
