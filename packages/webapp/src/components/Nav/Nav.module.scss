@@ -12,7 +12,7 @@
             display: none;
         }
 
-        & ul {
+        & > ul {
             @apply flex w-full space-x-4;
 
             & li {

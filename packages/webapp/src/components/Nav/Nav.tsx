@@ -16,13 +16,23 @@ const Nav = () => {
             <nav className={styles.nav} data-testid='nav'>
                 <ul>
                     {publicLinks.map((link, i) => (
-                        <NavLinkItem key={link.path} to={link.path} data-testid={`nav-link-${i}`}>
+                        <NavLinkItem
+                            key={link.path}
+                            to={link.path}
+                            data-testid={`nav-link-${i}`}
+                            sublinks={link.sublinks}
+                        >
                             {link.name}
                         </NavLinkItem>
                     ))}
                     <div className='flex-grow' />
                     {privateLinks.map((link) => (
-                        <NavLinkItem key={link.path} to={link.path} className={link.styling}>
+                        <NavLinkItem
+                            key={link.path}
+                            to={link.path}
+                            className={link.styling}
+                            sublinks={link.sublinks}
+                        >
                             {link.name}
                         </NavLinkItem>
                     ))}

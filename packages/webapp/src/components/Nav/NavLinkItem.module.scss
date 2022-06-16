@@ -1,0 +1,12 @@
+.link {
+    .menu {
+        display: none;
+    }
+
+    &:hover,
+    .menu:hover {
+        .menu {
+            display: block;
+        }
+    }
+}

@@ -3,6 +3,7 @@ import { ReactElement, useRef } from 'react'
 import Head from 'next/head'
 import { Listing } from '@mewi/prisma/index-browser'
 import { Container, HorizontalLine } from '@mewi/ui'
+import Link from 'next/link'
 import { withAuth } from '@/lib/auth'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { serialize } from '@/lib/serialize'
@@ -48,7 +49,7 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                         <h3>Mina gillade produkter</h3>
                         <HorizontalLine />
                     </Container.Header>
-                    <Container.Content className='space-y-4'>
+                    <Container.Content className='space-y-4 flex flex-col flex-grow'>
                         {_listings.current.map((listing, i) => (
                             <ListingRow
                                 key={listing.id}
@@ -56,6 +57,17 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                                 listing={listing}
                             />
                         ))}
+
+                        {!_listings.current.length && (
+                            <div className='flex flex-col justify-center items-center flex-grow mb-16 text-sm '>
+                                <span className='text-gray-400'>
+                                    Du har inte gillat några produkter ännu.
+                                </span>
+                                <div className='text-secondary underline'>
+                                    <Link href='/sok'>Bläddra bland produkter här</Link>
+                                </div>
+                            </div>
+                        )}
                     </Container.Content>
                 </Container>
             </main>
