@@ -28,4 +28,13 @@ describe('scraper', () => {
             expect(scraper['stringToCategoryMap']['frdon']).toEqual(Category.FORDON)
         })
     })
+
+    describe('#createId', () => {
+        it('should return same if input is the same', () => {
+            const string = faker.commerce.product()
+            const output = scraper.createId(string)
+            expect(scraper.createId(string)).toBe(output)
+            expect(scraper.createId(string)).toBe(output)
+        })
+    })
 })

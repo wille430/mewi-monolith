@@ -3,6 +3,7 @@ import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Prisma, ScraperTrigger, Category } from '@mewi/prisma'
 import { stringSimilarity } from '@wille430/common'
+import crypto from 'crypto'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -122,6 +123,12 @@ export class Scraper {
 
             // Insert to database
             for (const listing of scrapedListings) {
+                // check for duplicate
+                const exists = await this.prisma.listing
+                    .count({ where: { origin_id: listing.origin_id } })
+                    .then((o) => o > 0)
+                if (exists) continue
+
                 await this.prisma.listing
                     .create({
                         data: listing,
@@ -223,5 +230,13 @@ export class Scraper {
 
         this.stringToCategoryMap[string] = Category.OVRIGT
         return Category.OVRIGT
+    }
+
+    createId(string: string) {
+        const shasum = crypto.createHash('sha1')
+
+        shasum.update(string)
+
+        return `${this.name}-${shasum.digest('hex')}`
     }
 }
