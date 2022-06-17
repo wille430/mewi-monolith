@@ -25,7 +25,10 @@ export class TraderaScraper extends Scraper {
     itemsPerCategory: number
     limit = 50
 
-    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) configService: ConfigService
+    ) {
         super(prisma, configService, ListingOrigin.Tradera, 'https://www.tradera.com/', {
             scraperType: ScraperType.API_FETCH,
         })

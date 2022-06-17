@@ -13,7 +13,10 @@ export class BlippScraper extends Scraper {
     perPage = 40
     buildId?: string
 
-    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) configService: ConfigService
+    ) {
         super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {
             scraperType: ScraperType.API_FETCH,
         })
@@ -80,7 +83,7 @@ export class BlippScraper extends Scraper {
                 .get(url)
                 .then((res) => res.data.pageProps?.data?.payload.items)) as any[]
 
-            listings = rawListings.map(this.parseRawListing)
+            listings = rawListings.map((obj) => this.parseRawListing(obj))
         } catch (e) {
             console.log(e)
         }

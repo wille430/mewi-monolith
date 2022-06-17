@@ -13,7 +13,10 @@ export class BlocketScraper extends Scraper {
     page = 0
     limit = 50
 
-    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) configService: ConfigService
+    ) {
         super(prisma, configService, ListingOrigin.Blocket, 'https://www.blocket.se/', {
             scraperType: ScraperType.API_FETCH,
         })
@@ -66,7 +69,7 @@ export class BlocketScraper extends Scraper {
 
             const data = dom.data.data
 
-            const items: Prisma.ListingCreateInput[] = data.map(this.parseRawListing)
+            const items: Prisma.ListingCreateInput[] = data.map((obj) => this.parseRawListing(obj))
 
             this.page += 1
             return items

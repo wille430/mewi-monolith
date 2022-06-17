@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { vi } from 'vitest'
-import { Category } from '@mewi/prisma'
 import { BytbilScraper } from './bytbil.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
+import { validateListingTest } from '../tests/validate-listing-test'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
@@ -57,13 +57,7 @@ describe('Bytbil Scraper', () => {
             expect(scraped.length).toBeGreaterThan(0)
 
             for (const listing of scraped) {
-                expect(typeof listing.title).toBe('string')
-
-                expect(typeof listing.origin_id).toBe('string')
-                expect(listing.origin_id).toContain(scraper.name)
-
-                expect(listing.origin).toBe(scraper.name)
-                expect(Object.keys(Category)).toContain(listing.category)
+                validateListingTest(listing, scraper)
             }
         }, 20000)
 

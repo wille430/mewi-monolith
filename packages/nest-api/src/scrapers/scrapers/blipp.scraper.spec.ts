@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { CitiboardScraper } from './citiboard.scraper'
+import { BlippScraper } from './blipp.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
 import { validateListingTest } from '../tests/validate-listing-test'
 
-describe('Citiboard Scraper', () => {
-    let scraper: CitiboardScraper
+describe('Blipp Scraper', () => {
+    let scraper: BlippScraper
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [ConfigService, PrismaService, CitiboardScraper],
+            providers: [ConfigService, PrismaService, BlippScraper],
         }).compile()
 
-        scraper = module.get<CitiboardScraper>(CitiboardScraper)
+        scraper = module.get<BlippScraper>(BlippScraper)
         scraper.limit = 10
     })
 
@@ -23,11 +23,13 @@ describe('Citiboard Scraper', () => {
     })
 
     describe('#getListings', () => {
-        it('should fetch items', async () => {
-            const result = await scraper.getListings()
-            expect(Array.isArray(result)).toBe(true)
+        it('should fetch items and return valid array of objects', async () => {
+            const scraped = await scraper.getListings()
 
-            for (const listing of result) {
+            expect(Array.isArray(scraped)).toBe(true)
+            expect(scraped.length).toBeGreaterThan(0)
+
+            for (const listing of scraped) {
                 validateListingTest(listing, scraper)
             }
         }, 20000)

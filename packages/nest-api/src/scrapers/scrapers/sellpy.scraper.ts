@@ -11,7 +11,10 @@ export class SellpyScraper extends Scraper {
     page = 1
     limit = 50
 
-    constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) configService: ConfigService
+    ) {
         super(prisma, configService, ListingOrigin.Sellpy, 'https://www.sellpy.se/', {
             scraperType: ScraperType.API_FETCH,
         })

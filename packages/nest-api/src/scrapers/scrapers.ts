@@ -10,7 +10,7 @@ const Scrapers = [
     BlippScraper,
     TraderaScraper,
     SellpyScraper,
-    BlocketScraper,
+    BlippScraper,
     CitiboardScraper,
     ShpockScraper,
     BytbilScraper,
