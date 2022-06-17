@@ -1,8 +1,9 @@
 import { Inject } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
-import puppeteer from 'puppeteer'
-import { Scraper } from '../scraper'
+import { ListingOrigin, Prisma } from '@mewi/prisma'
+import { ElementHandle } from 'puppeteer'
+import { Scraper, ScraperEvalArgs } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BytbilScraper extends Scraper {
@@ -27,7 +28,12 @@ export class BytbilScraper extends Scraper {
         @Inject(PrismaService) prisma: PrismaService,
         @Inject(ConfigService) configService: ConfigService
     ) {
-        super(prisma, configService, ListingOrigin.Bytbil, 'https://bytbil.com/', {})
+        super(prisma, configService, ListingOrigin.Bytbil, 'https://bytbil.com/', {
+            scraperType: ScraperType.WEBSCRAPER,
+        })
+
+        // Webscraper specific options
+        this.webscraper.listingSelector = '.result-list-item'
     }
 
     get calculatedScrapeCount() {
@@ -60,97 +66,56 @@ export class BytbilScraper extends Scraper {
             return this.getListings()
         }
 
-        const listings = await this.scrapeType(countToScrape)
+        const scrapeUrl = this.scrapeUrl + this.vehicleTypes[this._typeIndex]
+        const listings = await this.evaluate(scrapeUrl, this.evalParseRawListing).then((arr) =>
+            arr.slice(0, countToScrape)
+        )
 
         this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]] += listings.length
 
         return listings
     }
 
-    async scrapeType(count: number) {
-        const scrapeUrl = this.scrapeUrl + this.vehicleTypes[this._typeIndex]
+    async evalParseRawListing(ele: ElementHandle<Element>, args: ScraperEvalArgs) {
+        const listing: Prisma.ListingCreateInput = await ele.evaluate(async (ele, args) => {
+            const href = ele.querySelector('.car-list-header > a').getAttribute('href')
 
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox'],
-        })
+            return {
+                origin_id: await (window as any).createId(
+                    ele.querySelector('.uk-grid').getAttribute('data-model-id')
+                ),
+                title: ele.querySelector('.car-list-header > a').textContent,
+                category: args.Category.FORDON,
+                // TODO
+                // imageUrl: [
+                //     ele
+                //         .querySelector('.car-image')
+                //         .style.backgroundImage.split("('")[1],
+                // ],
+                redirectUrl: args.scrapeUrl.slice(0, -1) + href,
+                isAuction: false,
+                price: ele.querySelector('.car-price-main')?.textContent
+                    ? {
+                          value:
+                              parseInt(
+                                  ele
+                                      .querySelector('.car-price-main')
+                                      .textContent.replace(/\D/g, '')
+                              ) ?? 0,
+                          currency: args.Currency.SEK,
+                      }
+                    : null,
+                origin: args.ListingOrigin.Bytbil,
+                date: args.date,
+            }
+        }, args)
 
-        try {
-            const page = await browser.newPage()
-            await page.goto(scrapeUrl)
-
-            const rawListings = await page.evaluate(
-                (count, Category, ListingOrigin, scrapeUrl) => {
-                    const items = document.querySelectorAll('.result-list-item')
-                    const rawListings: Prisma.ListingCreateInput[] = []
-                    let scrapedCount = 0
-
-                    items.forEach((ele) => {
-                        if (scrapedCount >= count) {
-                            return
-                        }
-
-                        const href = ele.querySelector('.car-list-header > a').getAttribute('href')
-
-                        rawListings.push({
-                            origin_id: `bytbil-${ele
-                                .querySelector('.uk-grid')
-                                .getAttribute('data-model-id')}`,
-                            title: href.split('/')[2],
-                            category: Category.FORDON,
-                            // TODO
-                            // imageUrl: [
-                            //     ele
-                            //         .querySelector('.car-image')
-                            //         .style.backgroundImage.split("('")[1],
-                            // ],
-                            redirectUrl: scrapeUrl.slice(0, -1) + href,
-                            isAuction: false,
-                            price: ele.querySelector('car-price-main')?.textContent
-                                ? {
-                                      value:
-                                          parseInt(
-                                              ele
-                                                  .querySelector('car-price-main')
-                                                  .textContent.replace(/\D/g, '')
-                                          ) ?? 0,
-                                      currency: Currency.SEK,
-                                  }
-                                : null,
-                            origin: ListingOrigin.Bytbil,
-                        })
-
-                        scrapedCount += 1
-                    })
-
-                    return rawListings
-                },
-                count,
-                Category,
-                ListingOrigin,
-                this.scrapeUrl
-            )
-
-            await browser.close()
-
-            // Can't use date class inside puppeteer eval
-            return rawListings.map((o) => {
-                o.date = new Date()
-                return o
-            })
-        } catch (e) {
-            console.error(e)
-            await browser.close()
-        }
-
-        return []
+        return listing
     }
 
     reset(): void {
         super.reset()
         this._calculatedScrapeCount = undefined
-
-        console.log('Setting index to', this._typeIndex)
-
         this._typeIndex = 0
     }
 }

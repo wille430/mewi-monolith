@@ -4,6 +4,7 @@ import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { SellpyListing } from '../types/sellpyListing'
 import { Scraper } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class SellpyScraper extends Scraper {
@@ -11,7 +12,9 @@ export class SellpyScraper extends Scraper {
     limit = 50
 
     constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
-        super(prisma, configService, ListingOrigin.Sellpy, 'https://www.sellpy.se/', {})
+        super(prisma, configService, ListingOrigin.Sellpy, 'https://www.sellpy.se/', {
+            scraperType: ScraperType.API_FETCH,
+        })
     }
 
     async getListings(): Promise<Prisma.ListingCreateInput[]> {
@@ -35,7 +38,7 @@ export class SellpyScraper extends Scraper {
 
             const listings: Prisma.ListingCreateInput[] = data.map(
                 (item: SellpyListing): Prisma.ListingCreateInput => ({
-                    origin_id: item.objectID,
+                    origin_id: this.createId(item.objectID),
                     title: item.metadata.brand ?? item.metadata.type,
                     category: Category.PERSONLIGT,
                     date: item.createdAt ? new Date(item.createdAt * 1000) : new Date(),

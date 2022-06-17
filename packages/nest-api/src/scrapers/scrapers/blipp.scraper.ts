@@ -4,6 +4,7 @@ import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
 import { Scraper } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends Scraper {
@@ -13,7 +14,9 @@ export class BlippScraper extends Scraper {
     buildId?: string
 
     constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
-        super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {})
+        super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {
+            scraperType: ScraperType.API_FETCH,
+        })
     }
 
     async apiUrl() {
@@ -77,40 +80,7 @@ export class BlippScraper extends Scraper {
                 .get(url)
                 .then((res) => res.data.pageProps?.data?.payload.items)) as any[]
 
-            listings = rawListings.map(
-                ({
-                    vehicle,
-                    published_date,
-                    cover_photo,
-                    entity_id,
-                    municipality,
-                }): Prisma.ListingCreateInput => ({
-                    origin_id: `${(vehicle.brand as string).toLowerCase()}_${vehicle.entity_id}`,
-                    title: vehicle.car_name,
-                    body: null,
-                    category: Category.FORDON,
-                    date: new Date(published_date),
-                    imageUrl: [cover_photo.full_path],
-                    redirectUrl: `https://blipp.se/fordon/${entity_id}`,
-                    isAuction: false,
-                    price: vehicle.monthly_cost?.car_info_valuation
-                        ? {
-                              value: parseFloat(
-                                  (vehicle.monthly_cost.car_info_valuation as string).replace(
-                                      ' ',
-                                      ''
-                                  )
-                              ),
-                              currency: Currency.SEK,
-                          }
-                        : null,
-                    region: municipality.name,
-                    // TODO: parse parameters
-                    parameters: [],
-                    origin: ListingOrigin.Blipp,
-                    auctionEnd: null,
-                })
-            )
+            listings = rawListings.map(this.parseRawListing)
         } catch (e) {
             console.log(e)
         }
@@ -133,6 +103,41 @@ export class BlippScraper extends Scraper {
 
         return items
     }
+
+    parseRawListing({
+        vehicle,
+        published_date,
+        cover_photo,
+        entity_id,
+        municipality,
+    }: Record<string, any>): Prisma.ListingCreateInput {
+        return {
+            origin_id: this.createId(
+                `${(vehicle.brand as string).toLowerCase().slice(0, 16)}_${vehicle.entity_id}`
+            ),
+            title: vehicle.car_name,
+            body: null,
+            category: Category.FORDON,
+            date: new Date(published_date),
+            imageUrl: [cover_photo.full_path],
+            redirectUrl: `https://blipp.se/fordon/${entity_id}`,
+            isAuction: false,
+            price: vehicle.monthly_cost?.car_info_valuation
+                ? {
+                      value: parseFloat(
+                          (vehicle.monthly_cost.car_info_valuation as string).replace(' ', '')
+                      ),
+                      currency: Currency.SEK,
+                  }
+                : null,
+            region: municipality.name,
+            // TODO: parse parameters
+            parameters: [],
+            origin: ListingOrigin.Blipp,
+            auctionEnd: null,
+        }
+    }
+
     reset(): void {
         super.reset()
         this.currentPage = 1

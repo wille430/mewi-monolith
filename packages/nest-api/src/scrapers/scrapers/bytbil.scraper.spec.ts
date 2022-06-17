@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { vi } from 'vitest'
+import { Category } from '@mewi/prisma'
 import { BytbilScraper } from './bytbil.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
 
-describe('Shpock Scraper', () => {
+describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
 
     beforeEach(async () => {
@@ -49,11 +50,21 @@ describe('Shpock Scraper', () => {
     })
 
     describe('#getListings', () => {
-        it('should fetch items', async () => {
+        it('should fetch items and return valid array of objects', async () => {
             const scraped = await scraper.getListings()
 
             expect(Array.isArray(scraped)).toBe(true)
             expect(scraped.length).toBeGreaterThan(0)
+
+            for (const listing of scraped) {
+                expect(typeof listing.title).toBe('string')
+
+                expect(typeof listing.origin_id).toBe('string')
+                expect(listing.origin_id).toContain(scraper.name)
+
+                expect(listing.origin).toBe(scraper.name)
+                expect(Object.keys(Category)).toContain(listing.category)
+            }
         }, 20000)
 
         it('should be able to fetch subsequently', async () => {
@@ -65,7 +76,7 @@ describe('Shpock Scraper', () => {
         }, 20000)
 
         it('should not throw error when fetching 10+ times', async () => {
-            scraper.scrapeType = vi.fn().mockResolvedValue(Array(scraper.limit))
+            scraper.evaluate = vi.fn().mockResolvedValue(Array(scraper.limit))
 
             for (let i = 0; i < 12; i++) {
                 expect(Array.isArray(await scraper.getListings())).toBe(true)

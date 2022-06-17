@@ -4,6 +4,7 @@ import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
 import { Scraper } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class ShpockScraper extends Scraper {
@@ -16,7 +17,9 @@ export class ShpockScraper extends Scraper {
         @Inject(PrismaService) prisma: PrismaService,
         @Inject(ConfigService) configService: ConfigService
     ) {
-        super(prisma, configService, ListingOrigin.Shpock, 'https://shpock.com/', {})
+        super(prisma, configService, ListingOrigin.Shpock, 'https://shpock.com/', {
+            scraperType: ScraperType.API_FETCH,
+        })
     }
 
     get token() {
@@ -76,12 +79,12 @@ export class ShpockScraper extends Scraper {
         this.offset += limit
 
         // format and return
-        return Promise.all(items.map((ele) => this.formatListing(ele)))
+        return Promise.all(items.map((ele) => this.parseListing(ele)))
     }
 
-    async formatListing(item: Record<string, any>): Promise<Prisma.ListingCreateInput> {
+    async parseListing(item: Record<string, any>): Promise<Prisma.ListingCreateInput> {
         return {
-            origin_id: `shpock-${item.id}`,
+            origin_id: this.createId(item.id),
             title: item.title,
             body: item.descrpition,
             // TODO: fix category

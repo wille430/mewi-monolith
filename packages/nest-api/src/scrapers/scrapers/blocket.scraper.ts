@@ -6,6 +6,7 @@ import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { Scraper } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlocketScraper extends Scraper {
@@ -13,7 +14,9 @@ export class BlocketScraper extends Scraper {
     limit = 50
 
     constructor(@Inject(PrismaService) prisma: PrismaService, configService: ConfigService) {
-        super(prisma, configService, ListingOrigin.Blocket, 'https://www.blocket.se/', {})
+        super(prisma, configService, ListingOrigin.Blocket, 'https://www.blocket.se/', {
+            scraperType: ScraperType.API_FETCH,
+        })
     }
 
     async getBearerToken(): Promise<string | null> {
@@ -63,30 +66,7 @@ export class BlocketScraper extends Scraper {
 
             const data = dom.data.data
 
-            const items: Prisma.ListingCreateInput[] = data.map(
-                (item: BlocketListing): Prisma.ListingCreateInput => ({
-                    origin_id: item.ad_id,
-                    title: item.subject,
-                    body: item.body,
-                    category: this.parseCategory(item.category[0].name),
-                    date: new Date(item.list_time),
-                    imageUrl: item.images
-                        ? item.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
-                        : [],
-                    redirectUrl: item.share_url,
-                    isAuction: false,
-                    price: item.price
-                        ? {
-                              value: parseFloat(item.price.value),
-                              currency: Currency.SEK,
-                          }
-                        : null,
-                    region: this.parseRegion(item.location),
-                    parameters: this.parseParameters(item.parameter_groups),
-                    origin: ListingOrigin.Blocket,
-                    auctionEnd: null,
-                })
-            )
+            const items: Prisma.ListingCreateInput[] = data.map(this.parseRawListing)
 
             this.page += 1
             return items
@@ -123,6 +103,31 @@ export class BlocketScraper extends Scraper {
         }
 
         return parameters
+    }
+
+    parseRawListing(item: Record<string, any>): Prisma.ListingCreateInput {
+        return {
+            origin_id: this.createId(item.ad_id),
+            title: item.subject,
+            body: item.body,
+            category: this.parseCategory(item.category[0].name),
+            date: new Date(item.list_time),
+            imageUrl: item.images
+                ? item.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
+                : [],
+            redirectUrl: item.share_url,
+            isAuction: false,
+            price: item.price
+                ? {
+                      value: parseFloat(item.price.value),
+                      currency: Currency.SEK,
+                  }
+                : null,
+            region: this.parseRegion(item.location),
+            parameters: this.parseParameters(item.parameter_groups),
+            origin: ListingOrigin.Blocket,
+            auctionEnd: null,
+        }
     }
 
     reset(): void {
