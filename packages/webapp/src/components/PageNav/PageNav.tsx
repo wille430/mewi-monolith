@@ -36,6 +36,8 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
         const showFirstPageSkip = startNum > 1
         const showLastPageSkip = totalPages > startNum + maxNumButtons - 1
 
+        if (!totalNumButtons) return null
+
         return (
             <>
                 {Array(totalNumButtons)
@@ -102,12 +104,14 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
     return (
         <div className='flex w-full max-w-full flex-wrap justify-center py-6' data-testid='pageNav'>
             <NavEndButton
+                key='page-prev'
                 data-testid='pageNavPrev'
                 onClick={() => changePage(-1)}
                 icon={FiArrowLeft}
             />
-            <RenderButtons />
+            <RenderButtons key='pages' />
             <NavEndButton
+                key='page-next'
                 data-testid='pageNavNext'
                 onClick={() => changePage(1)}
                 icon={FiArrowRight}

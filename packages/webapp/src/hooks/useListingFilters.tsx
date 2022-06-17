@@ -62,6 +62,10 @@ export const ListingFiltersProvider = ({
     excludeInParams?: Array<keyof Partial<ListingFilters>>
 }) => {
     const Context = getListingFilterContext()
+    const _defaults = {
+        page: 1,
+        ...defaults,
+    }
 
     const router = useRouter()
     const isFirstRender = useRef(true)
@@ -70,7 +74,7 @@ export const ListingFiltersProvider = ({
         return !_.isEqual(
             {
                 ...parseSearchParams(router.query, excludeInParams),
-                ...defaults,
+                ..._defaults,
             },
             _filters
         )
@@ -90,15 +94,18 @@ export const ListingFiltersProvider = ({
 
     const [_filters, _setFilters] = React.useState<ListingFilters>({
         ...initialFilters,
-        ...defaults,
+        ..._defaults,
         ...parseSearchParams(router.query, excludeInParams),
     })
     const filters = React.useRef(_filters)
     const setFilters: ListingFiltersContext['setFilters'] = (value, force = false) => {
         if (force) {
             if (typeof value === 'function') {
-                filters.current = value(filters.current)
+                const newValue = value(filters.current)
+                newValue.page = 1
+                filters.current = newValue
             } else {
+                value.page = 1
                 filters.current = value
             }
             updateSearchParams(filters.current)
@@ -123,7 +130,7 @@ export const ListingFiltersProvider = ({
         if (shouldUpdate()) {
             const newFilters = {
                 ...parseSearchParams(router.query, excludeInParams),
-                ...defaults,
+                ..._defaults,
             }
 
             filters.current = newFilters
@@ -145,7 +152,7 @@ export const ListingFiltersProvider = ({
                 filters: _filters,
                 debouncedFilters: filters.current,
                 setFilters,
-                defaults,
+                defaults: _defaults,
             }}
         >
             {children}

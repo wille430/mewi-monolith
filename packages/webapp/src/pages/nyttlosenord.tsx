@@ -1,7 +1,7 @@
 import { Button, Container, TextField } from '@mewi/ui'
 import { FormEvent, ReactElement, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import axios from 'axios'
+import { instance } from '@/lib/axios'
 import Router, { useRouter } from 'next/router'
 import Head from 'next/head'
 import { pushToSnackbar } from '@/store/snackbar/creators'
@@ -31,7 +31,7 @@ const ForgottenPassword = () => {
 
     const mutation = useMutation(
         async () =>
-            axios.put('/users/password', {
+            instance.put('/users/password', {
                 token,
                 password: formData.password,
                 passwordConfirm: formData.repassword,

@@ -1,12 +1,11 @@
 import { ACCESS_TOKEN_COOKIE, AuthTokens, REFRESH_TOKEN_COOKIE } from '@wille430/common'
-import { setHeaders } from './axios'
+import { updateAxios } from './axios'
 
 export const setJwt = (tokens: AuthTokens | undefined = undefined) => {
     window.sessionStorage.setItem(ACCESS_TOKEN_COOKIE, tokens?.access_token ?? '')
     window.localStorage.setItem(REFRESH_TOKEN_COOKIE, tokens?.refresh_token ?? '')
 
-    // update axios
-    setHeaders()
+    updateAxios()
 }
 
 export const getJwt = (): AuthTokens | undefined => {

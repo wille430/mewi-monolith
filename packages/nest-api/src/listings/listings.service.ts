@@ -123,7 +123,7 @@ export class ListingsService {
                     break
                 case 'dateGte':
                     args.where.date = {
-                        gte: new Date(+value),
+                        gte: new Date(value),
                     }
                     break
             }

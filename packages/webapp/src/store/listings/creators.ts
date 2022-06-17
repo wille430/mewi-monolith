@@ -1,9 +1,9 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { Listing } from '@mewi/prisma'
-import axios from 'axios'
 import { ListingSearchFilters } from '@wille430/common'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
+import { instance } from '@/lib/axios'
 
 // TODO: allow Listing or ID as args, if ID fetch listing
 export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listing: Listing) => {
@@ -27,7 +27,7 @@ export const likeListing = createAsyncThunk(
     ListingsActionTypes.LIKE,
     async ({ listingId, userId }: { listingId: string; userId: string }, thunkAPI) => {
         try {
-            await axios.put(`/listings/${listingId}/like`).catch((e) => {
+            await instance.put(`/listings/${listingId}/like`).catch((e) => {
                 throw e
             })
             return { listingId, userId }
@@ -41,7 +41,7 @@ export const unlikeListing = createAsyncThunk(
     ListingsActionTypes.UNLIKE,
     async ({ listingId, userId }: { listingId: string; userId: string }, thunkAPI) => {
         try {
-            await axios.put(`/listings/${listingId}/unlike`).catch((e) => {
+            await instance.put(`/listings/${listingId}/unlike`).catch((e) => {
                 throw e
             })
             return { listingId, userId }
@@ -55,7 +55,7 @@ export const searchListings = createAsyncThunk(
     ListingsActionTypes.FETCH_SEARCH,
     async (filters: ListingSearchFilters, thunkAPI) => {
         try {
-            return await axios
+            return await instance
                 .get<{ hits: Listing[]; totalHits: number }>(
                     '/listings?' + queryString.stringify(filters)
                 )

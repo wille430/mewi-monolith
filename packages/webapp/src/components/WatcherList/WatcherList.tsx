@@ -2,7 +2,7 @@ import { Container, HorizontalLine } from '@mewi/ui'
 import { ReactElement, useState } from 'react'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'
-import axios from 'axios'
+import { instance } from '@/lib/axios'
 import styles from './WatcherList.module.scss'
 import WatcherPopUpButton from './WatcherPopUpButton'
 import WatcherCard from './WatcherCard/WatcherCard'
@@ -16,7 +16,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     const { data } = useQuery(
         'watchers',
-        () => axios.get<PopulatedUserWatcher[]>('/users/me/watchers').then((res) => res.data),
+        () => instance.get<PopulatedUserWatcher[]>('/users/me/watchers').then((res) => res.data),
         {
             initialData: watchers ?? [],
             enabled: false,

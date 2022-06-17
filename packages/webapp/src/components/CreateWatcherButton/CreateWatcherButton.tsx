@@ -1,10 +1,10 @@
 import { Button, ButtonProps } from '@mewi/ui'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
 import { PopUpModal } from '../PopUpModal/PopUpModal'
+import { instance } from '@/lib/axios'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
 
@@ -32,7 +32,7 @@ export const CreateWatcherButton = ({
 
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
-            return axios
+            return instance
                 .post<PopulatedUserWatcher>('/users/me/watchers', { metadata: newWatcher })
                 .then((res) => res.data)
         },

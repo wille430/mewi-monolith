@@ -2,7 +2,7 @@ import { Button, TextField } from '@mewi/ui'
 import { capitalize } from 'lodash'
 import { Role, User } from '@mewi/prisma/index-browser'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import axios from 'axios'
+import { instance } from '@/lib/axios'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
@@ -13,7 +13,7 @@ export function EditRolePanel() {
 
     const { data, refetch, isLoading } = useQuery(
         'users',
-        () => axios.get<User[]>(`/users?email=${email}`).then((res) => res.data),
+        () => instance.get<User[]>(`/users?email=${email}`).then((res) => res.data),
         {
             refetchOnMount: false,
             refetchOnReconnect: false,
@@ -70,7 +70,7 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
 
     const updateUserMutation = useMutation(
         ({ user, newRole }: { user: User; newRole: Role }) =>
-            axios.patch('/users/' + user.id, {
+            instance.patch('/users/' + user.id, {
                 roles: [...user.roles, newRole],
             }),
         {
@@ -88,7 +88,7 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
 
     const deleteUserRoleMutation = useMutation(
         ({ user, roleToDelete }: { user: User; roleToDelete: Role }) =>
-            axios.patch('/users/' + user.id, {
+            instance.patch('/users/' + user.id, {
                 roles: user.roles.filter((x) => x != roleToDelete),
             }),
         {

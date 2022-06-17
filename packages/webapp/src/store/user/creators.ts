@@ -1,10 +1,9 @@
 import { User } from '@mewi/prisma/index-browser'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { AuthTokens } from '@wille430/common'
-import axios from 'axios'
 import { UserActionTypes } from './types'
+import { instance, updateAxios } from '@/lib/axios'
 import { setJwt } from '@/lib/jwt'
-import { setHeaders } from '@/lib/axios'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
@@ -17,7 +16,7 @@ export const setLoggedInStatus = createAction(
 
 export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, thunkApi) => {
     try {
-        return (await axios.get('/users/me').then((res) => res.data)) as User
+        return (await instance.get('/users/me').then((res) => res.data)) as User
     } catch (e) {
         await thunkApi.dispatch(logout())
 
@@ -27,7 +26,7 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
     await fetch('/api/logout')
-    setHeaders()
+    updateAxios()
     return
 })
 

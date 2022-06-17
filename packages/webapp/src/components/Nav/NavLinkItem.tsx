@@ -29,7 +29,7 @@ const NavLinkItem = ({ children, to, sublinks, ...props }: NavLinkItemProps) => 
             {_sublinks?.length ? (
                 <HoverMenu className={styles.menu}>
                     {_sublinks.map((link) => (
-                        <NavLinkItem to={link.path} sublinks={link.sublinks}>
+                        <NavLinkItem key={link.path} to={link.path} sublinks={link.sublinks}>
                             {link.name}
                         </NavLinkItem>
                     ))}

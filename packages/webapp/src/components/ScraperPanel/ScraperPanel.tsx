@@ -1,6 +1,5 @@
 import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
 import { Button, ButtonProps, Table } from '@mewi/ui'
-import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ScraperStatus } from '@wille430/common'
@@ -8,6 +7,7 @@ import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { GiPauseButton } from 'react-icons/gi'
 import StyledLoader from '../StyledLoader'
+import { instance } from '@/lib/axios'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
 export const ScraperPanel = () => {
@@ -33,7 +33,7 @@ export const ScraperPanel = () => {
 
     const { data: scraperStatus } = useQuery<Record<ListingOrigin, ScraperStatus>>(
         'scrapers',
-        () => axios.get('/scrapers/status').then((res) => res.data),
+        () => instance.get('/scrapers/status').then((res) => res.data),
         {
             initialData: initialScraperStatus,
             refetchInterval: 1000,
@@ -43,7 +43,7 @@ export const ScraperPanel = () => {
 
     const startScrapers = useMutation(
         () =>
-            axios
+            instance
                 .post('/scrapers/start', {
                     scrapers: Object.keys(selectedScrapers).filter(
                         (key) => selectedScrapers[key] === true
@@ -197,7 +197,7 @@ export const DeleteButton = ({
     const mutation = useMutation(
         async () =>
             // Delete listings from selected origins
-            await axios.delete('/listings', {
+            await instance.delete('/listings', {
                 data: {
                     where: {
                         origin: {

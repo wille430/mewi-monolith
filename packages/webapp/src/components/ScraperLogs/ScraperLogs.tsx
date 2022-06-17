@@ -1,8 +1,8 @@
 import { ListingOrigin, Prisma, ScrapingLog } from '@mewi/prisma/index-browser'
-import axios from 'axios'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { Chart, AxisOptions, UserSerie } from 'react-charts'
+import { instance } from '@/lib/axios'
 
 type Series = {
     label: string
@@ -13,7 +13,7 @@ export const ScraperLogs = () => {
     const { data, isLoading } = useQuery(
         'scraperLogs',
         (): Promise<Series[]> =>
-            axios
+            instance
                 .post<ScrapingLog[]>('/scrapers/logs', {
                     where: {
                         createdAt: {

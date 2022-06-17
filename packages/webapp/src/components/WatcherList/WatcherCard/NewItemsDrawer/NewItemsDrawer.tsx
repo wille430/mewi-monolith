@@ -3,10 +3,10 @@ import { PopulatedUserWatcher } from '@wille430/common'
 import { Listing } from '@mewi/prisma'
 // import { openListing } from '@/store/search/creators'
 import { useQuery } from 'react-query'
-import axios from 'axios'
 import queryString from 'query-string'
 import classNames from 'classnames'
 import styles from './NewItemsDrawer.module.scss'
+import { instance } from '@/lib/axios'
 import { openListing } from '@/store/listings'
 import { useAppDispatch } from '@/hooks'
 import StyledLoader from '@/components/StyledLoader'
@@ -35,7 +35,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     } = useQuery(
         ['watcherListings', { id: watcher.id }],
         async () =>
-            await axios
+            await instance
                 .get(
                     '/listings?' +
                         queryString.stringify({

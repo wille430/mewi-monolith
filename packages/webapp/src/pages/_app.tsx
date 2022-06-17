@@ -6,11 +6,10 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Store, wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
-import { setupAxios } from '@/lib/axios'
+import { instance, updateAxios } from '@/lib/axios'
 import { fetchUser } from '@/store/user'
 
 type NextPageWithLayout = NextPage & {
@@ -34,7 +33,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const { user } = store.getState().user
 
     useEffect(() => {
-        setupAxios()
+        updateAxios()
     }, [user])
 
     useEffect(() => {
@@ -43,7 +42,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store
-        window.axios = axios
+        window.axios = instance
     }
 
     return (

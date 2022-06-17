@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { motion, HTMLMotionProps, useAnimation, Variants } from 'framer-motion'
 import { Listing } from '@mewi/prisma/index-browser'
-import axios from 'axios'
 import { useMutation } from 'react-query'
 import { useAppSelector } from '../../hooks'
+import { instance } from '@/lib/axios'
 
 type LikeButtonProps = HTMLMotionProps<'button'> & {
     liked?: boolean
@@ -21,10 +21,10 @@ export const ListingLikeButton = ({
         setLiked(user && listing.likedByUserIDs.includes(user.id))
     }, [listing.likedByUserIDs, user])
 
-    const likeMutation = useMutation(() => axios.put(`/listings/${listing.id}/like`), {
+    const likeMutation = useMutation(() => instance.put(`/listings/${listing.id}/like`), {
         onMutate: () => setLiked(true),
     })
-    const unlikeMutation = useMutation(() => axios.put(`/listings/${listing.id}/unlike`), {
+    const unlikeMutation = useMutation(() => instance.put(`/listings/${listing.id}/unlike`), {
         onMutate: () => setLiked(false),
     })
 

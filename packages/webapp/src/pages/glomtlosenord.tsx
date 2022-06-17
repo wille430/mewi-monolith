@@ -1,5 +1,5 @@
 import { Button, Container, TextField } from '@mewi/ui'
-import axios from 'axios'
+import { instance } from '@/lib/axios'
 import Link from 'next/link'
 import { FormEvent, ReactElement, useState } from 'react'
 import { useMutation } from 'react-query'
@@ -16,7 +16,7 @@ const ForgottenPassword = () => {
     const [email, setEmail] = useState<string | undefined>()
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const mutation = useMutation(async () => axios.put('/users/password', { email }), {
+    const mutation = useMutation(async () => instance.put('/users/password', { email }), {
         onSuccess: () => {
             setSuccessMessage(
                 `Ett mejl har skickats till ${email} med en lösenordsåterställningslänk`
