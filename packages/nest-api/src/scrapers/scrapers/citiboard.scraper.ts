@@ -10,6 +10,7 @@ export class CitiboardScraper extends Scraper {
     baseUrl = 'https://citiboard.se'
     scrapeUrl = 'https://citiboard.se/hela-sverige'
     limit = 60
+    offset = 0
 
     constructor(
         @Inject(PrismaService) prisma: PrismaService,
@@ -18,14 +19,20 @@ export class CitiboardScraper extends Scraper {
         super(prisma, configService, ListingOrigin.Citiboard, 'https://www.blipp.se/', {
             scraperType: ScraperType.WEBSCRAPER,
         })
+
+        this.webscraper.listingSelector = 'article.gridItem'
     }
 
     nextPageUrl() {
-        return this.scrapeUrl + `?offset=${this.listingScraped}`
+        return this.scrapeUrl + `?offset=${this.offset}`
     }
 
-    async getListings(): Promise<Prisma.ListingCreateInput[]> {
-        return this.evaluate(this.nextPageUrl(), this.evalParseRawListing)
+    getListings(): Promise<Prisma.ListingCreateInput[]> {
+        const listings = this.evaluate(this.nextPageUrl(), this.evalParseRawListing)
+
+        this.offset += this.limit
+
+        return listings
     }
 
     async evalParseRawListing(ele: ElementHandle<Element>, args: ScraperEvalArgs) {
@@ -39,7 +46,7 @@ export class CitiboardScraper extends Scraper {
                 redirectUrl:
                     args.scrapeUrl + ele.querySelector('.gridTitle a').getAttribute('href'),
                 isAuction: false,
-                price: {
+                price: ele.querySelector('.gridPrice') && {
                     value: parseFloat(ele.querySelector('.gridPrice').textContent),
                     currency: args.Currency.SEK,
                 },

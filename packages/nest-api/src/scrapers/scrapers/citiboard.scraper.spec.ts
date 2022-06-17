@@ -26,6 +26,7 @@ describe('Citiboard Scraper', () => {
         it('should fetch items', async () => {
             const result = await scraper.getListings()
             expect(Array.isArray(result)).toBe(true)
+            expect(result.length).toBeGreaterThan(0)
 
             for (const listing of result) {
                 validateListingTest(listing, scraper)
