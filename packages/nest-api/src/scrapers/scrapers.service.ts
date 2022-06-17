@@ -31,7 +31,7 @@ export class ScrapersService {
     constructor(
         private blocketScraper: BlocketScraper,
         private traderaScraper: TraderaScraper,
-        private blippScraper: BlocketScraper,
+        private blippScraper: BlippScraper,
         private sellpyScraper: SellpyScraper,
         private citiboardScraper: CitiboardScraper,
         private shpockScraper: ShpockScraper,
