@@ -135,8 +135,8 @@ export class Scraper {
         this.listingScraped = 0
         this.status = ScraperStatus.SCRAPING
 
-        let scrapedListings = await this.getListings()
         let remainingEntries = await this.quantityToScrape
+        let scrapedListings = remainingEntries ? await this.getListings() : []
         const errors: Record<string, string> = {}
 
         let i = 0
@@ -147,25 +147,27 @@ export class Scraper {
 
             // Insert to database
             for (const listing of scrapedListings) {
-                // check for duplicate
-                const exists = await this.prisma.listing
-                    .count({ where: { origin_id: listing.origin_id } })
-                    .then((o) => o > 0)
-                if (exists) continue
+                // check for duplicates
+                const count = await this.prisma.listing.count({
+                    where: { origin_id: listing.origin_id },
+                })
 
-                await this.prisma.listing
-                    .create({
-                        data: listing,
-                    })
-                    .catch((e) => {
-                        console.log(e.message)
-                        errors[i] = e
-                    })
+                if (count === 0) {
+                    await this.prisma.listing
+                        .create({
+                            data: listing,
+                        })
+                        .catch((e) => {
+                            console.log(e.message)
+                            errors[i] = e
+                        })
+
+                    remainingEntries -= 1
+                    this.listingScraped += 1
+                }
             }
 
             scrapedListings = await this.getListings()
-            remainingEntries -= scrapedListings.length
-            this.listingScraped += scrapedListings.length
             i += 1
         }
 
