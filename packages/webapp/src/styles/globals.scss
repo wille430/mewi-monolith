@@ -106,4 +106,8 @@ caption {
 /* REACT SELECT */
 .Select__control {
     min-height: 42px !important;
+
+    & > span {
+        z-index: 2;
+    }
 }
