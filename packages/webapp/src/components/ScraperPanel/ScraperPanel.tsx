@@ -2,13 +2,36 @@ import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
 import { Button, ButtonProps, Table } from '@mewi/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { ScraperStatusReport } from '@wille430/common'
+import { ScraperStatus, ScraperStatusReport } from '@wille430/common'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { GiPauseButton } from 'react-icons/gi'
+import { BsSkipForward } from 'react-icons/bs'
+import { IoMdHammer } from 'react-icons/io'
 import StyledLoader from '../StyledLoader'
 import { instance } from '@/lib/axios'
 import Checkbox from '@/components/Checkbox/Checkbox'
+
+const scraperStatusIconMap: Record<ScraperStatus, JSX.Element> = {
+    IDLE: (
+        <>
+            <GiPauseButton className='mr-2' />
+            Pausad
+        </>
+    ),
+    QUEUED: (
+        <>
+            <BsSkipForward className='mr-2' />
+            Köad
+        </>
+    ),
+    SCRAPING: (
+        <>
+            <IoMdHammer className='mr-2' />
+            Skrapar...
+        </>
+    ),
+}
 
 export const ScraperPanel = () => {
     const queryClient = useQueryClient()
@@ -23,6 +46,7 @@ export const ScraperPanel = () => {
             scraperStatus[key] = {
                 started: false,
                 listings_current: 0,
+                status: ScraperStatus.IDLE,
                 listings_remaining: 0,
                 last_scraped: new Date(),
             }
@@ -132,14 +156,9 @@ export const ScraperPanel = () => {
                                     </td>
 
                                     <td>
-                                        {status.started ? (
-                                            <span className='text-green-600'>Skrapar...</span>
-                                        ) : (
-                                            <span className='text-gray-400 flex items-center'>
-                                                <GiPauseButton className='mr-2' />
-                                                Pausad
-                                            </span>
-                                        )}
+                                        <span className='text-gray-400 flex items-center'>
+                                            {scraperStatusIconMap[status.status]}
+                                        </span>
                                     </td>
                                 </tr>
                             )
