@@ -2,7 +2,7 @@ import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Prisma, ScraperTrigger, Category, Currency } from '@mewi/prisma'
-import { stringSimilarity } from '@wille430/common'
+import { ScraperStatus, stringSimilarity } from '@wille430/common'
 import puppeteer, { ElementHandle } from 'puppeteer'
 import crypto from 'crypto'
 import { StartScraperOptions } from './types/startScraperOptions'
@@ -65,7 +65,7 @@ export class Scraper {
      */
     deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
     /**
-     * @param started - Whether or not the scraper is running
+     * @param isScraping - Whether or not the scraper is running
      */
     isScraping = false
 
@@ -74,6 +74,7 @@ export class Scraper {
     private stringToCategoryMap = {}
 
     scraperType: ScraperType
+    status: ScraperStatus
 
     // Webscraper specific properties
     webscraper = {
@@ -97,6 +98,7 @@ export class Scraper {
 
         this.useRobots = useRobots ?? this.useRobots
         this.scraperType = scraperType ?? ScraperType.API_FETCH
+        this.status = ScraperStatus.IDLE
     }
 
     async checkRobots() {
@@ -131,6 +133,7 @@ export class Scraper {
     async start({ triggeredBy }: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }) {
         this.isScraping = true
         this.listingScraped = 0
+        this.status = ScraperStatus.SCRAPING
 
         let scrapedListings = await this.getListings()
         let remainingEntries = await this.quantityToScrape
@@ -178,6 +181,7 @@ export class Scraper {
         })
 
         this.isScraping = false
+        this.status = ScraperStatus.IDLE
         this._quantityToScrape = null
         this.listingCount += this.listingScraped
     }

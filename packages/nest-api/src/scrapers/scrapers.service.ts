@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
 import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
-import { ScraperStatus } from '@wille430/common'
+import { ScraperStatus, ScraperStatusReport } from '@wille430/common'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
 import { BlocketScraper } from './scrapers/blocket.scraper'
 import { SellpyScraper } from './scrapers/sellpy.scraper'
@@ -15,9 +15,6 @@ import { ShpockScraper } from './scrapers/shpock.scraper'
 import { BytbilScraper } from './scrapers/bytbil.scraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
-const pipelineQueue: RunPipelineEvent[] = []
-const scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
-
 @Injectable()
 export class ScrapersService {
     scrapers: Record<ListingOrigin, Scraper>
@@ -27,17 +24,19 @@ export class ScrapersService {
      */
     pipelineIndex: number | null = null
     startScraperAfterMs = 60 * 60 * 1000
+    pipelineQueue: RunPipelineEvent[] = []
+    scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
 
     constructor(
-        private blocketScraper: BlocketScraper,
-        private traderaScraper: TraderaScraper,
-        private blippScraper: BlippScraper,
-        private sellpyScraper: SellpyScraper,
-        private citiboardScraper: CitiboardScraper,
-        private shpockScraper: ShpockScraper,
-        private bytbilScraper: BytbilScraper,
-        private prisma: PrismaService,
-        private eventEmitter: EventEmitter2
+        @Inject(BlocketScraper) private blocketScraper: BlocketScraper,
+        @Inject(TraderaScraper) private traderaScraper: TraderaScraper,
+        @Inject(BlippScraper) private blippScraper: BlippScraper,
+        @Inject(SellpyScraper) private sellpyScraper: SellpyScraper,
+        @Inject(CitiboardScraper) private citiboardScraper: CitiboardScraper,
+        @Inject(ShpockScraper) private shpockScraper: ShpockScraper,
+        @Inject(BytbilScraper) private bytbilScraper: BytbilScraper,
+        @Inject(PrismaService) private prisma: PrismaService,
+        @Inject(EventEmitter2) private eventEmitter: EventEmitter2
     ) {
         this.scrapers = {
             Blocket: this.blocketScraper,
@@ -58,15 +57,15 @@ export class ScrapersService {
     async handlePipelineRunEvent(payload: RunPipelineEvent) {
         if (this.pipelineIndex != null) {
             // Push to queue if pipeline is already running
-            pipelineQueue.push(payload)
+            this.pipelineQueue.push(payload)
             return
         }
 
         this.pipelineIndex = 0
-        const totalScrapers = scraperPipeline.length
+        const totalScrapers = this.scraperPipeline.length
 
         const startScraperNext = async () => {
-            const [name, args] = scraperPipeline.shift()
+            const [name, args] = this.scraperPipeline.shift()
             this.pipelineIndex += 1
 
             const scraper = this.scrapers[name]
@@ -86,6 +85,9 @@ export class ScrapersService {
             await scraper.deleteOld()
             scraper.reset()
 
+            if (this.scraperPipeline.find((x) => x[0] === scraper.name))
+                scraper.status = ScraperStatus.QUEUED
+
             this.logPipeline(totalScrapers, `Done!`)
         }
 
@@ -103,9 +105,9 @@ export class ScrapersService {
 
         this.pipelineIndex = null
 
-        if (pipelineQueue.length) {
+        if (this.pipelineQueue.length) {
             console.log('Running next pipeline in queue...')
-            this.eventEmitter.emit('pipeline.run', pipelineQueue.shift())
+            this.eventEmitter.emit('pipeline.run', this.pipelineQueue.shift())
         } else {
             console.log('Pipeline queue is empty!')
         }
@@ -114,7 +116,7 @@ export class ScrapersService {
     @Cron('* */45 * * *')
     async startAll(...args: Parameters<Scraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
-            scraperPipeline.push([
+            this.scraperPipeline.push([
                 name as ListingOrigin,
                 { triggeredBy: ScraperTrigger.Scheduled, ...args },
             ])
@@ -126,11 +128,12 @@ export class ScrapersService {
     async start(
         scraperName: ListingOrigin,
         options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
-    ): Promise<ScraperStatus> {
+    ): Promise<ScraperStatusReport> {
         const scraper: Scraper | undefined = this.scrapers[scraperName]
 
         if (scraper) {
-            scraperPipeline.push([scraperName, options])
+            this.scraperPipeline.push([scraperName, options])
+            if (scraper.status !== ScraperStatus.SCRAPING) scraper.status = ScraperStatus.QUEUED
 
             this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
 
@@ -161,7 +164,7 @@ export class ScrapersService {
             await this.startAll()
     }
 
-    async status(): Promise<Record<ListingOrigin, ScraperStatus>> {
+    async status(): Promise<Record<ListingOrigin, ScraperStatusReport>> {
         const allScraperStatus: Partial<ReturnType<typeof this.status>> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
@@ -171,7 +174,7 @@ export class ScrapersService {
         return allScraperStatus as ReturnType<typeof this.status>
     }
 
-    async statusOf(target: ListingOrigin) {
+    async statusOf(target: ListingOrigin): Promise<ScraperStatusReport> {
         const scraper: Scraper = this.scrapers[target]
 
         const listingCount = await this.prisma.listing.count({
@@ -183,6 +186,7 @@ export class ScrapersService {
         return {
             started: scraper.isScraping,
             listings_current: listingCount,
+            status: scraper.status,
             listings_remaining: scraper.maxEntries - listingCount,
             last_scraped: await this.prisma.scrapingLog
                 .findFirst({

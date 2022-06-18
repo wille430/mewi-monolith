@@ -2,7 +2,7 @@ import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
 import { Button, ButtonProps, Table } from '@mewi/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { ScraperStatus } from '@wille430/common'
+import { ScraperStatusReport } from '@wille430/common'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { GiPauseButton } from 'react-icons/gi'
@@ -17,7 +17,7 @@ export const ScraperPanel = () => {
     >({})
 
     const initialScraperStatus = useMemo(() => {
-        const scraperStatus: Record<string, ScraperStatus> = {}
+        const scraperStatus: Record<string, ScraperStatusReport> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
             scraperStatus[key] = {
@@ -31,7 +31,7 @@ export const ScraperPanel = () => {
         return scraperStatus
     }, [])
 
-    const { data: scraperStatus } = useQuery<Record<ListingOrigin, ScraperStatus>>(
+    const { data: scraperStatus } = useQuery<Record<ListingOrigin, ScraperStatusReport>>(
         'scrapers',
         () => instance.get('/scrapers/status').then((res) => res.data),
         {
