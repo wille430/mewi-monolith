@@ -109,7 +109,6 @@ export const ListingFiltersProvider = ({
                 filters.current = value
             }
             updateSearchParams(filters.current)
-            console.log(`Setting filters to ${JSON.stringify(filters.current)} with debounce`)
         }
         _setFilters(value)
     }

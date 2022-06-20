@@ -38,7 +38,6 @@ export const CreateWatcherButton = ({
         },
         {
             onMutate: () => {
-                console.log('Creating watcher from filters', filters)
                 setError('')
             },
             onError: (error: any) => {

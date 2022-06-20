@@ -17,7 +17,7 @@ export default registerAs(
     (): AuthConfig => ({
         accessToken: {
             secret: process.env.TOKEN_KEY ?? crypto.randomBytes(32).toString('hex'),
-            expiresIn: '15m',
+            expiresIn: process.env.NODE_ENV === 'production' ? '15m' : '10s',
         },
         refreshToken: {
             secret: process.env.REFRESH_TOKEN_SECRET ?? crypto.randomBytes(32).toString('hex'),

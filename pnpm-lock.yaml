@@ -305,6 +305,7 @@ importers:
       '@types/react-router-dom': 5.3.1
       '@types/react-test-renderer': ^17.0.1
       '@types/tailwindcss': ^3.0.9
+      '@vespaiach/axios-fetch-adapter': ^0.3.0
       '@vitejs/plugin-react': 1.3.0
       '@wille430/common': workspace:^1.0.1
       axios: ^0.26.1
@@ -367,6 +368,7 @@ importers:
       '@react-hook/window-size': 3.0.7_react@17.0.2
       '@reduxjs/toolkit': 1.8.2_react-redux@7.2.8+react@17.0.2
       '@types/lodash': 4.14.182
+      '@vespaiach/axios-fetch-adapter': 0.3.0_axios@0.26.1
       '@wille430/common': link:../common
       axios: 0.26.1
       babel-polyfill: 6.26.0
@@ -8867,6 +8869,14 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@vespaiach/axios-fetch-adapter/0.3.0_axios@0.26.1:
+    resolution: {integrity: sha512-X3U9VANu+8R4Wu/77bAUiUSqgeTelDFZeJcGZDe63DiFcPI6onjrMWrG3py/N4Qf8qCU3YLq+wO2d8V6ftYcaw==}
+    peerDependencies:
+      axios: '>=0.26.0'
+    dependencies:
+      axios: 0.26.1
+    dev: false
 
   /@vitejs/plugin-react/1.3.0:
     resolution: {integrity: sha512-H+yIupjUE4a+E4oeWUv4xUJIMR0DWBIMUG/DYgvj0J9Vu1rdHAlJ5JdbI+N1KDUD7Ee2fZ1DMPZ/NBg6mXtoCw==}
