@@ -5,7 +5,7 @@ export const setJwt = (tokens: AuthTokens | undefined = undefined) => {
     window.sessionStorage.setItem(ACCESS_TOKEN_COOKIE, tokens?.access_token ?? '')
     window.localStorage.setItem(REFRESH_TOKEN_COOKIE, tokens?.refresh_token ?? '')
 
-    updateAxios()
+    updateAxios(tokens)
 }
 
 export const getJwt = (): AuthTokens | undefined => {

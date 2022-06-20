@@ -26,7 +26,7 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
     await fetch('/api/logout')
-    updateAxios()
+    updateAxios({})
     return
 })
 
