@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ACCESS_TOKEN_EXPIRATION } from '@wille430/common'
-import { ACCESS_TOKEN_EXPIRES } from '@/lib/constants'
-
-const ACCESS_TOKEN_COOKIE = 'access-token'
-const REFRESH_TOKEN_COOKIE = 'refresh-token'
+import {
+    ACCESS_TOKEN_COOKIE,
+    ACCESS_TOKEN_EXPIRATION,
+    ACCESS_TOKEN_EXPIRES,
+    REFRESH_TOKEN_COOKIE,
+} from '@/lib/constants'
 
 const handler = async (req: NextRequest) => {
     const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE]
