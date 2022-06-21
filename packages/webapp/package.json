@@ -20,7 +20,7 @@
         "@types/lodash": "^4.14.180",
         "@vespaiach/axios-fetch-adapter": "^0.3.0",
         "@wille430/common": "workspace:^1.0.1",
-        "@wille430/ui": "^1.0.1",
+        "@wille430/ui": "^1.0.2",
         "axios": "^0.26.1",
         "babel-polyfill": "^6.26.0",
         "classnames": "^2.3.1",

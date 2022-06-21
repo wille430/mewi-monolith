@@ -307,7 +307,7 @@ importers:
       '@vespaiach/axios-fetch-adapter': ^0.3.0
       '@vitejs/plugin-react': 1.3.0
       '@wille430/common': workspace:^1.0.1
-      '@wille430/ui': ^1.0.1
+      '@wille430/ui': ^1.0.2
       axios: ^0.26.1
       babel-loader: ^8.2.4
       babel-polyfill: ^6.26.0
@@ -369,7 +369,7 @@ importers:
       '@types/lodash': 4.14.182
       '@vespaiach/axios-fetch-adapter': 0.3.0_axios@0.26.1
       '@wille430/common': link:../common
-      '@wille430/ui': 1.0.1_776ef3ca8d38c8657737fa8258a8f96d
+      '@wille430/ui': 1.0.2_776ef3ca8d38c8657737fa8258a8f96d
       axios: 0.26.1
       babel-polyfill: 6.26.0
       classnames: 2.3.1
@@ -9814,8 +9814,8 @@ packages:
       '@webassemblyjs/wast-parser': 1.9.0
       '@xtuc/long': 4.2.2
 
-  /@wille430/ui/1.0.1_776ef3ca8d38c8657737fa8258a8f96d:
-    resolution: {integrity: sha512-ubomZw52BeJDLpQb+5n3a3SgzBdXhV5R6QkOkkG9uDtaz/NXaTpWdbF1ljKvw+Z3XldDBaglr11MwO6LWmCxBw==, tarball: download/@wille430/ui/1.0.1/8b64da30a3808f9e1e2f0eefec744f117543965b3735447717a955c6d49e866a}
+  /@wille430/ui/1.0.2_776ef3ca8d38c8657737fa8258a8f96d:
+    resolution: {integrity: sha512-k7gTzdcWF6Gfmw+PAWOE1oynq+UQNl48AfU8mzkbtB9xDcM4yFXoMtRO7D859iuHxEXWfnTsOsrrFC6+0Hkg+Q==, tarball: download/@wille430/ui/1.0.2/bb841e29a7ffc95584588d7c877af85b07f98de724eaf5f4e22266db84ef87d7}
     dependencies:
       '@storybook/react': 6.5.5_0ad9ed739754597131f4c2f4d5f98972
       '@types/lodash': 4.14.182
