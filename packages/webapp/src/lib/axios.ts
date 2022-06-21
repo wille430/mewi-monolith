@@ -50,7 +50,9 @@ instance.interceptors.response.use(
 )
 
 export const updateAxios = (authTokens: Partial<AuthTokens> | undefined = getJwt()) => {
-    instance.defaults.headers.common['Authorization'] = authTokens?.access_token
-        ? `Bearer ${authTokens?.access_token}`
-        : ''
+    if (authTokens?.access_token) {
+        instance.defaults.headers.common['Authorization'] = `Bearer ${authTokens.access_token}`
+    } else {
+        delete instance.defaults.headers.common['Authorization']
+    }
 }

@@ -26,6 +26,7 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
     await fetch('/api/logout')
+    setJwt()
     updateAxios({})
     return
 })
@@ -46,8 +47,6 @@ export const login = createAsyncThunk(
             })
 
             setJwt(tokens)
-
-            await thunkApi.dispatch(fetchUser())
 
             return tokens
         } catch (e) {
@@ -72,8 +71,6 @@ export const signup = createAsyncThunk(
             })
 
             setJwt(tokens)
-
-            await thunkApi.dispatch(fetchUser())
 
             return tokens
         } catch (e) {
