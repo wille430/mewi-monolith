@@ -19,6 +19,7 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
                     onChange={(e) =>
                         onChange('priceRangeGte', parseFloat(e.target.value) || undefined)
                     }
+                    onReset={() => onChange('priceRangeGte', undefined)}
                     data-testid='priceGte'
                     showClearButton={true}
                     fullWidth={true}
@@ -30,6 +31,7 @@ export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilt
                     onChange={(e) =>
                         onChange('priceRangeLte', parseFloat(e.target.value) || undefined)
                     }
+                    onReset={() => onChange('priceRangeLte', undefined)}
                     data-testid='priceLte'
                     showClearButton={true}
                     fullWidth={true}
