@@ -1,4 +1,4 @@
-import { Container } from '@mewi/ui'
+import { Container } from '@wille430/ui'
 import { Role } from '@mewi/prisma/index-browser'
 import styles from './SideNav.module.scss'
 import SideNavButton from './SideNavButton/SideNavButton'

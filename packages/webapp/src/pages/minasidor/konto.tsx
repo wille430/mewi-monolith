@@ -1,4 +1,4 @@
-import { Container, HorizontalLine } from '@mewi/ui'
+import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement } from 'react'
 import { Role, User } from '@mewi/prisma'
 import Head from 'next/head'

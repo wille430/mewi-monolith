@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ListingSearchFilters } from '@wille430/common'
-import { Button, Container, HorizontalLine } from '@mewi/ui'
+import { Button, Container, HorizontalLine } from '@wille430/ui'
 import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { PopUp } from '@/components/PopUp/PopUp'

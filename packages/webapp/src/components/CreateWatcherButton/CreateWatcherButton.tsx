@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mewi/ui'
+import { Button, ButtonProps } from '@wille430/ui'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'

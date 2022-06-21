@@ -1,6 +1,6 @@
 import { ListingSearchFilters } from '@wille430/common'
 import { useEffect, useRef, useState } from 'react'
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import PageNav from '../PageNav/PageNav'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'

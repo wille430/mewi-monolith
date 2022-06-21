@@ -1,4 +1,4 @@
-import { Container } from '@mewi/ui'
+import { Container } from '@wille430/ui'
 import React, { ReactNode } from 'react'
 import { ListingFilters, ListingFiltersProps } from '../ListingFilters/ListingFilters'
 

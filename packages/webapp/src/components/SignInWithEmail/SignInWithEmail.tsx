@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mewi/ui'
+import { Button, TextField } from '@wille430/ui'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'

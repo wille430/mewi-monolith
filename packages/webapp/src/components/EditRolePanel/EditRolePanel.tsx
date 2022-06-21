@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mewi/ui'
+import { Button, TextField } from '@wille430/ui'
 import { capitalize } from 'lodash'
 import { Role, User } from '@mewi/prisma/index-browser'
 import { useMutation, useQuery, useQueryClient } from 'react-query'

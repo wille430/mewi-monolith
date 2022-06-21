@@ -1,4 +1,4 @@
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
 interface ExpandedButtonProps {

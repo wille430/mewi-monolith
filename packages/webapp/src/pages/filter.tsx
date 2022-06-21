@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ListingSearchFilters } from '@wille430/common'
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import { useRouter } from 'next/router'
 import ListingFiltersArea from '@/components/ListingFiltersArea/ListingFiltersArea'
 import { NextPageWithLayout } from '@/types/next'

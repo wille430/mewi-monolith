@@ -1,4 +1,4 @@
-import { Container, HorizontalLine } from '@mewi/ui'
+import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement, useState } from 'react'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'

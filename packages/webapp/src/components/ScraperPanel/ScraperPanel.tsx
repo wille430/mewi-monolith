@@ -1,5 +1,5 @@
 import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
-import { Button, ButtonProps, Table } from '@mewi/ui'
+import { Button, ButtonProps, Table } from '@wille430/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ScraperStatus, ScraperStatusReport } from '@wille430/common'

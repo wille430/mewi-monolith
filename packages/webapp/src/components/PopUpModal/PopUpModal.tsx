@@ -1,4 +1,4 @@
-import { Button, Modal, ModalProps } from '@mewi/ui'
+import { Button, Modal, ModalProps } from '@wille430/ui'
 import { PopUp } from '../PopUp/PopUp'
 
 interface PopUpModalProps extends ModalProps {

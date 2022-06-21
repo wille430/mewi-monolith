@@ -1,4 +1,4 @@
-import { Container } from '@mewi/ui'
+import { Container } from '@wille430/ui'
 import { ReactNode } from 'react'
 
 export interface SmallContainerProps {

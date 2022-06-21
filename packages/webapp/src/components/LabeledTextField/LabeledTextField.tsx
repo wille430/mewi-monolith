@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from '@mewi/ui'
+import { TextField, TextFieldProps } from '@wille430/ui'
 
 export const LabeledTextField = ({ label, ...rest }: TextFieldProps & { label?: string }) => (
     <div>

@@ -1,4 +1,4 @@
-import { Container } from '@mewi/ui'
+import { Container } from '@wille430/ui'
 import style from './FeaturedListings.module.scss'
 import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
 import { useAppDispatch, useAppSelector } from '@/hooks'

@@ -1,7 +1,7 @@
 const { flowRight } = require('lodash')
 const keysTransformer = require('ts-transformer-keys/transformer').default
 
-const withTM = require('next-transpile-modules')(['@mewi/ui', '@wille430/common'])
+const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/common'])
 
 /**
  * @type {import('next').NextConfig}
@@ -31,6 +31,7 @@ const config = {
                     getCustomTransformers: (program) => ({
                         before: [keysTransformer(program)],
                     }),
+                    allowTsInNodeModules: true,
                 },
             },
         ]

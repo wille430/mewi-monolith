@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mewi/ui'
+import { Button, ButtonProps } from '@wille430/ui'
 import { useState } from 'react'
 import AddWatcherPopUp from './AddWatcherPopUp'
 

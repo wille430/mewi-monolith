@@ -1,4 +1,4 @@
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import { HTMLAttributes } from 'react'
 
 export const SearchInput = (props: HTMLAttributes<HTMLDivElement>) => {

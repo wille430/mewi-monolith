@@ -1,5 +1,5 @@
 import { FiTrash } from 'react-icons/fi'
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import { useMutation, useQueryClient } from 'react-query'
 import { instance } from '@/lib/axios'
 

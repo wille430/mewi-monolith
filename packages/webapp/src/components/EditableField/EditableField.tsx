@@ -1,4 +1,4 @@
-import { Button, TextField, TextFieldProps } from '@mewi/ui'
+import { Button, TextField, TextFieldProps } from '@wille430/ui'
 import { useEffect, useState } from 'react'
 import { MdOutlineModeEditOutline } from 'react-icons/md'
 import { FiCheck } from 'react-icons/fi'

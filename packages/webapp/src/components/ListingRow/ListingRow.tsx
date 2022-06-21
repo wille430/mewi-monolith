@@ -1,7 +1,7 @@
 import { Listing } from '@mewi/prisma'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
-import { Button } from '@mewi/ui'
+import { Button } from '@wille430/ui'
 import styles from './ListingRow.module.scss'
 import { ListingLikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'

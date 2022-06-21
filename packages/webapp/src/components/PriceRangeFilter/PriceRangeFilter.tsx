@@ -1,4 +1,4 @@
-import { TextField } from '@mewi/ui'
+import { TextField } from '@wille430/ui'
 import { HTMLAttributes } from 'react'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
