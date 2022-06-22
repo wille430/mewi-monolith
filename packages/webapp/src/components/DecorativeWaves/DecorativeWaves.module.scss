@@ -27,9 +27,9 @@
 }
 
 #p1 {
-    fill: $secondary;
+    fill: theme('colors.secondary');
 }
 
 #p2 {
-    fill: $primary;
+    fill: theme('colors.primary');
 }

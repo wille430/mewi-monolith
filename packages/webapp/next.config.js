@@ -7,10 +7,6 @@ const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/com
  * @type {import('next').NextConfig}
  **/
 const config = {
-    sassOptions: {
-        includePaths: ['./src'],
-        prependData: '@use "styles/_variables.scss" as *;',
-    },
     redirects: () => [
         {
             source: '/minasidor',

@@ -12,7 +12,6 @@
         "incremental": true,
         "preserveSymlinks": true,
         "outDir": "./build",
-        "strict": true,
         "noImplicitAny": false,
         "lib": ["dom", "dom.iterable", "esnext"],
         "forceConsistentCasingInFileNames": true,
@@ -21,7 +20,8 @@
         "typeRoots": ["src/types/**/*"],
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "strict": true
     },
     "include": ["src/**/*", "next-end.d.ts", "./prisma/*.ts"],
     "exclude": [
@@ -31,5 +31,9 @@
         "src/**/*.test.tsx",
         "src/**/*.spec.tsx"
     ],
-    "references": [{ "path": "./tsconfig.spec.json" }]
+    "references": [
+        {
+            "path": "./tsconfig.spec.json"
+        }
+    ]
 }
