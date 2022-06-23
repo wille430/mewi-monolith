@@ -10,8 +10,7 @@
         "cy:run": "cypress open",
         "e2e": "pnpm run dev & pnpm run dev -F nest-api & pnpm run cy:run",
         "test": "vitest run",
-        "test:watch": "vitest watch",
-        "postinstall": "mkdir -p ./node_modules/@mewi/prisma && cp ../../node_modules/@mewi/prisma/* ./node_modules/@mewi/prisma/ -r"
+        "test:watch": "vitest watch"
     },
     "dependencies": {
         "@babel/preset-react": "^7.16.7",

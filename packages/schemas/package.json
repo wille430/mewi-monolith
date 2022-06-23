@@ -7,8 +7,9 @@
         "url": "git://github.com/wille430/mewi-monolith.git"
     },
     "scripts": {
-        "postinstall": "npm run prisma:generate",
+        "postinstall": "npm run prisma:generate && npm run prisma:copy",
         "prisma:generate": "npx dotenv -- npx prisma generate --schema ./prisma/schema.prisma",
+        "prisma:copy": "cd ../../ && sh ./tools/copy_prisma.sh",
         "prisma:seed": "npx dotenv -- prisma db seed"
     },
     "author": "Mewi",

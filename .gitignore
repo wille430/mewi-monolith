@@ -43,3 +43,6 @@ Thumbs.db
 .netlify
 old
 .vercel
+
+.pnpm-debug.log
+.env

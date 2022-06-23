@@ -4,12 +4,12 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "filterJson"]
-  output          = "../../../node_modules/@mewi/prisma"
+  output          = "../node_modules/@prisma/client"
 }
 
 generator factories {
   provider = "prisma-factory"
-  output   = "../../../node_modules/@mewi/prisma/factory"
+  output   = "../node_modules/@prisma/client/factory"
 }
 
 datasource db {
