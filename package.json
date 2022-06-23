@@ -13,7 +13,7 @@
         "isolate": "pnpm run isolate -r",
         "db:up": "docker-compose up db -d || sudo docker compose up db -d",
         "db:down": "docker-compose down db || sudo docker compose down db",
-        "vercel-install": "pnpm i -F schemas --unsafe-perm && pnpm i --unsafe-perm -F=!schemas"
+        "vercel-install": "./tools/vercel-submodule-workaround.sh && pnpm i -F schemas --unsafe-perm && pnpm i --unsafe-perm -F=!schemas"
     },
     "private": true,
     "devDependencies": {
