@@ -62,10 +62,6 @@ export const ListingFiltersProvider = ({
     excludeInParams?: Array<keyof Partial<ListingFilters>>
 }) => {
     const Context = getListingFilterContext()
-    const _defaults = {
-        page: 1,
-        ...defaults,
-    }
 
     const router = useRouter()
     const isFirstRender = useRef(true)
@@ -74,7 +70,7 @@ export const ListingFiltersProvider = ({
         return !_.isEqual(
             {
                 ...parseSearchParams(router.query, excludeInParams),
-                ..._defaults,
+                ...defaults,
             },
             _filters
         )
@@ -94,18 +90,15 @@ export const ListingFiltersProvider = ({
 
     const [_filters, _setFilters] = React.useState<ListingFilters>({
         ...initialFilters,
-        ..._defaults,
+        ...defaults,
         ...parseSearchParams(router.query, excludeInParams),
     })
     const filters = React.useRef(_filters)
     const setFilters: ListingFiltersContext['setFilters'] = (value, force = false) => {
         if (force) {
             if (typeof value === 'function') {
-                const newValue = value(filters.current)
-                newValue.page = 1
-                filters.current = newValue
+                filters.current = value(filters.current)
             } else {
-                value.page = 1
                 filters.current = value
             }
             updateSearchParams(filters.current)
@@ -113,10 +106,24 @@ export const ListingFiltersProvider = ({
         _setFilters(value)
     }
 
+    const changedFilterValues = (oldFilters: ListingFilters, newFilters: ListingFilters) => {
+        const changedKeys: string[] = []
+        for (const key of Object.keys({ ...oldFilters, newFilters })) {
+            if (oldFilters[key] !== newFilters[key]) {
+                changedKeys.push(key)
+            }
+        }
+
+        return changedKeys
+    }
+
     const throttleUpdateParams = React.useCallback(
         _.debounce((newFilters: typeof _filters) => {
             if (!_.isEqual(filters.current, newFilters)) {
-                filters.current = newFilters
+                if (!_.isEqual(changedFilterValues(filters.current, newFilters), ['page'])) {
+                    newFilters.page = 1
+                    filters.current = newFilters
+                }
             }
 
             updateSearchParams(newFilters)
@@ -129,7 +136,7 @@ export const ListingFiltersProvider = ({
         if (shouldUpdate()) {
             const newFilters = {
                 ...parseSearchParams(router.query, excludeInParams),
-                ..._defaults,
+                ...defaults,
             }
 
             filters.current = newFilters
@@ -151,7 +158,7 @@ export const ListingFiltersProvider = ({
                 filters: _filters,
                 debouncedFilters: filters.current,
                 setFilters,
-                defaults: _defaults,
+                defaults,
             }}
         >
             {children}

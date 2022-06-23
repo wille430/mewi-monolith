@@ -4,6 +4,7 @@ import { Container } from '@wille430/ui'
 import { HorizontalLine } from '@wille430/ui'
 import { Button } from '@wille430/ui'
 import { FiX } from 'react-icons/fi'
+import clsx from 'clsx'
 import styles from './ListingPopUp.module.scss'
 import Description from './Description/Description'
 import { OriginLabel } from '../OriginLabel/OriginLabel'
@@ -41,10 +42,6 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
         onClose && onClose()
     }
 
-    const handleRedirect = () => {
-        window.open(redirectUrl)
-    }
-
     return (
         <PopUp onOutsideClick={onClose} className={styles.popUp}>
             <Container className={styles.container}>
@@ -57,50 +54,28 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                         <CategoryPathLabel category={category} />
                     </span>
                     <span>
-                        <Button onClick={handleClose} variant='text' icon={<FiX />} />
+                        <Button onClick={handleClose} variant='text' size='lg' icon={<FiX />} />
                     </span>
                 </Container.Header>
-                <Container.Content>
-                    <div className={styles.imageWrapper}>
+                <Container.Content className='flex flex-col flex-grow'>
+                    <div className={styles['image-wrapper']}>
                         {/* TODO: Implement image carousel */}
                         <DefaultImage src={imageUrl[0]} />
                     </div>
-                    <HorizontalLine />
-                    <article>
-                        <header className={styles.infoHeader}>
-                            <div>
-                                <span>{region}</span>
-                                <h3>{title}</h3>
-                                {price && <h4>{`${price.value} ${price.currency}`}</h4>}
-                            </div>
-                            <div>
-                                <h4 className={styles.originLabel}>
-                                    <OriginLabel {...{ origin }} />
-                                </h4>
-                                <Button
-                                    color='secondary'
-                                    label='Gå till artikeln >>'
-                                    onClick={handleRedirect}
-                                />
-                            </div>
-                        </header>
+                    <article className={styles.content}>
+                        <InfoHeader
+                            region={region}
+                            title={title}
+                            price={price}
+                            redirectUrl={redirectUrl}
+                            origin={origin}
+                        />
                         <HorizontalLine />
-                        <div className={styles.infoBody}>
-                            <div>
-                                <h4>Beskrivning</h4>
-                                <Description text={body || ''} />
-                            </div>
-                            {parameters.length > 0 && (
-                                <>
-                                    <HorizontalLine />
-                                    <aside>
-                                        <h4>Specifikationer</h4>
-                                        <Specifications specs={parameters} />
-                                    </aside>
-                                </>
-                            )}
+                        <div className={styles['info-body']}>
+                            <DescriptionView body={body} />
+                            <HorizontalLine />
+                            <SpecificationsView parameters={parameters} />
                         </div>
-                        <footer></footer>
                     </article>
                 </Container.Content>
                 <Container.Footer />
@@ -109,17 +84,60 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
     )
 }
 
-const Specifications = ({ specs }: { specs: Listing['parameters'] }) => (
-    <table className={styles.specifications}>
-        <tbody>
-            {specs?.map(({ label, value }) => (
-                <tr>
-                    <td>{label}:</td>
-                    <td>{value}</td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
+const DescriptionView = ({ body }) => (
+    <div data-content-length={body?.length ?? 0} className={clsx('box', styles.description)}>
+        <h4>Beskrivning</h4>
+        <Description text={body || ''} />
+    </div>
 )
 
 export default ListingPopUp
+
+const SpecificationsView = ({ parameters }) =>
+    parameters.length ? (
+        <aside className={clsx('box', styles['specs'])}>
+            <h4>Specifikationer</h4>
+            <table className={styles['specs-table']}>
+                <tbody>
+                    {parameters?.map(({ label, value }) => (
+                        <tr>
+                            <td>{label}:</td>
+                            <td>{value}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </aside>
+    ) : (
+        <aside className={styles['specs-hidden']} />
+    )
+
+const InfoHeader = ({
+    region,
+    title,
+    price,
+    redirectUrl,
+    origin,
+}: Pick<Listing, 'region' | 'title' | 'price' | 'redirectUrl' | 'origin'>) => {
+    const handleRedirect = () => {
+        window.open(redirectUrl)
+    }
+
+    return (
+        <header className={styles['info-header']}>
+            <div>
+                <span className={styles['region-text']}>{region}</span>
+                <h3 className={styles['title-text']}>{title}</h3>
+                {price && (
+                    <span
+                        className={styles['price-text']}
+                    >{`${price.value} ${price.currency}`}</span>
+                )}
+            </div>
+            <div>
+                <OriginLabel origin={origin} />
+                <Button label='Till artikeln >>' size='lg' onClick={handleRedirect} />
+            </div>
+        </header>
+    )
+}

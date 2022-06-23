@@ -1,10 +1,18 @@
 .hero {
-    height: 50vh;
+    min-height: 50vh;
     width: 100%;
     background-color: theme('colors.primary');
     display: flex;
     align-items: center;
     justify-content: center;
+
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    @screen sm {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 .inner-hero {
@@ -54,13 +62,18 @@
 
 .search-box {
     flex: none;
-    max-width: 26rem;
+    max-width: min(26rem, 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     color: white;
+    padding: 0 1rem;
 
     & > h3 {
         margin-bottom: 1rem;
+    }
+
+    @screen md {
+        padding: 0;
     }
 }

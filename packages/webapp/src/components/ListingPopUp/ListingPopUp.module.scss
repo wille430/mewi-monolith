@@ -1,93 +1,36 @@
-.categoryPath {
-    font-size: 0.75rem;
-}
+$content-padding: 1.5rem;
+$text-color: theme('colors.gray.800');
 
-.infoHeader {
-    display: flex;
-    justify-content: space-between;
-    padding: 0rem 1rem;
+.popUp {
+    overflow-y: scroll;
+    padding: 0.5rem;
+    min-height: 100vh;
 
-    & > *:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-}
-
-.specifications {
-    border-collapse: separate;
-    border-spacing: 0rem 0.75rem;
-    width: 100%;
-    table-layout: fixed;
-    overflow: hidden;
-
-    & tr > td:first-child {
-        padding-right: 0.75rem;
+    @screen md {
+        padding: 1rem;
+        padding-bottom: 12rem;
     }
 
-    & tr > td:last-child {
-        word-wrap: break-word;
+    @screen sm {
+        min-height: none;
     }
-}
-
-.infoBody {
-    display: flex;
-    flex-direction: column;
-    row-gap: 1rem;
-    padding: 1rem;
-
-    @media screen and (min-width: 768px) {
-        flex-direction: row;
-        column-gap: 4rem;
-
-        & aside {
-            max-width: 20rem;
-        }
-
-        & > div {
-            flex-grow: 1;
-        }
-
-        & div > h4 {
-            padding-bottom: 0.75rem;
-        }
-
-        & hr {
-            display: none;
-        }
-    }
-}
-
-.originLabel {
-    text-align: right;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
 }
 
-.container {
-    margin: 0.5rem;
-    min-height: 70vh;
-
-    @screen md {
-        min-height: 70vh;
-        padding: 0;
-        max-width: theme('screens.lg');
-        width: 100%;
-        margin: 0 auto;
-        margin-top: 10vh;
-    }
-
-    & > *:not(:nth-child(2)) {
-        padding: 1rem;
-    }
-}
-
-.imageWrapper {
-    height: 24rem;
+.image-wrapper {
+    @apply bg-gray-200;
+    height: 30vh;
     overflow: hidden;
+
+    @screen sm {
+        height: 32rem;
+    }
 
     & > img {
         height: 100%;
@@ -96,11 +39,132 @@
     }
 }
 
-.popUp {
-    overflow-y: scroll;
+.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-    @screen md {
-        padding: 1rem;
-        padding-bottom: 12rem;
+.container {
+    @screen sm {
+        margin-top: 6rem;
     }
 }
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+
+    // Left side
+    div:nth-child(1) {
+        flex-grow: 1;
+    }
+
+    // Right side
+    div:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.info-body {
+    flex-grow: 1;
+
+    .description {
+        height: 100%;
+    }
+}
+
+.description > h4,
+.specs > h4 {
+    @apply text-lg;
+    padding-bottom: 0.75rem;
+}
+
+.description > p,
+.specs > table {
+    color: $text-color;
+}
+
+.description {
+    flex: 6;
+    min-height: 16rem;
+
+    &[data-content-length='0'] {
+        min-height: auto;
+    }
+}
+
+.specs {
+    flex: 3;
+    min-width: 16rem;
+    min-height: 8rem;
+}
+
+.specs-table {
+    width: 100%;
+}
+
+@screen md {
+    $content-padding: 2rem;
+
+    .info-body {
+        display: flex;
+        grid-gap: 0.5rem;
+    }
+
+    .specs {
+        height: min-content;
+    }
+
+    .specs-hidden {
+        @extend .specs;
+    }
+
+    .specs {
+        max-width: 32rem;
+    }
+}
+
+// $padding: 1.5rem;
+
+// @screen md {
+//     $padding: 2rem;
+// }
+
+// .categoryPath {
+//     font-size: 0.75rem;
+// }
+
+// .infoHeader {
+//     display: flex;
+//     justify-content: space-between;
+//     padding: 0.5rem $padding;
+//     padding-top: $padding;
+
+//     & > *:nth-child(2) {
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: space-between;
+//     }
+// }
+
+// .specifications {
+//     color: $text-color;
+//     border-collapse: separate;
+//     border-spacing: 0rem 0.75rem;
+//     width: 100%;
+//     table-layout: fixed;
+//     overflow: hidden;
+
+//     & tr > td:first-child {
+//         padding-right: 0.75rem;
+//     }
+
+//     & tr > td:last-child {
+//         word-wrap: break-word;
+//     }
+// }
