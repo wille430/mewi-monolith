@@ -4,7 +4,7 @@
 SUBMODULE_GITHUB=github.com/wille430/ui
 
 # .gitmodules submodule path
-SUBMODULE_PATH=packages
+SUBMODULE_PATH=packages/ui
 
 # github access token is necessary
 # add it to Environment Variables on Vercel
