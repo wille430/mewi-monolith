@@ -1,106 +1,169 @@
+.link {
+    & > div a,
+    button.link {
+        @apply rounded;
+        position: relative;
+        display: block;
+        padding: 0.15rem 0.5rem;
+        width: 100%;
+        text-align: left;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    & > div:first-child {
+        position: relative;
+    }
+
+    & .sublinks.list {
+        position: relative;
+    }
+
+    & &:first-child {
+        margin-top: 0.75ch;
+    }
+
+    & &:last-child {
+        margin-bottom: 1ch;
+    }
+
+    & & {
+        margin-left: 2ch;
+    }
+
+    &[data-expand='false'] {
+        .link {
+            display: none;
+        }
+    }
+}
+
+.expand-button {
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 3ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        @apply rounded-full;
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+}
+
 .nav {
-    // small screens
+    width: 100%;
+    display: flex;
+}
 
-    @apply bg-primary text-white;
-    display: none;
-    grid-area: na;
+.link-list {
+    grid-area: nv;
+    width: 100%;
+    color: white;
+    overflow: hidden;
+}
 
-    @media screen and (min-width: theme('screens.md')) {
-        @apply mx-auto flex w-screen max-w-xl flex-row rounded-full px-4 text-sm text-black;
+.menu-toggle {
+    color: white;
+    height: min-content;
+}
 
-        height: 2.25rem;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
+.logo {
+    max-height: 2rem;
+    width: fit-content;
+
+    & > img {
+        height: 100%;
+        width: auto;
+    }
+}
+
+@screen md {
+    .nav {
+        @apply mx-auto;
+        max-width: theme('screens.md');
+        display: grid;
+        grid-template-columns: 1fr 32rem 1fr;
+        grid-template-areas: 'lg nv .';
+    }
+
+    .link-list {
+        @apply rounded-full text-sm;
+        padding: 0.5ch 1.5ch;
+        height: min-content !important;
         background-color: white;
+        display: flex;
+        color: black;
+        overflow: visible;
+        z-index: 10;
+    }
 
-        & header {
+    .link {
+        position: relative;
+
+        .sublinks-list {
             display: none;
         }
 
+        &:hover {
+            .sublinks-list {
+                display: block;
+            }
+        }
+
+        &[data-expand='false'] {
+            .link {
+                display: block;
+            }
+        }
+    }
+
+    .sublinks-list {
+        position: absolute;
+
+        &::before {
+            content: '';
+            width: 0;
+            height: 0;
+            position: absolute;
+            transform: translateY(calc(-0.5rem + 1.75ch));
+            left: 2ch;
+
+            border-left: 0.5rem solid transparent;
+            border-right: 0.5rem solid transparent;
+            border-bottom: 0.5rem solid theme('colors.gray.300');
+        }
+
         & > ul {
-            @apply flex w-full space-x-4;
-
-            & li {
-                display: flex;
-            }
+            @apply rounded border;
+            background-color: white;
+            padding: 0.5ch;
+            padding-bottom: 1ch;
+            padding-top: 1ch;
+            min-width: 12rem;
+            margin-top: 1.75ch;
         }
 
-        &.show {
-            @apply relative h-full w-full;
-
-            & ul {
-                @apply flex flex-row space-y-0;
-            }
+        & .link {
+            margin: 0 !important;
         }
     }
-}
 
-.container {
-    @apply h-full w-full bg-primary p-4;
-
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        '. mb'
-        'me me';
-
-    & figure {
-        @apply hidden h-8 w-auto;
-    }
-
-    & form {
-        @apply flex-grow;
-    }
-
-    & form,
-    & form > div:first-child {
-        max-width: max-content;
-        height: 100%;
-    }
-
-    @media screen and (min-width: theme('screens.md')) {
-        display: grid;
-        grid-template-columns: 15rem 1fr 15rem;
-        grid-gap: 0.75rem;
-        grid-template-rows: auto;
-        grid-template-areas: '. na .';
-
-        & figure {
-            @apply block h-10;
-        }
-    }
-}
-.menuButton {
-    display: block;
-    grid-area: mb;
-    margin-left: auto;
-
-    @media screen and (min-width: theme('screens.md')) {
+    .menu-toggle {
         display: none;
     }
-}
 
-.drawerWrapper {
-    @apply transition-all duration-300 ease-out delay-200;
-
-    &.show {
-        @apply py-4;
-    }
-
-    @media screen and (min-width: theme('screens.md')) {
+    .expand-button {
         display: none;
     }
-}
 
-.drawer {
-    display: block;
-    grid-area: me;
-
-    @apply text-white;
-
-    @media screen and (min-width: theme('screens.md')) {
-        display: none;
+    .logo {
+        grid-area: lg;
     }
 }

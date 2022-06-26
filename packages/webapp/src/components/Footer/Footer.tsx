@@ -2,13 +2,13 @@ import { Category } from '@mewi/prisma/index-browser'
 import { CategoryLabel } from '@wille430/common'
 import Link from 'next/link'
 import styles from './Footer.module.scss'
-import NavCurve from '../Nav/NavCurve'
+import { Arch } from '../Arch/Arch'
 
 export const Footer = () => {
     return (
         <div>
-            <div className='rotate-180'>
-                <NavCurve />
+            <div className='rotate-180 pb-2'>
+                <Arch />
             </div>
             <footer className={styles.footer}>
                 <div className={styles['inner-footer']}>
