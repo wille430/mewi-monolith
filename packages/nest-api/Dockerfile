@@ -12,8 +12,8 @@ RUN apt-get update && \
 WORKDIR /app
 COPY packages/nest-api/_isolated_/ /app/
 RUN npm i pnpm -g
-RUN pnpm i -F schemas || exit 0
-RUN pnpm i --production=false || exit 0
+RUN pnpm i -F schemas
+RUN pnpm i --production=false
 
 EXPOSE 3001
 CMD node /app/dist/main.js
