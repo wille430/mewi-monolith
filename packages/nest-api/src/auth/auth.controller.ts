@@ -1,14 +1,27 @@
-import { Controller, Request, Post, UseGuards, Body, Get, Req, Res } from '@nestjs/common'
+import {
+    Controller,
+    Request,
+    Post,
+    UseGuards,
+    Body,
+    Get,
+    Req,
+    Res,
+    HttpException,
+    HttpStatus,
+} from '@nestjs/common'
 import { Request as ReqObj } from 'express'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@mewi/prisma'
+import { REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import { setJWTCookies } from './utils/setJWTCookies'
 import { AuthService } from '@/auth/auth.service'
 import SignUpDto from '@/auth/dto/sign-up.dto'
 import { LocalAuthGuard } from '@/auth/local-auth.guard'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { GoogleAuthGuard } from '@/auth/google-auth.guard'
+import { Public } from '@/common/decorators/public.decorator'
 
 @Controller('/auth')
 export class AuthController {
@@ -27,6 +40,13 @@ export class AuthController {
         return tokens
     }
 
+    @Post('logout')
+    async logout(@Res({ passthrough: true }) res: Response) {
+        setJWTCookies(res, {})
+
+        return true
+    }
+
     @Post('signup')
     async signUp(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: Response) {
         const tokens = await this.authService.signUp(signUpDto)
@@ -37,8 +57,24 @@ export class AuthController {
     }
 
     @Post('token')
-    async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
-        return this.authService.refreshToken(refreshTokenDto)
+    @Public()
+    async refreshToken(
+        @Body() refreshTokenDto: RefreshTokenDto,
+        @Req() req: ReqObj,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        // Extract refresh token from req body or cookie header
+        const refreshToken = refreshTokenDto.refresh_token ?? req.cookies[REFRESH_TOKEN_COOKIE]
+
+        if (!refreshToken) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED)
+        }
+
+        const tokens = await this.authService.refreshToken({ refresh_token: refreshToken })
+
+        setJWTCookies(res, tokens)
+
+        return tokens
     }
 
     @Get('google/redirect')

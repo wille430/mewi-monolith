@@ -1,15 +1,10 @@
-import {
-    ConflictException,
-    Injectable,
-    NotFoundException,
-    UnauthorizedException,
-} from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { LoginStrategy, User } from '@mewi/prisma'
 import { ConfigService } from '@nestjs/config'
+import RefreshTokenDto from './dto/refresh-token.dto'
 import SignUpDto from '@/auth/dto/sign-up.dto'
-import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 import { AuthTokens } from '@/common/types/authTokens'
 
@@ -74,25 +69,19 @@ export class AuthService {
         return this.createTokens(newUser)
     }
 
-    async refreshToken(refreshTokenDto: RefreshTokenDto) {
-        const { refresh_token } = refreshTokenDto
+    async refreshToken({ refresh_token }: RefreshTokenDto) {
+        const payload: UserPayload = this.jwtService.verify(refresh_token, {
+            secret: this.configService.get('auth.refreshToken.secret'),
+        })
+        const user = await this.prisma.user.findFirst({
+            where: { email: payload.email },
+        })
 
-        try {
-            const payload: UserPayload = this.jwtService.verify(refresh_token, {
-                secret: this.configService.get('auth.refreshToken.secret'),
-            })
-            const user = await this.prisma.user.findFirst({
-                where: { email: payload.email },
-            })
-
-            if (!user) {
-                return null
-            }
-
-            return this.createTokens(user)
-        } catch (e) {
-            throw new UnauthorizedException()
+        if (!user) {
+            return null
         }
+
+        return this.createTokens(user)
     }
 
     async googleLogin(req: any) {

@@ -1,3 +1,4 @@
+import styles from './NavLinkItem.module.scss'
 import { useAppDispatch } from '@/hooks'
 import { logout } from '@/store/user'
 
@@ -6,7 +7,9 @@ const LogOutButton = () => {
 
     return (
         <form action='/api/logout' onSubmit={() => dispatch(logout())}>
-            <button type='submit'>Logga ut</button>
+            <button className={styles.link} type='submit'>
+                Logga ut
+            </button>
         </form>
     )
 }

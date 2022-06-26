@@ -9,7 +9,7 @@ import { useStore } from 'react-redux'
 import { useRouter } from 'next/router'
 import { Store, wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
-import { instance, updateAxios } from '@/lib/axios'
+import { instance } from '@/lib/axios'
 import { fetchUser } from '@/store/user'
 
 type NextPageWithLayout = NextPage & {
@@ -28,13 +28,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     const [queryClient] = useState(() => new QueryClient())
     const router = useRouter()
-
     const store = useStore() as Store
-    const { user } = store.getState().user
-
-    useEffect(() => {
-        updateAxios()
-    }, [user])
 
     useEffect(() => {
         store.dispatch(fetchUser())

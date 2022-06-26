@@ -1,9 +1,8 @@
 import { User } from '@mewi/prisma/index-browser'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { AuthTokens } from '@wille430/common'
+import axios from 'axios'
 import { UserActionTypes } from './types'
-import { instance, updateAxios } from '@/lib/axios'
-import { setJwt } from '@/lib/jwt'
+import { instance } from '@/lib/axios'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
@@ -25,30 +24,20 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
 })
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
-    await fetch('/api/logout')
-    setJwt()
-    updateAxios({})
-    return
+    await Promise.all([axios.post('/api/logout'), instance.post('/auth/logout')])
+    return true
 })
 
 export const login = createAsyncThunk(
     UserActionTypes.LOGIN,
     async ({ email, password }: { email: string; password: string }, thunkApi) => {
         try {
-            const tokens: AuthTokens = await fetch('/api/login', {
-                method: 'post',
-                body: JSON.stringify({ email, password }),
-            }).then(async (res) => {
-                if (res.ok) {
-                    return await res.json()
-                } else {
-                    throw await res.json()
-                }
-            })
+            const { access_token } = await instance
+                .post('/auth/login', { email, password })
+                .then((res) => res.data)
+            await axios.post('/api/login', { access_token })
 
-            setJwt(tokens)
-
-            return tokens
+            return true
         } catch (e) {
             return thunkApi.rejectWithValue(e)
         }
@@ -59,20 +48,12 @@ export const signup = createAsyncThunk(
     UserActionTypes.SIGNUP,
     async (args: { email?: string; password?: string; passwordConfirm?: string }, thunkApi) => {
         try {
-            const tokens: AuthTokens = await fetch('/api/signup', {
-                method: 'post',
-                body: JSON.stringify(args),
-            }).then(async (res) => {
-                if (res.ok) {
-                    return await res.json()
-                } else {
-                    throw await res.json()
-                }
-            })
+            const { access_token } = await instance
+                .post('/auth/signup', args)
+                .then((res) => res.data)
+            await axios.post('/api/login', { access_token })
 
-            setJwt(tokens)
-
-            return tokens
+            return true
         } catch (e) {
             return thunkApi.rejectWithValue(e)
         }

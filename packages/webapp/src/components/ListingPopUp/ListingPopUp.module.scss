@@ -46,9 +46,10 @@ $text-color: theme('colors.gray.800');
 }
 
 .container {
-    @screen sm {
-        margin-top: 6rem;
-    }
+    max-width: theme('screens.lg');
+    margin: 0 auto;
+    min-height: min(64rem, 80vh);
+    margin-top: 6rem;
 }
 
 .info-header {

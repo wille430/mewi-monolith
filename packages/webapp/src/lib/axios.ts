@@ -1,12 +1,7 @@
-import { AuthTokens } from '@wille430/common'
 import axios from 'axios'
-import { getJwt, setJwt } from './jwt'
 
 export const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
-    headers: {
-        Authorization: `Bearer ${getJwt()?.access_token}`,
-    },
     withCredentials: true,
 })
 
@@ -19,22 +14,21 @@ instance.interceptors.response.use(
 
         console.log('JWT is expired or invalid', err.status, config.url, config._retry)
 
-        if (err.response.status === 401 && config.url !== '/auth/login' && !config._retry) {
+        if (
+            err.response.status === 401 &&
+            config.url !== '/auth/login' &&
+            config.url !== '/auth/token' &&
+            !config._retry
+        ) {
             config._retry = true
 
             console.log('Refreshing jwt...')
 
             try {
                 // refetch jwt token
-                await fetch('/api/refreshjwt', {
-                    credentials: 'include',
+                await instance.post('/auth/token').catch((e) => {
+                    throw e
                 })
-                    .then(async (res) => {
-                        setJwt((await res.json()) as AuthTokens)
-                    })
-                    .catch((e) => {
-                        throw e
-                    })
 
                 return axios(config)
             } catch (e) {
@@ -48,11 +42,3 @@ instance.interceptors.response.use(
         }
     }
 )
-
-export const updateAxios = (authTokens: Partial<AuthTokens> | undefined = getJwt()) => {
-    if (authTokens?.access_token) {
-        instance.defaults.headers.common['Authorization'] = `Bearer ${authTokens.access_token}`
-    } else {
-        delete instance.defaults.headers.common['Authorization']
-    }
-}

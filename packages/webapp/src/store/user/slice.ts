@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchUser, login, logout, setLoggedInStatus, signup } from './creators'
 import { UserState } from './types'
-import { setJwt } from '@/lib/jwt'
 
 const initialState: UserState = {
     isLoggedIn: false,
@@ -37,7 +36,6 @@ export const userSlice = createSlice({
                 state.isLoggedIn = false
             })
             .addCase(logout.fulfilled, (state) => {
-                setJwt()
                 state.isLoggedIn = false
                 state.user = undefined
             })
