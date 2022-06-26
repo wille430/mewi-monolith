@@ -35,6 +35,9 @@ export const login = createAsyncThunk(
             const { access_token } = await instance
                 .post('/auth/login', { email, password })
                 .then((res) => res.data)
+                .catch((e) => {
+                    throw e.data
+                })
             await axios.post('/api/login', { access_token })
 
             return true
@@ -51,6 +54,9 @@ export const signup = createAsyncThunk(
             const { access_token } = await instance
                 .post('/auth/signup', args)
                 .then((res) => res.data)
+                .catch((e) => {
+                    throw e.data
+                })
             await axios.post('/api/login', { access_token })
 
             return true

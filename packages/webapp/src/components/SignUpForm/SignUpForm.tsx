@@ -21,12 +21,14 @@ export const SignUpForm = () => {
 
     const [formData, setFormData] = useState(initFormData)
     const [errors, setErrors] = useState(initErrors)
+    const [isLoading, setIsLoading] = useState(false)
 
     const dispatch = useAppDispatch()
     const router = useRouter()
 
-    const createAccount = () =>
-        dispatch(signup(formData))
+    const createAccount = async () => {
+        setIsLoading(true)
+        await dispatch(signup(formData))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
                     router.push('/minasidor')
@@ -92,6 +94,10 @@ export const SignUpForm = () => {
 
                 setErrors({ ...initErrors, ...newErrors })
             })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
 
     return (
         <Container className='mx-auto max-w-lg'>
@@ -116,6 +122,7 @@ export const SignUpForm = () => {
                             placeholder='E-postadress'
                             data-testid='emailInput'
                             fullWidth={true}
+                            disabled={isLoading}
                         />
                         <span className='text-red-400'>{errors.email}</span>
                     </div>
@@ -133,6 +140,7 @@ export const SignUpForm = () => {
                             type='password'
                             data-testid='passwordInput'
                             fullWidth={true}
+                            disabled={isLoading}
                         />
                         <a className='block' href='/glomtlosenord'>
                             Har du glömt lösenordet?
@@ -153,6 +161,7 @@ export const SignUpForm = () => {
                             type='password'
                             data-testid='repasswordInput'
                             fullWidth={true}
+                            disabled={isLoading}
                         />
                         <span className='text-red-400'>{errors.passwordConfirm}</span>
                     </div>

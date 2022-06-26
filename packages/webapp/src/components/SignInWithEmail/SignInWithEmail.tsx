@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import SmallContainer from '@/components/SmallContainer/SmallContainer'
-import { useAppDispatch, useAppSelector } from '@/hooks'
+import { useAppDispatch } from '@/hooks'
 import { login } from '@/store/user'
 
 export function SignInWithEmail() {
@@ -13,7 +13,6 @@ export function SignInWithEmail() {
 
     const dispatch = useAppDispatch()
     const router = useRouter()
-    const { user } = useAppSelector((state) => state.user)
 
     const mutation = useMutation(
         () =>
@@ -25,6 +24,9 @@ export function SignInWithEmail() {
         {
             onMutate: () => {
                 router.prefetch('/minasidor')
+            },
+            onSuccess: () => {
+                window.location.href = '/minasidor'
             },
             onError: () => {
                 setError('Felaktig e-postadress eller lösenord')
@@ -66,7 +68,7 @@ export function SignInWithEmail() {
                         placeholder='E-postadress'
                         data-testid='emailInput'
                         fullWidth={true}
-                        disabled={mutation.isLoading || !!user}
+                        disabled={mutation.isLoading}
                     />
                 </div>
                 <div className='w-full'>
