@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SuccessParam } from '@wille430/common'
-import { uniqueId } from 'lodash'
+import uniqueId from 'lodash/uniqueId'
 import { SnackbarActionTypes } from './types'
 import { SnackbarProps } from '@/components/Snackbar/Snackbar'
 

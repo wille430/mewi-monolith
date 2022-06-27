@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Container, ContainerProps } from '@wille430/ui'
 import { useRouter } from 'next/router'
 import queryString from 'query-string'
-import _ from 'lodash'
+import omit from 'lodash/omit'
 import styles from './CategorySideNav.module.scss'
 
 export interface CategorySideNavProps extends ContainerProps {
@@ -41,7 +41,7 @@ export const CategorySideNav = ({ selectedCategory, ...rest }: CategorySideNavPr
                         >
                             <Link
                                 href={`/kategorier/${key.toLowerCase()}?${queryString.stringify(
-                                    _.omit(router.query, ['category', 'page'])
+                                    omit(router.query, ['category', 'page'])
                                 )}`}
                             >
                                 {CategoryLabel[key]}

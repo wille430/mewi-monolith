@@ -4,7 +4,7 @@ import { vi } from 'vitest'
 import { BytbilScraper } from './bytbil.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
-import { validateListingTest } from '../tests/validate-listing-test'
+import { validateListingTest } from '../tests/validate-listing.spec'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper

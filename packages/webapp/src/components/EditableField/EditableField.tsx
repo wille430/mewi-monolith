@@ -2,7 +2,7 @@ import { Button, TextField, TextFieldProps } from '@wille430/ui'
 import { useEffect, useState } from 'react'
 import { MdOutlineModeEditOutline } from 'react-icons/md'
 import { FiCheck } from 'react-icons/fi'
-import _ from 'lodash'
+import omit from 'lodash/omit'
 import styles from './EditableField.module.scss'
 
 interface EditableFieldProps extends TextFieldProps {
@@ -36,7 +36,7 @@ const EditableField = ({ label, onEditComplete, disabled, ...rest }: EditableFie
                 />
             ) : (
                 <div className={styles.noneditable}>
-                    <input {..._.omit(rest, 'onChange')} disabled />
+                    <input {...omit(rest, 'onChange')} disabled />
                     {!disabled && (
                         <Button
                             icon={<MdOutlineModeEditOutline />}

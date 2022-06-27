@@ -1,12 +1,12 @@
 import { Button, TextField } from '@wille430/ui'
-import { capitalize } from 'lodash'
+import capitalize from 'lodash/capitalize'
 import { Role, User } from '@mewi/prisma/index-browser'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { instance } from '@/lib/axios'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
+import { instance } from '@/lib/axios'
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()

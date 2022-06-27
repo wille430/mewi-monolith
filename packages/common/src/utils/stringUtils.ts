@@ -1,5 +1,6 @@
+import forOwn from 'lodash/forOwn'
+import clone from 'lodash/clone'
 import queryString from 'query-string'
-import _ from 'lodash'
 
 export const capitalize = (string: string) => {
     const newString = string.split('')
@@ -35,7 +36,7 @@ export const stringifyNestedObject = (object: Record<string, unknown>, isChild =
     if (typeof object !== 'object') {
         return object
     } else {
-        object = _.clone(object)
+        object = clone(object)
     }
 
     for (const key of Object.keys(object)) {
@@ -59,7 +60,7 @@ export const parseNestedStringifiedObject = (string: string) => {
         return string
     }
 
-    _.forOwn(parsed, (val, key) => {
+    forOwn(parsed, (val, key) => {
         if (typeof val === 'string') {
             object[key] = parseNestedStringifiedObject(val as string)
         }

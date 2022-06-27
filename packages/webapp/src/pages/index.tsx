@@ -2,16 +2,18 @@ import Head from 'next/head'
 import { ReactElement } from 'react'
 import { GetStaticProps } from 'next'
 import { Listing } from '@mewi/prisma/index-browser'
+import dynamic from 'next/dynamic'
 import { Layout } from '@/components/Layout/Layout'
 import { Hero } from '@/components/Hero/Hero'
 import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
 import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings'
 import prisma from '@/lib/prisma'
 import { useAppDispatch, useAppSelector } from '@/hooks'
-import ListingPopUp from '@/components/ListingPopUp/ListingPopUp'
 import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
 import { serialize } from '@/lib/serialize'
+
+const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 
 interface IndexPageProps {
     featuredListings: Listing[]

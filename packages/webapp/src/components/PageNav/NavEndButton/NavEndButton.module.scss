@@ -1,6 +1,4 @@
-import styled from 'styled-components'
-
-export const Button = styled.button`
+.button {
     height: 50px;
     width: 50px;
     border: none;
@@ -21,4 +19,4 @@ export const Button = styled.button`
     &:active {
         background-color: rgb(230, 230, 230);
     }
-`
+}

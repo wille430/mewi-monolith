@@ -1,10 +1,13 @@
 import { ListingSearchFilters as ListingFilters } from '@wille430/common'
 import React, { useRef } from 'react'
 import queryString from 'query-string'
-import _ from 'lodash'
 import { keys } from 'ts-transformer-keys'
 import Router, { useRouter } from 'next/router'
 import { Category } from '@mewi/prisma/index-browser'
+import isEqual from 'lodash/isEqual'
+import debounce from 'lodash/debounce'
+import omit from 'lodash/omit'
+import pick from 'lodash/pick'
 import { ParsedUrlQuery } from 'querystring'
 
 export interface ListingFiltersContext {
@@ -67,7 +70,7 @@ export const ListingFiltersProvider = ({
     const isFirstRender = useRef(true)
 
     const shouldUpdate = () => {
-        return !_.isEqual(
+        return !isEqual(
             {
                 ...parseSearchParams(router.query, excludeInParams),
                 ...defaults,
@@ -78,9 +81,7 @@ export const ListingFiltersProvider = ({
 
     const updateSearchParams = (filters: ListingFilters) => {
         Router.push(
-            window.location.pathname +
-                '?' +
-                queryString.stringify(_.omit(filters, excludeInParams)),
+            window.location.pathname + '?' + queryString.stringify(omit(filters, excludeInParams)),
             undefined,
             { shallow: true }
         )
@@ -118,9 +119,9 @@ export const ListingFiltersProvider = ({
     }
 
     const throttleUpdateParams = React.useCallback(
-        _.debounce((newFilters: typeof _filters) => {
-            if (!_.isEqual(filters.current, newFilters)) {
-                if (!_.isEqual(changedFilterValues(filters.current, newFilters), ['page'])) {
+        debounce((newFilters: typeof _filters) => {
+            if (!isEqual(filters.current, newFilters)) {
+                if (!isEqual(changedFilterValues(filters.current, newFilters), ['page'])) {
                     newFilters.page = 1
                     filters.current = newFilters
                 }
@@ -177,8 +178,8 @@ export const parseSearchParams = (
     query: ParsedUrlQuery,
     excludeInParams: Array<keyof ListingFilters> = []
 ): ListingFilters => {
-    const unvalidatedFilters: Partial<ListingFilters> = _.omit(
-        _.pick(query, ...keys<ListingFilters>()),
+    const unvalidatedFilters: Partial<ListingFilters> = omit(
+        pick(query, ...keys<ListingFilters>()),
         excludeInParams
     )
 
@@ -226,7 +227,7 @@ export const parseSearchParams = (
 export const stringifySearchPath = (filters: ListingFilters) => {
     const excludeFilters: (keyof ListingFilters)[] = ['category']
 
-    const omittedFilters = _.omit(filters, excludeFilters)
+    const omittedFilters = omit(filters, excludeFilters)
 
     let path = '/sok'
 

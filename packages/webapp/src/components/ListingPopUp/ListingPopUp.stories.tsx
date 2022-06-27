@@ -1,5 +1,5 @@
 import { Story, Meta } from '@storybook/react'
-import { uniqueId } from 'lodash'
+import uniqueId from 'lodash/uniqueId'
 import ListingPopUp from './ListingPopUp'
 
 export default {

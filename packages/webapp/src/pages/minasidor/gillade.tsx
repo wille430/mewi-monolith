@@ -10,7 +10,6 @@ import { serialize } from '@/lib/serialize'
 import prisma from '@/lib/prisma'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
 import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUp'
-import { useAppSelector } from '@/hooks'
 
 export const getServerSideProps = withAuth(
     async (req) => {
@@ -35,8 +34,6 @@ export const getServerSideProps = withAuth(
 
 const Bevakningar = ({ listings }: { listings: Listing[] }) => {
     const _listings = useRef(listings)
-
-    const { user } = useAppSelector((state) => state.user)
 
     return (
         <>

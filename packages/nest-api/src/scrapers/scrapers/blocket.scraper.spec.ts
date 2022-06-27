@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { BlocketScraper } from './blocket.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
-import { validateListingTest } from '../tests/validate-listing-test'
+import { validateListingTest } from '../tests/validate-listing.spec'
 
 describe('Blipp Scraper', () => {
     let scraper: BlocketScraper

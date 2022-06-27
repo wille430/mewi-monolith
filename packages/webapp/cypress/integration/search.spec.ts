@@ -1,5 +1,5 @@
 import { ListingSearchFilters, regions } from '@wille430/common'
-import _ from 'lodash'
+import sampleSize from 'lodash/sampleSize'
 import queryString from 'query-string'
 import faker from '@faker-js/faker'
 
@@ -13,7 +13,7 @@ describe('search', () => {
 
             formData = {
                 // category: _.sample(Object.keys(categories)),
-                regions: _.sampleSize(regions).map((regionOption) => regionOption.label),
+                regions: sampleSize(regions).map((regionOption) => regionOption.label),
                 priceRangeGte: Math.round(Math.random() * 2000),
                 priceRangeLte: Math.round((1 + Math.random()) * 2000),
                 auction: Math.round(Math.random()) === 1 ? true : false,

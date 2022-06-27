@@ -2,10 +2,12 @@ import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement, useState } from 'react'
 import { PopulatedUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'
-import { instance } from '@/lib/axios'
+import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'
 import WatcherPopUpButton from './WatcherPopUpButton'
-import WatcherCard from './WatcherCard/WatcherCard'
+import { instance } from '@/lib/axios'
+
+const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))
 
 interface WatcherListProps {
     watchers: PopulatedUserWatcher[]

@@ -1,5 +1,4 @@
 import { capitalize } from '@wille430/common'
-import _ from 'lodash'
 
 describe('watchers', () => {
     const longWait = 1000
@@ -41,10 +40,10 @@ describe('watchers', () => {
         cy.get('[data-testid=regionsSelect]').type(capitalize(formData.regions[0]) + ' {enter}', {
             delay: 100,
         })
-        cy.get('[data-testid=regionsSelect]').contains(_.capitalize(formData.regions[0]))
+        cy.get('[data-testid=regionsSelect]').contains(capitalize(formData.regions[0]))
 
         cy.get('[data-testid=categorySelect]').type(formData.category + '{enter}')
-        cy.get('[data-testid=categorySelect]').contains(_.capitalize(formData.category))
+        cy.get('[data-testid=categorySelect]').contains(capitalize(formData.category))
 
         cy.get('[data-testid=priceGte]').type(formData.price.gte)
         cy.get('[data-testid=priceGte]').should('have.value', formData.price.gte)

@@ -1,4 +1,3 @@
-// import { jwtVerify, SignJWT } from 'jose'
 import { Role } from '@mewi/prisma/index-browser'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { IncomingMessage, ServerResponse } from 'http'

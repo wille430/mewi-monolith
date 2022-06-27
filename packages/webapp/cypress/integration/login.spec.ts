@@ -1,10 +1,11 @@
-import _ from 'lodash'
+import pick from 'lodash/pick'
+
 describe('login', () => {
     let userInfo: { email: string; password: string }
 
     before(() => {
         cy.request('post', 'http://localhost:3001/test/user').then((res) => {
-            userInfo = _.pick(res.body, ['email', 'password'])
+            userInfo = pick(res.body, ['email', 'password'])
         })
     })
 

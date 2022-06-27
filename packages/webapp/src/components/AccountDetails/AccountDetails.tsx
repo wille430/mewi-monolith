@@ -1,8 +1,8 @@
-import faker from '@faker-js/faker'
 import { FormEvent, useState } from 'react'
 import { useMutation } from 'react-query'
 import { LoginStrategy, User } from '@mewi/prisma/index-browser'
 import { Button, TextField } from '@wille430/ui'
+import { randomString } from '@wille430/common'
 import styles from './AccountDetails.module.scss'
 import { instance } from '@/lib/axios'
 import { ApiErrorResponse } from '@/types/types'
@@ -84,12 +84,7 @@ const AccountDetails = ({ user }: AccountDetailsProps) => {
                 </div>
                 <div>
                     <label>Lösenord</label>
-                    <TextField
-                        type='password'
-                        value={faker.internet.password()}
-                        disabled
-                        fullWidth
-                    />
+                    <TextField type='password' value={randomString(16)} disabled fullWidth />
                 </div>
                 <Button type='submit' label='Uppdatera' />
                 <span className='text-green-500'>{success}</span>

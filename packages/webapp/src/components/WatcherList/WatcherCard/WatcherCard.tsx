@@ -2,10 +2,10 @@ import { capitalize, CategoryLabel, PopulatedUserWatcher } from '@wille430/commo
 import { Listing } from '@mewi/prisma'
 import { Button } from '@wille430/ui'
 import queryString from 'query-string'
-import _ from 'lodash'
 import { Dispatch, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
+import omit from 'lodash/omit'
 import styles from './WatcherCard.module.scss'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 import RemoveButton from './RemoveWatcherButton'
@@ -29,7 +29,7 @@ const WatcherCard = ({
     const router = useRouter()
 
     const handleSearchButtonClick = () => {
-        const filters = _.omit(watcher.metadata, ['category'])
+        const filters = omit(watcher.metadata, ['category'])
         let pathname = '/sok'
 
         if (watcher.metadata.category) {

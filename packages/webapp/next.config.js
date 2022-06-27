@@ -1,5 +1,8 @@
-const { flowRight } = require('lodash')
+const flowRight = require('lodash/flowRight')
 const keysTransformer = require('ts-transformer-keys/transformer').default
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+})
 
 const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/common'])
 
@@ -36,4 +39,4 @@ const config = {
     },
 }
 
-module.exports = flowRight([withTM])(config)
+module.exports = flowRight([withTM, withBundleAnalyzer])(config)

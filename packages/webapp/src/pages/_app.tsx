@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
-import { useRouter } from 'next/router'
 import { Store, wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
 import { instance } from '@/lib/axios'
@@ -27,12 +26,17 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
 
     const [queryClient] = useState(() => new QueryClient())
-    const router = useRouter()
     const store = useStore() as Store
 
     useEffect(() => {
-        store.dispatch(fetchUser())
-    }, [router.events, router.asPath])
+        const handleLoad = () => store.dispatch(fetchUser())
+
+        window.addEventListener('load', handleLoad)
+
+        return () => {
+            window.removeEventListener('load', handleLoad)
+        }
+    }, [])
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store

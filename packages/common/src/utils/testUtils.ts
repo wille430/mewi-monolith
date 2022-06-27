@@ -1,9 +1,10 @@
-import { faker } from '@faker-js/faker'
+import { firstName, domainName, lastName } from 'minifaker'
+import { randomString } from './stringUtils'
 
 export const randomEmail = () => {
-    return `${faker.name.firstName()}.${faker.name.lastName()}@${faker.internet.domainName()}`.toLowerCase()
+    return `${firstName()}.${lastName()}@${domainName()}`.toLowerCase()
 }
 
 export const randomPassword = () => {
-    return '.Abc123' + faker.random.alpha(10)
+    return '.Abc123' + randomString(10)
 }
