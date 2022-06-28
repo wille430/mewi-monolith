@@ -75,3 +75,12 @@ Page                                       Size     First Load JS
 ○  (Static)  automatically rendered as static HTML (uses no initial props)
 ●  (SSG)     automatically generated as static HTML + JSON (uses getStaticProps)
    (ISR)     incremental static regeneration (uses revalidate in getStaticProps)
+
+
+NEST API:
+BEFORE:
+952K dist
++43M node_modules/
+
+AFTER:
+984K
