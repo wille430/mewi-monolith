@@ -325,6 +325,7 @@ importers:
       next: ^12.1.6
       next-redux-wrapper: ^7.0.5
       next-transpile-modules: ^9.0.0
+      prettier-plugin-tailwindcss: ^0.1.11
       query-string: ^7.1.1
       react: ^17.0.2
       react-charts: ^3.0.0-beta.36
@@ -393,6 +394,7 @@ importers:
       babel-loader: 8.2.5
       cypress: 9.7.0
       cypress-real-events: 1.7.1_cypress@9.7.0
+      prettier-plugin-tailwindcss: 0.1.11_prettier@2.7.1
       sass: 1.53.0
       tailwindcss: 3.1.4
       ts-loader: 9.3.1_typescript@4.7.4
@@ -16955,6 +16957,15 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       fast-diff: 1.2.0
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.1.11_prettier@2.7.1:
+    resolution: {integrity: sha512-a28+1jvpIZQdZ/W97wOXb6VqI762MKE/TxMMuibMEHhyYsSxQA8Ek30KObd5kJI2HF1ldtSYprFayXJXi3pz8Q==}
+    engines: {node: '>=12.17.0'}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.7.1
     dev: true
 
   /prettier/2.3.0:

@@ -62,6 +62,7 @@
         "babel-loader": "^8.2.4",
         "cypress": "^9.5.2",
         "cypress-real-events": "^1.7.0",
+        "prettier-plugin-tailwindcss": "^0.1.11",
         "sass": "^1.49.9",
         "tailwindcss": "^3.0.23",
         "ts-loader": "^9.2.8",

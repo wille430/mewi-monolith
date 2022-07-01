@@ -22,7 +22,7 @@ export const Layout = ({ children, decorations = true }: LayoutProps) => {
                     <Nav />
                 </header>
                 {decorations && <Arch className='pb-2' />}
-                <div className='flex-grow p-4'>{children}</div>
+                <div className='flex-grow'>{children}</div>
             </div>
             <Footer />
         </div>

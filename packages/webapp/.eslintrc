@@ -1,4 +1,4 @@
 {
-    "extends": "../../.eslintrc",
-    "ignorePatterns": "src/**/*.(js)$"
+  "extends": "../../.eslintrc",
+  "ignorePatterns": "src/**/*.(js)$"
 }
