@@ -6,7 +6,7 @@ $like-button-padding: 0.25rem;
 $fade-transition: all 150ms linear;
 
 .card {
-    @apply shadow-md border-2 border-gray-100 rounded-sm bg-paper;
+    @apply border-2 rounded-sm bg-paper;
     width: 16rem;
     height: 16rem;
     cursor: pointer;

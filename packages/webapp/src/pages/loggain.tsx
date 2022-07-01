@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import { ReactElement } from 'react'
+import { CreateAccountInformation } from './../components/CreateAccountInformation'
 import { Layout } from '@/components/Layout/Layout'
-import SignInWithEmail from '@/components/SignInWithEmail/SignInWithEmail'
+import { EmailSignInForm } from '@/components/EmailSignInForm/EmailSignInForm'
 import { useUser } from '@/hooks/useUser'
 
 const Login = () => {
@@ -16,8 +17,12 @@ const Login = () => {
                 <title>Logga in | Mewi.se</title>
             </Head>
 
-            <section style={{ paddingTop: '15vh' }}>
-                <SignInWithEmail />
+            <section className='divided-content section py-16' style={{ marginTop: '15vh' }}>
+                <div className='flex-grow'>
+                    <h3 className='text-center mb-8 text-primary'>Logga in</h3>
+                    <EmailSignInForm />
+                </div>
+                <CreateAccountInformation />
             </section>
         </main>
     )

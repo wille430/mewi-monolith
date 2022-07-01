@@ -1,5 +1,41 @@
 @import '~@wille430/ui/scss/root';
 
+$layout-width: theme('screens.lg');
+
+@layer components {
+    .form {
+        @apply flex flex-col space-y-8 max-w-md mx-auto;
+    }
+
+    .section {
+        @apply mx-auto  p-4 bg-white border rounded-md;
+    }
+
+    .btn-group {
+        @apply flex space-x-4 md:justify-center;
+    }
+
+    .divided-content {
+        @apply space-y-12 p-4;
+        margin: 0 auto;
+        max-width: $layout-width;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        @screen lg {
+            @apply space-x-16 space-y-0;
+            flex-direction: row;
+        }
+    }
+}
+
+@layer utilities {
+    .max-width {
+        @apply w-full max-w-screen-lg;
+    }
+}
+
 @font-face {
     font-family: 'Inter';
     src: local('Inter'), url(../fonts/Inter/Inter-VariableFont_slntwght.ttf);
@@ -12,10 +48,13 @@
     }
 }
 
+body {
+    background-color: theme('colors.gray.50');
+}
+
 .basic-layout {
-    @apply flex flex-col gap-4 p-4;
+    @apply flex flex-col gap-4 p-4 max-width;
     grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
-    max-width: theme('screens.lg');
     margin: 0 auto;
     height: 100%;
 
@@ -36,5 +75,38 @@
 
     & > span {
         z-index: 2;
+    }
+}
+
+.card {
+    @apply section max-w-none w-full p-0;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    &__body {
+        @apply p-4 px-3;
+        flex: 2;
+    }
+
+    &__heading {
+        @apply text-lg text-primary mb-2;
+    }
+
+    &__text {
+        @apply text-sm;
+    }
+
+    &__image-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: max(8rem, 30%);
+    }
+
+    &__img {
+        height: auto;
+        width: 100%;
+        object-fit: cover;
     }
 }

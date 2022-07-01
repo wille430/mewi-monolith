@@ -5,7 +5,7 @@ export const Arch = ({ className, ...props }: HTMLAttributes<HTMLOrSVGElement>) 
     <svg
         className={clsx('w-full fill-primary', className)}
         style={{
-            height: '1.8vw',
+            height: 'max(1.8vw, 1rem)',
         }}
         viewBox='0 0 100 100'
         preserveAspectRatio='none'

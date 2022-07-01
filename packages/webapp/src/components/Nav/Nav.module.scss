@@ -86,8 +86,7 @@
 
 @screen md {
     .nav {
-        @apply mx-auto;
-        max-width: theme('screens.md');
+        @apply mx-auto max-width;
         display: grid;
         grid-template-columns: 1fr 32rem 1fr;
         grid-template-areas: 'lg nv .';
