@@ -48,7 +48,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                         if (i === totalNumButtons - 1 && showLastPageSkip) {
                             return (
                                 <>
-                                    <span key='dots-1' className='block mt-auto mx-2'>
+                                    <span key='dots-1' className='mx-2 mt-auto block'>
                                         ...
                                     </span>
                                     <NavButton
@@ -71,7 +71,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                                         selected={filters.page === 1 || !filters.page}
                                         onClick={handleClick}
                                     />
-                                    <span key='dots-0' className='block mt-auto mx-2'>
+                                    <span key='dots-0' className='mx-2 mt-auto block'>
                                         ...
                                     </span>
                                 </>
@@ -107,14 +107,14 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
                 key='page-prev'
                 data-testid='pageNavPrev'
                 onClick={() => changePage(-1)}
-                icon={FiArrowLeft}
+                icon={<FiArrowLeft color='black' />}
             />
             <RenderButtons key='pages' />
             <NavEndButton
                 key='page-next'
                 data-testid='pageNavNext'
                 onClick={() => changePage(1)}
-                icon={FiArrowRight}
+                icon={<FiArrowRight color='black' />}
             />
         </div>
     )

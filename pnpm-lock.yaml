@@ -85,6 +85,7 @@ importers:
       '@wille430/common': workspace:^1.0.1
       axios: ^0.26.1
       bcryptjs: ^2.4.3
+      bson: ^4.6.4
       cache-manager: ^3.6.0
       class-transformer: ^0.5.1
       class-validator: ^0.13.2
@@ -130,6 +131,7 @@ importers:
       '@wille430/common': link:../common
       axios: 0.26.1
       bcryptjs: 2.4.3
+      bson: 4.6.4
       cache-manager: 3.6.3
       class-transformer: 0.5.1
       class-validator: 0.13.2
@@ -8355,6 +8357,13 @@ packages:
       electron-to-chromium: 1.4.171
       node-releases: 2.0.5
       update-browserslist-db: 1.0.4_browserslist@4.21.0
+
+  /bson/4.6.4:
+    resolution: {integrity: sha512-TdQ3FzguAu5HKPPlr0kYQCyrYUYh8tFM+CMTpxjNzVzxeiJY00Rtuj3LXLHSgiGvmaWlZ8PE+4KyM2thqE38pQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      buffer: 5.7.1
+    dev: false
 
   /buffer-crc32/0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}

@@ -13,18 +13,13 @@
 }
 
 .footer {
-    @apply bg-primary p-8 sm:p-12 text-white;
+    @apply bg-primary p-8 text-white sm:p-12;
     min-height: 32rem;
 }
 
 .inner-footer {
-    @apply max-w-7xl mx-auto;
-
-    & > div {
-        @apply w-full sm:flex grid grid-cols-2 space-x-8 md:space-x-16;
-        max-width: theme('screens.md');
-        justify-content: space-between;
-    }
+    @apply mx-auto grid w-full max-w-7xl grid-cols-2 gap-8 sm:flex md:gap-0 md:space-x-16;
+    max-width: theme('screens.lg');
 }
 
 .link-list {

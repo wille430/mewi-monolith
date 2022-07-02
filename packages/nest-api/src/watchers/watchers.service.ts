@@ -3,6 +3,7 @@ import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { Cron } from '@nestjs/schedule'
 import { Prisma, User, Watcher, EmailType } from '@mewi/prisma'
+import { EJSON } from 'bson'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
@@ -127,9 +128,9 @@ export class WatchersService {
 
         const user = (await this.prisma.user.findUnique({ where: { id: userId } })) as User
 
-        const { where } = this.listingService.metadataToWhereInput(watcher.metadata)
+        const pipeline = this.listingService.metadataToPL(watcher.metadata)
 
-        const newListings = await this.newListings(where)
+        const newListings = await this.newListings(pipeline)
 
         if (newListings.length >= this.configService.get('notification.watcher.minListings')) {
             const email = new Email({
@@ -140,11 +141,14 @@ export class WatchersService {
             })
 
             const locals = {
-                newItemCount: await this.prisma.listing.count({
-                    where: this.listingService.metadataToWhereInput(watcher.metadata as any)[
-                        'where'
-                    ],
-                }),
+                newItemCount: await this.prisma.listing
+                    .aggregateRaw({
+                        pipeline: [
+                            ...this.listingService.metadataToPL(watcher.metadata as any),
+                            { $count: 'totalHits' },
+                        ],
+                    })
+                    .then((res) => (res as unknown)[0]?.totalHits ?? 0),
                 keyword: watcher.metadata.keyword,
                 items: newListings,
             }
@@ -185,11 +189,12 @@ export class WatchersService {
         }
     }
 
-    async newListings(where: Prisma.ListingWhereInput) {
-        return await this.prisma.listing.findMany({
-            where,
-            take: 7,
-        })
+    async newListings(pipeline: any) {
+        return await this.prisma.listing
+            .aggregateRaw({
+                pipeline: [...pipeline, { $limit: 7 }],
+            })
+            .then((arr) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x)))
     }
 
     async shouldNotifyUser(userId: string, watcherId: string): Promise<boolean> {

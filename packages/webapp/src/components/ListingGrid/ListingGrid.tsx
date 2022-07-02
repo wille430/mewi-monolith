@@ -9,8 +9,6 @@ const cx = classNames.bind(styles)
 
 const ListingGrid = () => {
     const dispatch = useAppDispatch()
-
-    const { user } = useAppSelector((state) => state.user)
     const { hits, isLoading, error } = useAppSelector((state) => state.listings.search)
 
     if (isLoading) {

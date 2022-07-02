@@ -135,7 +135,7 @@ type FilterRange {
 
 type Metadata {
   keyword  String?
-  regions  String[]
+  region   String
   category String?
   auction  Boolean?
 

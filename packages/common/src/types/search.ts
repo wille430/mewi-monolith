@@ -5,7 +5,7 @@ type Metadata = Watcher['metadata']
 
 export interface ListingSearchFilters extends Partial<Metadata> {
     keyword?: string
-    regions?: string[]
+    region?: string
     category?: string
     priceRangeGte?: number
     priceRangeLte?: number

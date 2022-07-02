@@ -57,7 +57,7 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                         <Button onClick={handleClose} variant='text' size='lg' icon={<FiX />} />
                     </span>
                 </Container.Header>
-                <Container.Content className='flex flex-col flex-grow'>
+                <Container.Content className='flex flex-grow flex-col'>
                     <div className={styles['image-wrapper']}>
                         {/* TODO: Implement image carousel */}
                         <DefaultImage src={imageUrl[0]} />
@@ -74,7 +74,7 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                         <div className={styles['info-body']}>
                             <DescriptionView body={body} />
                             <HorizontalLine />
-                            <SpecificationsView parameters={parameters} />
+                            <SpecificationsView parameters={parameters ?? []} />
                         </div>
                     </article>
                 </Container.Content>

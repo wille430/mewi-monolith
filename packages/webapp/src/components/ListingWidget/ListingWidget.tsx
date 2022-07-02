@@ -47,13 +47,13 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                 </Link>
             )}
             <div className={style['image-wrapper']}>
-                <DefaultImage src={listing.imageUrl[0]} alt={listing.title} />
+                <DefaultImage src={listing.imageUrl && listing.imageUrl[0]} alt={listing.title} />
             </div>
             <div className={style['details']}>
                 <div className={style['header']}>
                     <span className={style['title']}>{listing.title}</span>
 
-                    <div className='flex flex-col text-right ml-1'>
+                    <div className='ml-1 flex flex-col text-right'>
                         <OriginLabel origin={listing.origin} />
                         <span className={style['region']}>{listing.region}</span>
                     </div>

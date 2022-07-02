@@ -1,5 +1,5 @@
 .grid {
-    @apply flex w-full flex-none flex-wrap justify-center gap-4 mx-auto;
+    @apply mx-auto flex w-full flex-none flex-wrap justify-center gap-4;
 
     & > * {
         aspect-ratio: 1 / 1;
@@ -27,5 +27,5 @@
 }
 
 .center {
-    @apply flex-grow flex justify-center items-center;
+    @apply flex flex-grow items-center justify-center;
 }

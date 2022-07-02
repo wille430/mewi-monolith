@@ -1,6 +1,7 @@
 import { ListingSearchFilters } from '@wille430/common'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@wille430/ui'
+import isEqual from 'lodash/isEqual'
 import PageNav from '../PageNav/PageNav'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
@@ -17,6 +18,7 @@ export interface SearchSectionProps {
 }
 
 export const SearchSection = () => {
+    const lastFilters = useRef({})
     const { filters, debouncedFilters, setFilters, defaults: defaultFilters } = useListingFilters()
     const scrollUpRef = useRef<HTMLDivElement | null>(null)
 
@@ -26,11 +28,14 @@ export const SearchSection = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(searchListings(debouncedFilters))
+        if (!isEqual(lastFilters.current, debouncedFilters)) {
+            lastFilters.current = debouncedFilters
+            dispatch(searchListings(debouncedFilters))
+        }
     }, [debouncedFilters])
 
     return (
-        <section className='w-full h-full flex flex-col'>
+        <section className='flex h-full w-full flex-col'>
             <div ref={scrollUpRef} />
             <ListingFiltersArea
                 {...{

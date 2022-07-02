@@ -1,4 +1,4 @@
-import { ListingSearchFilters, regions, categories } from '@wille430/common'
+import { ListingSearchFilters, categories } from '@wille430/common'
 import { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 import LabeledDropdown from '../LabeledDropdown/LabeledDropdown'
@@ -32,19 +32,20 @@ export const ListingFilters = ({
             data-testid='keywordInput'
             fullWidth
         />
-        <LabeledDropdown
-            label='Region'
-            name='regions'
-            value={filters.regions}
-            onChange={(val) =>
+        <LabeledTextField
+            label='Plats'
+            placeholder='Plats (stad, region, etc)'
+            name='region'
+            showLabel={false}
+            onChange={(e) =>
                 setFilters({
                     ...filters,
-                    regions: val,
+                    region: e.target.value,
                 })
             }
-            isMulti={true}
-            options={regions}
-            data-testid='regionsSelect'
+            value={filters.region ?? ''}
+            data-testid='regionInput'
+            fullWidth
         />
         {showCategory && (
             <LabeledDropdown

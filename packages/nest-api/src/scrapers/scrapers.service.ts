@@ -70,6 +70,12 @@ export class ScrapersService {
 
             const scraper = this.scrapers[name]
 
+            // Delete old
+            this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
+            await scraper.deleteOld()
+            scraper.reset()
+
+            // Begin scraping
             this.logPipeline(
                 totalScrapers,
                 `Scraping ${await scraper.quantityToScrape} listings from ${name}...`
@@ -80,10 +86,6 @@ export class ScrapersService {
                 totalScrapers,
                 `Successfully scraped ${scraper.listingScraped} from ${name}`
             )
-
-            this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
-            await scraper.deleteOld()
-            scraper.reset()
 
             if (this.scraperPipeline.find((x) => x[0] === scraper.name))
                 scraper.status = ScraperStatus.QUEUED

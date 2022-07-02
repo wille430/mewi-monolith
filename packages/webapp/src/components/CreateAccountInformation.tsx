@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import { AiFillHeart } from 'react-icons/ai'
+import { GiMagnifyingGlass } from 'react-icons/gi'
 import { InfoCard } from './InfoCard/InfoCard'
 
 export const CreateAccountInformation = () => (
@@ -10,12 +12,22 @@ export const CreateAccountInformation = () => (
             </h4>
             <ul className='space-y-8 '>
                 <InfoCard
-                    heading={'Bevaka sökningar'}
+                    heading={
+                        <>
+                            <AiFillHeart className='mr-2 inline' />
+                            Bevaka sökningar
+                        </>
+                    }
                     body='Skapa bevakningar och få notiser vid sökningar som matchar dina filter. Var den första som hittar de bästa produkterna för de bästa priserna'
                 />
 
                 <InfoCard
-                    heading={'Spara produkter'}
+                    heading={
+                        <>
+                            <GiMagnifyingGlass className='mr-2 inline' />
+                            Spara produkter
+                        </>
+                    }
                     body={
                         <>
                             Hitta produkter du gillar och spara dem för senare. Dina gillade

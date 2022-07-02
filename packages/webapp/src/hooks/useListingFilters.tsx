@@ -55,6 +55,14 @@ export const useListingFilters = () => {
     return listingFilters
 }
 
+export const removeUndefinedValues = (o: Record<any, any>) => {
+    for (const [key, value] of Object.entries(o)) {
+        if (value === undefined) {
+            delete o[key]
+        }
+    }
+}
+
 export const ListingFiltersProvider = ({
     children,
     defaults = {},
@@ -121,6 +129,7 @@ export const ListingFiltersProvider = ({
     const throttleUpdateParams = React.useCallback(
         debounce((newFilters: typeof _filters) => {
             if (!isEqual(filters.current, newFilters)) {
+                removeUndefinedValues(newFilters)
                 if (!isEqual(changedFilterValues(filters.current, newFilters), ['page'])) {
                     newFilters.page = 1
                     filters.current = newFilters
@@ -129,7 +138,7 @@ export const ListingFiltersProvider = ({
 
             updateSearchParams(newFilters)
         }, 1000),
-        []
+        [filters.current]
     )
 
     React.useEffect(() => {
@@ -178,6 +187,7 @@ export const parseSearchParams = (
     query: ParsedUrlQuery,
     excludeInParams: Array<keyof ListingFilters> = []
 ): ListingFilters => {
+    console.log(query, keys<ListingFilters>())
     const unvalidatedFilters: Partial<ListingFilters> = omit(
         pick(query, ...keys<ListingFilters>()),
         excludeInParams
@@ -202,15 +212,8 @@ export const parseSearchParams = (
                 if (value.toString().toUpperCase() in Category) validatedFilters[key] = value
                 break
             case 'keyword':
+            case 'region':
                 validatedFilters[key] = value
-                break
-            case 'regions':
-                if (Array.isArray(value)) {
-                    // TODO validate regions
-                    validatedFilters[key] = value as string[]
-                } else {
-                    validatedFilters[key] = [value as string]
-                }
                 break
             case 'page':
             case 'priceRangeGte':

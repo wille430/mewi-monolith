@@ -24,6 +24,7 @@
         "@wille430/common": "workspace:^1.0.1",
         "axios": "^0.26.1",
         "bcryptjs": "^2.4.3",
+        "bson": "^4.6.4",
         "cache-manager": "^3.6.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.13.2",
