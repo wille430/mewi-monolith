@@ -13,7 +13,8 @@ WORKDIR /app
 COPY packages/nest-api/_isolated_/ /app/
 RUN npm i pnpm -g
 RUN pnpm i -F schemas
-RUN pnpm i --production=false
+RUN pnpm i --production=false -F=!schemas
+# RUN cp /app/packages/common/dist/ /app/node_modules/@wille430/common/ -r
 
 EXPOSE 3001
 CMD node /app/dist/main.js

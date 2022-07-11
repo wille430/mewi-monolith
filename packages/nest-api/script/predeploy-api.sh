@@ -15,9 +15,13 @@ cp ../../tools/copy_prisma.sh  ./_isolated_/tools/
 # Fix pnpm-workspace.yaml
 
 # Delete last 2 lines
-sed -i '$ d' _isolated_/pnpm-workspace.yaml
-sed -i '$ d' _isolated_/pnpm-workspace.yaml
+# sed -i '$ d' _isolated_/pnpm-workspace.yaml
+# sed -i '$ d' _isolated_/pnpm-workspace.yaml
+
+# Clear
+truncate -s 0 _isolated_/pnpm-workspace.yaml
 
 # Append updated path
+echo "packages:" >> _isolated_/pnpm-workspace.yaml
 echo "  - packages/schemas" >> _isolated_/pnpm-workspace.yaml
 echo "  - packages/common" >> _isolated_/pnpm-workspace.yaml
