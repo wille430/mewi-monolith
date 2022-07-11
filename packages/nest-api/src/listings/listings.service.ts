@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
-import { ListingSort } from '@wille430/common'
 import { EJSON } from 'bson'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
+import { filterPipelineStage } from './helpers/filters'
+import { LAST_PL_STAGES } from './constants'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { PrismaService } from '@/prisma/prisma.service'
-
-const MIN_SEARCH_SCORE = 1
 
 @Injectable()
 export class ListingsService {
@@ -46,88 +45,9 @@ export class ListingsService {
     metadataToPL(dto: Partial<FindAllListingsDto>): Prisma.InputJsonValue[] {
         const pipeline: Prisma.InputJsonValue[] = []
 
-        if (dto.keyword) {
-            pipeline.push()
-        }
-
-        const dtoFieldToStageMap: Record<
-            keyof typeof dto,
-            (value: typeof dto[keyof typeof dto]) => Prisma.InputJsonValue | Prisma.InputJsonValue[]
-        > = {
-            keyword: (value) => [
-                {
-                    $search: {
-                        index:
-                            process.env.NODE_ENV === 'production'
-                                ? 'listing_search_prod'
-                                : 'listing_search_dev',
-                        text: {
-                            query: value as string,
-                            path: {
-                                wildcard: '*',
-                            },
-                            fuzzy: {},
-                        },
-                    },
-                },
-                {
-                    $addFields: {
-                        score: { $meta: 'searchScore' },
-                    },
-                },
-                { $match: { score: { $gte: MIN_SEARCH_SCORE } } },
-            ],
-            auction: (value: boolean) => ({ $match: { auction: value } }),
-            category: (value: string) => ({ $match: { category: value } }),
-            dateGte: (value: Date) => ({ $match: { date: { $gte: value } } } as any),
-            priceRangeGte: (value: number) => ({ $match: { 'price.value': { $gte: value } } }),
-            priceRangeLte: (value: number) => ({ $match: { 'price.value': { $lte: value } } }),
-            region: (value: string) => {
-                const regions = value
-                    .split(/(\.|,| )? /i)
-                    .filter((x) => !!x && !new RegExp(/^,$/).test(x))
-                    .map((x) => x.trim())
-
-                return {
-                    $match: {
-                        region: {
-                            $regex: (`^` +
-                                regions.map((reg) => '(?=.*\\b' + reg + '\\b)').join('') +
-                                '.+') as any,
-                            $options: 'i',
-                        },
-                    },
-                }
-            },
-            sort: (value) => {
-                const listingSortToOrderBy: Record<ListingSort, any> = {
-                    [ListingSort.DATE_ASC]: {
-                        date: 1,
-                    },
-                    [ListingSort.DATE_DESC]: {
-                        date: -1,
-                    },
-                    [ListingSort.PRICE_ASC]: {
-                        'price.value': 1,
-                    },
-                    [ListingSort.PRICE_DESC]: {
-                        'price.value': -1,
-                    },
-                    [ListingSort.RELEVANCE]: undefined,
-                }
-
-                return { $sort: listingSortToOrderBy[value as ListingSort] }
-            },
-            page: (value: number) => ({
-                $skip: (value - 1) * (value ?? 20),
-            }),
-            limit: (value: number) => ({ $limit: value }),
-        }
-
-        for (const [key, value] of Object.entries(dto)) {
+        for (const [key, value] of Object.entries(omit(dto, LAST_PL_STAGES))) {
             if (value !== undefined) {
-                let stage = dtoFieldToStageMap[key](value)
-                stage = Array.isArray(stage) ? stage : [stage]
+                const stage = filterPipelineStage(key as any, value)
 
                 if (key === 'keyword') {
                     pipeline.unshift(...stage)
@@ -137,9 +57,18 @@ export class ListingsService {
             }
         }
 
+        // Add the stages that needs to be last in pipeline
+        const stages = Array.from(LAST_PL_STAGES).reduce((prev, cur, i, arr) => {
+            const key = LAST_PL_STAGES[i]
+            return [...prev, ...filterPipelineStage(key, dto[key])]
+        }, [] as any[])
+        pipeline.push(...stages)
+
         if (!dto.sort && dto.keyword) {
             pipeline.push({ $sort: { score: -1 } })
         }
+
+        console.log(pipeline)
 
         return pipeline
     }
