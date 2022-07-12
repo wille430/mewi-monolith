@@ -21,6 +21,10 @@
             "@/*": ["./src/*"]
         }
     },
-    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "node_modules"],
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "references": [
+        {
+            "path": "./tsconfig.spec.json"
+        }
+    ]
 }

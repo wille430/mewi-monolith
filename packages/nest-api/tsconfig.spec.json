@@ -1,13 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "exclude": ["node_modules"],
-    "include": [
-        "src/**/*",
-        "src/**/*.spec.ts",
-        "src/**/*.test.ts",
-        "src/**/*.test.tsx",
-        "src/**/*.spec.tsx"
-    ],
+    "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.tsx"],
     "compilerOptions": {
         "types": ["vitest/globals"],
         "paths": {

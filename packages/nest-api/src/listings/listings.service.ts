@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
-import util from 'util'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { filterPipelineStage } from './helpers/filters'
@@ -14,10 +13,9 @@ export class ListingsService {
     constructor(private prisma: PrismaService) {}
 
     async create(createListingDto: CreateListingDto): Promise<Listing> {
-        const createdListing = await this.prisma.listing.create({
+        return await this.prisma.listing.create({
             data: createListingDto,
         })
-        return createdListing
     }
 
     async findAll(dto: FindAllListingsDto) {
@@ -30,12 +28,7 @@ export class ListingsService {
         totalHits = totalHits[0]?.totalHits ?? 0
 
         const hits = await this.prisma.improvedAggregate(this.prisma.listing, {
-            pipeline: [
-                ...hitsPipeline,
-                {
-                    $group: { _id: null, array: { $push: '$_id' } },
-                },
-            ],
+            pipeline: hitsPipeline,
         })
 
         return {
@@ -70,9 +63,6 @@ export class ListingsService {
         if (!dto.sort && dto.keyword) {
             pipeline.push({ $sort: { score: -1 } })
         }
-
-        process.env.NODE_ENV !== 'production' &&
-            console.log(util.inspect(pipeline, { depth: null }))
 
         return pipeline
     }
