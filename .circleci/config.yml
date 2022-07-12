@@ -75,6 +75,7 @@ jobs:
             - run:
                   name: deploy to Google App Engine
                   command: |
+                      cd ./packages/nest-api
                       gcloud app deploy app.yaml
 workflows:
     version: 2
