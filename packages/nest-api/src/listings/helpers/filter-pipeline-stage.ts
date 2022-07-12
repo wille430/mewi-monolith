@@ -3,6 +3,26 @@ import { ListingSort } from '@wille430/common'
 import { MIN_SEARCH_SCORE } from '../constants'
 import { FindAllListingsDto } from '../dto/find-all-listing.dto'
 
+export const sortPipelineStage = (field: keyof FindAllListingsDto, value: any): any[] => {
+    const listingSortToOrderBy: Record<ListingSort, any> = {
+        [ListingSort.DATE_ASC]: {
+            date: 1,
+        },
+        [ListingSort.DATE_DESC]: {
+            date: -1,
+        },
+        [ListingSort.PRICE_ASC]: {
+            'price.value': 1,
+        },
+        [ListingSort.PRICE_DESC]: {
+            'price.value': -1,
+        },
+        [ListingSort.RELEVANCE]: undefined,
+    }
+
+    return [{ $sort: listingSortToOrderBy[value as ListingSort] }]
+}
+
 export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any): any[] => {
     if (!value) {
         return []
@@ -72,23 +92,7 @@ export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any)
                 },
             ]
         case 'sort':
-            const listingSortToOrderBy: Record<ListingSort, any> = {
-                [ListingSort.DATE_ASC]: {
-                    date: 1,
-                },
-                [ListingSort.DATE_DESC]: {
-                    date: -1,
-                },
-                [ListingSort.PRICE_ASC]: {
-                    'price.value': 1,
-                },
-                [ListingSort.PRICE_DESC]: {
-                    'price.value': -1,
-                },
-                [ListingSort.RELEVANCE]: undefined,
-            }
-
-            return [{ $sort: listingSortToOrderBy[value as ListingSort] }]
+            return sortPipelineStage(field, value)
         case 'page':
             return [
                 {

@@ -1,7 +1,6 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from '@mewi/prisma'
 import { userMiddleware } from './user.middleware'
-import { improvedAggregate } from './helpers/improved-aggregate'
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -16,5 +15,32 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         })
     }
 
-    improvedAggregate = improvedAggregate
+    /**
+     * Aggregation which returns objects which conform to the prisma JSON shape
+     *
+     * @param args - Aggregation arguments
+     * @returns Array of the specified models documents
+     */
+    async improvedAggregate<T extends Record<string, any>>(
+        model: T,
+        args: Parameters<T['aggregateRaw']>[0] & { pipeline: any[] }
+    ): Promise<Awaited<ReturnType<T['findMany']>>> {
+        if (!args.pipeline) args.pipeline = []
+
+        args.pipeline.push({
+            $group: { _id: null, array: { $push: '$_id' } },
+        })
+        const ids = await model
+            .aggregateRaw(args)
+            .then((o) => (o[0] ? o[0]['array'].map((o) => o.$oid) : []))
+
+        const items: any[] =
+            (await model.findMany({
+                where: {
+                    id: { in: ids },
+                },
+            })) ?? []
+
+        return ids.map((x) => items.find((y) => y.id === x))
+    }
 }

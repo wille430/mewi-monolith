@@ -3,8 +3,8 @@ import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
-import { filterPipelineStage } from './helpers/filters'
-import { LAST_PL_STAGES } from './constants'
+import { filterPipelineStage } from './helpers/filter-pipeline-stage'
+import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -40,25 +40,23 @@ export class ListingsService {
 
     metadataToPL(dto: Partial<FindAllListingsDto>): Prisma.InputJsonValue[] {
         const pipeline: Prisma.InputJsonValue[] = []
+        const ANY_ORDER_STAGES = Object.keys(
+            omit(dto, ...LAST_PL_STAGES, ...FIRST_PL_STAGES)
+        ) as any[]
 
-        for (const [key, value] of Object.entries(omit(dto, LAST_PL_STAGES))) {
-            if (value !== undefined) {
-                const stage = filterPipelineStage(key as any, value)
-
-                if (key === 'keyword') {
-                    pipeline.unshift(...stage)
-                } else {
-                    pipeline.push(...stage)
-                }
-            }
+        const pushStages = (arr: (keyof FindAllListingsDto)[]) => {
+            const stages = Array.from(arr).reduce((prev, cur, i, arr) => {
+                const key = arr[i]
+                return [...prev, ...filterPipelineStage(key, dto[key])]
+            }, [] as any[])
+            pipeline.push(...stages)
         }
 
-        // Add the stages that needs to be last in pipeline
-        const stages = Array.from(LAST_PL_STAGES).reduce((prev, cur, i, arr) => {
-            const key = LAST_PL_STAGES[i]
-            return [...prev, ...filterPipelineStage(key, dto[key])]
-        }, [] as any[])
-        pipeline.push(...stages)
+        pushStages(FIRST_PL_STAGES)
+        pushStages(ANY_ORDER_STAGES)
+        pushStages(LAST_PL_STAGES)
+
+        console.log(pipeline)
 
         if (!dto.sort && dto.keyword) {
             pipeline.push({ $sort: { score: -1 } })
