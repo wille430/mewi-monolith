@@ -68,6 +68,7 @@
         "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json && node build.js",
         "pack": "pnpm pack --pack-destination ../../archive",
         "isolate": "sh script/predeploy-api.sh",
-        "start": "nest start"
+        "start": "nest start",
+        "deploy": "pnpm run isolate && gcloud app deploy"
     }
 }

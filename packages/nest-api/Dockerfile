@@ -10,7 +10,7 @@ RUN apt-get update && \
 
 # run app
 WORKDIR /app
-COPY packages/nest-api/_isolated_/ /app/
+COPY _isolated_/ /app/
 RUN npm i pnpm -g
 RUN pnpm i -F schemas
 RUN pnpm i --production=false -F=!schemas

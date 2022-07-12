@@ -64,31 +64,18 @@ jobs:
             - setup_remote_docker:
                   version: 20.10.12
                   docker_layer_caching: true
-            - run: ls
             - run:
-                  name: Authenticate Google Cloud
+                  name: Service Account Key
+                  command: echo ${GCLOUD_SERVICE_KEY} > ${HOME}/gcloud-service-key.json
+            - run:
+                  name: Set gcloud command
                   command: |
-                      touch service-account.json
-                      echo $GCLOUD_SERVICE_KEY >> service-account.json
-                      gcloud auth activate-service-account --key-file=service-account.json
+                      gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
                       gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-                      gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-                      gcloud auth configure-docker europe-north1-docker.pkg.dev
             - run:
-                  name: Install Docker Compose
+                  name: deploy to Google App Engine
                   command: |
-                      DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-                      mkdir -p $DOCKER_CONFIG/cli-plugins
-                      curl -SL https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-                      chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-            - run:
-                  name: Build API Docker image
-                  command: docker compose build
-            - run:
-                  name: Push API Docker image
-                  command: |
-                      docker tag project_api europe-north1-docker.pkg.dev/mewi-347117/mewi-docker-repo/mewi-api
-                      docker push europe-north1-docker.pkg.dev/mewi-347117/mewi-docker-repo/mewi-api
+                      gcloud app deploy app.yaml
 workflows:
     version: 2
     build_test_and_deploy:
