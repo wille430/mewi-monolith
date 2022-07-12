@@ -3,7 +3,7 @@ import { ListingSort } from '@wille430/common'
 import { MIN_SEARCH_SCORE } from '../constants'
 import { FindAllListingsDto } from '../dto/find-all-listing.dto'
 
-export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any) => {
+export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any): any[] => {
     if (!value) {
         return []
     }
@@ -38,7 +38,17 @@ export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any)
         case 'category':
             return [{ $match: { category: value } }]
         case 'dateGte':
-            return [{ $match: { date: { $gte: value } } }]
+            return [
+                {
+                    $match: {
+                        date: {
+                            $gte: {
+                                $date: value,
+                            },
+                        },
+                    },
+                },
+            ]
         case 'priceRangeGte':
             return [{ $match: { 'price.value': { $gte: value } } }]
         case 'priceRangeLte':

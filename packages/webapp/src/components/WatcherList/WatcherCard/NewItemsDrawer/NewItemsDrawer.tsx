@@ -46,7 +46,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
                 )
                 .then((res) => res.data?.hits),
         {
-            refetchOnMount: false,
+            // refetchOnMount: false,
             refetchOnReconnect: false,
             refetchOnWindowFocus: false,
         }

@@ -14,6 +14,8 @@ export const ListingLikeButton = ({
     listing,
     ...rest
 }: { listing: Listing } & HTMLMotionProps<'button'>) => {
+    if (!listing.likedByUserIDs) listing.likedByUserIDs = []
+
     const { user } = useAppSelector((state) => state.user)
     const [liked, setLiked] = useState(user && listing.likedByUserIDs.includes(user.id))
 

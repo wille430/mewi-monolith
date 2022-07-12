@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
-import { EJSON } from 'bson'
+import util from 'util'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { filterPipelineStage } from './helpers/filters'
@@ -29,11 +29,14 @@ export class ListingsService {
         })) as unknown as any[]
         totalHits = totalHits[0]?.totalHits ?? 0
 
-        const hits = await this.prisma.listing
-            .aggregateRaw({
-                pipeline: [...hitsPipeline],
-            })
-            .then((arr) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x)))
+        const hits = await this.prisma.improvedAggregate(this.prisma.listing, {
+            pipeline: [
+                ...hitsPipeline,
+                {
+                    $group: { _id: null, array: { $push: '$_id' } },
+                },
+            ],
+        })
 
         return {
             filters: dto,
@@ -68,105 +71,11 @@ export class ListingsService {
             pipeline.push({ $sort: { score: -1 } })
         }
 
-        console.log(pipeline)
+        process.env.NODE_ENV !== 'production' &&
+            console.log(util.inspect(pipeline, { depth: null }))
 
         return pipeline
     }
-
-    // metadataToWhereInput(dto: Partial<FindAllListingsDto>): Prisma.ListingFindManyArgs {
-    //     const args: Prisma.ListingFindManyArgs & {
-    //         where: Prisma.ListingWhereInput & {
-    //             OR?: Prisma.ListingWhereInput[]
-    //         }
-    //     } = {
-    //         where: {
-    //             OR: [],
-    //         },
-    //     }
-
-    //     if (dto.page && dto.page > 0) {
-    //         args.skip = (dto.page - 1) * (dto.limit ?? 20)
-    //     }
-
-    //     const listingSortToOrderBy: Record<ListingSort, Prisma.ListingOrderByWithRelationInput> = {
-    //         [ListingSort.DATE_ASC]: {
-    //             date: 'asc',
-    //         },
-    //         [ListingSort.DATE_DESC]: {
-    //             date: 'desc',
-    //         },
-    //         [ListingSort.PRICE_ASC]: {
-    //             price: {
-    //                 value: 'asc',
-    //             },
-    //         },
-    //         [ListingSort.PRICE_DESC]: {
-    //             price: {
-    //                 value: 'desc',
-    //             },
-    //         },
-    //         [ListingSort.RELEVANCE]: undefined,
-    //     }
-
-    //     if (dto.sort !== ListingSort.RELEVANCE) {
-    //         args.orderBy = {
-    //             ...listingSortToOrderBy[dto.sort],
-    //         }
-    //     }
-
-    //     if (dto.priceRangeGte) {
-    //         args.where = merge(args.where, {
-    //             price: {
-    //                 is: { value: { gte: dto.priceRangeGte } },
-    //             },
-    //         })
-    //     }
-
-    //     if (dto.priceRangeLte) {
-    //         args.where = merge(args.where, {
-    //             price: {
-    //                 is: { value: { lte: dto.priceRangeLte } },
-    //             },
-    //         })
-    //     }
-
-    //     for (const key in dto) {
-    //         const value = dto[key]
-    //         if (!value) continue
-    //         switch (key as keyof typeof dto) {
-    //             case 'keyword':
-    //                 args.where.title = {
-    //                     mode: 'insensitive',
-    //                     contains: value,
-    //                 }
-    //                 break
-    //             case 'region':
-    //                 args.where.OR.push({
-    //                     region: {
-    //                         contains: value,
-    //                         mode: 'insensitive',
-    //                     },
-    //                 })
-    //                 break
-    //             case 'category':
-    //                 args.where.category = value
-    //                 break
-    //             case 'auction':
-    //                 args.where.isAuction = value
-    //                 break
-    //             case 'dateGte':
-    //                 args.where.date = {
-    //                     gte: new Date(value),
-    //                 }
-    //                 break
-    //         }
-    //     }
-
-    //     // Remove unnecessary keys
-    //     if (!args.where.OR.length) args.where = _.omit(args.where, 'OR')
-
-    //     return args
-    // }
 
     async findOne(id: string) {
         return await this.prisma.listing.findUnique({ where: { id } })

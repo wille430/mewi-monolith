@@ -5,7 +5,7 @@ import { Button } from '@wille430/ui'
 import styles from './ListingRow.module.scss'
 import { ListingLikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import { useAppDispatch, useAppSelector } from '@/hooks'
+import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
@@ -15,7 +15,6 @@ interface ListingRowprops extends HTMLMotionProps<'article'> {
 export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
     const dispatch = useAppDispatch()
-    const { user } = useAppSelector((state) => state.user)
 
     const fadeVariants: AnimationProps['variants'] = {
         hide: {

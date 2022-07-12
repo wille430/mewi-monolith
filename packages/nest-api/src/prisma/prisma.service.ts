@@ -1,33 +1,34 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
-import { PrismaClient, Role } from '@mewi/prisma'
+import { PrismaClient } from '@mewi/prisma'
+import { userMiddleware } from './user.middleware'
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+    constructor() {
+        super()
+    }
+
     async onModuleInit() {
         await this.$connect()
-
-        this.$use(async (params, next) => {
-            if (params.model === 'User' && params.action === 'create') {
-                if (!params.args.data.roles) {
-                    params.args.data.roles = []
-                }
-
-                if (params.args.data.roles.indexOf(Role.USER) === -1) {
-                    params.args.data.roles = [...params.args.data.roles, Role.USER]
-                }
-
-                const result = await next(params)
-
-                return result
-            } else {
-                return await next(params)
-            }
-        })
+        this.$use(userMiddleware)
     }
 
     async enableShutdownHooks(app: INestApplication) {
         this.$on('beforeExit', async () => {
             await app.close()
+        })
+    }
+
+    async improvedAggregate<T extends Record<string, any>>(
+        model: T,
+        ...args: Parameters<T['aggregateRaw']>
+    ): Promise<Awaited<ReturnType<T['findMany']>>> {
+        const ids = await model.aggregateRaw(...args).then((o) => o[0]['array'].map((o) => o.$oid))
+
+        return model.findMany({
+            where: {
+                id: { in: ids },
+            },
         })
     }
 }

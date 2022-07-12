@@ -14,7 +14,7 @@ export const CreateAccountInformation = () => (
                 <InfoCard
                     heading={
                         <>
-                            <AiFillHeart className='mr-2 inline' />
+                            <GiMagnifyingGlass className='mr-2 inline' />
                             Bevaka sökningar
                         </>
                     }
@@ -24,7 +24,7 @@ export const CreateAccountInformation = () => (
                 <InfoCard
                     heading={
                         <>
-                            <GiMagnifyingGlass className='mr-2 inline' />
+                            <AiFillHeart className='mr-2 inline' />
                             Spara produkter
                         </>
                     }
