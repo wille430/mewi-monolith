@@ -72,11 +72,12 @@ jobs:
                   command: |
                       gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
                       gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            - run:
-                  name: deploy to Google App Engine
-                  command: |
-                      cd ./packages/nest-api
-                      gcloud app deploy app.yaml
+            # TODO: deploy to cloud run
+            # - run:
+            #       name: deploy to Google App Engine
+            #       command: |
+            #           cd ./packages/nest-api
+            #           gcloud app deploy app.yaml
 workflows:
     version: 2
     build_test_and_deploy:
