@@ -11,5 +11,8 @@ export default defineConfig({
     },
     test: {
         globals: true,
+        deps: {
+            inline: ['minifaker'],
+        },
     },
 })

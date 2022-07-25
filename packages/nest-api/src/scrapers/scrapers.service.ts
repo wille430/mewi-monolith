@@ -13,11 +13,12 @@ import { RunPipelineEvent } from './events/run-pipeline.event'
 import { CitiboardScraper } from './scrapers/citiboard.scraper'
 import { ShpockScraper } from './scrapers/shpock.scraper'
 import { BytbilScraper } from './scrapers/bytbil.scraper'
+import { ListingScraper } from './classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Record<ListingOrigin, Scraper>
+    scrapers: Record<ListingOrigin, Scraper | ListingScraper>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}

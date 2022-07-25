@@ -1,13 +1,16 @@
 import { Category, Prisma, Currency } from '@mewi/prisma'
-import { Scraper } from '../scraper'
+import { ListingScraper } from '../classes/ListingScraper'
 
-export const validateListingTest = (listing: Prisma.ListingCreateInput, scraper: Scraper) => {
+export const validateListingTest = (
+    listing: Prisma.ListingCreateInput,
+    scraper: ListingScraper
+) => {
     expect(typeof listing.title).toBe('string')
 
     expect(typeof listing.origin_id).toBe('string')
-    expect(listing.origin_id).toContain(scraper.name)
+    expect(listing.origin_id).toContain(scraper.origin)
 
-    expect(listing.origin).toBe(scraper.name)
+    expect(listing.origin).toBe(scraper.origin)
     expect(Object.keys(Category)).toContain(listing.category)
 
     if (listing.body) expect(typeof listing.body).toBe('string')

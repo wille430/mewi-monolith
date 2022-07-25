@@ -1,20 +1,24 @@
+import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
-import { Category, ListingOrigin, Currency } from '@mewi/prisma'
+import { Category, ListingOrigin, Currency, Prisma } from '@mewi/prisma'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
-import { ListingScraper, ScrapedListing } from '../classes/ListingScraper.old'
+import { Scraper } from '../scraper'
+import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 
-export class BlippScraper extends ListingScraper {
+export class BlippScraper extends Scraper {
     maxPages?: number
     currentPage = 1
     perPage = 40
     buildId?: string
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, ListingOrigin.Blipp, {
-            baseUrl: 'https://blipp.se/',
-            scrapeTargetUrl: 'https://blipp.se/fordon',
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) configService: ConfigService
+    ) {
+        super(prisma, configService, ListingOrigin.Blipp, 'https://www.blipp.se/', {
+            scraperType: ScraperType.API_FETCH,
         })
     }
 
@@ -32,7 +36,7 @@ export class BlippScraper extends ListingScraper {
             let token: string | undefined
             try {
                 const page = await browser.newPage()
-                await page.goto(this.scrapeTargetUrl)
+                await page.goto('https://blipp.se/fordon')
 
                 token = await page.evaluate(() => {
                     const text = document.querySelector('#__NEXT_DATA__').textContent
@@ -40,7 +44,6 @@ export class BlippScraper extends ListingScraper {
 
                     return json.buildId
                 })
-                this.buildId = token
             } catch (e) {
                 console.log('Could not find token')
             } finally {
@@ -57,7 +60,7 @@ export class BlippScraper extends ListingScraper {
     async numberOfPages(): Promise<number> {
         const payload = await axios
             .get(await this.apiUrl())
-            .then((res) => res.data.pageProps?.vehiclesData?.payload)
+            .then((res) => res.data.pageProps?.data?.payload)
 
         this.perPage = payload.per_page
         this.maxPages = payload.pages
@@ -69,16 +72,16 @@ export class BlippScraper extends ListingScraper {
      * @param pageNum - the page to scrape. pageNum \>= 1
      * @returns An array of listings
      */
-    async getListingOnPage(pageNum: number): Promise<ScrapedListing[]> {
+    async getListingOnPage(pageNum: number): Promise<Prisma.ListingCreateInput[]> {
         if (pageNum < 1) pageNum = 1
 
-        let listings: ScrapedListing[] = []
+        let listings: Prisma.ListingCreateInput[] = []
         try {
             const url = `${await this.apiUrl()}?page=${pageNum}/`
 
             const rawListings = (await axios
                 .get(url)
-                .then((res) => res.data.pageProps?.vehiclesData?.payload.items)) as any[]
+                .then((res) => res.data.pageProps?.data?.payload.items)) as any[]
 
             listings = rawListings.map((obj) => this.parseRawListing(obj))
         } catch (e) {
@@ -88,7 +91,7 @@ export class BlippScraper extends ListingScraper {
         return listings
     }
 
-    async getBatch(): Promise<ScrapedListing[]> {
+    async getListings(): Promise<Prisma.ListingCreateInput[]> {
         if (!this.maxPages) {
             await this.numberOfPages()
         }
@@ -110,12 +113,13 @@ export class BlippScraper extends ListingScraper {
         cover_photo,
         entity_id,
         municipality,
-    }: Record<string, any>): ScrapedListing {
+    }: Record<string, any>): Prisma.ListingCreateInput {
         return {
             origin_id: this.createId(
                 `${(vehicle.brand as string).toLowerCase().slice(0, 16)}_${vehicle.entity_id}`
             ),
             title: vehicle.car_name,
+            body: null,
             category: Category.FORDON,
             date: new Date(published_date),
             imageUrl: [cover_photo.full_path],
@@ -130,6 +134,8 @@ export class BlippScraper extends ListingScraper {
                   }
                 : null,
             region: municipality.name,
+            // TODO: parse parameters
+            parameters: [],
             origin: ListingOrigin.Blipp,
             auctionEnd: null,
         }

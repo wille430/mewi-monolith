@@ -1,24 +1,25 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 import { JSDOM } from 'jsdom'
 // import { stringSimilarity } from "@mewi/prisma";
 import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
-import { Scraper } from '../scraper'
-import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ListingScraper, ScrapedListing } from '../classes/ListingScraper'
 
-export class BlocketScraper extends Scraper {
+export class BlocketScraper extends ListingScraper {
     page = 0
     limit = 50
+    scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
     constructor(
         @Inject(PrismaService) prisma: PrismaService,
         @Inject(ConfigService) configService: ConfigService
     ) {
-        super(prisma, configService, ListingOrigin.Blocket, 'https://www.blocket.se/', {
-            scraperType: ScraperType.API_FETCH,
+        super(prisma, {
+            baseUrl: 'https://www.blocket.se/',
+            origin: ListingOrigin.Blocket,
         })
     }
 
@@ -27,7 +28,7 @@ export class BlocketScraper extends Scraper {
         const maxTries = 3
         while (tries < maxTries) {
             try {
-                const { data } = await axios.get(this.scrapeUrl)
+                const { data } = await axios.get(this.baseUrl)
 
                 const dom = new JSDOM(data)
                 const { document } = dom.window
@@ -53,22 +54,19 @@ export class BlocketScraper extends Scraper {
         return null
     }
 
-    async getListings(): Promise<Prisma.ListingCreateInput[]> {
+    async addAuthentication(axios: AxiosInstance): Promise<AxiosInstance> {
+        super.addAuthentication(axios)
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.getBearerToken()}`
+
+        return axios
+    }
+
+    async getBatch(): Promise<ScrapedListing[]> {
         try {
-            const url = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
-
-            const authToken = await this.getBearerToken()
-            if (!authToken) throw Error('Missing authentication token')
-
-            const dom = await axios.get(url, {
-                baseURL: this.scrapeUrl,
-                headers: {
-                    authorization: 'Bearer ' + authToken,
-                },
-            })
-
+            this.client = await this.createAxiosInstance()
+            const dom = await this.client.get(this.scrapeTargetUrl)
             const data = dom.data.data
-
             const items: Prisma.ListingCreateInput[] = data.map((obj) => this.parseRawListing(obj))
 
             this.page += 1
