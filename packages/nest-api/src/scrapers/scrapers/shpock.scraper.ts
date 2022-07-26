@@ -1,24 +1,21 @@
 import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
-import { Scraper } from '../scraper'
-import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ListingScraper } from '../classes/ListingScraper'
 
-export class ShpockScraper extends Scraper {
+export class ShpockScraper extends ListingScraper {
     offset = 0
     limit = 100
     _token: undefined | string
     _originCategories: undefined | any[]
+    _scrapeTargetUrl: string = this.baseUrl
 
-    constructor(
-        @Inject(PrismaService) prisma: PrismaService,
-        @Inject(ConfigService) configService: ConfigService
-    ) {
-        super(prisma, configService, ListingOrigin.Shpock, 'https://shpock.com/', {
-            scraperType: ScraperType.API_FETCH,
+    constructor(@Inject(PrismaService) prisma: PrismaService) {
+        super(prisma, {
+            baseUrl: 'https://shpock.com/',
+            origin: ListingOrigin.Shpock,
         })
     }
 
@@ -35,7 +32,7 @@ export class ShpockScraper extends Scraper {
             try {
                 // fetch token
                 const page = await browser.newPage()
-                await page.goto(this.scrapeUrl + 'en-gb/results')
+                await page.goto(new URL('/en-gb/results', this.scrapeTargetUrl).toString())
 
                 const token = await page.evaluate(() => {
                     const text = document.querySelector('#__NEXT_DATA__').textContent
@@ -56,16 +53,14 @@ export class ShpockScraper extends Scraper {
         })
     }
 
-    async getListings(): Promise<Prisma.ListingCreateInput[]> {
-        const limit = Math.min(this.limit, await this.quantityToScrape)
-
+    override async getBatch(): Promise<Prisma.ListingCreateInput[]> {
         const data = await axios
             .post('https://www.shpock.com/graphql', {
                 operationName: 'ItemSearch',
                 variables: {
                     trackingSource: 'Search',
                     pagination: {
-                        limit: limit,
+                        limit: this.limit,
                         od: await this.token,
                         offset: this.offset,
                     },
@@ -76,7 +71,7 @@ export class ShpockScraper extends Scraper {
         const items: Record<string, any>[] = data.data.itemSearch.itemResults[0].items
         this._token = data.data.itemSearch.od
 
-        this.offset += limit
+        this.offset += this.limit
 
         // format and return
         return Promise.all(items.map((ele) => this.parseListing(ele)))
@@ -116,7 +111,7 @@ export class ShpockScraper extends Scraper {
             // eslint-disable-next-line no-async-promise-executor
             return new Promise<any[]>(async (resolve) => {
                 const data = await axios
-                    .post(this.scrapeUrl + 'graphql', {
+                    .post(this.scrapeTargetUrl + 'graphql', {
                         operationName: 'Categories',
                         query: 'query Categories {\n  categories {\n    id\n    label\n    slugs\n    __typename\n  }\n}\n',
                         variables: {},

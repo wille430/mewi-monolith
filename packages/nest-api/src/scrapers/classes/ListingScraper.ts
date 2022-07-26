@@ -1,6 +1,6 @@
 import { ScraperStatus, stringSimilarity } from '@wille430/common'
 import { ListingOrigin, Prisma, Category } from '@mewi/prisma'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import robotsParser from 'robots-parser'
 import { IScraper } from './IScraper'
 import { PrismaService } from '@/prisma/prisma.service'
@@ -22,7 +22,11 @@ export class ListingScraper implements IScraper<ScrapedListing> {
     threshold: number = 0.8
     limit: number = 10
 
-    readonly scrapeTargetUrl: string
+    readonly _scrapeTargetUrl: string
+    public get scrapeTargetUrl(): string {
+        return this._scrapeTargetUrl
+    }
+
     readonly baseUrl: string
     readonly origin: ListingOrigin
     private readonly deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
@@ -173,9 +177,14 @@ export class ListingScraper implements IScraper<ScrapedListing> {
 
         const arr = await this.client
             .get(this.scrapeTargetUrl)
-            .then((res) => res.data.map(this.parseRawListing))
+            .then(this.extractRawListingsArray)
+            .then((data) => data.map(this.parseRawListing))
 
         return arr
+    }
+
+    extractRawListingsArray(res: AxiosResponse<any, any>) {
+        return res.data
     }
 
     parseRawListing(obj: Record<string, any>): ScrapedListing {

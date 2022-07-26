@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
 import { JSDOM } from 'jsdom'
-// import { stringSimilarity } from "@mewi/prisma";
-import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
@@ -11,12 +9,12 @@ import { ListingScraper, ScrapedListing } from '../classes/ListingScraper'
 export class BlocketScraper extends ListingScraper {
     page = 0
     limit = 50
-    scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
+    readonly _scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
+    public get scrapeTargetUrl() {
+        return `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
+    }
 
-    constructor(
-        @Inject(PrismaService) prisma: PrismaService,
-        @Inject(ConfigService) configService: ConfigService
-    ) {
+    constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
             baseUrl: 'https://www.blocket.se/',
             origin: ListingOrigin.Blocket,

@@ -1,61 +1,63 @@
-import { ListingOrigin, Prisma } from '@mewi/prisma'
-import { ConfigService } from '@nestjs/config'
+import { Prisma, ListingOrigin, Category, Currency } from '@mewi/prisma'
 import { Inject } from '@nestjs/common'
 import { ElementHandle } from 'puppeteer'
-import { Scraper, ScraperEvalArgs } from '../scraper'
-import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ListingWebCrawler } from '../classes/ListingWebCrawler'
+import _ from 'lodash'
 
-export class CitiboardScraper extends Scraper {
-    baseUrl = 'https://citiboard.se'
-    scrapeUrl = 'https://citiboard.se/hela-sverige'
+export class CitiboardScraper extends ListingWebCrawler {
+    readonly _scrapeTargetUrl = 'https://citiboard.se/hela-sverige'
+    get scrapeTargetUrl(): string {
+        return this.nextPageUrl()
+    }
     limit = 60
     offset = 0
 
-    constructor(
-        @Inject(PrismaService) prisma: PrismaService,
-        @Inject(ConfigService) configService: ConfigService
-    ) {
-        super(prisma, configService, ListingOrigin.Citiboard, 'https://www.blipp.se/', {
-            scraperType: ScraperType.WEBSCRAPER,
+    constructor(@Inject(PrismaService) prisma: PrismaService) {
+        super(prisma, {
+            baseUrl: 'https://www.citiboard.se/',
+            origin: ListingOrigin.Citiboard,
+            listingSelector: 'article.gridItem',
         })
-
-        this.webscraper.listingSelector = 'article.gridItem'
     }
 
     nextPageUrl() {
-        return this.scrapeUrl + `?offset=${this.offset}`
+        return this.scrapeTargetUrl + `?offset=${this.offset}`
     }
 
-    getListings(): Promise<Prisma.ListingCreateInput[]> {
-        const listings = this.evaluate(this.nextPageUrl(), this.evalParseRawListing)
+    async getBatch(): Promise<Prisma.ListingCreateInput[]> {
+        const listings = await super.getBatch()
 
         this.offset += this.limit
-
         return listings
     }
 
-    async evalParseRawListing(ele: ElementHandle<Element>, args: ScraperEvalArgs) {
-        const listing: Prisma.ListingCreateInput = await ele.evaluate(
-            async (ele, args: ScraperEvalArgs) => ({
-                origin_id: await (window as any).createId(ele.getAttribute('id')),
-                title: ele.querySelector('meta').content,
-                // TODO: assign correct category
-                category: args.Category.OVRIGT,
-                imageUrl: [ele.querySelector('.picture img').getAttribute('src')],
-                redirectUrl:
-                    args.scrapeUrl + ele.querySelector('.gridTitle a').getAttribute('href'),
-                isAuction: false,
-                price: ele.querySelector('.gridPrice') && {
-                    value: parseFloat(ele.querySelector('.gridPrice').textContent),
-                    currency: args.Currency.SEK,
-                },
-                region: ele.querySelector('.gridLocation span').textContent,
-                origin: args.ListingOrigin.Citiboard,
-            }),
-            args
-        )
+    async evalParseRawListing(ele: ElementHandle<Element>) {
+        const listing: any = await ele.evaluate(async (ele) => ({
+            origin_id: ele.getAttribute('id'),
+            title: ele.querySelector('meta').content,
+            imageUrl: [ele.querySelector('.picture img').getAttribute('src')],
+            redirectUrl: ele.querySelector('.gridTitle a').getAttribute('href'),
+            isAuction: false,
+            price: ele.querySelector('.gridPrice') && {
+                value: parseFloat(ele.querySelector('.gridPrice').textContent),
+            },
+            region: ele.querySelector('.gridLocation span').textContent,
+        }))
 
-        return listing
+        return Object.assign(listing, {
+            origin_id: this.createId(listing.origin_id),
+            redirectUrl: new URL(listing.redirectUrl, this.baseUrl),
+            price: listing.price
+                ? {
+                      value: listing.price.value,
+                      currency: Currency.SEK,
+                  }
+                : undefined,
+            // TODO: assign correct category
+            category: Category.FORDON,
+            origin: ListingOrigin.Bytbil,
+            date: new Date(),
+        })
     }
 }

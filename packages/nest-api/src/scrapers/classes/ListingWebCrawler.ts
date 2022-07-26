@@ -1,11 +1,24 @@
 import puppeteer, { ElementHandle } from 'puppeteer'
-import { ListingScraper } from './ListingScraper'
+import { ListingScraper, ListingScraperConstructorArgs } from './ListingScraper'
 import { ScrapedListing } from './ListingScraper'
 import { NotImplementedException } from '@nestjs/common'
+import { PrismaService } from '@/prisma/prisma.service'
+
+export type ListingWebCrawlerConstructorArgs = ListingScraperConstructorArgs & {
+    listingSelector: string
+}
 
 export class ListingWebCrawler extends ListingScraper {
-    private listingSelector: string
-    readonly useRobots: boolean = false
+    private readonly listingSelector: string
+    readonly useRobots: boolean = true
+
+    constructor(
+        prisma: PrismaService,
+        { listingSelector, ...options }: ListingWebCrawlerConstructorArgs
+    ) {
+        super(prisma, options)
+        this.listingSelector = listingSelector
+    }
 
     public override async getBatch(): Promise<ScrapedListing[]> {
         // Instantiate puppeteer
@@ -37,7 +50,7 @@ export class ListingWebCrawler extends ListingScraper {
         }
     }
 
-    evalParseRawListing(ele: ElementHandle<Element>): ScrapedListing {
+    async evalParseRawListing(ele: ElementHandle<Element>): Promise<ScrapedListing> {
         throw new NotImplementedException()
     }
 }

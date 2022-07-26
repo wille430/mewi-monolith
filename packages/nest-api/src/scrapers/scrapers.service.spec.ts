@@ -9,6 +9,7 @@ import scraperServices from './scrapers'
 import { Scraper } from './scraper'
 import configuration from '../config/configuration'
 import { PrismaService } from '../prisma/prisma.service'
+import { ListingScraper } from './classes/ListingScraper'
 
 describe('scraper', () => {
     let scrapersService: ScrapersService
@@ -40,15 +41,15 @@ describe('scraper', () => {
     })
 
     describe('#start', () => {
-        let scraper: Scraper
-        let scraper2: Scraper
+        let scraper: ListingScraper
+        let scraper2: ListingScraper
         const getListingsDelay = 500
 
         beforeEach(() => {
             scraper = _.sample(scrapers)
-            scraper2 = _.sample(scrapers.filter((x) => x.name !== scraper.name))
+            scraper2 = _.sample(scrapers.filter((x) => x.origin !== scraper.origin))
 
-            scraper.getListings = vi.fn(
+            scraper.getBatch = vi.fn(
                 async () =>
                     await new Promise((resolve) =>
                         setTimeout(() => resolve(new Array(scraper.limit)), getListingsDelay)
@@ -61,11 +62,11 @@ describe('scraper', () => {
             // Before scraping
             expect(scraper.status).toBe(ScraperStatus.IDLE)
 
-            await scrapersService.start(scraper.name)
+            await scrapersService.start(scraper.origin)
 
             // Directly before scraping
             expect(scraper.status).toBe(ScraperStatus.QUEUED)
-            expect(scrapersService.scraperPipeline[0][0]).toBe(scraper.name)
+            expect(scrapersService.scraperPipeline[0][0]).toBe(scraper.origin)
 
             // During scraping
             setTimeout(() => {
@@ -85,15 +86,15 @@ describe('scraper', () => {
             expect(scraper.status).toBe(ScraperStatus.IDLE)
             expect(scraper2.status).toBe(ScraperStatus.IDLE)
 
-            await scrapersService.start(scraper.name)
-            await scrapersService.start(scraper2.name)
+            await scrapersService.start(scraper.origin)
+            await scrapersService.start(scraper2.origin)
 
             // Directly before scraping
             expect(scraper.status).toBe(ScraperStatus.QUEUED)
-            expect(scrapersService.scraperPipeline[0][0]).toBe(scraper.name)
+            expect(scrapersService.scraperPipeline[0][0]).toBe(scraper.origin)
 
             expect(scraper2.status).toBe(ScraperStatus.QUEUED)
-            expect(scrapersService.scraperPipeline[1][0]).toBe(scraper2.name)
+            expect(scrapersService.scraperPipeline[1][0]).toBe(scraper2.origin)
 
             // During scraping of scraper 1
             setTimeout(() => {
@@ -101,7 +102,7 @@ describe('scraper', () => {
                 expect(scrapersService.scraperPipeline[0]).not.toBeTruthy()
 
                 expect(scraper2.status).toBe(ScraperStatus.QUEUED)
-                expect(scrapersService.scraperPipeline[0][0]).toBe(scraper2.name)
+                expect(scrapersService.scraperPipeline[0][0]).toBe(scraper2.origin)
             }, getListingsDelay / 2)
 
             // After scraping of scraper 1

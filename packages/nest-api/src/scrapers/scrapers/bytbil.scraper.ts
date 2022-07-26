@@ -1,13 +1,14 @@
 import { Inject } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ListingOrigin, Prisma } from '@mewi/prisma'
+import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import { ElementHandle } from 'puppeteer'
-import { Scraper, ScraperEvalArgs } from '../scraper'
-import { ScraperType } from '../scraper-type.enum'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ListingWebCrawler } from '../classes/ListingWebCrawler'
+import { ScrapedListing } from '../classes/ListingScraper'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
 
-export class BytbilScraper extends Scraper {
-    vehicleTypes = [
+export class BytbilScraper extends ListingWebCrawler {
+    readonly vehicleTypes = [
         'bil',
         'transportbil',
         'mc',
@@ -24,26 +25,18 @@ export class BytbilScraper extends Scraper {
     _calculatedScrapeCount: number | undefined
     _typeIndex = 0
 
+    public get scrapeTargetUrl(): string {
+        return new URL(this.vehicleTypes[this._typeIndex], this.scrapeTargetUrl).toString()
+    }
+
     constructor(
         @Inject(PrismaService) prisma: PrismaService,
         @Inject(ConfigService) configService: ConfigService
     ) {
-        super(prisma, configService, ListingOrigin.Bytbil, 'https://bytbil.com/', {
-            scraperType: ScraperType.WEBSCRAPER,
-        })
-
-        // Webscraper specific options
-        this.webscraper.listingSelector = '.result-list-item'
-    }
-
-    get calculatedScrapeCount() {
-        if (this._calculatedScrapeCount) return this._calculatedScrapeCount
-
-        const typesCount = this.vehicleTypes.length
-
-        // eslint-disable-next-line no-async-promise-executor
-        return new Promise<number>(async (resolve) => {
-            resolve(Math.max(1, Math.floor((await this.quantityToScrape) / typesCount)))
+        super(prisma, {
+            baseUrl: 'https://bytbil.com/',
+            origin: ListingOrigin.Bytbil,
+            listingSelector: '.result-list-item',
         })
     }
 
@@ -51,48 +44,28 @@ export class BytbilScraper extends Scraper {
         return this.vehicleTypes.reduce((prev, cur) => ({ ...prev, [cur]: 0 }), {})
     }
 
-    async getListings(): Promise<Prisma.ListingCreateInput[]> {
+    public override async getBatch(): Promise<Prisma.ListingCreateInput[]> {
         if (this._typeIndex + 1 >= this.vehicleTypes.length) {
             console.warn('Index is out of range! Please reset scraper to continue scraping.')
             return []
         }
-
-        const countToScrape =
-            (await this.calculatedScrapeCount) -
-            this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]]
-
-        if (countToScrape <= 0) {
-            this._typeIndex += 1
-            return this.getListings()
-        }
-
-        const scrapeUrl = this.scrapeUrl + this.vehicleTypes[this._typeIndex]
-        const listings = await this.evaluate(scrapeUrl, this.evalParseRawListing).then((arr) =>
-            arr.slice(0, countToScrape)
-        )
+        const listings = await super.getBatch()
 
         this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]] += listings.length
 
         return listings
     }
 
-    async evalParseRawListing(ele: ElementHandle<Element>, args: ScraperEvalArgs) {
-        const listing: Prisma.ListingCreateInput = await ele.evaluate(async (ele, args) => {
+    async evalParseRawListing(ele: ElementHandle<Element>): Promise<Prisma.ListingCreateInput> {
+        const listing = await ele.evaluate(async (ele) => {
             const href = ele.querySelector('.car-list-header > a').getAttribute('href')
 
             return {
-                origin_id: await (window as any).createId(
-                    ele.querySelector('.uk-grid').getAttribute('data-model-id')
-                ),
+                origin_id: ele.querySelector('.uk-grid').getAttribute('data-model-id'),
                 title: ele.querySelector('.car-list-header > a').textContent,
-                category: args.Category.FORDON,
                 // TODO
-                // imageUrl: [
-                //     ele
-                //         .querySelector('.car-image')
-                //         .style.backgroundImage.split("('")[1],
-                // ],
-                redirectUrl: args.scrapeUrl.slice(0, -1) + href,
+                // imageUrl: [],
+                redirectUrl: href,
                 isAuction: false,
                 price: ele.querySelector('.car-price-main')?.textContent
                     ? {
@@ -102,15 +75,23 @@ export class BytbilScraper extends Scraper {
                                       .querySelector('.car-price-main')
                                       .textContent.replace(/\D/g, '')
                               ) ?? 0,
-                          currency: args.Currency.SEK,
                       }
                     : null,
-                origin: args.ListingOrigin.Bytbil,
-                date: args.date,
             }
-        }, args)
+        })
 
-        return listing
+        return {
+            ...listing,
+            origin_id: this.createId(listing.origin_id),
+            redirectUrl: this.scrapeTargetUrl.slice(0, -1) + listing.redirectUrl,
+            price: {
+                value: listing.price.value,
+                currency: Currency.SEK,
+            },
+            category: Category.FORDON,
+            origin: ListingOrigin.Bytbil,
+            date: new Date(),
+        } as Prisma.ListingCreateInput
     }
 
     reset(): void {

@@ -5,6 +5,7 @@ import { BytbilScraper } from './bytbil.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
 import { validateListingTest } from '../tests/validate-listing.spec'
+import puppeteer from 'puppeteer'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
@@ -35,23 +36,9 @@ describe('Bytbil Scraper', () => {
         })
     })
 
-    describe('#calculate', () => {
-        it('with num 9*x (x is an integer) it should return x', async () => {
-            const x = Math.ceil(Math.random() * 10)
-            const num = 9 * x
-            scraper.quantityToScrape = num
-            expect(await scraper.calculatedScrapeCount).toBe(x)
-        })
-
-        it('should return 1 when number i less than length of vehicle types', async () => {
-            scraper.quantityToScrape = 8
-            expect(await scraper.calculatedScrapeCount).toBe(1)
-        })
-    })
-
-    describe('#getListings', () => {
+    describe('#getBatch', () => {
         it('should fetch items and return valid array of objects', async () => {
-            const scraped = await scraper.getListings()
+            const scraped = await scraper.getBatch()
 
             expect(Array.isArray(scraped)).toBe(true)
             expect(scraped.length).toBeGreaterThan(0)
@@ -62,7 +49,7 @@ describe('Bytbil Scraper', () => {
         }, 20000)
 
         it('should be able to fetch subsequently', async () => {
-            const resultArray = new Array(2).fill(await scraper.getListings())
+            const resultArray = new Array(2).fill(await scraper.getBatch())
 
             for (const ele of resultArray) {
                 expect(Array.isArray(ele)).toBe(true)
@@ -70,10 +57,17 @@ describe('Bytbil Scraper', () => {
         }, 20000)
 
         it('should not throw error when fetching 10+ times', async () => {
-            scraper.evaluate = vi.fn().mockResolvedValue(Array(scraper.limit))
+            puppeteer.launch = vi.fn(() => ({
+                newPage: vi.fn().mockResolvedValue({
+                    goto: vi.fn(),
+                    $$: vi.fn().mockResolvedValue(Array(scraper.limit)),
+                }),
+                close: vi.fn(),
+            })) as any
+            scraper.evalParseRawListing = vi.fn((ele) => ele) as any
 
             for (let i = 0; i < 12; i++) {
-                expect(Array.isArray(await scraper.getListings())).toBe(true)
+                expect(Array.isArray(await scraper.getBatch())).toBe(true)
             }
         })
     })

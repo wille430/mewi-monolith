@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios'
 import puppeteer from 'puppeteer'
-import { ListingWebCrawler } from './ListingWebCrawler'
+import { ListingScraper } from './ListingScraper'
 
-export class NextScraper extends ListingWebCrawler {
+export class NextScraper extends ListingScraper {
     private buildId: string
     useRobots: boolean = false
 
@@ -10,10 +10,7 @@ export class NextScraper extends ListingWebCrawler {
         super.addAuthentication(axios)
 
         axios.interceptors.request.use(async (req) => {
-            if (req.url === this.scrapeTargetUrl) {
-                req.url.replace('{buildId}', await this.getBuildId())
-            }
-
+            req.url = req.url.replace('{buildId}', await this.getBuildId())
             return req
         })
 
@@ -38,8 +35,9 @@ export class NextScraper extends ListingWebCrawler {
 
                     return json.buildId
                 })
+                this.buildId = token
             } catch (e) {
-                console.log('Could not find token')
+                throw new Error(`Could not retrieve build id from ${this.baseUrl}`)
             } finally {
                 await browser.close()
             }

@@ -1,82 +1,54 @@
 import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency } from '@mewi/prisma'
-import axios from 'axios'
-import puppeteer from 'puppeteer'
-import { ListingScraper, ScrapedListing } from '../classes/ListingScraper.old'
 import { PrismaService } from '@/prisma/prisma.service'
+import { NextScraper } from '../classes/NextScraper'
+import { ScrapedListing } from '../classes/ListingScraper'
 
-export class BlippScraper extends ListingScraper {
+export class BlippScraper extends NextScraper {
     maxPages?: number
     currentPage = 1
     perPage = 40
-    buildId?: string
+
+    readonly _scrapeTargetUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, ListingOrigin.Blipp, {
+        super(prisma, {
             baseUrl: 'https://blipp.se/',
-            scrapeTargetUrl: 'https://blipp.se/fordon',
+            origin: ListingOrigin.Blipp,
         })
-    }
-
-    async apiUrl() {
-        return `https://blipp.se/_next/data/${await this.getBuildId()}/fordon.json`
-    }
-
-    async getBuildId(): Promise<string | undefined> {
-        if (this.buildId) {
-            return this.buildId
-        } else {
-            const browser = await puppeteer.launch({
-                args: ['--no-sandbox'],
-            })
-            let token: string | undefined
-            try {
-                const page = await browser.newPage()
-                await page.goto(this.scrapeTargetUrl)
-
-                token = await page.evaluate(() => {
-                    const text = document.querySelector('#__NEXT_DATA__').textContent
-                    const json: Record<any, any> = JSON.parse(text)
-
-                    return json.buildId
-                })
-                this.buildId = token
-            } catch (e) {
-                console.log('Could not find token')
-            } finally {
-                await browser.close()
-            }
-
-            return token
-        }
     }
 
     /**
      * Get the number of pages of products that are available
      */
     async numberOfPages(): Promise<number> {
-        const payload = await axios
-            .get(await this.apiUrl())
-            .then((res) => res.data.pageProps?.vehiclesData?.payload)
+        try {
+            this.client = await this.createAxiosInstance()
+            const payload = await this.client
+                .get(this.scrapeTargetUrl)
+                .then((res) => res.data.pageProps?.vehiclesData?.payload)
 
-        this.perPage = payload.per_page
-        this.maxPages = payload.pages
+            this.perPage = payload.per_page
+            this.maxPages = payload.pages
 
-        return this.maxPages
+            return this.maxPages
+        } catch (e) {
+            throw new Error(`Could not retrieve number of pages from ${this.baseUrl}`)
+        }
     }
 
     /**
      * @param pageNum - the page to scrape. pageNum \>= 1
      * @returns An array of listings
      */
-    async getListingOnPage(pageNum: number): Promise<ScrapedListing[]> {
-        if (pageNum < 1) pageNum = 1
+    async getListingsOnPage(pageNum: number): Promise<ScrapedListing[]> {
+        pageNum = Math.max(pageNum, 1)
 
         let listings: ScrapedListing[] = []
         try {
-            const url = `${await this.apiUrl()}?page=${pageNum}/`
+            const url = `${this.scrapeTargetUrl}?page=${pageNum}/`
 
-            const rawListings = (await axios
+            const rawListings = (await this.client
                 .get(url)
                 .then((res) => res.data.pageProps?.vehiclesData?.payload.items)) as any[]
 
@@ -97,7 +69,7 @@ export class BlippScraper extends ListingScraper {
             return []
         }
 
-        const items = await this.getListingOnPage(this.currentPage)
+        const items = await this.getListingsOnPage(this.currentPage)
 
         this.currentPage += 1
 

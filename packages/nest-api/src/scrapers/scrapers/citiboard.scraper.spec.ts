@@ -24,7 +24,7 @@ describe('Citiboard Scraper', () => {
 
     describe('#getListings', () => {
         it('should fetch items', async () => {
-            const result = await scraper.getListings()
+            const result = await scraper.getBatch()
             expect(Array.isArray(result)).toBe(true)
             expect(result.length).toBeGreaterThan(0)
 
@@ -34,7 +34,7 @@ describe('Citiboard Scraper', () => {
         }, 20000)
 
         it('should be able to fetch subsequently', async () => {
-            const resultArray = new Array(2).fill(await scraper.getListings())
+            const resultArray = new Array(2).fill(await scraper.getBatch())
 
             for (const ele of resultArray) {
                 expect(Array.isArray(ele)).toBe(true)

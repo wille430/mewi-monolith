@@ -22,7 +22,7 @@ describe('Blipp Scraper', () => {
         expect(scraper).toBeDefined()
     })
 
-    describe('#getListings', () => {
+    describe('#getBatch', () => {
         it('should fetch items and return valid array of objects', async () => {
             const scraped = await scraper.getBatch()
 

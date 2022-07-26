@@ -7,7 +7,6 @@ import { BlocketScraper } from './scrapers/blocket.scraper'
 import { SellpyScraper } from './scrapers/sellpy.scraper'
 import { TraderaScraper } from './scrapers/tradera.scraper'
 import { BlippScraper } from './scrapers/blipp.scraper'
-import { Scraper } from './scraper'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { RunPipelineEvent } from './events/run-pipeline.event'
 import { CitiboardScraper } from './scrapers/citiboard.scraper'
@@ -18,7 +17,7 @@ import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Record<ListingOrigin, Scraper | ListingScraper>
+    scrapers: Record<ListingOrigin, ListingScraper>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -72,23 +71,17 @@ export class ScrapersService {
             const scraper = this.scrapers[name]
 
             // Delete old
-            this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
-            await scraper.deleteOld()
+            // this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
+            // await scraper.deleteOld()
             scraper.reset()
 
             // Begin scraping
-            this.logPipeline(
-                totalScrapers,
-                `Scraping ${await scraper.quantityToScrape} listings from ${name}...`
-            )
-            await scraper.start(args)
+            this.logPipeline(totalScrapers, `Scraping all listings from ${name}...`)
+            await scraper.start()
 
-            this.logPipeline(
-                totalScrapers,
-                `Successfully scraped ${scraper.listingScraped} from ${name}`
-            )
+            this.logPipeline(totalScrapers, `Successfully scraped all listings from ${name}`)
 
-            if (this.scraperPipeline.find((x) => x[0] === scraper.name))
+            if (this.scraperPipeline.find((x) => x[0] === scraper.origin))
                 scraper.status = ScraperStatus.QUEUED
 
             this.logPipeline(totalScrapers, `Done!`)
@@ -117,7 +110,7 @@ export class ScrapersService {
     }
 
     @Cron('* */45 * * *')
-    async startAll(...args: Parameters<Scraper['start']>) {
+    async startAll(...args: Parameters<ListingScraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
             this.scraperPipeline.push([
                 name as ListingOrigin,
@@ -132,7 +125,7 @@ export class ScrapersService {
         scraperName: ListingOrigin,
         options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
     ): Promise<ScraperStatusReport> {
-        const scraper: Scraper | undefined = this.scrapers[scraperName]
+        const scraper: ListingScraper | undefined = this.scrapers[scraperName]
 
         if (scraper) {
             this.scraperPipeline.push([scraperName, options])
@@ -178,7 +171,7 @@ export class ScrapersService {
     }
 
     async statusOf(target: ListingOrigin): Promise<ScraperStatusReport> {
-        const scraper: Scraper = this.scrapers[target]
+        const scraper: ListingScraper = this.scrapers[target]
 
         const listingCount = await this.prisma.listing.count({
             where: {
@@ -187,14 +180,14 @@ export class ScrapersService {
         })
 
         return {
-            started: scraper.isScraping,
+            started: scraper.status === ScraperStatus.SCRAPING,
             listings_current: listingCount,
             status: scraper.status,
-            listings_remaining: scraper.maxEntries - listingCount,
+            listings_remaining: -1,
             last_scraped: await this.prisma.scrapingLog
                 .findFirst({
                     where: {
-                        target: scraper.name,
+                        target: scraper.origin,
                     },
                     take: 1,
                     orderBy: {
