@@ -8,7 +8,7 @@ export class SellpyScraper extends ListingScraper {
     page = 1
     limit = 50
     readonly _scrapeTargetUrl = `https://m6wnfr0lvi-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.8.0)%3B%20Browser%20(lite)%3B%20JS%20Helper%20(3.2.2)%3B%20react%20(16.13.1)%3B%20react-instantsearch%20(6.7.0)&x-algolia-api-key=313e09c3b00b6e2da5dbe382cd1c8f4b&x-algolia-application-id=M6WNFR0LVI`
-    public get scrapeTargetUrl() {
+    getNextUrl() {
         return this._scrapeTargetUrl
     }
 
@@ -69,9 +69,9 @@ export class SellpyScraper extends ListingScraper {
             parameters: [],
             region: null,
             redirectUrl: `https://sellpy.com/item/${item.objectID}`,
-            price: item.pricing
+            price: item.pricing?.amount
                 ? {
-                      value: item.pricing.amount || 0,
+                      value: item.pricing.amount,
                       currency: Currency.SEK,
                   }
                 : null,

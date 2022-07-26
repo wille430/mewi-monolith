@@ -23,13 +23,17 @@ export class TraderaScraper extends ListingScraper {
     categories: TraderaCategory[] | undefined
     itemsPerCategory: number
     limit = 50
-    get scrapeTargetUrl() {
-        return (
-            'https://www.tradera.com' +
-            this.categories[this.currentCategoryIndex].href +
-            '.json' +
-            '?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=1'
-        )
+
+    override getNextUrl() {
+        return new Promise<string>(async (resolve) => {
+            if (!this.categories) this.categories = await this.getCategories()
+            resolve(
+                'https://www.tradera.com' +
+                    this.categories[this.currentCategoryIndex].href +
+                    '.json' +
+                    '?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=1'
+            )
+        })
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
@@ -42,14 +46,7 @@ export class TraderaScraper extends ListingScraper {
 
     async getBatch(): Promise<Prisma.ListingCreateInput[]> {
         if (!this.categories) this.categories = await this.getCategories()
-
         if (!this.categories[this.currentCategoryIndex]?.href) return []
-
-        // if (!this.itemsPerCategory)
-        //     this.itemsPerCategory = Math.max(
-        //         Math.ceil(this.maxEntries / this.categories.length),
-        //         10
-        //     )
 
         try {
             const listings = await super.getBatch()

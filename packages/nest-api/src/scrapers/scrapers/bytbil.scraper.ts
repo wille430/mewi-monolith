@@ -25,14 +25,11 @@ export class BytbilScraper extends ListingWebCrawler {
     _calculatedScrapeCount: number | undefined
     _typeIndex = 0
 
-    public get scrapeTargetUrl(): string {
+    override getNextUrl(): string {
         return new URL(this.vehicleTypes[this._typeIndex], this.scrapeTargetUrl).toString()
     }
 
-    constructor(
-        @Inject(PrismaService) prisma: PrismaService,
-        @Inject(ConfigService) configService: ConfigService
-    ) {
+    constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
             baseUrl: 'https://bytbil.com/',
             origin: ListingOrigin.Bytbil,

@@ -32,7 +32,7 @@ export class ShpockScraper extends ListingScraper {
             try {
                 // fetch token
                 const page = await browser.newPage()
-                await page.goto(new URL('/en-gb/results', this.scrapeTargetUrl).toString())
+                await page.goto(new URL('/en-gb/results', await this.scrapeTargetUrl).toString())
 
                 const token = await page.evaluate(() => {
                     const text = document.querySelector('#__NEXT_DATA__').textContent

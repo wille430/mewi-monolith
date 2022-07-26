@@ -28,6 +28,7 @@ export class ScrapersController {
             for (const scraper of scrapers) {
                 startStatusMap[scraper] = await this.scrapersService.start(scraper, {
                     triggeredBy: ScraperTrigger.Manual,
+                    scrapeType: 'NEW',
                 })
             }
 
@@ -45,7 +46,7 @@ export class ScrapersController {
     start(@Param() startOneScraperDto: StartOneScraperDto) {
         const started = this.scrapersService.start(
             capitalize(startOneScraperDto.scraperName) as ListingOrigin,
-            { triggeredBy: ScraperTrigger.Manual }
+            { triggeredBy: ScraperTrigger.Manual, scrapeType: 'NEW' }
         )
 
         if (!started) {

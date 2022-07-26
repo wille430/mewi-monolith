@@ -25,7 +25,7 @@ export class ScrapersService {
     pipelineIndex: number | null = null
     startScraperAfterMs = 60 * 60 * 1000
     pipelineQueue: RunPipelineEvent[] = []
-    scraperPipeline: [ListingOrigin, StartScraperOptions][] = []
+    scraperPipeline: [ListingOrigin, Partial<StartScraperOptions>][] = []
 
     constructor(
         @Inject(BlocketScraper) private blocketScraper: BlocketScraper,
@@ -123,7 +123,7 @@ export class ScrapersService {
 
     async start(
         scraperName: ListingOrigin,
-        options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
+        options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled, scrapeType: 'NEW' }
     ): Promise<ScraperStatusReport> {
         const scraper: ListingScraper | undefined = this.scrapers[scraperName]
 

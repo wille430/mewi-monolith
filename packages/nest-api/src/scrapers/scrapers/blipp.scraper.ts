@@ -3,6 +3,7 @@ import { Category, ListingOrigin, Currency } from '@mewi/prisma'
 import { PrismaService } from '@/prisma/prisma.service'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/ListingScraper'
+import { AxiosResponse } from 'axios'
 
 export class BlippScraper extends NextScraper {
     maxPages?: number
@@ -10,6 +11,9 @@ export class BlippScraper extends NextScraper {
     perPage = 40
 
     readonly _scrapeTargetUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
+    override getNextUrl() {
+        return `${this._scrapeTargetUrl}?page=${this.currentPage}/`
+    }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
@@ -37,29 +41,6 @@ export class BlippScraper extends NextScraper {
         }
     }
 
-    /**
-     * @param pageNum - the page to scrape. pageNum \>= 1
-     * @returns An array of listings
-     */
-    async getListingsOnPage(pageNum: number): Promise<ScrapedListing[]> {
-        pageNum = Math.max(pageNum, 1)
-
-        let listings: ScrapedListing[] = []
-        try {
-            const url = `${this.scrapeTargetUrl}?page=${pageNum}/`
-
-            const rawListings = (await this.client
-                .get(url)
-                .then((res) => res.data.pageProps?.vehiclesData?.payload.items)) as any[]
-
-            listings = rawListings.map((obj) => this.parseRawListing(obj))
-        } catch (e) {
-            console.log(e)
-        }
-
-        return listings
-    }
-
     async getBatch(): Promise<ScrapedListing[]> {
         if (!this.maxPages) {
             await this.numberOfPages()
@@ -69,11 +50,15 @@ export class BlippScraper extends NextScraper {
             return []
         }
 
-        const items = await this.getListingsOnPage(this.currentPage)
+        const listings = await super.getBatch()
 
         this.currentPage += 1
 
-        return items
+        return listings
+    }
+
+    extractRawListingsArray(res: AxiosResponse<any, any>) {
+        return res.data.pageProps?.vehiclesData?.payload.items
     }
 
     parseRawListing({

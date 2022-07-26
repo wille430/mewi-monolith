@@ -28,7 +28,7 @@ export class ListingWebCrawler extends ListingScraper {
 
         try {
             const page = await browser.newPage()
-            await page.goto(this.scrapeTargetUrl)
+            await page.goto(await this.getNextUrl())
 
             const items = await page.$$(this.listingSelector)
             const scrapedListings = await Promise.all(

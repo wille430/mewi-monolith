@@ -1,16 +1,18 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { JSDOM } from 'jsdom'
 import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { PrismaService } from '@/prisma/prisma.service'
-import { ListingScraper, ScrapedListing } from '../classes/ListingScraper'
+import { GetBatchOptions, ListingScraper, ScrapedListing } from '../classes/ListingScraper'
 
 export class BlocketScraper extends ListingScraper {
     page = 0
     limit = 50
-    readonly _scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
-    public get scrapeTargetUrl() {
+    readonly scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${
+        this.limit
+    }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
+    override getNextUrl() {
         return `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
     }
 
@@ -60,19 +62,19 @@ export class BlocketScraper extends ListingScraper {
         return axios
     }
 
-    async getBatch(): Promise<ScrapedListing[]> {
+    async getBatch(options: GetBatchOptions = {}): Promise<ScrapedListing[]> {
         try {
-            this.client = await this.createAxiosInstance()
-            const dom = await this.client.get(this.scrapeTargetUrl)
-            const data = dom.data.data
-            const items: Prisma.ListingCreateInput[] = data.map((obj) => this.parseRawListing(obj))
-
+            const items = super.getBatch(options)
             this.page += 1
             return items
         } catch (e) {
             console.log(e)
             return []
         }
+    }
+
+    extractRawListingsArray(res: AxiosResponse<any, any>) {
+        return res.data.data
     }
 
     parseRegion(location: BlocketListing['location']) {

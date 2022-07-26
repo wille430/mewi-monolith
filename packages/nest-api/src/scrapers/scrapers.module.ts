@@ -17,6 +17,7 @@ export class ScrapersModule implements OnModuleInit {
     constructor(private scraperService: ScrapersService, private prisma: PrismaService) {}
 
     async onModuleInit() {
-        this.scraperService.conditionalScrape()
+        // this.scraperService.conditionalScrape()
+        this.scraperService.scrapers.Blocket.watch()
     }
 }

@@ -7,9 +7,6 @@ import _ from 'lodash'
 
 export class CitiboardScraper extends ListingWebCrawler {
     readonly _scrapeTargetUrl = 'https://citiboard.se/hela-sverige'
-    get scrapeTargetUrl(): string {
-        return this.nextPageUrl()
-    }
     limit = 60
     offset = 0
 
@@ -21,7 +18,7 @@ export class CitiboardScraper extends ListingWebCrawler {
         })
     }
 
-    nextPageUrl() {
+    getNextUrl() {
         return this.scrapeTargetUrl + `?offset=${this.offset}`
     }
 
