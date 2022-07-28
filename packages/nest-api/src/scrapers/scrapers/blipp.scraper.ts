@@ -4,15 +4,15 @@ import { PrismaService } from '@/prisma/prisma.service'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/ListingScraper'
 import { AxiosResponse } from 'axios'
+import { EntryPoint } from '../classes/EntryPoint'
 
 export class BlippScraper extends NextScraper {
-    maxPages?: number
-    currentPage = 1
-    perPage = 40
+    limit = 40
 
-    readonly _scrapeTargetUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
-    override getNextUrl() {
-        return `${this._scrapeTargetUrl}?page=${this.currentPage}/`
+    readonly defaultScrapeUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
+
+    createScrapeUrl = (page = 1) => {
+        return `${this.defaultScrapeUrl}?page=${page}/`
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
@@ -20,41 +20,25 @@ export class BlippScraper extends NextScraper {
             baseUrl: 'https://blipp.se/',
             origin: ListingOrigin.Blipp,
         })
+
+        this.entryPoints = [
+            EntryPoint.create(this.prisma, this.createScrapeUrl, this.numberOfPages),
+        ]
     }
 
     /**
      * Get the number of pages of products that are available
      */
-    async numberOfPages(): Promise<number> {
+    numberOfPages(res: AxiosResponse): number {
         try {
-            this.client = await this.createAxiosInstance()
-            const payload = await this.client
-                .get(this.scrapeTargetUrl)
-                .then((res) => res.data.pageProps?.vehiclesData?.payload)
+            const payload = res.data.pageProps?.vehiclesData?.payload
 
-            this.perPage = payload.per_page
-            this.maxPages = payload.pages
+            this.limit = payload.per_page
 
-            return this.maxPages
+            return payload.pages
         } catch (e) {
-            throw new Error(`Could not retrieve number of pages from ${this.baseUrl}`)
+            throw new Error(`Could not retrieve number of pages from ${this.baseUrl}, Reason: ${e}`)
         }
-    }
-
-    async getBatch(): Promise<ScrapedListing[]> {
-        if (!this.maxPages) {
-            await this.numberOfPages()
-        }
-
-        if (this.currentPage > this.maxPages) {
-            return []
-        }
-
-        const listings = await super.getBatch()
-
-        this.currentPage += 1
-
-        return listings
     }
 
     extractRawListingsArray(res: AxiosResponse<any, any>) {
@@ -75,7 +59,7 @@ export class BlippScraper extends NextScraper {
             title: vehicle.car_name,
             category: Category.FORDON,
             date: new Date(published_date),
-            imageUrl: [cover_photo.full_path],
+            imageUrl: cover_photo ? [cover_photo.full_path] : [],
             redirectUrl: `https://blipp.se/fordon/${entity_id}`,
             isAuction: false,
             price: vehicle.monthly_cost?.car_info_valuation
@@ -90,10 +74,5 @@ export class BlippScraper extends NextScraper {
             origin: ListingOrigin.Blipp,
             auctionEnd: null,
         }
-    }
-
-    reset(): void {
-        super.reset()
-        this.currentPage = 1
     }
 }

@@ -24,10 +24,10 @@ describe('Shpock Scraper', () => {
 
     describe('#getBatch', () => {
         it('should fetch items', async () => {
-            const result = await scraper.getBatch()
-            expect(Array.isArray(result)).toBe(true)
+            const { listings } = await scraper.getBatch()
+            expect(Array.isArray(listings)).toBe(true)
 
-            for (const listing of result) {
+            for (const listing of listings) {
                 validateListingTest(listing, scraper)
             }
         }, 20000)

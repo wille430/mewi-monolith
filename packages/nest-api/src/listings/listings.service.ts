@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
-import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { filterPipelineStage } from './helpers/filter-pipeline-stage'
 import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { PrismaService } from '@/prisma/prisma.service'
+import { CreateListingDto } from './dto/create-listing.dto'
 
 @Injectable()
 export class ListingsService {

@@ -22,14 +22,14 @@ describe('Tradera Scraper', () => {
         expect(scraper).toBeDefined()
     })
 
-    describe('#getListings', () => {
+    describe('#getBatch', () => {
         it('should fetch items and return valid array of objects', async () => {
-            const scraped = await scraper.getBatch()
+            const { listings } = await scraper.getBatch()
 
-            expect(Array.isArray(scraped)).toBe(true)
-            expect(scraped.length).toBeGreaterThan(0)
+            expect(Array.isArray(listings)).toBe(true)
+            expect(listings.length).toBeGreaterThan(0)
 
-            for (const listing of scraped) {
+            for (const listing of listings) {
                 validateListingTest(listing, scraper)
             }
         }, 20000)

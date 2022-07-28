@@ -1,14 +1,15 @@
-import { Prisma, ListingOrigin, Category, Currency } from '@mewi/prisma'
+import { ListingOrigin, Category, Currency } from '@mewi/prisma'
 import { Inject } from '@nestjs/common'
 import { ElementHandle } from 'puppeteer'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import _ from 'lodash'
+import { EntryPoint } from '../classes/EntryPoint'
 
+// TODO: find maximum offset
 export class CitiboardScraper extends ListingWebCrawler {
-    readonly _scrapeTargetUrl = 'https://citiboard.se/hela-sverige'
+    readonly defaultScrapeUrl = 'https://citiboard.se/hela-sverige'
     limit = 60
-    offset = 0
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
@@ -16,18 +17,11 @@ export class CitiboardScraper extends ListingWebCrawler {
             origin: ListingOrigin.Citiboard,
             listingSelector: 'article.gridItem',
         })
+
+        this.entryPoints = [EntryPoint.create(this.prisma, this.createScrapeUrl)]
     }
 
-    getNextUrl() {
-        return this.scrapeTargetUrl + `?offset=${this.offset}`
-    }
-
-    async getBatch(): Promise<Prisma.ListingCreateInput[]> {
-        const listings = await super.getBatch()
-
-        this.offset += this.limit
-        return listings
-    }
+    createScrapeUrl = (page: number) => this.defaultScrapeUrl + `?offset=${(page - 1) * this.limit}`
 
     async evalParseRawListing(ele: ElementHandle<Element>) {
         const listing: any = await ele.evaluate(async (ele) => ({

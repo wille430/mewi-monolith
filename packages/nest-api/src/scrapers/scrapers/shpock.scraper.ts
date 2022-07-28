@@ -1,22 +1,25 @@
 import { Inject } from '@nestjs/common'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import puppeteer from 'puppeteer'
 import { PrismaService } from '@/prisma/prisma.service'
-import { ListingScraper } from '../classes/ListingScraper'
+import { GetBatchOptions, ListingScraper } from '../classes/ListingScraper'
 
 export class ShpockScraper extends ListingScraper {
-    offset = 0
     limit = 100
     _token: undefined | string
     _originCategories: undefined | any[]
-    _scrapeTargetUrl: string = this.baseUrl
+    defaultScrapeUrl: string = this.baseUrl
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
             baseUrl: 'https://shpock.com/',
             origin: ListingOrigin.Shpock,
         })
+    }
+
+    createScrapeUrl(): string {
+        throw this.defaultScrapeUrl
     }
 
     get token() {
@@ -32,7 +35,7 @@ export class ShpockScraper extends ListingScraper {
             try {
                 // fetch token
                 const page = await browser.newPage()
-                await page.goto(new URL('/en-gb/results', await this.scrapeTargetUrl).toString())
+                await page.goto(new URL('/en-gb/results', await this.defaultScrapeUrl).toString())
 
                 const token = await page.evaluate(() => {
                     const text = document.querySelector('#__NEXT_DATA__').textContent
@@ -53,7 +56,11 @@ export class ShpockScraper extends ListingScraper {
         })
     }
 
-    override async getBatch(): Promise<Prisma.ListingCreateInput[]> {
+    public override async getBatch(options?: GetBatchOptions): Promise<{
+        listings: Prisma.ListingCreateInput[]
+        continue: boolean
+        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
+    }> {
         const data = await axios
             .post('https://www.shpock.com/graphql', {
                 operationName: 'ItemSearch',
@@ -62,7 +69,7 @@ export class ShpockScraper extends ListingScraper {
                     pagination: {
                         limit: this.limit,
                         od: await this.token,
-                        offset: this.offset,
+                        offset: (options.page - 1) * this.limit,
                     },
                 },
                 query: 'query ItemSearch($serializedFilters: String, $pagination: Pagination, $trackingSource: TrackingSource!) {\n  itemSearch(\n    serializedFilters: $serializedFilters\n    pagination: $pagination\n    trackingSource: $trackingSource\n  ) {\n    __typename\n    od\n    offset\n    limit\n    count\n    total\n    adKeywords\n    locality\n    spotlightCarousel {\n      ...carouselSummaryFragment\n      __typename\n    }\n    itemResults {\n      distanceGroup\n      items {\n        ...summaryFragment\n        __typename\n      }\n      __typename\n    }\n    filters {\n      __typename\n      kind\n      key\n      triggerLabel\n      serializedValue\n      status\n      ... on CascaderFilter {\n        dataSourceKind\n        __typename\n      }\n      ... on SingleSelectListFilter {\n        title\n        options {\n          __typename\n          label\n          subLabel\n          badgeLabel\n          serializedValue\n        }\n        defaultSerializedValue\n        __typename\n      }\n      ... on MultiSelectListFilter {\n        title\n        submitLabel\n        options {\n          __typename\n          label\n          subLabel\n          badgeLabel\n          serializedValue\n        }\n        __typename\n      }\n      ... on SearchableMultiSelectListFilter {\n        title\n        submitLabel\n        searchEndpoint\n        __typename\n      }\n      ... on RangeFilter {\n        title\n        __typename\n      }\n      ... on LegacyPriceFilter {\n        title\n        __typename\n      }\n      ... on LegacyLocationFilter {\n        title\n        __typename\n      }\n      ... on RadioToggleFilter {\n        options {\n          __typename\n          label\n          value\n        }\n        defaultSerializedValue\n        __typename\n      }\n    }\n    floatingFilter {\n      name\n      options {\n        label\n        value\n        isSelected\n        __typename\n      }\n      __typename\n    }\n    savedSearchProposal {\n      isAlreadySaved\n      candidate {\n        id\n        name\n        keyword\n        serializedFilters\n        isNotificationChannelOn\n        isEmailChannelOn\n        displayedFilters {\n          name\n          value\n          format\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n  }\n}\n\nfragment summaryFragment on Summary {\n  __typename\n  ... on ItemSummary {\n    ...itemSummaryFragment\n    __typename\n  }\n  ... on ShopSummary {\n    ...shopSummaryFragment\n    __typename\n  }\n}\n\nfragment itemSummaryFragment on ItemSummary {\n  id\n  title\n  media {\n    id\n    width\n    height\n    title\n    __typename\n  }\n  description\n  path\n  distance\n  distanceUnit\n  locality\n  price\n  originalPrice\n  currency\n  ...itemSummaryTagsFragment\n  canonicalURL\n  __typename\n}\n\nfragment itemSummaryTagsFragment on ItemSummary {\n  isNew\n  isSold\n  isFree\n  isOnSale\n  isLiked\n  isBoosted\n  isShippable\n  isOnHold\n  __typename\n}\n\nfragment shopSummaryFragment on ShopSummary {\n  __typename\n  id\n  name\n  avatar {\n    id\n    __typename\n  }\n  media {\n    id\n    __typename\n  }\n  itemCount\n}\n\nfragment carouselSummaryFragment on CarouselSummary {\n  __typename\n  label\n  group\n  items {\n    id\n    title\n    description\n    media {\n      id\n      width\n      height\n      title\n      __typename\n    }\n    path\n    price\n    originalPrice\n    currency\n    ...itemSummaryTagsFragment\n    canonicalURL\n    __typename\n  }\n}\n',
@@ -71,10 +78,11 @@ export class ShpockScraper extends ListingScraper {
         const items: Record<string, any>[] = data.data.itemSearch.itemResults[0].items
         this._token = data.data.itemSearch.od
 
-        this.offset += this.limit
-
         // format and return
-        return Promise.all(items.map((ele) => this.parseListing(ele)))
+        return this.createGetBatchReturn(
+            await Promise.all(items.map((ele) => this.parseListing(ele))),
+            options
+        )
     }
 
     async parseListing(item: Record<string, any>): Promise<Prisma.ListingCreateInput> {
@@ -99,11 +107,6 @@ export class ShpockScraper extends ListingScraper {
         }
     }
 
-    reset(): void {
-        super.reset()
-        this.offset = 0
-    }
-
     get originCategories() {
         if (this._originCategories) {
             return this._originCategories
@@ -111,7 +114,7 @@ export class ShpockScraper extends ListingScraper {
             // eslint-disable-next-line no-async-promise-executor
             return new Promise<any[]>(async (resolve) => {
                 const data = await axios
-                    .post(this.scrapeTargetUrl + 'graphql', {
+                    .post(this.defaultScrapeUrl + 'graphql', {
                         operationName: 'Categories',
                         query: 'query Categories {\n  categories {\n    id\n    label\n    slugs\n    __typename\n  }\n}\n',
                         variables: {},

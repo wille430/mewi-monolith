@@ -2,191 +2,193 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "filterJson"]
-  output          = "../node_modules/@prisma/client"
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "filterJson"]
+    output          = "../node_modules/@prisma/client"
 }
 
 generator factories {
-  provider = "prisma-factory"
-  output   = "../node_modules/@prisma/client/factory"
+    provider = "prisma-factory"
+    output   = "../node_modules/@prisma/client/factory"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
 model Watcher {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  metadata Metadata
+    metadata Metadata
 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  UserWatcher UserWatcher[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    UserWatcher UserWatcher[]
 }
 
 model UserWatcher {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  watcherId String  @db.ObjectId
-  watcher   Watcher @relation(fields: [watcherId], references: [id])
+    watcherId String  @db.ObjectId
+    watcher   Watcher @relation(fields: [watcherId], references: [id])
 
-  notifiedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+    notifiedAt DateTime?
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
 
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+    userId String @db.ObjectId
+    user   User   @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  email         String         @unique()
-  password      String?
-  premium       Boolean        @default(false)
-  watchers      UserWatcher[]
-  roles         Role[]
-  loginStrategy LoginStrategy  @default(LOCAL)
-  passwordReset PasswordReset?
-  emailUpdate   EmailUpdate?
+    id            String         @id @default(auto()) @map("_id") @db.ObjectId
+    email         String         @unique()
+    password      String?
+    premium       Boolean        @default(false)
+    watchers      UserWatcher[]
+    roles         Role[]
+    loginStrategy LoginStrategy  @default(LOCAL)
+    passwordReset PasswordReset?
+    emailUpdate   EmailUpdate?
 
-  likedListingIDs String[]      @db.ObjectId
-  likedListings   Listing[]     @relation(fields: [likedListingIDs], references: [id])
-  EmailRecord     EmailRecord[]
+    likedListingIDs String[]      @db.ObjectId
+    likedListings   Listing[]     @relation(fields: [likedListingIDs], references: [id])
+    EmailRecord     EmailRecord[]
 }
 
 model Listing {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  origin_id   String        @unique()
-  title       String
-  body        String?
-  category    Category
-  date        DateTime      @default(now())
-  redirectUrl String
-  imageUrl    String[]
-  price       Price?
-  region      String?
-  parameters  Paramater[]
-  origin      ListingOrigin
-  isAuction   Boolean       @default(false)
-  auctionEnd  DateTime?
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
+    origin_id   String        @unique()
+    title       String
+    body        String?
+    category    Category
+    date        DateTime      @default(now())
+    redirectUrl String
+    imageUrl    String[]
+    price       Price?
+    region      String?
+    parameters  Paramater[]
+    origin      ListingOrigin
+    isAuction   Boolean       @default(false)
+    auctionEnd  DateTime?
 
-  likedByUserIDs String[] @db.ObjectId
-  likedBy        User[]   @relation(fields: [likedByUserIDs], references: [id])
+    likedByUserIDs String[] @db.ObjectId
+    likedBy        User[]   @relation(fields: [likedByUserIDs], references: [id])
+
+    entryPoint String?
 }
 
 model ScrapingLog {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  added_count Int
-  error_count Int
+    added_count Int
+    error_count Int
 
-  total_count Int
+    total_count Int
 
-  target       ListingOrigin
-  triggered_by ScraperTrigger
+    target       ListingOrigin
+    triggered_by ScraperTrigger
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model EmailRecord {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  to   String
-  from String
+    to   String
+    from String
 
-  type EmailType
+    type EmailType
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @db.ObjectId
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String? @db.ObjectId
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 }
 
 enum Role {
-  USER
-  ADMIN
-  GUEST
+    USER
+    ADMIN
+    GUEST
 }
 
 enum LoginStrategy {
-  GOOGLE
-  LOCAL
+    GOOGLE
+    LOCAL
 }
 
 type PasswordReset {
-  tokenHash  String
-  expiration Int
+    tokenHash  String
+    expiration Int
 }
 
 type EmailUpdate {
-  newEmail   String
-  tokenHash  String
-  expiration DateTime
+    newEmail   String
+    tokenHash  String
+    expiration DateTime
 }
 
 type FilterRange {
-  from Int?
-  to   Int?
+    from Int?
+    to   Int?
 }
 
 type Metadata {
-  keyword  String?
-  region   String?
-  category String?
-  auction  Boolean?
+    keyword  String?
+    region   String?
+    category String?
+    auction  Boolean?
 
-  priceRangeGte Int?
-  priceRangeLte Int?
-  dateGte       DateTime?
+    priceRangeGte Int?
+    priceRangeLte Int?
+    dateGte       DateTime?
 }
 
 enum Category {
-  FORDON
-  FOR_HEMMET
-  PERSONLIGT
-  ELEKTRONIK
-  FRITID_HOBBY
-  AFFARSVERKSAMHET
-  OVRIGT
+    FORDON
+    FOR_HEMMET
+    PERSONLIGT
+    ELEKTRONIK
+    FRITID_HOBBY
+    AFFARSVERKSAMHET
+    OVRIGT
 }
 
 type Price {
-  value    Int
-  currency Currency
+    value    Int
+    currency Currency
 }
 
 enum Currency {
-  SEK
+    SEK
 }
 
 type Paramater {
-  label String
-  value String
+    label String
+    value String
 }
 
 enum ListingOrigin {
-  Blocket
-  Tradera
-  Sellpy
-  Blipp
-  Citiboard
-  Shpock
-  Bytbil
+    Blocket
+    Tradera
+    Sellpy
+    Blipp
+    Citiboard
+    Shpock
+    Bytbil
 }
 
 enum ScraperTrigger {
-  Manual
-  Scheduled
+    Manual
+    Scheduled
 }
 
 enum EmailType {
-  WATCHER
-  ACCOUNT
-  EMAIL_CONFIRM
-  PASSWORD_RESET
-  INFO
+    WATCHER
+    ACCOUNT
+    EMAIL_CONFIRM
+    PASSWORD_RESET
+    INFO
 }

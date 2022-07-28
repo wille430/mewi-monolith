@@ -1,16 +1,28 @@
 import puppeteer, { ElementHandle } from 'puppeteer'
-import { ListingScraper, ListingScraperConstructorArgs } from './ListingScraper'
+import {
+    GetBatchOptions,
+    ListingScraper,
+    ListingScraperConstructorArgs,
+    WatchOptions,
+} from './ListingScraper'
 import { ScrapedListing } from './ListingScraper'
 import { NotImplementedException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
+import { Prisma } from '@mewi/prisma'
+import { EntryPointDOM } from './EntryPoint'
 
 export type ListingWebCrawlerConstructorArgs = ListingScraperConstructorArgs & {
     listingSelector: string
 }
 
-export class ListingWebCrawler extends ListingScraper {
-    private readonly listingSelector: string
+export abstract class ListingWebCrawler extends ListingScraper {
+    readonly listingSelector: string
     readonly useRobots: boolean = true
+    readonly watchOptions: WatchOptions = {
+        findFirst: 'date',
+    }
+
+    entryPoints: EntryPointDOM[] = []
 
     constructor(
         prisma: PrismaService,
@@ -20,7 +32,18 @@ export class ListingWebCrawler extends ListingScraper {
         this.listingSelector = listingSelector
     }
 
-    public override async getBatch(): Promise<ScrapedListing[]> {
+    public override async getBatch(
+        options: GetBatchOptions & {
+            extractListings?: (page: puppeteer.Page) => Promise<any[]>
+            jsonResult?: boolean
+        }
+    ): Promise<{
+        listings: Prisma.ListingCreateInput[]
+        continue: boolean
+        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
+    }> {
+        const { entryPoint, page: pageNb } = options
+
         // Instantiate puppeteer
         const browser = await puppeteer.launch({
             args: ['--no-sandbox'],
@@ -28,11 +51,18 @@ export class ListingWebCrawler extends ListingScraper {
 
         try {
             const page = await browser.newPage()
-            await page.goto(await this.getNextUrl())
+            await page.goto(entryPoint.createUrl(pageNb))
 
-            const items = await page.$$(this.listingSelector)
+            const items = options.extractListings
+                ? await options.extractListings(page)
+                : await page.$$(this.listingSelector)
             const scrapedListings = await Promise.all(
-                items.map((ele) => this.evalParseRawListing(ele))
+                items.map((ele) => ({
+                    ...(options.jsonResult
+                        ? this.parseRawListing(ele)
+                        : this.evalParseRawListing(ele)),
+                    entryPoint: options.entryPoint.identifier,
+                }))
             )
 
             const listings = scrapedListings.map((x) => ({
@@ -41,10 +71,10 @@ export class ListingWebCrawler extends ListingScraper {
                 date: new Date(),
             })) as ScrapedListing[]
 
-            return listings
+            return this.createGetBatchReturn(listings, options)
         } catch (e) {
             console.error(e)
-            return []
+            return this.createGetBatchReturn([], options)
         } finally {
             await browser.close()
         }

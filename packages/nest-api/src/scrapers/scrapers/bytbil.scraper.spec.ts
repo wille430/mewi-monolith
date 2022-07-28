@@ -38,7 +38,7 @@ describe('Bytbil Scraper', () => {
 
     describe('#getBatch', () => {
         it('should fetch items and return valid array of objects', async () => {
-            const scraped = await scraper.getBatch()
+            const { listings: scraped } = await scraper.getBatch()
 
             expect(Array.isArray(scraped)).toBe(true)
             expect(scraped.length).toBeGreaterThan(0)

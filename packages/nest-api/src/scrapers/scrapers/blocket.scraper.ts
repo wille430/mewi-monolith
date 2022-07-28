@@ -4,23 +4,27 @@ import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { PrismaService } from '@/prisma/prisma.service'
-import { GetBatchOptions, ListingScraper, ScrapedListing } from '../classes/ListingScraper'
+import { ListingScraper } from '../classes/ListingScraper'
+import { EntryPoint } from '../classes/EntryPoint'
 
 export class BlocketScraper extends ListingScraper {
-    page = 0
     limit = 50
-    readonly scrapeTargetUrl = `https://api.blocket.se/search_bff/v1/content?lim=${
+    readonly defaultScrapeUrl = `https://api.blocket.se/search_bff/v1/content?lim=${
         this.limit
     }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
-    override getNextUrl() {
-        return `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${this.page}&st=s&include=all&gl=3&include=extend_with_shipping`
-    }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma, {
             baseUrl: 'https://www.blocket.se/',
             origin: ListingOrigin.Blocket,
         })
+        this.entryPoints = [
+            EntryPoint.create(this.prisma, this.createScrapeUrl, this.extractTotalPageCount),
+        ]
+    }
+
+    private extractTotalPageCount(res: AxiosResponse) {
+        return res.data.total_page_count
     }
 
     async getBearerToken(): Promise<string | null> {
@@ -54,23 +58,10 @@ export class BlocketScraper extends ListingScraper {
         return null
     }
 
-    async addAuthentication(axios: AxiosInstance): Promise<AxiosInstance> {
-        super.addAuthentication(axios)
-
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.getBearerToken()}`
-
-        return axios
-    }
-
-    async getBatch(options: GetBatchOptions = {}): Promise<ScrapedListing[]> {
-        try {
-            const items = super.getBatch(options)
-            this.page += 1
-            return items
-        } catch (e) {
-            console.log(e)
-            return []
-        }
+    async createAxiosInstance(): Promise<AxiosInstance> {
+        const instance = await super.createAxiosInstance()
+        instance.defaults.headers.common['Authorization'] = `Bearer ${await this.getBearerToken()}`
+        return instance
     }
 
     extractRawListingsArray(res: AxiosResponse<any, any>) {
@@ -127,12 +118,9 @@ export class BlocketScraper extends ListingScraper {
             region: this.parseRegion(item.location),
             parameters: this.parseParameters(item.parameter_groups),
             origin: ListingOrigin.Blocket,
-            auctionEnd: null,
         }
     }
 
-    reset(): void {
-        super.reset()
-        this.page = 0
-    }
+    override createScrapeUrl = (page: number = 0): string =>
+        `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${page}&st=s&include=all&gl=3&include=extend_with_shipping`
 }

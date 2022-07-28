@@ -1,0 +1,1605 @@
+{
+    "items": [
+        {
+            "manufacturer": "Audi",
+            "model": "A4",
+            "vehicleModelDate": "2014",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 130,
+            "powerUnit": "kw",
+            "year": 2014,
+            "color": "Ibis vit",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 149800,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:25:18Z",
+            "publisher": {
+                "id": "3060",
+                "name": "Mellinger Bil AB",
+                "location": {
+                    "addressLocality": "VÄSTERÅS",
+                    "addressRegion": "Västmanlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "VÄSTERÅS",
+                "addressRegion": "Västmanlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372334",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Audi \u003e A4",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Porsche",
+            "model": "Cayman",
+            "vehicleModelDate": "2014",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 239,
+            "powerUnit": "kw",
+            "year": 2014,
+            "color": "Gul",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 599900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:24:57Z",
+            "publisher": {
+                "id": "11015",
+                "name": "TrendBil Ab",
+                "location": {
+                    "addressLocality": "BOLLEBYGD",
+                    "addressRegion": "Västra Götalands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "BOLLEBYGD",
+                "addressRegion": "Västra Götalands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372333",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Porsche \u003e Cayman",
+            "tags": [
+                "Car",
+                "Sportkupé",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Jeep",
+            "model": "Grand Cherokee",
+            "vehicleModelDate": "1999",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 146,
+            "powerUnit": "kw",
+            "year": 1999,
+            "color": "",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 29900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:23:55Z",
+            "publisher": {
+                "id": "2336",
+                "name": "STX Bil \u0026 MC AB",
+                "location": {
+                    "addressLocality": "OSKARSTRÖM",
+                    "addressRegion": "Hallands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "OSKARSTRÖM",
+                "addressRegion": "Hallands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372331",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Jeep \u003e Grand Cherokee",
+            "tags": [
+                "Car",
+                "SUV",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Volkswagen",
+            "model": "Golf",
+            "vehicleModelDate": "2008",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 103,
+            "powerUnit": "kw",
+            "year": 2008,
+            "color": "Grå",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 49900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:23:48Z",
+            "publisher": {
+                "id": "6950",
+                "name": "Bamas Bilar AB",
+                "location": {
+                    "addressLocality": "LINKÖPING",
+                    "addressRegion": "Östergötlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "LINKÖPING",
+                "addressRegion": "Östergötlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372330",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Volkswagen \u003e Golf",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Kia",
+            "model": "Carens",
+            "vehicleModelDate": "2016",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 85,
+            "powerUnit": "kw",
+            "year": 2016,
+            "color": "Vit",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 144900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:21:52Z",
+            "publisher": {
+                "id": "9350",
+                "name": "Bilia Outlet Kungens Kurva",
+                "location": {
+                    "addressLocality": "KUNGENS KURVA",
+                    "addressRegion": "Stockholms län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "KUNGENS KURVA",
+                "addressRegion": "Stockholms län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16309139",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Kia \u003e Carens",
+            "tags": [
+                "Car",
+                "Minibuss",
+                "No Premium Warranty",
+                "Diesel",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Volvo",
+            "model": "V70",
+            "vehicleModelDate": "2009",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "year": 2009,
+            "color": "Lgrå",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 35000,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:20:40Z",
+            "publisher": {
+                "id": "10625",
+                "name": "Bilia Outlet Auktioner Västerås",
+                "location": {
+                    "addressLocality": "VÄSTERÅS",
+                    "addressRegion": "Västmanlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "VÄSTERÅS",
+                "addressRegion": "Västmanlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372323",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Volvo \u003e V70",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Peugeot",
+            "model": "5008",
+            "vehicleModelDate": "2010",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 88,
+            "powerUnit": "kw",
+            "year": 2010,
+            "color": "Mgrå ",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 47500,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:20:17Z",
+            "publisher": {
+                "id": "9987",
+                "name": "Falbygdens Bil AB",
+                "location": {
+                    "addressLocality": "FALKÖPING",
+                    "addressRegion": "Kronobergs län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "FALKÖPING",
+                "addressRegion": "Kronobergs län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372321",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Peugeot \u003e 5008",
+            "tags": [
+                "Car",
+                "Minibuss",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Kia",
+            "model": "Optima",
+            "vehicleModelDate": "2018",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Hybrid el/bensin",
+            "power": 151,
+            "powerUnit": "kw",
+            "year": 2018,
+            "color": "Silver",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 279900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:18:12Z",
+            "publisher": {
+                "id": "7000",
+                "name": "Serman Cars AB",
+                "location": {
+                    "addressLocality": "SEGELTORP",
+                    "addressRegion": "Stockholms län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "SEGELTORP",
+                "addressRegion": "Stockholms län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372316",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Kia \u003e Optima",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Hybrid el/bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "BMW",
+            "model": "M3",
+            "vehicleModelDate": "2008",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 309,
+            "powerUnit": "kw",
+            "year": 2008,
+            "color": "",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 299000,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:18:12Z",
+            "publisher": {
+                "id": "11387",
+                "name": "BR BIL AB",
+                "location": {
+                    "addressLocality": "SKEE",
+                    "addressRegion": "Västra Götalands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "SKEE",
+                "addressRegion": "Västra Götalands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372317",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e BMW \u003e M3",
+            "tags": [
+                "Car",
+                "Sportkupé",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Audi",
+            "model": "A5",
+            "vehicleModelDate": "2022",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 195,
+            "powerUnit": "kw",
+            "year": 2022,
+            "color": "Svart",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 539900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:16:21Z",
+            "publisher": {
+                "id": "6252",
+                "name": "Tullinge Bil Sverige AB",
+                "location": {
+                    "addressLocality": "SEGELTORP",
+                    "addressRegion": "Stockholms län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "SEGELTORP",
+                "addressRegion": "Stockholms län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16371852",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Audi \u003e A5",
+            "tags": [
+                "Car",
+                "Halvkombi",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Fiat",
+            "model": "500C",
+            "vehicleModelDate": "2016",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 51,
+            "powerUnit": "kw",
+            "year": 2016,
+            "color": "Vit",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 108900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:15:52Z",
+            "publisher": {
+                "id": "9414",
+                "name": "Billyckan AB",
+                "location": {
+                    "addressLocality": "PÅARP",
+                    "addressRegion": "Skåne län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "PÅARP",
+                "addressRegion": "Skåne län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372308",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Fiat \u003e 500C",
+            "tags": [
+                "Car",
+                "Cab",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Ford",
+            "model": "S-Max",
+            "vehicleModelDate": "2013",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 118,
+            "powerUnit": "kw",
+            "year": 2013,
+            "color": "Mörkblå",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 124900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:13:34Z",
+            "publisher": {
+                "id": "100059",
+                "name": "Ford Hedin Bil Helsingborg",
+                "location": {
+                    "addressLocality": "Helsingborg",
+                    "addressRegion": "Skåne län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "Helsingborg",
+                "addressRegion": "Skåne län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372306",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Ford \u003e S-Max",
+            "tags": [
+                "Car",
+                "Minibuss",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Porsche",
+            "model": "Panamera",
+            "vehicleModelDate": "2014",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 221,
+            "powerUnit": "kw",
+            "year": 2014,
+            "color": "Svart",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 399000,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:13:27Z",
+            "publisher": {
+                "id": "1989",
+                "name": "Häggenäs Automobile AB",
+                "location": {
+                    "addressLocality": "HÖRBY",
+                    "addressRegion": "Skåne län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "HÖRBY",
+                "addressRegion": "Skåne län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372305",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Porsche \u003e Panamera",
+            "tags": [
+                "Car",
+                "Sedan",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Audi",
+            "model": "A4",
+            "vehicleModelDate": "2017",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 190,
+            "powerUnit": "kw",
+            "year": 2017,
+            "color": "Vit",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 219900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:13:13Z",
+            "publisher": {
+                "id": "9036",
+                "name": "Riddermark Bil Östersund",
+                "location": {
+                    "addressLocality": "ÖSTERSUND",
+                    "addressRegion": "Jämtlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "ÖSTERSUND",
+                "addressRegion": "Jämtlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372304",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Audi \u003e A4",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Audi",
+            "model": "A4",
+            "vehicleModelDate": "2014",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 177,
+            "powerUnit": "kw",
+            "year": 2014,
+            "color": "Grå",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 152800,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:13:13Z",
+            "publisher": {
+                "id": "9036",
+                "name": "Riddermark Bil Östersund",
+                "location": {
+                    "addressLocality": "ÖSTERSUND",
+                    "addressRegion": "Jämtlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "ÖSTERSUND",
+                "addressRegion": "Jämtlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372303",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Audi \u003e A4",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Nissan",
+            "model": "Qashqai",
+            "vehicleModelDate": "2015",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 81,
+            "powerUnit": "kw",
+            "year": 2015,
+            "color": "Grå",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 94900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:12:59Z",
+            "publisher": {
+                "id": "8675",
+                "name": "Reximotor AB",
+                "location": {
+                    "addressLocality": "VALBO",
+                    "addressRegion": "Gävleborgs län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "VALBO",
+                "addressRegion": "Gävleborgs län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16365977",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Nissan \u003e Qashqai",
+            "tags": [
+                "Car",
+                "SUV",
+                "No Premium Warranty",
+                "Diesel",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Porsche",
+            "model": "Cayman",
+            "vehicleModelDate": "2015",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 239,
+            "powerUnit": "kw",
+            "year": 2015,
+            "color": "Svart",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 479900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:12:26Z",
+            "publisher": {
+                "id": "11308",
+                "name": "Ekdahls Bil Göteborg AB",
+                "location": {
+                    "addressLocality": "GÖTEBORG",
+                    "addressRegion": "Västra Götalands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "GÖTEBORG",
+                "addressRegion": "Västra Götalands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372301",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Porsche \u003e Cayman",
+            "tags": [
+                "Car",
+                "Sportkupé",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Volkswagen",
+            "model": "Bora",
+            "vehicleModelDate": "1999",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 74,
+            "powerUnit": "kw",
+            "year": 1999,
+            "color": "",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 19900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:12:02Z",
+            "publisher": {
+                "id": "11072",
+                "name": "Westlunds Bil AB",
+                "location": {
+                    "addressLocality": "KARLSTAD",
+                    "addressRegion": "Värmlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "KARLSTAD",
+                "addressRegion": "Värmlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372300",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Volkswagen \u003e Bora",
+            "tags": [
+                "Car",
+                "Sedan",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Mercedes-Benz",
+            "model": "A",
+            "vehicleModelDate": "2013",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 90,
+            "powerUnit": "kw",
+            "year": 2013,
+            "color": "Svartmetalic",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 119900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:10:34Z",
+            "publisher": {
+                "id": "6531",
+                "name": "Nerikes Bilcenter AB",
+                "location": {
+                    "addressLocality": "ÖREBRO",
+                    "addressRegion": "Örebro län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "ÖREBRO",
+                "addressRegion": "Örebro län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372297",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Mercedes-Benz \u003e A",
+            "tags": [
+                "Car",
+                "Halvkombi",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Porsche",
+            "model": "911",
+            "vehicleModelDate": "2009",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 283,
+            "powerUnit": "kw",
+            "year": 2009,
+            "color": "Svart",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 729000,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:09:27Z",
+            "publisher": {
+                "id": "8332",
+                "name": "AutoParken Sverige AB",
+                "location": {
+                    "addressLocality": "KUNGSBACKA",
+                    "addressRegion": "Västra Götalands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "KUNGSBACKA",
+                "addressRegion": "Västra Götalands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372293",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Porsche \u003e 911",
+            "tags": [
+                "Car",
+                "Cab",
+                "No Premium Warranty",
+                "Bensin",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Renault",
+            "model": "Clio",
+            "vehicleModelDate": "2018",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Bensin",
+            "power": 66,
+            "powerUnit": "kw",
+            "year": 2018,
+            "color": "Silver",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 110000,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:08:56Z",
+            "publisher": {
+                "id": "8903",
+                "name": "Autohero",
+                "location": {
+                    "addressLocality": "ARLANDASTAD",
+                    "addressRegion": "Stockholms län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "ARLANDASTAD",
+                "addressRegion": "Stockholms län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372294",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Renault \u003e Clio",
+            "tags": [
+                "Car",
+                "Kombi",
+                "No Premium Warranty",
+                "Bensin",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "BMW",
+            "model": "316",
+            "vehicleModelDate": "2011",
+            "vehicleTransmission": "Manuell",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 85,
+            "powerUnit": "kw",
+            "year": 2011,
+            "color": "silver",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 76500,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:07:45Z",
+            "publisher": {
+                "id": "7110",
+                "name": "Skövde Bilcenter AB",
+                "location": {
+                    "addressLocality": "SKÖVDE",
+                    "addressRegion": "Västra Götalands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "SKÖVDE",
+                "addressRegion": "Västra Götalands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372292",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e BMW \u003e 316",
+            "tags": [
+                "Car",
+                "Sedan",
+                "No Premium Warranty",
+                "Diesel",
+                "Manuell",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Nissan",
+            "model": "Qashqai",
+            "vehicleModelDate": "2011",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 110,
+            "powerUnit": "kw",
+            "year": 2011,
+            "color": "svart",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 114900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:07:30Z",
+            "publisher": {
+                "id": "3641",
+                "name": "Biltjänsten Serrander Bil AB",
+                "location": {
+                    "addressLocality": "ESKILSTUNA",
+                    "addressRegion": "Södermanlands län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "ESKILSTUNA",
+                "addressRegion": "Södermanlands län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372290",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Nissan \u003e Qashqai",
+            "tags": [
+                "Car",
+                "SUV",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "Used"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        },
+        {
+            "manufacturer": "Peugeot",
+            "model": "308",
+            "vehicleModelDate": "2023",
+            "vehicleTransmission": "Automatisk",
+            "vehicleType": "Car",
+            "fuelType": "Diesel",
+            "power": 96,
+            "powerUnit": "kw",
+            "year": 2023,
+            "color": "SVART",
+            "items": [
+                {
+                    "type": "Vehicle"
+                }
+            ],
+            "price": 393900,
+            "currency": "SEK",
+            "adType": "sell",
+            "published": "2022-07-27T14:05:34Z",
+            "publisher": {
+                "id": "7443",
+                "name": "Fordon City i Stockholm",
+                "location": {
+                    "addressLocality": "SÖDERTÄLJE",
+                    "addressRegion": "Stockholms län",
+                    "postalCode": " "
+                }
+            },
+            "contentLocation": {
+                "addressLocality": "SÖDERTÄLJE",
+                "addressRegion": "Stockholms län",
+                "postalCode": " "
+            },
+            "clientId": "bytbilse",
+            "contentId": "16372287",
+            "contentType": "ClassifiedAd",
+            "category": "Fordon \u003e Bil \u003e Peugeot \u003e 308",
+            "tags": [
+                "Car",
+                "Halvkombi",
+                "No Premium Warranty",
+                "Diesel",
+                "Automatisk",
+                "New"
+            ],
+            "productType": "ResponsiveWeb",
+            "publisherType": "pro"
+        }
+    ],
+    "filters": {
+        "category": "Sök Fordon \u003e Bil",
+        "numResults": "24",
+        "sorting": "PublishedTime",
+        "currency": "SEK",
+        "adType": "Sell",
+        "newOrUsed": "new,used"
+    },
+    "clientId": "bytbilse",
+    "contentType": "Listing",
+    "productType": "ResponsiveWeb"
+}
+
+
+{
+    "event": "productList",
+    "ecommerce": {
+        "impressions": [
+            {
+                "id": "16372334",
+                "name": "Audi A4 allroad quattro 2.0 TDI S Tronic Comfort 177hk Drag",
+                "category": "Bil",
+                "brand": "Audi",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 1,
+                "price": "149800",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "3060",
+                "dimension7": "Mellinger Bil AB",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372333",
+                "name": "Porsche Cayman S PDK | Sport Chrono | Ferrita | Sv-Såld",
+                "category": "Bil",
+                "brand": "Porsche",
+                "variant": "Sportkupé",
+                "list": "Sök bil",
+                "position": 2,
+                "price": "599900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "11015",
+                "dimension7": "TrendBil Ab",
+                "dimension10": "No Warranty",
+                "dimension11": "500k - 599k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372331",
+                "name": "Jeep Grand Cherokee 4.0 Automat 198hk Drag Nyservad",
+                "category": "Bil",
+                "brand": "Jeep",
+                "variant": "SUV",
+                "list": "Sök bil",
+                "position": 3,
+                "price": "29900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "2336",
+                "dimension7": "STX Bil \u0026 MC AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372330",
+                "name": "Volkswagen Golf Variant 1.4 TSI Manuell, 140hk",
+                "category": "Bil",
+                "brand": "Volkswagen",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 4,
+                "price": "49900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "6950",
+                "dimension7": "Bamas Bilar AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16309139",
+                "name": "Kia Carens 1.7 CRDi GLS 7-sits Bluetooth Tonade Motorv Drag",
+                "category": "Bil",
+                "brand": "Kia",
+                "variant": "Minibuss",
+                "list": "Sök bil",
+                "position": 5,
+                "price": "144900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "9350",
+                "dimension7": "Bilia Outlet Kungens Kurva",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372323",
+                "name": "Volvo V70 2.0F Momentum / Elvärmare / Bluetooth",
+                "category": "Bil",
+                "brand": "Volvo",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 6,
+                "price": "35000",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "10625",
+                "dimension7": "Bilia Outlet Auktioner Västerås",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372321",
+                "name": "Peugeot 5008 1.6 VTi 7-sits 120hk",
+                "category": "Bil",
+                "brand": "Peugeot",
+                "variant": "Minibuss",
+                "list": "Sök bil",
+                "position": 7,
+                "price": "47500",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "9987",
+                "dimension7": "Falbygdens Bil AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372316",
+                "name": "Kia Optima SW Plugin Hybrid Plus MOMS NAVI H/K M-värme 205hk",
+                "category": "Bil",
+                "brand": "Kia",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 8,
+                "price": "279900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "7000",
+                "dimension7": "Serman Cars AB",
+                "dimension10": "No Warranty",
+                "dimension11": "200k - 299k",
+                "dimension20": "Deductible VAT"
+            },
+            {
+                "id": "16372317",
+                "name": "BMW M3 Coupé Drivelogic 420hk",
+                "category": "Bil",
+                "brand": "BMW",
+                "variant": "Sportkupé",
+                "list": "Sök bil",
+                "position": 9,
+                "price": "299000",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "11387",
+                "dimension7": "BR BIL AB",
+                "dimension10": "No Warranty",
+                "dimension11": "200k - 299k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16371852",
+                "name": "Audi A5 45 TFSI Quattro Competition S-Line Panorama 265hk",
+                "category": "Bil",
+                "brand": "Audi",
+                "variant": "Halvkombi",
+                "list": "Sök bil",
+                "position": 10,
+                "price": "539900",
+                "dimension6": "Nej",
+                "dimension1": "Ja",
+                "dimension2": "6252",
+                "dimension7": "Tullinge Bil Sverige AB",
+                "dimension10": "No Warranty",
+                "dimension11": "500k - 599k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372308",
+                "name": "Fiat 500C 1.2 Lounge / Cab /  Euro 6 / PDC / Ny servad /69hk",
+                "category": "Bil",
+                "brand": "Fiat",
+                "variant": "Cab",
+                "list": "Sök bil",
+                "position": 11,
+                "price": "108900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "9414",
+                "dimension7": "Billyckan AB",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372306",
+                "name": "Ford S-Max 1.6 EcoBoost 7-sits 160hk",
+                "category": "Bil",
+                "brand": "Ford",
+                "variant": "Minibuss",
+                "list": "Sök bil",
+                "position": 12,
+                "price": "124900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "100059",
+                "dimension7": "Ford Hedin Bil Helsingborg",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372305",
+                "name": "Porsche Panamera Diesel / 300hk / Luftfjädring",
+                "category": "Bil",
+                "brand": "Porsche",
+                "variant": "Sedan",
+                "list": "Sök bil",
+                "position": 13,
+                "price": "399000",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "1989",
+                "dimension7": "Häggenäs Automobile AB",
+                "dimension10": "No Warranty",
+                "dimension11": "300k - 399k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372304",
+                "name": "Audi A4 Quattro 2.0 TDI Avant 190hk D-värm Drag 0.45 l/mil",
+                "category": "Bil",
+                "brand": "Audi",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 14,
+                "price": "219900",
+                "dimension6": "Nej",
+                "dimension1": "Ja",
+                "dimension2": "9036",
+                "dimension7": "Riddermark Bil Östersund",
+                "dimension10": "No Warranty",
+                "dimension11": "200k - 299k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372303",
+                "name": "Audi A4 Quattro 2.0 TDI 177hk S-line Aux 0.5 l/mil Nyservad",
+                "category": "Bil",
+                "brand": "Audi",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 15,
+                "price": "152800",
+                "dimension6": "Nej",
+                "dimension1": "Ja",
+                "dimension2": "9036",
+                "dimension7": "Riddermark Bil Östersund",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16365977",
+                "name": "Nissan Qashqai 1.5 dCi 110hk Besiktad",
+                "category": "Bil",
+                "brand": "Nissan",
+                "variant": "SUV",
+                "list": "Sök bil",
+                "position": 16,
+                "price": "94900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "8675",
+                "dimension7": "Reximotor AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372301",
+                "name": "Porsche Cayman S PDK 325hk",
+                "category": "Bil",
+                "brand": "Porsche",
+                "variant": "Sportkupé",
+                "list": "Sök bil",
+                "position": 17,
+                "price": "479900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "11308",
+                "dimension7": "Ekdahls Bil Göteborg AB",
+                "dimension10": "No Warranty",
+                "dimension11": "400k - 499k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372300",
+                "name": "Volkswagen Bora 1.6 Comfort, Comfortline 100hk | Drag | 2-Äg",
+                "category": "Bil",
+                "brand": "Volkswagen",
+                "variant": "Sedan",
+                "list": "Sök bil",
+                "position": 18,
+                "price": "19900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "11072",
+                "dimension7": "Westlunds Bil AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372297",
+                "name": "Mercedes-Benz A 180 Euro 6 122hk",
+                "category": "Bil",
+                "brand": "Mercedes-Benz",
+                "variant": "Halvkombi",
+                "list": "Sök bil",
+                "position": 19,
+                "price": "119900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "6531",
+                "dimension7": "Nerikes Bilcenter AB",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372293",
+                "name": "Porsche 911 997 Carrera S Cabriolet PDK 385hk Sport Chrono ",
+                "category": "Bil",
+                "brand": "Porsche",
+                "variant": "Cab",
+                "list": "Sök bil",
+                "position": 20,
+                "price": "729000",
+                "dimension6": "Nej",
+                "dimension1": "Ja",
+                "dimension2": "8332",
+                "dimension7": "AutoParken Sverige AB",
+                "dimension10": "No Warranty",
+                "dimension11": "700k - 799k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372294",
+                "name": "Renault Clio Sport Tourer 0.9 TCe / GPS, PDC, Keyless",
+                "category": "Bil",
+                "brand": "Renault",
+                "variant": "Kombi",
+                "list": "Sök bil",
+                "position": 21,
+                "price": "110000",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "8903",
+                "dimension7": "Autohero",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372292",
+                "name": "BMW 316 d e90 Comfort / ev byte/avbetalning",
+                "category": "Bil",
+                "brand": "BMW",
+                "variant": "Sedan",
+                "list": "Sök bil",
+                "position": 22,
+                "price": "76500",
+                "dimension6": "Nej",
+                "dimension1": "Ja",
+                "dimension2": "7110",
+                "dimension7": "Skövde Bilcenter AB",
+                "dimension10": "No Warranty",
+                "dimension11": "0k - 99k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372290",
+                "name": "Nissan Qashqai 2.0 dCi 4x4 Automat 150hk",
+                "category": "Bil",
+                "brand": "Nissan",
+                "variant": "SUV",
+                "list": "Sök bil",
+                "position": 23,
+                "price": "114900",
+                "dimension6": "Nej","dimensi(?<=\<script\>pulse2opt = )(.*?)(?=\<\/script\>)on1": "Ja",
+                "dimension2": "3641",
+                "dimension7": "Biltjänsten Serrander Bil AB",
+                "dimension10": "No Warranty",
+                "dimension11": "100k - 199k",
+                "dimension20": "Standard"
+            },
+            {
+                "id": "16372287",
+                "name": "Peugeot 308 1.5 BlueHDi EAT Euro 6 130hk omg lev GT",
+                "category": "Bil",
+                "brand": "Peugeot",
+                "variant": "Halvkombi",
+                "list": "Sök bil",
+                "position": 24,
+                "price": "393900",
+                "dimension6": "Nej",
+                "dimension1": "Nej",
+                "dimension2": "7443",
+                "dimension7": "Fordon City i Stockholm",
+                "dimension10": "No Warranty",
+                "dimension11": "300k - 399k",
+                "dimension20": "Deductible VAT"
+            }
+        ]
+    }
+}

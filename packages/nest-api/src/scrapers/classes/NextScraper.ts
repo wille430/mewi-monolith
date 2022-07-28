@@ -2,19 +2,19 @@ import { AxiosInstance } from 'axios'
 import puppeteer from 'puppeteer'
 import { ListingScraper } from './ListingScraper'
 
-export class NextScraper extends ListingScraper {
+export abstract class NextScraper extends ListingScraper {
     private buildId: string
     useRobots: boolean = false
 
-    async addAuthentication(axios: AxiosInstance): Promise<AxiosInstance> {
-        super.addAuthentication(axios)
+    async createAxiosInstance(): Promise<AxiosInstance> {
+        const client = await super.createAxiosInstance()
 
-        axios.interceptors.request.use(async (req) => {
+        client.interceptors.request.use(async (req) => {
             req.url = req.url.replace('{buildId}', await this.getBuildId())
             return req
         })
 
-        return axios
+        return client
     }
 
     async getBuildId(): Promise<string> {

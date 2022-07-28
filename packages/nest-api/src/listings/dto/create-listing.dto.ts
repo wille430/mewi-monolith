@@ -54,4 +54,8 @@ export class CreateListingDto implements Listing {
     auctionEnd: Date
 
     likedByUserIDs: string[] = []
+
+    @IsOptional()
+    @IsString()
+    entryPoint: string | null
 }

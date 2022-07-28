@@ -146,7 +146,7 @@ export class ScrapersService {
         }
     }
 
-    @Cron('* */5 * * *')
+    // @Cron('* */5 * * *')
     async conditionalScrape() {
         const lastScrape = await this.prisma.scrapingLog.findFirst({
             orderBy: {

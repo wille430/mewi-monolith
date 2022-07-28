@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import { ElementHandle } from 'puppeteer'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
-import { ScrapedListing } from '../classes/ListingScraper'
-import { resolveHref } from 'next/dist/shared/lib/router/router'
+import { GetBatchOptions, WatchOptions } from '../classes/ListingScraper'
+import { AxiosInstance } from 'axios'
+import { EntryPoint } from '../classes/EntryPoint'
 
 export class BytbilScraper extends ListingWebCrawler {
     readonly vehicleTypes = [
@@ -22,11 +22,14 @@ export class BytbilScraper extends ListingWebCrawler {
     limit = 24
 
     vehicleTypesScrapedMap: Record<string, number> = this.newVehicleTypesScrapedMap()
-    _calculatedScrapeCount: number | undefined
     _typeIndex = 0
 
-    override getNextUrl(): string {
-        return new URL(this.vehicleTypes[this._typeIndex], this.scrapeTargetUrl).toString()
+    readonly watchOptions: WatchOptions = {
+        findFirst: 'origin_id',
+    }
+
+    createScrapeUrl = (vehicleType: string, page: number): string => {
+        return new URL(`/${vehicleType}?Page=${page}`, this.baseUrl).toString()
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
@@ -34,23 +37,51 @@ export class BytbilScraper extends ListingWebCrawler {
             baseUrl: 'https://bytbil.com/',
             origin: ListingOrigin.Bytbil,
             listingSelector: '.result-list-item',
+            entryPoints: [],
         })
+
+        this.entryPoints = this.vehicleTypes.map((o, i) =>
+            EntryPoint.create(
+                this.prisma,
+                (p) => this.createScrapeUrl(this.vehicleTypes[i], p),
+                null,
+                o
+            )
+        )
     }
 
     newVehicleTypesScrapedMap() {
         return this.vehicleTypes.reduce((prev, cur) => ({ ...prev, [cur]: 0 }), {})
     }
 
-    public override async getBatch(): Promise<Prisma.ListingCreateInput[]> {
+    override async createAxiosInstance(): Promise<AxiosInstance> {
+        const client = await super.createAxiosInstance()
+
+        client.interceptors.response.use((res) => {
+            // When response is 404, the page parameter is out of range
+            if (res.status === 404) {
+                this._typeIndex += 1
+            }
+        })
+
+        return client
+    }
+
+    public override async getBatch(options?: GetBatchOptions): Promise<{
+        listings: Prisma.ListingCreateInput[]
+        continue: boolean
+        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
+    }> {
         if (this._typeIndex + 1 >= this.vehicleTypes.length) {
             console.warn('Index is out of range! Please reset scraper to continue scraping.')
-            return []
+            return this.createGetBatchReturn([], options)
         }
-        const listings = await super.getBatch()
 
-        this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]] += listings.length
+        const returnObj = await super.getBatch(options)
 
-        return listings
+        this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]] += returnObj.listings.length
+
+        return returnObj
     }
 
     async evalParseRawListing(ele: ElementHandle<Element>): Promise<Prisma.ListingCreateInput> {
@@ -80,7 +111,7 @@ export class BytbilScraper extends ListingWebCrawler {
         return {
             ...listing,
             origin_id: this.createId(listing.origin_id),
-            redirectUrl: this.scrapeTargetUrl.slice(0, -1) + listing.redirectUrl,
+            redirectUrl: new URL(listing.redirectUrl, this.baseUrl).toString(),
             price: {
                 value: listing.price.value,
                 currency: Currency.SEK,
@@ -93,7 +124,6 @@ export class BytbilScraper extends ListingWebCrawler {
 
     reset(): void {
         super.reset()
-        this._calculatedScrapeCount = undefined
         this._typeIndex = 0
     }
 }

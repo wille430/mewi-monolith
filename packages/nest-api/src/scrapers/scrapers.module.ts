@@ -18,6 +18,8 @@ export class ScrapersModule implements OnModuleInit {
 
     async onModuleInit() {
         // this.scraperService.conditionalScrape()
-        this.scraperService.scrapers.Blocket.watch()
+        this.scraperService.scrapers.Tradera.start({
+            scrapeCount: 2000,
+        })
     }
 }

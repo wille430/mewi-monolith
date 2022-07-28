@@ -1,51 +1,77 @@
 import { ScraperStatus, stringSimilarity } from '@wille430/common'
 import { ListingOrigin, Prisma, Category, ScraperTrigger } from '@mewi/prisma'
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import robotsParser from 'robots-parser'
-import { IScraper } from './IScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import crypto from 'crypto'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { Inject } from '@nestjs/common'
+import { interval, map, merge } from 'rxjs'
+import { BaseEntryPoint, EntryPoint } from './EntryPoint'
+import { ScraperType } from '../enums/scraper-type.enum'
 
 export type ScrapedListing = Prisma.ListingCreateInput
+
+export type PageDetails = {
+    url: string
+    currentPage: number
+    maxPages?: (res: AxiosResponse) => number
+    getMostRecentDate: () => Date | undefined
+}
 
 export type ListingScraperConstructorArgs = {
     baseUrl: string
     origin: ListingOrigin
     useRobots?: boolean
+    verbose?: boolean
+    entryPoints?: BaseEntryPoint<any>[]
 }
 
 export type GetBatchOptions = {
     maxScrapeCount?: number
-    stopWhenIdFound?: string
-    scrapeTargetUrl?: string
+    entryPoint: EntryPoint
+    page: number
+    findIndex?: (
+        value: Prisma.ListingCreateInput,
+        index: number,
+        obj: Prisma.ListingCreateInput[]
+    ) => boolean
+    onTotalPageCount?: (pages: number) => any
 }
 
-export class ListingScraper implements IScraper<ScrapedListing> {
+export type WatchOptions = {
+    findFirst: 'origin_id' | 'date'
+}
+
+export interface IBaseListingScraper {
+    entryPoints: BaseEntryPoint<any>[]
+}
+
+export abstract class ListingScraper<T = 'DOM'> {
     status: ScraperStatus = ScraperStatus.IDLE
-    client: AxiosInstance
     useRobots: boolean = true
+    verbose = false
 
     threshold: number = 0.8
-    limit: number = 10
+    abstract limit: number
 
     private readonly defaultStartOptions: StartScraperOptions = {
         triggeredBy: ScraperTrigger.Scheduled,
         scrapeType: 'NEW',
     }
 
-    readonly scrapeTargetUrl: string
-    getNextUrl(): string | Promise<string> {
-        return this.scrapeTargetUrl
-    }
-
+    readonly defaultScrapeUrl: string
     readonly baseUrl: string
     readonly origin: ListingOrigin
+
     private readonly deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
 
+    readonly watchOptions: WatchOptions = {
+        findFirst: 'date',
+    }
+
     constructor(
-        @Inject(PrismaService) private readonly prisma: PrismaService,
+        @Inject(PrismaService) readonly prisma: PrismaService,
         props: ListingScraperConstructorArgs
     ) {
         Object.assign(this, props)
@@ -53,19 +79,23 @@ export class ListingScraper implements IScraper<ScrapedListing> {
         this.parseRawListing = this.parseRawListing.bind(this)
     }
 
-    async createAxiosInstance(): Promise<AxiosInstance> {
-        const instance = axios.create({
-            baseURL: this.baseUrl,
-        })
-
-        return this.addAuthentication(instance)
-    }
+    abstract createScrapeUrl(...args: any): string
 
     /**
-     * Add auth headers to request
+     * Override this function to find the array of unparsed listings
+     *
+     * @param res Axios Response object
+     * @returns An array of objects of unknown shape
      */
-    async addAuthentication(axios: AxiosInstance): Promise<AxiosInstance> {
-        return axios
+    extractRawListingsArray(res: AxiosResponse<any, any>) {
+        return res.data as any
+    }
+    parseRawListing(obj: Record<string, any>): ScrapedListing {
+        return obj as any
+    }
+
+    async createAxiosInstance(): Promise<AxiosInstance> {
+        return axios.create()
     }
 
     /**
@@ -83,7 +113,7 @@ export class ListingScraper implements IScraper<ScrapedListing> {
 
         const robots = robotsParser(new URL('robots.txt', this.baseUrl).toString(), robotsTxt)
 
-        if (robots.isAllowed(this.scrapeTargetUrl)) {
+        if (robots.isAllowed(this.defaultScrapeUrl)) {
             return true
         } else {
             return false
@@ -99,123 +129,235 @@ export class ListingScraper implements IScraper<ScrapedListing> {
         if (!this.allowsScraping())
             throw new Error(
                 `${new URL('robots.txt', this.baseUrl)} does not allow scraping the specified url ${
-                    this.scrapeTargetUrl
+                    this.defaultScrapeUrl
                 }`
             )
 
         this.status = ScraperStatus.SCRAPING
+
         let batch: ScrapedListing[] = []
-        let isFirstIteration = true
-        let scrapedListingCount = 0
+        let totalScrapedCount = 0
 
-        //  1. When...
-        // scrapeType === 'NEW': Scrape while there is a high probability of unique listings
-        // scrapeType === 'ALL': Scrape until getBatch returns empty
-        const shouldContinue = async () => {
-            let condition = false
-            if (options.scrapeType === 'NEW') {
-                condition = (await this.probabilityOfUnique(batch)) > this.threshold
-            } else if (options.scrapeType === 'ALL') {
-                condition = isFirstIteration ? true : batch.length > 0
-            }
+        this.log(`Scraping listings from ${this.entryPoints.length} entry points`)
+        for (const entryPoint of this.entryPoints) {
+            let shouldContinue = true
+            let scrapeCount = 0
+            let maxScrapeCount = options.scrapeCount
+                ? Math.floor(options.scrapeCount / this.entryPoints.length)
+                : undefined
 
-            if (options.scrapeCount) {
-                condition = condition && scrapedListingCount < options.scrapeCount
-            }
+            let lastDate = (await entryPoint.getMostRecentListing())?.date ?? new Date(0)
 
-            return condition
-        }
+            let totalPageCount: number | undefined
 
-        while (await shouldContinue()) {
-            batch = await this.getBatch()
+            const handleTotalPageCount = (pages: number) => (totalPageCount = pages)
 
-            // If this is the first time getBatch was called from the start method, limit should be updated
-            if (isFirstIteration) {
-                this.limit = batch.length
-            }
-            isFirstIteration = false
+            options.scrapeType !== 'ALL' &&
+                this.log(
+                    `Scraping ${
+                        maxScrapeCount ? `${maxScrapeCount}` : ''
+                    } listings from ${entryPoint.createUrl(
+                        1
+                    )} created after ${lastDate.toLocaleString()}...`
+                )
 
-            if (options.scrapeType === 'ALL') {
-                await this.prisma.listing.deleteMany({
-                    where: {
-                        origin_id: { in: batch.map((x) => x.origin_id) },
-                    },
+            let page = 1
+            while (shouldContinue) {
+                this.log(`Scraping page ${page}/${totalPageCount ?? 'unknown'}...`)
+                let { listings, continue: cont } = await this.getBatch({
+                    maxScrapeCount,
+                    findIndex:
+                        options.scrapeType === 'NEW'
+                            ? (o) => new Date(o.date).getTime() <= lastDate.getTime()
+                            : undefined,
+                    entryPoint,
+                    page,
+                    onTotalPageCount:
+                        totalPageCount === undefined ? handleTotalPageCount : undefined,
                 })
+                page += 1
+
+                batch = listings
+                shouldContinue = cont
+
+                if (options.scrapeType === 'ALL') {
+                    this.log(`Deleting listings in case duplicates are found`)
+                    await this.prisma.listing.deleteMany({
+                        where: {
+                            origin_id: { in: batch.map((x) => x.origin_id) },
+                        },
+                    })
+                }
+
+                this.log(`Inserting ${batch.length} listings into database`)
+
+                // 1.5 Add the scraped listings
+                if (batch.length) {
+                    const { count } = await this.prisma.listing.createMany({
+                        data: batch.map((o) => ({ ...o, entryPoint: entryPoint.identifier })),
+                    })
+                    scrapeCount += count
+                    maxScrapeCount -= count
+                }
+
+                if (totalPageCount && page > totalPageCount) {
+                    this.log(
+                        'Scraper exceeded the total page count. Stopping scraper on this entry point.'
+                    )
+                    shouldContinue = false
+                }
             }
 
-            // 1.5 Add the scraped listings
-            const { count } = await this.prisma.listing.createMany({
-                data: batch,
-            })
-            scrapedListingCount += count
-
-            if (!batch.length) {
-                break
-            }
+            totalScrapedCount += scrapeCount
         }
 
-        // 2. Delete old
+        this.log('Scraping complete. Deleting old listings...')
         await this.deleteOldListings()
-
-        // 3. Clean up
-        // this.createLog(triggeredBy)
+        this.log('DOME')
 
         this.reset()
     }
 
-    private isWatching = false
-    watchDelay = () => 60000 + Math.floor(Math.random() * 10000)
+    async getMostRecentDate(): Promise<Date | undefined> {
+        const listing = await this.prisma.listing.findFirst({
+            where: { origin: this.origin },
+            orderBy: {
+                date: 'desc',
+            },
+        })
 
-    watchEntryPoints() {
-        return [this.scrapeTargetUrl]
+        return listing.date
     }
 
-    // TODO: Scan next page if getBatch returned all listings on page
-    async watch() {
-        if (this.isWatching) {
-            throw new Error(`Class method "watch" is already running.`)
-        }
-        this.isWatching = true
-        const watchEntryPoints = this.watchEntryPoints()
-        console.log(`[${this.origin}]: Watching URLs: ${watchEntryPoints.join(', ')}`)
+    _listingsAddedAverage: number | undefined
+    /**
+     * Calculate how many listings are added per minute (average)
+     *
+     * @param daySpan Over how many days to calculate the average
+     * @returns Listings/minute
+     */
+    async getListingsAddedAverage(daySpan = 7): Promise<number> {
+        if (this._listingsAddedAverage) return this._listingsAddedAverage
 
-        // Get id of first item
-        let firstItemId = await this.getBatch({ maxScrapeCount: 1 }).then((o) => o[0].origin_id)
-        console.log(
-            `[${this.origin}]: Watching for new listings with ${firstItemId} as starting point...`
+        const listingCountSince = await this.prisma.listing.count({
+            where: {
+                date: {
+                    gte: new Date(Date.now() - daySpan * 24 * 60 * 60 * 1000),
+                },
+                origin: this.origin,
+            },
+        })
+
+        const avg = listingCountSince / (daySpan * 24 * 60)
+        this._listingsAddedAverage = avg
+
+        return avg
+    }
+
+    async watchDelay() {
+        const minutesToFillLimit = this.limit / (await this.getListingsAddedAverage())
+        let delay = minutesToFillLimit * 0.8 * 60 * 1000 + Math.floor(Math.random() * 10000)
+
+        delay = process.env.NODE_ENV === 'development' ? 20 * 1000 : Math.min(delay, 15 * 60 * 1000)
+
+        return delay
+    }
+
+    async createWatchFunction(entryPoint: EntryPoint, index: number) {
+        // Get the value where getBatch will stop scraping
+        let stopAtValue: ScrapedListing[typeof this.watchOptions['findFirst']] | undefined =
+            await this.getBatch({
+                maxScrapeCount: 1,
+                entryPoint,
+                page: 1,
+            }).then((o) =>
+                o.listings.length ? o.listings[0][this.watchOptions.findFirst] : undefined
+            )
+
+        if (!stopAtValue) {
+            throw new Error(
+                `[${this.origin}]: Could not determine value to stop scraping. Target ${this.baseUrl} might be down.`
+            )
+        }
+
+        let delay = (1 + index / this.entryPoints.length) * (await this.watchDelay())
+        this.log(
+            `Watching for new listings and stopping at ${
+                this.watchOptions.findFirst
+            } ${stopAtValue} every ${Math.ceil(delay / 1000)} seconds...`
         )
 
-        while (this.isWatching) {
-            const watchDelay = this.watchDelay()
-            for (const watchEntryPoint of watchEntryPoints) {
-                const listings = await this.getBatch({
-                    stopWhenIdFound: firstItemId,
-                    scrapeTargetUrl: watchEntryPoint,
-                })
-                firstItemId = listings.length > 0 ? listings[0].origin_id : firstItemId
+        this.reset()
+        return interval(delay).pipe(
+            map((val) => async () => {
+                let shouldContinue: boolean = false
+                let tempStopAtValue = stopAtValue
+                let i = 0
 
-                console.log(
-                    `[${this.origin}]: Found ${
-                        listings.length
-                    } new listings. Watching for new items until origin_id ${firstItemId}. Retrying again in ${
-                        watchDelay / 1000
-                    } seconds...`
-                )
-
-                if (listings.length)
-                    await this.prisma.listing.createMany({
-                        data: listings,
+                do {
+                    this.log(`Scraping ${entryPoint.identifier}...`)
+                    const { listings, ...rest } = await this.getBatch({
+                        entryPoint,
+                        page: i + 1,
+                        findIndex: (val) => {
+                            if (this.watchOptions.findFirst === 'date') {
+                                return (
+                                    new Date(val[this.watchOptions.findFirst]).getTime() <=
+                                    new Date(tempStopAtValue).getTime()
+                                )
+                            } else {
+                                return val[this.watchOptions.findFirst] === tempStopAtValue
+                            }
+                        },
                     })
-            }
 
-            await new Promise<void>((resolve) => {
-                setTimeout(resolve, watchDelay)
+                    // The first iteration should return the stop value of the first listing
+                    if (i === 0) {
+                        stopAtValue =
+                            listings.length > 0
+                                ? listings[0][this.watchOptions.findFirst]
+                                : stopAtValue
+
+                        this.log(`New stop value: ${stopAtValue}`)
+                    }
+
+                    if (!shouldContinue) {
+                        this.log(
+                            `Found ${listings.length} new listings. Retrying again in ${Math.ceil(
+                                delay / 1000
+                            )} seconds...`
+                        )
+                    } else {
+                        this.log(`Found ${listings.length} new listings. Fetching next page...`)
+                    }
+
+                    // Insert listings to database
+                    if (listings.length)
+                        await this.prisma.listing.createMany({
+                            data: listings,
+                        })
+
+                    i += 1
+                    shouldContinue = rest.continue
+                } while (shouldContinue === true)
+                this.reset()
             })
-        }
+        )
     }
 
-    async cancelWatch() {
-        this.isWatching = false
+    entryPoints: BaseEntryPoint<any>[] = []
+    async watch() {
+        const funcs = await Promise.all(
+            this.entryPoints.map((createUrl, i) => this.createWatchFunction(createUrl, i))
+        )
+
+        if (this.entryPoints.length === 0) {
+            throw new Error(
+                'No watcher entry points set. Please set watcherEntryPoints in options.'
+            )
+        }
+
+        return merge(...funcs).subscribe((val) => val())
     }
 
     private uniqueArray: boolean[] = []
@@ -245,7 +387,6 @@ export class ListingScraper implements IScraper<ScrapedListing> {
             this.uniqueArray.reduce((prev, cur) => (cur ? prev + 1 : prev), 0) /
             this.uniqueArray.length
 
-        console.log(`[${this.origin}]: Probability of finding unique listings: ${prob}`)
         return prob
     }
 
@@ -275,44 +416,57 @@ export class ListingScraper implements IScraper<ScrapedListing> {
     /**
      * Get next batch of listings from scrape target
      *
-     * @returns Array of scraped listings
+     * @returns Object
      */
-    public async getBatch(options: GetBatchOptions = {}): Promise<ScrapedListing[]> {
-        this.client = await this.createAxiosInstance()
+    public async getBatch(options: GetBatchOptions): Promise<{
+        listings: ScrapedListing[]
+        continue: boolean
+        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
+    }> {
+        const { entryPoint, onTotalPageCount } = options
+        const client = await this.createAxiosInstance()
 
-        const arr: ScrapedListing[] = await this.client
-            .get(options.scrapeTargetUrl ?? (await this.getNextUrl()))
-            .then(this.extractRawListingsArray)
-            .then((data) => data.map(this.parseRawListing))
+        const res = await client.get(entryPoint.createUrl(options.page))
 
-        if (options.stopWhenIdFound) {
-            const index = arr.findIndex((x) => x.origin_id === options.stopWhenIdFound)
+        if (onTotalPageCount) {
+            let maxPages = entryPoint.getTotalPages ? entryPoint.getTotalPages(res) : undefined
+            onTotalPageCount(maxPages)
+        }
+
+        const data = this.extractRawListingsArray(res)
+        const listings = data.map(this.parseRawListing)
+
+        return this.createGetBatchReturn(listings, options)
+    }
+
+    public async createGetBatchReturn(
+        arr: ScrapedListing[],
+        options: GetBatchOptions
+    ): ReturnType<typeof this.getBatch> {
+        if (options.findIndex) {
+            const index = arr.findIndex(options.findIndex)
             if (index >= 0) {
-                console.log(
-                    `[${this.origin}]: Found matching origin_id at index ${index}. Returning...`
-                )
-                return arr.slice(0, index)
+                this.log(`Found ${arr[index].origin_id} at index ${index}`)
+                return {
+                    listings: arr.slice(0, index),
+                    continue: false,
+                    reason: 'MATCH_FOUND',
+                }
             }
         }
 
-        if (options.maxScrapeCount && arr.length < options.maxScrapeCount)
-            arr.splice(0, options.maxScrapeCount)
+        if (options.maxScrapeCount && arr.length > options.maxScrapeCount) {
+            return {
+                listings: arr.splice(0, options.maxScrapeCount),
+                continue: false,
+                reason: 'MAX_COUNT',
+            }
+        }
 
-        return arr
-    }
-
-    /**
-     * Override this function to find the array of unparsed listings
-     *
-     * @param res Axios Response object
-     * @returns An array of objects of unknown shape
-     */
-    extractRawListingsArray(res: AxiosResponse<any, any>) {
-        return res.data
-    }
-
-    parseRawListing(obj: Record<string, any>): ScrapedListing {
-        return obj as any
+        return {
+            listings: arr,
+            continue: true,
+        }
     }
 
     reset(): void {
@@ -335,5 +489,11 @@ export class ListingScraper implements IScraper<ScrapedListing> {
 
         this.stringToCategoryMap[string] = Category.OVRIGT
         return Category.OVRIGT
+    }
+
+    log(message: string) {
+        if (process.env.NODE_ENV === 'development' || this.verbose) {
+            console.log(`[${this.origin}]: ${message}`)
+        }
     }
 }

@@ -22,13 +22,13 @@ describe('Citiboard Scraper', () => {
         expect(scraper).toBeDefined()
     })
 
-    describe('#getListings', () => {
+    describe('#getBatch', () => {
         it('should fetch items', async () => {
-            const result = await scraper.getBatch()
-            expect(Array.isArray(result)).toBe(true)
-            expect(result.length).toBeGreaterThan(0)
+            const { listings } = await scraper.getBatch()
+            expect(Array.isArray(listings)).toBe(true)
+            expect(listings.length).toBeGreaterThan(0)
 
-            for (const listing of result) {
+            for (const listing of listings) {
                 validateListingTest(listing, scraper)
             }
         }, 20000)

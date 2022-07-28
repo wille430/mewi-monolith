@@ -2,7 +2,7 @@ import { ScraperStatus } from '@wille430/common'
 import { AxiosInstance } from 'axios'
 
 export interface IScraper<T> {
-    readonly scrapeTargetUrl: string | Promise<string>
+    readonly defaultScrapeUrl: string | Promise<string>
     readonly baseUrl: string
 
     status: ScraperStatus
@@ -16,4 +16,8 @@ export interface IScraper<T> {
     reset(): void
 
     createAxiosInstance(): Promise<AxiosInstance>
+}
+
+export interface IFindMaxPages {
+    getMaxPages(): Promise<void>
 }

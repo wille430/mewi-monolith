@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
-import { ConfigService } from '@nestjs/config'
 import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
-import { TraderaListing } from '../types/traderaListing'
 import { PrismaService } from '@/prisma/prisma.service'
-import { ListingScraper } from '../classes/ListingScraper'
+import { GetBatchOptions, ListingScraper } from '../classes/ListingScraper'
+import { StartScraperOptions } from '../types/startScraperOptions'
+import { EntryPoint } from '../classes/EntryPoint'
 
 interface TraderaCategory {
     id: number
@@ -21,19 +21,12 @@ interface TraderaCategory {
 export class TraderaScraper extends ListingScraper {
     currentCategoryIndex = 0
     categories: TraderaCategory[] | undefined
+
     itemsPerCategory: number
     limit = 50
 
-    override getNextUrl() {
-        return new Promise<string>(async (resolve) => {
-            if (!this.categories) this.categories = await this.getCategories()
-            resolve(
-                'https://www.tradera.com' +
-                    this.categories[this.currentCategoryIndex].href +
-                    '.json' +
-                    '?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=1'
-            )
-        })
+    createScrapeUrl(category: string, page) {
+        return `https://www.tradera.com${category}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
@@ -44,19 +37,32 @@ export class TraderaScraper extends ListingScraper {
         this.parseRawListing = this.parseRawListing.bind(this)
     }
 
-    async getBatch(): Promise<Prisma.ListingCreateInput[]> {
-        if (!this.categories) this.categories = await this.getCategories()
-        if (!this.categories[this.currentCategoryIndex]?.href) return []
+    async start(options?: Partial<StartScraperOptions>): Promise<void> {
+        if (!this.categories) {
+            this.log('Fetching categories and updating entry points...')
+            this.categories = await this.getCategories()
 
-        try {
-            const listings = await super.getBatch()
-
-            this.currentCategoryIndex += 1
-            return listings
-        } catch (e) {
-            console.log(e.stack)
-            return []
+            this.entryPoints = this.categories.map((o, i) =>
+                EntryPoint.create<'API'>(
+                    this.prisma,
+                    (p) => this.createScrapeUrl(this.categories[i].href, p),
+                    (res) => res.data.pagination.pageCount,
+                    o.href
+                )
+            )
         }
+
+        super.start(options)
+    }
+
+    public override async getBatch(options?: GetBatchOptions): Promise<{
+        listings: Prisma.ListingCreateInput[]
+        continue: boolean
+        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
+    }> {
+        if (!this.categories[this.currentCategoryIndex]?.href)
+            this.createGetBatchReturn([], options)
+        return await super.getBatch(options)
     }
 
     extractRawListingsArray(res: AxiosResponse<any, any>) {
