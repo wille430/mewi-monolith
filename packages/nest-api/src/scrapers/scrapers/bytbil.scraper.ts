@@ -4,10 +4,13 @@ import { ElementHandle } from 'puppeteer'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { GetBatchOptions, WatchOptions } from '../classes/ListingScraper'
-import { AxiosInstance } from 'axios'
 import { EntryPoint } from '../classes/EntryPoint'
 
 export class BytbilScraper extends ListingWebCrawler {
+    baseUrl: string = 'https://bytbil.com/'
+    defaultScrapeUrl: string = 'https://bytbil.com/'
+    origin: ListingOrigin = ListingOrigin.Bytbil
+
     readonly vehicleTypes = [
         'bil',
         'transportbil',
@@ -32,42 +35,29 @@ export class BytbilScraper extends ListingWebCrawler {
         return new URL(`/${vehicleType}?Page=${page}`, this.baseUrl).toString()
     }
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
+    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
         super(prisma, {
-            baseUrl: 'https://bytbil.com/',
-            origin: ListingOrigin.Bytbil,
             listingSelector: '.result-list-item',
-            entryPoints: [],
         })
 
-        this.entryPoints = this.vehicleTypes.map((o, i) =>
-            EntryPoint.create(
-                this.prisma,
-                (p) => this.createScrapeUrl(this.vehicleTypes[i], p),
+        this.vehicleTypes.forEach((o, i) =>
+            this.createEntryPoint(
+                (p) => ({ url: this.createScrapeUrl(this.vehicleTypes[i], p) }),
                 null,
                 o
             )
         )
+
+        Object.assign(this.defaultStartOptions.watchOptions, {
+            findFirst: 'origin_id',
+        })
     }
 
     newVehicleTypesScrapedMap() {
         return this.vehicleTypes.reduce((prev, cur) => ({ ...prev, [cur]: 0 }), {})
     }
 
-    override async createAxiosInstance(): Promise<AxiosInstance> {
-        const client = await super.createAxiosInstance()
-
-        client.interceptors.response.use((res) => {
-            // When response is 404, the page parameter is out of range
-            if (res.status === 404) {
-                this._typeIndex += 1
-            }
-        })
-
-        return client
-    }
-
-    public override async getBatch(options?: GetBatchOptions): Promise<{
+    public override async getBatch(options?: GetBatchOptions<'DOM'>): Promise<{
         listings: Prisma.ListingCreateInput[]
         continue: boolean
         reason?: 'MAX_COUNT' | 'MATCH_FOUND'

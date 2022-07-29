@@ -7,6 +7,10 @@ import { AxiosResponse } from 'axios'
 import { EntryPoint } from '../classes/EntryPoint'
 
 export class BlippScraper extends NextScraper {
+    entryPoints: EntryPoint[]
+
+    baseUrl: string = 'https://blipp.se/'
+    origin: ListingOrigin = ListingOrigin.Blipp
     limit = 40
 
     readonly defaultScrapeUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
@@ -16,14 +20,9 @@ export class BlippScraper extends NextScraper {
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, {
-            baseUrl: 'https://blipp.se/',
-            origin: ListingOrigin.Blipp,
-        })
+        super(prisma)
 
-        this.entryPoints = [
-            EntryPoint.create(this.prisma, this.createScrapeUrl, this.numberOfPages),
-        ]
+        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }), this.numberOfPages)
     }
 
     /**

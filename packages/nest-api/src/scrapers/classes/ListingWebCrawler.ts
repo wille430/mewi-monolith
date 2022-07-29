@@ -1,41 +1,70 @@
 import puppeteer, { ElementHandle } from 'puppeteer'
-import {
-    GetBatchOptions,
-    ListingScraper,
-    ListingScraperConstructorArgs,
-    WatchOptions,
-} from './ListingScraper'
+import { GetBatchOptions } from './ListingScraper'
+import { BaseListingScraper } from './BaseListingScraper'
 import { ScrapedListing } from './ListingScraper'
-import { NotImplementedException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Prisma } from '@mewi/prisma'
 import { EntryPointDOM } from './EntryPoint'
+import { StartScraperOptions } from '../types/startScraperOptions'
+import axios from 'axios'
+import robotsParser from 'robots-parser'
 
-export type ListingWebCrawlerConstructorArgs = ListingScraperConstructorArgs & {
+export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
 }
 
-export abstract class ListingWebCrawler extends ListingScraper {
+export abstract class ListingWebCrawler extends BaseListingScraper<'DOM'> {
     readonly listingSelector: string
     readonly useRobots: boolean = true
-    readonly watchOptions: WatchOptions = {
-        findFirst: 'date',
-    }
+    abstract defaultScrapeUrl: string
 
     entryPoints: EntryPointDOM[] = []
 
     constructor(
-        prisma: PrismaService,
-        { listingSelector, ...options }: ListingWebCrawlerConstructorArgs
+        readonly prisma: PrismaService,
+        { listingSelector }: ListingWebCrawlerConstructorArgs
     ) {
-        super(prisma, options)
+        super()
         this.listingSelector = listingSelector
     }
 
+    /**
+     * Checks whether or not the website allows scraping
+     *
+     * @returns True if the website allows scraping
+     */
+    async allowsScraping(): Promise<boolean> {
+        // skip if useRobots is false
+        if (!this.useRobots) {
+            return true
+        }
+
+        const robotsTxt = await axios.get(this.baseUrl).then((res) => res.data)
+
+        const robots = robotsParser(new URL('robots.txt', this.baseUrl).toString(), robotsTxt)
+
+        if (robots.isAllowed(this.defaultScrapeUrl)) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    start(options?: Partial<StartScraperOptions>): Promise<void> {
+        // 0.5 Check permissions
+        if (!this.allowsScraping())
+            throw new Error(
+                `${new URL('robots.txt', this.baseUrl)} does not allow scraping the specified url ${
+                    this.defaultScrapeUrl
+                }`
+            )
+
+        return super.start(options)
+    }
+
     public override async getBatch(
-        options: GetBatchOptions & {
+        options: GetBatchOptions<'DOM'> & {
             extractListings?: (page: puppeteer.Page) => Promise<any[]>
-            jsonResult?: boolean
         }
     ): Promise<{
         listings: Prisma.ListingCreateInput[]
@@ -51,25 +80,18 @@ export abstract class ListingWebCrawler extends ListingScraper {
 
         try {
             const page = await browser.newPage()
-            await page.goto(entryPoint.createUrl(pageNb))
+            await page.goto((await entryPoint.createConfig(pageNb)).url)
 
             const items = options.extractListings
                 ? await options.extractListings(page)
                 : await page.$$(this.listingSelector)
-            const scrapedListings = await Promise.all(
-                items.map((ele) => ({
-                    ...(options.jsonResult
-                        ? this.parseRawListing(ele)
-                        : this.evalParseRawListing(ele)),
+
+            const listings = await Promise.all(
+                items.map(async (ele) => ({
+                    ...(await this.evalParseRawListing(ele)),
                     entryPoint: options.entryPoint.identifier,
                 }))
             )
-
-            const listings = scrapedListings.map((x) => ({
-                ...x,
-                origin: this.origin,
-                date: new Date(),
-            })) as ScrapedListing[]
 
             return this.createGetBatchReturn(listings, options)
         } catch (e) {
@@ -80,7 +102,5 @@ export abstract class ListingWebCrawler extends ListingScraper {
         }
     }
 
-    async evalParseRawListing(ele: ElementHandle<Element>): Promise<ScrapedListing> {
-        throw new NotImplementedException()
-    }
+    abstract evalParseRawListing(ele: ElementHandle<Element>): Promise<ScrapedListing>
 }

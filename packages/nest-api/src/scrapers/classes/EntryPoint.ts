@@ -1,9 +1,9 @@
 import { PrismaService } from '@/prisma/prisma.service'
-import { AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Page } from 'puppeteer'
 
-export interface CreateUrlFunction {
-    (page: number): string
+export interface CreateConfigFunction {
+    (page: number): Promise<AxiosRequestConfig> | AxiosRequestConfig
 }
 
 export interface CreateIndexedUrlFunction {
@@ -19,16 +19,16 @@ export type ScrapeTargetType = 'DOM' | 'API'
 export class BaseEntryPoint<T extends ScrapeTargetType> {
     constructor(
         readonly prisma: PrismaService,
-        createUrl: CreateUrlFunction,
-        getTotalPages?: GetTotalPagesFunction<T>,
-        identifier?: string
+        createConfig: CreateConfigFunction,
+        getTotalPages: GetTotalPagesFunction<T> | undefined,
+        identifier: string
     ) {
-        this.createUrl = createUrl
+        this.createConfig = createConfig
         this.identifier = identifier
         this.getTotalPages = getTotalPages
     }
 
-    public createUrl: CreateUrlFunction
+    public createConfig: CreateConfigFunction
     public getTotalPages: GetTotalPagesFunction<T>
     public identifier: string | undefined
 

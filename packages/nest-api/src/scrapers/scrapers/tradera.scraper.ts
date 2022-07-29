@@ -25,15 +25,18 @@ export class TraderaScraper extends ListingScraper {
     itemsPerCategory: number
     limit = 50
 
-    createScrapeUrl(category: string, page) {
+    entryPoints: EntryPoint[]
+    baseUrl: string = 'https://www.tradera.com/'
+    origin: ListingOrigin = ListingOrigin.Tradera
+
+    createScrapeRequest: any
+
+    createScrapeUrl = (category: string, page) => {
         return `https://www.tradera.com${category}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`
     }
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, {
-            baseUrl: 'https://www.tradera.com/',
-            origin: ListingOrigin.Tradera,
-        })
+        super(prisma)
         this.parseRawListing = this.parseRawListing.bind(this)
     }
 
@@ -42,20 +45,21 @@ export class TraderaScraper extends ListingScraper {
             this.log('Fetching categories and updating entry points...')
             this.categories = await this.getCategories()
 
-            this.entryPoints = this.categories.map((o, i) =>
-                EntryPoint.create<'API'>(
-                    this.prisma,
-                    (p) => this.createScrapeUrl(this.categories[i].href, p),
+            this.categories.forEach((o, i) => {
+                this.createEntryPoint(
+                    (p) => ({
+                        url: this.createScrapeUrl(this.categories[i].href, p),
+                    }),
                     (res) => res.data.pagination.pageCount,
                     o.href
                 )
-            )
+            })
         }
 
         super.start(options)
     }
 
-    public override async getBatch(options?: GetBatchOptions): Promise<{
+    public override async getBatch(options?: GetBatchOptions<'API'>): Promise<{
         listings: Prisma.ListingCreateInput[]
         continue: boolean
         reason?: 'MAX_COUNT' | 'MATCH_FOUND'

@@ -8,20 +8,23 @@ import { ListingScraper } from '../classes/ListingScraper'
 import { EntryPoint } from '../classes/EntryPoint'
 
 export class BlocketScraper extends ListingScraper {
+    entryPoints: EntryPoint[]
+    baseUrl: string = 'https://www.blocket.se/'
+    origin: ListingOrigin = ListingOrigin.Blocket
+
     limit = 50
     readonly defaultScrapeUrl = `https://api.blocket.se/search_bff/v1/content?lim=${
         this.limit
     }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, {
-            baseUrl: 'https://www.blocket.se/',
-            origin: ListingOrigin.Blocket,
-        })
-        this.entryPoints = [
-            EntryPoint.create(this.prisma, this.createScrapeUrl, this.extractTotalPageCount),
-        ]
+    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
+        super(prisma)
+
+        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }), this.extractTotalPageCount)
     }
+
+    override createScrapeUrl = (page: number = 0): string =>
+        `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
     private extractTotalPageCount(res: AxiosResponse) {
         return res.data.total_page_count
@@ -120,7 +123,4 @@ export class BlocketScraper extends ListingScraper {
             origin: ListingOrigin.Blocket,
         }
     }
-
-    override createScrapeUrl = (page: number = 0): string =>
-        `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${page}&st=s&include=all&gl=3&include=extend_with_shipping`
 }

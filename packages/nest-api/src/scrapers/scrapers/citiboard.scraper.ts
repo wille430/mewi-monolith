@@ -11,14 +11,18 @@ export class CitiboardScraper extends ListingWebCrawler {
     readonly defaultScrapeUrl = 'https://citiboard.se/hela-sverige'
     limit = 60
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma, {
-            baseUrl: 'https://www.citiboard.se/',
-            origin: ListingOrigin.Citiboard,
-            listingSelector: 'article.gridItem',
-        })
+    baseUrl: string = 'https://citiboard.se/'
+    origin: ListingOrigin = ListingOrigin.Citiboard
 
-        this.entryPoints = [EntryPoint.create(this.prisma, this.createScrapeUrl)]
+    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
+        super(prisma, { listingSelector: 'article.gridItem' })
+
+        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
+
+        this.defaultStartOptions.watchOptions = {
+            ...this.defaultStartOptions.watchOptions,
+            findFirst: 'origin_id',
+        }
     }
 
     createScrapeUrl = (page: number) => this.defaultScrapeUrl + `?offset=${(page - 1) * this.limit}`
@@ -36,9 +40,10 @@ export class CitiboardScraper extends ListingWebCrawler {
             region: ele.querySelector('.gridLocation span').textContent,
         }))
 
-        return Object.assign(listing, {
+        return {
+            ...listing,
             origin_id: this.createId(listing.origin_id),
-            redirectUrl: new URL(listing.redirectUrl, this.baseUrl),
+            redirectUrl: new URL(listing.redirectUrl, this.baseUrl).toString(),
             price: listing.price
                 ? {
                       value: listing.price.value,
@@ -49,6 +54,6 @@ export class CitiboardScraper extends ListingWebCrawler {
             category: Category.FORDON,
             origin: ListingOrigin.Bytbil,
             date: new Date(),
-        })
+        }
     }
 }

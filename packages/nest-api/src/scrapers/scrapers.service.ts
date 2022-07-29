@@ -12,12 +12,12 @@ import { RunPipelineEvent } from './events/run-pipeline.event'
 import { CitiboardScraper } from './scrapers/citiboard.scraper'
 import { ShpockScraper } from './scrapers/shpock.scraper'
 import { BytbilScraper } from './scrapers/bytbil.scraper'
-import { ListingScraper } from './classes/ListingScraper'
+import { BaseListingScraper } from './classes/BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Record<ListingOrigin, ListingScraper>
+    scrapers: Record<ListingOrigin, BaseListingScraper<any>>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -110,7 +110,7 @@ export class ScrapersService {
     }
 
     @Cron('* */45 * * *')
-    async startAll(...args: Parameters<ListingScraper['start']>) {
+    async startAll(...args: Parameters<BaseListingScraper<any>['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
             this.scraperPipeline.push([
                 name as ListingOrigin,
@@ -123,9 +123,9 @@ export class ScrapersService {
 
     async start(
         scraperName: ListingOrigin,
-        options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled, scrapeType: 'NEW' }
+        options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
     ): Promise<ScraperStatusReport> {
-        const scraper: ListingScraper | undefined = this.scrapers[scraperName]
+        const scraper: BaseListingScraper<any> | undefined = this.scrapers[scraperName]
 
         if (scraper) {
             this.scraperPipeline.push([scraperName, options])
@@ -171,7 +171,7 @@ export class ScrapersService {
     }
 
     async statusOf(target: ListingOrigin): Promise<ScraperStatusReport> {
-        const scraper: ListingScraper = this.scrapers[target]
+        const scraper = this.scrapers[target]
 
         const listingCount = await this.prisma.listing.count({
             where: {
