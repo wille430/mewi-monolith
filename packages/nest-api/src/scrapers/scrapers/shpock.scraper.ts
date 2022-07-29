@@ -2,19 +2,17 @@ import { Inject } from '@nestjs/common'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import puppeteer from 'puppeteer'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingScraper } from '../classes/ListingScraper'
-import { EntryPoint } from '../classes/EntryPoint'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
     _token: undefined | string
     _originCategories: undefined | any[]
 
-    baseUrl: string = 'https://shpock.com/'
-    defaultScrapeUrl: string = 'https://www.shpock.com/graphql'
+    baseUrl = 'https://shpock.com/'
+    defaultScrapeUrl = 'https://www.shpock.com/graphql'
     origin: ListingOrigin = ListingOrigin.Shpock
-    entryPoints: EntryPoint[] = []
 
     readonly defaultAxiosRequestConfig: AxiosRequestConfig<any> = {
         method: 'POST',

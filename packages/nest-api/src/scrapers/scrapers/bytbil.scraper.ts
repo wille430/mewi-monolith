@@ -1,14 +1,13 @@
 import { Inject } from '@nestjs/common'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import { ElementHandle } from 'puppeteer'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
-import { GetBatchOptions, WatchOptions } from '../classes/ListingScraper'
-import { EntryPoint } from '../classes/EntryPoint'
+import { WatchOptions } from '../classes/ListingScraper'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export class BytbilScraper extends ListingWebCrawler {
-    baseUrl: string = 'https://bytbil.com/'
-    defaultScrapeUrl: string = 'https://bytbil.com/'
+    baseUrl = 'https://bytbil.com/'
+    defaultScrapeUrl = 'https://bytbil.com/'
     origin: ListingOrigin = ListingOrigin.Bytbil
 
     readonly vehicleTypes = [
@@ -23,9 +22,6 @@ export class BytbilScraper extends ListingWebCrawler {
         'slap',
     ]
     limit = 24
-
-    vehicleTypesScrapedMap: Record<string, number> = this.newVehicleTypesScrapedMap()
-    _typeIndex = 0
 
     readonly watchOptions: WatchOptions = {
         findFirst: 'origin_id',
@@ -43,7 +39,6 @@ export class BytbilScraper extends ListingWebCrawler {
         this.vehicleTypes.forEach((o, i) =>
             this.createEntryPoint(
                 (p) => ({ url: this.createScrapeUrl(this.vehicleTypes[i], p) }),
-                null,
                 o
             )
         )
@@ -55,23 +50,6 @@ export class BytbilScraper extends ListingWebCrawler {
 
     newVehicleTypesScrapedMap() {
         return this.vehicleTypes.reduce((prev, cur) => ({ ...prev, [cur]: 0 }), {})
-    }
-
-    public override async getBatch(options?: GetBatchOptions<'DOM'>): Promise<{
-        listings: Prisma.ListingCreateInput[]
-        continue: boolean
-        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
-    }> {
-        if (this._typeIndex + 1 >= this.vehicleTypes.length) {
-            console.warn('Index is out of range! Please reset scraper to continue scraping.')
-            return this.createGetBatchReturn([], options)
-        }
-
-        const returnObj = await super.getBatch(options)
-
-        this.vehicleTypesScrapedMap[this.vehicleTypes[this._typeIndex]] += returnObj.listings.length
-
-        return returnObj
     }
 
     async evalParseRawListing(ele: ElementHandle<Element>): Promise<Prisma.ListingCreateInput> {
@@ -114,6 +92,5 @@ export class BytbilScraper extends ListingWebCrawler {
 
     reset(): void {
         super.reset()
-        this._typeIndex = 0
     }
 }

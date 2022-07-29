@@ -5,4 +5,5 @@ export interface StartScraperOptions {
     triggeredBy: ScraperTrigger
     scrapeCount?: number
     watchOptions?: Partial<WatchOptions>
+    onNextEntryPoint?(): any
 }

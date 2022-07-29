@@ -1,15 +1,13 @@
 import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency } from '@mewi/prisma'
-import { PrismaService } from '@/prisma/prisma.service'
+import { AxiosResponse } from 'axios'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/ListingScraper'
-import { AxiosResponse } from 'axios'
-import { EntryPoint } from '../classes/EntryPoint'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends NextScraper {
-    entryPoints: EntryPoint[]
 
-    baseUrl: string = 'https://blipp.se/'
+    baseUrl = 'https://blipp.se/'
     origin: ListingOrigin = ListingOrigin.Blipp
     limit = 40
 
@@ -22,13 +20,13 @@ export class BlippScraper extends NextScraper {
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma)
 
-        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }), this.numberOfPages)
+        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
 
     /**
      * Get the number of pages of products that are available
      */
-    numberOfPages(res: AxiosResponse): number {
+    getTotalPages(res: AxiosResponse): number {
         try {
             const payload = res.data.pageProps?.vehiclesData?.payload
 

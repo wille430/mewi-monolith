@@ -4,7 +4,7 @@ import { ListingScraper } from './ListingScraper'
 
 export abstract class NextScraper extends ListingScraper {
     private buildId: string
-    useRobots: boolean = false
+    useRobots = false
 
     async createAxiosInstance(): Promise<AxiosInstance> {
         const client = await super.createAxiosInstance()

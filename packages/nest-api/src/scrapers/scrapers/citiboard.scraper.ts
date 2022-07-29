@@ -1,17 +1,15 @@
 import { ListingOrigin, Category, Currency } from '@mewi/prisma'
 import { Inject } from '@nestjs/common'
 import { ElementHandle } from 'puppeteer'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
-import _ from 'lodash'
-import { EntryPoint } from '../classes/EntryPoint'
+import { PrismaService } from '@/prisma/prisma.service'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingWebCrawler {
     readonly defaultScrapeUrl = 'https://citiboard.se/hela-sverige'
     limit = 60
 
-    baseUrl: string = 'https://citiboard.se/'
+    baseUrl = 'https://citiboard.se/'
     origin: ListingOrigin = ListingOrigin.Citiboard
 
     constructor(@Inject(PrismaService) readonly prisma: PrismaService) {

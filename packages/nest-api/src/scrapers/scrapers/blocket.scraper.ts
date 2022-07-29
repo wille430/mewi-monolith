@@ -3,13 +3,11 @@ import { JSDOM } from 'jsdom'
 import { Inject } from '@nestjs/common'
 import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingScraper } from '../classes/ListingScraper'
-import { EntryPoint } from '../classes/EntryPoint'
+import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlocketScraper extends ListingScraper {
-    entryPoints: EntryPoint[]
-    baseUrl: string = 'https://www.blocket.se/'
+    baseUrl = 'https://www.blocket.se/'
     origin: ListingOrigin = ListingOrigin.Blocket
 
     limit = 50
@@ -20,13 +18,13 @@ export class BlocketScraper extends ListingScraper {
     constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
         super(prisma)
 
-        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }), this.extractTotalPageCount)
+        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
 
-    override createScrapeUrl = (page: number = 0): string =>
+    override createScrapeUrl = (page = 0): string =>
         `https://api.blocket.se/search_bff/v1/content?lim=${this.limit}&page=${page}&st=s&include=all&gl=3&include=extend_with_shipping`
 
-    private extractTotalPageCount(res: AxiosResponse) {
+    getTotalPages(res: AxiosResponse) {
         return res.data.total_page_count
     }
 

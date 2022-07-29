@@ -1,10 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
-import { PrismaService } from '@/prisma/prisma.service'
-import { GetBatchOptions, ListingScraper } from '../classes/ListingScraper'
+import { ListingScraper } from '../classes/ListingScraper'
 import { StartScraperOptions } from '../types/startScraperOptions'
-import { EntryPoint } from '../classes/EntryPoint'
+import { PrismaService } from '@/prisma/prisma.service'
 
 interface TraderaCategory {
     id: number
@@ -25,11 +24,8 @@ export class TraderaScraper extends ListingScraper {
     itemsPerCategory: number
     limit = 50
 
-    entryPoints: EntryPoint[]
-    baseUrl: string = 'https://www.tradera.com/'
+    baseUrl = 'https://www.tradera.com/'
     origin: ListingOrigin = ListingOrigin.Tradera
-
-    createScrapeRequest: any
 
     createScrapeUrl = (category: string, page) => {
         return `https://www.tradera.com${category}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`
@@ -37,7 +33,12 @@ export class TraderaScraper extends ListingScraper {
 
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma)
-        this.parseRawListing = this.parseRawListing.bind(this)
+
+        this.defaultStartOptions = {
+            onNextEntryPoint: () => {
+                this.currentCategoryIndex += 1
+            },
+        }
     }
 
     async start(options?: Partial<StartScraperOptions>): Promise<void> {
@@ -50,7 +51,6 @@ export class TraderaScraper extends ListingScraper {
                     (p) => ({
                         url: this.createScrapeUrl(this.categories[i].href, p),
                     }),
-                    (res) => res.data.pagination.pageCount,
                     o.href
                 )
             })
@@ -59,14 +59,8 @@ export class TraderaScraper extends ListingScraper {
         super.start(options)
     }
 
-    public override async getBatch(options?: GetBatchOptions<'API'>): Promise<{
-        listings: Prisma.ListingCreateInput[]
-        continue: boolean
-        reason?: 'MAX_COUNT' | 'MATCH_FOUND'
-    }> {
-        if (!this.categories[this.currentCategoryIndex]?.href)
-            this.createGetBatchReturn([], options)
-        return await super.getBatch(options)
+    getTotalPages(res: AxiosResponse): number {
+        return res.data.pagination.pageCount
     }
 
     extractRawListingsArray(res: AxiosResponse<any, any>) {
