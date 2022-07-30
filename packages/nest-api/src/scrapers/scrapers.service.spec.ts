@@ -14,7 +14,7 @@ import { mockedScrapers } from './scrapers/__mocks__/mockedScrapers'
 import Scrapers from './scrapers'
 import { ScrapedListing } from './classes/types/ScrapedListing'
 
-describe('scraper', () => {
+describe('mocked scrapers', () => {
     let scrapersService: ScrapersService
     let scrapers: BaseListingScraper[] = []
     let prisma: PrismaService

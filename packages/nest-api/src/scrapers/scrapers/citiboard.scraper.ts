@@ -52,7 +52,7 @@ export class CitiboardScraper extends ListingWebCrawler {
                 : undefined,
             // TODO: assign correct category
             category: Category.FORDON,
-            origin: ListingOrigin.Bytbil,
+            origin: this.origin,
             date: new Date(),
             entryPoint: context.entryPoint.identifier,
         } as ScrapedListing

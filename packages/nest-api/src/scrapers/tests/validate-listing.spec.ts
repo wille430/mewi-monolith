@@ -1,14 +1,14 @@
 import { Category, Prisma, Currency } from '@mewi/prisma'
-import { BaseListingScraper } from '../classes/BaseListingScraper'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 export const validateListingTest = (
     listing: Prisma.ListingCreateInput,
-    scraper: BaseListingScraper
+    { scraper, entryPoint }: ScrapeContext
 ) => {
     expect(typeof listing.title).toBe('string')
 
     expect(typeof listing.origin_id).toBe('string')
-    expect(listing.origin_id).toContain(scraper.origin)
+    expect(listing.origin_id).match(new RegExp(`^(${scraper.origin}-)`))
 
     expect(listing.origin).toBe(scraper.origin)
     expect(Object.keys(Category)).toContain(listing.category)
@@ -24,4 +24,6 @@ export const validateListingTest = (
         expect(Object.keys(Currency)).toContain(listing.price.currency)
         expect(typeof listing.price.value).toBe('number')
     }
+
+    expect(listing.entryPoint).toBe(entryPoint.identifier)
 }
