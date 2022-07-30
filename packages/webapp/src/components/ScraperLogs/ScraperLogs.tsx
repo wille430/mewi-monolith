@@ -51,7 +51,7 @@ export const ScraperLogs = () => {
     const secondaryAxes = useMemo(
         (): AxisOptions<ScrapingLog>[] => [
             {
-                getValue: (log) => log.total_count,
+                getValue: (log) => log.added_count,
             },
         ],
         []
@@ -63,7 +63,7 @@ export const ScraperLogs = () => {
 
     return (
         <div
-            className='bg-white rounded border border-gray-300'
+            className='rounded border border-gray-300 bg-white'
             style={{
                 width: '100%',
                 height: '16rem',

@@ -96,9 +96,9 @@ export const ScraperPanel = () => {
     }, [scraperStatus])
 
     return (
-        <div className='p-4 space-y-2'>
+        <div className='space-y-2 p-4'>
             <h4>Webbskrapare</h4>
-            <div className='rounded bg-gray-150 overflow-hidden'>
+            <div className='bg-gray-150 overflow-hidden rounded'>
                 <Table className='table-auto'>
                     <thead>
                         <tr>
@@ -156,7 +156,7 @@ export const ScraperPanel = () => {
                                     </td>
 
                                     <td>
-                                        <span className='text-gray-400 flex items-center'>
+                                        <span className='flex items-center text-gray-400'>
                                             {scraperStatusIconMap[status.status]}
                                         </span>
                                     </td>

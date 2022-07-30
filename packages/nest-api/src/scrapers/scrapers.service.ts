@@ -223,7 +223,7 @@ export class ScrapersService {
             started: scraper.status === ScraperStatus.SCRAPING,
             listings_current: listingCount,
             status: scraper.status,
-            listings_remaining: -1,
+            listings_remaining: scraper.getConfig<number>('limit') - listingCount,
             last_scraped: await this.prisma.scrapingLog
                 .findFirst({
                     where: {
