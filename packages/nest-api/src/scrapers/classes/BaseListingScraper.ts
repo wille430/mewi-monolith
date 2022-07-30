@@ -12,6 +12,7 @@ export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
     useRobots = true
     verbose = false
+    initialized = false
 
     abstract limit: number
     abstract readonly baseUrl: string
@@ -32,7 +33,17 @@ export abstract class BaseListingScraper {
         },
     }
 
+    async initialize(): Promise<void> {
+        if (this.initialized) {
+            throw new Error('Scraper is already initialized')
+        }
+
+        this.initialized = true
+    }
+
     async start(options: Partial<StartScraperOptions> = {}) {
+        if (!this.initialized) await this.initialize()
+
         options = {
             triggeredBy: ScraperTrigger.Scheduled,
             ...this.defaultStartOptions,
@@ -223,7 +234,7 @@ export abstract class BaseListingScraper {
         return Category.OVRIGT
     }
 
-    abstract createEntryPoint(createConfig: CreateConfigFunction, identifier?: string)
+    abstract createEntryPoint(createConfig: CreateConfigFunction, identifier?: string): void
 
     getTotalPages(arg: any): number | undefined {
         return undefined

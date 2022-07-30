@@ -10,6 +10,6 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "vitest.commandLine": "pnpm run test -F nest-api",
+    "vitest.commandLine": "pnpm run test -F nest-api -- ",
     "vitest.enable": true
 }

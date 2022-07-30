@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
-import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { StartScraperOptions } from '../types/startScraperOptions'
 
 interface TraderaCategory {
     id: number
@@ -35,29 +35,27 @@ export class TraderaScraper extends ListingScraper {
     constructor(@Inject(PrismaService) prisma: PrismaService) {
         super(prisma)
 
-        this.defaultStartOptions = {
+        Object.assign(this.defaultStartOptions, {
             onNextEntryPoint: () => {
                 this.currentCategoryIndex += 1
             },
-        }
+        })
     }
 
-    async start(options?: Partial<StartScraperOptions>): Promise<void> {
-        if (!this.categories) {
-            this.log('Fetching categories and updating entry points...')
-            this.categories = await this.getCategories()
+    async initialize(): Promise<void> {
+        await super.initialize()
 
-            this.categories.forEach((o, i) => {
-                this.createEntryPoint(
-                    (p) => ({
-                        url: this.createScrapeUrl(this.categories[i].href, p),
-                    }),
-                    o.href
-                )
-            })
-        }
+        this.log('Fetching categories and updating entry points...')
+        this.categories = await this.getCategories()
 
-        super.start(options)
+        this.categories.forEach((o, i) => {
+            this.createEntryPoint(
+                (p) => ({
+                    url: this.createScrapeUrl(o.href, p),
+                }),
+                o.href
+            )
+        })
     }
 
     getTotalPages(res: AxiosResponse): number {

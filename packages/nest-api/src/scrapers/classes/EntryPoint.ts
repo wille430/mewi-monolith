@@ -13,6 +13,7 @@ export class EntryPoint extends BaseEntryPoint {
             ...this.scraper.defaultAxiosRequestConfig,
             ...(await this.createConfig(page)),
         }
+
         const res = await client(config)
 
         const data: any[] = this.scraper.extractRawListingsArray(res)

@@ -24,7 +24,7 @@ describe('Bytbil Scraper', () => {
         expect(scraper).toBeDefined()
     })
 
-    describe('#getBatch', () => {
+    describe('#scrape', () => {
         it('should not throw error when fetching 10+ times', async () => {
             puppeteer.launch = vi.fn(() => ({
                 newPage: vi.fn().mockResolvedValue({
