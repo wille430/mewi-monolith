@@ -7,6 +7,7 @@ import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { EntryPointDOM } from './EntryPointDOM'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from './types/ScrapeContext'
 
 export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
@@ -60,7 +61,10 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
         return super.start(options)
     }
 
-    abstract evalParseRawListing(ele: ElementHandle<Element>): Promise<ScrapedListing>
+    abstract evalParseRawListing(
+        ele: ElementHandle<Element>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing>
 
     createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
         if (!this.entryPoints) this.entryPoints = []

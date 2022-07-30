@@ -5,6 +5,7 @@ import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -98,7 +99,7 @@ export class BlocketScraper extends ListingScraper {
         return parameters
     }
 
-    parseRawListing(item: Record<string, any>): Prisma.ListingCreateInput {
+    parseRawListing(item: Record<string, any>, context: ScrapeContext): Prisma.ListingCreateInput {
         return {
             origin_id: this.createId(item.ad_id),
             title: item.subject,
@@ -119,6 +120,7 @@ export class BlocketScraper extends ListingScraper {
             region: this.parseRegion(item.location),
             parameters: this.parseParameters(item.parameter_groups),
             origin: ListingOrigin.Blocket,
+            entryPoint: context.entryPoint.identifier,
         }
     }
 }

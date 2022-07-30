@@ -7,6 +7,7 @@ import { BaseListingScraper } from '@/scrapers/classes/BaseListingScraper'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { ScrapeOptions } from './types/ScrapeOptions'
 import { ScrapeResult } from './types/ScrapeResult'
+import { ScrapeContext } from './types/ScrapeContext'
 
 export abstract class BaseEntryPoint {
     /**
@@ -34,6 +35,13 @@ export abstract class BaseEntryPoint {
                 createdAt: 'desc',
             },
         })
+    }
+
+    createContext(): ScrapeContext {
+        return {
+            entryPoint: this,
+            scraper: this.scraper,
+        }
     }
 
     createScrapeResult(

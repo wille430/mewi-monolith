@@ -5,6 +5,7 @@ import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseListingScraper } from './BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapedListing } from './types/ScrapedListing'
+import { ScrapeContext } from './types/ScrapeContext'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[]
@@ -29,7 +30,7 @@ export abstract class ListingScraper extends BaseListingScraper {
     extractRawListingsArray(res: AxiosResponse<any, any>) {
         return res.data as any
     }
-    parseRawListing(obj: Record<string, any>): ScrapedListing {
+    parseRawListing(obj: Record<string, any>, context: ScrapeContext): ScrapedListing {
         return obj as any
     }
 

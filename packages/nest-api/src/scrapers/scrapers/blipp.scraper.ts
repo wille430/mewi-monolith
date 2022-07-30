@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
@@ -38,13 +39,10 @@ export class BlippScraper extends NextScraper {
         return res.data.pageProps?.vehiclesData?.payload.items
     }
 
-    parseRawListing({
-        vehicle,
-        published_date,
-        cover_photo,
-        entity_id,
-        municipality,
-    }: Record<string, any>): ScrapedListing {
+    parseRawListing(
+        { vehicle, published_date, cover_photo, entity_id, municipality }: Record<string, any>,
+        context: ScrapeContext
+    ): ScrapedListing {
         return {
             origin_id: this.createId(
                 `${(vehicle.brand as string).toLowerCase().slice(0, 16)}_${vehicle.entity_id}`
@@ -65,7 +63,7 @@ export class BlippScraper extends NextScraper {
                 : null,
             region: municipality.name,
             origin: ListingOrigin.Blipp,
-            auctionEnd: null,
+            entryPoint: context.entryPoint.identifier,
         }
     }
 }

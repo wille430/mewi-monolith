@@ -57,29 +57,36 @@ export abstract class BaseListingScraper {
             let findIndexValue: string | Date
 
             if (options.watchOptions.findFirst === 'date') {
-                findIndexValue = recentLog.scrapeToDate
+                findIndexValue = recentLog?.scrapeToDate
             } else if (options.watchOptions.findFirst === 'origin_id') {
-                findIndexValue = recentLog.scrapeToId
+                findIndexValue = recentLog?.scrapeToId
             }
 
             let totalPageCount: number | undefined
 
-            this.log(
-                `Scraping ${maxScrapeCount ? `${maxScrapeCount}` : ''} listings from ${
+            // Compose log
+            this.log('', false)
+            process.stdout.write(
+                `Scraping ${maxScrapeCount ? maxScrapeCount : ''} listings from ${
                     (await entryPoint.createConfig(1)).url
-                }`
+                } `
             )
 
             let findIndex = undefined
-            if (options.watchOptions.findFirst === 'date') {
-                this.log(`Scraping listings created after ${findIndexValue}`)
-                findIndex = (o) =>
-                    new Date(o.date).getTime() <=
-                    ((findIndexValue as Date) ?? new Date(0)).getTime()
-            } else if (options.watchOptions.findFirst === 'origin_id') {
-                this.log(`Stopping scraping when finding listing with origin_id ${findIndexValue}`)
-                findIndex = (o) => o.origin_id === findIndexValue
+            if (findIndexValue) {
+                if (options.watchOptions.findFirst === 'date') {
+                    process.stdout.write(`created after ${findIndexValue}`)
+                    findIndex = (o) =>
+                        new Date(o.date).getTime() <=
+                        ((findIndexValue as Date) ?? new Date(0)).getTime()
+                } else if (options.watchOptions.findFirst === 'origin_id') {
+                    process.stdout.write(`until listing with origin_id ${findIndexValue} is found`)
+                    findIndex = (o) => o.origin_id === findIndexValue
+                }
+            } else {
+                process.stdout.write('until last page or max scrape count reached')
             }
+            process.stdout.write('\n')
 
             let page = 1
             while (shouldContinue) {
@@ -186,9 +193,11 @@ export abstract class BaseListingScraper {
         return `${this.origin}-${shasum.digest('hex')}`
     }
 
-    log(message: string) {
+    log(message: string, linebreak = true) {
+        let completeMessage = `[${this.origin}]: ${message}`
         if (process.env.NODE_ENV === 'development' || this.verbose) {
-            console.log(`[${this.origin}]: ${message}`)
+            if (linebreak) console.log(completeMessage)
+            else process.stdout.write(completeMessage)
         }
     }
 

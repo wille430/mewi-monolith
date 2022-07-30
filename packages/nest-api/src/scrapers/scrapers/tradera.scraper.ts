@@ -4,6 +4,7 @@ import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 interface TraderaCategory {
     id: number
@@ -67,7 +68,10 @@ export class TraderaScraper extends ListingScraper {
         return res.data.items
     }
 
-    parseRawListing(item: Record<string, any>): Prisma.ListingCreateInput {
+    parseRawListing(
+        item: Record<string, any>,
+        scrapeContext: ScrapeContext
+    ): Prisma.ListingCreateInput {
         return {
             origin_id: this.createId(item.itemId.toString()),
             title: item.shortDescription,
@@ -89,6 +93,7 @@ export class TraderaScraper extends ListingScraper {
                   }
                 : null,
             origin: ListingOrigin.Tradera,
+            entryPoint: scrapeContext.entryPoint.identifier,
         }
     }
 

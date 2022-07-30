@@ -20,10 +20,9 @@ export class EntryPointDOM extends BaseEntryPoint {
             const items = await page.$$(this.scraper.listingSelector)
 
             const listings = await Promise.all(
-                items.map(async (ele) => ({
-                    ...(await this.scraper.evalParseRawListing(ele)),
-                    entryPoint: this.identifier,
-                }))
+                items.map(
+                    async (ele) => await this.scraper.evalParseRawListing(ele, this.createContext())
+                )
             )
 
             return this.createScrapeResult(page, listings, pageNumber, options)

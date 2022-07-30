@@ -4,6 +4,7 @@ import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { WatchOptions } from '../classes/types/WatchOptions'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 export class BytbilScraper extends ListingWebCrawler {
     baseUrl = 'https://bytbil.com/'
@@ -52,7 +53,10 @@ export class BytbilScraper extends ListingWebCrawler {
         return this.vehicleTypes.reduce((prev, cur) => ({ ...prev, [cur]: 0 }), {})
     }
 
-    async evalParseRawListing(ele: ElementHandle<Element>): Promise<Prisma.ListingCreateInput> {
+    async evalParseRawListing(
+        ele: ElementHandle<Element>,
+        context: ScrapeContext
+    ): Promise<Prisma.ListingCreateInput> {
         const listing = await ele.evaluate(async (ele) => {
             const href = ele.querySelector('.car-list-header > a').getAttribute('href')
 
@@ -87,6 +91,7 @@ export class BytbilScraper extends ListingWebCrawler {
             category: Category.FORDON,
             origin: ListingOrigin.Bytbil,
             date: new Date(),
+            entryPoint: context.entryPoint.identifier,
         } as Prisma.ListingCreateInput
     }
 

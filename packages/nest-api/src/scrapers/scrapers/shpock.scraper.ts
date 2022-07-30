@@ -4,6 +4,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import puppeteer from 'puppeteer'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
@@ -90,7 +91,7 @@ export class ShpockScraper extends ListingScraper {
         }
     }
 
-    parseRawListing(item: Record<string, any>): Prisma.ListingCreateInput {
+    parseRawListing(item: Record<string, any>, context: ScrapeContext): Prisma.ListingCreateInput {
         return {
             origin_id: this.createId(item.id),
             title: item.title,
@@ -109,6 +110,7 @@ export class ShpockScraper extends ListingScraper {
                   }
                 : null,
             origin: ListingOrigin.Shpock,
+            entryPoint: context.entryPoint.identifier,
         }
     }
 

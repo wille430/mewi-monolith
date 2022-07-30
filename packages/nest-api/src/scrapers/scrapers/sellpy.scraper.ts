@@ -3,6 +3,7 @@ import { Inject } from '@nestjs/common'
 import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
 
 // TODO: fix pagination
 export class SellpyScraper extends ListingScraper {
@@ -47,7 +48,10 @@ export class SellpyScraper extends ListingScraper {
         return res.data.results[0].hits
     }
 
-    override parseRawListing(item: Record<string, any>): Prisma.ListingCreateInput {
+    override parseRawListing(
+        item: Record<string, any>,
+        context: ScrapeContext
+    ): Prisma.ListingCreateInput {
         return {
             origin_id: this.createId(item.objectID),
             title: item.metadata.brand ?? item.metadata.type,
@@ -66,7 +70,7 @@ export class SellpyScraper extends ListingScraper {
                   }
                 : null,
             origin: ListingOrigin.Sellpy,
-            auctionEnd: null,
+            entryPoint: context.entryPoint.identifier,
         }
     }
 }

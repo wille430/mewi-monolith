@@ -3,6 +3,8 @@ import { Inject } from '@nestjs/common'
 import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingWebCrawler {
@@ -25,7 +27,7 @@ export class CitiboardScraper extends ListingWebCrawler {
 
     createScrapeUrl = (page: number) => this.defaultScrapeUrl + `?offset=${(page - 1) * this.limit}`
 
-    async evalParseRawListing(ele: ElementHandle<Element>) {
+    async evalParseRawListing(ele: ElementHandle<Element>, context: ScrapeContext) {
         const listing: any = await ele.evaluate(async (ele) => ({
             origin_id: ele.getAttribute('id'),
             title: ele.querySelector('meta').content,
@@ -52,6 +54,7 @@ export class CitiboardScraper extends ListingWebCrawler {
             category: Category.FORDON,
             origin: ListingOrigin.Bytbil,
             date: new Date(),
-        }
+            entryPoint: context.entryPoint.identifier,
+        } as ScrapedListing
     }
 }
