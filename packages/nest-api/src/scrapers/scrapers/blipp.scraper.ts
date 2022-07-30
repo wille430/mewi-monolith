@@ -6,7 +6,6 @@ import { ScrapedListing } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends NextScraper {
-
     baseUrl = 'https://blipp.se/'
     origin: ListingOrigin = ListingOrigin.Blipp
     limit = 40
@@ -23,9 +22,6 @@ export class BlippScraper extends NextScraper {
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
 
-    /**
-     * Get the number of pages of products that are available
-     */
     getTotalPages(res: AxiosResponse): number {
         try {
             const payload = res.data.pageProps?.vehiclesData?.payload

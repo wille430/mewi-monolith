@@ -61,7 +61,7 @@ export abstract class BaseEntryPoint {
     }
 
     createScrapeResult(
-        res: any,
+        res: AxiosResponse | Page,
         listings: ScrapedListing[],
         pageNumber: number,
         options: ScrapeOptions = {}
@@ -91,7 +91,7 @@ export abstract class BaseEntryPoint {
 export class EntryPoint extends BaseEntryPoint {
     scraper: ListingScraper
 
-    async scrape(page: number, options: ScrapeOptions): Promise<ScrapeResult> {
+    async scrape(page: number, options: ScrapeOptions = {}): Promise<ScrapeResult> {
         const client = await this.scraper.createAxiosInstance()
 
         const config = {
@@ -103,13 +103,13 @@ export class EntryPoint extends BaseEntryPoint {
         const data = this.scraper.extractRawListingsArray(res)
         const listings = data.map(this.scraper.parseRawListing)
 
-        return this.createScrapeResult(page, listings, page, options)
+        return this.createScrapeResult(res, listings, page, options)
     }
 }
 export class EntryPointDOM extends BaseEntryPoint {
     scraper: ListingWebCrawler
 
-    async scrape(pageNumber: number, options: ScrapeOptions): Promise<ScrapeResult> {
+    async scrape(pageNumber: number, options: ScrapeOptions = {}): Promise<ScrapeResult> {
         // Instantiate puppeteer
         const browser = await puppeteer.launch({
             args: ['--no-sandbox'],

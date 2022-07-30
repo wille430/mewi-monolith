@@ -180,13 +180,7 @@ export abstract class BaseListingScraper {
         return Category.OVRIGT
     }
 
-    createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
-        if (!this.entryPoints) this.entryPoints = []
-
-        this.entryPoints.push(
-            new EntryPoint(this.prisma, this, createConfig, identifier ?? this.origin)
-        )
-    }
+    abstract createEntryPoint(createConfig: CreateConfigFunction, identifier?: string)
 
     getTotalPages(arg: any): number | undefined {
         return undefined

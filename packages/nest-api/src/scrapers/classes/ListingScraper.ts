@@ -1,7 +1,7 @@
 import { Prisma } from '@mewi/prisma'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
-import { EntryPoint } from './EntryPoint'
+import { CreateConfigFunction, EntryPoint } from './EntryPoint'
 import { BaseListingScraper } from './BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -43,5 +43,13 @@ export abstract class ListingScraper extends BaseListingScraper {
     }
     parseRawListing(obj: Record<string, any>): ScrapedListing {
         return obj as any
+    }
+
+    createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
+        if (!this.entryPoints) this.entryPoints = []
+
+        this.entryPoints.push(
+            new EntryPoint(this.prisma, this, createConfig, identifier ?? this.origin)
+        )
     }
 }

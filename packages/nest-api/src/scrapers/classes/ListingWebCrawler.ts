@@ -3,7 +3,7 @@ import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { BaseListingScraper } from './BaseListingScraper'
 import { ScrapedListing } from './ListingScraper'
-import { EntryPointDOM } from './EntryPoint'
+import { CreateConfigFunction, EntryPointDOM } from './EntryPoint'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -61,4 +61,12 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
     }
 
     abstract evalParseRawListing(ele: ElementHandle<Element>): Promise<ScrapedListing>
+
+    createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
+        if (!this.entryPoints) this.entryPoints = []
+
+        this.entryPoints.push(
+            new EntryPointDOM(this.prisma, this, createConfig, identifier ?? this.origin)
+        )
+    }
 }

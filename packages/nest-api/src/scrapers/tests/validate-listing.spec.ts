@@ -1,9 +1,9 @@
 import { Category, Prisma, Currency } from '@mewi/prisma'
-import { ListingScraper } from '../classes/ListingScraper'
+import { BaseListingScraper } from '../classes/BaseListingScraper'
 
 export const validateListingTest = (
     listing: Prisma.ListingCreateInput,
-    scraper: ListingScraper
+    scraper: BaseListingScraper
 ) => {
     expect(typeof listing.title).toBe('string')
 
