@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency } from '@mewi/prisma'
 import { AxiosResponse } from 'axios'
 import { NextScraper } from '../classes/NextScraper'
-import { ScrapedListing } from '../classes/ListingScraper'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BlippScraper extends NextScraper {

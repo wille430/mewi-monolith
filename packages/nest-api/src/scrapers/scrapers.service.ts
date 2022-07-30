@@ -17,7 +17,7 @@ import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Record<ListingOrigin, BaseListingScraper<any>>
+    scrapers: Record<ListingOrigin, BaseListingScraper>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -110,7 +110,7 @@ export class ScrapersService {
     }
 
     @Cron('* */45 * * *')
-    async startAll(...args: Parameters<BaseListingScraper<any>['start']>) {
+    async startAll(...args: Parameters<BaseListingScraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
             this.scraperPipeline.push([
                 name as ListingOrigin,
@@ -125,7 +125,7 @@ export class ScrapersService {
         scraperName: ListingOrigin,
         options: StartScraperOptions = { triggeredBy: ScraperTrigger.Scheduled }
     ): Promise<ScraperStatusReport> {
-        const scraper: BaseListingScraper<any> | undefined = this.scrapers[scraperName]
+        const scraper: BaseListingScraper | undefined = this.scrapers[scraperName]
 
         if (scraper) {
             this.scraperPipeline.push([scraperName, options])

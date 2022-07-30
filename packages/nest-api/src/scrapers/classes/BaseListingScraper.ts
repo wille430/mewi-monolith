@@ -1,8 +1,10 @@
 import { ScraperStatus, stringSimilarity } from '@wille430/common'
 import { ListingOrigin, Category, ScraperTrigger } from '@mewi/prisma'
 import crypto from 'crypto'
-import { BaseEntryPoint, CreateConfigFunction, EntryPoint } from './EntryPoint'
-import { WatchOptions, ScrapedListing } from './ListingScraper'
+import { CreateConfigFunction } from './types/CreateConfigFunction'
+import { BaseEntryPoint } from './BaseEntryPoint'
+import { ScrapedListing } from './types/ScrapedListing'
+import { WatchOptions } from './types/WatchOptions'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -119,7 +121,7 @@ export abstract class BaseListingScraper {
             }
 
             totalScrapedCount += scrapeCount
-            options.onNextEntryPoint()
+            if (options.onNextEntryPoint) options.onNextEntryPoint()
         }
 
         this.log('Scraping complete. Deleting old listings...')

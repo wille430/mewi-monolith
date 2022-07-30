@@ -1,22 +1,10 @@
-import { Prisma } from '@mewi/prisma'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
-import { CreateConfigFunction, EntryPoint } from './EntryPoint'
+import { EntryPoint } from './EntryPoint'
+import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseListingScraper } from './BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
-
-export type ScrapedListing = Prisma.ListingCreateInput
-
-export type PageDetails = {
-    url: string
-    currentPage: number
-    maxPages?: (res: AxiosResponse) => number
-    getMostRecentDate: () => Date | undefined
-}
-
-export type WatchOptions = {
-    findFirst: 'origin_id' | 'date'
-}
+import { ScrapedListing } from './types/ScrapedListing'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[]

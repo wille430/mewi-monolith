@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
-import { WatchOptions } from '../classes/ListingScraper'
+import { WatchOptions } from '../classes/types/WatchOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
 export class BytbilScraper extends ListingWebCrawler {

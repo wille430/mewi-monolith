@@ -2,8 +2,9 @@ import { ElementHandle } from 'puppeteer'
 import axios from 'axios'
 import robotsParser from 'robots-parser'
 import { BaseListingScraper } from './BaseListingScraper'
-import { ScrapedListing } from './ListingScraper'
-import { CreateConfigFunction, EntryPointDOM } from './EntryPoint'
+import { ScrapedListing } from './types/ScrapedListing'
+import { CreateConfigFunction } from './types/CreateConfigFunction'
+import { EntryPointDOM } from './EntryPointDOM'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -49,7 +50,6 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
     }
 
     start(options?: Partial<StartScraperOptions>): Promise<void> {
-        // 0.5 Check permissions
         if (!this.allowsScraping())
             throw new Error(
                 `${new URL('robots.txt', this.baseUrl)} does not allow scraping the specified url ${
