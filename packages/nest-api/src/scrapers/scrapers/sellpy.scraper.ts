@@ -4,6 +4,8 @@ import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 // TODO: fix pagination
 export class SellpyScraper extends ListingScraper {
@@ -17,8 +19,12 @@ export class SellpyScraper extends ListingScraper {
         method: 'POST',
     }
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma)
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config)
+
         this.parseRawListing = this.parseRawListing.bind(this)
 
         this.createEntryPoint(() => ({
@@ -48,10 +54,7 @@ export class SellpyScraper extends ListingScraper {
         return res.data.results[0].hits
     }
 
-    override parseRawListing(
-        item: Record<string, any>,
-        context: ScrapeContext
-    ): Prisma.ListingCreateInput {
+    override parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
         return {
             origin_id: this.createId(item.objectID),
             title: item.metadata.brand ?? item.metadata.type,
@@ -59,16 +62,14 @@ export class SellpyScraper extends ListingScraper {
             date: item.createdAt ? new Date(item.createdAt * 1000) : new Date(),
             imageUrl: item.images ?? [],
             isAuction: false,
-            body: null,
             parameters: [],
-            region: null,
             redirectUrl: `https://sellpy.com/item/${item.objectID}`,
             price: item.pricing?.amount
                 ? {
                       value: item.pricing.amount,
                       currency: Currency.SEK,
                   }
-                : null,
+                : undefined,
             origin: ListingOrigin.Sellpy,
             entryPoint: context.entryPoint.identifier,
         }

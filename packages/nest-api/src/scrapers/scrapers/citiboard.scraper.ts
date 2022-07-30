@@ -5,6 +5,7 @@ import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { ConfigService } from '@nestjs/config'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingWebCrawler {
@@ -14,8 +15,11 @@ export class CitiboardScraper extends ListingWebCrawler {
     baseUrl = 'https://citiboard.se/'
     origin: ListingOrigin = ListingOrigin.Citiboard
 
-    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
-        super(prisma, { listingSelector: 'article.gridItem' })
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config, { listingSelector: 'article.gridItem' })
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
 

@@ -5,6 +5,7 @@ import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { StartScraperOptions } from '../types/startScraperOptions'
+import { ConfigService } from '@nestjs/config'
 
 interface TraderaCategory {
     id: number
@@ -32,8 +33,11 @@ export class TraderaScraper extends ListingScraper {
         return `https://www.tradera.com${category}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`
     }
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma)
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config)
 
         Object.assign(this.defaultStartOptions, {
             onNextEntryPoint: () => {

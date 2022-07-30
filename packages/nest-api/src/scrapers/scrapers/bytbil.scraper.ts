@@ -5,6 +5,7 @@ import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { WatchOptions } from '../classes/types/WatchOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export class BytbilScraper extends ListingWebCrawler {
     baseUrl = 'https://bytbil.com/'
@@ -32,8 +33,11 @@ export class BytbilScraper extends ListingWebCrawler {
         return new URL(`/${vehicleType}?Page=${page}`, this.baseUrl).toString()
     }
 
-    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
-        super(prisma, {
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config, {
             listingSelector: '.result-list-item',
         })
 

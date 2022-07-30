@@ -7,6 +7,7 @@ import { ScrapedListing } from './types/ScrapedListing'
 import { WatchOptions } from './types/WatchOptions'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
+import { ConfigService } from '@nestjs/config'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -21,6 +22,7 @@ export abstract class BaseListingScraper {
     abstract createScrapeUrl: (...args: any) => string
 
     abstract prisma: PrismaService
+    abstract config: ConfigService
 
     readonly watchOptions: WatchOptions = {
         findFirst: 'date',
@@ -41,11 +43,19 @@ export abstract class BaseListingScraper {
         this.initialized = true
     }
 
+    getConfig<T>(key: string) {
+        return (
+            this.config.get<T>(`scraper.${this.origin}.${key}`) ??
+            this.config.get<T>(`scraper.default.${key}`)
+        )
+    }
+
     async start(options: Partial<StartScraperOptions> = {}) {
         if (!this.initialized) await this.initialize()
 
         options = {
             triggeredBy: ScraperTrigger.Scheduled,
+            scrapeCount: this.getConfig('limit'),
             ...this.defaultStartOptions,
             ...options,
         }

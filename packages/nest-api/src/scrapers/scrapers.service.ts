@@ -146,7 +146,47 @@ export class ScrapersService {
         }
     }
 
-    // @Cron('* */5 * * *')
+    private scraperIndex: number
+    /**
+     * Call start method on the next scraper. Decorated with cronjob to execute start method on a scraper every 5 minutes.
+     */
+    @Cron('* */5 * * *')
+    async scrapeNext() {
+        if (!this.scraperIndex) {
+            this.scraperIndex = await this.getLastScrapedIndex()
+        }
+
+        const scraper: BaseListingScraper =
+            this.scrapers[Object.keys(this.scrapers)[this.scraperIndex]]
+        if (scraper.status === ScraperStatus.IDLE) {
+            this.scraperIndex += 1
+            this.scraperIndex %= Object.keys(this.scrapers).length
+
+            await scraper.start()
+        }
+    }
+
+    /**
+     * Find the index of the last scraped scraper.
+     *
+     * @returns Index of the last scraped scraper. Returns 0 if no logs were found.
+     */
+    private async getLastScrapedIndex() {
+        const log = await this.prisma.scrapingLog.findFirst({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        })
+
+        if (!log) {
+            return 0
+        }
+
+        const scraper = this.scrapers[log.target]
+
+        return Object.keys(this.scrapers).findIndex((x) => x === scraper.origin)
+    }
+
     async conditionalScrape() {
         const lastScrape = await this.prisma.scrapingLog.findFirst({
             orderBy: {

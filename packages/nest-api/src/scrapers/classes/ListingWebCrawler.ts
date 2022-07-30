@@ -8,6 +8,7 @@ import { EntryPointDOM } from './EntryPointDOM'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from './types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
@@ -22,6 +23,7 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
 
     constructor(
         readonly prisma: PrismaService,
+        readonly config: ConfigService,
         { listingSelector }: ListingWebCrawlerConstructorArgs
     ) {
         super()

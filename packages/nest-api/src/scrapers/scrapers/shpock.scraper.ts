@@ -5,6 +5,7 @@ import puppeteer from 'puppeteer'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
@@ -20,8 +21,11 @@ export class ShpockScraper extends ListingScraper {
         url: this.defaultScrapeUrl,
     }
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma)
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config)
 
         this.createEntryPoint(async (p) => ({
             data: {

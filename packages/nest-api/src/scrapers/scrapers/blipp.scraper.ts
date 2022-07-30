@@ -5,6 +5,7 @@ import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
@@ -17,8 +18,11 @@ export class BlippScraper extends NextScraper {
         return `${this.defaultScrapeUrl}?page=${page}/`
     }
 
-    constructor(@Inject(PrismaService) prisma: PrismaService) {
-        super(prisma)
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }

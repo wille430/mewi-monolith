@@ -6,11 +6,15 @@ import { BaseListingScraper } from './BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapedListing } from './types/ScrapedListing'
 import { ScrapeContext } from './types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[]
 
-    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
+    constructor(
+        @Inject(PrismaService) readonly prisma: PrismaService,
+        @Inject(ConfigService) readonly config: ConfigService
+    ) {
         super()
         this.parseRawListing = this.parseRawListing.bind(this)
     }

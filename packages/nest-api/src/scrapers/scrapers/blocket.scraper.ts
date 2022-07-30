@@ -6,6 +6,7 @@ import { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ConfigService } from '@nestjs/config'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -16,8 +17,11 @@ export class BlocketScraper extends ListingScraper {
         this.limit
     }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
 
-    constructor(@Inject(PrismaService) readonly prisma: PrismaService) {
-        super(prisma)
+    constructor(
+        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ConfigService) config: ConfigService
+    ) {
+        super(prisma, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
