@@ -82,7 +82,7 @@ export abstract class BaseListingScraper {
                     listings,
                     continue: cont,
                     maxPages,
-                } = await entryPoint.scrape(this, page, {
+                } = await entryPoint.scrape(page, {
                     findIndex,
                     maxScrapeCount,
                 })
@@ -183,7 +183,9 @@ export abstract class BaseListingScraper {
     createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
         if (!this.entryPoints) this.entryPoints = []
 
-        this.entryPoints.push(new EntryPoint(this.prisma, createConfig, identifier ?? this.origin))
+        this.entryPoints.push(
+            new EntryPoint(this.prisma, this, createConfig, identifier ?? this.origin)
+        )
     }
 
     getTotalPages(arg: any): number | undefined {

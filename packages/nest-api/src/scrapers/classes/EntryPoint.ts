@@ -19,8 +19,6 @@ export interface GetTotalPagesFunction<T> {
     (res: T extends 'DOM' ? Page : AxiosResponse): number
 }
 
-export type ScrapeTargetType = 'DOM' | 'API'
-
 export type ScrapeOptions = {
     maxScrapeCount?: number
     findIndex?: Parameters<Array<ScrapedListing>['findIndex']>[0]
@@ -42,14 +40,11 @@ export abstract class BaseEntryPoint {
      * @param options - Scrape options
      * @returns Page or AxiosResponse for further
      */
-    abstract scrape(
-        scraper: BaseListingScraper,
-        page: number,
-        options: ScrapeOptions
-    ): Promise<ScrapeResult>
+    abstract scrape(page: number, options: ScrapeOptions): Promise<ScrapeResult>
 
     constructor(
         readonly prisma: PrismaService,
+        readonly scraper: BaseListingScraper,
         readonly createConfig: CreateConfigFunction,
         readonly identifier: string
     ) {}
@@ -67,13 +62,12 @@ export abstract class BaseEntryPoint {
 
     createScrapeResult(
         res: any,
-        scraper: BaseListingScraper,
         listings: ScrapedListing[],
         pageNumber: number,
         options: ScrapeOptions = {}
     ): ScrapeResult {
         let shouldContinue = true
-        const maxPages = scraper.getTotalPages(res)
+        const maxPages = this.scraper.getTotalPages(res)
 
         // Remove based on findIndex function
         if (options.findIndex) {
@@ -95,31 +89,27 @@ export abstract class BaseEntryPoint {
 }
 
 export class EntryPoint extends BaseEntryPoint {
-    async scrape(
-        scraper: ListingScraper,
-        page: number,
-        options: ScrapeOptions
-    ): Promise<ScrapeResult> {
-        const client = await scraper.createAxiosInstance()
+    scraper: ListingScraper
+
+    async scrape(page: number, options: ScrapeOptions): Promise<ScrapeResult> {
+        const client = await this.scraper.createAxiosInstance()
 
         const config = {
-            ...scraper.defaultAxiosRequestConfig,
+            ...this.scraper.defaultAxiosRequestConfig,
             ...(await this.createConfig(page)),
         }
         const res = await client(config)
 
-        const data = scraper.extractRawListingsArray(res)
-        const listings = data.map(scraper.parseRawListing)
+        const data = this.scraper.extractRawListingsArray(res)
+        const listings = data.map(this.scraper.parseRawListing)
 
-        return this.createScrapeResult(page, scraper, listings, page, options)
+        return this.createScrapeResult(page, listings, page, options)
     }
 }
 export class EntryPointDOM extends BaseEntryPoint {
-    async scrape(
-        scraper: ListingWebCrawler,
-        pageNumber: number,
-        options: ScrapeOptions
-    ): Promise<ScrapeResult> {
+    scraper: ListingWebCrawler
+
+    async scrape(pageNumber: number, options: ScrapeOptions): Promise<ScrapeResult> {
         // Instantiate puppeteer
         const browser = await puppeteer.launch({
             args: ['--no-sandbox'],
@@ -129,16 +119,16 @@ export class EntryPointDOM extends BaseEntryPoint {
             const page = await browser.newPage()
             await page.goto((await this.createConfig(pageNumber)).url)
 
-            const items = await page.$$(scraper.listingSelector)
+            const items = await page.$$(this.scraper.listingSelector)
 
             const listings = await Promise.all(
                 items.map(async (ele) => ({
-                    ...(await scraper.evalParseRawListing(ele)),
+                    ...(await this.scraper.evalParseRawListing(ele)),
                     entryPoint: this.identifier,
                 }))
             )
 
-            return this.createScrapeResult(page, scraper, listings, pageNumber, options)
+            return this.createScrapeResult(page, listings, pageNumber, options)
         } catch (e) {
             console.error(e)
             return {
