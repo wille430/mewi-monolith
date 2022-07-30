@@ -25,13 +25,13 @@ export abstract class BaseEntryPoint {
         readonly identifier: string
     ) {}
 
-    public getMostRecentListing() {
-        return this.prisma.listing.findFirst({
+    public getMostRecentLog() {
+        return this.prisma.scrapingLog.findFirst({
             where: {
                 entryPoint: this.identifier,
             },
             orderBy: {
-                date: 'desc',
+                createdAt: 'desc',
             },
         })
     }

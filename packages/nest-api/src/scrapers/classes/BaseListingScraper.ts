@@ -1,5 +1,5 @@
 import { ScraperStatus, stringSimilarity } from '@wille430/common'
-import { ListingOrigin, Category, ScraperTrigger } from '@mewi/prisma'
+import { Prisma, ListingOrigin, Category, ScraperTrigger } from '@mewi/prisma'
 import crypto from 'crypto'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseEntryPoint } from './BaseEntryPoint'
@@ -51,11 +51,16 @@ export abstract class BaseListingScraper {
             let maxScrapeCount = options.scrapeCount
                 ? Math.floor(options.scrapeCount / this.entryPoints.length)
                 : undefined
+            let scrapeToValue: string | Date | undefined
 
-            const getMostRecentListing = await entryPoint.getMostRecentListing()
-            const findIndexValue = getMostRecentListing
-                ? getMostRecentListing[options.watchOptions.findFirst]
-                : undefined
+            const recentLog = await entryPoint.getMostRecentLog()
+            let findIndexValue: string | Date
+
+            if (options.watchOptions.findFirst === 'date') {
+                findIndexValue = recentLog.scrapeToDate
+            } else if (options.watchOptions.findFirst === 'origin_id') {
+                findIndexValue = recentLog.scrapeToId
+            }
 
             let totalPageCount: number | undefined
 
@@ -88,6 +93,11 @@ export abstract class BaseListingScraper {
                     findIndex,
                     maxScrapeCount,
                 })
+
+                if (page == 1 && listings.length > 0) {
+                    scrapeToValue = listings[0][options.watchOptions.findFirst]
+                }
+
                 totalPageCount = maxPages
                 page += 1
 
@@ -122,21 +132,43 @@ export abstract class BaseListingScraper {
 
             totalScrapedCount += scrapeCount
             if (options.onNextEntryPoint) options.onNextEntryPoint()
+
+            this.log(
+                `Scraping of entrypoint ${entryPoint.identifier} complete. Deleting old listings and creating log...`
+            )
+
+            await this.deleteOldListings({
+                entryPoint: entryPoint.identifier,
+            })
+
+            await this.prisma.scrapingLog.create({
+                data: {
+                    added_count: totalScrapedCount,
+                    // TODO: correct error count value
+                    error_count: 0,
+                    entryPoint: entryPoint.identifier,
+                    scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
+                    scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
+                    target: this.origin,
+                    triggered_by: options.triggeredBy,
+                },
+            })
         }
 
-        this.log('Scraping complete. Deleting old listings...')
-        await this.deleteOldListings()
         this.log('DONE')
 
         this.reset()
     }
 
-    private async deleteOldListings(): Promise<void> {
+    private async deleteOldListings(
+        args: Prisma.ListingDeleteManyArgs['where'] = {}
+    ): Promise<void> {
         await this.prisma.listing.deleteMany({
             where: {
                 date: {
                     lte: new Date(this.deleteOlderThan),
                 },
+                ...args,
             },
         })
     }

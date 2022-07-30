@@ -76,7 +76,7 @@ model Listing {
     likedByUserIDs String[] @db.ObjectId
     likedBy        User[]   @relation(fields: [likedByUserIDs], references: [id])
 
-    entryPoint String?
+    entryPoint String
 }
 
 model ScrapingLog {
@@ -85,7 +85,10 @@ model ScrapingLog {
     added_count Int
     error_count Int
 
-    total_count Int
+    // Properties used to identify when to stop scraping next time
+    entryPoint   String
+    scrapeToId   String?
+    scrapeToDate DateTime?
 
     target       ListingOrigin
     triggered_by ScraperTrigger
