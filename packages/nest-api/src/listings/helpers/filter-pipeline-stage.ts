@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { ListingSort } from '@wille430/common'
-import { MIN_SEARCH_SCORE } from '../constants'
+import { DEFAULT_LIMIT, MIN_SEARCH_SCORE } from '../constants'
 import { FindAllListingsDto } from '../dto/find-all-listing.dto'
 
 export const sortPipelineStage = (field: keyof FindAllListingsDto, value: any): any[] => {
@@ -23,7 +23,11 @@ export const sortPipelineStage = (field: keyof FindAllListingsDto, value: any): 
     return [{ $sort: listingSortToOrderBy[value as ListingSort] }]
 }
 
-export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any): any[] => {
+export const filterPipelineStage = (
+    field: keyof FindAllListingsDto,
+    value: any,
+    dto: Partial<FindAllListingsDto>
+): any[] => {
     if (!value) {
         return []
     }
@@ -96,7 +100,7 @@ export const filterPipelineStage = (field: keyof FindAllListingsDto, value: any)
         case 'page':
             return [
                 {
-                    $skip: (value - 1) * (value ?? 20),
+                    $skip: (value - 1) * (dto.limit ?? DEFAULT_LIMIT),
                 },
             ]
         case 'limit':

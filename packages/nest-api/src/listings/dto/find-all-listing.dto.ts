@@ -1,13 +1,14 @@
 import { ListingSearchFilters, ListingSort } from '@wille430/common'
 import { Transform } from 'class-transformer'
 import { IsOptional, IsString, IsNumber, IsBoolean, IsDate, Min, IsEnum } from 'class-validator'
+import { DEFAULT_LIMIT } from '../constants'
 
 export class FindAllListingsDto implements ListingSearchFilters {
     @IsOptional()
     @IsNumber()
     @Transform(({ value }) => Number.parseInt(value))
     @Min(0)
-    limit = 24
+    limit = DEFAULT_LIMIT
 
     @IsOptional()
     @IsString()
