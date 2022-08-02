@@ -3,9 +3,7 @@ services:
     api:
         ports:
             - '80:3001'
-        build:
-            context: .
-            dockerfile: packages/nest-api/Dockerfile
+        build: packages/nest-api
         environment:
             NODE_ENV: production
             TOKEN_KEY: $TOKEN_KEY
