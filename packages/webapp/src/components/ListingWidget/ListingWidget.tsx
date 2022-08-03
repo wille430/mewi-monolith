@@ -9,6 +9,8 @@ import { LikeButton, ListingLikeButton } from '../LikeButton/LikeButton'
 import { OriginLabel } from '@/components/OriginLabel/OriginLabel'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
 import { useAppSelector } from '@/hooks'
+import { ListingOrigin } from '@mewi/prisma/index-browser'
+import { getColor, getTextColor } from '@/constants/OriginColors'
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
     listing: Listing
@@ -34,6 +36,9 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                     onClick && onClick(e)
                 }}
             />
+
+            <OriginTag origin={listing.origin} />
+
             {isLoggedIn ? (
                 <ListingLikeButton
                     listing={listing}
@@ -46,15 +51,16 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                     <LikeButton data-testid='like-button' className={style['like-button']} />
                 </Link>
             )}
+
             <div className={style['image-wrapper']}>
                 <DefaultImage src={listing.imageUrl && listing.imageUrl[0]} alt={listing.title} />
             </div>
+
             <div className={style['details']}>
                 <div className={style['header']}>
                     <span className={style['title']}>{listing.title}</span>
 
-                    <div className='ml-1 flex flex-col text-right'>
-                        <OriginLabel origin={listing.origin} />
+                    <div className='ml-1 text-right'>
                         <span className={style['region']}>{listing.region}</span>
                     </div>
                 </div>
@@ -71,5 +77,20 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                 </div>
             </div>
         </article>
+    )
+}
+
+const OriginTag = ({ origin }: { origin: ListingOrigin }) => {
+    return (
+        <div
+            className={`absolute py-0.5 pr-3 pl-1  text-xs font-bold`}
+            style={{
+                backgroundColor: getColor(origin),
+                color: getTextColor(origin),
+                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)',
+            }}
+        >
+            <span>{origin}</span>
+        </div>
     )
 }
