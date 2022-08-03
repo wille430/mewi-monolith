@@ -140,9 +140,10 @@ export class UsersService {
                     to: email,
                     subject: 'Lösenordsåterställning',
                     html: forgottenPasswordEmail({
-                        link:
-                            this.configService.get<string>('CLIENT_URL') +
+                        link: new URL(
                             `/nyttlosenord?email=${email}&token=${token}`,
+                            this.configService.get<string>('CLIENT_URL')
+                        ).toString(),
                     }).html,
                 },
                 transport: transporter,
