@@ -21,6 +21,7 @@
         "@nestjs/throttler": "^2.0.1",
         "@types/jsdom": "^16.2.14",
         "@types/lodash": "^4.14.180",
+        "@types/node": "^17.0.31",
         "@wille430/common": "workspace:^1.0.1",
         "axios": "^0.26.1",
         "bcryptjs": "^2.4.3",

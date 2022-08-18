@@ -11,6 +11,7 @@
         "format": "prettier -w .",
         "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
         "isolate": "pnpm run isolate -r",
+        "isolate:api": "pnpm run isolate -F nest-api",
         "db:up": "docker-compose up db -d || sudo docker compose up db -d",
         "db:down": "docker-compose down db || sudo docker compose down db",
         "vercel-install": "./tools/vercel-submodule-workaround.sh && pnpm i -F schemas --unsafe-perm && pnpm i --unsafe-perm -F=!schemas"

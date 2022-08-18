@@ -40,6 +40,7 @@ export class AuthService {
         return {
             access_token: this.jwtService.sign(payload),
             refresh_token: this.jwtService.sign(payload, {
+                // @ts-ignore
                 expiresIn: this.configService.get('auth.refreshToken.expiresIn'),
                 secret: this.configService.get('auth.refreshToken.secret'),
             }),
