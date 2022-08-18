@@ -7,6 +7,7 @@
         "lint:fix": "eslint packages/**/*/src/**/*.{ts,tsx} --fix",
         "e2e": "pnpm run e2e -r",
         "build": "pnpm run build -r",
+        "build:api": "pnpm run build -F nest-api",
         "test": "pnpm run test -r",
         "format": "prettier -w .",
         "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
