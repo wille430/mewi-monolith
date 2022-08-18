@@ -8,6 +8,11 @@
 -   UI - component library
 -   Schemas - prisma schema
 
+## Deployments
+
+[Webapp](https://mewi.se)
+[API](https://api.mewi.se)
+
 ## Start development
 
 1. Install dependencies:

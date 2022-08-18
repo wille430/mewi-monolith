@@ -47,7 +47,7 @@ export class ListingsService {
         const pushStages = (arr: (keyof FindAllListingsDto)[]) => {
             const stages = Array.from(arr).reduce((prev, cur, i, arr) => {
                 const key = arr[i]
-                return [...prev, ...filterPipelineStage(key, dto[key])]
+                return [...prev, ...filterPipelineStage(key, dto[key], dto)]
             }, [] as any[])
             pipeline.push(...stages)
         }

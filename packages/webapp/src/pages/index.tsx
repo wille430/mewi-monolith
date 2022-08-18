@@ -20,7 +20,19 @@ interface IndexPageProps {
 }
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => async () => {
-    const listings = await prisma.listing.findMany({ take: 10 })
+    // Get random listings
+    const listingCount = await prisma.listing.count()
+    const take = 10
+
+    const listings = await Promise.all(
+        Array(take)
+            .fill(null)
+            .map(async () => {
+                return await prisma.listing.findFirst({
+                    skip: Math.floor(Math.random() * listingCount),
+                })
+            })
+    )
 
     store.dispatch(setFeatured(serialize(listings)))
 

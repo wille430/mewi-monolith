@@ -11,9 +11,10 @@ $fade-transition: all 150ms linear;
     height: 16rem;
     cursor: pointer;
     overflow: hidden;
-    display: flex;
     flex-direction: column;
     position: relative;
+    display: grid;
+    grid-template-rows: 1fr 3rem;
 
     .like-button,
     .overlay {
@@ -56,7 +57,7 @@ $fade-transition: all 150ms linear;
 .title {
     font-size: small;
     flex-grow: 2;
-    max-lines: 2;
+    max-lines: 1;
     margin-right: 0.5rem;
     max-height: 5ch;
     overflow: hidden;

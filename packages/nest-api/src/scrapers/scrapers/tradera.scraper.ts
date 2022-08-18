@@ -86,7 +86,7 @@ export class TraderaScraper extends ListingScraper {
             region: null,
             imageUrl: [item.imageUrl],
             isAuction: !!item.endDate || item.itemType === 'auction',
-            redirectUrl: this.baseUrl + item.itemUrl,
+            redirectUrl: new URL(item.itemUrl, this.baseUrl).toString(),
             parameters: [],
             price: item.price
                 ? {
