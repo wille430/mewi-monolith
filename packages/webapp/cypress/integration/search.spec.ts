@@ -12,8 +12,10 @@ describe('search', () => {
             cy.visit('/sok')
 
             formData = {
-                // category: _.sample(Object.keys(categories)),
-                regions: sampleSize(regions).map((regionOption) => regionOption.label),
+                // TODO: test category sorting
+                region: sampleSize(regions)
+                    .map((regionOption) => regionOption.label)
+                    .join(', '),
                 priceRangeGte: Math.round(Math.random() * 2000),
                 priceRangeLte: Math.round((1 + Math.random()) * 2000),
                 auction: Math.round(Math.random()) === 1 ? true : false,
@@ -25,14 +27,8 @@ describe('search', () => {
         Cypress._.times(1, () => {
             it('can filter with randomized filters and search', () => {
                 // TODO: select category from category selection list
-
-                // open filters
-                // cy.getBySel('showFilters').click()
-
-                // Insert regions
-                // FIXME: fix detached from DOM error
                 // TODO: insert multiple regions
-                for (const region of formData.regions ?? []) {
+                for (const region of formData.region ?? []) {
                     cy.getBySel('regionsSelect').type(region + ' {enter}')
 
                     cy.getBySel('regionsSelect').contains(region)
@@ -74,8 +70,8 @@ describe('search', () => {
 
                         switch (key) {
                             case 'regions':
-                                if (formData.regions && typeof parsedUrl.regions === 'string') {
-                                    expect(formData.regions[0].toLowerCase()).to.equal(
+                                if (formData.region && typeof parsedUrl.region === 'string') {
+                                    expect(formData.region[0].toLowerCase()).to.equal(
                                         parsedUrl[key]
                                     )
                                 } else {
@@ -127,82 +123,9 @@ describe('search', () => {
             // TODO: check success message
             // cy.contains('Bevakningen lades till', { matchCase: false })
         })
-
-        // TODO: filters should be cleared
-        // it('keeps filters when changing categories', () => {
-        //     cy.window().its('store').invoke('dispatch', setFilters(formData))
-
-        //     // change category
-        //     const newCategoryKey = _.sample(Object.keys(Types.Category)) as keyof typeof Types.Category
-        //     cy.getBySel(`categoryListItem-0`).contains(Types.CategoryLabel[newCategoryKey as keyof typeof Types.Category]).click()
-
-        //     // expect url search params to update correctly
-        //     cy.location().then((loc) => {
-        //         const searchParams = queryString.parse(loc.search)
-
-        //         console.log(decodeURI(loc.pathname), `/kategorier/${Types.Category[newCategoryKey as keyof typeof Types.Category]}`)
-
-        //         expect(!!decodeURI(loc.pathname).match(`/kategorier/${Types.Category[newCategoryKey as keyof typeof Types.Category]}`)).to.equal(true)
-
-        //         const keysToIgnore = ['category']
-
-        //         if (!formData.auction) keysToIgnore.push('auction')
-
-        //         expect(Object.keys(searchParams)).to.have.members(
-        //             Object.keys(formData).filter((x) => !keysToIgnore.includes(x))
-        //         )
-
-        //         for (const key in searchParams) {
-        //             switch (key) {
-        //                 case 'priceRangeGte':
-        //                 case 'priceRangeLte':
-        //                     expect(parseInt(searchParams[key] as string)).to.equal(formData[key])
-        //                     break
-        //                 case 'auction':
-        //                     expect(Boolean(searchParams[key])).to.equal(formData[key])
-        //                     break
-        //                 default:
-        //                     expect(searchParams[key]).to.equal(formData[key as keyof FormData])
-        //             }
-        //         }
-        //     })
-        // })
-
-        // it('should be able to navigate through pages', () => {
-        //     cy.visit('/')
-        //     cy.getBySel('searchInput').type('{enter}')
-
-        //     cy.wrap([1]).each((ele, i) => {
-        //         const currentPage = i + 2
-        //         cy.getBySel('pageNav').contains(currentPage).click()
-
-        //         cy.location().then((loc) => {
-        //             const searchParams = queryString.parse(loc.search)
-        //             expect(searchParams['page']).to.equal(currentPage.toString())
-        //         })
-        //     })
-
-        //     cy.location().then((loc) => {
-        //         const currentPage = parseInt(queryString.parse(loc.search)['page'] as string)
-
-        //         cy.getBySel('pageNavNext').click()
-
-        //         cy.wrap(currentPage).then((page) => {
-        //             cy.location().then((loc) => {
-        //                 const searchParams = queryString.parse(loc.search)
-        //                 expect(searchParams['page']).to.equal((page + 1).toString())
-        //             })
-
-        //             cy.getBySel('pageNavPrev').click()
-
-        //             cy.location().then((loc) => {
-        //                 const searchParams = queryString.parse(loc.search)
-        //                 expect(searchParams['page']).to.equal(page.toString())
-        //             })
-        //         })
-        //     })
-        // })
     })
+
+    // TODO: filters should be cleared
 
     describe('from /', () => {
         beforeEach(() => {

@@ -59,8 +59,8 @@ export const filterPipelineStage = (
             ]
         case 'auction':
             return [{ $match: { auction: value } }]
-        case 'category':
-            return [{ $match: { category: value } }]
+        case 'categories':
+            return [{ $match: { category: { $in: value } } }]
         case 'dateGte':
             return [
                 {

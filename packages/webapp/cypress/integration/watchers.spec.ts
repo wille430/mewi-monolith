@@ -31,7 +31,7 @@ describe('watchers', () => {
     it('can create a new watcher and display it', () => {
         cy.get('[data-testid=createNewWatcherButton]').click()
 
-        // Fill in fields start
+        // Fill in fields
         cy.get('[data-testid=keywordInput]').type(formData.keyword)
         cy.get('[data-testid=keywordInput]').should('have.value', formData.keyword)
 
@@ -50,7 +50,6 @@ describe('watchers', () => {
 
         cy.get('[data-testid=priceLte]').type(formData.price.lte)
         cy.get('[data-testid=priceLte]').should('have.value', formData.price.lte)
-        // Fiell in fields end
 
         if (formData.isAuction) cy.get('[data-testid=auctionCheckbox]').click()
 
@@ -119,8 +118,5 @@ describe('watchers', () => {
         })
 
         cy.get('[data-testid=watcherCard]').should('not.exist')
-
-        // Expect notification to be displayed
-        // cy.get('[data-testid=snackbarContainer]').should('exist')
     })
 })

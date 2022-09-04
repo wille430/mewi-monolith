@@ -1,7 +1,18 @@
 import { ListingSearchFilters, ListingSort } from '@wille430/common'
 import { Transform } from 'class-transformer'
-import { IsOptional, IsString, IsNumber, IsBoolean, IsDate, Min, IsEnum } from 'class-validator'
+import {
+    IsOptional,
+    IsString,
+    IsNumber,
+    IsBoolean,
+    IsDate,
+    Min,
+    IsEnum,
+    IsArray,
+} from 'class-validator'
 import { DEFAULT_LIMIT } from '../constants'
+import { Category } from '@mewi/prisma'
+import _ from 'lodash'
 
 export class FindAllListingsDto implements ListingSearchFilters {
     @IsOptional()
@@ -20,8 +31,10 @@ export class FindAllListingsDto implements ListingSearchFilters {
     region: string
 
     @IsOptional()
-    @IsString()
-    category?: string
+    @IsArray()
+    @IsEnum(Category, { each: true })
+    @Transform(({ value }) => (_.isString(value) ? value.split(',') : value))
+    categories?: Category[]
 
     @IsOptional()
     @IsNumber()
