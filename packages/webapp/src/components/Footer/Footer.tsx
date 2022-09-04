@@ -30,7 +30,7 @@ export const Footer = () => {
                         <ul className='grid gap-3 md:grid-cols-2'>
                             {Object.keys(Category).map((key) => (
                                 <li key={key} className='text-sm'>
-                                    <Link href={`/kategorier/${key.toLowerCase()}`}>
+                                    <Link href={`/sok?categories=/${key}`}>
                                         {CategoryLabel[key as Category]}
                                     </Link>
                                 </li>

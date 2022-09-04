@@ -1,8 +1,7 @@
 import { useListingFilters } from '@/hooks/useListingFilters'
-import { navigateToCategoryUrl } from '@/utils/navigateToCategoryUrl'
+import { toggleCategory } from '@/utils/toggleCategory'
 import { categories } from '@wille430/common'
 import { Button, Container, TextField } from '@wille430/ui'
-import Link from 'next/link'
 import Checkbox from '../Checkbox/Checkbox'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
@@ -19,9 +18,13 @@ export const SideFilters = () => {
                     <h4>Kategorier</h4>
                     <ul className='list-none'>
                         {categories.map((x) => (
-                            <li className='mx-2 hover:cursor-pointer'>
-                                {/* <Checkbox label={x.label} name={`category-${x.value}`} /> */}
-                                <Link href={navigateToCategoryUrl(x.value)}>{x.label}</Link>
+                            <li className='mx-2 hover:cursor-pointer' key={x.value}>
+                                <Checkbox
+                                    label={x.label}
+                                    name={`category-${x.value}`}
+                                    onClick={(val) => toggleCategory(x.value, val, setFilters)}
+                                    checked={filters.categories?.includes(x.value)}
+                                />
                             </li>
                         ))}
                     </ul>

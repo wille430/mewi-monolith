@@ -33,7 +33,7 @@ const WatcherCard = ({
         let pathname = '/sok'
 
         if (watcher.metadata.category) {
-            pathname = `/kategorier/${watcher.metadata.category}`.toLowerCase()
+            pathname = `/sok?categories=${watcher.metadata.category}`
         }
 
         router.push({
@@ -59,7 +59,7 @@ const WatcherCard = ({
     return (
         <div className={styles.watcherCardContainer} ref={scrollRef}>
             <article
-                className='flex flex-col rounded-md bg-white p-4 shadow-sm border-2'
+                className='flex flex-col rounded-md border-2 bg-white p-4 shadow-sm'
                 data-testid='watcherCard'
             >
                 {watcher.metadata.keyword && (

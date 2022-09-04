@@ -28,10 +28,10 @@ export const categoryIconMap: Record<Category, IconType> = {
 export const CategoryListItem = ({
     categoryKey,
     subCatIndex = 0,
-    parentTo = '/kategorier',
+    parentTo = '/sok',
     index = 0,
 }: Props) => {
-    const redirectUrl = `${parentTo}/${Category[categoryKey]}`.toLowerCase()
+    const redirectUrl = `${parentTo}?categories=${Category[categoryKey]}`
     const Icon = categoryIconMap[categoryKey]
 
     return (
@@ -55,7 +55,7 @@ export const CategoryListItem = ({
         >
             <Link href={redirectUrl} className='block w-32'>
                 <div className='cursor-pointer'>
-                    <Icon className='h-20 w-20 bg-primary rounded-full mx-auto p-4' color='white' />
+                    <Icon className='mx-auto h-20 w-20 rounded-full bg-primary p-4' color='white' />
                     <span className='block text-center'>{CategoryLabel[categoryKey]}</span>
                 </div>
             </Link>

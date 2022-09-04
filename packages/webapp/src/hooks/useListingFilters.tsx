@@ -9,6 +9,7 @@ import debounce from 'lodash/debounce'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import { ParsedUrlQuery } from 'querystring'
+import isString from 'lodash/isString'
 
 export interface ListingFiltersContext {
     filters: ListingFilters
@@ -202,7 +203,6 @@ export const parseSearchParams = (
     query: ParsedUrlQuery,
     excludeInParams: Array<keyof ListingFilters> = []
 ): ListingFilters => {
-    console.log(query, keys<ListingFilters>())
     const unvalidatedFilters: Partial<ListingFilters> = omit(
         pick(query, ...keys<ListingFilters>()),
         excludeInParams
@@ -223,8 +223,14 @@ export const parseSearchParams = (
                     validatedFilters[key] = true
                 }
                 break
-            case 'category':
-                if (value.toString().toUpperCase() in Category) validatedFilters[key] = value
+            case 'categories':
+                const categories = isString(value) ? value.split(',') : value
+
+                if (!validatedFilters.categories) validatedFilters.categories = []
+                for (const category of categories) {
+                    if (Object.keys(Category).includes(category))
+                        validatedFilters.categories.push(category as Category)
+                }
                 break
             case 'keyword':
             case 'region':
@@ -243,15 +249,11 @@ export const parseSearchParams = (
 }
 
 export const stringifySearchPath = (filters: ListingFilters) => {
-    const excludeFilters: (keyof ListingFilters)[] = ['category']
+    const excludeFilters: (keyof ListingFilters)[] = []
 
     const omittedFilters = omit(filters, excludeFilters)
 
     let path = '/sok'
-
-    if (filters.category) {
-        path = `/kategorier/${filters.category.toLowerCase()}`
-    }
 
     if (Object.keys(omittedFilters).length) {
         path += `?${queryString.stringify(omittedFilters)}`

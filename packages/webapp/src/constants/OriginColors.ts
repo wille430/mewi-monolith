@@ -27,8 +27,6 @@ export const getTextColor = (origin: ListingOrigin) => {
     const [r, g, b] = hexToRgb(getColor(origin))
     const luminance = relativeLuminance(r, g, b)
 
-    console.log('LUMINANCE', luminance)
-
     if (luminance < 0.5) {
         return '#fff'
     } else {

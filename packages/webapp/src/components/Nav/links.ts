@@ -24,7 +24,7 @@ export const links: NavLink[] = [
         href: '/kategorier',
         sublinks: Object.keys(Category).map((key) => ({
             label: CategoryLabel[key],
-            href: `/kategorier/${key.toLowerCase()}`,
+            href: `/sok?categories=${key}`,
         })),
     },
     {

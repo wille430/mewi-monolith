@@ -1,3 +1,4 @@
+import { toggleCategory } from '@/utils/toggleCategory'
 import { ListingSearchFilters, categories } from '@wille430/common'
 import { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
@@ -51,12 +52,10 @@ export const ListingFilters = ({
             <LabeledDropdown
                 label='Kategori'
                 name='category'
-                value={filters.category}
+                value={filters.categories}
                 onChange={(val) =>
-                    setFilters({
-                        ...filters,
-                        category: val,
-                    })
+                    // TODO: change dropdown to multi dropdown
+                    toggleCategory(val, true, setFilters)
                 }
                 options={categories}
                 data-testid='categorySelect'
