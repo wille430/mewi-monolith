@@ -53,12 +53,12 @@ body {
 }
 
 .basic-layout {
-    @apply max-width flex flex-col gap-4 p-4;
-    grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
+    @apply flex flex-col gap-4 p-4;
     margin: 0 auto;
     height: 100%;
 
     @screen xl {
+        grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
         display: grid;
         max-width: none;
         margin: none;
@@ -66,6 +66,19 @@ body {
 
     & > main {
         flex-grow: 1;
+    }
+}
+
+.search-layout {
+    @extend .basic-layout;
+
+    @screen md {
+        grid-template-columns: 16rem 1fr;
+        display: grid;
+    }
+
+    @screen xl {
+        grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
     }
 }
 
@@ -95,7 +108,7 @@ body {
     }
 
     &__heading {
-        @apply mb-1 text-base text-primary;
+        @apply text-primary mb-1 text-base;
     }
 
     &__text {

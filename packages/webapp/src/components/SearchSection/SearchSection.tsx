@@ -1,13 +1,10 @@
 import { ListingSearchFilters } from '@wille430/common'
-import { useEffect, useRef, useState } from 'react'
-import { Button } from '@wille430/ui'
+import { useEffect, useRef } from 'react'
 import isEqual from 'lodash/isEqual'
 import PageNav from '../PageNav/PageNav'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
 import { ListingPopUpContainer } from '../ListingPopUp/ListingPopUp'
-import ListingFiltersArea from '../ListingFiltersArea/ListingFiltersArea'
-import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { searchListings } from '@/store/listings'
 import { useListingFilters } from '@/hooks/useListingFilters'
@@ -19,10 +16,8 @@ export interface SearchSectionProps {
 
 export const SearchSection = () => {
     const lastFilters = useRef({})
-    const { filters, debouncedFilters, setFilters, defaults: defaultFilters } = useListingFilters()
+    const { debouncedFilters } = useListingFilters()
     const scrollUpRef = useRef<HTMLDivElement | null>(null)
-
-    const [error, setError] = useState('')
 
     const search = useAppSelector((state) => state.listings.search)
     const dispatch = useAppDispatch()
@@ -37,33 +32,6 @@ export const SearchSection = () => {
     return (
         <section className='flex h-full w-full flex-col'>
             <div ref={scrollUpRef} />
-            <ListingFiltersArea
-                {...{
-                    filters,
-                    setFilters,
-                    defaultFilters,
-                    footer: (
-                        <>
-                            <span className='text-red-400'>{error}</span>
-                            <CreateWatcherButton
-                                label='Bevaka sökning'
-                                variant='outlined'
-                                filters={filters}
-                                setError={setError}
-                                onSuccess={() => setError('')}
-                            />
-                            <Button
-                                label='Rensa'
-                                onClick={() =>
-                                    setFilters({
-                                        ...defaultFilters,
-                                    })
-                                }
-                            />
-                        </>
-                    ),
-                }}
-            />
             <div className='my-4 flex justify-between'>
                 <ListingResultText totalHits={search.totalHits} />
                 <SortButton />

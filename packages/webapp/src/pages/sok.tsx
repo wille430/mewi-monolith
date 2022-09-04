@@ -1,10 +1,10 @@
 import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { BasicLayout } from '@/components/BasicLayout/BasicLayout'
-import { CategorySideNav } from '@/components/CategorySideNav/CategorySideNav'
 import { SearchSection } from '@/components/SearchSection/SearchSection'
 import { ListingFiltersProvider } from '@/hooks/useListingFilters'
+import { SideFilters } from '@/components/SideFilters/SideFilters'
+import { Layout } from '@/components/Layout/Layout'
 
 const SearchPage = () => {
     const router = useRouter()
@@ -17,7 +17,7 @@ const SearchPage = () => {
 
             <ListingFiltersProvider>
                 <aside>
-                    <CategorySideNav />
+                    <SideFilters />
                 </aside>
                 <main>
                     <SearchSection />
@@ -28,6 +28,10 @@ const SearchPage = () => {
     )
 }
 
-SearchPage.getLayout = (component: ReactElement) => <BasicLayout>{component}</BasicLayout>
+SearchPage.getLayout = (component: ReactElement) => (
+    <Layout>
+        <div className='search-layout'>{component}</div>
+    </Layout>
+)
 
 export default SearchPage

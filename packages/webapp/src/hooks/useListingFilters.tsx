@@ -1,5 +1,5 @@
 import { ListingSearchFilters as ListingFilters } from '@wille430/common'
-import React, { useRef } from 'react'
+import React, { ChangeEvent, useRef } from 'react'
 import queryString from 'query-string'
 import { keys } from 'ts-transformer-keys'
 import Router, { useRouter } from 'next/router'
@@ -12,12 +12,14 @@ import { ParsedUrlQuery } from 'querystring'
 
 export interface ListingFiltersContext {
     filters: ListingFilters
+    setField: (e: ChangeEvent<HTMLInputElement>) => void
     setFilters: (
         value: Parameters<React.Dispatch<React.SetStateAction<ListingFilters>>>[0],
         force?: boolean
     ) => void
     debouncedFilters: ListingFilters
     defaults: Partial<ListingFilters>
+    clear: () => void
 }
 
 declare global {
@@ -141,6 +143,17 @@ export const ListingFiltersProvider = ({
         [filters.current]
     )
 
+    const setField = (e: ChangeEvent<HTMLInputElement>) => {
+        setFilters((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }))
+    }
+
+    const clear = () => {
+        setFilters(initialFilters)
+    }
+
     React.useEffect(() => {
         // Update filters from URL search params
         if (shouldUpdate()) {
@@ -168,7 +181,9 @@ export const ListingFiltersProvider = ({
                 filters: _filters,
                 debouncedFilters: filters.current,
                 setFilters,
+                setField,
                 defaults,
+                clear,
             }}
         >
             {children}

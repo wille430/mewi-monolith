@@ -10,7 +10,6 @@ export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElemen
 export const PriceRangeFilter = ({ gte, lte, onChange, ...rest }: PriceRangeFilterProps) => {
     return (
         <div {...rest}>
-            <label className='inline-block h-8'>Välj prisintervall:</label>
             <div className='flex flex-col space-y-3 text-black'>
                 <TextField
                     className='input'
