@@ -10,7 +10,9 @@ export const toggleCategory = (
     if (selected === true) {
         setFilters((prev) => ({
             ...prev,
-            categories: [...(prev.categories ?? []), cat],
+            categories: prev.categories?.includes(cat)
+                ? prev.categories
+                : [...(prev.categories ?? []), cat],
         }))
     } else {
         setFilters((prev) => ({

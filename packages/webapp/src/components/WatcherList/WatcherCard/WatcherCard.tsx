@@ -32,10 +32,6 @@ const WatcherCard = ({
         const filters = omit(watcher.metadata, ['category'])
         let pathname = '/sok'
 
-        if (watcher.metadata.category) {
-            pathname = `/sok?categories=${watcher.metadata.category}`
-        }
-
         router.push({
             pathname,
             search: queryString.stringify(filters),
@@ -79,10 +75,12 @@ const WatcherCard = ({
                             <div></div>
                         )}
 
-                        {watcher.metadata.category ? (
+                        {watcher.metadata.categories ? (
                             <div className='mr-6'>
-                                <label className='label'>Kategori:</label>
-                                <span>{CategoryLabel[watcher.metadata.category]}</span>
+                                <label className='label'>{watcher.metadata.categories.length > 1 ? 'Kategori:' : 'Kategorier:'}</label>
+                              {watcher.metadata.categories.map(cat => (
+                                <span className='mr-2'>{CategoryLabel[cat]}</span>
+                              ))}
                             </div>
                         ) : (
                             <div></div>

@@ -37,6 +37,7 @@ export const SideFilters = () => {
                                     <Checkbox
                                         label={x.label}
                                         name={`category-${x.value}`}
+                                        data-testid={`category-${x.value}`}
                                         onClick={(val) => toggleCategory(x.value, val, setFilters)}
                                         checked={filters.categories?.includes(x.value)}
                                     />
@@ -91,7 +92,6 @@ export const SideFilters = () => {
                     </div>
                 </div>
 
-                {/* TODO */}
                 <div className='flex flex-col justify-end space-y-2'>
                     <Button label='Rensa' onClick={clear} />
                     <CreateWatcherButton

@@ -2,6 +2,8 @@ import { ListingSearchFilters, regions } from '@wille430/common'
 import sampleSize from 'lodash/sampleSize'
 import queryString from 'query-string'
 import faker from '@faker-js/faker'
+import _ from 'lodash'
+import { Category } from '@mewi/prisma'
 
 describe('search', () => {
     describe('from /sok', () => {
@@ -11,27 +13,34 @@ describe('search', () => {
         beforeEach(() => {
             cy.visit('/sok')
 
+            const sampleCategories = sampleSize(
+                Object.keys(Category),
+                Math.floor(Math.random() * 4)
+            ) as Category[]
+
+            const sampleRegions = sampleSize(regions)
+                .map((regionOption) => regionOption.label)
+                .join(', ')
+
             formData = {
-                // TODO: test category sorting
-                region: sampleSize(regions)
-                    .map((regionOption) => regionOption.label)
-                    .join(', '),
+                region: sampleRegions,
+                categories: sampleCategories,
                 priceRangeGte: Math.round(Math.random() * 2000),
                 priceRangeLte: Math.round((1 + Math.random()) * 2000),
                 auction: Math.round(Math.random()) === 1 ? true : false,
             }
-
-            console.log('Filtering search with:', JSON.stringify(formData))
         })
 
         Cypress._.times(1, () => {
             it('can filter with randomized filters and search', () => {
-                // TODO: select category from category selection list
-                // TODO: insert multiple regions
-                for (const region of formData.region ?? []) {
-                    cy.getBySel('regionsSelect').type(region + ' {enter}')
+                for (const category of formData.categories ?? []) {
+                    cy.getBySel(`category-${category}`).check()
+                    cy.getBySel(`category-${category}`).should('be.checked')
+                }
 
-                    cy.getBySel('regionsSelect').contains(region)
+                if (formData.region) {
+                    cy.getBySel('regionInput').type(formData.region + '{enter}')
+                    cy.getBySel('regionInput').should('have.value', formData.region)
                 }
 
                 // Insert price range
@@ -58,7 +67,6 @@ describe('search', () => {
                 // validate url
                 cy.location().then((loc) => {
                     const parsedUrl: typeof formData = queryString.parse(loc.search)
-                    console.log('PARSED URL:', parsedUrl)
 
                     for (const key of Object.keys(formData)) {
                         const value = formData[key as keyof FormData]
@@ -69,15 +77,6 @@ describe('search', () => {
                         }
 
                         switch (key) {
-                            case 'regions':
-                                if (formData.region && typeof parsedUrl.region === 'string') {
-                                    expect(formData.region[0].toLowerCase()).to.equal(
-                                        parsedUrl[key]
-                                    )
-                                } else {
-                                    // TODO: validate if parsed url contains an array of regions
-                                }
-                                break
                             case 'priceRangeGte':
                                 expect(parsedUrl.priceRangeGte).to.equal(
                                     formData.priceRangeGte?.toString()
@@ -88,6 +87,22 @@ describe('search', () => {
                                     formData.priceRangeGte?.toString()
                                 )
                                 break
+                            case 'auction':
+                                if (formData.auction === true) {
+                                    expect(parsedUrl[key]).to.equal('true')
+                                } else {
+                                    expect(parsedUrl[key]).to.be.an('undefined')
+                                }
+                                break
+                            case 'categories':
+                                if (formData.categories?.length === 1) {
+                                    expect(parsedUrl.categories).to.be(value[0])
+                                } else if (formData.categories?.length ?? 0 > 0) {
+                                    expect(parsedUrl.categories).to.eql(value)
+                                } else {
+                                    expect(parsedUrl.categories).to.be.an('undefined')
+                                }
+                                break
                             default:
                                 expect(parsedUrl[key as keyof FormData]).to.equal(value.toString())
                         }
@@ -97,8 +112,6 @@ describe('search', () => {
         })
 
         it('redirects to login page if adding watcher without being logged in', () => {
-            // cy.getBySel('showFilters').click()
-
             cy.contains('BEVAKA SÖKNING').click()
             cy.url().should('contain', '/loggain')
         })
@@ -106,13 +119,9 @@ describe('search', () => {
         it('can add a watcher from current search', () => {
             cy.login()
 
-            // cy.getBySel('showFilters').click()
-
-            // Set filters
             cy.visit('/sok?' + queryString.stringify(formData))
 
             // wait for debounce
-            cy.wait(debounceWait)
             cy.wait(debounceWait)
 
             cy.getBySel('addWatcherButton').click()
@@ -120,8 +129,7 @@ describe('search', () => {
             // accept modal
             cy.getBySel('modalAccept').click()
 
-            // TODO: check success message
-            // cy.contains('Bevakningen lades till', { matchCase: false })
+            cy.contains('Bevakningen lades till', { matchCase: false })
         })
     })
 
