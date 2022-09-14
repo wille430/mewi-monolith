@@ -105,6 +105,8 @@ export const filterPipelineStage = (
             ]
         case 'limit':
             return [{ $limit: value }]
+        case 'origins':
+            return [{ $match: { origin: { $in: value } } }]
         default:
             return []
     }

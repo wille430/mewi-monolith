@@ -11,7 +11,7 @@ import {
     IsArray,
 } from 'class-validator'
 import { DEFAULT_LIMIT } from '../constants'
-import { Category } from '@mewi/prisma'
+import { Category, ListingOrigin } from '@mewi/prisma'
 import _ from 'lodash'
 
 export class FindAllListingsDto implements ListingSearchFilters {
@@ -65,4 +65,10 @@ export class FindAllListingsDto implements ListingSearchFilters {
     @IsEnum(ListingSort)
     @Transform(({ value }) => Number.parseInt(value))
     sort?: ListingSort
+
+    @IsOptional()
+    @IsArray()
+    @IsEnum(ListingOrigin, { each: true })
+    @Transform(({ value }) => (_.isString(value) ? value.split(',') : value))
+    origins?: ListingOrigin[]
 }

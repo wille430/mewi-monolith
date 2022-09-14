@@ -1,4 +1,4 @@
-import { toggleCategory } from '@/utils/toggleCategory'
+import { toggleCategory } from '@/utils/toggleFilters'
 import { ListingSearchFilters, categories } from '@wille430/common'
 import { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'

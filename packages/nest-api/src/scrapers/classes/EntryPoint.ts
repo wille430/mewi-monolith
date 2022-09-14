@@ -2,6 +2,7 @@ import { ListingScraper } from '@/scrapers/classes/ListingScraper'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import { ScrapeResult } from './types/ScrapeResult'
 import { ScrapeOptions } from './types/ScrapeOptions'
+import { AxiosResponse } from 'axios'
 
 export class EntryPoint extends BaseEntryPoint {
     scraper: ListingScraper
@@ -14,7 +15,17 @@ export class EntryPoint extends BaseEntryPoint {
             ...(await this.createConfig(page)),
         }
 
-        const res = await client(config)
+        let res: AxiosResponse
+        try {
+            res = await client(config)
+        } catch (e) {
+            console.error(e)
+            return {
+                continue: false,
+                listings: [],
+                page: -1,
+            }
+        }
 
         const data: any[] = this.scraper.extractRawListingsArray(res)
         const listings = data.map((o) => this.scraper.parseRawListing(o, this.createContext()))

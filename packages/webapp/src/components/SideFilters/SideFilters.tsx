@@ -1,10 +1,12 @@
 import { useListingFilters } from '@/hooks/useListingFilters'
-import { toggleCategory } from '@/utils/toggleCategory'
+import { toggleCategory, toggleOrigin } from '@/utils/toggleFilters'
+import { Category, ListingOrigin } from '@mewi/prisma/index-browser'
 import { categories } from '@wille430/common'
 import { Button, Container, TextField } from '@wille430/ui'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
+import { CheckboxList } from '../CheckboxList/CheckboxList'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 
@@ -31,19 +33,16 @@ export const SideFilters = () => {
                 <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:block md:space-y-4'>
                     <div>
                         <h4>Kategorier</h4>
-                        <ul className='list-none'>
-                            {categories.map((x) => (
-                                <li className='mx-2 hover:cursor-pointer' key={x.value}>
-                                    <Checkbox
-                                        label={x.label}
-                                        name={`category-${x.value}`}
-                                        data-testid={`category-${x.value}`}
-                                        onClick={(val) => toggleCategory(x.value, val, setFilters)}
-                                        checked={filters.categories?.includes(x.value)}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
+                        <CheckboxList
+                            list={categories.map(({ label, value }) => ({
+                                value: value,
+                                checked: filters.categories?.includes(value as Category),
+                                onClick: (val) =>
+                                    toggleCategory(value as Category, val, setFilters),
+                                label,
+                            }))}
+                            prefix='category'
+                        />
                     </div>
 
                     <div>
@@ -90,6 +89,18 @@ export const SideFilters = () => {
                             }
                         />
                     </div>
+                </div>
+
+                <div>
+                    <h4>Sajter</h4>
+                    <CheckboxList
+                        list={Object.keys(ListingOrigin).map((o) => ({
+                            value: o,
+                            checked: filters.origins?.includes(o as ListingOrigin),
+                            onClick: (val) => toggleOrigin(o as ListingOrigin, val, setFilters),
+                        }))}
+                        prefix='origin'
+                    />
                 </div>
 
                 <div className='flex flex-col justify-end space-y-2'>

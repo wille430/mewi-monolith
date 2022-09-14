@@ -1,4 +1,4 @@
-import { Watcher, Category } from '@mewi/prisma'
+import { Watcher, Category, ListingOrigin } from '@mewi/prisma'
 import { ListingSort } from './listingSort'
 
 type Metadata = Watcher['metadata']
@@ -13,4 +13,5 @@ export interface ListingSearchFilters extends Partial<Metadata> {
     dateGte?: Date
     page?: number
     sort?: ListingSort
+    origins?: ListingOrigin[]
 }

@@ -3,13 +3,15 @@ import React, { ChangeEvent, useRef } from 'react'
 import queryString from 'query-string'
 import { keys } from 'ts-transformer-keys'
 import Router, { useRouter } from 'next/router'
-import { Category } from '@mewi/prisma/index-browser'
+import { Category, ListingOrigin } from '@mewi/prisma/index-browser'
 import isEqual from 'lodash/isEqual'
 import debounce from 'lodash/debounce'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import { ParsedUrlQuery } from 'querystring'
 import isString from 'lodash/isString'
+import { parseSearchParamArray } from '@/utils/parseSearchParamArray'
+import { getValidEles } from '@/utils/getValidEles'
 
 export interface ListingFiltersContext {
     filters: ListingFilters
@@ -208,6 +210,8 @@ export const parseSearchParams = (
         excludeInParams
     )
 
+    console.log({ unvalidatedFilters })
+
     const validatedFilters: ListingFilters = {}
 
     for (const key of Object.keys(unvalidatedFilters)) {
@@ -224,13 +228,12 @@ export const parseSearchParams = (
                 }
                 break
             case 'categories':
-                const categories = isString(value) ? value.split(',') : value
-
-                if (!validatedFilters.categories) validatedFilters.categories = []
-                for (const category of categories) {
-                    if (Object.keys(Category).includes(category))
-                        validatedFilters.categories.push(category as Category)
-                }
+                const categories = parseSearchParamArray(value) as Category[]
+                validatedFilters.categories = getValidEles(categories, Object.keys(Category))
+                break
+            case 'origins':
+                const origins = parseSearchParamArray(value) as ListingOrigin[]
+                validatedFilters.origins = getValidEles(origins, Object.keys(ListingOrigin))
                 break
             case 'keyword':
             case 'region':
