@@ -66,8 +66,10 @@ export class SellpyScraper extends ListingScraper {
             redirectUrl: `https://sellpy.com/item/${item.objectID}`,
             price: item.pricing?.amount
                 ? {
-                      value: item.pricing.amount,
-                      currency: Currency.SEK,
+                      set: {
+                          value: item.pricing.amount,
+                          currency: Currency.SEK,
+                      },
                   }
                 : undefined,
             origin: ListingOrigin.Sellpy,

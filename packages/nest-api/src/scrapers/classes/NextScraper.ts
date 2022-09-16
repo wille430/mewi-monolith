@@ -1,16 +1,20 @@
 import { AxiosInstance } from 'axios'
 import puppeteer from 'puppeteer'
+import { getNextDataEval } from '../helpers/getNextData'
 import { ListingScraper } from './ListingScraper'
 
 export abstract class NextScraper extends ListingScraper {
-    private buildId: string
+    private buildId: string | undefined
     useRobots = false
 
     async createAxiosInstance(): Promise<AxiosInstance> {
         const client = await super.createAxiosInstance()
 
         client.interceptors.request.use(async (req) => {
-            req.url = req.url.replace('{buildId}', await this.getBuildId())
+            if (req.url) {
+                req.url = req.url.replace('{buildId}', await this.getBuildId())
+            }
+
             return req
         })
 
@@ -29,15 +33,10 @@ export abstract class NextScraper extends ListingScraper {
                 const page = await browser.newPage()
                 await page.goto(this.baseUrl)
 
-                token = await page.evaluate(() => {
-                    const text = document.querySelector('#__NEXT_DATA__').textContent
-                    const json: Record<any, any> = JSON.parse(text)
-
-                    return json.buildId
-                })
+                token = (await getNextDataEval(page).then((res) => res.buildId)) as string
                 this.buildId = token
             } catch (e) {
-                throw new Error(`Could not retrieve build id from ${this.baseUrl}`)
+                throw new Error(`Could not retrieve build id from ${this.baseUrl}. Reason: ${e}`)
             } finally {
                 await browser.close()
             }

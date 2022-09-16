@@ -10,6 +10,7 @@ import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 import { EmailService } from '@/email/email.service'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ListingsService } from '@/listings/listings.service'
+import { ListingSearchFilters } from '@wille430/common'
 
 @Injectable()
 export class WatchersService {
@@ -59,11 +60,10 @@ export class WatchersService {
     @Cron('* * 9 * * *')
     async notifyAll() {
         const watcherCount = await this.prisma.watcher.count()
-        let watcher: Watcher | null
 
         let i = 0
         while (watcherCount > i) {
-            watcher = await this.prisma.watcher.findFirst({
+            const watcher = await this.prisma.watcher.findFirst({
                 skip: i,
                 orderBy: { id: 'asc' },
             })
@@ -128,7 +128,9 @@ export class WatchersService {
 
         const user = (await this.prisma.user.findUnique({ where: { id: userId } })) as User
 
-        const pipeline = this.listingService.metadataToPL(watcher.metadata)
+        const pipeline = this.listingService.metadataToPL(
+            watcher.metadata as Partial<ListingSearchFilters>
+        )
 
         const newListings = await this.newListings(pipeline)
 
@@ -148,7 +150,7 @@ export class WatchersService {
                             { $count: 'totalHits' },
                         ],
                     })
-                    .then((res) => (res as unknown)[0]?.totalHits ?? 0),
+                    .then((res) => (res as any)[0]?.totalHits ?? 0),
                 keyword: watcher.metadata.keyword,
                 items: newListings,
             }

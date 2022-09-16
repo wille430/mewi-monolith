@@ -1,8 +1,8 @@
 import { Category } from '@mewi/prisma'
 
-export const parseTraderaCategories = (category: string): Category => {
-    return traderaKeyValuePair[category] || []
-}
+// export const parseTraderaCategories = (category: string): Category => {
+//     return traderaKeyValuePair[category] || []
+// }
 
 const traderaKeyValuePair = {
     Accessoarer: ['personligt', 'accessoarer_klockor'],

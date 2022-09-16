@@ -1,4 +1,4 @@
-import { ScraperStatus, stringSimilarity } from '@wille430/common'
+import { ScraperStatus, stringSimilarity, safeToDate } from '@wille430/common'
 import { Prisma, ListingOrigin, Category, ScraperTrigger } from '@mewi/prisma'
 import crypto from 'crypto'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
@@ -8,6 +8,8 @@ import { WatchOptions } from './types/WatchOptions'
 import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ConfigService } from '@nestjs/config'
+import { DefaultStartOptions } from '../types/defaultStartOptions'
+import { ScraperStopFunction, scraperStopFunction } from '../helpers/scraperStopFunction'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -29,7 +31,7 @@ export abstract class BaseListingScraper {
     }
     readonly deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
 
-    defaultStartOptions: Partial<StartScraperOptions> = {
+    defaultStartOptions: DefaultStartOptions = {
         watchOptions: {
             findFirst: 'date',
         },
@@ -50,15 +52,18 @@ export abstract class BaseListingScraper {
         )
     }
 
-    async start(options: Partial<StartScraperOptions> = {}) {
+    async start(_options: Partial<StartScraperOptions> = this.defaultStartOptions) {
         if (!this.initialized) await this.initialize()
 
-        options = {
+        const options = {
             triggeredBy: ScraperTrigger.Scheduled,
-            scrapeCount: this.getConfig('limit'),
+            scrapeCount: this.getConfig<number>('limit'),
             ...this.defaultStartOptions,
-            ...options,
         }
+
+        Object.assign(options, _options)
+
+        const { watchOptions, scrapeCount } = options
 
         this.status = ScraperStatus.SCRAPING
 
@@ -68,19 +73,20 @@ export abstract class BaseListingScraper {
         this.log(`Scraping listings from ${this.entryPoints.length} entry points`)
         for (const entryPoint of this.entryPoints) {
             let shouldContinue = true
-            let scrapeCount = 0
-            let maxScrapeCount = options.scrapeCount
-                ? Math.floor(options.scrapeCount / this.entryPoints.length)
+            let targetScrapeCount = 0
+            let maxScrapeCount = scrapeCount
+                ? Math.floor(scrapeCount / this.entryPoints.length)
                 : undefined
             let scrapeToValue: string | Date | undefined
 
             const recentLog = await entryPoint.getMostRecentLog()
-            let findIndexValue: string | Date
+            let findIndexValue: string | Date | undefined
 
-            if (options.watchOptions.findFirst === 'date') {
-                findIndexValue = recentLog?.scrapeToDate
-            } else if (options.watchOptions.findFirst === 'origin_id') {
-                findIndexValue = recentLog?.scrapeToId
+            const findFirst = watchOptions?.findFirst
+            if (findFirst === 'date' && recentLog?.scrapeToDate) {
+                findIndexValue = recentLog.scrapeToDate.toString()
+            } else if (findFirst === 'origin_id' && recentLog?.scrapeToId) {
+                findIndexValue = recentLog.scrapeToId.toString()
             }
 
             let totalPageCount: number | undefined
@@ -93,16 +99,14 @@ export abstract class BaseListingScraper {
                 } `
             )
 
-            let findIndex = undefined
+            let findIndex = scraperStopFunction(watchOptions.findFirst, findIndexValue)
+
+            // This block is only used for logging
             if (findIndexValue) {
-                if (options.watchOptions.findFirst === 'date') {
+                if (watchOptions?.findFirst === 'date') {
                     process.stdout.write(`created after ${findIndexValue}`)
-                    findIndex = (o) =>
-                        new Date(o.date).getTime() <=
-                        ((findIndexValue as Date) ?? new Date(0)).getTime()
-                } else if (options.watchOptions.findFirst === 'origin_id') {
+                } else if (options.watchOptions?.findFirst === 'origin_id') {
                     process.stdout.write(`until listing with origin_id ${findIndexValue} is found`)
-                    findIndex = (o) => o.origin_id === findIndexValue
                 }
             } else {
                 process.stdout.write('until last page or max scrape count reached')
@@ -123,7 +127,11 @@ export abstract class BaseListingScraper {
                 })
 
                 if (page == 1 && listings.length > 0) {
-                    scrapeToValue = listings[0][options.watchOptions.findFirst]
+                    scrapeToValue =
+                        listings[0][
+                            watchOptions?.findFirst ??
+                                this.defaultStartOptions.watchOptions.findFirst
+                        ]
                 }
 
                 totalPageCount = maxPages
@@ -146,8 +154,9 @@ export abstract class BaseListingScraper {
                     const { count } = await this.prisma.listing.createMany({
                         data: batch.map((o) => ({ ...o, entryPoint: entryPoint.identifier })),
                     })
-                    scrapeCount += count
-                    maxScrapeCount -= count
+                    targetScrapeCount += count
+
+                    if (maxScrapeCount) maxScrapeCount -= count
                 }
 
                 if (totalPageCount && page > totalPageCount) {
@@ -158,7 +167,7 @@ export abstract class BaseListingScraper {
                 }
             }
 
-            totalScrapedCount += scrapeCount
+            totalScrapedCount += targetScrapeCount
             if (options.onNextEntryPoint) options.onNextEntryPoint()
 
             this.log(
@@ -227,10 +236,12 @@ export abstract class BaseListingScraper {
     }
 
     stringToCategoryMap: Record<string, Category> = {}
-    parseCategory(string: string): Category {
+    parseCategory(_string: string): Category {
+        const string = _string.toUpperCase()
         if (this.stringToCategoryMap[string]) return this.stringToCategoryMap[string]
 
-        if (Category[string.toUpperCase()]) return string.toUpperCase() as Category
+        if (string in Category && Category[string as Category] != null)
+            return string.toUpperCase() as Category
 
         for (const category of Object.values(Category)) {
             const similarity = stringSimilarity(category, string) * 2

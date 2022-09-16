@@ -53,7 +53,7 @@ export abstract class BaseEntryPoint {
         let shouldContinue = true
         const maxPages = this.scraper.getTotalPages(res)
 
-        if (options.maxScrapeCount < listings.length) {
+        if (options.maxScrapeCount && options.maxScrapeCount < listings.length) {
             listings = listings.splice(0, options.maxScrapeCount)
             shouldContinue = false
         }

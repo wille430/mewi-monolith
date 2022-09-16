@@ -28,7 +28,7 @@ export class FindAllListingsDto implements ListingSearchFilters {
     @IsOptional()
     @IsString()
     // TODO: transform
-    region: string
+    region?: string
 
     @IsOptional()
     @IsArray()

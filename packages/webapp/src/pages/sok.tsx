@@ -5,6 +5,7 @@ import { SearchSection } from '@/components/SearchSection/SearchSection'
 import { ListingFiltersProvider } from '@/hooks/useListingFilters'
 import { SideFilters } from '@/components/SideFilters/SideFilters'
 import { Layout } from '@/components/Layout/Layout'
+import { SearchInput } from '@/components/SearchInput/SearchInput'
 
 const SearchPage = () => {
     const router = useRouter()
@@ -20,6 +21,8 @@ const SearchPage = () => {
                     <SideFilters />
                 </aside>
                 <main>
+                    <SearchInput className='border-2 border-r-0' />
+
                     <SearchSection />
                 </main>
                 <aside />

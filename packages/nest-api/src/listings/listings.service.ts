@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { Listing, Prisma } from '@mewi/prisma'
 import { omit } from 'lodash'
 import { UpdateListingDto } from './dto/update-listing.dto'
@@ -55,8 +55,6 @@ export class ListingsService {
         pushStages(FIRST_PL_STAGES)
         pushStages(ANY_ORDER_STAGES)
         pushStages(LAST_PL_STAGES)
-
-        console.log(pipeline)
 
         if (!dto.sort && dto.keyword) {
             pipeline.push({ $sort: { score: -1 } })
@@ -124,6 +122,8 @@ export class ListingsService {
         // Check if user already has liked the listing
         const listing = await this.prisma.listing.findUnique({ where: { id: listingId } })
 
+        if (!listing) throw new NotFoundException()
+
         if (listing.likedByUserIDs.includes(userId)) {
             return listing
         } else {
@@ -143,6 +143,8 @@ export class ListingsService {
     async unlike(userId: string, listingId: string) {
         // Check if user already has liked the listing
         const listing = await this.prisma.listing.findUnique({ where: { id: listingId } })
+        if (!listing) throw new NotFoundException()
+
         const likedByUserIDs = listing.likedByUserIDs.filter((x) => x != userId)
 
         return await this.prisma.listing.update({

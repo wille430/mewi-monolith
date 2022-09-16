@@ -29,7 +29,7 @@ import { UserPayload } from '@/auth/jwt-strategy'
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ListingsController {
     constructor(private readonly listingsService: ListingsService) {}
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(CACHE_MANAGER) private cacheManager!: Cache
 
     @Post()
     @Roles(Role.ADMIN)

@@ -8,42 +8,42 @@ import { IsPassword } from '@/common/decorators/password.decorator'
 export class ChangePasswordNoAuth {
     @IsString()
     @IsEmail()
-    email: string
+    email!: string
 }
 
 export class ChangePasswordAuth extends PickType(SignUpDto, ['passwordConfirm', 'password']) {
     @Expose({ groups: ['user'] })
-    password: string
+    password!: string
 
-    passwordConfirm: string
+    passwordConfirm!: string
 }
 
 export class ChangePasswordWithToken extends ChangePasswordAuth {
     @IsString()
-    token: string
+    token!: string
 
     @IsEmail()
-    email: string
+    email!: string
 }
 
 export default class ChangePasswordDto {
     @ValidateIf((obj) => obj.passwordConfirm && obj.token)
     @IsPassword()
-    password: string
+    password!: string
 
     @ValidateIf((obj) => obj.password && obj.token)
     @IsString()
     @MinLength(8)
     @MaxLength(20)
     @Match('password', { message: 'passwords must match' })
-    passwordConfirm: string
+    passwordConfirm!: string
 
     @ValidateIf((obj) => !obj.password && !obj.passwordConfirm)
     @IsString()
     @IsEmail()
-    email: string
+    email!: string
 
     @IsString()
     @ValidateIf((obj) => false)
-    token: string
+    token!: string
 }

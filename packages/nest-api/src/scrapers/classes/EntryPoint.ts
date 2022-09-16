@@ -5,7 +5,7 @@ import { ScrapeOptions } from './types/ScrapeOptions'
 import { AxiosResponse } from 'axios'
 
 export class EntryPoint extends BaseEntryPoint {
-    scraper: ListingScraper
+    scraper!: ListingScraper
 
     async scrape(page: number, options: ScrapeOptions = {}): Promise<ScrapeResult> {
         const client = await this.scraper.createAxiosInstance()

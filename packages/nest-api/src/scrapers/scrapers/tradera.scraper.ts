@@ -4,7 +4,6 @@ import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
-import { StartScraperOptions } from '../types/startScraperOptions'
 import { ConfigService } from '@nestjs/config'
 
 interface TraderaCategory {
@@ -23,13 +22,13 @@ export class TraderaScraper extends ListingScraper {
     currentCategoryIndex = 0
     categories: TraderaCategory[] | undefined
 
-    itemsPerCategory: number
+    itemsPerCategory!: number
     limit = 50
 
     baseUrl = 'https://www.tradera.com/'
     origin: ListingOrigin = ListingOrigin.Tradera
 
-    createScrapeUrl = (category: string, page) => {
+    createScrapeUrl = (category: string, page: number) => {
         return `https://www.tradera.com${category}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`
     }
 
@@ -52,14 +51,22 @@ export class TraderaScraper extends ListingScraper {
         this.log('Fetching categories and updating entry points...')
         this.categories = await this.getCategories()
 
-        this.categories.forEach((o, i) => {
+        this.categories.forEach((o, i) => {})
+
+        for (const category of this.categories) {
+            if (!category.href == null) {
+                throw new Error(
+                    `Href to Tradera ${category.id} is undefined. Could not create entrypoint for category.`
+                )
+            }
+
             this.createEntryPoint(
                 (p) => ({
-                    url: this.createScrapeUrl(o.href, p),
+                    url: this.createScrapeUrl(category.href!, p),
                 }),
-                o.href
+                category.href
             )
-        })
+        }
     }
 
     getTotalPages(res: AxiosResponse): number {
@@ -78,7 +85,7 @@ export class TraderaScraper extends ListingScraper {
             origin_id: this.createId(item.itemId.toString()),
             title: item.shortDescription,
             category: this.parseCategories(
-                (this.categories ?? {})[this.currentCategoryIndex].title
+                (this.categories ?? [])[this.currentCategoryIndex].title
             ),
             date: item.startDate ? new Date(item.startDate) : new Date(),
             auctionEnd: new Date(item.endDate),

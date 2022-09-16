@@ -1,49 +1,49 @@
-import { Category, Currency, Listing, ListingOrigin } from '@mewi/prisma'
+import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 
-export class CreateListingDto implements Listing {
-    id: string
+export class CreateListingDto implements Prisma.ListingCreateInput {
+    id!: string
 
     @IsString()
-    origin_id: string
+    origin_id!: string
 
     @IsString()
-    title: string
+    title!: string
 
     @IsString()
-    body: string
+    body!: string
 
     @IsArray()
     @IsString({ each: true })
     @IsEnum(Category)
-    category: Category
+    category!: Category
 
     @IsDate()
-    date: Date
+    date!: Date
 
     @IsString()
-    redirectUrl: string
+    redirectUrl!: string
 
     @IsString({ each: true })
-    imageUrl: string[]
+    imageUrl!: string[]
 
     // TODO: check object props
     @IsObject()
-    price: {
+    price!: {
         value: number
         currency: Currency
     }
 
     @IsString()
-    region: string
+    region!: string
 
     // TODO: check object props
     @IsArray()
     @IsObject({ each: true })
-    parameters: { id: string; label: string; value: string }[]
+    parameters!: { id: string; label: string; value: string }[]
 
     @IsEnum(ListingOrigin)
-    origin: ListingOrigin
+    origin!: ListingOrigin
 
     @IsBoolean()
     @IsOptional()
@@ -51,11 +51,11 @@ export class CreateListingDto implements Listing {
 
     @IsOptional()
     @IsDate()
-    auctionEnd: Date
+    auctionEnd!: Date
 
     likedByUserIDs: string[] = []
 
     @IsOptional()
     @IsString()
-    entryPoint: string | null
+    entryPoint!: string
 }

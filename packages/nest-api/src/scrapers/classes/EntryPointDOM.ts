@@ -5,7 +5,7 @@ import { ScrapeOptions } from './types/ScrapeOptions'
 import { ScrapeResult } from './types/ScrapeResult'
 
 export class EntryPointDOM extends BaseEntryPoint {
-    scraper: ListingWebCrawler
+    scraper!: ListingWebCrawler
 
     async scrape(pageNumber: number, options: ScrapeOptions = {}): Promise<ScrapeResult> {
         // Instantiate puppeteer
@@ -15,7 +15,11 @@ export class EntryPointDOM extends BaseEntryPoint {
 
         try {
             const page = await browser.newPage()
-            await page.goto((await this.createConfig(pageNumber)).url)
+            const config = await this.createConfig(pageNumber)
+
+            if (!config.url) throw new Error('config createConfig contains no property named url')
+
+            await page.goto(config.url)
 
             const items = await page.$$(this.scraper.listingSelector)
 

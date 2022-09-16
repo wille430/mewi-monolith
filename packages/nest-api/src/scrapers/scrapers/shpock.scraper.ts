@@ -6,6 +6,7 @@ import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { getNextDataEval } from '../helpers/getNextData'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
@@ -65,16 +66,14 @@ export class ShpockScraper extends ListingScraper {
             try {
                 // fetch token
                 const page = await browser.newPage()
-                await page.goto(new URL('/en-gb/results', this.baseUrl).toString())
+                const url = new URL('/en-gb/results', this.baseUrl).toString()
+                await page.goto(url)
 
-                const token = await page.evaluate(() => {
-                    const text = document.querySelector('#__NEXT_DATA__').textContent
-                    const json = JSON.parse(text)
-
-                    return json.props.pageProps.apolloState.ROOT_QUERY[
+                const nextData = await getNextDataEval(page)
+                const token =
+                    nextData.props.pageProps.apolloState.ROOT_QUERY[
                         'itemSearch({"pagination":{"limit":40},"serializedFilters":"{}","trackingSource":"Search"})'
                     ].od
-                })
 
                 await browser.close()
                 this._token = token
@@ -104,7 +103,7 @@ export class ShpockScraper extends ListingScraper {
             // category: await this.parseCategory(item.category[0]),
             category: Category.OVRIGT,
             date: new Date(),
-            imageUrl: item.media.map((o) => `https://webimg.secondhandapp.at/w-i-m/${o.id}`),
+            imageUrl: item.media.map((o: any) => `https://webimg.secondhandapp.at/w-i-m/${o.id}`),
             redirectUrl: item.canonicalURL,
             isAuction: false,
             price: item.price

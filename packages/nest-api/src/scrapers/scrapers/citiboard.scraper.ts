@@ -32,17 +32,24 @@ export class CitiboardScraper extends ListingWebCrawler {
     createScrapeUrl = (page: number) => this.defaultScrapeUrl + `?offset=${(page - 1) * this.limit}`
 
     async evalParseRawListing(ele: ElementHandle<Element>, context: ScrapeContext) {
-        const listing: any = await ele.evaluate(async (ele) => ({
-            origin_id: ele.getAttribute('id'),
-            title: ele.querySelector('meta').content,
-            imageUrl: [ele.querySelector('.picture img').getAttribute('src')],
-            redirectUrl: ele.querySelector('.gridTitle a').getAttribute('href'),
-            isAuction: false,
-            price: ele.querySelector('.gridPrice') && {
-                value: parseFloat(ele.querySelector('.gridPrice').textContent),
-            },
-            region: ele.querySelector('.gridLocation span').textContent,
-        }))
+        const listing: any = await ele.evaluate(async (ele) => {
+            const imageUrl = ele.querySelector('.picture img')?.getAttribute('src')
+            const priceString = ele.querySelector('.gridPrice')?.textContent
+
+            return {
+                origin_id: ele.getAttribute('id'),
+                title: ele.querySelector('meta')?.content,
+                imageUrl: imageUrl ? [imageUrl] : undefined,
+                redirectUrl: ele.querySelector('.gridTitle a')?.getAttribute('href'),
+                isAuction: false,
+                price: priceString
+                    ? {
+                          value: parseFloat(priceString),
+                      }
+                    : undefined,
+                region: ele.querySelector('.gridLocation span')?.textContent,
+            }
+        })
 
         return {
             ...listing,

@@ -8,10 +8,10 @@ export class Metadata extends OmitType(FindAllListingsDto, ['page', 'limit', 'so
 export class CreateUserWatcherDto {
     @IsOptional()
     @IsMongoId()
-    userId: string
+    userId!: string
 
     @IsObject()
     @ValidateNested()
     @Type(() => Metadata)
-    metadata: Metadata
+    metadata!: Metadata
 }

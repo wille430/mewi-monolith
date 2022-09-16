@@ -63,7 +63,7 @@ describe('mocked scrapers', () => {
 
         beforeEach(async () => {
             scraper = scrapers[index]
-            scraper2 = _.sample(scrapers.filter((x) => x.origin !== scraper.origin))
+            scraper2 = _.sample(scrapers.filter((x) => x.origin !== scraper.origin))!
 
             await scraper.initialize()
 

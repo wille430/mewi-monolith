@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import bcrypt from 'bcryptjs'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
@@ -39,7 +39,7 @@ export class UsersService {
         })
     }
 
-    async findOne(id: string): Promise<User> | null {
+    async findOne(id: string): Promise<User | null> {
         return await this.prisma.user.findFirst({
             where: { id: id },
         })
@@ -88,9 +88,11 @@ export class UsersService {
     }: ChangePasswordWithToken) {
         if (password === passwordConfirm) {
             const user = await this.prisma.user.findFirst({ where: { email } })
-            if (!user) return
+            if (!user) throw new NotFoundException()
+            if (!user.passwordReset)
+                throw new BadRequestException('User has no pending password reset')
 
-            console.log(`Comparing ${token} and ${user.passwordReset.tokenHash}`)
+            console.log(`Comparing ${token} and ${user.passwordReset?.tokenHash}`)
 
             if (
                 user.passwordReset &&

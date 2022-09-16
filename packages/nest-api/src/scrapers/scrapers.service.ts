@@ -65,8 +65,12 @@ export class ScrapersService {
         const totalScrapers = this.scraperPipeline.length
 
         const startScraperNext = async () => {
-            const [name, args] = this.scraperPipeline.shift()
-            this.pipelineIndex += 1
+            const arr = this.scraperPipeline.shift()
+            if (!arr)
+                throw new Error('startScraperNext: Cannot get next scraper. No scrapers in queue!')
+
+            const [name, args] = arr
+            this.pipelineIndex! += 1
 
             const scraper = this.scrapers[name]
 
@@ -146,7 +150,7 @@ export class ScrapersService {
         }
     }
 
-    private scraperIndex: number
+    private scraperIndex!: number
     /**
      * Call start method on the next scraper. Decorated with cronjob to execute start method on a scraper every 5 minutes.
      */
@@ -157,7 +161,7 @@ export class ScrapersService {
         }
 
         const scraper: BaseListingScraper =
-            this.scrapers[Object.keys(this.scrapers)[this.scraperIndex]]
+            this.scrapers[Object.keys(this.scrapers)[this.scraperIndex] as ListingOrigin]
         if (scraper.status === ScraperStatus.IDLE) {
             this.scraperIndex += 1
             this.scraperIndex %= Object.keys(this.scrapers).length
@@ -201,10 +205,10 @@ export class ScrapersService {
     }
 
     async status(): Promise<Record<ListingOrigin, ScraperStatusReport>> {
-        const allScraperStatus: Partial<ReturnType<typeof this.status>> = {}
+        const allScraperStatus: Partial<Awaited<ReturnType<typeof this.status>>> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
-            allScraperStatus[key] = await this.statusOf(key as ListingOrigin)
+            allScraperStatus[key as ListingOrigin] = await this.statusOf(key as ListingOrigin)
         }
 
         return allScraperStatus as ReturnType<typeof this.status>
@@ -223,7 +227,7 @@ export class ScrapersService {
             started: scraper.status === ScraperStatus.SCRAPING,
             listings_current: listingCount,
             status: scraper.status,
-            listings_remaining: scraper.getConfig<number>('limit') - listingCount,
+            listings_remaining: scraper.getConfig<number>('limit') ?? 0 - listingCount,
             last_scraped: await this.prisma.scrapingLog
                 .findFirst({
                     where: {

@@ -16,7 +16,7 @@
         "isolatedModules": true,
         "allowJs": true,
         "lib": ["es2019", "dom"],
-        "strict": false,
+        "strict": true,
         "paths": {
             "@/*": ["./src/*"]
         }

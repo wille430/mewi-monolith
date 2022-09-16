@@ -4,10 +4,10 @@ import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validato
 export class CreateUserDto implements Partial<User> {
     @IsEmail()
     @IsNotEmpty()
-    email: string
+    email!: string
 
     @IsNotEmpty()
-    password: string
+    password!: string
 
     @IsOptional()
     @IsArray()

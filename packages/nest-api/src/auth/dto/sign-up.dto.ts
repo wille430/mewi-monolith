@@ -7,14 +7,14 @@ export default class SignUpDto {
     @IsEmail()
     @IsNotEmpty()
     @Validate(UniqueEmailRule)
-    email: string
+    email!: string
 
     @IsPassword()
-    password: string
+    password!: string
 
     @IsString()
     @MinLength(8)
     @MaxLength(20)
     @Match('password', { message: 'passwords must match' })
-    passwordConfirm: string
+    passwordConfirm!: string
 }

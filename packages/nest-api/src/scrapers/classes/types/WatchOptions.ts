@@ -1,3 +1,5 @@
+import { ScrapePredicate } from './ScrapePredicate'
+
 export type WatchOptions = {
-    findFirst: 'origin_id' | 'date'
+    findFirst: ScrapePredicate
 }

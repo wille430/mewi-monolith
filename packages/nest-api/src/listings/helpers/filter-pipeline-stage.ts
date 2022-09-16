@@ -80,15 +80,15 @@ export const filterPipelineStage = (
         case 'region':
             const regions = value
                 .split(/(\.|,| )? /i)
-                .filter((x) => !!x && !new RegExp(/^,$/).test(x))
-                .map((x) => x.trim())
+                .filter((x: string) => !!x && !new RegExp(/^,$/).test(x))
+                .map((x: string) => x.trim())
 
             return [
                 {
                     $match: {
                         region: {
                             $regex: (`^` +
-                                regions.map((reg) => '(?=.*\\b' + reg + '\\b)').join('') +
+                                regions.map((reg: any) => '(?=.*\\b' + reg + '\\b)').join('') +
                                 '.+') as any,
                             $options: 'i',
                         },

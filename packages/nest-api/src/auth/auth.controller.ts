@@ -10,8 +10,7 @@ import {
     HttpException,
     HttpStatus,
 } from '@nestjs/common'
-import { Request as ReqObj } from 'express'
-import { Response } from 'express'
+import { Request as ReqObj, Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@mewi/prisma'
 import { REFRESH_TOKEN_COOKIE } from '@wille430/common'
@@ -79,7 +78,7 @@ export class AuthController {
 
     @Get('google/redirect')
     @UseGuards(GoogleAuthGuard)
-    async googleCallback(@Req() req, @Res() res: Response) {
+    async googleCallback(@Req() req: ReqObj, @Res() res: Response) {
         const authTokens = await this.authService.googleLogin(req)
 
         const redirectUrl =

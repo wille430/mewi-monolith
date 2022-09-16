@@ -77,10 +77,7 @@ export class AuthService {
         const user = await this.prisma.user.findFirst({
             where: { email: payload.email },
         })
-
-        if (!user) {
-            return null
-        }
+        if (!user) throw new NotFoundException()
 
         return this.createTokens(user)
     }

@@ -1,6 +1,6 @@
 import { Role } from '@mewi/prisma'
 
-export const userMiddleware = async (params, next) => {
+export const userMiddleware = async (params: any, next: any) => {
     if (params.model === 'User' && params.action === 'create') {
         if (!params.args.data.roles) {
             params.args.data.roles = []

@@ -147,6 +147,8 @@ type Metadata {
     priceRangeGte Int?
     priceRangeLte Int?
     dateGte       DateTime?
+
+    origins ListingOrigin[]
 }
 
 enum Category {

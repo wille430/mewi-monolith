@@ -6,15 +6,15 @@ export class UpdateEmailDto {
     @ValidateIf((obj) => !obj.token)
     @IsEmail()
     @Validate(UniqueEmailRule)
-    newEmail: string
+    newEmail!: string
 
     @ValidateIf((obj) => obj.token)
     @IsString()
     @IsEmail()
-    oldEmail: string
+    oldEmail!: string
 
     @ValidateIf((obj) => obj.oldEmail)
-    token: string
+    token!: string
 }
 
 export class AuthorizedUpdateEmailDto extends PickType(UpdateEmailDto, ['token', 'oldEmail']) {}

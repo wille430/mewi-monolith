@@ -7,6 +7,7 @@ import { ListingScraper } from '../classes/ListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { getNextData } from '../helpers/getNextData'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -38,23 +39,9 @@ export class BlocketScraper extends ListingScraper {
         const maxTries = 3
         while (tries < maxTries) {
             try {
-                const { data } = await axios.get(this.baseUrl)
-
-                const dom = new JSDOM(data)
-                const { document } = dom.window
-                const bearerNode = document.querySelector(
-                    'script#__NEXT_DATA__[type="application/json"]'
-                )
-
-                const textContent = bearerNode?.textContent
-
-                if (!textContent) {
-                    throw new Error('Could not find bearer token in DOM')
-                } else {
-                    const token =
-                        JSON.parse(textContent).props.initialReduxState.authentication.bearerToken
-                    return token
-                }
+                const nextData = await getNextData(this.baseUrl)
+                const token = nextData.props.initialReduxState.authentication.bearerToken
+                return token
             } catch (e) {
                 if (tries === maxTries) throw e
                 tries += 1
@@ -111,7 +98,9 @@ export class BlocketScraper extends ListingScraper {
             category: this.parseCategory(item.category[0].name),
             date: new Date(item.list_time),
             imageUrl: item.images
-                ? item.images.map((img) => img.url + '?type=mob_iphone_vi_normal_retina')
+                ? item.images.map(
+                      (img: { url: string }) => img.url + '?type=mob_iphone_vi_normal_retina'
+                  )
                 : [],
             redirectUrl: item.share_url,
             isAuction: false,

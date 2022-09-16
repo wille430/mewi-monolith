@@ -32,7 +32,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         })
         const ids = await model
             .aggregateRaw(args)
-            .then((o) => (o[0] ? o[0]['array'].map((o) => o.$oid) : []))
+            .then((o: any) => (o[0] ? o[0]['array'].map((o: any) => o.$oid) : []))
 
         const items: any[] =
             (await model.findMany({
@@ -41,6 +41,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
                 },
             })) ?? []
 
-        return ids.map((x) => items.find((y) => y.id === x))
+        return ids.map((x: any) => items.find((y) => y.id === x))
     }
 }

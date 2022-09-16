@@ -8,5 +8,5 @@ export class StartOneScraperDto {
             .join('|')}$`,
         'i'
     )
-    scraperName: ListingOrigin
+    scraperName!: ListingOrigin
 }

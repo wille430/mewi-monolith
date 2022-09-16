@@ -10,7 +10,14 @@ export const Hero = () => {
                 </div>
                 <div className={style['search-box']}>
                     <h3>Hitta begagnade produkter på ett enda ställe</h3>
-                    <SearchInput data-testid='search-input' />
+
+                    <div className='flex w-full flex-col items-end'>
+                        <SearchInput data-testid='search-input' />
+
+                        <a className='mt-2 text-secondary' href='/filter'>
+                            {'Advancerade filter >>'}
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>

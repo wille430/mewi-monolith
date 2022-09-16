@@ -62,36 +62,42 @@ export class BytbilScraper extends ListingWebCrawler {
         context: ScrapeContext
     ): Promise<Prisma.ListingCreateInput> {
         const listing = await ele.evaluate(async (ele) => {
-            const href = ele.querySelector('.car-list-header > a').getAttribute('href')
+            const href = ele.querySelector('.car-list-header > a')?.getAttribute('href')
+            const priceString = ele
+                .querySelector('.car-price-main')
+                ?.textContent?.replace(/\D/g, '')
 
             return {
-                origin_id: ele.querySelector('.uk-grid').getAttribute('data-model-id'),
-                title: ele.querySelector('.car-list-header > a').textContent,
+                origin_id: ele.querySelector('.uk-grid')?.getAttribute('data-model-id'),
+                title: ele.querySelector('.car-list-header > a')?.textContent,
                 // TODO
                 // imageUrl: [],
                 redirectUrl: href,
                 isAuction: false,
-                price: ele.querySelector('.car-price-main')?.textContent
+                price: priceString
                     ? {
-                          value:
-                              parseInt(
-                                  ele
-                                      .querySelector('.car-price-main')
-                                      .textContent.replace(/\D/g, '')
-                              ) ?? 0,
+                          value: parseInt(priceString),
                       }
-                    : null,
+                    : undefined,
             }
         })
+
+        if (!listing.origin_id) {
+            throw new Error('Scraped listing has no title. Cannot create origin_id.')
+        }
 
         return {
             ...listing,
             origin_id: this.createId(listing.origin_id),
-            redirectUrl: new URL(listing.redirectUrl, this.baseUrl).toString(),
-            price: {
-                value: listing.price.value,
-                currency: Currency.SEK,
-            },
+            redirectUrl: listing.redirectUrl
+                ? new URL(listing.redirectUrl, this.baseUrl).toString()
+                : this.baseUrl,
+            price: listing.price
+                ? {
+                      ...listing.price,
+                      currency: Currency.SEK,
+                  }
+                : undefined,
             category: Category.FORDON,
             origin: ListingOrigin.Bytbil,
             date: new Date(),
