@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import _ from 'lodash'
 import { PrismaService } from '../../prisma/prisma.service'
+import { commonScraperTests } from './common.scraper.spec'
 import { TraderaScraper } from './tradera.scraper'
 
 describe('Tradera Scraper', () => {
@@ -34,3 +35,5 @@ describe('Tradera Scraper', () => {
         })
     })
 })
+
+commonScraperTests(TraderaScraper)

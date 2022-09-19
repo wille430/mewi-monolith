@@ -6,6 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
 import { validateListingTest } from '../tests/validate-listing.spec'
 import puppeteer from 'puppeteer'
+import { commonScraperTests } from './common.scraper.spec'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
@@ -45,3 +46,5 @@ describe('Bytbil Scraper', () => {
         })
     })
 })
+
+commonScraperTests(BytbilScraper)

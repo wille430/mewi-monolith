@@ -9,7 +9,7 @@ import { StartScraperOptions } from '../types/startScraperOptions'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ConfigService } from '@nestjs/config'
 import { DefaultStartOptions } from '../types/defaultStartOptions'
-import { ScraperStopFunction, scraperStopFunction } from '../helpers/scraperStopFunction'
+import { scraperStopFunction } from '../helpers/scraperStopFunction'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE

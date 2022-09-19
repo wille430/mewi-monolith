@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ShpockScraper } from './shpock.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
+import { commonScraperTests } from './common.scraper.spec'
 
 describe('Shpock Scraper', () => {
     let scraper: ShpockScraper
@@ -29,3 +30,5 @@ describe('Shpock Scraper', () => {
         }, 20000)
     })
 })
+
+commonScraperTests(ShpockScraper)

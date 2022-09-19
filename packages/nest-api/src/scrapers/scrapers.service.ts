@@ -15,6 +15,7 @@ import { BytbilScraper } from './scrapers/bytbil.scraper'
 import { BaseListingScraper } from './classes/BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { KvdbilScraper } from './scrapers/kvdbil.scraper'
+import { BilwebScraper } from './scrapers/bilweb.scraper'
 
 @Injectable()
 export class ScrapersService {
@@ -37,6 +38,7 @@ export class ScrapersService {
         @Inject(ShpockScraper) private shpockScraper: ShpockScraper,
         @Inject(BytbilScraper) private bytbilScraper: BytbilScraper,
         @Inject(KvdbilScraper) private kvdbilScraper: KvdbilScraper,
+        @Inject(BilwebScraper) private bilwebScraper: BilwebScraper,
         @Inject(PrismaService) private prisma: PrismaService,
         @Inject(EventEmitter2) private eventEmitter: EventEmitter2
     ) {
@@ -49,6 +51,7 @@ export class ScrapersService {
             Shpock: this.shpockScraper,
             Bytbil: this.bytbilScraper,
             Kvdbil: this.kvdbilScraper,
+            Bilweb: this.bilwebScraper,
         }
     }
 

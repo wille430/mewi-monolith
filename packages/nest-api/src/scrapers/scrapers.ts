@@ -1,3 +1,4 @@
+import { BilwebScraper } from './scrapers/bilweb.scraper'
 import { BlippScraper } from './scrapers/blipp.scraper'
 import { BlocketScraper } from './scrapers/blocket.scraper'
 import { BytbilScraper } from './scrapers/bytbil.scraper'
@@ -16,6 +17,7 @@ const Scrapers = [
     ShpockScraper,
     BytbilScraper,
     KvdbilScraper,
+    BilwebScraper,
 ]
 
 export default Scrapers
