@@ -183,6 +183,7 @@ enum ListingOrigin {
     Citiboard
     Shpock
     Bytbil
+    Kvdbil
 }
 
 enum ScraperTrigger {

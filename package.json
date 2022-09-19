@@ -9,6 +9,7 @@
         "build": "pnpm run build -r",
         "build:api": "pnpm run build -F nest-api",
         "test": "pnpm run test -r",
+        "test:watch": "pnpm run test:watch -r",
         "format": "prettier -w .",
         "dev": "pnpm run build:watch -F @wille430/common | pnpm run dev -r --parallel",
         "isolate": "pnpm run isolate -r",
