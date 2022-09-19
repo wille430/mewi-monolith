@@ -19,7 +19,9 @@ export abstract class ListingScraper extends BaseListingScraper {
         this.parseRawListing = this.parseRawListing.bind(this)
     }
 
-    readonly defaultAxiosRequestConfig: AxiosRequestConfig = {}
+    readonly defaultAxiosRequestConfig: AxiosRequestConfig = {
+        withCredentials: true,
+    }
 
     async createAxiosInstance(): Promise<AxiosInstance> {
         return axios.create()

@@ -3,8 +3,8 @@ import { JSDOM } from 'jsdom'
 import { Page } from 'puppeteer'
 
 export const getNextDataEval = async (page: Page): Promise<any> => {
-    const nextDataSelector = '#__NEXT_DATA__'
     return await page.evaluate(() => {
+        const nextDataSelector = '#__NEXT_DATA__'
         const text = document.querySelector(nextDataSelector)?.textContent
 
         if (text == null) {

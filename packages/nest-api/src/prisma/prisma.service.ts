@@ -5,7 +5,11 @@ import { userMiddleware } from './user.middleware'
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
     async onModuleInit() {
-        await this.$connect()
+        await this.$connect().catch((e) => {
+            if (process.env.NODE_ENV !== 'test') {
+                throw e
+            }
+        })
         this.$use(userMiddleware)
     }
 

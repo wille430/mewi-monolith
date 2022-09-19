@@ -19,7 +19,7 @@ export class EntryPoint extends BaseEntryPoint {
         try {
             res = await client(config)
         } catch (e) {
-            console.error(e)
+            console.error((e as any).response?.data ?? e)
             return {
                 continue: false,
                 listings: [],

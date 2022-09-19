@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common'
 import { Category, ListingOrigin, Currency } from '@mewi/prisma'
-import { AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { PrismaService } from '@/prisma/prisma.service'
@@ -11,12 +11,9 @@ export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
     origin: ListingOrigin = ListingOrigin.Blipp
     limit = 40
+    _axios!: AxiosInstance
 
-    readonly defaultScrapeUrl = 'https://blipp.se/_next/data/{buildId}/fordon.json'
-
-    createScrapeUrl = (page = 1) => {
-        return `${this.defaultScrapeUrl}?page=${page}/`
-    }
+    readonly defaultScrapeUrl = 'https://blipp.se/api/proxy'
 
     constructor(
         @Inject(PrismaService) prisma: PrismaService,
@@ -24,12 +21,24 @@ export class BlippScraper extends NextScraper {
     ) {
         super(prisma, config)
 
-        this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
+        this.createEntryPoint((p) => ({
+            url: this.createScrapeUrl(),
+            data: {
+                method: 'getMarketplaceAds',
+                payload: {
+                    params: `filters%5Btag%5D=&sort%5Bcolumn%5D=published_date&sort%5Border%5D=desc&page=${p}&per_page=39`,
+                },
+            },
+        }))
+    }
+
+    createScrapeUrl = () => {
+        return this.defaultScrapeUrl
     }
 
     getTotalPages(res: AxiosResponse): number {
         try {
-            const payload = res.data.pageProps?.vehiclesData?.payload
+            const payload = res.data.body.payload
 
             this.limit = payload.per_page
 
@@ -40,7 +49,7 @@ export class BlippScraper extends NextScraper {
     }
 
     extractRawListingsArray(res: AxiosResponse<any, any>) {
-        return res.data.pageProps?.vehiclesData?.payload.items
+        return res.data.body.payload.items
     }
 
     parseRawListing(

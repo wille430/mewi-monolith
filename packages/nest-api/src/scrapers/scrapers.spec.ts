@@ -1,4 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service'
+import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import _ from 'lodash'
 import { BaseEntryPoint } from './classes/BaseEntryPoint'
@@ -12,7 +13,7 @@ describe.each((Scrapers as any[]).map((o) => [o.name, o]))('%s', (name, Scraper)
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [PrismaService, Scraper],
+            providers: [PrismaService, Scraper, ConfigService],
         }).compile()
 
         prisma = module.get<PrismaService>(PrismaService)
@@ -25,7 +26,7 @@ describe.each((Scrapers as any[]).map((o) => [o.name, o]))('%s', (name, Scraper)
 
         beforeEach(async () => {
             await scraper.initialize()
-            entryPoint = _.sample(scraper.entryPoints)
+            entryPoint = _.sample(scraper.entryPoints)!
         })
 
         it('should return array of Listings', async () => {
