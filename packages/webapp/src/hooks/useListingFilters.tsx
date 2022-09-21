@@ -9,7 +9,6 @@ import debounce from 'lodash/debounce'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import { ParsedUrlQuery } from 'querystring'
-import isString from 'lodash/isString'
 import { parseSearchParamArray } from '@/utils/parseSearchParamArray'
 import { getValidEles } from '@/utils/getValidEles'
 
@@ -209,8 +208,6 @@ export const parseSearchParams = (
         pick(query, ...keys<ListingFilters>()),
         excludeInParams
     )
-
-    console.log({ unvalidatedFilters })
 
     const validatedFilters: ListingFilters = {}
 

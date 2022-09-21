@@ -36,7 +36,8 @@
                 "disallowPrototype": true,
                 "singleReturnOnly": true
             }
-        ]
+        ],
+        "no-case-declarations": "off"
     },
     "overrides": [
         {

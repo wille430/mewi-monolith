@@ -11,7 +11,9 @@
         "e2e": "pnpm run dev & pnpm run dev -F nest-api & pnpm run cy:run",
         "test": "vitest run",
         "test:watch": "vitest watch",
-        "analyze": "ANALYZE=true next build"
+        "analyze": "ANALYZE=true next build",
+        "lint": "eslint ./src/**/*.{ts,tsx}",
+        "lint:fix": "pnpm run lint -- --fix"
     },
     "dependencies": {
         "@reduxjs/toolkit": "^1.8.0",

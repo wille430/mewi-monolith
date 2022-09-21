@@ -23,6 +23,11 @@ export const commonScraperTests = <T extends typeof BaseListingScraper>(
             scraper.verbose = true
         })
 
+        it('should have unique entry points', () => {
+            const identifiers = scraper.entryPoints.map((o) => o.identifier)
+            expect(_.uniq(identifiers)).toEqual(identifiers)
+        })
+
         describe('#scrape', () => {
             let entryPoint: BaseEntryPoint
 
@@ -43,10 +48,19 @@ export const commonScraperTests = <T extends typeof BaseListingScraper>(
                     validateListingTest(listing, entryPoint.createContext())
                 }
             }, 20000)
+
+            it('should error safely', async () => {
+                const page = 999999
+                const result = await entryPoint.scrape(page, {})
+
+                expect(result.listings).toEqual([])
+                expect(result.continue).toBe(false)
+                expect(result.page).toBe(page)
+            }, 20000)
         })
     })
 }
 
 describe('Common tests for scraper instances', () => {
-    it('should be user per scraper', () => {})
+    it('should be used per scraper', () => {})
 })

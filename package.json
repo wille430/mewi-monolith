@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
-        "lint": "eslint packages/**/*/src/**/*.{ts,tsx}",
-        "lint:fix": "eslint packages/**/*/src/**/*.{ts,tsx} --fix",
+        "lint": "pnpm run lint -r",
+        "lint:fix": "pnpm run lint:fix -r",
         "e2e": "pnpm run e2e -r",
         "build": "pnpm run build -r",
         "build:api": "pnpm run build -F nest-api",

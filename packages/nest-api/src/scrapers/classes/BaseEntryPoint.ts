@@ -68,6 +68,8 @@ export abstract class BaseEntryPoint {
             }
         }
 
+        if (listings.length <= 0) shouldContinue = false
+
         return {
             listings: listings,
             continue: shouldContinue,
