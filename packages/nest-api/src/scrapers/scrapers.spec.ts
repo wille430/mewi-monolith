@@ -1,17 +1,19 @@
+import Scrapers from './scrapers'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import _ from 'lodash'
-import { BaseEntryPoint } from '../classes/BaseEntryPoint'
-import { BaseListingScraper } from '../classes/BaseListingScraper'
-import { validateListingTest } from '../tests/validate-listing.spec'
+import { BaseEntryPoint } from './classes/BaseEntryPoint'
+import { validateListingTest } from './tests/validate-listing.spec'
+import { BaseListingScraper } from './classes/BaseListingScraper'
 
-export const commonScraperTests = <T extends typeof BaseListingScraper>(
-    ScraperProvider: T | any
-) => {
-    describe(`Common tests for ${ScraperProvider.name} implementation`, () => {
+const testScrapers = Scrapers.map((x) => [x.name, x])
+
+describe.each(testScrapers)(
+    `Common tests for scraper implementation (%s)`,
+    (a, ScraperProvider) => {
         let prisma: PrismaService
-        let scraper: InstanceType<T>
+        let scraper: BaseListingScraper
 
         beforeEach(async () => {
             const module: TestingModule = await Test.createTestingModule({
@@ -58,9 +60,5 @@ export const commonScraperTests = <T extends typeof BaseListingScraper>(
                 expect(result.page).toBe(page)
             }, 20000)
         })
-    })
-}
-
-describe('Common tests for scraper instances', () => {
-    it('should be used per scraper', () => {})
-})
+    }
+)

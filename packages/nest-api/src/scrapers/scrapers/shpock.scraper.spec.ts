@@ -30,5 +30,3 @@ describe('Shpock Scraper', () => {
         }, 20000)
     })
 })
-
-commonScraperTests(ShpockScraper)

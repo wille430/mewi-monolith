@@ -46,5 +46,3 @@ describe('Bytbil Scraper', () => {
         })
     })
 })
-
-commonScraperTests(BytbilScraper)

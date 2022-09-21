@@ -35,5 +35,3 @@ describe('Tradera Scraper', () => {
         })
     })
 })
-
-commonScraperTests(TraderaScraper)
