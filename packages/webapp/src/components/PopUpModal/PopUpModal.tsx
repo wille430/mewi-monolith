@@ -1,7 +1,7 @@
 import { Button, Modal, ModalProps } from '@wille430/ui'
 import { PopUp } from '../PopUp/PopUp'
 
-interface PopUpModalProps extends ModalProps {
+export interface PopUpModalProps extends ModalProps {
     open?: boolean
     onExit?: () => void
     onAccept?: () => void

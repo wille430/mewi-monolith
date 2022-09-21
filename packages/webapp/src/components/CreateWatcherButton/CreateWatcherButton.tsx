@@ -7,8 +7,12 @@ import { instance } from '@/lib/axios'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
 import dynamic from 'next/dynamic'
+import { PopUpModalProps } from '../PopUpModal/PopUpModal'
 
-const PopUpModal = dynamic(() => import('../PopUpModal/PopUpModal').then((res) => res.PopUpModal))
+const PopUpModal = dynamic<PopUpModalProps>(
+    () => import('../PopUpModal/PopUpModal').then((mod) => mod.PopUpModal),
+    { loading: () => null }
+)
 
 type CreateWatcherButtonProps = ButtonProps & {
     error?: string

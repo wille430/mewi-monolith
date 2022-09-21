@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing } from '@/store/listings'
 import dynamic from 'next/dynamic'
 
-const DynamicListingPopUp = dynamic(() => import('./ListingPopUp'))
+const DynamicListingPopUp = dynamic(() => import('./ListingPopUp'), { loading: () => null })
 
 export const ListingPopUpContainer = () => {
     const listing = useAppSelector((state) => state.listings.opened)
