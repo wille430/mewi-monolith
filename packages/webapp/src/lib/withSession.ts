@@ -1,11 +1,10 @@
 import { IronSessionOptions } from 'iron-session'
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next'
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next'
-import * as crypto from 'crypto'
 
 const sessionOptions: IronSessionOptions = {
     cookieName: 'user-session',
-    password: process.env.SESSION_PASSWORD ?? crypto.randomBytes(32).toString('hex'),
+    password: process.env.SESSION_PASSWORD,
     cookieOptions: {
         secure: process.env.NODE_ENV === 'production',
     },

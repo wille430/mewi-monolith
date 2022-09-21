@@ -1,4 +1,4 @@
-import { Prisma, Category, ListingOrigin, Currency, Listing } from '@mewi/prisma'
+import { Prisma, Category, ListingOrigin, Listing } from '@mewi/prisma'
 import { createListingFactory } from '@mewi/prisma/factory'
 import _ from 'lodash'
 import faker from '@faker-js/faker'

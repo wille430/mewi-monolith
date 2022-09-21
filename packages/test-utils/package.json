@@ -1,0 +1,35 @@
+{
+    "name": "@mewi/test-utils",
+    "version": "1.0.1",
+    "description": "Shared test utils for Mewi monorepo",
+    "source": "src/index.ts",
+    "exports": {
+        "require": "./dist/index.js",
+        "default": "./dist/index.modern.js"
+    },
+    "main": "dist/index.js",
+    "module": "dist/index.module.js",
+    "types": "dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/wille430/mewi-monolith.git"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "scripts": {
+        "build": "npx microbundle build",
+        "dev": "npx microbundle watch",
+        "prepare": "npm run build"
+    },
+    "author": "Mewi",
+    "license": "ISC",
+    "dependencies": {
+        "@wille430/common": "workspace:^1.0.1",
+        "minifaker": "^1.34.1"
+    },
+    "devDependencies": {
+        "microbundle": "^0.14.2",
+        "typescript": "^4.6.4"
+    }
+}

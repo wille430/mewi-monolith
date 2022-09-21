@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { randomEmail, randomPassword } from '@wille430/common'
+import { randomEmail, randomPassword } from '@mewi/test-utils'
 import { ConfigModule } from '@nestjs/config'
 import bcrypt from 'bcryptjs'
 import { User } from '@mewi/prisma'

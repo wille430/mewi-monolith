@@ -1,5 +1,6 @@
 import { Controller, Post } from '@nestjs/common'
-import { randomEmail, randomPassword } from '@wille430/common'
+import { randomPassword } from '@mewi/test-utils'
+import { randomEmail } from '@mewi/test-utils'
 import { AuthService } from '@/auth/auth.service'
 
 @Controller('/test')

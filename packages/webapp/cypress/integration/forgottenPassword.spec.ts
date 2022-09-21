@@ -1,4 +1,4 @@
-import { randomEmail } from '@wille430/common'
+import { randomEmail } from '@mewi/test-utils'
 
 describe('forgotten password', () => {
     beforeEach(() => {

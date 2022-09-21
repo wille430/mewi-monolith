@@ -9,6 +9,7 @@ export const CITIBOARD_COLOR = '#f1543b'
 export const BYTBIL_COLOR = '#525350'
 export const SHPOCK_COLOR = '#43c46d'
 export const KVDBIL_COLOR = '#f6b401'
+export const BILWEB_COLOR = '#1190c6'
 
 export const OriginColorMap: Record<ListingOrigin, string> = {
     Blocket: BLOCKET_COLOR,
@@ -19,6 +20,7 @@ export const OriginColorMap: Record<ListingOrigin, string> = {
     Shpock: SHPOCK_COLOR,
     Bytbil: BYTBIL_COLOR,
     Kvdbil: KVDBIL_COLOR,
+    Bilweb: BILWEB_COLOR,
 }
 
 export const getColor = (origin: ListingOrigin) => {

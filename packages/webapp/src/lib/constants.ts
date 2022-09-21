@@ -1,8 +1,6 @@
-import crypto from 'crypto'
-
 export const USER_TOKEN = 'user-session'
 
-export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? crypto.randomBytes(16).toString('hex')
+export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 export const REFRESH_TOKEN_EXPIRES = () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 export const ACCESS_TOKEN_EXPIRES = () =>

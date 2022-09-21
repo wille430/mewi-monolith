@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { randomEmail } from '@wille430/common'
+import { randomEmail } from '@mewi/test-utils'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Transporter } from 'nodemailer'
 import { User } from '@mewi/prisma'

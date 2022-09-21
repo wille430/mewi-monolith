@@ -1,0 +1,2 @@
+!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("minifaker"),require("minifaker/locales/en"),require("@wille430/common")):"function"==typeof define&&define.amd?define(["exports","minifaker","minifaker/locales/en","@wille430/common"],n):n((e||self).testUtils={},e.minifaker,0,e.common)}(this,function(e,n,i,o){e.randomEmail=function(){return(n.firstName()+"."+n.lastName()+"@"+n.domainName()).toLowerCase()},e.randomPassword=function(){return".Abc123"+o.randomString(10)}});
+//# sourceMappingURL=index.umd.js.map

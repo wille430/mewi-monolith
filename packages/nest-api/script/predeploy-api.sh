@@ -9,9 +9,6 @@ mv _isolated_/workspaces/packages _isolated_/packages
 rm -r _isolated_/workspaces
 cp ../schemas _isolated_/packages/schemas -r
 
-mkdir ./_isolated_/tools
-cp ../../tools/copy_prisma.sh  ./_isolated_/tools/
-
 # Fix pnpm-workspace.yaml
 
 # Delete last 2 lines

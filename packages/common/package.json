@@ -30,8 +30,8 @@
     "author": "Mewi",
     "license": "ISC",
     "dependencies": {
+        "@mewi/prisma": "workspace:^1.0.1",
         "lodash": "^4.17.21",
-        "minifaker": "^1.34.1",
         "query-string": "^7.1.1",
         "tslib": "^2.3.1"
     },
@@ -39,7 +39,7 @@
         "@types/lodash": "^4.14.180",
         "@vitejs/plugin-react": "^1.0.7",
         "microbundle": "^0.14.2",
-        "vitest": "^0.8.1",
-        "typescript": "^4.6.4"
+        "typescript": "^4.6.4",
+        "vitest": "^0.8.1"
     }
 }

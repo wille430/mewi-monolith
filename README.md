@@ -18,7 +18,7 @@
 1. Install dependencies:
 
 ```
-pnpm i -F schemas && pnpm i -F !schemas
+pnpm install
 ```
 
 2. Start servers:

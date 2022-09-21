@@ -12,8 +12,7 @@ RUN apt-get update && \
 WORKDIR /app
 COPY _isolated_/ /app/
 RUN npm i pnpm -g
-RUN pnpm i -F schemas
-RUN pnpm i --production=false -F=!schemas
+RUN pnpm i --production=false
 # RUN cp /app/packages/common/dist/ /app/node_modules/@wille430/common/ -r
 
 EXPOSE 3001

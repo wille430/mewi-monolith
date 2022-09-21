@@ -1,4 +1,5 @@
-import { randomEmail, randomPassword, randomString } from '@wille430/common'
+import { randomString } from '@wille430/common'
+import { randomEmail, randomPassword } from '@mewi/test-utils'
 
 describe('register', () => {
     const userInfo = {
