@@ -11,7 +11,7 @@ interface LayoutProps {
 
 export const Layout = ({ children, decorations = true }: LayoutProps) => {
     return (
-        <div className='min-h-screen flex flex-col justify-between'>
+        <div className='flex min-h-screen flex-col justify-between'>
             <div
                 className='flex flex-col'
                 style={{

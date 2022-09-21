@@ -9,7 +9,7 @@ import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { serialize } from '@/lib/serialize'
 import prisma from '@/lib/prisma'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
-import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUp'
+import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
 
 export const getServerSideProps = withAuth(
     async (req) => {

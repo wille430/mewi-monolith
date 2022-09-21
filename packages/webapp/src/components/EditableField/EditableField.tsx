@@ -1,9 +1,13 @@
-import { Button, TextField, TextFieldProps } from '@wille430/ui'
+import type { TextFieldProps } from '@wille430/ui'
 import { useEffect, useState } from 'react'
 import { MdOutlineModeEditOutline } from 'react-icons/md'
 import { FiCheck } from 'react-icons/fi'
 import omit from 'lodash/omit'
 import styles from './EditableField.module.scss'
+import dynamic from 'next/dynamic'
+
+const TextField = dynamic(() => import('@wille430/ui').then((o) => o.TextField))
+const Button = dynamic(() => import('@wille430/ui').then((o) => o.Button))
 
 interface EditableFieldProps extends TextFieldProps {
     label: string

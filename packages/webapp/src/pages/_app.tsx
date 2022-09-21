@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { ReactElement, ReactNode, useEffect, useState } from 'react'

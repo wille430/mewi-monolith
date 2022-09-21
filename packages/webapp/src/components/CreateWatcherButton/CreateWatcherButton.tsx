@@ -3,10 +3,12 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
-import { PopUpModal } from '../PopUpModal/PopUpModal'
 import { instance } from '@/lib/axios'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
+import dynamic from 'next/dynamic'
+
+const PopUpModal = dynamic(() => import('../PopUpModal/PopUpModal').then((res) => res.PopUpModal))
 
 type CreateWatcherButtonProps = ButtonProps & {
     error?: string

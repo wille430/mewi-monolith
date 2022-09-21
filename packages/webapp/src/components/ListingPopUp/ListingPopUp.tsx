@@ -11,27 +11,12 @@ import { OriginLabel } from '../OriginLabel/OriginLabel'
 import { PopUp } from '../PopUp/PopUp'
 import DefaultImage from '../DefaultImage/DefaultImage'
 import { CategoryPathLabel } from '@/components/CategoryPathLabel/CategoryPathLabel'
-import { useAppDispatch, useAppSelector } from '@/hooks'
-import { closeListing } from '@/store/listings'
 
 const cx = classNames.bind(styles)
 
 interface ListingPopUp {
     onClose?: () => void
     listing: Listing
-}
-
-export const ListingPopUpContainer = () => {
-    const listing = useAppSelector((state) => state.listings.opened)
-    const dispatch = useAppDispatch()
-
-    const handleClose = () => dispatch(closeListing())
-
-    if (!listing) {
-        return null
-    }
-
-    return <ListingPopUp onClose={handleClose} listing={listing} />
 }
 
 // TODO: disable scroll outside element
