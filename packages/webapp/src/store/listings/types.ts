@@ -1,4 +1,4 @@
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import { ResourceType } from '..'
 
 export interface ListingsState {

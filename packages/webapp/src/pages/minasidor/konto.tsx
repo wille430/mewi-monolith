@@ -1,6 +1,6 @@
 import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement } from 'react'
-import { Role, User } from '@mewi/prisma'
+import { Role, User } from '@mewi/prisma/index-browser'
 import Head from 'next/head'
 import { withAuth } from '@/lib/auth'
 import { logoutSession } from '@/lib/session'

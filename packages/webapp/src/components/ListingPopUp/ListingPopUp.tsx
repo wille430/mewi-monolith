@@ -1,4 +1,4 @@
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import classNames from 'classnames'
 import { Container } from '@wille430/ui'
 import { HorizontalLine } from '@wille430/ui'

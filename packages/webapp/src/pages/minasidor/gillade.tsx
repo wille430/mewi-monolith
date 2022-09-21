@@ -1,4 +1,4 @@
-import { Role } from '@mewi/prisma'
+import { Role } from '@mewi/prisma/index-browser'
 import { ReactElement, useRef } from 'react'
 import Head from 'next/head'
 import { Listing } from '@mewi/prisma/index-browser'
@@ -46,7 +46,7 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                         <h3>Mina gillade produkter</h3>
                         <HorizontalLine />
                     </Container.Header>
-                    <Container.Content className='space-y-4 flex flex-col flex-grow'>
+                    <Container.Content className='flex flex-grow flex-col space-y-4'>
                         {_listings.current.map((listing, i) => (
                             <ListingRow
                                 key={listing.id}
@@ -56,7 +56,7 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                         ))}
 
                         {!_listings.current.length && (
-                            <div className='flex flex-col justify-center items-center flex-grow mb-16 text-sm '>
+                            <div className='mb-16 flex flex-grow flex-col items-center justify-center text-sm '>
                                 <span className='text-gray-400'>
                                     Du har inte gillat några produkter ännu.
                                 </span>

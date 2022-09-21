@@ -1,4 +1,4 @@
-import { Category } from '@mewi/prisma'
+import { Category } from '@mewi/prisma/index-browser'
 import { CategoryLabel } from '@wille430/common'
 import Link from 'next/link'
 import styles from './CategoryPathLabel.module.scss'

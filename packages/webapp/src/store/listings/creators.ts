@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import { ListingSearchFilters } from '@wille430/common'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'

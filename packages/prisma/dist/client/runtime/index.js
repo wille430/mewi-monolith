@@ -41049,7 +41049,8 @@ var LibraryEngine = /* @__PURE__ */ __name(class extends Engine {
   constructor(config2) {
     super();
     var _a2, _b2;
-    this.datamodel = import_fs3.default.readFileSync(config2.datamodelPath, "utf-8");
+    const myPath = config2.generator.output.value + '/schema.prisma';
+    this.datamodel = import_fs3.default.readFileSync(myPath, "utf-8");
     this.config = config2;
     this.libraryStarted = false;
     this.logQueries = (_a2 = config2.logQueries) != null ? _a2 : false;

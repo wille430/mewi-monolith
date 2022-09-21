@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { createUserWatcherFactory, createListingFactory } from '@mewi/prisma/factory'
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import WatcherCard from './WatcherCard'
 
 export default {

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { PopulatedUserWatcher } from '@wille430/common'
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 // import { openListing } from '@/store/search/creators'
 import { useQuery } from 'react-query'
 import queryString from 'query-string'

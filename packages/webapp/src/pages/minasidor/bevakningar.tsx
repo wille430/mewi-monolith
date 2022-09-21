@@ -1,4 +1,4 @@
-import { Role } from '@mewi/prisma'
+import { Role } from '@mewi/prisma/index-browser'
 import { ReactElement } from 'react'
 import Head from 'next/head'
 import { withAuth } from '@/lib/auth'

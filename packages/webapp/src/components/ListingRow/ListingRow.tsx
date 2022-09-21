@@ -1,4 +1,4 @@
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@wille430/ui'

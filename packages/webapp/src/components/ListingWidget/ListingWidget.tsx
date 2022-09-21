@@ -1,6 +1,6 @@
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import { HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'

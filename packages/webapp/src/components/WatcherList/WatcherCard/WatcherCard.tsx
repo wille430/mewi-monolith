@@ -1,5 +1,5 @@
 import { capitalize, CategoryLabel, PopulatedUserWatcher } from '@wille430/common'
-import { Listing } from '@mewi/prisma'
+import { Listing } from '@mewi/prisma/index-browser'
 import { Button } from '@wille430/ui'
 import queryString from 'query-string'
 import { Dispatch, useEffect, useRef, useState } from 'react'
