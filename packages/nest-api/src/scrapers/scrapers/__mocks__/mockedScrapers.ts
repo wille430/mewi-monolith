@@ -3,7 +3,7 @@ import path from 'path'
 import fs from 'fs'
 
 const resolveScraperFilename = (className: string) => {
-    return className.toLowerCase().replace('scraper', '.scraper')
+    return className.toLowerCase().replace('scraper', '.mock')
 }
 
 export const mockedScrapers = Scrapers.map(async (cls) => {

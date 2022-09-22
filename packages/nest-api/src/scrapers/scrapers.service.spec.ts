@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import _ from 'lodash'
-import { vi } from 'vitest'
 import { ScraperStatus } from '@wille430/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { ScrapersService } from './scrapers.service'
@@ -62,35 +61,37 @@ describe('mocked scrapers', () => {
         let listings: ScrapedListing[]
 
         beforeEach(async () => {
-            scraper = scrapers[index]
+            scraper = scrapers[index as number]
             scraper2 = _.sample(scrapers.filter((x) => x.origin !== scraper.origin))!
 
             await scraper.initialize()
 
-            listings = new Array(scraper.limit).fill(null).map((o, i) =>
-                createListing({
-                    origin_id: scraper.createId(faker.random.alpha(16)),
-                    origin: scraper.origin,
-                    date: new Date(Date.now() - 2 * 60 * 1000 * i),
-                })
+            listings = await Promise.all(
+                new Array(scraper.limit).fill(null).map((o, i) =>
+                    createListing({
+                        origin_id: scraper.createId(faker.random.alpha(16)),
+                        origin: scraper.origin,
+                        date: new Date(Date.now() - 2 * 60 * 1000 * i),
+                    })
+                )
             )
 
             scraper.entryPoints.forEach((entryPoint) => {
-                entryPoint.scrape = vi.fn().mockResolvedValue({
+                entryPoint.scrape = jest.fn().mockResolvedValue({
                     listings,
                     page: 1,
                     continue: false,
                 })
-                entryPoint.getMostRecentLog = vi.fn().mockResolvedValue(undefined)
+                entryPoint.getMostRecentLog = jest.fn().mockResolvedValue(undefined)
             })
 
-            scrapersService.statusOf = vi.fn().mockResolvedValue({})
+            scrapersService.statusOf = jest.fn().mockResolvedValue({})
 
-            prisma.listing.deleteMany = vi.fn()
-            prisma.listing.createMany = vi.fn().mockResolvedValue({
+            prisma.listing.deleteMany = jest.fn()
+            prisma.listing.createMany = jest.fn().mockResolvedValue({
                 count: listings.length,
             })
-            prisma.scrapingLog.create = vi.fn()
+            prisma.scrapingLog.create = jest.fn()
         })
 
         it('should update status correctly', async () => {
@@ -153,10 +154,10 @@ describe('mocked scrapers', () => {
         it('should scrape until total pages is reached', async () => {
             const totalPages = Math.floor(Math.random() * 5) + 2
 
-            scraper.getTotalPages = vi.fn(() => totalPages)
+            scraper.getTotalPages = jest.fn(() => totalPages)
 
             scraper.entryPoints.forEach((entryPoint) => {
-                entryPoint.scrape = vi.fn((page) =>
+                entryPoint.scrape = jest.fn((page) =>
                     Promise.resolve({
                         listings,
                         page,

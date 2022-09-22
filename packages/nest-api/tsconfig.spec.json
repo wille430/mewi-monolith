@@ -1,8 +1,14 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.tsx", "src/**/*"],
+    "include": [
+        "**/*.spec.ts",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.tsx",
+        "src/**/*",
+        "**/__mocks__/*"
+    ],
     "compilerOptions": {
-        "types": ["vitest/globals"],
         "paths": {
             "@/*": ["./src/*"]
         },

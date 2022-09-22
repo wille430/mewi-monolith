@@ -9,56 +9,54 @@ import { BaseListingScraper } from './classes/BaseListingScraper'
 
 const testScrapers = Scrapers.map((x) => [x.name, x])
 
-describe.each(testScrapers)(
-    `Common tests for scraper implementation (%s)`,
-    (a, ScraperProvider) => {
-        let prisma: PrismaService
-        let scraper: BaseListingScraper
+describe.each(testScrapers)(`Common scraper test (%s)`, (a, ScraperProvider) => {
+    let prisma: PrismaService
+    let scraper: BaseListingScraper
+
+    beforeAll(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [PrismaService, ScraperProvider as any, ConfigService],
+        }).compile()
+
+        prisma = module.get<PrismaService>(PrismaService)
+        scraper = module.get(ScraperProvider as any)
+        scraper.verbose = true
+
+        await scraper.initialize()
+    })
+
+    it('should have unique entry points', () => {
+        const identifiers = scraper.entryPoints.map((o) => o.identifier)
+        expect(_.uniq(identifiers)).toEqual(identifiers)
+    })
+
+    describe('#scrape', () => {
+        let entryPoint: BaseEntryPoint
 
         beforeEach(async () => {
-            const module: TestingModule = await Test.createTestingModule({
-                providers: [PrismaService, ScraperProvider as any, ConfigService],
-            }).compile()
-
-            prisma = module.get<PrismaService>(PrismaService)
-            scraper = module.get(ScraperProvider as any)
-            scraper.verbose = true
+            entryPoint = _.sample(scraper.entryPoints)!
         })
 
-        it('should have unique entry points', () => {
-            const identifiers = scraper.entryPoints.map((o) => o.identifier)
-            expect(_.uniq(identifiers)).toEqual(identifiers)
-        })
+        it('should return array of Listings', async () => {
+            const page = 1
+            const result = await entryPoint.scrape(page, {})
 
-        describe('#scrape', () => {
-            let entryPoint: BaseEntryPoint
+            expect(result.listings).toBeInstanceOf(Array)
+            expect(typeof result.continue).toBe('boolean')
+            expect(result.page).toBe(page)
 
-            beforeEach(async () => {
-                await scraper.initialize()
-                entryPoint = _.sample(scraper.entryPoints)!
-            })
+            for (const listing of result.listings) {
+                validateListingTest(listing, entryPoint.createContext())
+            }
+        }, 20000)
 
-            it('should return array of Listings', async () => {
-                const page = 1
-                const result = await entryPoint.scrape(page, {})
+        it('should error safely', async () => {
+            const page = 999999
+            const result = await entryPoint.scrape(page, {})
 
-                expect(result.listings).instanceOf(Array)
-                expect(typeof result.continue).toBe('boolean')
-                expect(result.page).toBe(page)
-
-                for (const listing of result.listings) {
-                    validateListingTest(listing, entryPoint.createContext())
-                }
-            }, 20000)
-
-            it('should error safely', async () => {
-                const page = 999999
-                const result = await entryPoint.scrape(page, {})
-
-                expect(result.listings).toEqual([])
-                expect(result.continue).toBe(false)
-                expect(result.page).toBe(page)
-            }, 20000)
-        })
-    }
-)
+            expect(result.listings).toEqual([])
+            expect(result.continue).toBe(false)
+            expect(result.page).toBe(page)
+        }, 20000)
+    })
+})

@@ -8,6 +8,7 @@
         "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "./",
+        "rootDir": "./",
         "incremental": true,
         "skipLibCheck": true,
         "noFallthroughCasesInSwitch": false,
@@ -22,6 +23,7 @@
         }
     },
     "include": ["src/**/*"],
+    "exclude": ["**/__mocks__/*"],
     "references": [
         {
             "path": "./tsconfig.spec.json"

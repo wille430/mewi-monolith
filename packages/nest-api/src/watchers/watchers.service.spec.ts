@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Transporter } from 'nodemailer'
 import { User } from '@mewi/prisma'
 import { createListingFactory, createUserFactory, createWatcherFactory } from '@mewi/prisma/factory'
-import { vi } from 'vitest'
 import { faker } from '@faker-js/faker'
 import { WatchersService } from './watchers.service'
 import { EmailModule } from '../email/email.module'
@@ -60,12 +59,12 @@ describe('WatchersService', () => {
         })
 
         mockTransporter = await emailService.transporter()
-        mockTransporter.sendMail = vi.fn()
-        emailService.transporter = vi.fn().mockResolvedValue(mockTransporter)
+        mockTransporter.sendMail = jest.fn()
+        emailService.transporter = jest.fn().mockResolvedValue(mockTransporter)
     })
 
     afterEach(async () => {
-        vi.clearAllMocks()
+        jest.clearAllMocks()
     })
 
     afterAll(async () => {
@@ -78,21 +77,27 @@ describe('WatchersService', () => {
 
     describe('#notifyUserOfWatcher', () => {
         it('should send email to user and update user watcher', async () => {
-            vi.spyOn(watchersService, 'newListings').mockImplementation(
+            jest.spyOn(watchersService, 'newListings').mockImplementation(
                 () => Array(12).fill(listingFactory.build()) as any
             )
 
             let userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
-            watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(true)
+
+            if (!userWatcher)
+                throw new Error(
+                    `Could not find a watcher thar user with id ${user.id} is subscribed to`
+                )
+
+            watchersService.shouldNotifyUser = jest.fn().mockResolvedValue(true)
 
             await watchersService.notifyUserOfWatcher(user.id, userWatcher.watcherId)
 
             expect(mockTransporter.sendMail).toBeCalledTimes(1)
 
             // Get updated data
-            user = await prisma.user.findUnique({
+            user = (await prisma.user.findUnique({
                 where: { id: user.id },
-            })
+            }))!
 
             userWatcher = await prisma.userWatcher.findFirst({
                 where: {
@@ -101,14 +106,16 @@ describe('WatchersService', () => {
             })
 
             expect(userWatcher).toHaveProperty('notifiedAt')
-            expect(userWatcher.notifiedAt.getTime()).toBeGreaterThan(Date.now() - 10 * 1000)
+            expect(userWatcher?.notifiedAt?.getTime()).toBeGreaterThan(Date.now() - 10 * 1000)
         })
 
         it('should not send email to user if no new listings were found', async () => {
-            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue([])
+            jest.spyOn(prisma.listing, 'findMany').mockResolvedValue([])
 
-            const userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
-            watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(true)
+            const userWatcher = (await prisma.userWatcher.findFirst({
+                where: { userId: user.id },
+            }))!
+            watchersService.shouldNotifyUser = jest.fn().mockResolvedValue(true)
 
             await watchersService.notifyUserOfWatcher(user.id, userWatcher.id)
 
@@ -116,12 +123,14 @@ describe('WatchersService', () => {
         })
 
         it('should not send email to user if #shouldNotifyUser returns false', async () => {
-            vi.spyOn(prisma.listing, 'findMany').mockResolvedValue(
+            jest.spyOn(prisma.listing, 'findMany').mockResolvedValue(
                 Array(configService.get('notification.watcher.minListings'))
             )
 
-            const userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
-            watchersService.shouldNotifyUser = vi.fn().mockResolvedValue(false)
+            const userWatcher = (await prisma.userWatcher.findFirst({
+                where: { userId: user.id },
+            }))!
+            watchersService.shouldNotifyUser = jest.fn().mockResolvedValue(false)
 
             await watchersService.notifyUserOfWatcher(user.id, userWatcher.watcherId)
 
@@ -133,7 +142,7 @@ describe('WatchersService', () => {
         it('should try to notify all users in watcher', async () => {
             const watcher = await watcherFactory.create()
 
-            const notifyMock = vi
+            const notifyMock = jest
                 .spyOn(watchersService, 'notifyUserOfWatcher')
                 .mockResolvedValue(true)
 
@@ -144,20 +153,21 @@ describe('WatchersService', () => {
     })
 
     describe('#notifyAll', () => {
-        it('should notify all users in all watchers', async () => {
-            let userCount = 0
-
+        beforeEach(async () => {
             // generate multiple watchers
             while ((await prisma.watcher.count()) < 12) {
                 await watcherFactory.create()
             }
+        })
 
+        it('should notify all users in all watchers', async () => {
+            let userCount = 0
             // find total numbers of subscribers
             for (const { id } of await prisma.watcher.findMany()) {
                 userCount += await watchersService.subscriberCount(id)
             }
 
-            watchersService.notifyUserOfWatcher = vi.fn()
+            watchersService.notifyUserOfWatcher = jest.fn()
             await watchersService.notifyAll()
 
             expect(watchersService.notifyUserOfWatcher).toBeCalledTimes(userCount)

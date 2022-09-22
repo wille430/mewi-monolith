@@ -11,7 +11,7 @@ export const validateListingTest = (
     expect(typeof listing.title).toBe('string')
 
     expect(typeof listing.origin_id).toBe('string')
-    expect(listing.origin_id).match(new RegExp(`^(${scraper.origin}-)`))
+    expect(listing.origin_id).toMatch(new RegExp(`^(${scraper.origin}-)`))
 
     expect(listing.redirectUrl).toMatch(urlRegex)
 
@@ -38,3 +38,7 @@ export const validateListingTest = (
 
     expect(listing.entryPoint).toBe(entryPoint.identifier)
 }
+
+describe('validate-listing', () => {
+    it('should be defined', () => {})
+})

@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config'
 import bcrypt from 'bcryptjs'
 import { User } from '@mewi/prisma'
 import { createUserFactory } from '@mewi/prisma/factory'
-import { vi } from 'vitest'
 import * as crypto from 'crypto'
 import { UsersService } from './users.service'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -107,9 +106,9 @@ describe('UsersService', () => {
 
             await usersService.changePassword(changePasswordDto, user.id)
 
-            expect((await prisma.user.findUnique({ where: { id: user.id } })).password).not.toEqual(
-                originalPassHash
-            )
+            expect(
+                (await prisma.user.findUnique({ where: { id: user.id } }))?.password
+            ).not.toEqual(originalPassHash)
         })
     })
 
@@ -134,15 +133,15 @@ describe('UsersService', () => {
                     },
                 },
             })
-            prisma.user.findFirst = vi.fn().mockResolvedValue(user)
+            prisma.user.findFirst = jest.fn().mockResolvedValue(user)
 
             const originalPassHash = user.password
 
             await usersService.changePasswordWithToken(changePasswordDto)
 
-            expect((await prisma.user.findUnique({ where: { id: user.id } })).password).not.toEqual(
-                originalPassHash
-            )
+            expect(
+                (await prisma.user.findUnique({ where: { id: user.id } }))?.password
+            ).not.toEqual(originalPassHash)
         })
 
         it('should throw with invalid token', async () => {
@@ -180,12 +179,12 @@ describe('UsersService', () => {
             const passwordResetDto: ChangePasswordNoAuth = { email: user.email }
 
             const mockTransporter = await emailService.transporter()
-            mockTransporter.sendMail = vi.fn()
-            emailService.transporter = vi.fn().mockResolvedValue(mockTransporter)
+            mockTransporter.sendMail = jest.fn()
+            emailService.transporter = jest.fn().mockResolvedValue(mockTransporter)
 
             await usersService.sendPasswordResetEmail(passwordResetDto)
 
-            user = await prisma.user.findFirst({ where: { email: user.email } })
+            user = (await prisma.user.findFirst({ where: { email: user.email } }))!
 
             expect(user.passwordReset).toBeTruthy()
             expect(user.passwordReset?.expiration).toBeGreaterThan(Date.now())
@@ -200,15 +199,15 @@ describe('UsersService', () => {
             const sendEmailUpdateDto: VerifyEmailDto = { newEmail: randomEmail() }
 
             const mockTransporter = await emailService.transporter()
-            mockTransporter.sendMail = vi.fn()
-            emailService.transporter = vi.fn().mockResolvedValue(mockTransporter)
+            mockTransporter.sendMail = jest.fn()
+            emailService.transporter = jest.fn().mockResolvedValue(mockTransporter)
 
             await usersService.verifyEmailUpdate(sendEmailUpdateDto, user.id)
 
-            user = await prisma.user.findUnique({ where: { id: user.id } })
+            user = (await prisma.user.findUnique({ where: { id: user.id } }))!
 
-            expect(user.emailUpdate.newEmail).toBe(sendEmailUpdateDto.newEmail)
-            expect(typeof user.emailUpdate.tokenHash).toBe('string')
+            expect(user.emailUpdate?.newEmail).toBe(sendEmailUpdateDto.newEmail)
+            expect(typeof user.emailUpdate?.tokenHash).toBe('string')
             expect(user.emailUpdate?.expiration?.getTime()).toBeGreaterThan(Date.now())
 
             expect(mockTransporter.sendMail).toBeCalledTimes(1)
@@ -234,13 +233,18 @@ describe('UsersService', () => {
 
             const updateEmailDto: AuthorizedUpdateEmailDto = { token: token, oldEmail: user.email }
 
-            prisma.user.findFirst = vi.fn().mockResolvedValue(user)
+            prisma.user.findFirst = jest.fn().mockResolvedValue(user)
 
             await usersService.updateEmail(updateEmailDto)
 
-            user = await prisma.user.findUnique({
+            const user2 = await prisma.user.findUnique({
                 where: { id: user.id },
             })
+
+            if (!user2) {
+                throw new Error(`Could not find user with id ${user2}`)
+            }
+            user = user2
 
             expect(user.email).toBe(newEmail)
             expect(user.emailUpdate).not.toBeTruthy()
@@ -270,7 +274,7 @@ describe('UsersService', () => {
             try {
                 await usersService.updateEmail(updateEmailDto)
                 expect(true).toBe(false)
-            } catch (e) {
+            } catch (e: any) {
                 expect(e.message).toBe('Invalid token')
             }
         })
@@ -299,7 +303,7 @@ describe('UsersService', () => {
             try {
                 await usersService.updateEmail(updateEmailDto)
                 expect(true).toBe(false)
-            } catch (e) {
+            } catch (e: any) {
                 expect(e.message).toBe('Invalid token')
             }
         })
