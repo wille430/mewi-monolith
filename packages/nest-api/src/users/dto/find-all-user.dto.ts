@@ -1,7 +1,8 @@
+import { UserDocument } from '@/schemas/user.schema'
 import { IsOptional, IsString } from 'class-validator'
-import { Prisma } from '@mewi/prisma'
+import { FilterQuery } from 'mongoose'
 
-export class FindAllUserDto implements Prisma.UserWhereInput {
+export class FindAllUserDto implements FilterQuery<UserDocument> {
     @IsOptional()
     @IsString()
     email?: string

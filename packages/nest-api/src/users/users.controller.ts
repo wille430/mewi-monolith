@@ -24,7 +24,7 @@ import { FindAllUserDto } from './dto/find-all-user.dto'
 import { Roles } from '@/auth/roles.decorator'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { RolesGuard } from '@/auth/roles.guard'
-import ChangePasswordDto from '@/users/dto/change-password.dto'
+import ChangePasswordDto, { ChangePasswordWithToken } from '@/users/dto/change-password.dto'
 import { Public } from '@/common/decorators/public.decorator'
 import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
@@ -48,7 +48,7 @@ export class UsersController {
 
     @Get()
     @Roles(Role.ADMIN)
-    findAll(@Query() findAllUserDto: FindAllUserDto) {
+    findAll(@Query() findAllUserDto: FindAllUserDto = {}) {
         return this.usersService.findAll(findAllUserDto)
     }
 
@@ -60,7 +60,7 @@ export class UsersController {
     @Put('email')
     @Public()
     @UseGuards(OptionalJwtAuthGuard)
-    updateEmail(@GetUser() user: UserPayload, @Body() updateEmailDto: UpdateEmailDto) {
+    async updateEmail(@GetUser() user: UserPayload, @Body() updateEmailDto: UpdateEmailDto) {
         if (updateEmailDto.newEmail && user) {
             return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
         } else if (updateEmailDto.token) {
@@ -94,16 +94,24 @@ export class UsersController {
     async changePassword(
         @Body()
         dto: ChangePasswordDto,
-        @GetUser() user: UserPayload
+        @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (dto.password && dto.passwordConfirm) {
             if (user?.userId) {
-                return this.usersService.changePassword(dto, user.userId)
-            } else if (dto.token) {
-                return this.usersService.changePasswordWithToken(dto)
+                return this.usersService.changePassword(
+                    {
+                        password: dto.password,
+                        passwordConfirm: dto.passwordConfirm,
+                    },
+                    user.userId
+                )
+            } else if (dto.token && dto.email) {
+                return this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
             }
         } else if (dto.email) {
-            return this.usersService.sendPasswordResetEmail(dto)
+            return this.usersService.sendPasswordResetEmail({
+                email: dto.email,
+            })
         }
 
         throw new UnprocessableEntityException()

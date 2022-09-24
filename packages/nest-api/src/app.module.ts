@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ScheduleModule } from '@nestjs/schedule'
@@ -20,6 +20,7 @@ import { WatchersModule } from './watchers/watchers.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import authConfig from './config/auth.config'
 import { ListingsModule } from '@/listings/listings.module'
+import { MongooseModule } from '@nestjs/mongoose'
 
 @Module({
     imports: [
@@ -34,6 +35,12 @@ import { ListingsModule } from '@/listings/listings.module'
         }),
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public'),
+        }),
+        MongooseModule.forRootAsync({
+            imports: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                uri: configService.get<string>('database.uri'),
+            }),
         }),
         EventEmitterModule.forRoot(),
         ScheduleModule.forRoot(),
