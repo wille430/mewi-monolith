@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { randomEmail } from '@mewi/test-utils'
+import {
+    createMany,
+    createScrapedListings,
+    ListingFactory,
+    UserFactory,
+    UserWatcherFactory,
+    WatcherFactory,
+} from '@mewi/test-utils'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Transporter } from 'nodemailer'
 import { User } from '@mewi/prisma'
-import { createListingFactory, createUserFactory, createWatcherFactory } from '@mewi/prisma/factory'
-import { faker } from '@faker-js/faker'
 import { WatchersService } from './watchers.service'
 import { EmailModule } from '../email/email.module'
 import configuration from '../config/configuration'
@@ -12,6 +17,7 @@ import { EmailService } from '../email/email.service'
 import { ListingsModule } from '../listings/listings.module'
 import notificationConfig from '../config/notification.config'
 import { PrismaService } from '../prisma/prisma.service'
+import _ from 'lodash'
 
 describe('WatchersService', () => {
     let watchersService: WatchersService
@@ -20,12 +26,6 @@ describe('WatchersService', () => {
     let prisma: PrismaService
 
     let mockTransporter: Transporter
-
-    const watcherFactory = createWatcherFactory({ metadata: { keyword: faker.random.word() } })
-    const userFactory = createUserFactory({
-        email: randomEmail(),
-    })
-    const listingFactory = createListingFactory({})
 
     let user: User
 
@@ -43,20 +43,26 @@ describe('WatchersService', () => {
         emailService = module.get<EmailService>(EmailService)
         configService = module.get<ConfigService>(ConfigService)
         prisma = module.get<PrismaService>(PrismaService)
+
+        for (let i = 0; i < 20; i++) {
+            await prisma.listing.create({
+                data: ListingFactory.build({
+                    date: new Date().toISOString(),
+                }),
+            })
+        }
     })
 
     beforeEach(async () => {
-        const watcher = await watcherFactory.create()
+        // Create a user, a watcher, and subscribe the user to that watcher
 
-        user = await userFactory.create({
-            email: randomEmail(),
-            watchers: {
-                create: {
-                    watcherId: watcher.id,
-                    notifiedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 10000),
-                },
-            },
-        })
+        user = await UserFactory.create()
+
+        // await prisma.userWatcher.create({
+        //     data: UserWatcherFactory.build({
+        //         notifiedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 10000),
+        //     }),
+        // })
 
         mockTransporter = await emailService.transporter()
         mockTransporter.sendMail = jest.fn()
@@ -71,16 +77,17 @@ describe('WatchersService', () => {
         await prisma.userWatcher.deleteMany()
         await prisma.user.deleteMany()
         await prisma.watcher.deleteMany()
+        await prisma.listing.deleteMany()
 
         await prisma.$disconnect()
     })
 
+    it('should be defined', () => {
+        expect(watchersService).toBeTruthy()
+    })
+
     describe('#notifyUserOfWatcher', () => {
         it('should send email to user and update user watcher', async () => {
-            jest.spyOn(watchersService, 'newListings').mockImplementation(
-                () => Array(12).fill(listingFactory.build()) as any
-            )
-
             let userWatcher = await prisma.userWatcher.findFirst({ where: { userId: user.id } })
 
             if (!userWatcher)
@@ -140,7 +147,7 @@ describe('WatchersService', () => {
 
     describe('#notifyUsersInWatcher', () => {
         it('should try to notify all users in watcher', async () => {
-            const watcher = await watcherFactory.create()
+            const watcher = await WatcherFactory.create()
 
             const notifyMock = jest
                 .spyOn(watchersService, 'notifyUserOfWatcher')
@@ -156,7 +163,7 @@ describe('WatchersService', () => {
         beforeEach(async () => {
             // generate multiple watchers
             while ((await prisma.watcher.count()) < 12) {
-                await watcherFactory.create()
+                await WatcherFactory.create()
             }
         })
 

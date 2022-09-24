@@ -13,7 +13,7 @@
     },
     "typesVersions": {
         "*": {
-            "*": [
+            "index": [
                 "./dist/client/index.d.ts"
             ],
             "index-browser": [

@@ -9,7 +9,7 @@ import { ScrapeContext } from './types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 
 export abstract class ListingScraper extends BaseListingScraper {
-    entryPoints!: EntryPoint[]
+    entryPoints: EntryPoint[] = []
 
     constructor(
         @Inject(PrismaService) readonly prisma: PrismaService,
@@ -41,8 +41,6 @@ export abstract class ListingScraper extends BaseListingScraper {
     }
 
     createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
-        if (!this.entryPoints) this.entryPoints = []
-
         this.entryPoints.push(
             new EntryPoint(this.prisma, this, createConfig, identifier ?? this.origin)
         )

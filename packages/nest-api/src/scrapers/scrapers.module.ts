@@ -9,7 +9,7 @@ import { ListingsModule } from '@/listings/listings.module'
 
 @Module({
     imports: [ListingsModule, UsersModule],
-    providers: [ScrapersService, ConfigService, PrismaService, ...Scrapers],
+    providers: [ScrapersService, ConfigService, PrismaService],
     controllers: [ScrapersController],
     exports: [ListingsModule],
 })

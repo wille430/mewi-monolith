@@ -10,7 +10,10 @@ describe('Tradera Scraper', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [PrismaService, TraderaScraper, ConfigService],
-        }).compile()
+        })
+            .overrideProvider(PrismaService)
+            .useValue({})
+            .compile()
 
         scraper = module.get<TraderaScraper>(TraderaScraper)
         scraper.limit = 10

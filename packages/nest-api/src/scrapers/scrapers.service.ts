@@ -16,10 +16,11 @@ import { BaseListingScraper } from './classes/BaseListingScraper'
 import { PrismaService } from '@/prisma/prisma.service'
 import { KvdbilScraper } from './scrapers/kvdbil.scraper'
 import { BilwebScraper } from './scrapers/bilweb.scraper'
+import Scrapers from './scrapers'
 
 @Injectable()
 export class ScrapersService {
-    scrapers: Record<ListingOrigin, BaseListingScraper>
+    scrapers!: Record<ListingOrigin, BaseListingScraper>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -30,29 +31,18 @@ export class ScrapersService {
     scraperPipeline: [ListingOrigin, Partial<StartScraperOptions>][] = []
 
     constructor(
-        @Inject(BlocketScraper) private blocketScraper: BlocketScraper,
-        @Inject(TraderaScraper) private traderaScraper: TraderaScraper,
-        @Inject(BlippScraper) private blippScraper: BlippScraper,
-        @Inject(SellpyScraper) private sellpyScraper: SellpyScraper,
-        @Inject(CitiboardScraper) private citiboardScraper: CitiboardScraper,
-        @Inject(ShpockScraper) private shpockScraper: ShpockScraper,
-        @Inject(BytbilScraper) private bytbilScraper: BytbilScraper,
-        @Inject(KvdbilScraper) private kvdbilScraper: KvdbilScraper,
-        @Inject(BilwebScraper) private bilwebScraper: BilwebScraper,
         @Inject(PrismaService) private prisma: PrismaService,
         @Inject(EventEmitter2) private eventEmitter: EventEmitter2
     ) {
-        this.scrapers = {
-            Blocket: this.blocketScraper,
-            Tradera: this.traderaScraper,
-            Blipp: this.blippScraper,
-            Sellpy: this.sellpyScraper,
-            Citiboard: this.citiboardScraper,
-            Shpock: this.shpockScraper,
-            Bytbil: this.bytbilScraper,
-            Kvdbil: this.kvdbilScraper,
-            Bilweb: this.bilwebScraper,
-        }
+        this.instantiateScrapers()
+    }
+
+    instantiateScrapers() {
+        this.scrapers = Scrapers.reduce((prev, Scraper) => {
+            const scraper = new Scraper(this.prisma, this.eventEmitter)
+            prev[scraper.origin] = scraper
+            return prev
+        }, {} as typeof this.scrapers)
     }
 
     logPipeline(total: number, msg: string) {

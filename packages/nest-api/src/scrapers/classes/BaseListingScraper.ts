@@ -39,7 +39,7 @@ export abstract class BaseListingScraper {
 
     async initialize(): Promise<void> {
         if (this.initialized) {
-            throw new Error('Scraper is already initialized')
+            return
         }
 
         this.initialized = true

@@ -12,12 +12,3 @@ services:
             GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
             GOOGLE_SECRET: $GOOGLE_SECRET
             DATABASE_URL: $DATABASE_URL
-    db:
-        image: mongo:5.0.8
-        restart: always
-        container_name: integration-tests-prisma
-        ports:
-            - '27017:27017'
-        environment:
-            MONGO_USERNAME: prisma
-            MONGO_PASSWORD: prisma

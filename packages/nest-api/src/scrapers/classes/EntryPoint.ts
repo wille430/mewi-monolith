@@ -23,7 +23,7 @@ export class EntryPoint extends BaseEntryPoint {
             return {
                 continue: false,
                 listings: [],
-                page: -1,
+                page: page,
             }
         }
 

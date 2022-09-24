@@ -9,61 +9,58 @@ import { PrismaService } from '../prisma/prisma.service'
 import { BaseListingScraper } from './classes/BaseListingScraper'
 import faker from '@faker-js/faker'
 import { createListing } from '@/factories/createListing'
-import { mockedScrapers } from './scrapers/__mocks__/mockedScrapers'
-import Scrapers from './scrapers'
 import { ScrapedListing } from './classes/types/ScrapedListing'
+import { ListingOrigin } from '@mewi/prisma'
+import { ListingScraperMock } from './scrapers/__mocks__/ListingScraper'
+import { MAX_SCRAPE_DURATION } from './classes/__mocks__/EntryPoint'
+import { randomSample } from '@mewi/test-utils'
 
-describe('mocked scrapers', () => {
+describe('ScrapersService', () => {
     let scrapersService: ScrapersService
     let scrapers: BaseListingScraper[] = []
     let prisma: PrismaService
+    let configService: ConfigService
 
-    let scrapersAsync = mockedScrapers
-    let resolvedScrapers: typeof Scrapers
-
-    beforeEach(async () => {
-        resolvedScrapers = await Promise.all(scrapersAsync.map(async (x) => await x))
-
+    beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [
-                ConfigService,
-                PrismaService,
-                ScrapersService,
-                EventEmitter2,
-                ...resolvedScrapers,
-            ],
+            providers: [ConfigService, PrismaService, ScrapersService, EventEmitter2],
         }).compile()
 
         scrapersService = module.get<ScrapersService>(ScrapersService)
         prisma = module.get<PrismaService>(PrismaService)
+        configService = module.get<ConfigService>(ConfigService)
 
-        scrapers = []
+        const nullArr = new Array(Object.values(ListingOrigin).length).fill(null)
+        const scrapersMap = nullArr.map((_, index) => {
+            const origin = Object.values(ListingOrigin)[index]
+            const scraper = new ListingScraperMock(prisma, configService)
+            scraper.origin = origin
+            return scraper
+        })
+        const scrapersHash = scrapersMap.reduce((prev, curr) => {
+            prev[curr.origin] = curr as any
+            return prev
+        }, {} as typeof scrapersService.scrapers)
 
-        for (const scraper of resolvedScrapers) {
-            let temp = module.get<typeof scraper>(scraper as any) as any as BaseListingScraper
-            scrapers.push(temp)
-        }
+        scrapers = scrapersMap
+
+        scrapersService.scrapers = scrapersHash
+
+        jest.useFakeTimers()
     })
 
     it('should be defined', () => {
         expect(scrapersService).toBeTruthy()
     })
 
-    describe.each(
-        Array(scrapersAsync.length)
-            .fill(null)
-            .map((o, i) => [i, Scrapers[i].name])
-    )('#start (%i) %s', (index, name) => {
+    describe('#start', () => {
         let scraper: BaseListingScraper
-        let scraper2: BaseListingScraper
-        const getListingsDelay = 500
+        const getListingsDelay = MAX_SCRAPE_DURATION + 50
         let listings: ScrapedListing[]
 
         beforeEach(async () => {
-            scraper = scrapers[index as number]
-            scraper2 = _.sample(scrapers.filter((x) => x.origin !== scraper.origin))!
-
+            scraper = _.sample(Object.values(scrapersService.scrapers))!
             await scraper.initialize()
 
             listings = await Promise.all(
@@ -75,15 +72,6 @@ describe('mocked scrapers', () => {
                     })
                 )
             )
-
-            scraper.entryPoints.forEach((entryPoint) => {
-                entryPoint.scrape = jest.fn().mockResolvedValue({
-                    listings,
-                    page: 1,
-                    continue: false,
-                })
-                entryPoint.getMostRecentLog = jest.fn().mockResolvedValue(undefined)
-            })
 
             scrapersService.statusOf = jest.fn().mockResolvedValue({})
 
@@ -114,41 +102,32 @@ describe('mocked scrapers', () => {
             setTimeout(() => {
                 expect(scraper.status).toBe(ScraperStatus.IDLE)
                 expect(scrapersService.scraperPipeline[0]).not.toBeTruthy()
-            }, getListingsDelay)
+            }, getListingsDelay + 200)
         })
 
-        it('should allow queueing', async () => {
-            // Before scraping
-            expect(scraper.status).toBe(ScraperStatus.IDLE)
-            expect(scraper2.status).toBe(ScraperStatus.IDLE)
+        it('should remove scraper from queue after each scraper resolves', async () => {
+            const scrapersToQueue = randomSample(scrapers, 2)
 
-            await scrapersService.start(scraper.origin)
-            await scrapersService.start(scraper2.origin)
+            for (const scraper of scrapersToQueue) {
+                await scrapersService.start(scraper.origin)
+                expect(scrapersService.scraperPipeline.at(-1)?.at(0)).toBe(scraper.origin)
+            }
 
-            // Directly before scraping
-            expect(scraper.status).toBe(ScraperStatus.QUEUED)
-            expect(scrapersService.scraperPipeline[0][0]).toBe(scraper.origin)
-
-            expect(scraper2.status).toBe(ScraperStatus.QUEUED)
-            expect(scrapersService.scraperPipeline[1][0]).toBe(scraper2.origin)
-
-            // During scraping of scraper 1
             setTimeout(() => {
-                expect(scraper.status).toBe(ScraperStatus.SCRAPING)
-                expect(scrapersService.scraperPipeline[0]).not.toBeTruthy()
+                expect(scrapersService.scraperPipeline.length).toBe(0)
+            }, getListingsDelay * scrapersToQueue.length)
+        })
 
-                expect(scraper2.status).toBe(ScraperStatus.QUEUED)
-                expect(scrapersService.scraperPipeline[0][0]).toBe(scraper2.origin)
-            }, getListingsDelay / 2)
+        it('should have idle status when in queue and not running', async () => {
+            const scrapersToQueue = randomSample(scrapers, 2)
 
-            // After scraping of scraper 1
-            setTimeout(() => {
-                expect(scraper.status).toBe(ScraperStatus.IDLE)
-                expect(scrapersService.scraperPipeline[0]).not.toBeTruthy()
+            for (const scraper of scrapersToQueue) {
+                await scrapersService.start(scraper.origin)
+            }
 
-                expect(scraper2.status).toBe(ScraperStatus.SCRAPING)
-                expect(scrapersService.scraperPipeline[0][0]).not.toBeTruthy()
-            }, getListingsDelay + 10)
+            for (const scraper of scrapersToQueue) {
+                expect(scraper.status).toBe(ScraperStatus.QUEUED)
+            }
         })
 
         it('should scrape until total pages is reached', async () => {

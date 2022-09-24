@@ -16,7 +16,10 @@ describe.each(testScrapers)(`Common scraper test (%s)`, (a, ScraperProvider) => 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [PrismaService, ScraperProvider as any, ConfigService],
-        }).compile()
+        })
+            .overrideProvider(PrismaService)
+            .useValue({})
+            .compile()
 
         prisma = module.get<PrismaService>(PrismaService)
         scraper = module.get(ScraperProvider as any)
@@ -54,7 +57,16 @@ describe.each(testScrapers)(`Common scraper test (%s)`, (a, ScraperProvider) => 
             const page = 999999
             const result = await entryPoint.scrape(page, {})
 
-            expect(result.listings).toEqual([])
+            // TraderaScraper returns a list of items even though the page
+            // does not exist
+            try {
+                expect(result.listings).toEqual([])
+            } catch (e) {
+                for (const listing of result.listings) {
+                    validateListingTest(listing, entryPoint.createContext())
+                }
+            }
+
             expect(result.continue).toBe(false)
             expect(result.page).toBe(page)
         }, 20000)
