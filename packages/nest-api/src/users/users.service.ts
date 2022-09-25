@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
-import bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import * as crypto from 'crypto'

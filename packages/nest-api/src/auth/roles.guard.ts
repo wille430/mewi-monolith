@@ -20,8 +20,6 @@ export class RolesGuard implements CanActivate {
         const request = context.switchToHttp().getRequest()
         const user = await this.usersRepository.findById(request.user.userId)
 
-        console.log({ user, payload: request.user, roles: user?.roles })
-
         if (!user) {
             return false
         }
