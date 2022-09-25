@@ -10,7 +10,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
                 throw e
             }
         })
-        this.$use(userMiddleware)
+        // this.$use(userMiddleware)
     }
 
     async enableShutdownHooks(app: INestApplication) {

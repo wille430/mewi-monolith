@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import nodeMailer from 'nodemailer'
-import path from 'path'
+import * as path from 'path'
 
 @Injectable()
 export class EmailService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    constructor() {}
-
     credentials = {
         email: process.env.GMAIL_MAIL ?? 'email@test.com',
         pass: process.env.GMAIL_PASS,

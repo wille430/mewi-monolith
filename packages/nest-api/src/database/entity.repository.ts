@@ -55,4 +55,8 @@ export abstract class EntityRepository<T extends Document> {
         const deleteResult = await this.entityModel.deleteMany(entityFilterQuery)
         return deleteResult.deletedCount >= 1
     }
+
+    async count(entityFilterQuery: FilterQuery<T>): Promise<number> {
+        return this.entityModel.count(entityFilterQuery)
+    }
 }

@@ -12,7 +12,6 @@
         "incremental": true,
         "skipLibCheck": true,
         "noFallthroughCasesInSwitch": false,
-        "esModuleInterop": true,
         "preserveSymlinks": true,
         "isolatedModules": true,
         "allowJs": true,
@@ -20,7 +19,9 @@
         "strict": true,
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "declaration": true,
+        "removeComments": true
     },
     "include": ["src/**/*"],
     "exclude": ["dist"],

@@ -1,12 +1,15 @@
 import { registerAs } from '@nestjs/config'
 
 type DatabaseConfig = {
-    uri: string
+    uri?: string
 }
 
 export default registerAs(
     'database',
     (): DatabaseConfig => ({
-        uri: process.env.DATABASE_URL || 'mongodb://localhost:27017/test',
+        uri:
+            process.env.NODE_ENV === 'test'
+                ? process.env.DATABASE_TEST_URI
+                : process.env.DATABASE_URI,
     })
 )

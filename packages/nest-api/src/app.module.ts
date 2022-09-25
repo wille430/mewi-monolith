@@ -20,7 +20,7 @@ import { WatchersModule } from './watchers/watchers.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import authConfig from './config/auth.config'
 import { ListingsModule } from '@/listings/listings.module'
-import { MongooseModule } from '@nestjs/mongoose'
+import { DatabaseModule } from './database/database.module'
 
 @Module({
     imports: [
@@ -36,12 +36,6 @@ import { MongooseModule } from '@nestjs/mongoose'
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public'),
         }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                uri: configService.get<string>('database.uri'),
-            }),
-        }),
         EventEmitterModule.forRoot(),
         ScheduleModule.forRoot(),
         ListingsModule,
@@ -53,6 +47,7 @@ import { MongooseModule } from '@nestjs/mongoose'
         TestModule,
         WatchersModule,
         UserWatchersModule,
+        DatabaseModule,
     ],
     controllers: [AppController],
 })

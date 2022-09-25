@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common'
 import { Request as ReqObj, Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { User } from '@mewi/prisma'
 import { REFRESH_TOKEN_COOKIE } from '@wille430/common'
 import { setJWTCookies } from './utils/setJWTCookies'
 import { AuthService } from '@/auth/auth.service'
@@ -21,6 +20,7 @@ import { LocalAuthGuard } from '@/auth/local-auth.guard'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { GoogleAuthGuard } from '@/auth/google-auth.guard'
 import { Public } from '@/common/decorators/public.decorator'
+import { User } from '@/schemas/user.schema'
 
 @Controller('/auth')
 export class AuthController {
