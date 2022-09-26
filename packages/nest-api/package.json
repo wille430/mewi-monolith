@@ -80,8 +80,8 @@
     "scripts": {
         "dev": "nest start --watch && node build.js",
         "lint": "eslint",
-        "test": "dotenv -e .env.test -- bash -c 'echo \"DATABSAE_URL: $DATABASE_URI\"' && jest --maxWorkers=1",
-        "test:watch": "npm run test -- --watch",
+        "test": "dotenv -e .env.test -- bash -c 'echo \"DATABSAE_URL: $DATABASE_URI\"' && jest --maxWorkers=50%",
+        "test:watch": "npm run test -- --watch --onlyChanged",
         "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json && node build.js",
         "pack": "pnpm pack --pack-destination ../../archive",
         "isolate": "sh script/predeploy-api.sh",

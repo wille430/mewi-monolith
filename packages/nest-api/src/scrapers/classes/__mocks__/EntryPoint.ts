@@ -14,10 +14,10 @@ class EntryPointMock extends BaseEntryPoint {
     async scrape(page: number, options: ScrapeOptions): Promise<ScrapeResult> {
         if (!this.pages[page]) {
             const listings = await Promise.all(
-                new Array(this.scraper.limit).fill(null).map(ListingFactory.create)
+                new Array(this.scraper.limit).fill(null).map(ListingFactory.build)
             )
 
-            this.pages[page] = listings
+            this.pages[page] = listings as any
         }
 
         await new Promise<void>((resolve) => {

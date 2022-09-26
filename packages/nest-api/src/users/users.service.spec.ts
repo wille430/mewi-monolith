@@ -12,7 +12,7 @@ import {
     ChangePasswordWithToken,
 } from './dto/change-password.dto'
 import { CreateUserDto } from './dto/create-user.dto'
-import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
+import { RequestEmailUpdateDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
 import { EmailService } from '../email/email.service'
 import { EmailModule } from '../email/email.module'
 import configuration from '../config/configuration'
@@ -194,15 +194,15 @@ describe('UsersService', () => {
         })
     })
 
-    describe('#verifyEmailUpdate', () => {
+    describe('#requestEmailUpdate', () => {
         it('should set updateEmail details and send email', async () => {
-            const sendEmailUpdateDto: VerifyEmailDto = { newEmail: randomEmail() }
+            const sendEmailUpdateDto: RequestEmailUpdateDto = { newEmail: randomEmail() }
 
             const mockTransporter = await emailService.transporter()
             mockTransporter.sendMail = jest.fn()
             emailService.transporter = jest.fn().mockResolvedValue(mockTransporter)
 
-            await usersService.verifyEmailUpdate(sendEmailUpdateDto, user.id)
+            await usersService.requestEmailUpdate(sendEmailUpdateDto, user.id)
 
             user = (await userModel.findById(user.id))!
 

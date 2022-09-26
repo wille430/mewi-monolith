@@ -1,11 +1,17 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    NotFoundException,
+    UnprocessableEntityException,
+} from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import * as crypto from 'crypto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { VerifyEmailDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
+import { RequestEmailUpdateDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
 import { FindAllUserDto } from './dto/find-all-user.dto'
 import {
     ChangePasswordAuth,
@@ -77,26 +83,29 @@ export class UsersService {
         token,
         email,
     }: ChangePasswordWithToken) {
-        if (password === passwordConfirm) {
-            const user = await this.usersRepository.findOne({ email })
-            if (!user) throw new NotFoundException()
-            if (!user.passwordReset)
-                throw new BadRequestException('User has no pending password reset')
+        if (password !== passwordConfirm) {
+            throw new BadRequestException('Password and password confirmation must match')
+        }
+        const user = await this.usersRepository.findOne({ email })
+        if (!user) throw new NotFoundException()
+        if (!user.passwordReset) throw new BadRequestException('User has no pending password reset')
 
-            console.log(`Comparing ${token} and ${user.passwordReset?.tokenHash}`)
+        const isValidToken = token != null && token === user.passwordReset.tokenHash
+        // class-validator validates password validity
+        const isValidPassword = !(await bcrypt.compare(password, user?.password ?? ''))
+        if (!isValidPassword) {
+            throw new BadRequestException(
+                'The provided password is already in use. Please provide an unique password.'
+            )
+        }
 
-            if (
-                user.passwordReset &&
-                user.passwordReset.expiration > Date.now() &&
-                (await bcrypt.compare(token, user.passwordReset.tokenHash))
-            ) {
-                await this.usersRepository.findByIdAndUpdate(user.id, {
-                    password: await bcrypt.hash(password, 10),
-                    passwordReset: null,
-                })
-            } else {
-                throw Error('Invalid token')
-            }
+        if (user.passwordReset && user.passwordReset.expiration > Date.now() && isValidToken) {
+            await this.usersRepository.findByIdAndUpdate(user.id, {
+                password: await bcrypt.hash(password, 10),
+                passwordReset: null,
+            })
+        } else {
+            throw Error('Invalid token')
         }
     }
 
@@ -156,13 +165,15 @@ export class UsersService {
 
     async updateEmail({ token, oldEmail }: AuthorizedUpdateEmailDto) {
         const user = await this.usersRepository.findOne({ email: oldEmail })
-        if (!user) return
+        if (!user) throw new NotFoundException(`No users with email ${oldEmail} was found`)
+
+        const isValidToken = token != null && token === user.emailUpdate?.tokenHash
 
         if (
             user.emailUpdate &&
             user.emailUpdate.expiration.getTime() > Date.now() &&
             token &&
-            (await bcrypt.compare(token, user.emailUpdate?.tokenHash ?? ''))
+            isValidToken
         ) {
             await this.usersRepository.findByIdAndUpdate(user.id, {
                 email: user.emailUpdate.newEmail,
@@ -173,24 +184,32 @@ export class UsersService {
         }
     }
 
-    async verifyEmailUpdate({ newEmail }: VerifyEmailDto, userId: string) {
+    async requestEmailUpdate({ newEmail }: RequestEmailUpdateDto, userId: string) {
         const user = await this.usersRepository.findById(userId)
-        if (!user) return
+        if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
 
         if (user.loginStrategy !== LoginStrategy.LOCAL) {
-            return
+            throw new BadRequestException(
+                `Requesting an email update is only possible for users that have signed up using email and password`
+            )
         }
 
         const token = crypto.randomBytes(32).toString('hex')
 
-        await this.usersRepository.findByIdAndUpdate(userId, {
-            emailUpdate: {
-                tokenHash: await bcrypt.hash(token, 10),
-                newEmail,
-                // expire in 15 minutes
-                expiration: new Date(Date.now() + 15 * 60 * 60 * 1000),
+        await this.usersRepository.findByIdAndUpdate(user.id, {
+            $set: {
+                emailUpdate: {
+                    tokenHash: await bcrypt.hash(token, 10),
+                    newEmail,
+                    // expire in 15 minutes
+                    expiration: new Date(Date.now() + 15 * 60 * 60 * 1000),
+                },
             },
         })
+
+        if (process.env.NODE_ENV === 'test') {
+            return
+        }
 
         const transporter = await this.emailService.transporter()
 

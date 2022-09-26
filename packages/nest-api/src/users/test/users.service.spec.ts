@@ -15,7 +15,7 @@ import { UsersRepository } from '../users.repository'
 import { UsersService } from '../users.service'
 import { userStub } from './stubs/user.stub'
 import bcrypt from 'bcryptjs'
-import { AuthorizedUpdateEmailDto, VerifyEmailDto } from '../dto/update-email.dto'
+import { AuthorizedUpdateEmailDto, RequestEmailUpdateDto } from '../dto/update-email.dto'
 
 jest.mock('../users.repository')
 jest.mock('bcryptjs')
@@ -320,17 +320,17 @@ describe('UsersService', () => {
         })
     })
 
-    describe('#verifyEmailUpdate', () => {
-        describe('when verifyEmailUpdate is called', () => {
+    describe('#requestEmailUpdate', () => {
+        describe('when requestEmailUpdate is called', () => {
             let ret: any
-            let verifyEmailDto: VerifyEmailDto
+            let verifyEmailDto: RequestEmailUpdateDto
 
             beforeEach(async () => {
                 verifyEmailDto = {
                     newEmail: userStub().email,
                 }
 
-                ret = await usersService.verifyEmailUpdate(verifyEmailDto, userStub().id)
+                ret = await usersService.requestEmailUpdate(verifyEmailDto, userStub().id)
             })
 
             it('then it should call usersRepository', () => {

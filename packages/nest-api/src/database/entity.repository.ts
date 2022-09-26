@@ -1,6 +1,9 @@
-import { Document, FilterQuery, Model, UpdateQuery } from 'mongoose'
+import mongoose, { Document, FilterQuery, Model, UpdateQuery } from 'mongoose'
 
 export abstract class EntityRepository<T extends Document> {
+    defaultProjection = {
+        __v: 0,
+    }
     constructor(protected readonly entityModel: Model<T>) {}
 
     async findOne(
@@ -9,20 +12,19 @@ export abstract class EntityRepository<T extends Document> {
     ): Promise<T | null> {
         return this.entityModel
             .findOne(entityFilterQuery, {
-                _id: 0,
-                __v: 0,
+                ...this.defaultProjection,
                 ...projection,
             })
             .exec()
     }
 
     async findById(id: string, projection?: Record<string, unknown>): Promise<T | null> {
-        return this.findOne(
-            {
-                id,
-            },
-            projection
-        )
+        return this.entityModel
+            .findById(id, {
+                ...this.defaultProjection,
+                ...projection,
+            })
+            .exec()
     }
 
     async find(entityFilterQuery: FilterQuery<T>): Promise<T[] | null> {
@@ -35,7 +37,9 @@ export abstract class EntityRepository<T extends Document> {
     }
 
     async findByIdAndUpdate(id: string, updateEntityData: UpdateQuery<T>): Promise<T | null> {
-        return this.entityModel.findByIdAndUpdate(id, updateEntityData)
+        return this.entityModel.findByIdAndUpdate(id, updateEntityData, {
+            new: true,
+        })
     }
 
     async findOneAndUpdate(
@@ -57,6 +61,6 @@ export abstract class EntityRepository<T extends Document> {
     }
 
     async count(entityFilterQuery: FilterQuery<T>): Promise<number> {
-        return this.entityModel.count(entityFilterQuery)
+        return this.entityModel.countDocuments(entityFilterQuery)
     }
 }

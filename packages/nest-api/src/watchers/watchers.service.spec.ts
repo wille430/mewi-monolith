@@ -1,12 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import {
-    createMany,
-    createScrapedListings,
-    ListingFactory,
-    UserFactory,
-    UserWatcherFactory,
-    WatcherFactory,
-} from '@mewi/test-utils'
+import { ListingFactory, UserFactory, WatcherFactory } from '@mewi/test-utils'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Transporter } from 'nodemailer'
 import { User } from '@mewi/prisma'

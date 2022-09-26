@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { Role, User } from '@mewi/prisma'
 import _ from 'lodash'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -29,6 +28,8 @@ import { Public } from '@/common/decorators/public.decorator'
 import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { SuccessParam } from '@/common/enum/successParam'
+import { User } from '@/schemas/user.schema'
+import { Role } from '@/schemas/enums/UserRole'
 
 export const hiddenUserFields: (keyof User)[] = ['emailUpdate', 'password', 'passwordReset']
 
@@ -54,7 +55,7 @@ export class UsersController {
 
     @Get('me')
     async getMe(@GetUser() user: UserPayload) {
-        return _.omit(await this.usersService.findOne(user.userId), ...hiddenUserFields)
+        return this.usersService.findOne(user.userId)
     }
 
     @Put('email')
@@ -62,7 +63,7 @@ export class UsersController {
     @UseGuards(OptionalJwtAuthGuard)
     async updateEmail(@GetUser() user: UserPayload, @Body() updateEmailDto: UpdateEmailDto) {
         if (updateEmailDto.newEmail && user) {
-            return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
+            return this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
         } else if (updateEmailDto.token) {
             return this.usersService.updateEmail(updateEmailDto)
         }
@@ -77,7 +78,7 @@ export class UsersController {
         @Res() res: Response
     ) {
         if (updateEmailDto.newEmail && user) {
-            return this.usersService.verifyEmailUpdate(updateEmailDto, user.userId)
+            return this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 

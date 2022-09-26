@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import nodeMailer from 'nodemailer'
+import nodeMailer, { TestAccount } from 'nodemailer'
 import * as path from 'path'
+import * as net from 'net'
 
 @Injectable()
 export class EmailService {
@@ -17,9 +18,18 @@ export class EmailService {
         verifyEmail: path.resolve(__dirname, this.templatesDir, 'verifyEmail'),
     }
 
+    private _account?: TestAccount
+    async getTestAccount(): Promise<TestAccount> {
+        if (!this._account) {
+            this._account = await nodeMailer.createTestAccount()
+        }
+
+        return this._account!
+    }
+
     async transporter(real?: boolean) {
         if (!real && process.env.NODE_ENV !== 'production') {
-            const account = await nodeMailer.createTestAccount()
+            const account = await this.getTestAccount()
 
             return nodeMailer.createTransport({
                 host: account.smtp.host,

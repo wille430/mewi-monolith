@@ -55,7 +55,7 @@ describe('UsersController', () => {
             let users: User[]
 
             beforeEach(async () => {
-                users = await usersController.findAll()
+                users = (await usersController.findAll()) ?? []
             })
 
             it('then it should call usersService', () => {
@@ -148,7 +148,7 @@ describe('UsersController', () => {
                 })
 
                 it('then it should have called usersService', () => {
-                    expect(usersService.verifyEmailUpdate).toHaveBeenCalledWith(
+                    expect(usersService.requestEmailUpdate).toHaveBeenCalledWith(
                         updateEmailDto,
                         userPayload.userId
                     )

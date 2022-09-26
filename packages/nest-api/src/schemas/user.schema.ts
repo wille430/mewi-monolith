@@ -1,19 +1,17 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { ObjectId } from 'bson'
 import mongoose, { Document } from 'mongoose'
 import { EmailUpdate } from './class/EmailUpdate'
 import { PasswordReset } from './class/PasswordReset'
 import { LoginStrategy } from './enums/LoginStrategy'
 import { Role } from './enums/UserRole'
 import { Listing } from './listing.schema'
-import { UserWatcher } from './user-watcher.schema'
 
 export type UserDocument = User & Document
 
-@Schema()
+@Schema({
+    id: true,
+})
 export class User {
-    _id!: ObjectId
-
     id!: string
 
     @Prop({ type: String, required: true })
@@ -30,11 +28,11 @@ export class User {
     })
     premium: boolean = false
 
-    @Prop({
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserWatcher' }],
-        default: [],
-    })
-    watchers!: UserWatcher[]
+    // @Prop({
+    //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserWatcher' }],
+    //     default: [],
+    // })
+    // watchers!: UserWatcher[]
 
     @Prop({
         type: [String],

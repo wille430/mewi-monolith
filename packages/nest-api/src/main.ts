@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core'
-import { useContainer } from 'class-validator'
-import cookieParser from 'cookie-parser'
+import * as cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { bootstrapApp } from './bootstrapApp'
@@ -20,7 +19,6 @@ const bootstrap = async () => {
     SwaggerModule.setup('api', app, document)
 
     app.use(cookieParser())
-    useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
     await app.listen(process.env.PORT || 3001)
 }

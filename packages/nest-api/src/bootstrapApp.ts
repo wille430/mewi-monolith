@@ -4,6 +4,8 @@ import {
     ValidationError,
     ValidationPipe,
 } from '@nestjs/common'
+import { useContainer } from 'class-validator'
+import { AppModule } from './app.module'
 
 export const bootstrapApp = (app: INestApplication) => {
     app.enableCors({
@@ -20,4 +22,5 @@ export const bootstrapApp = (app: INestApplication) => {
             },
         })
     )
+    useContainer(app.select(AppModule), { fallbackOnErrors: true })
 }
