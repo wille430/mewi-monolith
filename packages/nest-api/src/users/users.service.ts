@@ -105,7 +105,7 @@ export class UsersService {
                 passwordReset: null,
             })
         } else {
-            throw Error('Invalid token')
+            throw new BadRequestException('Invalid token')
         }
     }
 

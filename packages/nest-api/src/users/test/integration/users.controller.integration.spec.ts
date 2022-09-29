@@ -20,6 +20,8 @@ import ChangePasswordDto, {
     ChangePasswordWithToken,
 } from '@/users/dto/change-password.dto'
 import * as bcrypt from 'bcryptjs'
+import _ from 'lodash'
+import { UpdateUserDto } from '@/users/dto/update-user.dto'
 
 describe('UsersController', () => {
     let dbConnection: Connection
@@ -111,7 +113,7 @@ describe('UsersController', () => {
                 const response = await request(httpServer).get('/users/me')
 
                 expect(response.status).toBe(200)
-                expect(adminStub()).toMatchObject(response.body)
+                expect(response.body).toMatchObject(adminStub())
             })
         })
 
@@ -237,6 +239,50 @@ describe('UsersController', () => {
                 })
             })
         })
+
+        describe('GET /users/:id', () => {
+            it('should return user', async () => {
+                await usersCollection.insertOne(userStub())
+                const response = await request(httpServer).get(`/users/${userStub().id}`)
+
+                expect(response.status).toBe(200)
+                expect(response.body).toMatchObject(userStub())
+            })
+        })
+
+        describe('PUT /users/:id', () => {
+            it('should return user and update document', async () => {
+                await usersCollection.insertOne(userStub())
+
+                const dto: UpdateUserDto = {
+                    email: faker.internet.email().toLowerCase(),
+                }
+                const response = await request(httpServer).put(`/users/${userStub().id}`).send(dto)
+                const newUser = await usersCollection.findOne({
+                    id: userStub().id,
+                })
+
+                expect(response.status).toBe(200)
+                expect(response.body).toMatchObject(newUser!)
+            })
+        })
+
+        describe('DELETE /users/:id', () => {
+            it('should return user and remove document', async () => {
+                await usersCollection.insertOne(userStub())
+
+                const response = await request(httpServer).delete(`/users/${userStub().id}`)
+
+                expect(response.status).toBe(200)
+                expect(response.body).toMatchObject(userStub())
+
+                const user = await usersCollection.findOne({
+                    id: userStub().id,
+                })
+
+                expect(user).toBe(null)
+            })
+        })
     })
 
     describe('when unauthenticated', () => {
@@ -325,6 +371,33 @@ describe('UsersController', () => {
 
                     expect(response.status).toBe(400)
                 })
+            })
+        })
+
+        describe('GET /users/:id', () => {
+            it('should return status 401', async () => {
+                await usersCollection.insertOne(userStub())
+                const response = await request(httpServer).get(`/users/${userStub().id}`)
+
+                expect(response.status).toBe(401)
+            })
+        })
+
+        describe('PUT /users/:id', () => {
+            it('should return status 401', async () => {
+                await usersCollection.insertOne(userStub())
+                const response = await request(httpServer).put(`/users/${userStub().id}`)
+
+                expect(response.status).toBe(401)
+            })
+        })
+
+        describe('DELETE /users/:id', () => {
+            it('should return status 401', async () => {
+                await usersCollection.insertOne(userStub())
+                const response = await request(httpServer).delete(`/users/${userStub().id}`)
+
+                expect(response.status).toBe(401)
             })
         })
     })
