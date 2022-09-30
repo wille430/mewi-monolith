@@ -9,6 +9,7 @@ import {
     Query,
     ValidationPipe,
     UseGuards,
+    Put,
 } from '@nestjs/common'
 import { Role } from '@mewi/prisma'
 import { WatchersService } from './watchers.service'
@@ -51,7 +52,7 @@ export class WatchersController {
         return this.watchersService.findOne(id)
     }
 
-    @Patch(':id')
+    @Put(':id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateWatcherDto: UpdateWatcherDto) {
         return this.watchersService.update(id, updateWatcherDto)

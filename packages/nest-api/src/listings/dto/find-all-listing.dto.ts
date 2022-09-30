@@ -1,4 +1,4 @@
-import { ListingSearchFilters, ListingSort } from '@wille430/common'
+import { ListingSort } from '@wille430/common'
 import { Transform } from 'class-transformer'
 import {
     IsOptional,
@@ -14,7 +14,7 @@ import { DEFAULT_LIMIT } from '../constants'
 import { Category, ListingOrigin } from '@mewi/prisma'
 import _ from 'lodash'
 
-export class FindAllListingsDto implements ListingSearchFilters {
+export class FindAllListingsDto {
     @IsOptional()
     @IsNumber()
     @Transform(({ value }) => Number.parseInt(value))

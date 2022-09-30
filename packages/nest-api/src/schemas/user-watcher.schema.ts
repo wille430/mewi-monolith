@@ -9,20 +9,22 @@ export type UserWatcherDocument = UserWatcher & Document
     timestamps: true,
 })
 export class UserWatcher {
-    @Prop({
-        type: { type: mongoose.Schema.Types.ObjectId, ref: 'Watcher' },
-        required: true,
-    })
-    watcher!: Watcher
+    // @Prop({
+    //     type: { type: mongoose.Schema.Types.ObjectId, ref: 'Watcher' },
+    //     required: true,
+    // })
+    // watcher!: Watcher
 
     @Prop({
         type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        required: true,
     })
     user!: User
 
     @Prop(Date)
     notifiedAt?: Date
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const UserWatcherSchema = SchemaFactory.createForClass(UserWatcher)

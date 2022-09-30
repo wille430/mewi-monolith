@@ -22,6 +22,7 @@ import ChangePasswordDto, {
 import * as bcrypt from 'bcryptjs'
 import _ from 'lodash'
 import { UpdateUserDto } from '@/users/dto/update-user.dto'
+import { initTestModule } from '@/common/test/initTestModule'
 
 describe('UsersController', () => {
     let dbConnection: Connection
@@ -31,23 +32,17 @@ describe('UsersController', () => {
 
     describe('when authenticated', () => {
         beforeAll(async () => {
-            const moduleRef = await Test.createTestingModule({
-                imports: [AppModule],
+            const testModule = await initTestModule((builder) => {
+                builder
+                    .overrideGuard(JwtAuthGuard)
+                    .useClass(createJwtAuthGuard(adminUserPayloadStub()))
+                    .overrideGuard(OptionalJwtAuthGuard)
+                    .useClass(createOptionalJwtAuthGuard(userPayloadStub()))
             })
-                .overrideGuard(JwtAuthGuard)
-                .useClass(createJwtAuthGuard(adminUserPayloadStub()))
-                .overrideGuard(OptionalJwtAuthGuard)
-                .useClass(createOptionalJwtAuthGuard(userPayloadStub()))
-                .compile()
-
-            app = moduleRef.createNestApplication()
-            bootstrapApp(app)
-            await app.init()
-
-            dbConnection = moduleRef.get<DatabaseService>(DatabaseService).getDbHandle()
+            dbConnection = testModule.dbConnection
+            httpServer = testModule.httpServer
+            app = testModule.app
             usersCollection = dbConnection.collection('users')
-
-            httpServer = app.getHttpServer()
 
             jest.resetAllMocks()
         })
@@ -287,17 +282,12 @@ describe('UsersController', () => {
 
     describe('when unauthenticated', () => {
         beforeAll(async () => {
-            const moduleRef = await Test.createTestingModule({
-                imports: [AppModule],
-            }).compile()
+            const testModule = await initTestModule()
 
-            app = moduleRef.createNestApplication()
-            await app.init()
-
-            dbConnection = moduleRef.get<DatabaseService>(DatabaseService).getDbHandle()
+            dbConnection = testModule.dbConnection
+            httpServer = testModule.httpServer
+            app = testModule.app
             usersCollection = dbConnection.collection('users')
-
-            httpServer = app.getHttpServer()
 
             jest.resetAllMocks()
         })

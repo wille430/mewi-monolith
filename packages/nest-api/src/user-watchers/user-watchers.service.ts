@@ -5,33 +5,36 @@ import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { WatchersService } from '@/watchers/watchers.service'
 import { PrismaService } from '@/prisma/prisma.service'
+import { UserWatchersRepository } from './user-watchers.repository'
+import { WatchersRepository } from '@/watchers/watchers.repository'
+import { UsersRepository } from '@/users/users.repository'
 
 @Injectable()
 export class UserWatchersService {
-    constructor(private watchersService: WatchersService, private prisma: PrismaService) {}
+    constructor(
+        private watchersService: WatchersService,
+        private readonly userWatchersRepository: UserWatchersRepository,
+        private readonly watchersRepository: WatchersRepository,
+        private readonly usersRepository: UsersRepository
+    ) {}
 
-    async create({
-        userId,
-        metadata,
-    }: CreateUserWatcherDto): Promise<(UserWatcher & { watcher: Watcher }) | null> {
-        let watcher = await this.prisma.watcher.findFirst({ where: { metadata } })
+    async create({ userId, metadata }: CreateUserWatcherDto) {
+        let watcher = await this.watchersRepository.findOne({ metadata })
 
         // 1. Create new watcher if watcher doesn't exist already
         if (!watcher) {
-            watcher = await this.prisma.watcher.create({ data: { metadata } })
+            watcher = await this.watchersRepository.create({ metadata })
         }
 
         // 2. Append user watcher to user
-        const user = await this.prisma.user.findUnique({ where: { id: userId } })
+        const user = await this.usersRepository.findById(userId)
         if (!user) return null
 
         // 2. If user is already subscribed to the watcher, throw error
         if (
-            await this.prisma.userWatcher.count({
-                where: {
-                    userId: user.id,
-                    watcherId: watcher.id,
-                },
+            await this.userWatchersRepository.count({
+                userId: user.id,
+                watcherId: watcher.id,
             })
         ) {
             throw new ConflictException({
@@ -40,58 +43,37 @@ export class UserWatchersService {
                 error: Error.Database.CONFLICTING_RESOURCE,
             })
         } else {
-            const userWatcher = await this.prisma.userWatcher.create({
-                data: {
-                    userId: user.id,
-                    watcherId: watcher.id,
-                },
-                include: {
-                    watcher: true,
-                },
+            const userWatcher = await this.userWatchersRepository.create({
+                userId: user.id,
+                watcherId: watcher.id,
             })
 
             return userWatcher
         }
     }
 
-    async findAll(userId: string): Promise<(UserWatcher & { watcher: Watcher })[] | null> {
+    async findAll(userId: string) {
         try {
-            return await this.prisma.userWatcher.findMany({
-                where: {
-                    userId: userId,
-                },
-                include: {
-                    watcher: true,
-                },
+            return await this.userWatchersRepository.find({
+                userId: userId,
             })
         } catch (e) {
             return []
         }
     }
 
-    async findOne(
-        id: string,
-        userId: string
-    ): Promise<(UserWatcher & { watcher: Watcher }) | null> {
+    async findOne(id: string, userId: string) {
         try {
-            return await this.prisma.userWatcher.findFirst({
-                where: {
-                    id: id,
-                    userId: userId,
-                },
-                include: {
-                    watcher: true,
-                },
+            return await this.userWatchersRepository.findOne({
+                id: id,
+                userId: userId,
             })
         } catch (e) {
             return null
         }
     }
 
-    async update(
-        id: string,
-        { userId, metadata }: UpdateUserWatcherDto
-    ): Promise<(UserWatcher & { watcher: Watcher }) | null> {
+    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
         this.remove(id, userId)
         return this.create({ metadata, userId })
     }
@@ -104,21 +86,17 @@ export class UserWatchersService {
      * @returns True if the user watcher was deleted, else false
      */
     async remove(id: string, userId: string): Promise<boolean> {
-        const { watcherId } =
-            (await this.prisma.userWatcher.findFirst({
-                where: {
-                    id,
-                    userId,
-                },
+        const { id: watcherId } =
+            (await this.userWatchersRepository.findOne({
+                id,
+                userId,
             })) ?? {}
         if (!watcherId) return false
 
         // delete from user
-        await this.prisma.userWatcher.deleteMany({
-            where: {
-                id,
-                userId,
-            },
+        await this.userWatchersRepository.deleteMany({
+            id,
+            userId,
         })
 
         // delete watcher if no one is subscribed
@@ -126,11 +104,7 @@ export class UserWatchersService {
         const subCount = await this.watchersService.subscriberCount(watcherId)
 
         if (subCount <= 0) {
-            await this.prisma.watcher.delete({
-                where: {
-                    id: watcherId,
-                },
-            })
+            await this.watchersRepository.findByIdAndDelete(watcherId)
         }
 
         return true

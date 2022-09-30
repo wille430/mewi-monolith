@@ -2,43 +2,54 @@ import { Inject, Injectable } from '@nestjs/common'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
 import { Cron } from '@nestjs/schedule'
-import { Prisma, User, Watcher, EmailType } from '@mewi/prisma'
 import { EJSON } from 'bson'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 import { EmailService } from '@/email/email.service'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ListingsService } from '@/listings/listings.service'
 import { ListingSearchFilters } from '@wille430/common'
+import { WatchersRepository } from './watchers.repository'
+import { Watcher } from '@/schemas/watcher.schema'
+import { User } from '@/schemas/user.schema'
+import { EmailType } from '@mewi/prisma'
+import { UserWatchersRepository } from '@/user-watchers/user-watchers.repository'
+import { UsersRepository } from '@/users/users.repository'
+import { ListingsRepository } from '@/listings/listings.repository'
 
 @Injectable()
 export class WatchersService {
     constructor(
-        @Inject(PrismaService) private prisma: PrismaService,
+        @Inject(WatchersRepository) private readonly watchersRepository: WatchersRepository,
+        @Inject(UserWatchersRepository)
+        private readonly userWatchersRepository: UserWatchersRepository,
+        @Inject(UsersRepository)
+        private readonly usersRepository: UsersRepository,
+        @Inject(ListingsRepository)
+        private readonly listingsRepository: ListingsRepository,
         @Inject(EmailService) private readonly emailService: EmailService,
         @Inject(ListingsService) private readonly listingService: ListingsService,
         @Inject(ConfigService) private configService: ConfigService
     ) {}
 
     async exists(metadata: CreateWatcherDto['metadata']) {
-        const count = await this.prisma.watcher.count({ where: { metadata } })
+        const count = await this.watchersRepository.count({ metadata })
         return count === 0 ? false : true
     }
 
     async create(createWatcherDto: CreateWatcherDto) {
-        const watcher = await this.prisma.watcher.create({ data: createWatcherDto })
+        const watcher = await this.watchersRepository.create(createWatcherDto)
 
         return watcher
     }
 
     async findAll(query: FindAllWatchersDto) {
         const { limit } = query
-        const options: Prisma.WatcherFindManyArgs = {}
+        const options: any = {}
 
         if (limit) options.take = +limit
 
-        const watchers = await this.prisma.watcher.findMany({
+        const watchers = await this.watchersRepository.find({
             ...options,
         })
 
@@ -46,24 +57,24 @@ export class WatchersService {
     }
 
     async findOne(id: string) {
-        return await this.prisma.watcher.findUnique({ where: { id } })
+        return await this.watchersRepository.findById(id)
     }
 
     async update(id: string, updateWatcherDto: UpdateWatcherDto) {
-        return await this.prisma.watcher.update({ where: { id }, data: updateWatcherDto })
+        return await this.watchersRepository.findByIdAndUpdate(id, { $set: updateWatcherDto })
     }
 
     async remove(id: string) {
-        await this.prisma.watcher.findUnique({ where: { id } })
+        await this.watchersRepository.findByIdAndDelete(id)
     }
 
     @Cron('* * 9 * * *')
     async notifyAll() {
-        const watcherCount = await this.prisma.watcher.count()
+        const watcherCount = await this.watchersRepository.count({})
 
         let i = 0
         while (watcherCount > i) {
-            const watcher = await this.prisma.watcher.findFirst({
+            const watcher = await this.watchersRepository.findOne({
                 skip: i,
                 orderBy: { id: 'asc' },
             })
@@ -80,21 +91,22 @@ export class WatchersService {
      * @param watcherId - The id of the watcher
      * @returns An array of user ids
      */
-    async getUsersInWatcher(watcherId: string) {
-        return (
-            await this.prisma.userWatcher.groupBy({
-                by: ['userId'],
-                where: {
-                    watcherId,
-                },
-            })
-        ).map((x) => x.userId)
+    async getUsersInWatcher(watcherId: string): Promise<User[]> {
+        // return (
+        //     await this.userWatchersRepository.aggregate({
+        //         by: ['userId'],
+        //         where: {
+        //             watcherId,
+        //         },
+        //     })
+        // ).map((x) => x.userId)
+        return []
     }
 
     async notifyUsersInWatcher(watcherOrId: string | Watcher) {
         const watcher =
             typeof watcherOrId === 'string'
-                ? await this.prisma.watcher.findUnique({ where: { id: watcherOrId } })
+                ? await this.watchersRepository.findById(watcherOrId)
                 : watcherOrId
 
         if (!watcher) return
@@ -117,7 +129,7 @@ export class WatchersService {
 
         const watcher =
             typeof watcherOrId === 'string'
-                ? await this.prisma.watcher.findUnique({ where: { id: watcherOrId } })
+                ? await this.watchersRepository.findById(watcherOrId)
                 : watcherOrId
 
         if (!watcher) return false
@@ -126,7 +138,7 @@ export class WatchersService {
             return false
         }
 
-        const user = (await this.prisma.user.findUnique({ where: { id: userId } })) as User
+        const user = (await this.usersRepository.findById(userId)) as User
 
         const pipeline = this.listingService.metadataToPL(
             watcher.metadata as Partial<ListingSearchFilters>
@@ -143,13 +155,11 @@ export class WatchersService {
             })
 
             const locals = {
-                newItemCount: await this.prisma.listing
-                    .aggregateRaw({
-                        pipeline: [
-                            ...this.listingService.metadataToPL(watcher.metadata as any),
-                            { $count: 'totalHits' },
-                        ],
-                    })
+                newItemCount: await this.listingsRepository
+                    .aggregate([
+                        ...this.listingService.metadataToPL(watcher.metadata as any),
+                        { $count: 'totalHits' },
+                    ])
                     .then((res) => (res as any)[0]?.totalHits ?? 0),
                 keyword: watcher.metadata.keyword,
                 items: newListings,
@@ -164,26 +174,27 @@ export class WatchersService {
             })
             await transporter.sendMail(emailInfo.originalMessage)
 
+            // TODO:
             // Save email record
-            await this.prisma.emailRecord.create({
-                data: {
-                    from: this.emailService.credentials.email,
-                    to: user.email,
-                    userId: user.id,
-                    type: EmailType.WATCHER,
-                },
-            })
+            // await this.prisma.emailRecord.create({
+            //     data: {
+            //         from: this.emailService.credentials.email,
+            //         to: user.email,
+            //         userId: user.id,
+            //         type: EmailType.WATCHER,
+            //     },
+            // })
 
             // Set new notifiedAt date
-            await this.prisma.userWatcher.updateMany({
-                where: {
+            await this.userWatchersRepository.findOneAndUpdate(
+                {
                     userId: user.id,
                     watcherId: watcher.id,
                 },
-                data: {
+                {
                     notifiedAt: new Date(),
-                },
-            })
+                }
+            )
 
             return true
         } else {
@@ -192,19 +203,15 @@ export class WatchersService {
     }
 
     async newListings(pipeline: any) {
-        return await this.prisma.listing
-            .aggregateRaw({
-                pipeline: [...pipeline, { $limit: 7 }],
-            })
-            .then((arr) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x)))
+        return await this.listingsRepository
+            .aggregate([...pipeline, { $limit: 7 }])
+            .then((arr: any) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x)))
     }
 
     async shouldNotifyUser(userId: string, watcherId: string): Promise<boolean> {
-        const userWatcher = await this.prisma.userWatcher.findFirst({
-            where: {
-                userId,
-                watcherId,
-            },
+        const userWatcher = await this.userWatchersRepository.findOne({
+            userId,
+            watcherId,
         })
 
         if (!userWatcher) return false
@@ -221,10 +228,8 @@ export class WatchersService {
 
     async subscriberCount(watcherId: string): Promise<number> {
         return (
-            (await this.prisma.userWatcher.count({
-                where: {
-                    watcherId,
-                },
+            (await this.userWatchersRepository.count({
+                watcherId,
             })) ?? 0
         )
     }
