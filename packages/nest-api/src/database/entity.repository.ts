@@ -1,9 +1,10 @@
-import { UpdateResult } from 'mongodb'
-import mongoose, {
+import { AggregateOptions, UpdateResult } from 'mongodb'
+import {
     Document,
     FilterQuery,
     HydratedDocument,
     Model,
+    PipelineStage,
     Query,
     UpdateQuery,
 } from 'mongoose'
@@ -15,13 +16,12 @@ export abstract class EntityRepository<T extends Document> {
     }
     constructor(protected readonly entityModel: Model<T>) {}
 
-    private async applyPagination(
-        pagination: Pagination,
-        query: Query<
+    private applyPagination<
+        R extends Query<
             HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null,
-            HydratedDocument<T, {}, {}>
+            HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null
         >
-    ) {
+    >(pagination: Pagination, query: R): R {
         pagination?.skip && query.skip(pagination.skip)
 
         pagination?.limit && query.limit(pagination.limit)
@@ -31,45 +31,43 @@ export abstract class EntityRepository<T extends Document> {
 
     async findOne(
         entityFilterQuery: FilterQuery<T>,
-        pagination?: Pagination,
+        pagination: Pagination = {},
         projection?: Record<string, unknown>
     ): Promise<T | null> {
-        const query = this.entityModel.findOne(entityFilterQuery, {
-            ...this.defaultProjection,
-            ...projection,
-        })
-
-        pagination && this.applyPagination(pagination, query)
-
-        return query.exec()
+        return this.applyPagination(
+            pagination,
+            this.entityModel.findOne(entityFilterQuery, {
+                ...this.defaultProjection,
+                ...projection,
+            })
+        ).exec()
     }
 
     async findById(
         id: string,
-        pagination?: Pagination,
+        pagination: Pagination = {},
         projection?: Record<string, unknown>
     ): Promise<T | null> {
-        const query = this.entityModel.findById(id, {
-            ...this.defaultProjection,
-            ...projection,
-        })
-
-        pagination && this.applyPagination(pagination, query)
-
-        return query.exec()
+        return this.applyPagination(
+            pagination,
+            this.entityModel.findById(id, {
+                ...this.defaultProjection,
+                ...projection,
+            })
+        ).exec()
     }
 
-    async find(entityFilterQuery: FilterQuery<T>, pagination?: Pagination): Promise<T[] | null> {
-        const query = this.entityModel.find(entityFilterQuery)
-
-        pagination && this.applyPagination(pagination, query)
-
-        return query.exec()
+    async find(entityFilterQuery: FilterQuery<T>, pagination: Pagination): Promise<T[] | null> {
+        return this.applyPagination(
+            pagination,
+            this.entityModel.find(entityFilterQuery, {
+                ...this.defaultProjection,
+            })
+        ).exec()
     }
 
     async create(createEntityData: unknown): Promise<T> {
         const entity = new this.entityModel(createEntityData)
-        const id = entity.id
         return entity.save()
     }
 
@@ -108,5 +106,29 @@ export abstract class EntityRepository<T extends Document> {
         return this.entityModel.countDocuments(entityFilterQuery)
     }
 
-    aggregate = this.entityModel.aggregate
+    async aggregate(pipeline: PipelineStage[], options: AggregateOptions = {}) {
+        return this.entityModel.aggregate(pipeline, options)
+    }
+
+    async sample(count: number) {
+        const totalDocs = await this.entityModel.count({})
+
+        const randomNums = Array.from({ length: Math.min(count, totalDocs) }, () =>
+            Math.floor(Math.random() * (totalDocs - 1))
+        )
+
+        const randomDocs: T[] = []
+        const addedDocNums: number[] = []
+
+        for (const i of randomNums) {
+            if (!addedDocNums.includes(i)) {
+                const entity = await this.entityModel.findOne({}, { skip: i })
+
+                if (entity) randomDocs.push(entity)
+                addedDocNums.push(i)
+            }
+        }
+
+        return randomDocs
+    }
 }

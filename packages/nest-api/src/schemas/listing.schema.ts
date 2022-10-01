@@ -1,16 +1,20 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose, { Document } from 'mongoose'
+import { Document } from 'mongoose'
 import { Category } from './enums/Category'
+import { Currency } from './enums/Currency'
 import { ListingOrigin } from './enums/ListingOrigin'
-import { UserWatcher } from './user-watcher.schema'
-import { User } from './user.schema'
 
 export type ListingDocument = Listing & Document
 
 @Schema({
+    id: true,
     timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
 })
 export class Listing {
+    id!: string
+
     @Prop({
         type: String,
         required: true,
@@ -54,7 +58,7 @@ export class Listing {
         required: true,
         default: [],
     })
-    imageUrl!: string
+    imageUrl!: string[]
 
     @Prop(
         raw({
@@ -64,7 +68,7 @@ export class Listing {
     )
     price?: {
         value: number
-        currency: 'SEK'
+        currency: Currency
     }
 
     @Prop(String)
@@ -76,7 +80,7 @@ export class Listing {
             value: String,
         }),
     ])
-    parameters?: [{ label: string; value: string }]
+    parameters?: { label: string; value: string }[]
 
     @Prop({
         type: String,

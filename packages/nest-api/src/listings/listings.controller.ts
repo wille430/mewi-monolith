@@ -3,7 +3,6 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
     Delete,
     CACHE_MANAGER,
@@ -13,7 +12,6 @@ import {
     Put,
 } from '@nestjs/common'
 import { Cache } from 'cache-manager'
-import { Role, Prisma } from '@mewi/prisma'
 import { ListingsService } from './listings.service'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { UpdateListingDto } from './dto/update-listing.dto'
@@ -24,6 +22,9 @@ import { RolesGuard } from '@/auth/roles.guard'
 import { Public } from '@/common/decorators/public.decorator'
 import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
+import { DeleteListingsDto } from './dto/delete-listings.dto'
+import { Listing } from '@/schemas/listing.schema'
+import { Role } from '@/schemas/enums/UserRole'
 
 @Controller('/listings')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -45,21 +46,22 @@ export class ListingsController {
 
     @Delete()
     @Roles(Role.ADMIN)
-    deleteMany(@Body() dto: Prisma.ListingDeleteManyArgs) {
+    deleteMany(@Body() dto: DeleteListingsDto) {
         return this.listingsService.deleteMany(dto)
     }
 
     @Get('featured')
     @Public()
     async featured() {
-        if (!(await this.cacheManager.get('featured'))) {
-            console.log('Caching random listings...')
-            this.cacheManager.set('featured', await this.listingsService.sample(5), {
+        let cachedListings: Listing[] | undefined = await this.cacheManager.get('featured')
+        if (!cachedListings) {
+            cachedListings = await this.listingsService.sample(5)
+            await this.cacheManager.set('featured', cachedListings, {
                 ttl: 60 * 60,
             })
         }
 
-        return await this.cacheManager.get('featured')
+        return cachedListings
     }
 
     @Get('autocomplete/:keyword')
@@ -74,7 +76,7 @@ export class ListingsController {
         return this.listingsService.findOne(id)
     }
 
-    @Patch(':id')
+    @Put(':id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateListingDto: UpdateListingDto) {
         return this.listingsService.update(id, updateListingDto)

@@ -1,5 +1,4 @@
 import { UserPayload } from '@/auth/jwt-strategy'
-import { adminUserPayloadStub } from '@/users/test/stubs/admin-user-payload.stub'
 import { ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'

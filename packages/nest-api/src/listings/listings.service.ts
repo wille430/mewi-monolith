@@ -6,12 +6,16 @@ import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { ListingsRepository } from './listings.repository'
-import { Listing } from '@mewi/prisma'
-import { FilterQuery, PipelineStage } from 'mongoose'
+import mongoose, { FilterQuery, PipelineStage } from 'mongoose'
+import { Listing } from '@/schemas/listing.schema'
+import { UsersRepository } from '@/users/users.repository'
 
 @Injectable()
 export class ListingsService {
-    constructor(private readonly listingsRepository: ListingsRepository) {}
+    constructor(
+        private readonly listingsRepository: ListingsRepository,
+        private readonly usersRepository: UsersRepository
+    ) {}
 
     async create(createListingDto: CreateListingDto) {
         return this.listingsRepository.create(createListingDto)
@@ -65,9 +69,9 @@ export class ListingsService {
         return await this.listingsRepository.findById(id)
     }
 
-    async update(id: string, updateListingDto: UpdateListingDto): Promise<Listing> {
+    async update(id: string, updateListingDto: UpdateListingDto): Promise<Listing | null> {
         const updatedListing = await this.listingsRepository.findByIdAndUpdate(id, updateListingDto)
-        return updatedListing?.replaceOne()
+        return updatedListing
     }
 
     async remove(id: string) {
@@ -75,39 +79,22 @@ export class ListingsService {
     }
 
     async sample(count = 1) {
-        const totalDocs = await this.listingsRepository.count({})
-
-        const randomNums = Array.from({ length: count }, () =>
-            Math.floor(Math.random() * totalDocs)
-        )
-
-        const randomDocs: Listing[] = []
-        const addedDocNums: number[] = []
-
-        for (const i of randomNums) {
-            if (!addedDocNums.includes(i)) {
-                const listing = await this.listingsRepository.findOne({}, { skip: i })
-
-                if (listing) randomDocs.push()
-                addedDocNums.push(i)
-            }
-        }
-
-        return randomDocs
+        return this.listingsRepository.sample(count)
     }
 
-    async autocomplete(keyword: string): Promise<string[]> {
-        const response =
-            (await this.listingsRepository.find(
-                {
-                    title: {
-                        contains: keyword,
-                    },
+    async autocomplete(keyword: string) {
+        const response = await this.listingsRepository.find(
+            {
+                title: {
+                    $regex: new RegExp(keyword, 'i'),
                 },
-                {
-                    limit: 5,
-                }
-            )) ?? []
+            },
+            {
+                limit: 5,
+            }
+        )
+
+        if (!response) return []
 
         return response.map((x) => x.title)
     }
@@ -116,32 +103,40 @@ export class ListingsService {
         return await this.listingsRepository.deleteMany(dto)
     }
 
-    // async like(userId: string, listingId: string) {
-    //     // Check if user already has liked the listing
-    //     const listing = await this.listingsRepository.findById(listingId)
+    async like(userId: string, listingId: string) {
+        // Check if user already has liked the listing
+        const user = await this.usersRepository.findById(userId)
+        const listing = await this.listingsRepository.findById(listingId)
 
-    //     if (!listing) throw new NotFoundException()
+        if (!user) throw new NotFoundException('User not found')
+        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-    //     if (listing.likedByUserIDs.includes(userId)) {
-    //         return listing
-    //     } else {
-    //         return await this.listingsRepository.findByIdAndUpdate(listingId, {
-    //             likedByUserIDs: {
-    //                 push: userId,
-    //             },
-    //         })
-    //     }
-    // }
+        if (user.likedListings.includes(listing)) {
+            return listing
+        } else {
+            return await this.usersRepository.findByIdAndUpdate(userId, {
+                $push: {
+                    likedListings: listingId,
+                },
+            })
+        }
+    }
 
-    // async unlike(userId: string, listingId: string) {
-    //     // Check if user already has liked the listing
-    //     const listing = await this.listingsRepository.findById(listingId)
-    //     if (!listing) throw new NotFoundException()
+    async unlike(userId: string, listingId: string) {
+        const user = await this.usersRepository.findById(userId)
+        const listing = await this.listingsRepository.findById(listingId)
 
-    //     const likedByUserIDs = listing.likedByUserIDs.filter((x) => x != userId)
+        if (!user) throw new NotFoundException('User not found')
+        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-    //     return await this.listingsRepository.findByIdAndUpdate(listingId, {
-    //         likedByUserIDs,
-    //     })
-    // }
+        if (user.likedListings.includes(listing)) {
+            return listing
+        } else {
+            return await this.usersRepository.findByIdAndUpdate(userId, {
+                $pull: {
+                    likedListings: listingId,
+                },
+            })
+        }
+    }
 }

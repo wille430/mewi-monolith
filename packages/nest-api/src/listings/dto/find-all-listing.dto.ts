@@ -12,7 +12,7 @@ import {
 } from 'class-validator'
 import { DEFAULT_LIMIT } from '../constants'
 import { Category, ListingOrigin } from '@mewi/prisma'
-import _ from 'lodash'
+import * as _ from 'lodash'
 
 export class FindAllListingsDto {
     @IsOptional()
