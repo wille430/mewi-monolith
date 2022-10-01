@@ -7,7 +7,7 @@ import SignUpDto from '@/auth/dto/sign-up.dto'
 import { AuthTokens } from '@/common/types/authTokens'
 import { UsersRepository } from '@/users/users.repository'
 import { User } from '@/schemas/user.schema'
-import { LoginStrategy } from '@/schemas/enums/LoginStrategy'
+import { LoginStrategy } from '@wille430/common'
 
 interface UserPayload {
     email: string

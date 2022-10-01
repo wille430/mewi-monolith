@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import puppeteer from 'puppeteer'
+import * as puppeteer from 'puppeteer'
 import { getNextDataEval } from '../helpers/getNextData'
 import { ListingScraper } from './ListingScraper'
 

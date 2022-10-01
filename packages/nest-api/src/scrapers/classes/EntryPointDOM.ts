@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import * as puppeteer from 'puppeteer'
 import { ListingWebCrawler } from '@/scrapers/classes/ListingWebCrawler'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import { ScrapeOptions } from './types/ScrapeOptions'

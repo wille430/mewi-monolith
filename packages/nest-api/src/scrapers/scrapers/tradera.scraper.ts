@@ -1,10 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
-import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 interface TraderaCategory {
     id: number
@@ -33,10 +34,10 @@ export class TraderaScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         Object.assign(this.defaultStartOptions, {
             onNextEntryPoint: () => {
@@ -77,10 +78,7 @@ export class TraderaScraper extends ListingScraper {
         return res.data.items
     }
 
-    parseRawListing(
-        item: Record<string, any>,
-        scrapeContext: ScrapeContext
-    ): Prisma.ListingCreateInput {
+    parseRawListing(item: Record<string, any>, scrapeContext: ScrapeContext): ScrapedListing {
         return {
             origin_id: this.createId(item.itemId.toString()),
             title: item.shortDescription,
@@ -89,8 +87,6 @@ export class TraderaScraper extends ListingScraper {
             ),
             date: item.startDate ? new Date(item.startDate) : new Date(),
             auctionEnd: new Date(item.endDate),
-            body: null,
-            region: null,
             imageUrl: [item.imageUrl],
             isAuction: !!item.endDate || item.itemType === 'auction',
             redirectUrl: new URL(item.itemUrl, this.baseUrl).toString(),

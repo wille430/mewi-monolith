@@ -45,7 +45,6 @@ describe('UsersRepository', () => {
 
                 test('then it should call the userModel', () => {
                     expect(userModel.findOne).toHaveBeenCalledWith(userFilterQuery, {
-                        _id: 0,
                         __v: 0,
                     })
                 })
@@ -66,7 +65,10 @@ describe('UsersRepository', () => {
                 })
 
                 test('then it should call the userModel', () => {
-                    expect(userModel.find).toHaveBeenCalledWith(userFilterQuery)
+                    expect(userModel.find).toHaveBeenCalledWith(
+                        userFilterQuery,
+                        usersRepository.defaultProjection
+                    )
                 })
 
                 test('then it should return a user', () => {

@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ShpockScraper } from './shpock.scraper'
-import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
 
 describe('Shpock Scraper', () => {
@@ -10,7 +9,7 @@ describe('Shpock Scraper', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [ConfigService, PrismaService, ShpockScraper],
+            providers: [ConfigService, ShpockScraper],
         }).compile()
 
         scraper = module.get<ShpockScraper>(ShpockScraper)

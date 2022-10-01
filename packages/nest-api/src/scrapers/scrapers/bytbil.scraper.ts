@@ -1,11 +1,12 @@
 import { Inject } from '@nestjs/common'
-import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { WatchOptions } from '../classes/types/WatchOptions'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 export class BytbilScraper extends ListingWebCrawler {
     baseUrl = 'https://bytbil.com/'
@@ -34,10 +35,10 @@ export class BytbilScraper extends ListingWebCrawler {
     }
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config, {
+        super(listingsRepository, config, {
             listingSelector: '.result-list-item',
         })
 
@@ -60,7 +61,7 @@ export class BytbilScraper extends ListingWebCrawler {
     async evalParseRawListing(
         ele: ElementHandle<Element>,
         context: ScrapeContext
-    ): Promise<Prisma.ListingCreateInput> {
+    ): Promise<ScrapedListing> {
         const listing = await ele.evaluate(async (ele) => {
             const href = ele.querySelector('.car-list-header > a')?.getAttribute('href')
             const priceString = ele
@@ -102,7 +103,7 @@ export class BytbilScraper extends ListingWebCrawler {
             origin: ListingOrigin.Bytbil,
             date: new Date(),
             entryPoint: context.entryPoint.identifier,
-        } as Prisma.ListingCreateInput
+        } as ScrapedListing
     }
 
     reset(): void {

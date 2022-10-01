@@ -16,10 +16,12 @@ import { RequestEmailUpdateDto, AuthorizedUpdateEmailDto } from './dto/update-em
 import { EmailService } from '../email/email.service'
 import { EmailModule } from '../email/email.module'
 import configuration from '../config/configuration'
-import { PrismaService } from '../prisma/prisma.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import { User, UserDocument, UserSchema } from '@/schemas/user.schema'
 import { Model } from 'mongoose'
+import { UsersRepository } from './users.repository'
+
+jest.mock('./users.repository')
 
 describe('UsersService', () => {
     let usersService: UsersService
@@ -43,7 +45,7 @@ describe('UsersService', () => {
                     },
                 ]),
             ],
-            providers: [UsersService, PrismaService],
+            providers: [UsersService, UsersRepository],
         }).compile()
 
         usersService = module.get<UsersService>(UsersService)

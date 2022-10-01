@@ -28,7 +28,7 @@ import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { SuccessParam } from '@/common/enum/successParam'
 import { User } from '@/schemas/user.schema'
-import { Role } from '@/schemas/enums/UserRole'
+import { Role } from '@wille430/common'
 
 export const hiddenUserFields: (keyof User)[] = ['emailUpdate', 'password', 'passwordReset']
 

@@ -1,4 +1,4 @@
-import { ListingSort } from '@wille430/common'
+import { Category, ListingOrigin, ListingSort } from '@wille430/common'
 import { Transform } from 'class-transformer'
 import {
     IsOptional,
@@ -11,7 +11,6 @@ import {
     IsArray,
 } from 'class-validator'
 import { DEFAULT_LIMIT } from '../constants'
-import { Category, ListingOrigin } from '@mewi/prisma'
 import * as _ from 'lodash'
 
 export class FindAllListingsDto {

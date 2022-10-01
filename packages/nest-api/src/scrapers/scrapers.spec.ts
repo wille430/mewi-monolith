@@ -4,24 +4,25 @@ import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import _ from 'lodash'
 import { BaseEntryPoint } from './classes/BaseEntryPoint'
-import { validateListingTest } from './tests/validate-listing.spec'
+import { validateListingTest } from './test/validate-listing.spec'
 import { BaseListingScraper } from './classes/BaseListingScraper'
+import { ListingsRepository } from '@/listings/listings.repository'
 
 const testScrapers = Scrapers.map((x) => [x.name, x])
 
 describe.each(testScrapers)(`Common scraper test (%s)`, (a, ScraperProvider) => {
-    let prisma: PrismaService
+    let listingsRepository: ListingsRepository
     let scraper: BaseListingScraper
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [PrismaService, ScraperProvider as any, ConfigService],
+            providers: [ListingsRepository, ScraperProvider as any, ConfigService],
         })
             .overrideProvider(PrismaService)
             .useValue({})
             .compile()
 
-        prisma = module.get<PrismaService>(PrismaService)
+        listingsRepository = module.get<PrismaService>(PrismaService)
         scraper = module.get(ScraperProvider as any)
         scraper.verbose = true
 

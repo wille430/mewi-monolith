@@ -1,7 +1,7 @@
 import Scrapers from '@/scrapers/scrapers'
 import path from 'path'
 import fs from 'fs'
-import EntryPointMock from '@/scrapers/classes/__mocks__/EntryPoint'
+import { EntryPoint as EntryPointMock } from '@/scrapers/classes/__mocks__/EntryPoint'
 import { PrismaService } from '@/prisma/prisma.service'
 import { ListingOrigin } from '@mewi/prisma'
 

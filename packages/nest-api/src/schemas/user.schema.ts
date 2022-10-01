@@ -1,9 +1,8 @@
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { IUser, LoginStrategy, Role } from '@wille430/common'
 import mongoose, { Document } from 'mongoose'
 import { EmailUpdate } from './class/EmailUpdate'
 import { PasswordReset } from './class/PasswordReset'
-import { LoginStrategy } from './enums/LoginStrategy'
-import { Role } from './enums/UserRole'
 import { Listing } from './listing.schema'
 
 export type UserDocument = User & Document
@@ -13,7 +12,7 @@ export type UserDocument = User & Document
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
 })
-export class User {
+export class User implements IUser {
     id!: string
 
     @Prop({ type: String, required: true })

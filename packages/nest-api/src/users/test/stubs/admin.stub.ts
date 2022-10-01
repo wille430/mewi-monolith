@@ -1,6 +1,5 @@
-import { LoginStrategy } from '@/schemas/enums/LoginStrategy'
-import { Role } from '@/schemas/enums/UserRole'
 import { User } from '@/schemas/user.schema'
+import { LoginStrategy, Role } from '@wille430/common'
 import { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 

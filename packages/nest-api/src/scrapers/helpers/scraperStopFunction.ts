@@ -1,7 +1,7 @@
-import { Prisma } from '@mewi/prisma'
 import { safeToDate } from '@wille430/common'
 import { ScrapePredicate } from '../classes/types/ScrapePredicate'
 import { ScrapeCompareValue } from '../classes/types/ScrapeCompareValue'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 /**
  * Creates a predicate function used for determining whether
@@ -15,7 +15,7 @@ import { ScrapeCompareValue } from '../classes/types/ScrapeCompareValue'
 export const scraperStopFunction = <T extends ScrapePredicate>(
     field: T,
     stopAt: ScrapeCompareValue[T] | undefined
-): Parameters<Array<Prisma.ListingCreateInput>['find']>[0] => {
+): Parameters<Array<ScrapedListing>['find']>[0] => {
     switch (field) {
         case 'date':
             return (listing, index, listings) => {

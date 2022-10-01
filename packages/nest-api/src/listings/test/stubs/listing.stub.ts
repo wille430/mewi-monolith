@@ -1,8 +1,6 @@
-import { Category } from '@/schemas/enums/Category'
-import { Currency } from '@/schemas/enums/Currency'
-import { ListingOrigin } from '@/schemas/enums/ListingOrigin'
 import { Listing } from '@/schemas/listing.schema'
 import faker from '@faker-js/faker'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
 import { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 
@@ -23,4 +21,5 @@ export const listingStub = (): WithId<Listing> => ({
         value: 100000,
         currency: Currency.SEK,
     },
+    entryPoint: '/',
 })

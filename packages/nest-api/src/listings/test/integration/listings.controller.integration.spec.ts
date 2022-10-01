@@ -16,7 +16,7 @@ import { INestApplication } from '@nestjs/common'
 import * as _ from 'lodash'
 import mongoose, { Collection, Connection } from 'mongoose'
 import * as request from 'supertest'
-import { listingStub } from '../stubs/listing.strub'
+import { listingStub } from '../stubs/listing.stub'
 
 const ADMIN_ENDPOINTS = [
     ['POST', '/listings'],

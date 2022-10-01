@@ -14,11 +14,10 @@ import { UpdateUserDto } from '../dto/update-user.dto'
 import { UsersRepository } from '../users.repository'
 import { UsersService } from '../users.service'
 import { userStub } from './stubs/user.stub'
-import bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs'
 import { AuthorizedUpdateEmailDto, RequestEmailUpdateDto } from '../dto/update-email.dto'
 
 jest.mock('../users.repository')
-jest.mock('bcryptjs')
 
 describe('UsersService', () => {
     let usersService: UsersService
@@ -31,6 +30,8 @@ describe('UsersService', () => {
 
         usersService = moduleRef.get<UsersService>(UsersService)
         usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
+
+        jest.clearAllMocks()
     })
 
     describe('#findAll', () => {
@@ -186,7 +187,7 @@ describe('UsersService', () => {
                     } as any)
 
                     // Pass bcrypt comparation
-                    bcrypt.compare = jest.fn().mockResolvedValue(true)
+                    jest.spyOn(bcrypt, 'compare').mockImplementation(() => false)
 
                     ret = await usersService.changePasswordWithToken(dto)
                 })
@@ -278,7 +279,7 @@ describe('UsersService', () => {
                     } as any)
 
                     // Pass bcrypt comparation
-                    bcrypt.compare = jest.fn().mockResolvedValue(true)
+                    jest.spyOn(bcrypt, 'compare').mockImplementation(() => true)
 
                     ret = await usersService.updateEmail(authorizedUpdateEmailDto)
                 })

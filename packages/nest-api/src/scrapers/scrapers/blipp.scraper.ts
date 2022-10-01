@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common'
-import { Category, ListingOrigin, Currency } from '@mewi/prisma'
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { AxiosInstance, AxiosResponse } from 'axios'
 import { NextScraper } from '../classes/NextScraper'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
 
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
@@ -16,10 +16,10 @@ export class BlippScraper extends NextScraper {
     readonly defaultScrapeUrl = 'https://blipp.se/api/proxy'
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         this.createEntryPoint((p) => ({
             url: this.createScrapeUrl(),

@@ -1,7 +1,8 @@
 import { Prop, Schema } from '@nestjs/mongoose'
+import { IEmailUpdate } from '@wille430/common'
 
 @Schema()
-export class EmailUpdate {
+export class EmailUpdate implements IEmailUpdate {
     @Prop({
         type: String,
         required: true,

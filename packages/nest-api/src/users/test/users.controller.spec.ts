@@ -1,20 +1,21 @@
 import { UserPayload } from '@/auth/jwt-strategy'
-import { PrismaService } from '@/prisma/prisma.service'
-import { Role } from '@/schemas/enums/UserRole'
 import { User } from '@/schemas/user.schema'
 import faker from '@faker-js/faker'
 import { ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
+import { Role } from '@wille430/common'
 import ChangePasswordDto from '../dto/change-password.dto'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { UpdateEmailDto } from '../dto/update-email.dto'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { UsersController } from '../users.controller'
+import { UsersRepository } from '../users.repository'
 import { UsersService } from '../users.service'
 import { userPayloadStub } from './stubs/user-payload.stub'
 import { userStub } from './stubs/user.stub'
 
 jest.mock('../users.service')
+jest.mock('../users.repository')
 
 describe('UsersController', () => {
     let usersController: UsersController
@@ -24,7 +25,7 @@ describe('UsersController', () => {
         const moduleRef = await Test.createTestingModule({
             imports: [],
             controllers: [UsersController],
-            providers: [UsersService, ConfigService, PrismaService],
+            providers: [UsersService, ConfigService, UsersRepository],
         }).compile()
 
         usersController = moduleRef.get<UsersController>(UsersController)

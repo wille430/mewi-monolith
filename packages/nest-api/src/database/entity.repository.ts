@@ -26,6 +26,8 @@ export abstract class EntityRepository<T extends Document> {
 
         pagination?.limit && query.limit(pagination.limit)
 
+        pagination?.sort && query.sort(pagination.sort)
+
         return query
     }
 
@@ -57,18 +59,40 @@ export abstract class EntityRepository<T extends Document> {
         ).exec()
     }
 
-    async find(entityFilterQuery: FilterQuery<T>, pagination: Pagination): Promise<T[] | null> {
-        return this.applyPagination(
-            pagination,
-            this.entityModel.find(entityFilterQuery, {
-                ...this.defaultProjection,
-            })
-        ).exec()
+    async find(
+        entityFilterQuery: FilterQuery<T>,
+        pagination: Pagination = {}
+    ): Promise<T[] | null> {
+        try {
+            return this.applyPagination(
+                pagination,
+                this.entityModel.find(entityFilterQuery, {
+                    ...this.defaultProjection,
+                })
+            ).exec()
+        } catch (e) {
+            // @ts-ignore
+            return this.applyPagination(
+                pagination,
+                // @ts-ignore
+                this.entityModel.find(entityFilterQuery, {
+                    ...this.defaultProjection,
+                })
+            )
+        }
     }
 
     async create(createEntityData: unknown): Promise<T> {
         const entity = new this.entityModel(createEntityData)
         return entity.save()
+    }
+
+    async createMany(createEntityData: unknown[]): Promise<{ count: number }> {
+        const entities = await Promise.all(createEntityData.map(this.create))
+
+        return {
+            count: entities.length,
+        }
     }
 
     async findByIdAndUpdate(id: string, updateEntityData: UpdateQuery<T>): Promise<T | null> {

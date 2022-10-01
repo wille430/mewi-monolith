@@ -24,7 +24,7 @@ import { GetUser } from '@/common/decorators/user.decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { DeleteListingsDto } from './dto/delete-listings.dto'
 import { Listing } from '@/schemas/listing.schema'
-import { Role } from '@/schemas/enums/UserRole'
+import { Role } from '@wille430/common'
 
 @Controller('/listings')
 @UseGuards(JwtAuthGuard, RolesGuard)

@@ -1,15 +1,22 @@
-import { ScraperStatus, stringSimilarity, safeToDate } from '@wille430/common'
-import { Prisma, ListingOrigin, Category, ScraperTrigger } from '@mewi/prisma'
+import {
+    ListingOrigin,
+    ScraperStatus,
+    stringSimilarity,
+    ScraperTrigger,
+    Category,
+} from '@wille430/common'
 import crypto from 'crypto'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import { ScrapedListing } from './types/ScrapedListing'
 import { WatchOptions } from './types/WatchOptions'
 import { StartScraperOptions } from '../types/startScraperOptions'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ConfigService } from '@nestjs/config'
 import { DefaultStartOptions } from '../types/defaultStartOptions'
 import { scraperStopFunction } from '../helpers/scraperStopFunction'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { FilterQuery } from 'mongoose'
+import { UserDocument } from '@/schemas/user.schema'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -23,7 +30,7 @@ export abstract class BaseListingScraper {
     abstract entryPoints: BaseEntryPoint[]
     abstract createScrapeUrl: (...args: any) => string
 
-    abstract prisma: PrismaService
+    abstract listingsRepository: ListingsRepository
     abstract config: ConfigService
 
     readonly watchOptions: WatchOptions = {
@@ -141,19 +148,17 @@ export abstract class BaseListingScraper {
                 shouldContinue = cont
 
                 this.log(`Deleting listings in case duplicates are found`)
-                await this.prisma.listing.deleteMany({
-                    where: {
-                        origin_id: { in: batch.map((x) => x.origin_id) },
-                    },
+                await this.listingsRepository.deleteMany({
+                    origin_id: { $in: batch.map((x) => x.origin_id) },
                 })
 
                 this.log(`Inserting ${batch.length} listings into database`)
 
                 // 1.5 Add the scraped listings
                 if (batch.length) {
-                    const { count } = await this.prisma.listing.createMany({
-                        data: batch.map((o) => ({ ...o, entryPoint: entryPoint.identifier })),
-                    })
+                    const { count } = await this.listingsRepository.createMany(
+                        batch.map((o) => ({ ...o, entryPoint: entryPoint.identifier }))
+                    )
                     targetScrapeCount += count
 
                     if (maxScrapeCount) maxScrapeCount -= count
@@ -178,18 +183,18 @@ export abstract class BaseListingScraper {
                 entryPoint: entryPoint.identifier,
             })
 
-            await this.prisma.scrapingLog.create({
-                data: {
-                    added_count: totalScrapedCount,
-                    // TODO: correct error count value
-                    error_count: 0,
-                    entryPoint: entryPoint.identifier,
-                    scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
-                    scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
-                    target: this.origin,
-                    triggered_by: options.triggeredBy,
-                },
-            })
+            // await this.listingsRepository.scrapingLog.create({
+            //     data: {
+            //         added_count: totalScrapedCount,
+            //         // TODO: correct error count value
+            //         error_count: 0,
+            //         entryPoint: entryPoint.identifier,
+            //         scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
+            //         scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
+            //         target: this.origin,
+            //         triggered_by: options.triggeredBy,
+            //     },
+            // })
         }
 
         this.log('DONE')
@@ -197,16 +202,12 @@ export abstract class BaseListingScraper {
         this.reset()
     }
 
-    private async deleteOldListings(
-        args: Prisma.ListingDeleteManyArgs['where'] = {}
-    ): Promise<void> {
-        await this.prisma.listing.deleteMany({
-            where: {
-                date: {
-                    lte: new Date(this.deleteOlderThan),
-                },
-                ...args,
+    private async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {
+        await this.listingsRepository.deleteMany({
+            date: {
+                lte: new Date(this.deleteOlderThan),
             },
+            ...args,
         })
     }
 

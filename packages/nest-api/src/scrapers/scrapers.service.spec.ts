@@ -1,40 +1,41 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import _ from 'lodash'
-import { ScraperStatus } from '@wille430/common'
+import { ListingOrigin, ScraperStatus } from '@wille430/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { ScrapersService } from './scrapers.service'
 import configuration from '../config/configuration'
-import { PrismaService } from '../prisma/prisma.service'
 import { BaseListingScraper } from './classes/BaseListingScraper'
 import faker from '@faker-js/faker'
 import { createListing } from '@/factories/createListing'
 import { ScrapedListing } from './classes/types/ScrapedListing'
-import { ListingOrigin } from '@mewi/prisma'
 import { ListingScraperMock } from './scrapers/__mocks__/ListingScraper'
 import { MAX_SCRAPE_DURATION } from './classes/__mocks__/EntryPoint'
 import { randomSample } from '@mewi/test-utils'
+import { ListingsRepository } from '@/listings/listings.repository'
+
+jest.mock('../listings/listings.repository')
 
 describe('ScrapersService', () => {
     let scrapersService: ScrapersService
     let scrapers: BaseListingScraper[] = []
-    let prisma: PrismaService
+    let listingsRepository: ListingsRepository
     let configService: ConfigService
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [ConfigService, PrismaService, ScrapersService, EventEmitter2],
+            providers: [ConfigService, ListingsRepository, ScrapersService, EventEmitter2],
         }).compile()
 
         scrapersService = module.get<ScrapersService>(ScrapersService)
-        prisma = module.get<PrismaService>(PrismaService)
+        listingsRepository = module.get<ListingsRepository>(ListingsRepository)
         configService = module.get<ConfigService>(ConfigService)
 
         const nullArr = new Array(Object.values(ListingOrigin).length).fill(null)
         const scrapersMap = nullArr.map((_, index) => {
             const origin = Object.values(ListingOrigin)[index]
-            const scraper = new ListingScraperMock(prisma, configService)
+            const scraper = new ListingScraperMock(listingsRepository, configService)
             scraper.origin = origin
             return scraper
         })
@@ -64,22 +65,17 @@ describe('ScrapersService', () => {
             await scraper.initialize()
 
             listings = await Promise.all(
-                new Array(scraper.limit).fill(null).map((o, i) =>
-                    createListing({
-                        origin_id: scraper.createId(faker.random.alpha(16)),
-                        origin: scraper.origin,
-                        date: new Date(Date.now() - 2 * 60 * 1000 * i),
-                    })
+                new Array(scraper.limit).fill(null).map(
+                    (o, i) =>
+                        createListing({
+                            origin_id: scraper.createId(faker.random.alpha(16)),
+                            origin: scraper.origin,
+                            date: new Date(Date.now() - 2 * 60 * 1000 * i),
+                        }) as Promise<ScrapedListing>
                 )
             )
 
             scrapersService.statusOf = jest.fn().mockResolvedValue({})
-
-            prisma.listing.deleteMany = jest.fn()
-            prisma.listing.createMany = jest.fn().mockResolvedValue({
-                count: listings.length,
-            })
-            prisma.scrapingLog.create = jest.fn()
         })
 
         it('should update status correctly', async () => {

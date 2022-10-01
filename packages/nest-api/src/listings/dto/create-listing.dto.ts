@@ -1,7 +1,5 @@
-import { Category } from '@/schemas/enums/Category'
-import { Currency } from '@/schemas/enums/Currency'
-import { ListingOrigin } from '@/schemas/enums/ListingOrigin'
 import { Listing } from '@/schemas/listing.schema'
+import { Category, ListingOrigin, Currency } from '@wille430/common'
 import { Transform } from 'class-transformer'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 

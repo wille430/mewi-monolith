@@ -1,10 +1,4 @@
-import {
-    BadRequestException,
-    Inject,
-    Injectable,
-    NotFoundException,
-    UnprocessableEntityException,
-} from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import Email from 'email-templates'
 import { ConfigService } from '@nestjs/config'
@@ -22,8 +16,8 @@ import { EmailService } from '@/email/email.service'
 import { EnvVars } from '@/config/configuration'
 import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 import { User } from '@/schemas/user.schema'
-import { LoginStrategy } from '@/schemas/enums/LoginStrategy'
 import { UsersRepository } from './users.repository'
+import { LoginStrategy } from '@wille430/common'
 
 @Injectable()
 export class UsersService {

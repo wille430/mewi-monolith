@@ -1,3 +1,3 @@
-import { Prisma } from '@mewi/prisma'
+import { Listing } from '@/schemas/listing.schema'
 
-export type ScrapedListing = Prisma.ListingCreateInput
+export type ScrapedListing = Omit<Listing, 'id'>

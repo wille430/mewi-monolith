@@ -1,8 +1,7 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { IListing } from '@wille430/common'
 import { Document } from 'mongoose'
-import { Category } from './enums/Category'
-import { Currency } from './enums/Currency'
-import { ListingOrigin } from './enums/ListingOrigin'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
 
 export type ListingDocument = Listing & Document
 
@@ -12,7 +11,7 @@ export type ListingDocument = Listing & Document
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
 })
-export class Listing {
+export class Listing implements IListing {
     id!: string
 
     @Prop({
@@ -97,6 +96,12 @@ export class Listing {
 
     @Prop(Date)
     auctionEnd?: Date
+
+    @Prop({
+        type: String,
+        required: true,
+    })
+    entryPoint!: string
 }
 
 export const ListingSchema = SchemaFactory.createForClass(Listing)

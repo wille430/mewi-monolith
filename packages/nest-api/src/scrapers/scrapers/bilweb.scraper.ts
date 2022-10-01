@@ -1,7 +1,7 @@
-import { PrismaService } from '@/prisma/prisma.service'
-import { Prisma, ListingOrigin, Currency, Category } from '@mewi/prisma'
+import { ListingsRepository } from '@/listings/listings.repository'
 import { Inject } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
 import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
@@ -14,10 +14,10 @@ export class BilwebScraper extends ListingWebCrawler {
     origin = ListingOrigin.Bilweb
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config, { listingSelector: '.Card-Wrapper > .Card' })
+        super(listingsRepository, config, { listingSelector: '.Card-Wrapper > .Card' })
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
 
@@ -35,7 +35,7 @@ export class BilwebScraper extends ListingWebCrawler {
     async evalParseRawListing(
         ele: ElementHandle<Element>,
         context: ScrapeContext
-    ): Promise<Prisma.ListingCreateInput> {
+    ): Promise<ScrapedListing> {
         const listing: any = await ele.evaluate(async (ele) => {
             const imageUrl = ele.querySelector('img.goToObject')?.getAttribute('src')
             const priceString = ele.querySelector('.Card-mainPrice')?.textContent

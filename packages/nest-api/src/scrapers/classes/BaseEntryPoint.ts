@@ -1,13 +1,14 @@
 import { AxiosResponse } from 'axios'
 import { Page } from 'puppeteer'
 import { ScrapedListing } from './types/ScrapedListing'
-import { PrismaService } from '@/prisma/prisma.service'
 import { sliceAtIndex } from '@/scrapers/helpers/sliceAtIndex'
 import { BaseListingScraper } from '@/scrapers/classes/BaseListingScraper'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { ScrapeOptions } from './types/ScrapeOptions'
 import { ScrapeResult } from './types/ScrapeResult'
 import { ScrapeContext } from './types/ScrapeContext'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export abstract class BaseEntryPoint {
     /**
@@ -20,21 +21,24 @@ export abstract class BaseEntryPoint {
     abstract scrape(page: number, options: ScrapeOptions): Promise<ScrapeResult>
 
     constructor(
-        readonly prisma: PrismaService,
+        readonly listingsRepository: ListingsRepository,
+        readonly scrapingLogsRepository: ScrapingLogsRepository,
         readonly scraper: BaseListingScraper,
         readonly createConfig: CreateConfigFunction,
         readonly identifier: string
     ) {}
 
     public getMostRecentLog() {
-        return this.prisma.scrapingLog.findFirst({
-            where: {
+        return this.scrapingLogsRepository.findOne(
+            {
                 entryPoint: this.identifier,
             },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        })
+            {
+                sort: {
+                    createdAt: -1,
+                },
+            }
+        )
     }
 
     createContext(): ScrapeContext {

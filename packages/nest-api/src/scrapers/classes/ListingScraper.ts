@@ -3,16 +3,16 @@ import { Inject } from '@nestjs/common'
 import { EntryPoint } from './EntryPoint'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseListingScraper } from './BaseListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapedListing } from './types/ScrapedListing'
 import { ScrapeContext } from './types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { ListingsRepository } from '@/listings/listings.repository'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[] = []
 
     constructor(
-        @Inject(PrismaService) readonly prisma: PrismaService,
+        @Inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
         @Inject(ConfigService) readonly config: ConfigService
     ) {
         super()
@@ -42,7 +42,7 @@ export abstract class ListingScraper extends BaseListingScraper {
 
     createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
         this.entryPoints.push(
-            new EntryPoint(this.prisma, this, createConfig, identifier ?? this.origin)
+            new EntryPoint(this.listingsRepository, this, createConfig, identifier ?? this.origin)
         )
     }
 }

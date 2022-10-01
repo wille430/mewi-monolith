@@ -3,20 +3,12 @@ import { Cron } from '@nestjs/schedule'
 import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
 import { ScraperStatus, ScraperStatusReport } from '@wille430/common'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
-import { BlocketScraper } from './scrapers/blocket.scraper'
-import { SellpyScraper } from './scrapers/sellpy.scraper'
-import { TraderaScraper } from './scrapers/tradera.scraper'
-import { BlippScraper } from './scrapers/blipp.scraper'
 import { StartScraperOptions } from './types/startScraperOptions'
 import { RunPipelineEvent } from './events/run-pipeline.event'
-import { CitiboardScraper } from './scrapers/citiboard.scraper'
-import { ShpockScraper } from './scrapers/shpock.scraper'
-import { BytbilScraper } from './scrapers/bytbil.scraper'
 import { BaseListingScraper } from './classes/BaseListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
-import { KvdbilScraper } from './scrapers/kvdbil.scraper'
-import { BilwebScraper } from './scrapers/bilweb.scraper'
 import Scrapers from './scrapers'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapingLogsRepository } from './scraping-logs.repository'
 
 @Injectable()
 export class ScrapersService {
@@ -31,7 +23,8 @@ export class ScrapersService {
     scraperPipeline: [ListingOrigin, Partial<StartScraperOptions>][] = []
 
     constructor(
-        @Inject(PrismaService) private prisma: PrismaService,
+        @Inject(ListingsRepository) private listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(EventEmitter2) private eventEmitter: EventEmitter2
     ) {
         this.instantiateScrapers()
@@ -39,7 +32,7 @@ export class ScrapersService {
 
     instantiateScrapers() {
         this.scrapers = Scrapers.reduce((prev, Scraper) => {
-            const scraper = new Scraper(this.prisma, this.eventEmitter)
+            const scraper = new Scraper(this.listingsRepository, this.eventEmitter)
             prev[scraper.origin] = scraper
             return prev
         }, {} as typeof this.scrapers)
@@ -172,27 +165,33 @@ export class ScrapersService {
      * @returns Index of the last scraped scraper. Returns 0 if no logs were found.
      */
     private async getLastScrapedIndex() {
-        const log = await this.prisma.scrapingLog.findFirst({
-            orderBy: {
-                createdAt: 'desc',
-            },
-        })
+        const log = await this.scrapingLogsRepository.findOne(
+            {},
+            {
+                sort: {
+                    createdAt: -1,
+                },
+            }
+        )
 
         if (!log) {
             return 0
         }
 
-        const scraper = this.scrapers[log.target]
+        const scraper = this.scrapers[log.target as ListingOrigin]
 
         return Object.keys(this.scrapers).findIndex((x) => x === scraper.origin)
     }
 
     async conditionalScrape() {
-        const lastScrape = await this.prisma.scrapingLog.findFirst({
-            orderBy: {
-                createdAt: 'desc',
-            },
-        })
+        const lastScrape = await this.scrapingLogsRepository.findOne(
+            {},
+            {
+                sort: {
+                    createdAt: -1,
+                },
+            }
+        )
 
         if (!lastScrape) return
 
@@ -213,10 +212,8 @@ export class ScrapersService {
     async statusOf(target: ListingOrigin): Promise<ScraperStatusReport> {
         const scraper = this.scrapers[target]
 
-        const listingCount = await this.prisma.listing.count({
-            where: {
-                origin: target,
-            },
+        const listingCount = await this.listingsRepository.count({
+            origin: target,
         })
 
         return {
@@ -224,22 +221,24 @@ export class ScrapersService {
             listings_current: listingCount,
             status: scraper.status,
             listings_remaining: scraper.getConfig<number>('limit') ?? 0 - listingCount,
-            last_scraped: await this.prisma.scrapingLog
-                .findFirst({
-                    where: {
+            last_scraped: await this.scrapingLogsRepository
+                .findOne(
+                    {
                         target: scraper.origin,
                     },
-                    take: 1,
-                    orderBy: {
-                        createdAt: 'desc',
-                    },
-                })
+                    {
+                        limit: 1,
+                        sort: {
+                            createdAt: -1,
+                        },
+                    }
+                )
                 .then((o) => o?.createdAt ?? undefined),
         }
     }
 
     async getLogs(dto: Prisma.ScrapingLogFindManyArgs) {
-        return await this.prisma.scrapingLog.findMany(dto)
+        return await this.scrapingLogsRepository.find(dto)
     }
 
     async resetAll() {

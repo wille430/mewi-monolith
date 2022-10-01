@@ -6,9 +6,9 @@ import { ScrapedListing } from './types/ScrapedListing'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { EntryPointDOM } from './EntryPointDOM'
 import { StartScraperOptions } from '../types/startScraperOptions'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from './types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
+import { ListingsRepository } from '@/listings/listings.repository'
 
 export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
@@ -22,7 +22,7 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
     entryPoints: EntryPointDOM[] = []
 
     constructor(
-        readonly prisma: PrismaService,
+        readonly listingsRepository: ListingsRepository,
         readonly config: ConfigService,
         { listingSelector }: ListingWebCrawlerConstructorArgs
     ) {
@@ -72,7 +72,12 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
         if (!this.entryPoints) this.entryPoints = []
 
         this.entryPoints.push(
-            new EntryPointDOM(this.prisma, this, createConfig, identifier ?? this.origin)
+            new EntryPointDOM(
+                this.listingsRepository,
+                this,
+                createConfig,
+                identifier ?? this.origin
+            )
         )
     }
 }

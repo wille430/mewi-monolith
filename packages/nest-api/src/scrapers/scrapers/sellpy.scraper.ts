@@ -1,11 +1,11 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
-import { Category, Currency, ListingOrigin, Prisma } from '@mewi/prisma'
 import { ListingScraper } from '../classes/ListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ListingsRepository } from '@/listings/listings.repository'
 
 // TODO: fix pagination
 export class SellpyScraper extends ListingScraper {
@@ -20,10 +20,10 @@ export class SellpyScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         this.parseRawListing = this.parseRawListing.bind(this)
 

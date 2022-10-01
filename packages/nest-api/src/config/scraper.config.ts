@@ -4,7 +4,7 @@ import { ScraperOptions } from '@/common/types/scraperOptions'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-type ScraperConfig = Partial<Record<ListingOrigin, ScraperOptions>> & {
+export type ScraperConfig = Partial<Record<ListingOrigin, ScraperOptions>> & {
     default: ScraperOptions
 }
 

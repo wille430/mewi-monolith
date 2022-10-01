@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { IUserWatcher, IWatcher } from '@wille430/common'
 import mongoose, { Document } from 'mongoose'
 import { User } from './user.schema'
 import { Watcher } from './watcher.schema'
@@ -11,7 +12,7 @@ export type UserWatcherDocument = UserWatcher & Document
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
 })
-export class UserWatcher {
+export class UserWatcher implements IUserWatcher {
     id!: string
 
     @Prop({
@@ -19,7 +20,7 @@ export class UserWatcher {
         ref: Watcher.name,
         required: true,
     })
-    watcher!: Watcher
+    watcher!: IWatcher
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,

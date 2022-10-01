@@ -10,7 +10,6 @@ import scraperConfig from './config/scraper.config'
 import databaseConfig from './config/database.config'
 import notificationConfig from './config/notification.config'
 import { AppController } from './app.controller'
-import { PrismaModule } from './prisma/prisma.module'
 import { EmailModule } from './email/email.module'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
@@ -39,7 +38,6 @@ import { DatabaseModule } from './database/database.module'
         EventEmitterModule.forRoot(),
         ScheduleModule.forRoot(),
         ListingsModule,
-        PrismaModule,
         EmailModule,
         AuthModule,
         UsersModule,

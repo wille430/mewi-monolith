@@ -1,10 +1,11 @@
-import { PrismaService } from '@/prisma/prisma.service'
-import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
+import { ListingsRepository } from '@/listings/listings.repository'
 import { Inject } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
 import { AxiosResponse } from 'axios'
 import { ListingScraper } from '../classes/ListingScraper'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 export class KvdbilScraper extends ListingScraper {
     limit = 20
@@ -17,10 +18,10 @@ export class KvdbilScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
@@ -33,7 +34,7 @@ export class KvdbilScraper extends ListingScraper {
         return res.data.auctions
     }
 
-    parseRawListing(obj: Record<string, any>, context: ScrapeContext): Prisma.ListingCreateInput {
+    parseRawListing(obj: Record<string, any>, context: ScrapeContext): ScrapedListing {
         return {
             origin_id: this.createId(obj.id),
             title: obj?.processObject?.title,

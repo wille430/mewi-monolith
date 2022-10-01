@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { BytbilScraper } from './bytbil.scraper'
 import { PrismaService } from '../../prisma/prisma.service'
 import configuration from '../../config/configuration'
-import puppeteer from 'puppeteer'
+import * as puppeteer from 'puppeteer'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
@@ -24,13 +24,13 @@ describe('Bytbil Scraper', () => {
 
     describe('#scrape', () => {
         it('should not throw error when fetching 10+ times', async () => {
-            puppeteer.launch = jest.fn(() => ({
+            jest.spyOn(puppeteer, 'launch').mockImplementation({
                 newPage: jest.fn().mockResolvedValue({
                     goto: jest.fn(),
                     $$: jest.fn().mockResolvedValue(Array(scraper.limit)),
                 }),
                 close: jest.fn(),
-            })) as any
+            } as any)
             scraper.evalParseRawListing = jest.fn((ele) => ele) as any
 
             for (let i = 0; i < 12; i++) {

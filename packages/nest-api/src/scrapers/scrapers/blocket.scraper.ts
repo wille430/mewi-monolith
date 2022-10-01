@@ -1,13 +1,14 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { JSDOM } from 'jsdom'
+import { AxiosInstance, AxiosResponse } from 'axios'
 import { Inject } from '@nestjs/common'
-import { Currency, ListingOrigin, Listing, Prisma } from '@mewi/prisma'
 import { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { getNextData } from '../helpers/getNextData'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { ListingOrigin, Currency } from '@wille430/common'
+import { Listing } from '@/schemas/listing.schema'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -19,10 +20,10 @@ export class BlocketScraper extends ListingScraper {
     }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }
@@ -90,7 +91,7 @@ export class BlocketScraper extends ListingScraper {
         return parameters
     }
 
-    parseRawListing(item: Record<string, any>, context: ScrapeContext): Prisma.ListingCreateInput {
+    parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
         return {
             origin_id: this.createId(item.ad_id),
             title: item.subject,

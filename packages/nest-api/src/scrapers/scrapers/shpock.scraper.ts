@@ -1,12 +1,13 @@
 import { Inject } from '@nestjs/common'
-import { ListingOrigin, Prisma, Category, Currency } from '@mewi/prisma'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import puppeteer from 'puppeteer'
+import * as puppeteer from 'puppeteer'
 import { ListingScraper } from '../classes/ListingScraper'
-import { PrismaService } from '@/prisma/prisma.service'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { getNextDataEval } from '../helpers/getNextData'
+import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapedListing } from '../classes/types/ScrapedListing'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
@@ -23,10 +24,10 @@ export class ShpockScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(PrismaService) prisma: PrismaService,
+        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(prisma, config)
+        super(listingsRepository, config)
 
         this.createEntryPoint(async (p) => ({
             data: {
@@ -94,7 +95,7 @@ export class ShpockScraper extends ListingScraper {
         }
     }
 
-    parseRawListing(item: Record<string, any>, context: ScrapeContext): Prisma.ListingCreateInput {
+    parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
         return {
             origin_id: this.createId(item.id),
             title: item.title,

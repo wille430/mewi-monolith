@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { IWatcher, IWatcherMetadata } from '@wille430/common'
 import { Document } from 'mongoose'
 import { WatcherMetadata } from './class/WatcherMetadata'
 
@@ -10,7 +11,7 @@ export type WatcherDocument = Watcher & Document
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
 })
-export class Watcher {
+export class Watcher implements IWatcher {
     id!: string
 
     // TODO: define metadata
@@ -18,7 +19,7 @@ export class Watcher {
         type: WatcherMetadata,
         default: {},
     })
-    metadata!: WatcherMetadata
+    metadata!: IWatcherMetadata
 
     @Prop(Date)
     notifiedAt?: Date
