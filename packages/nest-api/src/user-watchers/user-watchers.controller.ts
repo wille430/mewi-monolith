@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common'
 import { Role } from '@mewi/prisma'
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
@@ -29,7 +29,7 @@ export class MyWatchersController {
         return this.userWatchersService.findOne(id, user.userId)
     }
 
-    @Patch(':id')
+    @Put(':id')
     update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
         return this.userWatchersService.update(id, updateUserWatcherDto)
     }
@@ -63,7 +63,7 @@ export class UserWatchersController {
         return this.userWatchersService.findOne(id, userId)
     }
 
-    @Patch(':id')
+    @Put(':id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
         return this.userWatchersService.update(id, updateUserWatcherDto)

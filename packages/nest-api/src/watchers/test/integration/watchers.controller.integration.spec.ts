@@ -2,8 +2,10 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { createJwtAuthGuard } from '@/auth/test/support/jwt-auth.guard'
 import { initTestModule } from '@/common/test/initTestModule'
 import { transformDate } from '@/listings/helpers/transform-dates'
+import { User } from '@/schemas/user.schema'
 import { Watcher } from '@/schemas/watcher.schema'
 import { adminUserPayloadStub } from '@/users/test/stubs/admin-user-payload.stub'
+import { adminStub } from '@/users/test/stubs/admin.stub'
 import { CreateWatcherDto } from '@/watchers/dto/create-watcher.dto'
 import { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
 import { UpdateWatcherDto } from '@/watchers/dto/update-watcher.dto'
@@ -17,6 +19,7 @@ import { watcherStub } from '../stubs/watcher.stub'
 describe('WatchersController', () => {
     let dbConnection: Connection
     let watchersCollection: Collection<Watcher>
+    let usersCollection: Collection<User>
     let httpServer: any
     let app: INestApplication
 
@@ -30,10 +33,13 @@ describe('WatchersController', () => {
         httpServer = testModule.httpServer
 
         watchersCollection = dbConnection.collection('watchers')
+        usersCollection = dbConnection.collection('users')
     })
 
     beforeEach(async () => {
         await watchersCollection.deleteMany({})
+        await usersCollection.deleteMany({})
+        await usersCollection.insertOne(adminStub())
     })
 
     afterAll(async () => {

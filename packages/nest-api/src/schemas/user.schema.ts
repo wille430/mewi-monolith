@@ -10,6 +10,8 @@ export type UserDocument = User & Document
 
 @Schema({
     id: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
 })
 export class User {
     id!: string
@@ -27,12 +29,6 @@ export class User {
         default: false,
     })
     premium: boolean = false
-
-    // @Prop({
-    //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserWatcher' }],
-    //     default: [],
-    // })
-    // watchers!: UserWatcher[]
 
     @Prop({
         type: [String],

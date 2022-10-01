@@ -69,6 +69,7 @@ export abstract class EntityRepository<T extends Document> {
 
     async create(createEntityData: unknown): Promise<T> {
         const entity = new this.entityModel(createEntityData)
+        const id = entity.id
         return entity.save()
     }
 

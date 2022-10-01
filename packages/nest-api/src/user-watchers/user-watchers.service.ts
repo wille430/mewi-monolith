@@ -1,6 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common'
 import { Error } from '@wille430/common'
-import { UserWatcher, Watcher } from '@mewi/prisma'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { WatchersService } from '@/watchers/watchers.service'
@@ -8,6 +7,8 @@ import { PrismaService } from '@/prisma/prisma.service'
 import { UserWatchersRepository } from './user-watchers.repository'
 import { WatchersRepository } from '@/watchers/watchers.repository'
 import { UsersRepository } from '@/users/users.repository'
+import { Watcher } from '@/schemas/watcher.schema'
+import mongoose from 'mongoose'
 
 @Injectable()
 export class UserWatchersService {
@@ -44,8 +45,8 @@ export class UserWatchersService {
             })
         } else {
             const userWatcher = await this.userWatchersRepository.create({
-                userId: user.id,
-                watcherId: watcher.id,
+                user: user,
+                watcher: watcher,
             })
 
             return userWatcher
@@ -55,7 +56,7 @@ export class UserWatchersService {
     async findAll(userId: string) {
         try {
             return await this.userWatchersRepository.find({
-                userId: userId,
+                user: userId,
             })
         } catch (e) {
             return []
@@ -63,19 +64,44 @@ export class UserWatchersService {
     }
 
     async findOne(id: string, userId: string) {
-        try {
-            return await this.userWatchersRepository.findOne({
-                id: id,
-                userId: userId,
-            })
-        } catch (e) {
-            return null
-        }
+        const userWatcher = await this.userWatchersRepository.findOne({
+            id: id,
+            user: new mongoose.Types.ObjectId(userId),
+        })
+
+        await userWatcher?.populate('watcher')
+
+        return userWatcher
     }
 
     async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
-        this.remove(id, userId)
-        return this.create({ metadata, userId })
+        const oldUserWatcher = await this.userWatchersRepository.findById(id)
+        let watcher: Watcher
+
+        if (await this.watchersService.exists(metadata)) {
+            watcher = (await this.watchersRepository.findOne({
+                metadata,
+            }))!
+        } else {
+            watcher = await this.watchersService.create({
+                metadata,
+            })
+        }
+
+        await this.userWatchersRepository.findByIdAndUpdate(id, {
+            $set: {
+                watcher: watcher,
+            },
+        })
+
+        if (
+            oldUserWatcher &&
+            (await this.watchersService.subscriberCount(oldUserWatcher.watcher.id)) === 0
+        ) {
+            await this.watchersService.remove(oldUserWatcher.watcher.id)
+        }
+
+        return this.findOne(id, userId)
     }
 
     /**

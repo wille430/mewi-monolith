@@ -10,6 +10,5 @@ export const watcherStub = (): WithId<Watcher> => ({
     metadata: {
         keyword: 'volvo',
     },
-    userWatchers: [],
     notifiedAt: notifiedAt,
 })

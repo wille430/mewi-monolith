@@ -16,6 +16,7 @@ import { EmailType } from '@mewi/prisma'
 import { UserWatchersRepository } from '@/user-watchers/user-watchers.repository'
 import { UsersRepository } from '@/users/users.repository'
 import { ListingsRepository } from '@/listings/listings.repository'
+import mongoose from 'mongoose'
 
 @Injectable()
 export class WatchersService {
@@ -227,10 +228,8 @@ export class WatchersService {
     }
 
     async subscriberCount(watcherId: string): Promise<number> {
-        return (
-            (await this.userWatchersRepository.count({
-                watcherId,
-            })) ?? 0
-        )
+        return this.userWatchersRepository.count({
+            watcher: new mongoose.Types.ObjectId(watcherId),
+        })
     }
 }
