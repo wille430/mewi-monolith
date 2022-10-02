@@ -6,7 +6,7 @@ import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
 import { FindAllListingsDto } from '@/listings/dto/find-all-listing.dto'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { ListingsRepository } from './listings.repository'
-import mongoose, { FilterQuery, PipelineStage } from 'mongoose'
+import { FilterQuery, PipelineStage } from 'mongoose'
 import { Listing } from '@/schemas/listing.schema'
 import { UsersRepository } from '@/users/users.repository'
 
@@ -111,10 +111,8 @@ export class ListingsService {
         if (!user) throw new NotFoundException('User not found')
         if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-        if (user.likedListings.includes(listing)) {
-            return listing
-        } else {
-            return await this.usersRepository.findByIdAndUpdate(userId, {
+        if (!user.likedListings.includes(listing)) {
+            await this.usersRepository.findByIdAndUpdate(userId, {
                 $push: {
                     likedListings: listingId,
                 },
@@ -129,10 +127,8 @@ export class ListingsService {
         if (!user) throw new NotFoundException('User not found')
         if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-        if (user.likedListings.includes(listing)) {
-            return listing
-        } else {
-            return await this.usersRepository.findByIdAndUpdate(userId, {
+        if (!user.likedListings.includes(listing)) {
+            await this.usersRepository.findByIdAndUpdate(userId, {
                 $pull: {
                     likedListings: listingId,
                 },
