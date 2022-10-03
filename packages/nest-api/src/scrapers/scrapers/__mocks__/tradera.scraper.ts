@@ -1,10 +1,13 @@
+import { ListingScraper } from '@/scrapers/classes/__mocks__/ListingScraper'
 import faker from '@faker-js/faker'
-import { TraderaScraper } from '../tradera.scraper'
+import { ListingOrigin } from '@wille430/common'
 
-TraderaScraper.prototype.getCategories = jest.fn().mockResolvedValue(
-    Array(2)
-        .fill(null)
-        .map((o) => ({ href: '/' + faker.commerce.department().toLowerCase() } as any))
-)
-
-export default TraderaScraper
+export const TraderaScraper = jest.fn().mockReturnValue({
+    ...new ListingScraper(),
+    origin: ListingOrigin.Tradera,
+    getCategories: jest.fn().mockResolvedValue(
+        Array(2)
+            .fill(null)
+            .map((o) => ({ href: '/' + faker.commerce.department().toLowerCase() } as any))
+    ),
+})

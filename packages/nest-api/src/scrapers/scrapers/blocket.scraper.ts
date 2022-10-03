@@ -9,6 +9,7 @@ import { ListingsRepository } from '@/listings/listings.repository'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ListingOrigin, Currency } from '@wille430/common'
 import { Listing } from '@/schemas/listing.schema'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -21,9 +22,10 @@ export class BlocketScraper extends ListingScraper {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config)
+        super(listingsRepository, scrapingLogsRepository, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }

@@ -8,6 +8,7 @@ import { getNextDataEval } from '../helpers/getNextData'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import { ListingsRepository } from '@/listings/listings.repository'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export class ShpockScraper extends ListingScraper {
     limit = 25
@@ -25,9 +26,10 @@ export class ShpockScraper extends ListingScraper {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config)
+        super(listingsRepository, scrapingLogsRepository, config)
 
         this.createEntryPoint(async (p) => ({
             data: {

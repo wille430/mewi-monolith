@@ -6,6 +6,7 @@ import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ConfigService } from '@nestjs/config'
 import { ListingsRepository } from '@/listings/listings.repository'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingWebCrawler {
@@ -17,9 +18,12 @@ export class CitiboardScraper extends ListingWebCrawler {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config, { listingSelector: 'article.gridItem' })
+        super(listingsRepository, scrapingLogsRepository, config, {
+            listingSelector: 'article.gridItem',
+        })
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
 

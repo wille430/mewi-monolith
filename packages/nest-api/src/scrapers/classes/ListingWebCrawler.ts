@@ -9,6 +9,8 @@ import { StartScraperOptions } from '../types/startScraperOptions'
 import { ScrapeContext } from './types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { ListingsRepository } from '@/listings/listings.repository'
+import { Inject } from '@nestjs/common'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
@@ -22,8 +24,9 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
     entryPoints: EntryPointDOM[] = []
 
     constructor(
-        readonly listingsRepository: ListingsRepository,
-        readonly config: ConfigService,
+        @Inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository,
+        @Inject(ConfigService) readonly config: ConfigService,
         { listingSelector }: ListingWebCrawlerConstructorArgs
     ) {
         super()
@@ -74,6 +77,7 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
         this.entryPoints.push(
             new EntryPointDOM(
                 this.listingsRepository,
+                this.scrapingLogsRepository,
                 this,
                 createConfig,
                 identifier ?? this.origin

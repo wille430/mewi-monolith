@@ -17,6 +17,7 @@ import { scraperStopFunction } from '../helpers/scraperStopFunction'
 import { ListingsRepository } from '@/listings/listings.repository'
 import { FilterQuery } from 'mongoose'
 import { UserDocument } from '@/schemas/user.schema'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -32,6 +33,7 @@ export abstract class BaseListingScraper {
 
     abstract listingsRepository: ListingsRepository
     abstract config: ConfigService
+    abstract scrapingLogsRepository: ScrapingLogsRepository
 
     readonly watchOptions: WatchOptions = {
         findFirst: 'date',
@@ -183,18 +185,16 @@ export abstract class BaseListingScraper {
                 entryPoint: entryPoint.identifier,
             })
 
-            // await this.listingsRepository.scrapingLog.create({
-            //     data: {
-            //         added_count: totalScrapedCount,
-            //         // TODO: correct error count value
-            //         error_count: 0,
-            //         entryPoint: entryPoint.identifier,
-            //         scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
-            //         scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
-            //         target: this.origin,
-            //         triggered_by: options.triggeredBy,
-            //     },
-            // })
+            await this.scrapingLogsRepository.create({
+                added_count: totalScrapedCount,
+                // TODO: correct error count value
+                error_count: 0,
+                entryPoint: entryPoint.identifier,
+                scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
+                scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
+                target: this.origin,
+                triggered_by: options.triggeredBy,
+            })
         }
 
         this.log('DONE')

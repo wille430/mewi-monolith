@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 // TODO: fix pagination
 export class SellpyScraper extends ListingScraper {
@@ -21,9 +22,10 @@ export class SellpyScraper extends ListingScraper {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config)
+        super(listingsRepository, scrapingLogsRepository, config)
 
         this.parseRawListing = this.parseRawListing.bind(this)
 

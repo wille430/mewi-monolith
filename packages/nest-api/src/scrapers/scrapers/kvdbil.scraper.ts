@@ -6,6 +6,7 @@ import { AxiosResponse } from 'axios'
 import { ListingScraper } from '../classes/ListingScraper'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export class KvdbilScraper extends ListingScraper {
     limit = 20
@@ -19,9 +20,10 @@ export class KvdbilScraper extends ListingScraper {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config)
+        super(listingsRepository, scrapingLogsRepository, config)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }

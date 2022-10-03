@@ -33,6 +33,8 @@ describe('ListingsService', () => {
         listingsService = moduleRef.get<ListingsService>(ListingsService)
         listingsRepository = moduleRef.get<ListingsRepository>(ListingsRepository)
         usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
+
+        jest.clearAllMocks()
     })
 
     describe('#findAll', () => {

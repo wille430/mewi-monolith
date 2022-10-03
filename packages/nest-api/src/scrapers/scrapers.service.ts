@@ -9,6 +9,9 @@ import { BaseListingScraper } from './classes/BaseListingScraper'
 import Scrapers from './scrapers'
 import { ListingsRepository } from '@/listings/listings.repository'
 import { ScrapingLogsRepository } from './scraping-logs.repository'
+import { ConfigService } from '@nestjs/config'
+import { FilterQuery } from 'mongoose'
+import { ScrapingLog } from '@/schemas/scraping-log.schema'
 
 @Injectable()
 export class ScrapersService {
@@ -25,14 +28,19 @@ export class ScrapersService {
     constructor(
         @Inject(ListingsRepository) private listingsRepository: ListingsRepository,
         @Inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(EventEmitter2) private eventEmitter: EventEmitter2
+        @Inject(EventEmitter2) private eventEmitter: EventEmitter2,
+        @Inject(ConfigService) private configService: ConfigService
     ) {
         this.instantiateScrapers()
     }
 
     instantiateScrapers() {
         this.scrapers = Scrapers.reduce((prev, Scraper) => {
-            const scraper = new Scraper(this.listingsRepository, this.eventEmitter)
+            const scraper = new Scraper(
+                this.listingsRepository,
+                this.scrapingLogsRepository,
+                this.configService
+            )
             prev[scraper.origin] = scraper
             return prev
         }, {} as typeof this.scrapers)
@@ -139,7 +147,7 @@ export class ScrapersService {
         }
     }
 
-    private scraperIndex!: number
+    scraperIndex!: number
     /**
      * Call start method on the next scraper. Decorated with cronjob to execute start method on a scraper every 5 minutes.
      */
@@ -151,12 +159,15 @@ export class ScrapersService {
 
         const scraper: BaseListingScraper =
             this.scrapers[Object.keys(this.scrapers)[this.scraperIndex] as ListingOrigin]
+
         if (scraper.status === ScraperStatus.IDLE) {
             this.scraperIndex += 1
             this.scraperIndex %= Object.keys(this.scrapers).length
 
             await scraper.start()
         }
+
+        return
     }
 
     /**
@@ -164,7 +175,7 @@ export class ScrapersService {
      *
      * @returns Index of the last scraped scraper. Returns 0 if no logs were found.
      */
-    private async getLastScrapedIndex() {
+    async getLastScrapedIndex() {
         const log = await this.scrapingLogsRepository.findOne(
             {},
             {
@@ -220,7 +231,7 @@ export class ScrapersService {
             started: scraper.status === ScraperStatus.SCRAPING,
             listings_current: listingCount,
             status: scraper.status,
-            listings_remaining: scraper.getConfig<number>('limit') ?? 0 - listingCount,
+            listings_remaining: (scraper.getConfig<number>('limit') ?? 0) - listingCount,
             last_scraped: await this.scrapingLogsRepository
                 .findOne(
                     {
@@ -237,7 +248,7 @@ export class ScrapersService {
         }
     }
 
-    async getLogs(dto: Prisma.ScrapingLogFindManyArgs) {
+    async getLogs(dto: FilterQuery<ScrapingLog>) {
         return await this.scrapingLogsRepository.find(dto)
     }
 

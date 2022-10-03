@@ -14,5 +14,6 @@ export const createRepositoryMock = (stub: any) => {
         deleteMany: jest.fn().mockResolvedValue(1),
         aggregate: jest.fn().mockResolvedValue([stub]),
         sample: jest.fn().mockResolvedValue([stub]),
+        count: jest.fn().mockResolvedValue(1),
     })
 }

@@ -6,6 +6,7 @@ import { ElementHandle } from 'puppeteer'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export class BilwebScraper extends ListingWebCrawler {
     defaultScrapeUrl = 'https://bilweb.se/sok'
@@ -15,9 +16,12 @@ export class BilwebScraper extends ListingWebCrawler {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config, { listingSelector: '.Card-Wrapper > .Card' })
+        super(listingsRepository, scrapingLogsRepository, config, {
+            listingSelector: '.Card-Wrapper > .Card',
+        })
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
 

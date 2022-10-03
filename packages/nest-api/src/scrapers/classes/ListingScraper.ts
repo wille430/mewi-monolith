@@ -7,12 +7,14 @@ import { ScrapedListing } from './types/ScrapedListing'
 import { ScrapeContext } from './types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[] = []
 
     constructor(
         @Inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) readonly config: ConfigService
     ) {
         super()
@@ -42,7 +44,13 @@ export abstract class ListingScraper extends BaseListingScraper {
 
     createEntryPoint(createConfig: CreateConfigFunction, identifier?: string) {
         this.entryPoints.push(
-            new EntryPoint(this.listingsRepository, this, createConfig, identifier ?? this.origin)
+            new EntryPoint(
+                this.listingsRepository,
+                this.scrapingLogsRepository,
+                this,
+                createConfig,
+                identifier ?? this.origin
+            )
         )
     }
 }

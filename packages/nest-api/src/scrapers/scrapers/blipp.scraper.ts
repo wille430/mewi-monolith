@@ -6,6 +6,7 @@ import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ConfigService } from '@nestjs/config'
 import { ListingsRepository } from '@/listings/listings.repository'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
@@ -17,9 +18,10 @@ export class BlippScraper extends NextScraper {
 
     constructor(
         @Inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
         @Inject(ConfigService) config: ConfigService
     ) {
-        super(listingsRepository, config)
+        super(listingsRepository, scrapingLogsRepository, config)
 
         this.createEntryPoint((p) => ({
             url: this.createScrapeUrl(),

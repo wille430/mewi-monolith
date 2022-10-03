@@ -8,6 +8,7 @@ export type ScrapingLogDocument = ScrapingLog & Document
     id: true,
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
+    timestamps: true,
 })
 export class ScrapingLog implements IScrapingLog {
     id!: string
@@ -38,6 +39,9 @@ export class ScrapingLog implements IScrapingLog {
         enum: ScraperTrigger,
     })
     triggeredBy!: ScraperTrigger
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const ScrapingLogSchema = SchemaFactory.createForClass(ScrapingLog)
