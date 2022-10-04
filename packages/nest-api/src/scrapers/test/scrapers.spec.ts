@@ -37,6 +37,7 @@ describe('Scrapers', () => {
                 ScrapingLogsRepository
             )
             scraper = await moduleRef.get<BaseListingScraper>(Scraper)
+            scraper.verbose = false
 
             jest.clearAllMocks()
         })

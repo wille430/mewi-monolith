@@ -22,7 +22,7 @@ import { ScrapingLogsRepository } from '../scraping-logs.repository'
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
     useRobots = true
-    verbose = false
+    verbose = process.env.NODE_ENV === 'development'
     initialized = false
 
     abstract limit: number
@@ -101,25 +101,29 @@ export abstract class BaseListingScraper {
 
             // Compose log
             this.log('', false)
-            process.stdout.write(
-                `Scraping ${maxScrapeCount ? maxScrapeCount : ''} listings from ${
-                    (await entryPoint.createConfig(1)).url
-                } `
-            )
+            this.verbose &&
+                process.stdout.write(
+                    `Scraping ${maxScrapeCount ? maxScrapeCount : ''} listings from ${
+                        (await entryPoint.createConfig(1)).url
+                    } `
+                )
 
             let findIndex = scraperStopFunction(watchOptions.findFirst, findIndexValue)
 
             // This block is only used for logging
             if (findIndexValue) {
                 if (watchOptions?.findFirst === 'date') {
-                    process.stdout.write(`created after ${findIndexValue}`)
+                    this.verbose && process.stdout.write(`created after ${findIndexValue}`)
                 } else if (options.watchOptions?.findFirst === 'origin_id') {
-                    process.stdout.write(`until listing with origin_id ${findIndexValue} is found`)
+                    this.verbose &&
+                        process.stdout.write(
+                            `until listing with origin_id ${findIndexValue} is found`
+                        )
                 }
             } else {
-                process.stdout.write('until last page or max scrape count reached')
+                this.verbose && process.stdout.write('until last page or max scrape count reached')
             }
-            process.stdout.write('\n')
+            this.verbose && process.stdout.write('\n')
 
             let page = 1
             while (shouldContinue) {
@@ -224,7 +228,7 @@ export abstract class BaseListingScraper {
 
     log(message: string, linebreak = true) {
         let completeMessage = `[${this.origin}]: ${message}`
-        if (process.env.NODE_ENV === 'development' || this.verbose) {
+        if (this.verbose) {
             if (linebreak) console.log(completeMessage)
             else process.stdout.write(completeMessage)
         }
