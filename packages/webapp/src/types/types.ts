@@ -1,86 +1,6 @@
 import { Axios } from 'axios'
 import { Store } from '@/store'
 
-// TODO: create category enum in common lib
-export type Category = (
-    | 'fordon'
-    | 'för_hemmet'
-    | 'bostad'
-    | 'personligt'
-    | 'elektronik'
-    | 'fritid_hobby'
-    | 'affärsverksamhet'
-    | 'övrigt'
-    | 'bilar'
-    | 'båtar'
-    | 'bildelar_biltillbehör'
-    | 'mopeder'
-    | 'båtdelar_tillbehör'
-    | 'husvagnar_husbilar'
-    | 'mc-delar'
-    | 'a-traktor'
-    | 'lastbil_truck_entreprenad'
-    | 'motorcyklar'
-    | 'snöskotrar'
-    | 'snöskoterdelar'
-    | 'bygg_trädgård'
-    | 'husgeråd_vitvaror'
-    | 'möbler_hemindredning'
-    | 'verktyg'
-    | 'lägenheter'
-    | 'villor'
-    | 'radhus'
-    | 'tomter'
-    | 'gårdar'
-    | 'fritidsboende'
-    | 'utland'
-    | 'kläder_skor'
-    | 'accessoarer_klockor'
-    | 'barnartiklar_leksaker'
-    | 'barnkläder_skor'
-    | 'datorer_tv-spel'
-    | 'ljud_bild'
-    | 'telefoner_tillbehör'
-    | 'upplevelser_nöje'
-    | 'böcker_studentlitteratur'
-    | 'cyklar'
-    | 'djur'
-    | 'hobby_samlarprylar'
-    | 'hästar_ridsport'
-    | 'jakt_fiske'
-    | 'musikutrustning'
-    | 'sport-_fritidsutrustning'
-    | 'affärsöverlåtelser'
-    | 'inventarier_maskiner'
-    | 'lokaler_fastigheter'
-    | 'tjänster'
-    | 'övrigt'
-)[]
-
-// export interface ItemData {
-//     id: string
-//     title: string
-//     body?: string
-//     category: Category
-//     date?: number
-//     endDate?: number
-//     imageUrl: string[]
-//     isAuction: boolean
-//     redirectUrl: string
-//     price: {
-//         value?: number
-//         currency?: string
-//     }
-//     region: string
-//     zipcode?: string
-//     parameters?: {
-//         id: string
-//         label: string
-//         value: string
-//     }[]
-//     origin: string
-// }
-
 export interface BlocketItemData {
     ad_id: string
     ad_status: string
@@ -245,61 +165,6 @@ export interface SellpyItemData {
     favouriteCount: number
     favoriteCountBucket: number
     objectID: string
-    // "_highlightResult": {
-    //     "user": {
-    //         "value": string,
-    //         "matchLevel": string,
-    //         "matchedWords": []
-    //     },
-    //     "metadata": {
-    //         "brand": {
-    //             "value": "Filippa K",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         },
-    //         "demography": {
-    //             "value": "Kvinna",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         },
-    //         "size": {
-    //             "value": "WMN-INT-L",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         },
-    //         "type": {
-    //             "value": "Polotröja",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         },
-    //         "material": [{
-    //             "value": "Bomull",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         }],
-    //         "color": [{
-    //             "value": "Blå",
-    //             "matchLevel": "none",
-    //             "matchedWords": []
-    //         }]
-    //     },
-    //     "sizes": [{
-    //         "value": "WMN-INT-L",
-    //         "matchLevel": "none",
-    //         "matchedWords": []
-    //     }],
-    //     "cat2": {
-    //         "value": "Kläder > Damkläder",
-    //         "matchLevel": "none",
-    //         "matchedWords": []
-    //     },
-    //     "featuredIn": [{
-    //         "value": "UmEBwGxWA8",
-    //         "matchLevel": "none",
-    //         "matchedWords": []
-    //     }
-    //     ]
-    // }
 }
 
 export interface TraderaItemData {
@@ -364,17 +229,6 @@ export interface ValidatorMessage {
     param: string
 }
 
-// export interface WatcherMetadata {
-//     keyword: string,
-//     regions?: string[] | null,
-//     category?: string | null,
-//     isAuction?: boolean | null,
-//     priceRange?: {
-//         gte?: string,
-//         lte?: string
-//     }
-// }
-
 export interface FilterStates {
     regionState: { state: string; setState: any }
     categoryState: { state: string; setState: any }
@@ -382,8 +236,6 @@ export interface FilterStates {
     priceRangeState: { state: string; setState: any }
     queryState?: { state: string; setState: any }
 }
-
-export type Parameters<T> = T extends (...args: infer T) => any ? T : never
 
 declare global {
     interface Window {
