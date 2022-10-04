@@ -49,8 +49,11 @@ jobs:
             - restore_cache:
                   key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
-                  name: Test and lint
-                  command: pnpm run lint || pnpm run test
+                  name: Lint
+                  command: pnpm run lint
+            - run:
+                  name: test
+                  command: pnpm run test
     deploy:
         docker:
             - image: google/cloud-sdk
