@@ -5,7 +5,7 @@ import {
     ScraperTrigger,
     Category,
 } from '@wille430/common'
-import crypto from 'crypto'
+import * as crypto from 'crypto'
 import { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import { ScrapedListing } from './types/ScrapedListing'
@@ -77,7 +77,6 @@ export abstract class BaseListingScraper {
         this.status = ScraperStatus.SCRAPING
 
         let batch: ScrapedListing[] = []
-        let totalScrapedCount = 0
 
         this.log(`Scraping listings from ${this.entryPoints.length} entry points`)
         for (const entryPoint of this.entryPoints) {
@@ -174,7 +173,6 @@ export abstract class BaseListingScraper {
                 }
             }
 
-            totalScrapedCount += targetScrapeCount
             if (options.onNextEntryPoint) options.onNextEntryPoint()
 
             this.log(
@@ -186,7 +184,7 @@ export abstract class BaseListingScraper {
             })
 
             await this.scrapingLogsRepository.create({
-                added_count: totalScrapedCount,
+                added_count: targetScrapeCount,
                 // TODO: correct error count value
                 error_count: 0,
                 entryPoint: entryPoint.identifier,
@@ -202,7 +200,7 @@ export abstract class BaseListingScraper {
         this.reset()
     }
 
-    private async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {
+    async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {
         await this.listingsRepository.deleteMany({
             date: {
                 lte: new Date(this.deleteOlderThan),
@@ -237,7 +235,7 @@ export abstract class BaseListingScraper {
     }
 
     stringToCategoryMap: Record<string, Category> = {}
-    parseCategory(_string: string): Category {
+    parseCategory(_string: string): Promise<Category> | Category {
         const string = _string.toUpperCase()
         if (this.stringToCategoryMap[string]) return this.stringToCategoryMap[string]
 

@@ -1,6 +1,6 @@
 import { ElementHandle } from 'puppeteer'
 import axios from 'axios'
-import robotsParser from 'robots-parser'
+import * as robotsParser from 'robots-parser'
 import { BaseListingScraper } from './BaseListingScraper'
 import { ScrapedListing } from './types/ScrapedListing'
 import { CreateConfigFunction } from './types/CreateConfigFunction'

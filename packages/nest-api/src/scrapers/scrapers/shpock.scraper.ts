@@ -120,33 +120,34 @@ export class ShpockScraper extends ListingScraper {
         }
     }
 
-    get originCategories() {
+    async originCategories(): Promise<any[]> {
         if (this._originCategories) {
             return this._originCategories
         } else {
             // eslint-disable-next-line no-async-promise-executor
-            return new Promise<any[]>(async (resolve) => {
-                const data = await axios
-                    .post(this.createScrapeUrl() + 'graphql', {
-                        operationName: 'Categories',
-                        query: 'query Categories {\n  categories {\n    id\n    label\n    slugs\n    __typename\n  }\n}\n',
-                        variables: {},
-                    })
-                    .then((res) => res.data)
+            const data = await axios
+                .post(this.createScrapeUrl() + 'graphql', {
+                    operationName: 'Categories',
+                    query: 'query Categories {\n  categories {\n    id\n    label\n    slugs\n    __typename\n  }\n}\n',
+                    variables: {},
+                })
+                .then((res) => res.data)
 
-                const categories = data.data.categories
-                this._originCategories = categories
+            const categories = data.data.categories
+            this._originCategories = categories
 
-                resolve(categories)
-            })
+            return categories
         }
     }
 
-    parseCategory(catShort: any): Category {
-        // eslint-disable-next-line no-async-promise-executor
-        return new Promise<Category>(async (resolve) => {
-            const cat = (await this.originCategories).find((x) => x.id === catShort).label
-            resolve(super.parseCategory(cat))
-        }) as any
+    async parseCategory(catShort: any): Promise<Category> {
+        // Try to fetch categories from Shpock. If it fails, just
+        // use the inherited method.
+        try {
+            const cat = (await this.originCategories()).find((x) => x.id === catShort)?.label
+            return super.parseCategory(cat)
+        } catch (e) {
+            return super.parseCategory(catShort)
+        }
     }
 }
