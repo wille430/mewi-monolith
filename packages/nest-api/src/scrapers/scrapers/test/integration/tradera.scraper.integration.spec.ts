@@ -1,21 +1,24 @@
+import { AppModule } from '@/app.module'
+import { ListingsRepository } from '@/listings/listings.repository'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import _ from 'lodash'
-import { PrismaService } from '../../prisma/prisma.service'
-import { TraderaScraper } from './tradera.scraper'
+import { ScrapingLogsRepository } from '../../../scraping-logs.repository'
+import { TraderaScraper } from '../../tradera.scraper'
 
 describe('Tradera Scraper', () => {
     let scraper: TraderaScraper
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [PrismaService, TraderaScraper, ConfigService],
-        })
-            .overrideProvider(PrismaService)
-            .useValue({})
-            .compile()
+            imports: [AppModule],
+        }).compile()
 
-        scraper = module.get<TraderaScraper>(TraderaScraper)
+        scraper = new TraderaScraper(
+            module.get<ListingsRepository>(ListingsRepository),
+            module.get<ScrapingLogsRepository>(ScrapingLogsRepository),
+            module.get<ConfigService>(ConfigService)
+        )
         scraper.limit = 10
     })
 

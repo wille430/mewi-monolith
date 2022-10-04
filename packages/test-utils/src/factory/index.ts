@@ -4,3 +4,5 @@ export * from './UserWatcherFactory'
 export * from './WatcherFactory'
 
 export * from './createMany'
+
+export * from './createFakeUser'

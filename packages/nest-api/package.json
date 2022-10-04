@@ -80,7 +80,9 @@
     "scripts": {
         "dev": "nest start --watch && node build.js",
         "lint": "eslint",
-        "test": "dotenv -e .env.test -- bash -c 'echo \"DATABSAE_URL: $DATABASE_URI\"' && jest --maxWorkers=50%",
+        "test": "dotenv -e .env.test -- bash -c 'echo \"DATABSAE_URL: $DATABASE_URI\"' && jest",
+        "test:unit": "npm run test -- --filter='./script/unit-tests-filter.js'",
+        "test:integration": "npm run test -- --filter='./script/integration-tests-filter.js' --runInBand --forceExit",
         "test:watch": "npm run test -- --watch --onlyChanged",
         "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json && node build.js",
         "pack": "pnpm pack --pack-destination ../../archive",

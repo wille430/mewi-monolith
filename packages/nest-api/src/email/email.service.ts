@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import nodeMailer, { TestAccount } from 'nodemailer'
+import * as nodeMailer from 'nodemailer'
+import { TestAccount } from 'nodemailer'
 import * as path from 'path'
-import * as net from 'net'
 
 @Injectable()
 export class EmailService {

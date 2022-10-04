@@ -1,20 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { BytbilScraper } from './bytbil.scraper'
-import { PrismaService } from '../../prisma/prisma.service'
-import configuration from '../../config/configuration'
+import { ConfigService } from '@nestjs/config'
+import { BytbilScraper } from '../../bytbil.scraper'
 import * as puppeteer from 'puppeteer'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { ScrapingLogsRepository } from '../../../scraping-logs.repository'
+import { AppModule } from '@/app.module'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [ConfigService, PrismaService, BytbilScraper],
+            imports: [AppModule],
         }).compile()
 
-        scraper = module.get<BytbilScraper>(BytbilScraper)
+        scraper = new BytbilScraper(
+            module.get<ListingsRepository>(ListingsRepository),
+            module.get<ScrapingLogsRepository>(ScrapingLogsRepository),
+            module.get<ConfigService>(ConfigService)
+        )
         scraper.limit = 10
     })
 
@@ -24,7 +28,7 @@ describe('Bytbil Scraper', () => {
 
     describe('#scrape', () => {
         it('should not throw error when fetching 10+ times', async () => {
-            jest.spyOn(puppeteer, 'launch').mockImplementation({
+            jest.spyOn(puppeteer, 'launch').mockReturnValue({
                 newPage: jest.fn().mockResolvedValue({
                     goto: jest.fn(),
                     $$: jest.fn().mockResolvedValue(Array(scraper.limit)),

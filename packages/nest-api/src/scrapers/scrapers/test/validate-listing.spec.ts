@@ -1,5 +1,5 @@
 import { Category, Prisma, Currency } from '@mewi/prisma'
-import { ScrapeContext } from '../classes/types/ScrapeContext'
+import { ScrapeContext } from '../../classes/types/ScrapeContext'
 
 const urlRegex =
     /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/

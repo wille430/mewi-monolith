@@ -27,10 +27,6 @@ export class BytbilScraper extends ListingWebCrawler {
     ]
     limit = 24
 
-    readonly watchOptions: WatchOptions = {
-        findFirst: 'origin_id',
-    }
-
     createScrapeUrl = (vehicleType: string, page: number): string => {
         return new URL(`/${vehicleType}?Page=${page}`, this.baseUrl).toString()
     }
@@ -51,8 +47,10 @@ export class BytbilScraper extends ListingWebCrawler {
             )
         )
 
-        Object.assign(this.defaultStartOptions.watchOptions, {
-            findFirst: 'origin_id',
+        Object.assign(this.defaultStartOptions, {
+            watchOptions: {
+                findFirst: 'origin_id',
+            },
         })
     }
 

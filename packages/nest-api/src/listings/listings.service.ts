@@ -118,6 +118,8 @@ export class ListingsService {
                 },
             })
         }
+
+        return
     }
 
     async unlike(userId: string, listingId: string) {
@@ -134,5 +136,7 @@ export class ListingsService {
                 },
             })
         }
+
+        return
     }
 }

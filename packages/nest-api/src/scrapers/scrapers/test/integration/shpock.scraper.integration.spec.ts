@@ -1,18 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ShpockScraper } from './shpock.scraper'
-import configuration from '../../config/configuration'
+import { ConfigService } from '@nestjs/config'
+import { ShpockScraper } from '../../shpock.scraper'
+import { ScrapingLogsRepository } from '../../../scraping-logs.repository'
+import { ListingsRepository } from '@/listings/listings.repository'
+import { AppModule } from '@/app.module'
 
 describe('Shpock Scraper', () => {
     let scraper: ShpockScraper
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigModule.forRoot({ load: [configuration] })],
-            providers: [ConfigService, ShpockScraper],
+            imports: [AppModule],
         }).compile()
 
-        scraper = module.get<ShpockScraper>(ShpockScraper)
+        scraper = new ShpockScraper(
+            module.get<ListingsRepository>(ListingsRepository),
+            module.get<ScrapingLogsRepository>(ScrapingLogsRepository),
+            module.get<ConfigService>(ConfigService)
+        )
         scraper.limit = 10
     })
 

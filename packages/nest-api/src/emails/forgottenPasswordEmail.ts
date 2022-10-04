@@ -43,13 +43,14 @@ const forgottenPasswordEmail = ({link}: forgottenPasswordEmailProps) => mjml2htm
                                 {
                                     tagName: 'mj-text',
                                     attributes: {},
-                                    content: 'En begäran om lösenordsändring har skickats till oss. Om det var du, klicka på knappen nedan, annars kan du ignorera detta meddelande.'
-                                },
-                                {
-                                    tagName: 'mj-button',
-                                    attributes: {
-                                        href: link
+                                        content:
+                                            'En begäran om lösenordsändring har skickats till oss. Om det var du, klicka på knappen nedan, annars kan du ignorera detta meddelande.',
                                     },
+                                    {
+                                        tagName: 'mj-button',
+                                        attributes: {
+                                            href: link,
+                                        },
                                     content: 'Ändra lösenord'
                                 }
                             ]
