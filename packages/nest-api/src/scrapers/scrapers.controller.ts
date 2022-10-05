@@ -9,6 +9,7 @@ import { StartScrapersDto } from './dto/start-scrapers.dto'
 import { RolesGuard } from '@/auth/roles.guard'
 import { Roles } from '@/auth/roles.decorator'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { GetLogsDto } from './dto/get-logs.dto'
 
 @Controller('/scrapers')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -63,7 +64,7 @@ export class ScrapersController {
 
     @Post('logs')
     @Roles(Role.ADMIN)
-    async logs(@Body() dto: Prisma.ScrapingLogFindManyArgs) {
+    async logs(@Body() dto: GetLogsDto) {
         return this.scrapersService.getLogs(dto)
     }
 }

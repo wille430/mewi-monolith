@@ -1,35 +1,32 @@
-import { Role } from '@mewi/prisma/index-browser'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import Head from 'next/head'
-import { withAuth } from '@/lib/auth'
 import WatcherList from '@/components/WatcherList/WatcherList'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { serialize } from '@/lib/serialize'
-import prisma from '@/lib/prisma'
 import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
+import { useQuery } from 'react-query'
+import { instance } from '@/lib/axios'
+import { useUser } from '@/hooks/useUser'
 
-export const getServerSideProps = withAuth(
-    async (req) => {
-        const { id } = req.session.user
-
-        const watchers =
-            (await prisma.userWatcher.findMany({
-                where: { userId: id },
-                include: {
-                    watcher: true,
-                },
-            })) ?? []
-
-        return {
-            props: {
-                watchers: serialize(watchers),
-            },
+const Bevakningar = () => {
+    const { data: watchers, refetch: fetchWatchers } = useQuery(
+        'user-watchers',
+        () => instance.get('/users/me/watchers').then((res) => res.data),
+        {
+            initialData: [],
+            refetchOnMount: false,
         }
-    },
-    [Role.USER]
-)
+    )
 
-const Bevakningar = ({ watchers }) => {
+    const { user } = useUser({
+        redirectTo: '/loggain',
+    })
+
+    useEffect(() => {
+        if (user) {
+            fetchWatchers()
+        }
+    }, [user])
+
     return (
         <>
             <Head>

@@ -4,7 +4,7 @@ import ListingPopUp from './ListingPopUp'
 
 export default {
     component: ListingPopUp,
-    title: 'Listing Pop Up',
+    title: 'IListing Pop Up',
 } as Meta
 
 const Template: Story = (args) => (

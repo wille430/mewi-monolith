@@ -1,11 +1,11 @@
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing } from '@wille430/common'
 import { ResourceType } from '..'
 
 export interface ListingsState {
-    opened?: Listing
-    featured: Listing[]
+    opened?: IListing
+    featured: IListing[]
     search: ResourceType & {
-        hits: Listing[] | null
+        hits: IListing[] | null
         totalHits: number
     }
 }

@@ -36,36 +36,32 @@ export const listingsSlice = createSlice({
                 state.featured = action.payload
             })
             .addCase(likeListing.pending, (state: ListingsState, action) => {
-                const { listingId, userId } = action.meta.arg
+                const { listing, user } = action.meta.arg
 
-                if (!listingId || !userId) return
+                if (!listing || !user) return
 
-                state.featured = like(listingId, userId, state.featured)
-                if (state.search.hits)
-                    state.search.hits = like(listingId, userId, state.search.hits)
+                state.featured = like(listing, user, state.featured)
+                if (state.search.hits) state.search.hits = like(listing, user, state.search.hits)
             })
             .addCase(likeListing.rejected, (state, action) => {
-                const { listingId, userId } = action.meta.arg
+                const { listing, user } = action.meta.arg
 
-                state.featured = unlike(listingId, userId, state.featured)
-                if (state.search.hits)
-                    state.search.hits = unlike(listingId, userId, state.search.hits)
+                state.featured = unlike(listing, user, state.featured)
+                if (state.search.hits) state.search.hits = unlike(listing, user, state.search.hits)
             })
             .addCase(unlikeListing.pending, (state: ListingsState, action) => {
-                const { listingId, userId } = action.meta.arg
+                const { listing, user } = action.meta.arg
 
-                if (!listingId || !userId) return
+                if (!listing || !user) return
 
-                state.featured = unlike(listingId, userId, state.featured)
-                if (state.search.hits)
-                    state.search.hits = unlike(listingId, userId, state.search.hits)
+                state.featured = unlike(listing, user, state.featured)
+                if (state.search.hits) state.search.hits = unlike(listing, user, state.search.hits)
             })
             .addCase(unlikeListing.rejected, (state, action) => {
-                const { listingId, userId } = action.meta.arg
+                const { listing, user } = action.meta.arg
 
-                state.featured = like(listingId, userId, state.featured)
-                if (state.search.hits)
-                    state.search.hits = like(listingId, userId, state.search.hits)
+                state.featured = like(listing, user, state.featured)
+                if (state.search.hits) state.search.hits = like(listing, user, state.search.hits)
             })
             .addCase(searchListings.pending, (state: ListingsState) => {
                 state.search = {

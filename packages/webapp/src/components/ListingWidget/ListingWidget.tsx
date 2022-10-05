@@ -1,6 +1,6 @@
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing } from '@wille430/common'
 import { HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -8,11 +8,11 @@ import style from './ListingWidget.module.scss'
 import { LikeButton, ListingLikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
 import { useAppSelector } from '@/hooks'
-import { ListingOrigin } from '@mewi/prisma/index-browser'
+import { ListingOrigin } from '@wille430/common'
 import { getColor, getTextColor } from '@/constants/OriginColors'
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
-    listing: Listing
+    listing: IListing
 }
 
 export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {

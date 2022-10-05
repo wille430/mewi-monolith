@@ -1,4 +1,4 @@
-import { Category, ListingOrigin } from '@mewi/prisma/index-browser'
+import { Category, ListingOrigin } from '@wille430/common'
 import { ListingSearchFilters } from '@wille430/common'
 import { Dispatch, SetStateAction } from 'react'
 

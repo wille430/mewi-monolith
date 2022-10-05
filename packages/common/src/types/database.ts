@@ -1,4 +1,4 @@
-import { User, UserWatcher } from '@mewi/prisma'
+import { IUser, IUserWatcher } from '../schemas'
 import { Watcher } from 'error'
 
 export interface FilterStates {
@@ -26,6 +26,6 @@ export interface AuthTokens {
     refresh_token: string
 }
 
-export type EditableUserFields = keyof Pick<User, 'email'>
+export type EditableUserFields = keyof Pick<IUser, 'email'>
 
-export type PopulatedUserWatcher = UserWatcher & { watcher: Watcher }
+export type PopulatedUserWatcher = IUserWatcher & { watcher: Watcher }

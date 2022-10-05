@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@wille430/ui'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { ListingSearchFilters, PopulatedUserWatcher } from '@wille430/common'
+import { ListingSearchFilters, IUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
 import { instance } from '@/lib/axios'
 import { useAppDispatch, useAppSelector } from '@/hooks'
@@ -39,7 +39,7 @@ export const CreateWatcherButton = ({
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
             return instance
-                .post<PopulatedUserWatcher>('/users/me/watchers', { metadata: newWatcher })
+                .post<IUserWatcher>('/users/me/watchers', { metadata: newWatcher })
                 .then((res) => res.data)
         },
         {
@@ -68,7 +68,7 @@ export const CreateWatcherButton = ({
                 setShowModal(false)
                 dispatch(pushToSnackbar({ title: 'Bevakningar lades till!' }))
 
-                queryClient.setQueryData('watchers', (old?: PopulatedUserWatcher[]) => [
+                queryClient.setQueryData('watchers', (old?: IUserWatcher[]) => [
                     ...(old ?? []),
                     data,
                 ])

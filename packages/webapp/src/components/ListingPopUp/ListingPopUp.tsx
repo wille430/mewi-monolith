@@ -1,4 +1,4 @@
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing } from '@wille430/common'
 import classNames from 'classnames'
 import { Container } from '@wille430/ui'
 import { HorizontalLine } from '@wille430/ui'
@@ -16,7 +16,7 @@ const cx = classNames.bind(styles)
 
 interface ListingPopUp {
     onClose?: () => void
-    listing: Listing
+    listing: IListing
 }
 
 // TODO: disable scroll outside element
@@ -103,7 +103,7 @@ const InfoHeader = ({
     price,
     redirectUrl,
     origin,
-}: Pick<Listing, 'region' | 'title' | 'price' | 'redirectUrl' | 'origin'>) => {
+}: Pick<IListing, 'region' | 'title' | 'price' | 'redirectUrl' | 'origin'>) => {
     const handleRedirect = () => {
         window.open(redirectUrl)
     }

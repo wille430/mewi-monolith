@@ -1,5 +1,5 @@
-import { capitalize, CategoryLabel, PopulatedUserWatcher } from '@wille430/common'
-import { Listing } from '@mewi/prisma/index-browser'
+import { CategoryLabel, IUserWatcher } from '@wille430/common'
+import { IListing } from '@wille430/common'
 import { Button } from '@wille430/ui'
 import queryString from 'query-string'
 import { Dispatch, useEffect, useRef, useState } from 'react'
@@ -17,8 +17,8 @@ const WatcherCard = ({
     expand,
     onExpand,
 }: {
-    userWatcher: PopulatedUserWatcher
-    newItems?: Listing[]
+    userWatcher: IUserWatcher
+    newItems?: IListing[]
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
@@ -43,9 +43,9 @@ const WatcherCard = ({
     }
 
     const regionsString = () => {
-        if (typeof watcher.metadata.regions === 'string') return watcher.metadata.regions
+        if (typeof watcher.metadata.region === 'string') return watcher.metadata.region
 
-        return watcher.metadata.regions?.map((x: string) => capitalize(x)).join(', ')
+        return watcher.metadata.region
     }
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const WatcherCard = ({
                 )}
                 <div className='flex flex-grow space-y-4'>
                     <div className='grid flex-1 grid-cols-fit-12 gap-4'>
-                        {watcher.metadata.regions && watcher.metadata.regions.length >= 1 ? (
+                        {watcher.metadata.region && watcher.metadata.region.length >= 1 ? (
                             <div className='mr-6'>
                                 <label className='label'>Regioner:</label>
                                 <span>{regionsString()}</span>

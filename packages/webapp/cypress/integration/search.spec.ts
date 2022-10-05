@@ -3,7 +3,7 @@ import sampleSize from 'lodash/sampleSize'
 import queryString from 'query-string'
 import faker from '@faker-js/faker'
 import _ from 'lodash'
-import { Category } from '@mewi/prisma'
+import { Category } from '@wille430/common'
 
 describe('search', () => {
     describe('from /sok', () => {

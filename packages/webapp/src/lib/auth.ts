@@ -1,9 +1,9 @@
-import { Role } from '@mewi/prisma/index-browser'
+import { Role } from '@wille430/common'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { IncomingMessage, ServerResponse } from 'http'
 import { withSessionSsr } from './withSession'
 
-export interface UserJwtPayload {
+export interface IUserJwtPayload {
     jti: string
     iat: number
     role: Role

@@ -3,7 +3,7 @@ import React, { ChangeEvent, useRef } from 'react'
 import queryString from 'query-string'
 import { keys } from 'ts-transformer-keys'
 import Router, { useRouter } from 'next/router'
-import { Category, ListingOrigin } from '@mewi/prisma/index-browser'
+import { Category, ListingOrigin } from '@wille430/common'
 import isEqual from 'lodash/isEqual'
 import debounce from 'lodash/debounce'
 import omit from 'lodash/omit'
@@ -35,7 +35,7 @@ const defaultContext = React.createContext<ListingFiltersContext | undefined>(un
 /**
  * Get listing filter context from the memory
  *
- * @returns Listing filters context
+ * @returns IListing filters context
  */
 const getListingFilterContext = () => {
     if (typeof window !== 'undefined') {
@@ -194,7 +194,7 @@ export const ListingFiltersProvider = ({
 }
 
 /**
- * Parse query string to an object with Listing filters
+ * Parse query string to an object with IListing filters
  *
  * @param string The query string
  * @param excludeInParams Paremeters to exclude in output object

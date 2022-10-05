@@ -1,4 +1,4 @@
-import { ListingOrigin } from '@mewi/prisma/index-browser'
+import { ListingOrigin } from '@wille430/common'
 import { hexToRgb, relativeLuminance } from '@/helpers/colors'
 
 export const BLOCKET_COLOR = '#f71414'

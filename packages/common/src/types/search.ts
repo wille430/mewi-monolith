@@ -1,7 +1,7 @@
-import { Watcher, Category, ListingOrigin } from '@mewi/prisma'
+import { IWatcher, Category, ListingOrigin } from '../schemas'
 import { ListingSort } from './listingSort'
 
-type Metadata = Watcher['metadata']
+type Metadata = IWatcher['metadata']
 
 export interface ListingSearchFilters extends Partial<Metadata> {
     keyword?: string

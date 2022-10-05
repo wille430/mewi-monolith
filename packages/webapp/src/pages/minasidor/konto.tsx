@@ -1,23 +1,23 @@
 import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement } from 'react'
-import { Role, User } from '@mewi/prisma/index-browser'
+import { Role, IUser } from '@wille430/common'
 import Head from 'next/head'
 import { withAuth } from '@/lib/auth'
 import { logoutSession } from '@/lib/session'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import prisma from '@/lib/prisma'
+import { instance } from '@/lib/axios'
 
 interface KontoPageProps {
-    user: User
+    user: IUser
 }
 
 export const getServerSideProps = withAuth(
     async (req) => {
         const userId = req.session.user.id
-        const user = await prisma.user.findUnique({ where: { id: userId } })
+        const user: IUser = await instance.get('/users/me')
 
-        if (!user) {
+        if (!user || user.id !== userId) {
             return logoutSession(req)
         }
 

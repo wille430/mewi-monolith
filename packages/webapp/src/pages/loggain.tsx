@@ -19,7 +19,7 @@ const Login = () => {
 
             <section className='divided-content section p-0' style={{ marginTop: '15vh' }}>
                 <div className='flex-grow p-4 py-16'>
-                    <h3 className='text-center mb-8 text-primary'>Logga in</h3>
+                    <h3 className='mb-8 text-center text-primary'>Logga in</h3>
                     <EmailSignInForm />
                 </div>
                 <CreateAccountInformation />

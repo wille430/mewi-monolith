@@ -1,6 +1,6 @@
 import { Container, HorizontalLine } from '@wille430/ui'
 import { ReactElement, useState } from 'react'
-import { PopulatedUserWatcher } from '@wille430/common'
+import { IUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'
@@ -10,7 +10,7 @@ import { instance } from '@/lib/axios'
 const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))
 
 interface WatcherListProps {
-    watchers: PopulatedUserWatcher[]
+    watchers: IUserWatcher[]
 }
 
 const WatcherList = ({ watchers }: WatcherListProps) => {
@@ -18,7 +18,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     const { data } = useQuery(
         'watchers',
-        () => instance.get<PopulatedUserWatcher[]>('/users/me/watchers').then((res) => res.data),
+        () => instance.get<IUserWatcher[]>('/users/me/watchers').then((res) => res.data),
         {
             initialData: watchers ?? [],
             enabled: false,

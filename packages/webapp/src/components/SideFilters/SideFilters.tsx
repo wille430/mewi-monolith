@@ -1,6 +1,6 @@
 import { useListingFilters } from '@/hooks/useListingFilters'
 import { toggleCategory, toggleOrigin } from '@/utils/toggleFilters'
-import { Category, ListingOrigin } from '@mewi/prisma/index-browser'
+import { Category, ListingOrigin } from '@wille430/common'
 import { categories } from '@wille430/common'
 import { Button, Container, TextField } from '@wille430/ui'
 import clsx from 'clsx'

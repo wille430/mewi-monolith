@@ -1,5 +1,5 @@
 import { CategoryLabel } from '@wille430/common'
-import { Category } from '@mewi/prisma/index-browser'
+import { Category } from '@wille430/common'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { AiFillCar, AiOutlineMobile } from 'react-icons/ai'

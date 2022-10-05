@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
-import { PopulatedUserWatcher } from '@wille430/common'
-import { Listing } from '@mewi/prisma/index-browser'
-// import { openListing } from '@/store/search/creators'
+import { IUserWatcher } from '@wille430/common'
+import { IListing } from '@wille430/common'
 import { useQuery } from 'react-query'
 import queryString from 'query-string'
 import classNames from 'classnames'
@@ -13,8 +12,8 @@ import StyledLoader from '@/components/StyledLoader'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
 
 interface NewItemsDrawerProps {
-    newItems: Listing[]
-    watcher: PopulatedUserWatcher
+    newItems: IListing[]
+    watcher: IUserWatcher
 }
 
 const removeNullValues = (obj: Record<any, any>) => {

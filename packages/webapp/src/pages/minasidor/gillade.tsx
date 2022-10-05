@@ -1,39 +1,22 @@
-import { Role } from '@mewi/prisma/index-browser'
-import { ReactElement, useRef } from 'react'
+import { IUser } from '@wille430/common'
+import { ReactElement } from 'react'
 import Head from 'next/head'
-import { Listing } from '@mewi/prisma/index-browser'
 import { Container, HorizontalLine } from '@wille430/ui'
 import Link from 'next/link'
-import { withAuth } from '@/lib/auth'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { serialize } from '@/lib/serialize'
-import prisma from '@/lib/prisma'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
 import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
+import { useUser } from '@/hooks/useUser'
+import { useQuery } from 'react-query'
+import { instance } from '@/lib/axios'
+import StyledLoader from '@/components/StyledLoader'
 
-export const getServerSideProps = withAuth(
-    async (req) => {
-        const { id } = req.session.user
+const Bevakningar = () => {
+    const { data: listings, isLoading } = useQuery('liked-listings', () =>
+        instance.get<IUser>('/users/me').then((res) => res.data.likedListings)
+    )
 
-        const listings = await prisma.listing.findMany({
-            where: {
-                likedByUserIDs: {
-                    has: id,
-                },
-            },
-        })
-
-        return {
-            props: {
-                listings: serialize(listings),
-            },
-        }
-    },
-    [Role.USER]
-)
-
-const Bevakningar = ({ listings }: { listings: Listing[] }) => {
-    const _listings = useRef(listings)
+    useUser({ redirectTo: '/loggain' })
 
     return (
         <>
@@ -47,15 +30,17 @@ const Bevakningar = ({ listings }: { listings: Listing[] }) => {
                         <HorizontalLine />
                     </Container.Header>
                     <Container.Content className='flex flex-grow flex-col space-y-4'>
-                        {_listings.current.map((listing, i) => (
-                            <ListingRow
-                                key={listing.id}
-                                data-testid={`listing-${i}`}
-                                listing={listing}
-                            />
-                        ))}
-
-                        {!_listings.current.length && (
+                        {isLoading ? (
+                            <StyledLoader />
+                        ) : listings != null && listings.length > 0 ? (
+                            listings.map((listing, i) => (
+                                <ListingRow
+                                    key={listing.id}
+                                    data-testid={`listing-${i}`}
+                                    listing={listing}
+                                />
+                            ))
+                        ) : (
                             <div className='mb-16 flex flex-grow flex-col items-center justify-center text-sm '>
                                 <span className='text-gray-400'>
                                     Du har inte gillat några produkter ännu.

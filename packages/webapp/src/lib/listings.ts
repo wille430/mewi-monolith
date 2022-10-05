@@ -1,19 +1,19 @@
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing, IUser } from '@wille430/common'
 
-export const like = (listingId: string, userId: string | undefined, arr: Listing[]) => {
+export const like = (listing: IListing, user: IUser | undefined, arr: IListing[]) => {
     return arr.map((o) => {
-        if (o.id === listingId && userId) {
-            o.likedByUserIDs.push(userId)
+        if (o.id === listing.id && user) {
+            user.likedListings.push(listing)
         }
 
         return o
     })
 }
 
-export const unlike = (listingId: string, userId: string | undefined, arr: Listing[]) => {
+export const unlike = (listing: IListing, user: IUser | undefined, arr: IListing[]) => {
     return arr.map((o) => {
-        if (o.id === listingId) {
-            o.likedByUserIDs = o.likedByUserIDs.filter((x) => x !== userId)
+        if (o.id === listing.id && user) {
+            user.likedListings = user.likedListings.filter((x) => x.id !== listing.id)
         }
 
         return o

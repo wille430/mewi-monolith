@@ -1,4 +1,4 @@
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing } from '@wille430/common'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Button } from '@wille430/ui'
@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/hooks'
 import { openListing } from '@/store/listings'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
-    listing: Listing
+    listing: IListing
 }
 
 export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {

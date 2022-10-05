@@ -1,4 +1,4 @@
-import { User } from '@mewi/prisma/index-browser'
+import { IUser } from '@wille430/common'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { UserActionTypes } from './types'
@@ -15,7 +15,7 @@ export const setLoggedInStatus = createAction(
 
 export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, thunkApi) => {
     try {
-        return (await instance.get('/users/me').then((res) => res.data)) as User
+        return (await instance.get('/users/me').then((res) => res.data)) as IUser
     } catch (e) {
         await thunkApi.dispatch(logout())
 

@@ -1,4 +1,4 @@
-import { Category } from '@mewi/prisma/index-browser'
+import { Category } from '@wille430/common'
 import { CategoryLabel } from '@wille430/common'
 import { LinkProps } from 'next/link'
 import { RootState } from '@/store'

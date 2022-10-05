@@ -23,4 +23,6 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
             })
         }
     }, [user, redirectIfFound, redirectTo, isFirstRender.current])
+
+    return { user }
 }

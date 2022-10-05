@@ -30,7 +30,6 @@
     "author": "Mewi",
     "license": "ISC",
     "dependencies": {
-        "@mewi/prisma": "workspace:^1.0.1",
         "lodash": "^4.17.21",
         "query-string": "^7.1.1",
         "tslib": "^2.3.1"

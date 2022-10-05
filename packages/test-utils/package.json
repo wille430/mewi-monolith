@@ -26,7 +26,6 @@
     "license": "ISC",
     "dependencies": {
         "@faker-js/faker": "^7.5.0",
-        "@mewi/prisma": "workspace:^1.0.1",
         "@wille430/common": "workspace:^1.0.1",
         "lodash": "^4.17.21",
         "prisma-factory": "^0.1.12"

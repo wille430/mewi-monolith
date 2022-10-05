@@ -1,8 +1,8 @@
-import { User } from '@mewi/prisma/index-browser'
+import { IUser } from '@wille430/common'
 
 export interface UserState {
     isLoggedIn: boolean
-    user?: User
+    user?: IUser
 }
 
 export enum UserActionTypes {

@@ -1,4 +1,4 @@
-import { ListingOrigin, Prisma } from '@mewi/prisma/index-browser'
+import { ListingOrigin } from '@wille430/common'
 import { Button, ButtonProps, Table } from '@wille430/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -218,12 +218,8 @@ export const DeleteButton = ({
             // Delete listings from selected origins
             await instance.delete('/listings', {
                 data: {
-                    where: {
-                        origin: {
-                            in: selected,
-                        },
-                    },
-                } as Prisma.ListingDeleteManyArgs,
+                    origin: selected,
+                },
             }),
         {
             onMutate: () => queryClient.refetchQueries('scrapers'),

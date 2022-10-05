@@ -1,44 +1,31 @@
 import Head from 'next/head'
 import { ReactElement } from 'react'
 import { GetStaticProps } from 'next'
-import { Listing } from '@mewi/prisma/index-browser'
+import { IListing } from '@wille430/common'
 import dynamic from 'next/dynamic'
 import { Layout } from '@/components/Layout/Layout'
 import { Hero } from '@/components/Hero/Hero'
 import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
 import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings'
-import prisma from '@/lib/prisma'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
-import { serialize } from '@/lib/serialize'
+import { instance } from '@/lib/axios'
 
 const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 
 interface IndexPageProps {
-    featuredListings: Listing[]
+    featuredListings: IListing[]
 }
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => async () => {
     // Get random listings
-    const listingCount = await prisma.listing.count()
-    const take = 10
-
-    const listings = await Promise.all(
-        Array(take)
-            .fill(null)
-            .map(async () => {
-                return await prisma.listing.findFirst({
-                    skip: Math.floor(Math.random() * listingCount),
-                })
-            })
-    )
-
-    store.dispatch(setFeatured(serialize(listings)))
+    const listings = await instance.get<IListing[]>('/listings/featured').then((res) => res.data)
+    store.dispatch(setFeatured(listings))
 
     return {
         props: {
-            featuredListings: serialize(listings),
+            featuredListings: listings,
         } as IndexPageProps,
         revalidate: 15 * 60 * 60,
     }

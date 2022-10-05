@@ -1,4 +1,4 @@
-import { ListingOrigin, Prisma, ScrapingLog } from '@mewi/prisma/index-browser'
+import { ListingOrigin, IScrapingLog } from '@wille430/common'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { Chart, AxisOptions, UserSerie } from 'react-charts'
@@ -6,7 +6,7 @@ import { instance } from '@/lib/axios'
 
 type Series = {
     label: string
-    data: Partial<ScrapingLog>[]
+    data: Partial<IScrapingLog>[]
 }
 
 export const ScraperLogs = () => {
@@ -14,14 +14,12 @@ export const ScraperLogs = () => {
         'scraperLogs',
         (): Promise<Series[]> =>
             instance
-                .post<ScrapingLog[]>('/scrapers/logs', {
-                    where: {
-                        createdAt: {
-                            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-                        },
+                .post<IScrapingLog[]>('/scrapers/logs', {
+                    createdAt: {
+                        gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
                     },
                     take: 20,
-                } as Prisma.ScrapingLogFindManyArgs)
+                })
                 .then(({ data }) => {
                     const series: Series[] = []
 
@@ -41,7 +39,7 @@ export const ScraperLogs = () => {
     )
 
     const primaryAxis = useMemo(
-        (): AxisOptions<ScrapingLog> => ({
+        (): AxisOptions<IScrapingLog> => ({
             getValue: (log) => new Date(log.createdAt),
             scaleType: 'time',
         }),
@@ -49,9 +47,9 @@ export const ScraperLogs = () => {
     )
 
     const secondaryAxes = useMemo(
-        (): AxisOptions<ScrapingLog>[] => [
+        (): AxisOptions<IScrapingLog>[] => [
             {
-                getValue: (log) => log.added_count,
+                getValue: (log) => log.addedCount,
             },
         ],
         []
@@ -71,7 +69,7 @@ export const ScraperLogs = () => {
         >
             <Chart
                 options={{
-                    data: data as UserSerie<ScrapingLog>[],
+                    data: data as UserSerie<IScrapingLog>[],
                     primaryAxis,
                     secondaryAxes,
                 }}

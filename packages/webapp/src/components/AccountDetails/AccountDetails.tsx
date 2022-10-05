@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { useMutation } from 'react-query'
-import { LoginStrategy, User } from '@mewi/prisma/index-browser'
+import { LoginStrategy, IUser } from '@wille430/common'
 import { Button, TextField } from '@wille430/ui'
 import { randomString } from '@wille430/common'
 import styles from './AccountDetails.module.scss'
@@ -8,7 +8,7 @@ import { instance } from '@/lib/axios'
 import { ApiErrorResponse } from '@/types/types'
 
 export interface AccountDetailsProps {
-    user: User
+    user: IUser
 }
 
 const AccountDetails = ({ user }: AccountDetailsProps) => {
@@ -43,12 +43,12 @@ const AccountDetails = ({ user }: AccountDetailsProps) => {
         }
     )
 
-    interface UpdateUserInfo {
+    interface UpdateIUserInfo {
         email?: string
     }
 
-    const [formData, setFormData] = useState<UpdateUserInfo>(user || {})
-    const [errors, setErrors] = useState<Record<keyof UpdateUserInfo | string, string>>({
+    const [formData, setFormData] = useState<UpdateIUserInfo>(user || {})
+    const [errors, setErrors] = useState<Record<keyof UpdateIUserInfo | string, string>>({
         email: '',
     })
     const [success, setSuccess] = useState<string | undefined>()

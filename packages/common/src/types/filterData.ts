@@ -1,4 +1,4 @@
-import { Category } from '@mewi/prisma/index-browser'
+import { Category } from '../schemas'
 import { CategoryLabel } from './category.enum'
 
 export const regions = [

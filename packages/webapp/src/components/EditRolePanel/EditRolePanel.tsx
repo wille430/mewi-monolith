@@ -1,6 +1,6 @@
 import { Button, TextField } from '@wille430/ui'
 import capitalize from 'lodash/capitalize'
-import { Role, User } from '@mewi/prisma/index-browser'
+import { Role, IUser } from '@wille430/common'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'
@@ -13,7 +13,7 @@ export function EditRolePanel() {
 
     const { data, refetch, isLoading } = useQuery(
         'users',
-        () => instance.get<User[]>(`/users?email=${email}`).then((res) => res.data),
+        () => instance.get<IUser[]>(`/users?email=${email}`).then((res) => res.data),
         {
             refetchOnMount: false,
             refetchOnReconnect: false,
@@ -22,9 +22,9 @@ export function EditRolePanel() {
     )
 
     return (
-        <div className='p-2 spce-y-2'>
+        <div className='spce-y-2 p-2'>
             <h4 className='mb-2'>Hantera roller</h4>
-            <div className='space-y-4 rounded bg-gray-150 p-2'>
+            <div className='bg-gray-150 space-y-4 rounded p-2'>
                 <form
                     className='flex max-w-sm'
                     onSubmit={(e) => {
@@ -40,9 +40,9 @@ export function EditRolePanel() {
                     />
                     <Button label='Sök' className='ml-1' type='submit' />
                 </form>
-                <div className='p-2 w-ful'>
+                <div className='w-ful p-2'>
                     {isLoading ? (
-                        <div className='w-full flex justify-center'>
+                        <div className='flex w-full justify-center'>
                             <StyledLoader />
                         </div>
                     ) : !data?.length ? (
@@ -50,7 +50,7 @@ export function EditRolePanel() {
                     ) : (
                         <ul>
                             {data?.map((user) => (
-                                <UserRolesWidget user={user} />
+                                <IUserRolesWidget user={user} />
                             ))}
                         </ul>
                     )}
@@ -60,16 +60,16 @@ export function EditRolePanel() {
     )
 }
 
-interface UserRolesWidgetProps {
-    user: User
+interface IUserRolesWidgetProps {
+    user: IUser
 }
 
-export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
+export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
     const queryClient = useQueryClient()
-    const data = queryClient.getQueryData<User[] | undefined>('users')
+    const data = queryClient.getQueryData<IUser[] | undefined>('users')
 
-    const updateUserMutation = useMutation(
-        ({ user, newRole }: { user: User; newRole: Role }) =>
+    const updateIUserMutation = useMutation(
+        ({ user, newRole }: { user: IUser; newRole: Role }) =>
             instance.patch('/users/' + user.id, {
                 roles: [...user.roles, newRole],
             }),
@@ -86,8 +86,8 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
         }
     )
 
-    const deleteUserRoleMutation = useMutation(
-        ({ user, roleToDelete }: { user: User; roleToDelete: Role }) =>
+    const deleteIUserRoleMutation = useMutation(
+        ({ user, roleToDelete }: { user: IUser; roleToDelete: Role }) =>
             instance.patch('/users/' + user.id, {
                 roles: user.roles.filter((x) => x != roleToDelete),
             }),
@@ -106,15 +106,15 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
 
     const missingRoles = useMemo(() => {
         const roles = user.roles
-        const rolesNotInUser: Role[] = []
+        const rolesNotInIUser: Role[] = []
 
         for (const role of Object.keys(Role)) {
             if (!roles.includes(role as Role)) {
-                rolesNotInUser.push(role as Role)
+                rolesNotInIUser.push(role as Role)
             }
         }
 
-        return rolesNotInUser
+        return rolesNotInIUser
     }, [user.roles])
 
     return (
@@ -125,7 +125,7 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
                     <span
                         className={styles['role-label']}
                         onClick={() =>
-                            deleteUserRoleMutation.mutate({
+                            deleteIUserRoleMutation.mutate({
                                 user,
                                 roleToDelete: key,
                             })
@@ -142,7 +142,7 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
                             [styles['unselected']]: true,
                         })}
                         onClick={() =>
-                            updateUserMutation.mutate({
+                            updateIUserMutation.mutate({
                                 user,
                                 newRole: key,
                             })

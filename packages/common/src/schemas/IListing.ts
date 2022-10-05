@@ -1,8 +1,9 @@
 import { Category } from './enums/category.enum'
 import { Currency } from './enums/currency.enum'
 import { ListingOrigin } from './enums/listing-origin.enum'
+import { IEntity } from './IEntity'
 
-export interface IListing {
+export interface IListing extends IEntity {
     id: string
     origin_id: string
     title: string

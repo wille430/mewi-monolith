@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
 import { withSessionRoute } from '@/lib/withSession'
 
 export default withSessionRoute(userRoute)
@@ -12,11 +11,7 @@ async function userRoute(req: NextApiRequest, res: NextApiResponse) {
         })
     }
 
-    const user = await prisma.user.findUnique({
-        where: {
-            id: req.session.user.id,
-        },
-    })
+    const user = null
 
     res.json(user)
 }
