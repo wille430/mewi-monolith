@@ -19,7 +19,10 @@ jobs:
                       - node_modules/*
                       - packages/nest-api/node_modules/*
                       - packages/common/node_modules/*
-                      - packages/schemas/node_modules/*
+                      - packages/prisma/node_modules/*
+                      - packages/test-utils/node_modules/*
+                      - packages/ui/node_modules/*
+                      - packages/webapp/node_modules/*
     build:
         docker:
             - image: 'cimg/node:14.17-browsers'
