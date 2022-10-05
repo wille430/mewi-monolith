@@ -16,10 +16,10 @@ jobs:
             - save_cache:
                   key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
                   paths:
-                      - node_modules
-                      - ./packages/nest-api/node_modules
-                      - ./packages/common/node_modules
-                      - ./packages/schemas/node_modules
+                      - node_modules/*
+                      - packages/nest-api/node_modules/*
+                      - packages/common/node_modules/*
+                      - packages/schemas/node_modules/*
     build:
         docker:
             - image: 'cimg/node:14.17-browsers'
@@ -49,10 +49,10 @@ jobs:
             - restore_cache:
                   key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
-                  name: Lint
+                  name: Lint all packages
                   command: pnpm run lint
             - run:
-                  name: test
+                  name: Test all packages
                   command: pnpm run test
     deploy:
         docker:
@@ -111,15 +111,11 @@ workflows:
                       - build
     build_and_test:
         jobs:
-            - hold:
-                  type: approval
+            - setup:
                   filters:
                       branches:
                           only:
                               - dev
-            - setup:
-                  requires:
-                      - hold
             - test:
                   requires:
                       - setup
