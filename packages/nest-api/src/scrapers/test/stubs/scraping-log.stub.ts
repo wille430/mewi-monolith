@@ -1,3 +1,4 @@
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 import { listingStub } from '@/listings/test/stubs/listing.stub'
 import { ScrapingLog } from '@/schemas/scraping-log.schema'
 import faker from '@faker-js/faker'
@@ -6,7 +7,6 @@ import { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 
 const id = faker.database.mongodbObjectId()
-const date = new Date()
 export const scrapingLogStub = (): WithId<ScrapingLog> => ({
     _id: new mongoose.Types.ObjectId(id),
     id: id,
@@ -17,6 +17,5 @@ export const scrapingLogStub = (): WithId<ScrapingLog> => ({
     scrapeToId: listingStub().origin_id,
     target: listingStub().origin,
     triggeredBy: ScraperTrigger.Manual,
-    createdAt: date,
-    updatedAt: date,
+    ...timestampsStub(),
 })

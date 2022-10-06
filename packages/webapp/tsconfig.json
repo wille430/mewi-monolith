@@ -21,7 +21,8 @@
         "paths": {
             "@/*": ["./src/*"]
         },
-        "strict": true
+        "strict": true,
+        "sourceMap": true
     },
     "include": ["src/**/*", "next-end.d.ts", "./prisma/*.ts", "./tailwind.config.js"],
     "exclude": [
@@ -31,6 +32,11 @@
         "src/**/*.test.tsx",
         "src/**/*.spec.tsx",
         "src/**/*.stories.ts",
-        "src/**/*.stories.tsx",
+        "src/**/*.stories.tsx"
+    ],
+    "references": [
+        {
+            "path": "./tsconfig.spec.json"
+        }
     ]
 }

@@ -5,12 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "node-terminal",
             "request": "launch",
             "name": "Launch Program",
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}/src/main.ts",
-            "preLaunchTask": "dev",
+            "command": "npm run dev",
             "outFiles": ["${workspaceFolder}/dist/**/*.js"]
         },
         {

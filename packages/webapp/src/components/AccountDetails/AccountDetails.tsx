@@ -55,7 +55,6 @@ const AccountDetails = ({ user }: AccountDetailsProps) => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        // TODO: mutate
         if (
             formData?.email !== user?.email &&
             confirm(

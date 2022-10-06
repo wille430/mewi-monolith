@@ -102,6 +102,9 @@ export class Listing implements IListing {
         required: true,
     })
     entryPoint!: string
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const ListingSchema = SchemaFactory.createForClass(Listing)

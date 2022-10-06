@@ -57,6 +57,11 @@ export class UsersController {
         return this.usersService.findOne(user.userId)
     }
 
+    @Get('me/likes')
+    async getMyLikes(@GetUser() user: UserPayload) {
+        return this.usersService.getLikedListings(user.userId)
+    }
+
     @Put('email')
     @Public()
     @UseGuards(OptionalJwtAuthGuard)

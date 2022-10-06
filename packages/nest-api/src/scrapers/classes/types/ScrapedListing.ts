@@ -1,3 +1,3 @@
 import { Listing } from '@/schemas/listing.schema'
 
-export type ScrapedListing = Omit<Listing, 'id'>
+export type ScrapedListing = Partial<Listing>

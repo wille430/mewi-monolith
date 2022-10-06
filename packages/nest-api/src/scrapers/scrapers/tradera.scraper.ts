@@ -80,7 +80,10 @@ export class TraderaScraper extends ListingScraper {
         return res.data.items
     }
 
-    parseRawListing(item: Record<string, any>, scrapeContext: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        item: Record<string, any>,
+        scrapeContext: ScrapeContext
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(item.itemId.toString()),
             title: item.shortDescription,
@@ -98,7 +101,7 @@ export class TraderaScraper extends ListingScraper {
                       value: item.price,
                       currency: Currency.SEK,
                   }
-                : null,
+                : undefined,
             origin: ListingOrigin.Tradera,
             entryPoint: scrapeContext.entryPoint.identifier,
         }

@@ -2,6 +2,7 @@ import { Role } from '@wille430/common'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { IncomingMessage, ServerResponse } from 'http'
 import { withSessionSsr } from './withSession'
+import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
 export interface IUserJwtPayload {
     jti: string
@@ -22,7 +23,7 @@ export const withAuth = (
         if (!roles) {
             return {
                 redirect: {
-                    destination: '/loggain',
+                    destination: ON_UNAUTHENTICATED_GOTO,
                 },
             }
         }

@@ -31,6 +31,9 @@ export class UserWatcher implements IUserWatcher {
 
     @Prop(Date)
     notifiedAt?: Date
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const UserWatcherSchema = SchemaFactory.createForClass(UserWatcher)

@@ -12,9 +12,8 @@ instance.interceptors.response.use(
     async (err) => {
         const config = err.config
 
-        console.log('JWT is expired or invalid', err.status, config.url, config._retry)
-
         if (
+            err.response &&
             err.response.status === 401 &&
             config.url !== '/auth/login' &&
             config.url !== '/auth/token' &&
@@ -22,21 +21,14 @@ instance.interceptors.response.use(
         ) {
             config._retry = true
 
-            console.log('Refreshing jwt...')
-
             try {
                 // refetch jwt token
-                await instance.post('/auth/token').catch((e) => {
-                    throw e
-                })
+                await instance.post('/auth/token')
 
                 return axios(config)
             } catch (e) {
                 return Promise.reject(err.response ?? err)
             }
-            // } else if (config._retry && err.status === 401) {
-            //     // Log out when retried request returns 401 again
-            //     window.location.href = '/loggain'
         } else {
             return Promise.reject(err.response ?? err)
         }

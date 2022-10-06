@@ -19,7 +19,6 @@ import SignUpDto from '@/auth/dto/sign-up.dto'
 import { LocalAuthGuard } from '@/auth/local-auth.guard'
 import RefreshTokenDto from '@/auth/dto/refresh-token.dto'
 import { GoogleAuthGuard } from '@/auth/google-auth.guard'
-import { Public } from '@/common/decorators/public.decorator'
 import { User } from '@/schemas/user.schema'
 
 @Controller('/auth')
@@ -56,7 +55,6 @@ export class AuthController {
     }
 
     @Post('token')
-    @Public()
     async refreshToken(
         @Body() refreshTokenDto: RefreshTokenDto,
         @Req() req: ReqObj,

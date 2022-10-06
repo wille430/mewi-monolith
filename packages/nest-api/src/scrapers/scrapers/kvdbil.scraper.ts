@@ -36,7 +36,10 @@ export class KvdbilScraper extends ListingScraper {
         return res.data.auctions
     }
 
-    parseRawListing(obj: Record<string, any>, context: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        obj: Record<string, any>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(obj.id),
             title: obj?.processObject?.title,

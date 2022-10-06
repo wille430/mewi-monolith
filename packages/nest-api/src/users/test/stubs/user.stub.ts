@@ -2,6 +2,7 @@ import { User } from '@/schemas/user.schema'
 import mongoose from 'mongoose'
 import { WithId } from 'mongodb'
 import { LoginStrategy, Role } from '@wille430/common'
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 
 const id = '6330360f919579b678e3d048'
 export const userStub = (): WithId<User> & { password: string } => ({
@@ -13,6 +14,7 @@ export const userStub = (): WithId<User> & { password: string } => ({
     loginStrategy: LoginStrategy.LOCAL,
     premium: true,
     likedListings: [],
+    ...timestampsStub(),
 })
 
 const expiration = new Date()

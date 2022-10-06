@@ -97,7 +97,10 @@ export class ShpockScraper extends ListingScraper {
         }
     }
 
-    parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        item: Record<string, any>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(item.id),
             title: item.title,
@@ -114,7 +117,7 @@ export class ShpockScraper extends ListingScraper {
                       value: item.price,
                       currency: Currency.SEK,
                   }
-                : null,
+                : undefined,
             origin: ListingOrigin.Shpock,
             entryPoint: context.entryPoint.identifier,
         }

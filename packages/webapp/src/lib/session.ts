@@ -1,4 +1,5 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
+import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 import type { IronSessionOptions } from 'iron-session'
 import { REFRESH_TOKEN_EXPIRES, USER_TOKEN } from './constants'
 
@@ -22,7 +23,7 @@ export const logoutSession = (req: any) => {
 
     return {
         redirect: {
-            destination: '/loggain',
+            destination: ON_UNAUTHENTICATED_GOTO,
         },
     }
 }

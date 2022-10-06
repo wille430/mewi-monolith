@@ -38,7 +38,10 @@ export abstract class ListingScraper extends BaseListingScraper {
     extractRawListingsArray(res: AxiosResponse<any, any>) {
         return res.data as any
     }
-    parseRawListing(obj: Record<string, any>, context: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        obj: Record<string, any>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing> {
         return obj as any
     }
 

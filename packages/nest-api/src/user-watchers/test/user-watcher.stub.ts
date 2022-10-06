@@ -1,3 +1,4 @@
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 import { UserWatcher } from '@/schemas/user-watcher.schema'
 import { userStub } from '@/users/test/stubs/user.stub'
 import { watcherStub } from '@/watchers/test/stubs/watcher.stub'
@@ -10,6 +11,7 @@ export const userWatcherStub = (): WithId<UserWatcher> => ({
     id,
     user: userStub(),
     watcher: watcherStub(),
+    ...timestampsStub(),
 })
 
 export const createUserWatcherStub = (): Omit<WithId<UserWatcher>, 'user' | 'watcher'> & {

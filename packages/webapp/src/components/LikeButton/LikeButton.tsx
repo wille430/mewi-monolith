@@ -1,24 +1,30 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { motion, HTMLMotionProps, useAnimation, Variants } from 'framer-motion'
-import { IListing, IUser } from '@wille430/common'
+import { IListing, IUserLean } from '@wille430/common'
 import { useMutation } from 'react-query'
 import { useAppSelector } from '../../hooks'
 import { instance } from '@/lib/axios'
 
-type LikeButtonProps = HTMLMotionProps<'button'> & {
+export type ListingLikeButtonProps = {
+    listing: IListing
+    liked?: boolean
+} & HTMLMotionProps<'button'>
+
+export type LikeButtonProps = HTMLMotionProps<'button'> & {
     liked?: boolean
 }
 
 export const ListingLikeButton = ({
     listing,
+    liked: _liked = false,
     ...rest
-}: { listing: IListing } & HTMLMotionProps<'button'>) => {
-    const user = useAppSelector((state) => state.user.user) as IUser | undefined
-    const [liked, setLiked] = useState(user && user.likedListings.includes(listing))
+}: ListingLikeButtonProps) => {
+    const user = useAppSelector((state) => state.user.user) as IUserLean | undefined
+    const [liked, setLiked] = useState(_liked)
 
     useEffect(() => {
-        setLiked(user && user.likedListings.includes(listing))
+        setLiked(user?.likedListings.includes(listing.id) ?? false)
     }, [user?.likedListings, user])
 
     const likeMutation = useMutation(() => instance.put(`/listings/${listing.id}/like`), {

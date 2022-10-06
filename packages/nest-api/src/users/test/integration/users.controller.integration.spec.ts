@@ -19,10 +19,14 @@ import * as bcrypt from 'bcryptjs'
 import _ from 'lodash'
 import { UpdateUserDto } from '@/users/dto/update-user.dto'
 import { initTestModule } from '@/common/test/initTestModule'
+import { transformDate } from '@/listings/helpers/transform-dates'
+import { listingStub } from '@/listings/test/stubs/listing.stub'
+import { Listing } from '@/schemas/listing.schema'
 
 describe('UsersController', () => {
     let dbConnection: Connection
     let usersCollection: Collection<User>
+    let listingsCollection: Collection<Listing>
     let httpServer: any
     let app: INestApplication
 
@@ -39,6 +43,7 @@ describe('UsersController', () => {
             httpServer = testModule.httpServer
             app = testModule.app
             usersCollection = dbConnection.collection('users')
+            listingsCollection = dbConnection.collection('listings')
 
             jest.resetAllMocks()
         })
@@ -58,7 +63,10 @@ describe('UsersController', () => {
                 const response = await request(httpServer).get('/users')
 
                 expect(response.status).toBe(200)
-                expect(response.body).toMatchObject([adminStub(), userStub()])
+                expect(response.body).toMatchObject([
+                    transformDate(adminStub()),
+                    transformDate(userStub()),
+                ])
             })
         })
 
@@ -104,7 +112,7 @@ describe('UsersController', () => {
                 const response = await request(httpServer).get('/users/me')
 
                 expect(response.status).toBe(200)
-                expect(response.body).toMatchObject(adminStub())
+                expect(response.body).toMatchObject(transformDate(adminStub()))
             })
         })
 
@@ -237,7 +245,7 @@ describe('UsersController', () => {
                 const response = await request(httpServer).get(`/users/${userStub().id}`)
 
                 expect(response.status).toBe(200)
-                expect(response.body).toMatchObject(userStub())
+                expect(response.body).toMatchObject(transformDate(userStub()))
             })
         })
 
@@ -254,7 +262,7 @@ describe('UsersController', () => {
                 })
 
                 expect(response.status).toBe(200)
-                expect(response.body).toMatchObject(newUser!)
+                expect(response.body).toMatchObject(transformDate(newUser!))
             })
         })
 
@@ -265,13 +273,26 @@ describe('UsersController', () => {
                 const response = await request(httpServer).delete(`/users/${userStub().id}`)
 
                 expect(response.status).toBe(200)
-                expect(response.body).toMatchObject(userStub())
+                expect(response.body).toMatchObject(transformDate(userStub()))
 
                 const user = await usersCollection.findOne({
                     id: userStub().id,
                 })
 
                 expect(user).toBe(null)
+            })
+        })
+
+        describe('GET /users/me/likes', () => {
+            it('should return listings', async () => {
+                await usersCollection.insertOne(userStub())
+                await listingsCollection.insertOne(listingStub())
+                await request(httpServer).put(`/listings/${listingStub().id}/like`)
+
+                const res = await request(httpServer).get('/users/me/likes')
+
+                expect(res.status).toBe(200)
+                expect(res.body).toMatchObject([transformDate(listingStub())])
             })
         })
     })
@@ -362,7 +383,6 @@ describe('UsersController', () => {
 
         describe('GET /users/:id', () => {
             it('should return status 401', async () => {
-                await usersCollection.insertOne(userStub())
                 const response = await request(httpServer).get(`/users/${userStub().id}`)
 
                 expect(response.status).toBe(401)
@@ -371,7 +391,6 @@ describe('UsersController', () => {
 
         describe('PUT /users/:id', () => {
             it('should return status 401', async () => {
-                await usersCollection.insertOne(userStub())
                 const response = await request(httpServer).put(`/users/${userStub().id}`)
 
                 expect(response.status).toBe(401)
@@ -380,9 +399,15 @@ describe('UsersController', () => {
 
         describe('DELETE /users/:id', () => {
             it('should return status 401', async () => {
-                await usersCollection.insertOne(userStub())
                 const response = await request(httpServer).delete(`/users/${userStub().id}`)
 
+                expect(response.status).toBe(401)
+            })
+        })
+
+        describe('GET /users/me/likes', () => {
+            it('should return status 401', async () => {
+                const response = await request(httpServer).get(`/users/me/likes`)
                 expect(response.status).toBe(401)
             })
         })

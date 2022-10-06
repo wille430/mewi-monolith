@@ -7,7 +7,7 @@ import { BaseListingScraper } from '@/scrapers/classes/BaseListingScraper'
 import { BaseEntryPoint } from '@/scrapers/classes/BaseEntryPoint'
 import { AppModule } from '@/app.module'
 import { ScrapersService } from '@/scrapers/scrapers.service'
-import { ListingOrigin } from '@mewi/prisma'
+import { ListingOrigin } from '@wille430/common'
 
 const testScrapers = Object.values(ListingOrigin).map((x) => [x])
 

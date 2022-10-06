@@ -5,7 +5,6 @@ import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
 import { instance } from '@/lib/axios'
 
-// TODO: allow IListing or ID as args, if ID fetch listing
 export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listing: IListing) => {
     return {
         payload: listing,

@@ -6,6 +6,7 @@ import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpCon
 import { useQuery } from 'react-query'
 import { instance } from '@/lib/axios'
 import { useUser } from '@/hooks/useUser'
+import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
 const Bevakningar = () => {
     const { data: watchers, refetch: fetchWatchers } = useQuery(
@@ -18,7 +19,7 @@ const Bevakningar = () => {
     )
 
     const { user } = useUser({
-        redirectTo: '/loggain',
+        redirectTo: ON_UNAUTHENTICATED_GOTO,
     })
 
     useEffect(() => {

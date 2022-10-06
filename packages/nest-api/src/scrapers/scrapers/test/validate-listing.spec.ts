@@ -1,4 +1,4 @@
-import { Category, Prisma, Currency } from '@mewi/prisma'
+import { Category, Prisma, Currency } from '@wille430/common'
 import { ScrapeContext } from '../../classes/types/ScrapeContext'
 
 const urlRegex =

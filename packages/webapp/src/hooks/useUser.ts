@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from '.'
 import { fetchUser } from '@/store/user'
@@ -7,22 +7,24 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     const dispatch = useAppDispatch()
     const { user, isLoggedIn } = useAppSelector((state) => state.user)
 
-    const isFirstRender = useRef(true)
+    const [isFirstRender, setIsFirstRender] = useState(true)
     const router = useRouter()
 
+    const refetchUser = () => dispatch(fetchUser()).then(() => setIsFirstRender(false))
+
     useEffect(() => {
-        dispatch(fetchUser()).then(() => (isFirstRender.current = false))
+        refetchUser()
     }, [])
 
     useEffect(() => {
-        if (!redirectTo || !isLoggedIn || isFirstRender.current) return
+        if (!redirectTo || isFirstRender) return
 
         if ((!redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
             router.replace(redirectTo, undefined, {
                 shallow: true,
             })
         }
-    }, [user, redirectIfFound, redirectTo, isFirstRender.current])
+    }, [user, redirectIfFound, redirectTo, isFirstRender])
 
-    return { user }
+    return { user, refetchUser }
 }

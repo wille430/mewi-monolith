@@ -10,7 +10,7 @@ import {
     UseGuards,
     Put,
 } from '@nestjs/common'
-import { Role } from '@mewi/prisma'
+import { Role } from '@wille430/common'
 import { WatchersService } from './watchers.service'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'

@@ -54,10 +54,10 @@ export class BlippScraper extends NextScraper {
         return res.data.body.payload.items
     }
 
-    parseRawListing(
+    async parseRawListing(
         { vehicle, published_date, cover_photo, entity_id, municipality }: Record<string, any>,
         context: ScrapeContext
-    ): ScrapedListing {
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(
                 `${(vehicle.brand as string).toLowerCase().slice(0, 16)}_${vehicle.entity_id}`
@@ -75,7 +75,7 @@ export class BlippScraper extends NextScraper {
                       ),
                       currency: Currency.SEK,
                   }
-                : null,
+                : undefined,
             region: municipality.name,
             origin: ListingOrigin.Blipp,
             entryPoint: context.entryPoint.identifier,

@@ -56,7 +56,10 @@ export class SellpyScraper extends ListingScraper {
         return res.data.results[0].hits
     }
 
-    override parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        item: Record<string, any>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(item.objectID),
             title: item.metadata.brand ?? item.metadata.type,

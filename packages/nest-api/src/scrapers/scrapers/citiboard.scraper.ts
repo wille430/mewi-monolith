@@ -1,6 +1,4 @@
 import { Inject } from '@nestjs/common'
-import { ElementHandle } from 'puppeteer'
-import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ConfigService } from '@nestjs/config'
@@ -9,7 +7,6 @@ import { Category, Currency, ListingOrigin, safeToDate } from '@wille430/common'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingScraper } from '../classes/ListingScraper'
 import { AxiosResponse } from 'axios'
-import { isObjectIdOrHexString } from 'mongoose'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingScraper {
@@ -40,7 +37,7 @@ export class CitiboardScraper extends ListingScraper {
         return res.data.annonser
     }
 
-    parseRawListing(obj: Record<string, any>, context: ScrapeContext) {
+    async parseRawListing(obj: Record<string, any>, context: ScrapeContext) {
         return {
             title: obj.rubrik,
             category: Category.OVRIGT,

@@ -5,6 +5,11 @@ import { useFormik } from 'formik'
 import Link from 'next/link'
 import { useAppDispatch } from '@/hooks'
 import { login } from '@/store/user'
+import { EmailSignInDto } from './EmailSignInDto'
+import { handleSignInError } from './handleSignInError'
+import { ON_AUTH_SUCCESS_GOTO } from '@/constants/paths'
+
+const initialValues = { email: '', password: '' }
 
 export const EmailSignInForm = () => {
     const dispatch = useAppDispatch()
@@ -12,15 +17,15 @@ export const EmailSignInForm = () => {
 
     const {
         handleSubmit,
-        setFieldError,
         setFieldValue,
+        setErrors,
         values,
         handleChange,
         errors,
         isSubmitting,
         setSubmitting,
-    } = useFormik({
-        initialValues: { email: '', password: '' },
+    } = useFormik<EmailSignInDto>({
+        initialValues,
         onSubmit: () => mutation.mutate(),
     })
 
@@ -33,15 +38,16 @@ export const EmailSignInForm = () => {
             }),
         {
             onMutate: () => {
-                router.prefetch('/minasidor')
+                router.prefetch(ON_AUTH_SUCCESS_GOTO)
                 setSubmitting(true)
             },
             onSuccess: () => {
-                window.location.href = '/minasidor'
+                window.location.href = ON_AUTH_SUCCESS_GOTO
             },
             onError: () => {
                 setFieldValue('password', '').then(() => {
-                    setFieldError('password', 'Felaktig e-postadress eller lösenord')
+                    const formErr = handleSignInError()
+                    setErrors(formErr)
                 })
             },
             onSettled: () => {

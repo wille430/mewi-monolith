@@ -1,3 +1,4 @@
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 import { Listing } from '@/schemas/listing.schema'
 import faker from '@faker-js/faker'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
@@ -22,4 +23,5 @@ export const listingStub = (): WithId<Listing> => ({
         currency: Currency.SEK,
     },
     entryPoint: '/',
+    ...timestampsStub(),
 })

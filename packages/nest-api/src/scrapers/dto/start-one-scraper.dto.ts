@@ -1,4 +1,4 @@
-import { ListingOrigin } from '@mewi/prisma'
+import { ListingOrigin } from '@wille430/common'
 import { Matches } from 'class-validator'
 
 export class StartOneScraperDto {

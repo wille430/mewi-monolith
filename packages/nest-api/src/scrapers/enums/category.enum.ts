@@ -1,4 +1,4 @@
-import { Category } from '@mewi/prisma'
+import { Category } from '@wille430/common'
 
 // export const parseTraderaCategories = (category: string): Category => {
 //     return traderaKeyValuePair[category] || []

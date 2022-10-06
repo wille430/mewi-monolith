@@ -8,7 +8,7 @@ $layout-width: theme('screens.lg');
     }
 
     .section {
-        @apply mx-auto  overflow-hidden rounded-md border bg-white p-4;
+        @apply mx-auto  overflow-hidden rounded-md border-2 border-gray-300 bg-white p-4;
     }
 
     .btn-group {
@@ -49,7 +49,7 @@ $layout-width: theme('screens.lg');
 }
 
 body {
-    background-color: theme('colors.gray.50');
+    background-color: theme('colors.gray.200');
 }
 
 .basic-layout {
@@ -108,7 +108,7 @@ body {
     }
 
     &__heading {
-        @apply text-primary mb-1 text-base;
+        @apply mb-1 text-base text-primary;
     }
 
     &__text {

@@ -18,6 +18,7 @@ import forgottenPasswordEmail from '@/emails/forgottenPasswordEmail'
 import { User } from '@/schemas/user.schema'
 import { UsersRepository } from './users.repository'
 import { LoginStrategy } from '@wille430/common'
+import { Listing } from '@/schemas/listing.schema'
 
 @Injectable()
 export class UsersService {
@@ -227,5 +228,13 @@ export class UsersService {
         })
 
         await transporter.sendMail(emailInfo.originalMessage)
+    }
+
+    async getLikedListings(userId: string): Promise<Listing[]> {
+        const user = await this.usersRepository.findById(userId)
+        if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
+
+        await user.populate('likedListings')
+        return user.likedListings
     }
 }

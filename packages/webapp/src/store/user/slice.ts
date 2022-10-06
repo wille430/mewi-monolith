@@ -20,7 +20,7 @@ export const userSlice = createSlice({
                 state.isLoggedIn = true
             })
             .addCase(fetchUser.rejected, (state) => {
-                state.user = undefined
+                state.user = {}
                 state.isLoggedIn = false
             })
             .addCase(login.fulfilled, (state) => {

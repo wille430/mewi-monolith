@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
-import { ListingOrigin, Prisma, ScraperTrigger } from '@mewi/prisma'
+import { ListingOrigin, ScraperTrigger } from '@wille430/common'
 import { ScraperStatus, ScraperStatusReport } from '@wille430/common'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
 import { StartScraperOptions } from './types/startScraperOptions'

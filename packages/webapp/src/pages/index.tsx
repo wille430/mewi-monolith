@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { ReactElement } from 'react'
 import { GetStaticProps } from 'next'
-import { IListing } from '@wille430/common'
+import { IListing, IUser } from '@wille430/common'
 import dynamic from 'next/dynamic'
 import { Layout } from '@/components/Layout/Layout'
 import { Hero } from '@/components/Hero/Hero'
@@ -10,7 +10,9 @@ import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
-import { instance } from '@/lib/axios'
+import { dbConnection } from '@/lib/dbConnection'
+import { serialize } from '@/lib/serialize'
+import _ from 'lodash'
 
 const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 
@@ -20,12 +22,28 @@ interface IndexPageProps {
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => async () => {
     // Get random listings
-    const listings = await instance.get<IListing[]>('/listings/featured').then((res) => res.data)
-    store.dispatch(setFeatured(listings))
+    const db = await dbConnection()
+    const listingsCollection = db.collection<IUser>('listings')
+    const docCount = await listingsCollection.countDocuments({})
+    let listings = await Promise.all(
+        Array(8)
+            .fill(null)
+            .map(() =>
+                listingsCollection.findOne(
+                    {},
+                    {
+                        skip: Math.floor(Math.random() * (docCount - 1)),
+                    }
+                )
+            )
+    )
+    listings = _.uniqBy(listings, (o) => o?._id)
+
+    store.dispatch(setFeatured(serialize(listings)))
 
     return {
         props: {
-            featuredListings: listings,
+            featuredListings: serialize(listings),
         } as IndexPageProps,
         revalidate: 15 * 60 * 60,
     }

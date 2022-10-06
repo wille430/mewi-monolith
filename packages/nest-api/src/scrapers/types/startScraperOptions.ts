@@ -1,4 +1,4 @@
-import { ScraperTrigger } from '@mewi/prisma'
+import { ScraperTrigger } from '@wille430/common'
 import { WatchOptions } from '../classes/types/WatchOptions'
 
 export interface StartScraperOptions {

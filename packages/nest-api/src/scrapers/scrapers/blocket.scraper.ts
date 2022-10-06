@@ -93,12 +93,15 @@ export class BlocketScraper extends ListingScraper {
         return parameters
     }
 
-    parseRawListing(item: Record<string, any>, context: ScrapeContext): ScrapedListing {
+    async parseRawListing(
+        item: Record<string, any>,
+        context: ScrapeContext
+    ): Promise<ScrapedListing> {
         return {
             origin_id: this.createId(item.ad_id),
             title: item.subject,
             body: item.body,
-            category: this.parseCategory(item.category[0].name),
+            category: await this.parseCategory(item.category[0].name),
             date: new Date(item.list_time),
             imageUrl: item.images
                 ? item.images.map(
@@ -112,7 +115,7 @@ export class BlocketScraper extends ListingScraper {
                       value: parseFloat(item.price.value),
                       currency: Currency.SEK,
                   }
-                : null,
+                : undefined,
             region: this.parseRegion(item.location),
             parameters: this.parseParameters(item.parameter_groups),
             origin: ListingOrigin.Blocket,

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common'
-import { Role } from '@mewi/prisma'
+import { Role } from '@wille430/common'
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'

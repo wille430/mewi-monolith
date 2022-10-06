@@ -60,6 +60,9 @@ export class User implements IUser {
     likedListings!: Listing[]
 
     // TODO: implement email record relation?
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

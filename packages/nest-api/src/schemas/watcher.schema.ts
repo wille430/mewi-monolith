@@ -23,6 +23,9 @@ export class Watcher implements IWatcher {
 
     @Prop(Date)
     notifiedAt?: Date
+
+    createdAt!: Date
+    updatedAt!: Date
 }
 
 export const WatcherSchema = SchemaFactory.createForClass(Watcher)

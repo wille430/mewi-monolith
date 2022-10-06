@@ -28,7 +28,9 @@ export class EntryPoint extends BaseEntryPoint {
         }
 
         const data: any[] = this.scraper.extractRawListingsArray(res)
-        const listings = data.map((o) => this.scraper.parseRawListing(o, this.createContext()))
+        const listings = await Promise.all(
+            data.map((o) => this.scraper.parseRawListing(o, this.createContext()))
+        )
 
         return this.createScrapeResult(res, listings, page, options)
     }

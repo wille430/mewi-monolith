@@ -46,7 +46,10 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
 
         const robotsTxt = await axios.get(this.baseUrl).then((res) => res.data)
 
-        const robots = robotsParser(new URL('robots.txt', this.baseUrl).toString(), robotsTxt)
+        const robots = robotsParser.default(
+            new URL('robots.txt', this.baseUrl).toString(),
+            robotsTxt
+        )
 
         if (robots.isAllowed(this.defaultScrapeUrl)) {
             return true

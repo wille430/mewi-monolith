@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config'
-import { ListingOrigin } from '@mewi/prisma'
+import { ListingOrigin } from '@wille430/common'
 import { ScraperOptions } from '@/common/types/scraperOptions'
 
 const isProduction = process.env.NODE_ENV === 'production'

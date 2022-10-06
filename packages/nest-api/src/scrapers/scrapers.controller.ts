@@ -1,4 +1,4 @@
-import { ListingOrigin, Role, Prisma, ScraperTrigger } from '@mewi/prisma'
+import { ListingOrigin, Role, ScraperTrigger } from '@wille430/common'
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { capitalize } from 'lodash'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -27,9 +27,12 @@ export class ScrapersController {
             const startStatusMap: Partial<Record<ListingOrigin, ScraperStatusReport>> = {}
 
             for (const scraper of scrapers) {
-                startStatusMap[scraper] = await this.scrapersService.start(scraper, {
-                    triggeredBy: ScraperTrigger.Manual,
-                })
+                startStatusMap[scraper as ListingOrigin] = await this.scrapersService.start(
+                    scraper,
+                    {
+                        triggeredBy: ScraperTrigger.Manual,
+                    }
+                )
             }
 
             return {

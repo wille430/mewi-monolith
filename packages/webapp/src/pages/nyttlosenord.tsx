@@ -8,6 +8,7 @@ import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useAppDispatch } from '@/hooks'
 import { Layout } from '@/components/Layout/Layout'
 import { useUser } from '@/hooks/useUser'
+import { PASSWORD_RESET_REDIRECT_TO } from '@/constants/paths'
 
 const ForgottenPassword = () => {
     useUser({
@@ -39,7 +40,7 @@ const ForgottenPassword = () => {
             }),
         {
             onSuccess: () => {
-                Router.push('/loggain')
+                Router.push(PASSWORD_RESET_REDIRECT_TO)
                 dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
             },
             onError: () => {

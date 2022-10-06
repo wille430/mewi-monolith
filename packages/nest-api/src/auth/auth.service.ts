@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common'
 import { compare, hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
@@ -68,6 +73,8 @@ export class AuthService {
     }
 
     async refreshToken({ refresh_token }: RefreshTokenDto) {
+        if (!refresh_token) throw new BadRequestException('refresh_token cannot be empty')
+
         const payload: UserPayload = this.jwtService.verify(refresh_token, {
             secret: this.configService.get('auth.refreshToken.secret'),
         })

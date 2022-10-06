@@ -1,6 +1,6 @@
 import { IListing } from '@wille430/common'
 import { AnimationProps, HTMLMotionProps, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@wille430/ui'
 import styles from './ListingRow.module.scss'
 import { ListingLikeButton } from '../LikeButton/LikeButton'

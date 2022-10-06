@@ -16,3 +16,7 @@ export interface IUser extends IEntity {
     emailUpdate?: IEmailUpdate
     likedListings: IListing[]
 }
+
+export type IUserLean = IUser & {
+    likedListings: string[]
+}

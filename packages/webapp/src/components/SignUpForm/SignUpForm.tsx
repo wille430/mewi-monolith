@@ -4,66 +4,15 @@ import { useFormik } from 'formik'
 import Link from 'next/link'
 import { useAppDispatch } from '@/hooks'
 import { signup } from '@/store/user'
+import { handleSignUpError } from './handleSignUpError'
+import { SignUpDto } from './SignUpDto'
+import { ON_AUTH_SUCCESS_GOTO } from '@/constants/paths'
 
 export const SignUpForm = () => {
-    const handleError = (err: any) => {
-        const message = err.message
-        formik.setErrors({})
+    const dispatch = useAppDispatch()
+    const router = useRouter()
 
-        const newErrors: typeof formik.errors = {}
-
-        for (const validationError of message) {
-            if (validationError.property === 'email') {
-                for (const constraint of Object.keys(validationError.constraints)) {
-                    switch (constraint) {
-                        case 'isEmail':
-                            newErrors.email = 'E-postadressen är felaktig'
-                            break
-                        case 'isNotEmpty':
-                            newErrors.email = 'Fältet kan inte vara tomt'
-                            break
-                        case 'UniqueEmail':
-                            newErrors.email = 'E-postadressen är upptagen'
-                    }
-                }
-            } else if (validationError.property === 'password') {
-                for (const constraint of Object.keys(validationError.constraints)) {
-                    switch (constraint) {
-                        case 'matches':
-                            newErrors.password = 'Lösenordet är för svagt'
-                            break
-                        case 'minLength':
-                            newErrors.password = 'Lösenordet måste minsta vara 8 tecken långt'
-                            break
-                        case 'isNotEmpty':
-                            newErrors.password = 'Fältet kan inte vara tomt'
-                            break
-                        case 'maxLength':
-                            newErrors.password = 'Lösenordet kan max vara 20 tecken långt'
-                    }
-                }
-            } else if (
-                validationError.property === 'passwordConfirm' &&
-                Object.keys(message.find((x) => x.property === 'password')?.constraints || [])
-                    .length === 0
-            ) {
-                for (const constraint of Object.keys(validationError.constraints)) {
-                    switch (constraint) {
-                        case 'Match':
-                            newErrors.password = 'Lösenorden måste matcha'
-                            newErrors.passwordConfirm = 'Lösenorden måste matcha'
-                            break
-                        case 'isNotEmpty':
-                            newErrors.passwordConfirm = 'Fältet kan inte vara tomt'
-                    }
-                }
-            }
-        }
-
-        formik.setErrors(newErrors)
-    }
-
-    const formik = useFormik({
+    const formik = useFormik<SignUpDto>({
         initialValues: {
             email: '',
             password: '',
@@ -74,20 +23,17 @@ export const SignUpForm = () => {
             dispatch(signup(formik.values))
                 .then((res) => {
                     if (res.meta.requestStatus === 'fulfilled') {
-                        router.push('/minasidor')
+                        router.push(ON_AUTH_SUCCESS_GOTO)
                     } else {
                         throw res.payload
                     }
                 })
-                .catch(handleError)
+                .catch((err: any) => formik.setErrors(handleSignUpError(err)))
                 .finally(() => {
                     formik.setSubmitting(false)
                 })
         },
     })
-
-    const dispatch = useAppDispatch()
-    const router = useRouter()
 
     return (
         <form className='form' onSubmit={formik.handleSubmit}>
@@ -121,7 +67,7 @@ export const SignUpForm = () => {
                     onChange={formik.handleChange}
                     value={formik.values.passwordConfirm}
                     disabled={formik.isSubmitting}
-                    name='repassword'
+                    name='passwordConfirm'
                     placeholder='Bekräfta lösenord'
                     type='password'
                     data-testid='repasswordInput'

@@ -16,6 +16,8 @@ import { UsersService } from '../users.service'
 import { userStub } from './stubs/user.stub'
 import * as bcrypt from 'bcryptjs'
 import { AuthorizedUpdateEmailDto, RequestEmailUpdateDto } from '../dto/update-email.dto'
+import { Listing } from '@/schemas/listing.schema'
+import { listingStub } from '@/listings/test/stubs/listing.stub'
 
 jest.mock('../users.repository')
 
@@ -347,6 +349,25 @@ describe('UsersService', () => {
 
             it('then it should return undefined', () => {
                 expect(ret).toBe(undefined)
+            })
+        })
+    })
+
+    describe('#getLikedListings', () => {
+        describe('when getLikedListings is called', () => {
+            let likedListings: Listing[]
+            beforeEach(async () => {
+                jest.spyOn(usersRepository, 'findById').mockResolvedValue({
+                    ...userStub(),
+                    likedListings: [listingStub()],
+                    populate: jest.fn(),
+                } as any)
+
+                likedListings = await usersService.getLikedListings(userStub().id)
+            })
+
+            it('then it should return listings', () => {
+                expect([listingStub()]).toMatchObject(likedListings)
             })
         })
     })

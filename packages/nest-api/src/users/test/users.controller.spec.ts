@@ -1,4 +1,5 @@
 import { UserPayload } from '@/auth/jwt-strategy'
+import { Listing } from '@/schemas/listing.schema'
 import { User } from '@/schemas/user.schema'
 import faker from '@faker-js/faker'
 import { ConfigService } from '@nestjs/config'
@@ -47,6 +48,42 @@ describe('UsersController', () => {
 
             it('then it should return the user', () => {
                 expect(user).toEqual(userStub())
+            })
+        })
+    })
+
+    describe('#me', () => {
+        describe('when me is called', () => {
+            let user: User
+
+            beforeEach(async () => {
+                user = (await usersController.getMe(userPayloadStub()))!
+            })
+
+            it('then it should call usersService', () => {
+                expect(usersService.findOne).toBeCalledWith(userStub().id)
+            })
+
+            it('then it should return the user', () => {
+                expect(user).toEqual(userStub())
+            })
+        })
+    })
+
+    describe('#getMyLikes', () => {
+        describe('when getMyLikes is called', () => {
+            let likedListings: Listing[]
+
+            beforeEach(async () => {
+                likedListings = await usersController.getMyLikes(userPayloadStub())
+            })
+
+            it('then it should call usersService', () => {
+                expect(usersService.getLikedListings).toHaveBeenCalledWith(userPayloadStub().userId)
+            })
+
+            it('then it should return listings', () => {
+                expect(userStub().likedListings).toMatchObject(likedListings)
             })
         })
     })
@@ -138,14 +175,13 @@ describe('UsersController', () => {
             describe('with newEmail', () => {
                 let updateEmailDto: UpdateEmailDto
                 let userPayload: UserPayload
-                let ret: any
 
                 beforeEach(async () => {
                     updateEmailDto = {
                         newEmail: userStub().email,
                     }
                     userPayload = userPayloadStub()
-                    ret = await usersController.updateEmail(userPayload, updateEmailDto)
+                    await usersController.updateEmail(userPayload, updateEmailDto)
                 })
 
                 it('then it should have called usersService', () => {
@@ -154,31 +190,22 @@ describe('UsersController', () => {
                         userPayload.userId
                     )
                 })
-
-                it('then it should return nothing', () => {
-                    expect(ret).toBe(undefined)
-                })
             })
 
             describe('with token', () => {
                 let updateEmailDto: UpdateEmailDto
                 let userPayload: UserPayload
-                let ret: any
 
                 beforeEach(async () => {
                     updateEmailDto = {
                         token: faker.random.alphaNumeric(32),
                     }
                     userPayload = userPayloadStub()
-                    ret = await usersController.updateEmail(userPayload, updateEmailDto)
+                    await usersController.updateEmail(userPayload, updateEmailDto)
                 })
 
                 it('then it should have called usersService', () => {
                     expect(usersService.updateEmail).toHaveBeenCalledWith(updateEmailDto)
-                })
-
-                it('then it should return nothing', () => {
-                    expect(ret).toBe(undefined)
                 })
             })
         })
@@ -188,7 +215,6 @@ describe('UsersController', () => {
         describe('when changePassword is called', () => {
             describe('with password, passwordConfirm and userPaylaod', () => {
                 let changePasswordDto: ChangePasswordDto
-                let ret: any
 
                 beforeEach(async () => {
                     changePasswordDto = {
@@ -196,7 +222,7 @@ describe('UsersController', () => {
                         passwordConfirm: userStub().password,
                     }
 
-                    ret = await usersController.changePassword(changePasswordDto, userPayloadStub())
+                    await usersController.changePassword(changePasswordDto, userPayloadStub())
                 })
 
                 it('then it should call usersService', () => {
@@ -205,15 +231,10 @@ describe('UsersController', () => {
                         userPayloadStub().userId
                     )
                 })
-
-                it('then it should return undefined', () => {
-                    expect(ret).toBe(undefined)
-                })
             })
 
             describe('with password, passwordConfirm, token and email', () => {
                 let changePasswordDto: ChangePasswordDto
-                let ret: any
 
                 beforeEach(async () => {
                     changePasswordDto = {
@@ -223,7 +244,7 @@ describe('UsersController', () => {
                         token: faker.random.alphaNumeric(32),
                     }
 
-                    ret = await usersController.changePassword(changePasswordDto)
+                    await usersController.changePassword(changePasswordDto)
                 })
 
                 it('then it should call usersService', () => {
@@ -231,32 +252,23 @@ describe('UsersController', () => {
                         changePasswordDto
                     )
                 })
-
-                it('then it should return undefined', () => {
-                    expect(ret).toBe(undefined)
-                })
             })
 
             describe('with email', () => {
                 let changePasswordDto: ChangePasswordDto
-                let ret: any
 
                 beforeEach(async () => {
                     changePasswordDto = {
                         email: userStub().email,
                     }
 
-                    ret = await usersController.changePassword(changePasswordDto)
+                    await usersController.changePassword(changePasswordDto)
                 })
 
                 it('then it should call usersService', () => {
                     expect(usersService.sendPasswordResetEmail).toHaveBeenCalledWith(
                         changePasswordDto
                     )
-                })
-
-                it('then it should return undefined', () => {
-                    expect(ret).toBe(undefined)
                 })
             })
         })

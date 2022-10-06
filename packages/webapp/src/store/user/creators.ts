@@ -17,8 +17,6 @@ export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, th
     try {
         return (await instance.get('/users/me').then((res) => res.data)) as IUser
     } catch (e) {
-        await thunkApi.dispatch(logout())
-
         return thunkApi.rejectWithValue(undefined)
     }
 })

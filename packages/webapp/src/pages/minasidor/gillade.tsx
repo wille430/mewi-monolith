@@ -1,4 +1,4 @@
-import { IUser } from '@wille430/common'
+import { IListing, IUser } from '@wille430/common'
 import { ReactElement } from 'react'
 import Head from 'next/head'
 import { Container, HorizontalLine } from '@wille430/ui'
@@ -10,13 +10,14 @@ import { useUser } from '@/hooks/useUser'
 import { useQuery } from 'react-query'
 import { instance } from '@/lib/axios'
 import StyledLoader from '@/components/StyledLoader'
+import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
-const Bevakningar = () => {
+const Gillade = () => {
     const { data: listings, isLoading } = useQuery('liked-listings', () =>
-        instance.get<IUser>('/users/me').then((res) => res.data.likedListings)
+        instance.get<IListing[]>('/users/me/likes').then((res) => res.data)
     )
 
-    useUser({ redirectTo: '/loggain' })
+    useUser({ redirectTo: ON_UNAUTHENTICATED_GOTO })
 
     return (
         <>
@@ -31,7 +32,9 @@ const Bevakningar = () => {
                     </Container.Header>
                     <Container.Content className='flex flex-grow flex-col space-y-4'>
                         {isLoading ? (
-                            <StyledLoader />
+                            <div className='mx-auto my-auto'>
+                                <StyledLoader />
+                            </div>
                         ) : listings != null && listings.length > 0 ? (
                             listings.map((listing, i) => (
                                 <ListingRow
@@ -43,7 +46,7 @@ const Bevakningar = () => {
                         ) : (
                             <div className='mb-16 flex flex-grow flex-col items-center justify-center text-sm '>
                                 <span className='text-gray-400'>
-                                    Du har inte gillat några produkter ännu.
+                                    Du har inte gillat några produkter ännu
                                 </span>
                                 <div className='text-secondary underline'>
                                     <Link href='/sok'>Bläddra bland produkter här</Link>
@@ -58,6 +61,6 @@ const Bevakningar = () => {
     )
 }
 
-Bevakningar.getLayout = (page: ReactElement) => <MyAccountLayout>{page}</MyAccountLayout>
+Gillade.getLayout = (page: ReactElement) => <MyAccountLayout>{page}</MyAccountLayout>
 
-export default Bevakningar
+export default Gillade

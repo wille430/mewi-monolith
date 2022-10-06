@@ -9,5 +9,7 @@ export const createFakeUser = (overrides: Partial<IUser>): IUser => ({
     loginStrategy: LoginStrategy.LOCAL,
     premium: faker.datatype.boolean(),
     likedListings: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
     ...overrides,
 })

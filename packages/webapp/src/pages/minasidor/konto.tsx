@@ -6,7 +6,9 @@ import { withAuth } from '@/lib/auth'
 import { logoutSession } from '@/lib/session'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { instance } from '@/lib/axios'
+import { dbConnection } from '@/lib/dbConnection'
+import { ObjectId } from 'mongodb'
+import { serialize } from '@/lib/serialize'
 
 interface KontoPageProps {
     user: IUser
@@ -15,15 +17,20 @@ interface KontoPageProps {
 export const getServerSideProps = withAuth(
     async (req) => {
         const userId = req.session.user.id
-        const user: IUser = await instance.get('/users/me')
 
-        if (!user || user.id !== userId) {
+        const db = await dbConnection()
+        const usersCollection = db.collection<IUser>('users')
+        const user = await usersCollection.findOne({
+            _id: ObjectId(userId),
+        })
+
+        if (!user || user._id.toString() !== userId) {
             return logoutSession(req)
         }
 
         return {
             props: {
-                user,
+                user: serialize(user),
             } as KontoPageProps,
         }
     },

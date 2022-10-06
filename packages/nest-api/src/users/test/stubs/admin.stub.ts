@@ -1,3 +1,4 @@
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 import { User } from '@/schemas/user.schema'
 import { LoginStrategy, Role } from '@wille430/common'
 import { WithId } from 'mongodb'
@@ -13,4 +14,5 @@ export const adminStub = (): WithId<User> & { password: string } => ({
     loginStrategy: LoginStrategy.LOCAL,
     premium: true,
     likedListings: [],
+    ...timestampsStub(),
 })
