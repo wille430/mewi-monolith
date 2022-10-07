@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ScheduleModule } from '@nestjs/schedule'
@@ -14,7 +14,6 @@ import { EmailModule } from './email/email.module'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { ScrapersModule } from './scrapers/scrapers.module'
-import { TestModule } from './test/test.module'
 import { WatchersModule } from './watchers/watchers.module'
 import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import authConfig from './config/auth.config'
@@ -42,7 +41,6 @@ import { DatabaseModule } from './database/database.module'
         AuthModule,
         UsersModule,
         ScrapersModule,
-        TestModule,
         WatchersModule,
         UserWatchersModule,
         DatabaseModule,

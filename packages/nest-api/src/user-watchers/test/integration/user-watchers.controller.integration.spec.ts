@@ -1,6 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { createJwtAuthGuard } from '@/auth/test/support/jwt-auth.guard'
 import { initTestModule } from '@/common/test/initTestModule'
+import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 import { transformDate } from '@/listings/helpers/transform-dates'
 import { UserWatcher } from '@/schemas/user-watcher.schema'
 import { User } from '@/schemas/user.schema'
@@ -77,7 +78,7 @@ describe('UserWatchersController', () => {
             const response = await request(httpServer).get('/users/me/watchers')
 
             expect(response.status).toBe(200)
-            expect(response.body).toMatchObject([createUserWatcherStub()])
+            expect(response.body).toMatchObject([transformDate(createUserWatcherStub())])
         })
     })
 
@@ -93,7 +94,7 @@ describe('UserWatchersController', () => {
 
             expect(response.status).toBe(200)
             expect(response.body).toMatchObject({
-                ...createUserWatcherStub(),
+                ...transformDate(createUserWatcherStub()),
                 watcher: transformDate(watcherStub()),
             })
         })
@@ -120,6 +121,8 @@ describe('UserWatchersController', () => {
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject({
                     ...userWatcherStub(),
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
                     user: userStub().id,
                     watcher: {
                         metadata: dto.metadata,
@@ -134,12 +137,13 @@ describe('UserWatchersController', () => {
                 await watchersCollection.insertOne(watcherStub())
 
                 const id = faker.database.mongodbObjectId()
-                const watcher2: WithId<Watcher> = {
+                const watcher2 = {
                     _id: new mongoose.Types.ObjectId(id),
                     id,
                     metadata: {
                         keyword: faker.commerce.product(),
                     },
+                    ...timestampsStub(),
                 }
                 await watchersCollection.insertOne(watcher2)
 
@@ -157,8 +161,14 @@ describe('UserWatchersController', () => {
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject({
                     ...userWatcherStub(),
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
                     user: userStub().id,
-                    watcher: watcher2,
+                    watcher: {
+                        ...watcher2,
+                        createdAt: expect.any(String),
+                        updatedAt: expect.any(String),
+                    },
                 })
 
                 const oldWatcher = await watchersCollection.findOne({
