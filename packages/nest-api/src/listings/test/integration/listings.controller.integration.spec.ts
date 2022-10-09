@@ -69,12 +69,20 @@ describe('ListingsController', () => {
                 const response = await request(httpServer).post('/listings').send(dto)
 
                 expect(response.status).toBe(201)
-                expect(response.body).toMatchObject(transformDate(dto))
+                expect(response.body).toMatchObject({
+                    ...transformDate(dto),
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                })
 
                 const listing = await listingsCollection.findOne({
                     _id: new mongoose.Types.ObjectId(response.body._id),
                 })
-                expect(listing).toMatchObject(dto)
+                expect(listing).toMatchObject({
+                    ...dto,
+                    createdAt: expect.any(Date),
+                    updatedAt: expect.any(Date),
+                })
             })
         })
 
@@ -113,6 +121,7 @@ describe('ListingsController', () => {
                     transformDate({
                         ...listingStub(),
                         ...dto,
+                        updatedAt: expect.any(String),
                     })
                 )
 
@@ -122,6 +131,7 @@ describe('ListingsController', () => {
                 expect(listing).toMatchObject({
                     ...listingStub(),
                     ...dto,
+                    updatedAt: expect.any(Date),
                 })
             })
         })
