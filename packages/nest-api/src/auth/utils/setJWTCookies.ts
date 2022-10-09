@@ -8,13 +8,13 @@ export const setJWTCookies = (res: Response, tokens: Partial<AuthTokens>) => {
             expires: new Date(Date.now() + 15 * 60 * 1000),
         })
     } else {
-        res.cookie(ACCESS_TOKEN_COOKIE, undefined)
+        res.clearCookie(ACCESS_TOKEN_COOKIE)
     }
     if (tokens.refresh_token) {
         res.cookie(REFRESH_TOKEN_COOKIE, tokens.refresh_token, {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         })
     } else {
-        res.cookie(REFRESH_TOKEN_COOKIE, undefined)
+        res.clearCookie(REFRESH_TOKEN_COOKIE)
     }
 }

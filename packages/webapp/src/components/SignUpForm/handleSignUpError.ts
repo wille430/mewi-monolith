@@ -1,7 +1,8 @@
 import { FormError } from '@/types/forms'
 import { SignUpDto } from './SignUpDto'
 
-export const handleSignUpError = (msg: any): FormError<SignUpDto> => {
+export const handleSignUpError = (e: any): FormError<SignUpDto> => {
+    const msg = e.message
     const newErrors: { [key in keyof Partial<SignUpDto>]: string } = {}
 
     if (!msg) {

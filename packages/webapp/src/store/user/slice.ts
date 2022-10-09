@@ -19,8 +19,8 @@ export const userSlice = createSlice({
                 state.user = action.payload
                 state.isLoggedIn = true
             })
-            .addCase(fetchUser.rejected, (state) => {
-                state.user = {}
+            .addCase(fetchUser.rejected, (state, action) => {
+                state.user = action.payload
                 state.isLoggedIn = false
             })
             .addCase(login.fulfilled, (state) => {

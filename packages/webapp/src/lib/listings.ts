@@ -1,21 +1,22 @@
 import { IListing, IUser } from '@wille430/common'
 
-export const like = (listing: IListing, user: IUser | undefined, arr: IListing[]) => {
-    return arr.map((o) => {
-        if (o.id === listing.id && user) {
-            user.likedListings.push(listing)
+export const likeWith = (
+    listing: IListing,
+    user: IUser | undefined,
+    arr: IListing[],
+    callback: (listings: IListing[], listing: IListing) => IListing[]
+): IListing[] => {
+    arr.forEach((l) => {
+        if (listing.id === listing.id && user) {
+            user.likedListings = callback(user.likedListings, l)
         }
-
-        return o
     })
+
+    return user?.likedListings ?? []
 }
 
-export const unlike = (listing: IListing, user: IUser | undefined, arr: IListing[]) => {
-    return arr.map((o) => {
-        if (o.id === listing.id && user) {
-            user.likedListings = user.likedListings.filter((x) => x.id !== listing.id)
-        }
+export const like = (listing: IListing, user: IUser | undefined, arr: IListing[]) =>
+    likeWith(listing, user, arr, (arr, listing) => [...arr, listing])
 
-        return o
-    })
-}
+export const unlike = (listing: IListing, user: IUser | undefined, arr: IListing[]) =>
+    likeWith(listing, user, arr, (arr, listing) => arr.filter((x) => x.id !== listing.id))

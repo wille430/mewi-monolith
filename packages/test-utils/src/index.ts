@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import _ from 'lodash'
 
 export * from './factory'
+export * from './stubs'
 
 export const randomEmail = () => {
     return `${faker.name.firstName()}.${faker.name.lastName()}@${faker.internet.domainName()}`.toLowerCase()

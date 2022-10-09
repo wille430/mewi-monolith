@@ -1,8 +1,8 @@
-import { IUser } from '@wille430/common'
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { UserActionTypes } from './types'
 import { instance } from '@/lib/axios'
+import { getMe } from '@/api/users'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
@@ -14,15 +14,17 @@ export const setLoggedInStatus = createAction(
 )
 
 export const fetchUser = createAsyncThunk(UserActionTypes.FETCH, async (args, thunkApi) => {
-    try {
-        return (await instance.get('/users/me').then((res) => res.data)) as IUser
-    } catch (e) {
-        return thunkApi.rejectWithValue(undefined)
+    const user = await getMe()
+
+    if (!user) {
+        return thunkApi.rejectWithValue(user)
     }
+
+    return user
 })
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
-    await Promise.all([axios.post('/api/logout'), instance.post('/auth/logout')])
+    await instance.post('/auth/logout')
     return true
 })
 
@@ -30,13 +32,12 @@ export const login = createAsyncThunk(
     UserActionTypes.LOGIN,
     async ({ email, password }: { email: string; password: string }, thunkApi) => {
         try {
-            const { access_token } = await instance
+            await instance
                 .post('/auth/login', { email, password })
                 .then((res) => res.data)
                 .catch((e) => {
                     throw e.data
                 })
-            await axios.post('/api/login', { access_token })
 
             return true
         } catch (e) {

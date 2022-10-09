@@ -4,8 +4,8 @@
         "module": "esnext",
         "allowJs": true,
         "skipLibCheck": true,
-        "jsx": "react-jsx",
-        "baseUrl": ".",
+        "jsx": "preserve",
+        "baseUrl": "./",
         "esModuleInterop": true,
         "moduleResolution": "node",
         "isolatedModules": true,
@@ -24,19 +24,20 @@
         "strict": true,
         "sourceMap": true
     },
-    "include": ["src/**/*", "next-end.d.ts", "./prisma/*.ts", "./tailwind.config.js"],
-    "exclude": [
-        "node_modules",
-        "src/**/*.spec.ts",
-        "src/**/*.test.ts",
-        "src/**/*.test.tsx",
-        "src/**/*.spec.tsx",
-        "src/**/*.stories.ts",
-        "src/**/*.stories.tsx"
-    ],
+    "include": ["src/**/*", "next-end.d.ts", "./tailwind.config.js"],
     "references": [
         {
             "path": "./tsconfig.spec.json"
         }
+    ],
+    "exclude": [
+        "node_modules",
+        "**/__mocks__/**/*",
+        "./src/**/*.spec.ts",
+        "./src/**/*.spec.tsx",
+        "./src/**/*.test.ts",
+        "./src/**/*.test.tsx",
+        "./src/**/*.stories.ts",
+        "./src/**/*.stories.tsx"
     ]
 }

@@ -5,8 +5,8 @@ import { Container } from '@wille430/ui'
 import Head from 'next/head'
 import { EditRolePanel } from './../../components/EditRolePanel/EditRolePanel'
 import { ScraperPanel } from './../../components/ScraperPanel/ScraperPanel'
-import { withAuth } from '@/lib/auth'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
+import { withAuth } from '@/lib/auth/withAuth'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {
