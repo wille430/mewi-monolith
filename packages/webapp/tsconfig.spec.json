@@ -10,11 +10,13 @@
     "include": [
         "src/**/*",
         "node_modules",
+        "**/test/**/*",
         "**/__mocks__/**/*",
         "./src/**/*.spec.ts",
         "./src/**/*.spec.tsx",
         "./src/**/*.test.ts",
-        "./src/**/*.test.tsx"
+        "./src/**/*.test.tsx",
+        "./cypress/**/*.{ts,tsx}"
     ],
     "exclude": ["node_modules"]
 }

@@ -4,6 +4,7 @@ import _ from 'lodash'
 
 export * from './factory'
 export * from './stubs'
+export * from './seed'
 
 export const randomEmail = () => {
     return `${faker.name.firstName()}.${faker.name.lastName()}@${faker.internet.domainName()}`.toLowerCase()

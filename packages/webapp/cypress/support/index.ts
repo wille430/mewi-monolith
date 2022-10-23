@@ -18,6 +18,12 @@
 import './commands'
 import 'cypress-real-events'
 import { ListingFiltersContext } from '../../src/hooks/useListingFilters'
+import { AuthTokens } from '@wille430/common'
+
+beforeEach(() => {
+    cy.log('BRRRRUUUUUUUHHH')
+    cy.exec('npm run db:reset && npm run db:seed')
+})
 
 declare global {
     namespace Cypress {
@@ -34,6 +40,8 @@ declare global {
                     Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow
                 >
             ): Chainable<JQuery<HTMLElement>>
+            login(): Chainable<{ email: string; password: string } & AuthTokens>
+            authenticate(args: { email: string; password: string }): void
         }
     }
     interface Window {

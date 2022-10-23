@@ -19,32 +19,39 @@ import { UserWatchersModule } from './user-watchers/user-watchers.module'
 import authConfig from './config/auth.config'
 import { ListingsModule } from '@/listings/listings.module'
 import { DatabaseModule } from './database/database.module'
+import { TestModule } from './test/test.module'
+
+const modules = [
+    ConfigModule.forRoot({
+        envFilePath: '.env',
+        isGlobal: true,
+        load: [configuration, scraperConfig, databaseConfig, notificationConfig, authConfig],
+    }),
+    ThrottlerModule.forRoot({
+        ttl: 60,
+        limit: 10,
+    }),
+    ServeStaticModule.forRoot({
+        rootPath: join(__dirname, '..', 'public'),
+    }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
+    ListingsModule,
+    EmailModule,
+    AuthModule,
+    UsersModule,
+    ScrapersModule,
+    WatchersModule,
+    UserWatchersModule,
+    DatabaseModule,
+]
+
+if (process.env.NODE_ENV !== 'production') {
+    modules.push(TestModule)
+}
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            envFilePath: '.env',
-            isGlobal: true,
-            load: [configuration, scraperConfig, databaseConfig, notificationConfig, authConfig],
-        }),
-        ThrottlerModule.forRoot({
-            ttl: 60,
-            limit: 10,
-        }),
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'public'),
-        }),
-        EventEmitterModule.forRoot(),
-        ScheduleModule.forRoot(),
-        ListingsModule,
-        EmailModule,
-        AuthModule,
-        UsersModule,
-        ScrapersModule,
-        WatchersModule,
-        UserWatchersModule,
-        DatabaseModule,
-    ],
+    imports: modules,
     controllers: [AppController],
 })
 export class AppModule {}

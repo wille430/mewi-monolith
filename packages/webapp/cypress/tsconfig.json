@@ -3,7 +3,7 @@
     "include": [
         "../node_modules/cypress",
         "./support/*.ts",
-        "./integration/*.ts",
+        "integration/*.ts",
         "**/*.ts",
         "../src/*"
     ],

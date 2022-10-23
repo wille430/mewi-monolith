@@ -9,7 +9,7 @@ import { useStore } from 'react-redux'
 import { Store, wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
 import { instance } from '@/lib/axios'
-import { fetchUser } from '@/store/user'
+import { useUser } from '@/hooks/useUser'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -28,15 +28,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const [queryClient] = useState(() => new QueryClient())
     const store = useStore() as Store
 
-    useEffect(() => {
-        const handleLoad = () => store.dispatch(fetchUser())
-
-        window.addEventListener('load', handleLoad)
-
-        return () => {
-            window.removeEventListener('load', handleLoad)
-        }
-    }, [])
+    useUser()
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store

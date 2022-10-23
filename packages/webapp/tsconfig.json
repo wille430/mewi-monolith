@@ -33,11 +33,23 @@
     "exclude": [
         "node_modules",
         "**/__mocks__/**/*",
+        "**/test/**/*",
         "./src/**/*.spec.ts",
         "./src/**/*.spec.tsx",
         "./src/**/*.test.ts",
         "./src/**/*.test.tsx",
         "./src/**/*.stories.ts",
-        "./src/**/*.stories.tsx"
-    ]
+        "./src/**/*.stories.tsx",
+        "./cypress/**/*.{ts,tsx}"
+    ],
+    "ts-node": {
+        "transpileOnly": true,
+        "files": true,
+        "compilerOptions": {
+            // compilerOptions specified here will override those declared below,
+            // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+            // different options with a single tsconfig.json.
+            "module": "CommonJS"
+        }
+    }
 }

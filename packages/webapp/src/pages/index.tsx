@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => 
         props: {
             featuredListings: serialize(listings),
         } as IndexPageProps,
-        revalidate: 15 * 60 * 60,
+        revalidate: process.env.NODE_ENV === 'production' ? 15 * 60 * 60 : 1,
     }
 })
 
