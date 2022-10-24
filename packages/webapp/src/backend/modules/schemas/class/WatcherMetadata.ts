@@ -1,14 +1,8 @@
-import type { IWatcherMetadata } from '@wille430/common'
+import { PickType } from '@nestjs/mapped-types'
+import { FindAllListingsDto } from '../../listings/dto/find-all-listing.dto'
 
 // TODO: fix
-export class WatcherMetadata
-    // extends PickType(FindAllListingsDto, [
-    //     'keyword',
-    //     'auction',
-    //     'categories',
-    //     'origins',
-    //     'priceRangeGte',
-    //     'priceRangeLte',
-    //     'region',
-    // ])
-    implements IWatcherMetadata {}
+export class WatcherMetadata extends PickType<FindAllListingsDto, keyof FindAllListingsDto>(
+    FindAllListingsDto,
+    ['keyword', 'auction', 'categories', 'origins', 'priceRangeGte', 'priceRangeLte', 'region']
+) {}

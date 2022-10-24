@@ -1,7 +1,7 @@
-import type { IListing } from '@wille430/common'
 import type { Document } from 'mongoose'
 import type { Currency } from '@wille430/common'
 import { Category, ListingOrigin } from '@wille430/common'
+import type { Ref } from '@typegoose/typegoose'
 import { getModelForClass, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document
@@ -19,7 +19,7 @@ export class Parameter {
     value!: string
 }
 
-export class Listing implements IListing {
+export class Listing {
     id!: string
 
     @prop({
@@ -76,7 +76,7 @@ export class Listing implements IListing {
     @prop({
         _id: false,
     })
-    parameters?: Parameter[]
+    parameters?: Ref<Parameter[]>
 
     @prop({
         type: String,

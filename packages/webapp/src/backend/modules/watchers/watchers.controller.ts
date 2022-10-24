@@ -1,32 +1,19 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param,
-    Delete,
-    Query,
-    ValidationPipe,
-    UseGuards,
-    Put,
-} from '@nestjs/common'
 import { Role } from '@wille430/common'
-import type { WatchersService } from './watchers.service'
+import { Body, Delete, Get, Param, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
+import { autoInjectable, inject } from 'tsyringe'
+import { WatchersService } from './watchers.service'
 import type { CreateWatcherDto } from './dto/create-watcher.dto'
 import type { UpdateWatcherDto } from './dto/update-watcher.dto'
-import type { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { RolesGuard } from '@/auth/roles.guard'
-import { Roles } from '@/auth/roles.decorator'
+import type { FindAllWatchersDto } from './dto/find-all-watchers.dto'
+import { Roles } from '@/backend/middlewares/Roles'
 
-@Controller('/watchers')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@autoInjectable()
 export class WatchersController {
-    constructor(private readonly watchersService: WatchersService) {}
+    constructor(@inject(WatchersService) private readonly watchersService: WatchersService) {}
 
     @Post()
     @Roles(Role.ADMIN)
-    create(@Body() createWatcherDto: CreateWatcherDto) {
+    async create(@Body(ValidationPipe) createWatcherDto: CreateWatcherDto) {
         return this.watchersService.create(createWatcherDto)
     }
 
@@ -34,8 +21,7 @@ export class WatchersController {
     @Roles(Role.ADMIN)
     findAll(
         @Query(
-            new ValidationPipe({
-                transform: true,
+            ValidationPipe({
                 transformOptions: { enableImplicitConversion: true },
                 forbidNonWhitelisted: true,
             })
@@ -45,19 +31,19 @@ export class WatchersController {
         return this.watchersService.findAll(query)
     }
 
-    @Get(':id')
+    @Get('/:id')
     @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
         return this.watchersService.findOne(id)
     }
 
-    @Put(':id')
+    @Put('/:id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() updateWatcherDto: UpdateWatcherDto) {
         return this.watchersService.update(id, updateWatcherDto)
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
         return this.watchersService.remove(id)

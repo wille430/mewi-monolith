@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "esnext",
         "allowJs": true,
         "skipLibCheck": true,
@@ -43,12 +43,7 @@
         "./src/**/*.test.tsx",
         "./src/**/*.stories.ts",
         "./src/**/*.stories.tsx",
-        "./cypress/**/*.{ts,tsx}",
-        "./src/backend/modules/email",
-        "./src/backend/modules/emails",
-        "./src/backend/modules/test",
-        "./src/backend/modules/user-watchers",
-        "./src/backend/modules/watchers"
+        "./cypress/**/*.{ts,tsx}"
     ],
     "ts-node": {
         "transpileOnly": true,

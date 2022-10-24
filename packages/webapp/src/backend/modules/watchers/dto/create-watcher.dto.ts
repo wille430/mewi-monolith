@@ -1,10 +1,8 @@
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
-import { WatcherMetadata } from '@/schemas/class/WatcherMetadata'
-import type { Watcher } from '@/schemas/watcher.schema'
+import { IsObject, ValidateNested } from 'class-validator'
+import type { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
 
-export class CreateWatcherDto implements Partial<Watcher> {
+export class CreateWatcherDto {
+    @IsObject()
     @ValidateNested()
-    @Type(() => WatcherMetadata)
     metadata!: WatcherMetadata
 }

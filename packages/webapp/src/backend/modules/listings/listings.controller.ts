@@ -1,4 +1,3 @@
-import type { IListing } from '@wille430/common'
 import { Role } from '@wille430/common'
 import { Post, Put, Get, Body, ValidationPipe, Param, Delete, Query } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
@@ -10,6 +9,7 @@ import type { DeleteListingsDto } from './dto/delete-listings.dto'
 import { Public } from '../common/decorators/public.decorator'
 import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
+import type { ListingDocument } from '../schemas/listing.schema'
 import { Roles } from '@/backend/middlewares/Roles'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 
@@ -41,7 +41,7 @@ export class ListingsController {
     @Public()
     async featured() {
         // let cachedListings: IListing[] | undefined = await this.cacheManager.get('featured')
-        let cachedListings: IListing[] | undefined = undefined
+        let cachedListings: ListingDocument[] | undefined = undefined
         if (!cachedListings) {
             cachedListings = await this.listingsService.sample(5)
             // await this.cacheManager.set('featured', cachedListings, {

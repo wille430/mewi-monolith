@@ -22,7 +22,7 @@ export const getServerSideProps = withAuth(
         const db = await dbConnection()
         const usersCollection = db.collection<IUser>('users')
         const user = await usersCollection.findOne({
-            _id: ObjectId(userId),
+            _id: new ObjectId(userId),
         })
 
         if (!user || user._id.toString() !== userId) {

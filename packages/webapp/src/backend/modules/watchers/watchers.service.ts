@@ -1,40 +1,43 @@
-import { Inject, Injectable } from '@nestjs/common'
-import Email from 'email-templates'
-import { ConfigService } from '@nestjs/config'
-import { Cron } from '@nestjs/schedule'
-import { EJSON } from 'bson'
+import { autoInjectable, inject } from 'tsyringe'
 import type { ListingSearchFilters } from '@wille430/common'
-import mongoose from 'mongoose'
-import type { CreateWatcherDto } from './dto/create-watcher.dto'
-import type { UpdateWatcherDto } from './dto/update-watcher.dto'
+import { ObjectId } from 'mongodb'
+import { EJSON } from 'bson'
+import Email from 'email-templates'
 import { WatchersRepository } from './watchers.repository'
-import type { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
-import { EmailService } from '@/email/email.service'
-import { ListingsService } from '@/listings/listings.service'
-import type { Watcher } from '@/schemas/watcher.schema'
-import type { User } from '@/schemas/user.schema'
-import { UserWatchersRepository } from '@/user-watchers/user-watchers.repository'
-import { UsersRepository } from '@/users/users.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import type { CreateWatcherDto } from './dto/create-watcher.dto'
+import type { FindAllWatchersDto } from './dto/find-all-watchers.dto'
+import type { UpdateWatcherDto } from './dto/update-watcher.dto'
+import { EmailService } from '../email/email.service'
+import { ListingsRepository } from '../listings/listings.repository'
+import { ListingsService } from '../listings/listings.service'
+import { UserWatchersRepository } from '../user-watchers/user-watchers.repository'
+import { UsersRepository } from '../users/users.repository'
+import type { User } from '../schemas/user.schema'
+import type { WatcherDocument } from '../schemas/watcher.schema'
 
-@Injectable()
+@autoInjectable()
 export class WatchersService {
     constructor(
-        @Inject(WatchersRepository) private readonly watchersRepository: WatchersRepository,
-        @Inject(UserWatchersRepository)
+        @inject(WatchersRepository) private readonly watchersRepository: WatchersRepository,
+        @inject(UserWatchersRepository)
         private readonly userWatchersRepository: UserWatchersRepository,
-        @Inject(UsersRepository)
-        private readonly usersRepository: UsersRepository,
-        @Inject(ListingsRepository)
-        private readonly listingsRepository: ListingsRepository,
-        @Inject(EmailService) private readonly emailService: EmailService,
-        @Inject(ListingsService) private readonly listingService: ListingsService,
-        @Inject(ConfigService) private configService: ConfigService
+        @inject(UsersRepository) private readonly usersRepository: UsersRepository,
+        @inject(ListingsRepository) private readonly listingsRepository: ListingsRepository,
+        @inject(EmailService) private readonly emailService: EmailService,
+        @inject(ListingsService) private readonly listingService: ListingsService
     ) {}
+
+    config = {
+        notifications: {
+            interval: 2.5 * 24 * 60 * 60 * 1000,
+            listingCount: 7,
+            minListings: 1,
+        },
+    }
 
     async exists(metadata: CreateWatcherDto['metadata']) {
         const count = await this.watchersRepository.count({ metadata })
-        return count === 0 ? false : true
+        return count !== 0
     }
 
     async create(createWatcherDto: CreateWatcherDto) {
@@ -68,7 +71,6 @@ export class WatchersService {
         await this.watchersRepository.findByIdAndDelete(id)
     }
 
-    @Cron('* * 9 * * *')
     async notifyAll() {
         const watcherCount = await this.watchersRepository.count({})
 
@@ -93,17 +95,19 @@ export class WatchersService {
      */
     async getUsersInWatcher(watcherId: string): Promise<User[]> {
         // return (
-        //     await this.userWatchersRepository.aggregate({
-        //         by: ['userId'],
-        //         where: {
-        //             watcherId,
+        //     await this.userWatchersRepository.aggregate([
+        //         {
+        //             by: ['userId'],
+        //             where: {
+        //                 watcherId,
+        //             },
         //         },
-        //     })
+        //     ])
         // ).map((x) => x.userId)
         return []
     }
 
-    async notifyUsersInWatcher(watcherOrId: string | Watcher) {
+    async notifyUsersInWatcher(watcherOrId: string | WatcherDocument) {
         const watcher =
             typeof watcherOrId === 'string'
                 ? await this.watchersRepository.findById(watcherOrId)
@@ -124,7 +128,10 @@ export class WatchersService {
      * @param watcherOrId - either id of watcher or watcher document
      * @returns true if user was notified, else false
      */
-    async notifyUserOfWatcher(userId: string, watcherOrId: string | Watcher): Promise<boolean> {
+    async notifyUserOfWatcher(
+        userId: string,
+        watcherOrId: string | WatcherDocument
+    ): Promise<boolean> {
         const transporter = await this.emailService.transporter()
 
         const watcher =
@@ -146,7 +153,7 @@ export class WatchersService {
 
         const newListings = await this.newListings(pipeline)
 
-        if (newListings.length >= this.configService.get('notification.watcher.minListings')) {
+        if (newListings.length >= this.config.notifications.minListings) {
             const email = new Email({
                 message: {
                     from: this.emailService.credentials.email,
@@ -218,7 +225,7 @@ export class WatchersService {
 
         if (
             Date.now() - new Date(userWatcher.notifiedAt || userWatcher.createdAt).getTime() >=
-            this.configService.get('notification.watcher.interval')
+            this.config.notifications.interval
         ) {
             return true
         } else {
@@ -228,7 +235,7 @@ export class WatchersService {
 
     async subscriberCount(watcherId: string): Promise<number> {
         return this.userWatchersRepository.count({
-            watcher: new mongoose.Types.ObjectId(watcherId),
+            watcher: new ObjectId(watcherId),
         })
     }
 }

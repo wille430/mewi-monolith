@@ -1,13 +1,13 @@
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import type { ReactElement, ReactNode} from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
-import type { Store} from '@/store'
+import type { Store } from '@/store'
 import { wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
 import { instance } from '@/lib/axios'
@@ -19,9 +19,7 @@ type NextPageWithLayout = NextPage & {
 
 type AppPropsWithLayout = AppProps & {
     Component: NextPageWithLayout
-    pageProps: AppProps['pageProps'] & {
-        initialReduxState: any
-    }
+    pageProps: AppProps['pageProps']
 }
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
