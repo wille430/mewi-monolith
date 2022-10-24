@@ -8,16 +8,15 @@ import type {
     Query,
     UpdateQuery,
 } from 'mongoose'
-import { container } from 'tsyringe'
 import type { Pagination } from './dto/pagination.dto'
-import { DatabaseService } from './database.service'
+import { dbConnection } from '@/lib/dbConnection'
 
 export abstract class EntityRepository<T extends Document> {
     defaultProjection = {
         __v: 0,
     }
     constructor(protected readonly entityModel: Model<T>) {
-        container.resolve(DatabaseService)
+        dbConnection()
     }
 
     private applyPagination<

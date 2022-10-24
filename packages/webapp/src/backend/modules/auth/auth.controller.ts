@@ -1,34 +1,49 @@
-import { Body, Post, ValidationPipe } from 'next-api-decorators'
+import type { NextApiRequest } from 'next'
+import { Body, Post, Req, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { AuthService } from './auth.service'
+import type { LoginDto } from './dto/login.dto'
 import type SignUpDto from './dto/sign-up.dto'
+import { WithSession } from '@/backend/middlewares/SessionGuard'
 
 @autoInjectable()
 export class AuthController {
     constructor(@inject(AuthService) private authService: AuthService) {}
 
-    // @Post('login')
-    // async login(
-    //     @Request() req: ReqObj & { user: User },
-    //     @Res({ passthrough: true }) res: Response
-    // ) {
-    //     const tokens = await this.authService.login(req.user)
+    @Post('/signup')
+    @WithSession()
+    async signUp(@Body(ValidationPipe) signUpDto: SignUpDto, @Req() req: NextApiRequest) {
+        const user = await this.authService.signUp(signUpDto)
 
-    //     setJWTCookies(res, tokens)
+        req.session.user = {
+            userId: user.id,
+            email: user.email,
+            roles: user.roles,
+        }
+        await req.session.save()
 
-    //     return tokens
-    // }
+        return true
+    }
 
-    // @Post('logout')
-    // async logout(@Res({ passthrough: true }) res: Response) {
-    //     setJWTCookies(res, {})
+    @Post('/login')
+    @WithSession()
+    async login(@Body(ValidationPipe) loginDto: LoginDto, @Req() req: NextApiRequest) {
+        const user = await this.authService.login(loginDto)
 
-    //     return true
-    // }
+        req.session.user = {
+            userId: user.id,
+            email: user.email,
+            roles: user.roles,
+        }
+        await req.session.save()
 
-    @Post('signup')
-    async signUp(@Body(ValidationPipe) signUpDto: SignUpDto) {
-        await this.authService.signUp(signUpDto)
+        return true
+    }
+
+    @Post('/logout')
+    @WithSession()
+    async logout(@Req() req: NextApiRequest) {
+        req.session.destroy()
         return true
     }
 }

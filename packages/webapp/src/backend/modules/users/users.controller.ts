@@ -24,7 +24,7 @@ import type ChangePasswordDto from './dto/change-password.dto'
 import type { UpdateUserDto } from './dto/update-user.dto'
 import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
-import { WithSession } from '@/backend/middlewares/WithSession'
+import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 import { Roles } from '@/backend/middlewares/Roles'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
@@ -34,7 +34,7 @@ export class UsersController {
     constructor(@inject(UsersService) private readonly usersService: UsersService) {}
 
     @Post()
-    @WithSession()
+    @SessionGuard()
     create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto)
     }
@@ -46,13 +46,13 @@ export class UsersController {
     }
 
     @Get('/me')
-    @WithSession()
+    @SessionGuard()
     async getMe(@GetUser() user: UserPayload) {
         return this.usersService.findOne(user.userId)
     }
 
     @Get('/me/likes')
-    @WithSession()
+    @SessionGuard()
     async getMyLikes(@GetUser() user: UserPayload) {
         return this.usersService.getLikedListings(user.userId)
     }

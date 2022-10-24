@@ -11,10 +11,10 @@ import { Public } from '../common/decorators/public.decorator'
 import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { Roles } from '@/backend/middlewares/Roles'
-import { WithSession } from '@/backend/middlewares/WithSession'
+import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 
 @autoInjectable()
-@WithSession()
+@SessionGuard()
 export class ListingsController {
     constructor(@inject(ListingsService) private readonly listingsService: ListingsService) {}
 

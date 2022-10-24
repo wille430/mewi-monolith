@@ -8,10 +8,10 @@ import type { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import type { StartScrapersDto } from './dto/start-scrapers.dto'
 import { ScrapersService } from './scrapers.service'
 import { Roles } from '@/backend/middlewares/Roles'
-import { WithSession } from '@/backend/middlewares/WithSession'
+import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 
 @autoInjectable()
-@WithSession()
+@SessionGuard()
 export class ScrapersController {
     constructor(@inject(ScrapersService) private readonly scrapersService: ScrapersService) {}
 
