@@ -1,12 +1,11 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { inject } from 'tsyringe'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 // TODO: fix pagination
 export class SellpyScraper extends ListingScraper {
@@ -21,11 +20,10 @@ export class SellpyScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         this.parseRawListing = this.parseRawListing.bind(this)
 

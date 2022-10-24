@@ -15,7 +15,7 @@ import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 export class ScrapersController {
     constructor(@inject(ScrapersService) private readonly scrapersService: ScrapersService) {}
 
-    @Post('start')
+    @Post('/start')
     @Roles(Role.ADMIN)
     async startAll(@Body(ValidationPipe) { scrapers }: StartScrapersDto) {
         if (scrapers) {
@@ -38,7 +38,7 @@ export class ScrapersController {
         }
     }
 
-    @Post('start/:scraperName')
+    @Post('/start/:scraperName')
     @Roles(Role.ADMIN)
     start(@Query(ValidationPipe) startOneScraperDto: StartOneScraperDto) {
         const started = this.scrapersService.start(
@@ -53,13 +53,13 @@ export class ScrapersController {
         }
     }
 
-    @Get('status')
+    @Get('/status')
     @Roles(Role.ADMIN)
     async status() {
         return this.scrapersService.status()
     }
 
-    @Post('logs')
+    @Post('/logs')
     @Roles(Role.ADMIN)
     async logs(@Body(ValidationPipe) dto: GetLogsDto) {
         return this.scrapersService.getLogs(dto)

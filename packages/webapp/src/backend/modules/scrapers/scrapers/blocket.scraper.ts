@@ -1,15 +1,14 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ListingOrigin, Currency } from '@wille430/common'
+import { inject } from 'tsyringe'
 import type { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { getNextData } from '../helpers/getNextData'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
-import type { Listing } from '@/schemas/listing.schema'
+import { ListingsRepository } from '../../listings/listings.repository'
+import type { Listing } from '../../schemas/listing.schema'
 
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
@@ -21,11 +20,10 @@ export class BlocketScraper extends ListingScraper {
     }&page=${0}&st=s&include=all&gl=3&include=extend_with_shipping`
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }

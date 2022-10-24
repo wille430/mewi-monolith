@@ -2,7 +2,7 @@ import type { AxiosResponse } from 'axios'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import type { ScrapeResult } from './types/ScrapeResult'
 import type { ScrapeOptions } from './types/ScrapeOptions'
-import type { ListingScraper } from '@/scrapers/classes/ListingScraper'
+import type { ListingScraper } from './ListingScraper'
 
 export class EntryPoint extends BaseEntryPoint {
     scraper!: ListingScraper

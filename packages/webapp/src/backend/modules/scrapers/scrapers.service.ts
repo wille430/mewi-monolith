@@ -1,20 +1,17 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-import { Cron } from '@nestjs/schedule'
-import { ListingOrigin, ScraperTrigger } from '@wille430/common'
 import type { ScraperStatusReport } from '@wille430/common'
-import { ScraperStatus } from '@wille430/common'
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
-import { ConfigService } from '@nestjs/config'
+import { ListingOrigin, ScraperStatus, ScraperTrigger } from '@wille430/common'
 import type { FilterQuery } from 'mongoose'
-import type { StartScraperOptions } from './types/startScraperOptions'
-import { RunPipelineEvent } from './events/run-pipeline.event'
+import { NotFoundException } from 'next-api-decorators'
+import { autoInjectable, inject } from 'tsyringe'
 import type { BaseListingScraper } from './classes/BaseListingScraper'
+import type { RunPipelineEvent } from './events/run-pipeline.event'
 import Scrapers from './scrapers'
 import { ScrapingLogsRepository } from './scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
-import type { ScrapingLog } from '@/schemas/scraping-log.schema'
+import type { StartScraperOptions } from './types/startScraperOptions'
+import type { ScrapingLog } from '../schemas/scraping-log.schema'
+import { ListingsRepository } from '../listings/listings.repository'
 
-@Injectable()
+@autoInjectable()
 export class ScrapersService {
     scrapers!: Record<ListingOrigin, BaseListingScraper>
     /**
@@ -27,21 +24,15 @@ export class ScrapersService {
     scraperPipeline: [ListingOrigin, Partial<StartScraperOptions>][] = []
 
     constructor(
-        @Inject(ListingsRepository) private listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(EventEmitter2) private eventEmitter: EventEmitter2,
-        @Inject(ConfigService) private configService: ConfigService
+        @inject(ListingsRepository) private listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository
     ) {
         this.instantiateScrapers()
     }
 
     instantiateScrapers() {
         this.scrapers = Scrapers.reduce((prev, Scraper) => {
-            const scraper = new Scraper(
-                this.listingsRepository,
-                this.scrapingLogsRepository,
-                this.configService
-            )
+            const scraper = new Scraper(this.listingsRepository, this.scrapingLogsRepository)
             prev[scraper.origin] = scraper
             return prev
         }, {} as typeof this.scrapers)
@@ -51,7 +42,6 @@ export class ScrapersService {
         console.log(`[${this.pipelineIndex}/${total}] ${msg}`)
     }
 
-    @OnEvent('pipeline.run')
     async handlePipelineRunEvent(payload: RunPipelineEvent) {
         if (this.pipelineIndex != null) {
             // Push to queue if pipeline is already running
@@ -67,7 +57,8 @@ export class ScrapersService {
             if (!arr)
                 throw new Error('startScraperNext: Cannot get next scraper. No scrapers in queue!')
 
-            const [name, args] = arr
+            const [name] = arr
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.pipelineIndex! += 1
 
             const scraper = this.scrapers[name]
@@ -105,13 +96,12 @@ export class ScrapersService {
 
         if (this.pipelineQueue.length) {
             console.log('Running next pipeline in queue...')
-            this.eventEmitter.emit('pipeline.run', this.pipelineQueue.shift())
+            // this.eventEmitter.emit('pipeline.run', this.pipelineQueue.shift())
         } else {
             console.log('Pipeline queue is empty!')
         }
     }
 
-    @Cron('* */45 * * *')
     async startAll(...args: Parameters<BaseListingScraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
             this.scraperPipeline.push([
@@ -120,7 +110,7 @@ export class ScrapersService {
             ])
         }
 
-        this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
+        // this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
     }
 
     async start(
@@ -133,18 +123,14 @@ export class ScrapersService {
             this.scraperPipeline.push([scraperName, options])
             if (scraper.status !== ScraperStatus.SCRAPING) scraper.status = ScraperStatus.QUEUED
 
-            this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
+            // this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
 
             const status = await this.statusOf(scraperName)
             status.started = true
 
             return status
         } else {
-            throw new NotFoundException({
-                statusCode: 404,
-                message: [`no scraper named ${scraperName}`],
-                error: 'Not Found',
-            })
+            throw new NotFoundException(`No scraper named ${scraperName}`)
         }
     }
 
@@ -152,7 +138,6 @@ export class ScrapersService {
     /**
      * Call start method on the next scraper. Decorated with cronjob to execute start method on a scraper every 5 minutes.
      */
-    @Cron('* */5 * * *')
     async scrapeNext() {
         if (!this.scraperIndex) {
             this.scraperIndex = await this.getLastScrapedIndex()
@@ -232,7 +217,7 @@ export class ScrapersService {
             started: scraper.status === ScraperStatus.SCRAPING,
             listings_current: listingCount,
             status: scraper.status,
-            listings_remaining: (scraper.getConfig<number>('limit') ?? 0) - listingCount,
+            listings_remaining: (scraper.config.limit ?? 0) - listingCount,
             last_scraped: await this.scrapingLogsRepository
                 .findOne(
                     {

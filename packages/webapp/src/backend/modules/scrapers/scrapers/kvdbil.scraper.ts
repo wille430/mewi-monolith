@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import type { AxiosResponse } from 'axios'
+import { inject } from 'tsyringe'
+import { ListingsRepository } from '../../listings/listings.repository'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
 
 export class KvdbilScraper extends ListingScraper {
     limit = 20
@@ -19,11 +18,10 @@ export class KvdbilScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
     }

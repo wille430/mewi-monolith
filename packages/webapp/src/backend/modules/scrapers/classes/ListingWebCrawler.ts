@@ -1,8 +1,7 @@
 import type { ElementHandle } from 'puppeteer'
 import axios from 'axios'
-import * as robotsParser from 'robots-parser'
-import { ConfigService } from '@nestjs/config'
-import { Inject } from '@nestjs/common'
+import robotsParser from 'robots-parser'
+import { inject } from 'tsyringe'
 import { BaseListingScraper } from './BaseListingScraper'
 import type { ScrapedListing } from './types/ScrapedListing'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
@@ -10,7 +9,7 @@ import { EntryPointDOM } from './EntryPointDOM'
 import type { ScrapeContext } from './types/ScrapeContext'
 import type { StartScraperOptions } from '../types/startScraperOptions'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 export type ListingWebCrawlerConstructorArgs = {
     listingSelector: string
@@ -24,9 +23,8 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
     entryPoints: EntryPointDOM[] = []
 
     constructor(
-        @Inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) readonly config: ConfigService,
+        @inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository,
         { listingSelector }: ListingWebCrawlerConstructorArgs
     ) {
         super()
@@ -46,10 +44,7 @@ export abstract class ListingWebCrawler extends BaseListingScraper {
 
         const robotsTxt = await axios.get(this.baseUrl).then((res) => res.data)
 
-        const robots = robotsParser.default(
-            new URL('robots.txt', this.baseUrl).toString(),
-            robotsTxt
-        )
+        const robots = robotsParser(new URL('robots.txt', this.baseUrl).toString(), robotsTxt)
 
         if (robots.isAllowed(this.defaultScrapeUrl)) {
             return true

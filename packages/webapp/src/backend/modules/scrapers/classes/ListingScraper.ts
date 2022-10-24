@@ -1,22 +1,20 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { inject } from 'tsyringe'
 import { EntryPoint } from './EntryPoint'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
 import { BaseListingScraper } from './BaseListingScraper'
 import type { ScrapedListing } from './types/ScrapedListing'
 import type { ScrapeContext } from './types/ScrapeContext'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 export abstract class ListingScraper extends BaseListingScraper {
     entryPoints: EntryPoint[] = []
 
     constructor(
-        @Inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) readonly config: ConfigService
+        @inject(ListingsRepository) readonly listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) readonly scrapingLogsRepository: ScrapingLogsRepository
     ) {
         super()
         this.parseRawListing = this.parseRawListing.bind(this)

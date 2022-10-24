@@ -36,6 +36,7 @@ export class ListingsController {
         return this.listingsService.deleteMany(dto)
     }
 
+    // TODO: CACHE?
     @Get('featured')
     @Public()
     async featured() {

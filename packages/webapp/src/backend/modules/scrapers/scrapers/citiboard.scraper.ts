@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin, safeToDate } from '@wille430/common'
 import type { AxiosResponse } from 'axios'
+import { inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingScraper } from '../classes/ListingScraper'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 // TODO: find maximum offset
 export class CitiboardScraper extends ListingScraper {
@@ -17,11 +16,10 @@ export class CitiboardScraper extends ListingScraper {
     origin: ListingOrigin = ListingOrigin.Citiboard
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
 

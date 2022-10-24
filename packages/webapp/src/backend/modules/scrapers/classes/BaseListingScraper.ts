@@ -1,12 +1,5 @@
-import type {
-    ListingOrigin} from '@wille430/common'
-import {
-    ScraperStatus,
-    stringSimilarity,
-    ScraperTrigger,
-    Category,
-} from '@wille430/common'
-import type { ConfigService } from '@nestjs/config'
+import type { ListingOrigin } from '@wille430/common'
+import { ScraperStatus, stringSimilarity, ScraperTrigger, Category } from '@wille430/common'
 import type { FilterQuery } from 'mongoose'
 import * as crypto from 'crypto'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
@@ -17,12 +10,12 @@ import type { StartScraperOptions } from '../types/startScraperOptions'
 import type { DefaultStartOptions } from '../types/defaultStartOptions'
 import { scraperStopFunction } from '../helpers/scraperStopFunction'
 import type { ScrapingLogsRepository } from '../scraping-logs.repository'
-import type { ListingsRepository } from '@/listings/listings.repository'
-import type { UserDocument } from '@/schemas/user.schema'
+import type { ListingsRepository } from '../../listings/listings.repository'
+import type { ScraperOptions } from '../../common/types/scraperOptions'
+import type { UserDocument } from '../../schemas/user.schema'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
-    useRobots = true
     verbose = process.env.NODE_ENV === 'development'
     initialized = false
 
@@ -33,13 +26,11 @@ export abstract class BaseListingScraper {
     abstract createScrapeUrl: (...args: any) => string
 
     abstract listingsRepository: ListingsRepository
-    abstract config: ConfigService
     abstract scrapingLogsRepository: ScrapingLogsRepository
 
     readonly watchOptions: WatchOptions = {
         findFirst: 'date',
     }
-    readonly deleteOlderThan = Date.now() - 2 * 30 * 24 * 60 * 60 * 1000
 
     defaultStartOptions: DefaultStartOptions = {
         watchOptions: {
@@ -55,19 +46,24 @@ export abstract class BaseListingScraper {
         this.initialized = true
     }
 
-    getConfig<T>(key: string) {
-        return (
-            this.config.get<T>(`scraper.${this.origin}.${key}`) ??
-            this.config.get<T>(`scraper.default.${key}`)
-        )
-    }
+    config = Object.assign(
+        {
+            interval: 2.5 * 24 * 60 * 60 * 1000,
+            listingCount: 7,
+            minListings: 1,
+            deleteOlderThan: Date.now() - 2 * 30 * 24 * 60 * 60 * 1000,
+            limit: 40,
+            useRobots: false,
+        } as ScraperOptions,
+        {}
+    )
 
     async start(_options: Partial<StartScraperOptions> = this.defaultStartOptions) {
         if (!this.initialized) await this.initialize()
 
         const options = {
             triggeredBy: ScraperTrigger.Scheduled,
-            scrapeCount: this.getConfig<number>('limit'),
+            scrapeCount: this.config.limit,
             ...this.defaultStartOptions,
         }
 
@@ -208,7 +204,7 @@ export abstract class BaseListingScraper {
     async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {
         await this.listingsRepository.deleteMany({
             date: {
-                lte: new Date(this.deleteOlderThan),
+                lte: new Date(this.config.deleteOlderThan),
             },
             ...args,
         })
@@ -261,7 +257,8 @@ export abstract class BaseListingScraper {
 
     abstract createEntryPoint(createConfig: CreateConfigFunction, identifier?: string): void
 
-    getTotalPages(arg: any): number | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getTotalPages(_args: any): number | undefined {
         return undefined
     }
 }

@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common'
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { inject } from 'tsyringe'
 import { NextScraper } from '../classes/NextScraper'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
@@ -17,11 +16,10 @@ export class BlippScraper extends NextScraper {
     readonly defaultScrapeUrl = 'https://blipp.se/api/proxy'
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         this.createEntryPoint((p) => ({
             url: this.createScrapeUrl(),

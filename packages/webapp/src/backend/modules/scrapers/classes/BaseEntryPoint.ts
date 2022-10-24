@@ -5,10 +5,10 @@ import type { CreateConfigFunction } from './types/CreateConfigFunction'
 import type { ScrapeOptions } from './types/ScrapeOptions'
 import type { ScrapeResult } from './types/ScrapeResult'
 import type { ScrapeContext } from './types/ScrapeContext'
+import type { BaseListingScraper } from './BaseListingScraper'
 import type { ScrapingLogsRepository } from '../scraping-logs.repository'
-import type { ListingsRepository } from '@/listings/listings.repository'
-import type { BaseListingScraper } from '@/scrapers/classes/BaseListingScraper'
-import { sliceAtIndex } from '@/scrapers/helpers/sliceAtIndex'
+import type { ListingsRepository } from '../../listings/listings.repository'
+import { sliceAtIndex } from '../helpers/sliceAtIndex'
 
 export abstract class BaseEntryPoint {
     /**

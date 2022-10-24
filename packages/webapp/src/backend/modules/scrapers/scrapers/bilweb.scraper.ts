@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import type { ElementHandle } from 'puppeteer'
+import { inject } from 'tsyringe'
+import { ListingsRepository } from '../../listings/listings.repository'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
 
 export class BilwebScraper extends ListingWebCrawler {
     defaultScrapeUrl = 'https://bilweb.se/sok'
@@ -15,11 +14,10 @@ export class BilwebScraper extends ListingWebCrawler {
     origin = ListingOrigin.Bilweb
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config, {
+        super(listingsRepository, scrapingLogsRepository, {
             listingSelector: '.Card-Wrapper > .Card',
         })
 

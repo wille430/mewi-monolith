@@ -1,21 +1,21 @@
 import omit from 'lodash/omit'
 import type { FilterQuery, PipelineStage } from 'mongoose'
 import { NotFoundException } from 'next-api-decorators'
-import { autoInjectable } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
 import type { CreateListingDto } from './dto/create-listing.dto'
 import type { FindAllListingsDto } from './dto/find-all-listing.dto'
 import type { UpdateListingDto } from './dto/update-listing.dto'
 import { filterPipelineStage } from './helpers/filter-pipeline-stage'
-import type { ListingsRepository } from './listings.repository'
-import type { UsersRepository } from '../users/users.repository'
+import { ListingsRepository } from './listings.repository'
+import { UsersRepository } from '../users/users.repository'
 import type { Listing } from '../schemas/listing.schema'
 
 @autoInjectable()
 export class ListingsService {
     constructor(
-        private readonly listingsRepository: ListingsRepository,
-        private readonly usersRepository: UsersRepository
+        @inject(ListingsRepository) private readonly listingsRepository: ListingsRepository,
+        @inject(UsersRepository) private readonly usersRepository: UsersRepository
     ) {}
 
     async create(createListingDto: CreateListingDto) {
@@ -32,7 +32,10 @@ export class ListingsService {
         ])) as unknown as any[]
         totalHits = totalHits[0]?.totalHits ?? 0
 
-        const hits = await this.listingsRepository.aggregate(hitsPipeline)
+        const hits =
+            hitsPipeline.length === 0
+                ? await this.listingsRepository.find({})
+                : await this.listingsRepository.aggregate(hitsPipeline)
 
         return {
             filters: dto,

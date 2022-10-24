@@ -1,8 +1,8 @@
 import * as puppeteer from 'puppeteer'
 import { BaseEntryPoint } from './BaseEntryPoint'
+import type { ListingWebCrawler } from './ListingWebCrawler'
 import type { ScrapeOptions } from './types/ScrapeOptions'
 import type { ScrapeResult } from './types/ScrapeResult'
-import type { ListingWebCrawler } from '@/scrapers/classes/ListingWebCrawler'
 
 export class EntryPointDOM extends BaseEntryPoint {
     scraper!: ListingWebCrawler

@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common'
 import type { ElementHandle } from 'puppeteer'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { inject } from 'tsyringe'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 export class BytbilScraper extends ListingWebCrawler {
     baseUrl = 'https://bytbil.com/'
@@ -31,11 +30,10 @@ export class BytbilScraper extends ListingWebCrawler {
     }
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config, {
+        super(listingsRepository, scrapingLogsRepository, {
             listingSelector: '.result-list-item',
         })
 

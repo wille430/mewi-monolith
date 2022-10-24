@@ -1,13 +1,12 @@
 import type { AxiosResponse } from 'axios'
 import axios from 'axios'
-import { Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
+import { ListingsRepository } from '../../listings/listings.repository'
 
 interface TraderaCategory {
     id: number
@@ -36,11 +35,10 @@ export class TraderaScraper extends ListingScraper {
     }
 
     constructor(
-        @Inject(ListingsRepository) listingsRepository: ListingsRepository,
-        @Inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository,
-        @Inject(ConfigService) config: ConfigService
+        @inject(ListingsRepository) listingsRepository: ListingsRepository,
+        @inject(ScrapingLogsRepository) scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        super(listingsRepository, scrapingLogsRepository, config)
+        super(listingsRepository, scrapingLogsRepository)
 
         Object.assign(this.defaultStartOptions, {
             onNextEntryPoint: () => {
@@ -54,8 +52,6 @@ export class TraderaScraper extends ListingScraper {
 
         this.log('Fetching categories and updating entry points...')
         this.categories = await this.getCategories()
-
-        this.categories.forEach((o, i) => {})
 
         for (const category of this.categories) {
             if (!category.href == null) {
