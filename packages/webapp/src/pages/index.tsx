@@ -1,8 +1,10 @@
 import Head from 'next/head'
-import { ReactElement } from 'react'
-import { GetStaticProps } from 'next'
-import { IListing, IUser } from '@wille430/common'
+import type { ReactElement } from 'react'
+import type { GetStaticProps } from 'next'
+import type { IListing, IUser } from '@wille430/common'
 import dynamic from 'next/dynamic'
+import max from 'lodash/max'
+import uniqBy from 'lodash/uniqBy'
 import { Layout } from '@/components/Layout/Layout'
 import { Hero } from '@/components/Hero/Hero'
 import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
@@ -12,7 +14,6 @@ import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
 import { dbConnection } from '@/lib/dbConnection'
 import { serialize } from '@/lib/serialize'
-import _ from 'lodash'
 
 const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 
@@ -32,12 +33,12 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps((store) => 
                 listingsCollection.findOne(
                     {},
                     {
-                        skip: Math.floor(Math.random() * (docCount - 1)),
+                        skip: max([Math.floor(Math.random() * (docCount - 1)), 0]),
                     }
                 )
             )
     )
-    listings = _.uniqBy(listings, (o) => o?._id)
+    listings = uniqBy(listings, (o) => o?._id)
 
     store.dispatch(setFeatured(serialize(listings)))
 

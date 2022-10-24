@@ -1,4 +1,4 @@
-import { SnackbarProps } from '@/components/Snackbar/Snackbar'
+import type { SnackbarProps } from '@/components/Snackbar/Snackbar'
 
 export interface SnackbarState {
     queue: SnackbarProps[]

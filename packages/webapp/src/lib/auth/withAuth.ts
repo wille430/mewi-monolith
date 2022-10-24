@@ -1,7 +1,7 @@
-import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
-import { Role } from '@wille430/common'
-import { GetServerSideProps } from 'next'
+import type { Role } from '@wille430/common'
+import type { GetServerSideProps } from 'next'
 import { withUser } from './withUser'
+import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
 export const withAuth = (handler: GetServerSideProps, allowedRoles: Role[]): GetServerSideProps => {
     return withUser(async (context) => {

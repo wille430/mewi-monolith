@@ -1,5 +1,5 @@
-import { IListing } from '@wille430/common'
-import { ResourceType } from '..'
+import type { IListing } from '@wille430/common'
+import type { ResourceType } from '..'
 
 export interface ListingsState {
     opened?: IListing

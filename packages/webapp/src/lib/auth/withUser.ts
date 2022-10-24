@@ -1,7 +1,7 @@
-import { getMe } from '@/api/users'
 import axios from 'axios'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { getAccessToken } from './getAccessToken'
+import { getMe } from '../client/users'
 
 export const addUserToRequest = async (context: GetServerSidePropsContext, handler) => {
     const { req } = context

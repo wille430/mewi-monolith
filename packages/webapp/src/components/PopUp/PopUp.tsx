@@ -1,4 +1,5 @@
-import { HTMLAttributes, useRef } from 'react'
+import type { HTMLAttributes} from 'react'
+import { useRef } from 'react'
 import classNames from 'classnames'
 
 interface PopUpProps {

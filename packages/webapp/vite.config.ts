@@ -23,6 +23,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@/*': resolve(__dirname, './src'),
+            '@Backend/*': resolve(__dirname, './src/backend'),
             '@/hooks': resolve(__dirname, './src/hooks'),
             '@/utils': resolve(__dirname, './src/utils'),
             '@/lib': resolve(__dirname, './src/lib'),

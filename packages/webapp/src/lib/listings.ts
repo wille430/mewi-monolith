@@ -1,4 +1,4 @@
-import { IListing, IUser } from '@wille430/common'
+import type { IListing, IUser } from '@wille430/common'
 
 export const likeWith = (
     listing: IListing,

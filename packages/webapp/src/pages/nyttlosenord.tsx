@@ -1,5 +1,6 @@
 import { Button, Container, TextField } from '@wille430/ui'
-import { FormEvent, ReactElement, useEffect, useState } from 'react'
+import type { FormEvent, ReactElement} from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import Router, { useRouter } from 'next/router'
 import Head from 'next/head'

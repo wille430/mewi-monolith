@@ -1,7 +1,7 @@
 import { Category } from '@wille430/common'
 import { CategoryLabel } from '@wille430/common'
-import { LinkProps } from 'next/link'
-import { RootState } from '@/store'
+import type { LinkProps } from 'next/link'
+import type { RootState } from '@/store'
 
 export type NavLink = {
     label: string

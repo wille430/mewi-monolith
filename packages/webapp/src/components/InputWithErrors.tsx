@@ -1,4 +1,5 @@
-import { HTMLAttributes, useEffect, useState } from 'react'
+import type { HTMLAttributes} from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props {
     errorMessage: string | null | undefined

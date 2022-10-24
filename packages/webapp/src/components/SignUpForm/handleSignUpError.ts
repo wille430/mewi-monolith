@@ -1,5 +1,5 @@
-import { FormError } from '@/types/forms'
-import { SignUpDto } from './SignUpDto'
+import type { SignUpDto } from './SignUpDto'
+import type { FormError } from '@/types/forms'
 
 export const handleSignUpError = (e: any): FormError<SignUpDto> => {
     const msg = e.message

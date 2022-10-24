@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useEffect } from 'react'
-import { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
+import type { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
 
 const DefaultImage = ({
     src,

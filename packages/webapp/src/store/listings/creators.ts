@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { IListing, IUser } from '@wille430/common'
-import { ListingSearchFilters } from '@wille430/common'
+import type { IListing, IUser } from '@wille430/common'
+import type { ListingSearchFilters } from '@wille430/common'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
 import { instance } from '@/lib/axios'

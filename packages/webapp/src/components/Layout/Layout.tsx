@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import style from './Layout.module.scss'
 import { Nav } from '../Nav/Nav'
 import { Footer } from '../Footer/Footer'

@@ -1,5 +1,5 @@
 import { createListingFactory } from '@mewi/prisma/factory'
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 import { ListingRow } from './ListingRow'
 
 export default {

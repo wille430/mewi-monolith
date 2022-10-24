@@ -1,6 +1,8 @@
 import { Container } from '@wille430/ui'
-import React, { ReactNode } from 'react'
-import { ListingFilters, ListingFiltersProps } from '../ListingFilters/ListingFilters'
+import type { ReactNode } from 'react'
+import React from 'react'
+import type { ListingFiltersProps } from '../ListingFilters/ListingFilters'
+import { ListingFilters } from '../ListingFilters/ListingFilters'
 
 type ListingFiltersAreaProps = ListingFiltersProps & {
     footer?: ReactNode

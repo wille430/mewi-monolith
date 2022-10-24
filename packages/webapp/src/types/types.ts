@@ -1,5 +1,5 @@
-import { Axios } from 'axios'
-import { Store } from '@/store'
+import type { Axios } from 'axios'
+import type { Store } from '@/store'
 
 export interface BlocketItemData {
     ad_id: string

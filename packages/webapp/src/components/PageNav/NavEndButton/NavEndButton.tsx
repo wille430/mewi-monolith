@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { HTMLAttributes, ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import styles from './NavEndButton.module.scss'
 
 const NavEndButton = ({

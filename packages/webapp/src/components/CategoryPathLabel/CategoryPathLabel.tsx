@@ -1,4 +1,4 @@
-import { Category } from '@wille430/common'
+import type { Category } from '@wille430/common'
 import { CategoryLabel } from '@wille430/common'
 import Link from 'next/link'
 import styles from './CategoryPathLabel.module.scss'

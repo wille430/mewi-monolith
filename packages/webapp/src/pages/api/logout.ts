@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import Cookies from 'cookies'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@wille430/common'
 

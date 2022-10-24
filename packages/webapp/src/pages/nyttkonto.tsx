@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { Layout } from '@/components/Layout/Layout'
 import { SignUpForm } from '@/components/SignUpForm/SignUpForm'
 import { useUser } from '@/hooks/useUser'

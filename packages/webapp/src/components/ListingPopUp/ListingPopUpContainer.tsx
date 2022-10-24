@@ -1,6 +1,6 @@
+import dynamic from 'next/dynamic'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing } from '@/store/listings'
-import dynamic from 'next/dynamic'
 
 const DynamicListingPopUp = dynamic(() => import('./ListingPopUp'), { loading: () => null })
 

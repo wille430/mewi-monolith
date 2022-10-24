@@ -1,6 +1,7 @@
 import { Button, TextField } from '@wille430/ui'
 import capitalize from 'lodash/capitalize'
-import { Role, IUser } from '@wille430/common'
+import type { IUser } from '@wille430/common'
+import { Role } from '@wille430/common'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'

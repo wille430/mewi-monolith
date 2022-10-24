@@ -1,5 +1,5 @@
-import { ListingOrigin } from '@wille430/common'
-import { hexToRgb, relativeLuminance } from '@/helpers/colors'
+import type { ListingOrigin } from '@wille430/common'
+import { hexToRgb, relativeLuminance } from '@/utils/colors'
 
 export const BLOCKET_COLOR = '#f71414'
 export const BLIPP_COLOR = '#000033'

@@ -1,6 +1,6 @@
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps } from 'next'
 import { Role } from '@wille430/common'
-import { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { Container } from '@wille430/ui'
 import Head from 'next/head'
 import { EditRolePanel } from './../../components/EditRolePanel/EditRolePanel'

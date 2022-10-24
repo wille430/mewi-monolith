@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 import makeAnimated from 'react-select/animated'
 import Select from 'react-select'
-import { HTMLAttributes } from 'react'
+import type { HTMLAttributes } from 'react'
 
 export interface DropDownMenuProps extends HTMLAttributes<HTMLDivElement> {
     label?: string

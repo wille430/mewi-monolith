@@ -1,9 +1,9 @@
 import { Role } from '@wille430/common'
-import { withAuth } from '../withAuth'
 import faker from '@faker-js/faker'
-import { contextStub } from './stubs/context.stub'
 import { userStub } from '@mewi/test-utils'
 import _ from 'lodash'
+import { contextStub } from './stubs/context.stub'
+import { withAuth } from '../withAuth'
 
 jest.mock('../withUser')
 

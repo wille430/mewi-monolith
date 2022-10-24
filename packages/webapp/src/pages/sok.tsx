@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { SearchSection } from '@/components/SearchSection/SearchSection'

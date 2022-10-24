@@ -1,6 +1,5 @@
-import { useListingFilters } from '@/hooks/useListingFilters'
-import { toggleCategory, toggleOrigin } from '@/utils/toggleFilters'
-import { Category, ListingOrigin } from '@wille430/common'
+import type { Category} from '@wille430/common'
+import { ListingOrigin } from '@wille430/common'
 import { categories } from '@wille430/common'
 import { Button, Container, TextField } from '@wille430/ui'
 import clsx from 'clsx'
@@ -9,6 +8,8 @@ import Checkbox from '../Checkbox/Checkbox'
 import { CheckboxList } from '../CheckboxList/CheckboxList'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
+import { toggleCategory, toggleOrigin } from '@/utils/toggleFilters'
+import { useListingFilters } from '@/hooks/useListingFilters'
 
 export const SideFilters = () => {
     const { filters, setFilters, setField, clear } = useListingFilters()

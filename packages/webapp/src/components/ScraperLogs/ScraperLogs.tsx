@@ -1,7 +1,9 @@
-import { ListingOrigin, IScrapingLog } from '@wille430/common'
+import type { IScrapingLog } from '@wille430/common'
+import { ListingOrigin } from '@wille430/common'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { Chart, AxisOptions, UserSerie } from 'react-charts'
+import type { AxisOptions, UserSerie } from 'react-charts'
+import { Chart } from 'react-charts'
 import { instance } from '@/lib/axios'
 
 type Series = {

@@ -1,4 +1,5 @@
-import { Button, Modal, ModalProps } from '@wille430/ui'
+import type { ModalProps } from '@wille430/ui'
+import { Button, Modal } from '@wille430/ui'
 import { PopUp } from '../PopUp/PopUp'
 
 export interface PopUpModalProps extends ModalProps {

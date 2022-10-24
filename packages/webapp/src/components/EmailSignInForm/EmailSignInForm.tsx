@@ -3,10 +3,10 @@ import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Link from 'next/link'
+import type { EmailSignInDto } from './EmailSignInDto'
+import { handleSignInError } from './handleSignInError'
 import { useAppDispatch } from '@/hooks'
 import { login } from '@/store/user'
-import { EmailSignInDto } from './EmailSignInDto'
-import { handleSignInError } from './handleSignInError'
 import { ON_AUTH_SUCCESS_GOTO } from '@/constants/paths'
 
 const initialValues = { email: '', password: '' }

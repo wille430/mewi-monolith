@@ -1,13 +1,14 @@
-import { Button, ButtonProps } from '@wille430/ui'
+import type { ButtonProps } from '@wille430/ui'
+import { Button } from '@wille430/ui'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { ListingSearchFilters, IUserWatcher } from '@wille430/common'
+import type { ListingSearchFilters, IUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+import type { PopUpModalProps } from '../PopUpModal/PopUpModal'
 import { instance } from '@/lib/axios'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
-import dynamic from 'next/dynamic'
-import { PopUpModalProps } from '../PopUpModal/PopUpModal'
 
 const PopUpModal = dynamic<PopUpModalProps>(
     () => import('../PopUpModal/PopUpModal').then((mod) => mod.PopUpModal),

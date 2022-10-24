@@ -1,5 +1,5 @@
-import { dbConnection } from '../lib/dbConnection'
 import { exit } from 'process'
+import { dbConnection } from '../lib/dbConnection'
 
 const COLLECTIONS = ['users', 'listings']
 

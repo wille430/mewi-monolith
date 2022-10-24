@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchUser, login, logout, setLoggedInStatus, signup } from './creators'
-import { UserState } from './types'
+import type { UserState } from './types'
 
 const initialState: UserState = {
     isLoggedIn: false,

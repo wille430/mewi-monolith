@@ -1,5 +1,6 @@
 import { Button, TextField } from '@wille430/ui'
-import { ReactElement, useState } from 'react'
+import type { ReactElement} from 'react'
+import { useState } from 'react'
 import Head from 'next/head'
 import { Formik } from 'formik'
 import Link from 'next/link'

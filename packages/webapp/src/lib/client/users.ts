@@ -1,6 +1,6 @@
+import type { IUser } from '@wille430/common'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { instance } from '@/lib/axios'
-import { IUser } from '@wille430/common'
-import { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 export const getMe = async (config: AxiosRequestConfig = {}, client: AxiosInstance = instance) => {
     return client

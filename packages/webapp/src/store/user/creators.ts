@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { UserActionTypes } from './types'
 import { instance } from '@/lib/axios'
-import { getMe } from '@/api/users'
+import { getMe } from '@/lib/client/users'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,

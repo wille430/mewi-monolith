@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react'
+import type { AnchorHTMLAttributes, DetailedHTMLProps } from 'react'
 import styles from './SideNavButton.module.scss'
 
 const SideNavButton = ({

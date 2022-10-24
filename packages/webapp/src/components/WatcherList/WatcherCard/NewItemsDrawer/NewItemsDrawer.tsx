@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { IUserWatcher } from '@wille430/common'
-import { IListing } from '@wille430/common'
+import type { IUserWatcher } from '@wille430/common'
+import type { IListing } from '@wille430/common'
 import { useQuery } from 'react-query'
 import queryString from 'query-string'
 import classNames from 'classnames'

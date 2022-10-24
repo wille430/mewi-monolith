@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import uniqueId from 'lodash/uniqueId'
 import { checkSuccessParam, clearSnackbarQueue, pushToSnackbar } from './creators'
 import { nextSnackbar } from './creators'
-import { SnackbarState } from './types'
+import type { SnackbarState } from './types'
 
 const initialState: SnackbarState = {
     queue: [],

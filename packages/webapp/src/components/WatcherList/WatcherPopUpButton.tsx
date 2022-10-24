@@ -1,4 +1,5 @@
-import { Button, ButtonProps } from '@wille430/ui'
+import type { ButtonProps } from '@wille430/ui'
+import { Button } from '@wille430/ui'
 import { useState } from 'react'
 import AddWatcherPopUp from './AddWatcherPopUp'
 

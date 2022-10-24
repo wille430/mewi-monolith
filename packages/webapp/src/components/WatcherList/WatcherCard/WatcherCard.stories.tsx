@@ -1,6 +1,6 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 import { createIUserWatcherFactory, createListingFactory } from '@mewi/prisma/factory'
-import { IListing } from '@wille430/common'
+import type { IListing } from '@wille430/common'
 import WatcherCard from './WatcherCard'
 
 export default {

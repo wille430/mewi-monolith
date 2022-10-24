@@ -1,10 +1,11 @@
-import { toggleCategory } from '@/utils/toggleFilters'
-import { ListingSearchFilters, categories } from '@wille430/common'
+import type { ListingSearchFilters} from '@wille430/common'
+import { categories } from '@wille430/common'
 import dynamic from 'next/dynamic'
-import { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 import { LabeledTextField } from '../LabeledTextField/LabeledTextField'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
+import { toggleCategory } from '@/utils/toggleFilters'
 
 const LabeledDropdown = dynamic(() => import('../LabeledDropdown/LabeledDropdown'))
 

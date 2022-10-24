@@ -1,6 +1,7 @@
-import { HTMLAttributes } from 'react'
-import DropdownMenu, { DropDownMenuProps } from '../../components/DropdownMenu/DropdownMenu'
-import { Override } from '@/types/types'
+import type { HTMLAttributes } from 'react'
+import type { DropDownMenuProps } from '../../components/DropdownMenu/DropdownMenu'
+import DropdownMenu from '../../components/DropdownMenu/DropdownMenu'
+import type { Override } from '@/types/types'
 
 export type LabeledDropdownProps = Override<
     DropDownMenuProps,

@@ -1,4 +1,4 @@
-import { IListing } from '@wille430/common'
+import type { IListing } from '@wille430/common'
 import classNames from 'classnames'
 import { Container } from '@wille430/ui'
 import { HorizontalLine } from '@wille430/ui'

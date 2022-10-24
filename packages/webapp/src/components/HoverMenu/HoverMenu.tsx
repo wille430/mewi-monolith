@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { motion, HTMLMotionProps } from 'framer-motion'
+import type { HTMLMotionProps } from 'framer-motion'
+import { motion } from 'framer-motion'
 import styles from './HoverMenu.module.scss'
 
 export type HoverMenuProps = HTMLMotionProps<'ul'>

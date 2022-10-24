@@ -1,6 +1,6 @@
 import { Button } from '@wille430/ui'
 import clsx from 'clsx'
-import { HTMLAttributes } from 'react'
+import type { HTMLAttributes } from 'react'
 
 export const SearchInput = (props: HTMLAttributes<HTMLInputElement>) => {
     const { className, ...rest } = props

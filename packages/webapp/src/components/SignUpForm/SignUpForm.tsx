@@ -2,10 +2,10 @@ import { Button, TextField } from '@wille430/ui'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Link from 'next/link'
+import { handleSignUpError } from './handleSignUpError'
+import type { SignUpDto } from './SignUpDto'
 import { useAppDispatch } from '@/hooks'
 import { signup } from '@/store/user'
-import { handleSignUpError } from './handleSignUpError'
-import { SignUpDto } from './SignUpDto'
 import { ON_AUTH_SUCCESS_GOTO } from '@/constants/paths'
 
 export const SignUpForm = () => {

@@ -1,8 +1,8 @@
-import { getMe } from '@/api/users'
-import { GetServerSidePropsContext } from 'next'
+import type { GetServerSidePropsContext } from 'next'
+import { contextStub } from './stubs/context.stub'
 import { getAccessToken } from '../getAccessToken'
 import { addUserToRequest, withUser } from '../withUser'
-import { contextStub } from './stubs/context.stub'
+import { getMe } from '@/lib/api/users'
 
 jest.mock('../getAccessToken')
 jest.mock('@/api/users')

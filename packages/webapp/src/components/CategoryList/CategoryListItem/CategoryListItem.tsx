@@ -6,7 +6,7 @@ import { AiFillCar, AiOutlineMobile } from 'react-icons/ai'
 import { MdOutlineSportsCricket, MdPersonOutline, MdStore } from 'react-icons/md'
 import { BsHouse } from 'react-icons/bs'
 import { FiPlus } from 'react-icons/fi'
-import { IconType } from 'react-icons/lib'
+import type { IconType } from 'react-icons/lib'
 
 interface Props {
     categoryKey: keyof typeof Category

@@ -1,11 +1,13 @@
-import { FormEvent, useState } from 'react'
+import type { FormEvent} from 'react'
+import { useState } from 'react'
 import { useMutation } from 'react-query'
-import { LoginStrategy, IUser } from '@wille430/common'
+import type { IUser } from '@wille430/common'
+import { LoginStrategy } from '@wille430/common'
 import { Button, TextField } from '@wille430/ui'
 import { randomString } from '@wille430/common'
 import styles from './AccountDetails.module.scss'
 import { instance } from '@/lib/axios'
-import { ApiErrorResponse } from '@/types/types'
+import type { ApiErrorResponse } from '@/types/types'
 
 export interface AccountDetailsProps {
     user: IUser

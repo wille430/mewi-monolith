@@ -1,6 +1,6 @@
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'
 import { configureStore } from '@reduxjs/toolkit'
-import { AnyAction, Store as ReduxStore } from 'redux'
+import type { AnyAction, Store as ReduxStore } from 'redux'
 import { rootReducer } from './reducer'
 
 const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {

@@ -1,4 +1,5 @@
-import { memo, MutableRefObject, useMemo } from 'react'
+import type { MutableRefObject} from 'react'
+import { memo, useMemo } from 'react'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
 import { useListingFilters } from '@/hooks/useListingFilters'

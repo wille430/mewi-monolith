@@ -19,10 +19,13 @@
         "resolveJsonModule": true,
         "typeRoots": ["src/types/**/*"],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@Backend/*": ["./src/backend/*"]
         },
         "strict": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "include": ["src/**/*", "next-end.d.ts", "./tailwind.config.js"],
     "references": [
@@ -40,7 +43,14 @@
         "./src/**/*.test.tsx",
         "./src/**/*.stories.ts",
         "./src/**/*.stories.tsx",
-        "./cypress/**/*.{ts,tsx}"
+        "./cypress/**/*.{ts,tsx}",
+        "./src/backend/modules/scrapers",
+        "./src/backend/modules/email",
+        "./src/backend/modules/emails",
+        "./src/backend/modules/listings",
+        "./src/backend/modules/test",
+        "./src/backend/modules/user-watchers",
+        "./src/backend/modules/watchers"
     ],
     "ts-node": {
         "transpileOnly": true,

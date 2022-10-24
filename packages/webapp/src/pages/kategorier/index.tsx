@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import Head from 'next/head'
 import { CategoryList } from '@/components/CategoryList/CategoryList'
 import { Layout } from '@/components/Layout/Layout'

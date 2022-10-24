@@ -1,4 +1,6 @@
 {
-  "extends": "../../.eslintrc",
-  "ignorePatterns": "src/**/*.(js)$"
+    "extends": "../../.eslintrc",
+    "rules": {
+        "@typescript-eslint/consistent-type-imports": "error"
+    }
 }

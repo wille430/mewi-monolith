@@ -7,7 +7,7 @@ import {
     setFeatured,
     unlikeListing,
 } from './creators'
-import { ListingsState } from './types'
+import type { ListingsState } from './types'
 import { like, unlike } from '@/lib/listings'
 
 const initialState: ListingsState = {

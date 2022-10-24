@@ -1,4 +1,4 @@
-import { IUser } from '@wille430/common'
+import type { IUser } from '@wille430/common'
 
 export interface UserState {
     isLoggedIn: boolean
