@@ -1,16 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common'
 import { Role } from '@wille430/common'
+import { Body, Delete, Get, Param, Post } from 'next-api-decorators'
 import type { UserWatchersService } from './user-watchers.service'
 import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
-import type { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { Roles } from '@/auth/roles.decorator'
-import { RolesGuard } from '@/auth/roles.guard'
-import type { UserPayload } from '@/auth/jwt-strategy'
-import { GetUser } from '@/common/decorators/user.decorator'
+import { GetUser } from '../common/decorators/user.decorator'
+import type { UserPayload } from '../common/types/UserPayload'
+import { SessionGuard } from '@/backend/middlewares/SessionGuard'
+import { Roles } from '@/backend/middlewares/Roles'
 
-@UseGuards(JwtAuthGuard)
-@Controller('/users/me/watchers')
+@SessionGuard()
 export class MyWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
@@ -29,10 +26,10 @@ export class MyWatchersController {
         return this.userWatchersService.findOne(id, user.userId)
     }
 
-    @Put(':id')
-    update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
-        return this.userWatchersService.update(id, updateUserWatcherDto)
-    }
+    // @Put(':id')
+    // update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
+    //     return this.userWatchersService.update(id, updateUserWatcherDto)
+    // }
 
     @Delete(':id')
     remove(@Param('id') id: string, @GetUser() user: UserPayload) {
@@ -40,8 +37,7 @@ export class MyWatchersController {
     }
 }
 
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('/users/:user_id/watchers')
+@SessionGuard()
 export class UserWatchersController {
     constructor(private readonly userWatchersService: UserWatchersService) {}
 
@@ -63,11 +59,11 @@ export class UserWatchersController {
         return this.userWatchersService.findOne(id, userId)
     }
 
-    @Put(':id')
-    @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
-        return this.userWatchersService.update(id, updateUserWatcherDto)
-    }
+    // @Put(':id')
+    // @Roles(Role.ADMIN)
+    // update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
+    //     return this.userWatchersService.update(id, updateUserWatcherDto)
+    // }
 
     @Delete(':id')
     @Roles(Role.ADMIN)

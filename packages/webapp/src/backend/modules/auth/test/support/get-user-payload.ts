@@ -1,7 +1,8 @@
-import { UserPayload } from '@/auth/jwt-strategy'
-import { User } from '@/schemas/user.schema'
+import type { UserPayload } from '@/backend/modules/common/types/UserPayload'
+import type { User } from '@/backend/modules/schemas/user.schema'
 
 export const getUserPayload = (user: User): UserPayload => ({
-    email: user.email,
     userId: user.id,
+    email: user.email,
+    roles: user.roles,
 })

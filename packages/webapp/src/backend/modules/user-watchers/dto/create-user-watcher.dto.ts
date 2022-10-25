@@ -1,6 +1,5 @@
 import { IsMongoId, IsObject, IsOptional, ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
-import { WatcherMetadata } from '@/schemas/class/WatcherMetadata'
+import type { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
 
 export class CreateUserWatcherDto {
     @IsOptional()
@@ -9,6 +8,5 @@ export class CreateUserWatcherDto {
 
     @IsObject()
     @ValidateNested()
-    @Type(() => WatcherMetadata)
     metadata!: WatcherMetadata
 }

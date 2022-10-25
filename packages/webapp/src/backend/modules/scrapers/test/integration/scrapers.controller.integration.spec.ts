@@ -33,6 +33,4 @@ describe('ScrapersController', () => {
         await usersCollection.deleteMany({})
         await usersCollection.insertOne(adminStub())
     })
-
-    it('should be defined', () => {})
 })

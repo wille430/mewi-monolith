@@ -90,8 +90,6 @@ describe('ScrapersService', () => {
             beforeEach(async () => {
                 await scrapersService.handlePipelineRunEvent(runPipelineEventStub())
             })
-
-            it('then scraper should be called', () => {})
         })
     })
 

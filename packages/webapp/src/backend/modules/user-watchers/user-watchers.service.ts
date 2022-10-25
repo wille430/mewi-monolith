@@ -1,21 +1,20 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common'
-import { Error } from '@wille430/common'
 import mongoose from 'mongoose'
+import { autoInjectable, inject } from 'tsyringe'
+import { ConflictException } from 'next-api-decorators'
 import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
-import type { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import type { UserWatchersRepository } from './user-watchers.repository'
-import type { WatchersService } from '@/watchers/watchers.service'
-import type { WatchersRepository } from '@/watchers/watchers.repository'
-import type { UsersRepository } from '@/users/users.repository'
-import type { Watcher } from '@/schemas/watcher.schema'
+import { UserWatchersRepository } from './user-watchers.repository'
+import { WatchersRepository } from '../watchers/watchers.repository'
+import { WatchersService } from '../watchers/watchers.service'
+import { UsersRepository } from '../users/users.repository'
 
-@Injectable()
+@autoInjectable()
 export class UserWatchersService {
     constructor(
-        private watchersService: WatchersService,
+        @inject(WatchersService) private watchersService: WatchersService,
+        @inject(UserWatchersRepository)
         private readonly userWatchersRepository: UserWatchersRepository,
-        private readonly watchersRepository: WatchersRepository,
-        private readonly usersRepository: UsersRepository
+        @inject(WatchersRepository) private readonly watchersRepository: WatchersRepository,
+        @inject(UsersRepository) private readonly usersRepository: UsersRepository
     ) {}
 
     async create({ userId, metadata }: CreateUserWatcherDto) {
@@ -37,11 +36,7 @@ export class UserWatchersService {
                 watcherId: watcher.id,
             })
         ) {
-            throw new ConflictException({
-                statusCode: HttpStatus.CONFLICT,
-                message: ['You are already subscribed to a similar watcher'],
-                error: Error.Database.CONFLICTING_RESOURCE,
-            })
+            throw new ConflictException('You are already subscribed to a similar watcher')
         } else {
             const userWatcher = await this.userWatchersRepository.create({
                 user: user,
@@ -73,35 +68,37 @@ export class UserWatchersService {
         return userWatcher
     }
 
-    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
-        const oldUserWatcher = await this.userWatchersRepository.findById(id)
-        let watcher: Watcher
+    // async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+    //     const oldUserWatcher = await this.userWatchersRepository.findById(id)
+    //     let watcher: Watcher
 
-        if (await this.watchersService.exists(metadata)) {
-            watcher = (await this.watchersRepository.findOne({
-                metadata,
-            }))!
-        } else {
-            watcher = await this.watchersService.create({
-                metadata,
-            })
-        }
+    //     if (await this.watchersService.exists(metadata)) {
+    //         watcher = (await this.watchersRepository.findOne({
+    //             metadata,
+    //         }))!
+    //     } else {
+    //         watcher = await this.watchersService.create({
+    //             metadata,
+    //         })
+    //     }
 
-        await this.userWatchersRepository.findByIdAndUpdate(id, {
-            $set: {
-                watcher: watcher,
-            },
-        })
+    //     await this.userWatchersRepository.findByIdAndUpdate(id, {
+    //         $set: {
+    //             watcher: watcher,
+    //         },
+    //     })
 
-        if (
-            oldUserWatcher &&
-            (await this.watchersService.subscriberCount(oldUserWatcher.watcher.id)) === 0
-        ) {
-            await this.watchersService.remove(oldUserWatcher.watcher.id)
-        }
+    //     const watcher2 = oldUserWatcher?.watcher
+    //     if (
+    //         oldUserWatcher &&
+    //         watcher2 &&
+    //         (await this.watchersService.subscriberCount((watcher2 as Watcher).id)) === 0
+    //     ) {
+    //         await this.watchersService.remove(oldUserWatcher.watcher.id)
+    //     }
 
-        return this.findOne(id, userId)
-    }
+    //     return this.findOne(id, userId)
+    // }
 
     /**
      * Unsubscribe a user from a watcher
