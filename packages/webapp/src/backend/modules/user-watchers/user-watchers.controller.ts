@@ -1,7 +1,8 @@
 import { Role } from '@wille430/common'
-import { Body, Delete, Get, Param, Post } from 'next-api-decorators'
+import { Body, Delete, Get, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
 import type { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
+import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'
@@ -21,7 +22,7 @@ export class MyWatchersController {
         return this.userWatchersService.findAll(user.userId)
     }
 
-    @Get(':id')
+    @Get('/:id')
     findOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         return this.userWatchersService.findOne(id, user.userId)
     }
@@ -31,7 +32,7 @@ export class MyWatchersController {
     //     return this.userWatchersService.update(id, updateUserWatcherDto)
     // }
 
-    @Delete(':id')
+    @Delete('/:id')
     remove(@Param('id') id: string, @GetUser() user: UserPayload) {
         return this.userWatchersService.remove(id, user.userId)
     }
@@ -43,7 +44,7 @@ export class UserWatchersController {
 
     @Post()
     @Roles(Role.ADMIN)
-    create(@Body() createUserWatcherDto: CreateUserWatcherDto) {
+    create(@Body(ValidationPipe) createUserWatcherDto: CreateUserWatcherDto) {
         return this.userWatchersService.create(createUserWatcherDto)
     }
 
@@ -59,11 +60,14 @@ export class UserWatchersController {
         return this.userWatchersService.findOne(id, userId)
     }
 
-    // @Put(':id')
-    // @Roles(Role.ADMIN)
-    // update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
-    //     return this.userWatchersService.update(id, updateUserWatcherDto)
-    // }
+    @Put(':id')
+    @Roles(Role.ADMIN)
+    update(
+        @Param('id') id: string,
+        @Body(ValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
+    ) {
+        return this.userWatchersService.update(id, updateUserWatcherDto)
+    }
 
     @Delete(':id')
     @Roles(Role.ADMIN)

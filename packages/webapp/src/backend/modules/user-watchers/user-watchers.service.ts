@@ -1,11 +1,13 @@
 import mongoose from 'mongoose'
 import { autoInjectable, inject } from 'tsyringe'
-import { ConflictException } from 'next-api-decorators'
+import { ConflictException, NotFoundException } from 'next-api-decorators'
 import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UserWatchersRepository } from './user-watchers.repository'
+import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { WatchersRepository } from '../watchers/watchers.repository'
 import { WatchersService } from '../watchers/watchers.service'
 import { UsersRepository } from '../users/users.repository'
+import { WatcherDocument } from '../schemas/watcher.schema'
 
 @autoInjectable()
 export class UserWatchersService {
@@ -68,37 +70,42 @@ export class UserWatchersService {
         return userWatcher
     }
 
-    // async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
-    //     const oldUserWatcher = await this.userWatchersRepository.findById(id)
-    //     let watcher: Watcher
+    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+        const oldUserWatcher = await this.userWatchersRepository.findOne({ id, user: userId })
+        if (!oldUserWatcher) {
+            throw new NotFoundException(`No user watcher with id ${id} was found`)
+        }
 
-    //     if (await this.watchersService.exists(metadata)) {
-    //         watcher = (await this.watchersRepository.findOne({
-    //             metadata,
-    //         }))!
-    //     } else {
-    //         watcher = await this.watchersService.create({
-    //             metadata,
-    //         })
-    //     }
+        let watcher: WatcherDocument
 
-    //     await this.userWatchersRepository.findByIdAndUpdate(id, {
-    //         $set: {
-    //             watcher: watcher,
-    //         },
-    //     })
+        if (await this.watchersService.exists(metadata)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            watcher = (await this.watchersRepository.findOne({
+                metadata,
+            }))!
+        } else {
+            watcher = await this.watchersService.create({
+                metadata,
+            })
+        }
 
-    //     const watcher2 = oldUserWatcher?.watcher
-    //     if (
-    //         oldUserWatcher &&
-    //         watcher2 &&
-    //         (await this.watchersService.subscriberCount((watcher2 as Watcher).id)) === 0
-    //     ) {
-    //         await this.watchersService.remove(oldUserWatcher.watcher.id)
-    //     }
+        await this.userWatchersRepository.findByIdAndUpdate(id, {
+            $set: {
+                watcher: watcher,
+            },
+        })
 
-    //     return this.findOne(id, userId)
-    // }
+        await oldUserWatcher?.populate('watcher')
+        if (
+            oldUserWatcher &&
+            watcher &&
+            (await this.watchersService.subscriberCount(watcher.id)) === 0
+        ) {
+            await this.watchersService.remove(watcher.id)
+        }
+
+        return this.findOne(id, userId)
+    }
 
     /**
      * Unsubscribe a user from a watcher
