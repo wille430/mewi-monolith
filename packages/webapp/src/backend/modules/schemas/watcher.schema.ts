@@ -1,5 +1,4 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
-import type { IWatcherMetadata } from '@wille430/common'
 import type { Document } from 'mongoose'
 import { WatcherMetadata } from './class/WatcherMetadata'
 
@@ -8,10 +7,9 @@ export type WatcherDocument = Watcher & Document
 export class Watcher {
     // TODO: define metadata
     @prop({
-        type: WatcherMetadata,
-        default: {},
+        _id: false,
     })
-    metadata!: IWatcherMetadata
+    metadata!: WatcherMetadata
 
     @prop(Date)
     notifiedAt?: Date

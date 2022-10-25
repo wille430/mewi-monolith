@@ -14,6 +14,7 @@ export class WatchersController {
     @Post()
     @Roles(Role.ADMIN)
     async create(@Body(ValidationPipe) createWatcherDto: CreateWatcherDto) {
+        console.log(createWatcherDto)
         return this.watchersService.create(createWatcherDto)
     }
 

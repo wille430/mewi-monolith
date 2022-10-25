@@ -1,8 +1,10 @@
+import { Type } from 'class-transformer'
 import { IsObject, ValidateNested } from 'class-validator'
-import type { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
+import { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
 
 export class CreateWatcherDto {
     @IsObject()
     @ValidateNested()
+    @Type(() => WatcherMetadata)
     metadata!: WatcherMetadata
 }
