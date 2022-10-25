@@ -2,9 +2,9 @@ import { Role } from '@wille430/common'
 import { Body, Delete, Get, Param, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { WatchersService } from './watchers.service'
-import type { CreateWatcherDto } from './dto/create-watcher.dto'
-import type { UpdateWatcherDto } from './dto/update-watcher.dto'
-import type { FindAllWatchersDto } from './dto/find-all-watchers.dto'
+import { CreateWatcherDto } from './dto/create-watcher.dto'
+import { UpdateWatcherDto } from './dto/update-watcher.dto'
+import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
 import { Roles } from '@/backend/middlewares/Roles'
 
 @autoInjectable()

@@ -1,7 +1,7 @@
 import { Role } from '@wille430/common'
 import { Body, Delete, Get, Param, Post } from 'next-api-decorators'
 import type { UserWatchersService } from './user-watchers.service'
-import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
+import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'

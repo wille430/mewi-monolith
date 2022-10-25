@@ -2,8 +2,8 @@ import type { NextApiRequest } from 'next'
 import { Body, Post, Req, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { AuthService } from './auth.service'
-import type { LoginDto } from './dto/login.dto'
-import type SignUpDto from './dto/sign-up.dto'
+import { LoginDto } from './dto/login.dto'
+import SignUpDto from './dto/sign-up.dto'
 import { WithSession } from '@/backend/middlewares/SessionGuard'
 
 @autoInjectable()
