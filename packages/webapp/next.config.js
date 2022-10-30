@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 })
 
-const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/common'])
+const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/common', '@mewi/test-utils'])
 
 /**
  * @type {import('next').NextConfig}
