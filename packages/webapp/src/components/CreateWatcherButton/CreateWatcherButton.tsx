@@ -40,7 +40,7 @@ export const CreateWatcherButton = ({
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
             return instance
-                .post<IUserWatcher>('/users/me/watchers', { metadata: newWatcher })
+                .post<IUserWatcher>('/user-watchers', { metadata: newWatcher })
                 .then((res) => res.data)
         },
         {

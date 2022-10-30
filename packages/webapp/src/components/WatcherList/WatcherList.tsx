@@ -1,5 +1,5 @@
 import { Container, HorizontalLine } from '@wille430/ui'
-import type { ReactElement} from 'react'
+import type { ReactElement } from 'react'
 import { useState } from 'react'
 import type { IUserWatcher } from '@wille430/common'
 import { useQuery } from 'react-query'
@@ -19,7 +19,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     const { data } = useQuery(
         'watchers',
-        () => instance.get<IUserWatcher[]>('/users/me/watchers').then((res) => res.data),
+        () => instance.get<IUserWatcher[]>('/user-watchers').then((res) => res.data),
         {
             initialData: watchers ?? [],
             enabled: false,

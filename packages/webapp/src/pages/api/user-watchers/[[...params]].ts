@@ -1,4 +1,4 @@
 import { createHandler } from 'next-api-decorators'
-import { UserWatchersController } from '@/backend/modules/user-watchers/user-watchers.controller'
+import { MyWatchersController } from '@/backend/modules/user-watchers/user-watchers.controller'
 
-export default createHandler(UserWatchersController)
+export default createHandler(MyWatchersController)

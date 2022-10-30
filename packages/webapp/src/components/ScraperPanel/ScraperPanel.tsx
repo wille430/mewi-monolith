@@ -1,5 +1,5 @@
 import { ListingOrigin } from '@wille430/common'
-import type { ButtonProps} from '@wille430/ui'
+import type { ButtonProps } from '@wille430/ui'
 import { Button, Table } from '@wille430/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'

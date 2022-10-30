@@ -1,4 +1,4 @@
-import type { FormEvent} from 'react'
+import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
 import type { IUser } from '@wille430/common'

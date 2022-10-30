@@ -1,4 +1,4 @@
-import type { ReactElement} from 'react'
+import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 import Head from 'next/head'
 import { useQuery } from 'react-query'
@@ -12,7 +12,7 @@ import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 const Bevakningar = () => {
     const { data: watchers, refetch: fetchWatchers } = useQuery(
         'user-watchers',
-        () => instance.get('/users/me/watchers').then((res) => res.data),
+        () => instance.get('/user-watchers').then((res) => res.data),
         {
             initialData: [],
             refetchOnMount: false,

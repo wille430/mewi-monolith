@@ -1,6 +1,7 @@
 import { Role } from '@wille430/common'
 import { Body, Delete, Get, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
-import type { UserWatchersService } from './user-watchers.service'
+import { autoInjectable, inject } from 'tsyringe'
+import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
 import { GetUser } from '../common/decorators/user.decorator'
@@ -8,31 +9,44 @@ import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 import { Roles } from '@/backend/middlewares/Roles'
 
-@SessionGuard()
+@autoInjectable()
 export class MyWatchersController {
-    constructor(private readonly userWatchersService: UserWatchersService) {}
+    constructor(
+        @inject(UserWatchersService) private readonly userWatchersService: UserWatchersService
+    ) {}
 
     @Post()
-    create(@Body() createUserWatcherDto: CreateUserWatcherDto, @GetUser() user: UserPayload) {
+    @SessionGuard()
+    create(
+        @Body(ValidationPipe) createUserWatcherDto: CreateUserWatcherDto,
+        @GetUser() user: UserPayload
+    ) {
         return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
     }
 
     @Get()
+    @SessionGuard()
     findAll(@GetUser() user: UserPayload) {
         return this.userWatchersService.findAll(user.userId)
     }
 
     @Get('/:id')
+    @SessionGuard()
     findOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         return this.userWatchersService.findOne(id, user.userId)
     }
 
-    // @Put(':id')
-    // update(@Param('id') id: string, @Body() updateUserWatcherDto: UpdateUserWatcherDto) {
-    //     return this.userWatchersService.update(id, updateUserWatcherDto)
-    // }
+    @Put(':id')
+    @SessionGuard()
+    update(
+        @Param('id') id: string,
+        @Body(ValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
+    ) {
+        return this.userWatchersService.update(id, updateUserWatcherDto)
+    }
 
     @Delete('/:id')
+    @SessionGuard()
     remove(@Param('id') id: string, @GetUser() user: UserPayload) {
         return this.userWatchersService.remove(id, user.userId)
     }

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchUser, login, logout, setLoggedInStatus, signup } from './creators'
+import { login, logout, setLoggedInStatus, signup } from './creators'
 import type { UserState } from './types'
 
 const initialState: UserState = {
@@ -14,14 +14,6 @@ export const userSlice = createSlice({
         builder
             .addCase(setLoggedInStatus, (state, action) => {
                 state.isLoggedIn = action.payload
-            })
-            .addCase(fetchUser.fulfilled, (state, action) => {
-                state.user = action.payload
-                state.isLoggedIn = true
-            })
-            .addCase(fetchUser.rejected, (state, action) => {
-                state.user = action.payload
-                state.isLoggedIn = false
             })
             .addCase(login.fulfilled, (state) => {
                 state.isLoggedIn = true

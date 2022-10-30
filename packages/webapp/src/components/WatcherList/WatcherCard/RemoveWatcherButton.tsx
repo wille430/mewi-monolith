@@ -5,15 +5,12 @@ import { instance } from '@/lib/axios'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
     const queryClient = useQueryClient()
-    const mutation = useMutation(
-        async () => await instance.delete(`/users/me/watchers/${watcherId}`),
-        {
-            onSuccess: async () =>
-                queryClient.setQueryData('watchers', (old: any) =>
-                    old.filter((x) => x.id !== watcherId)
-                ),
-        }
-    )
+    const mutation = useMutation(async () => await instance.delete(`/user-watchers/${watcherId}`), {
+        onSuccess: async () =>
+            queryClient.setQueryData('watchers', (old: any) =>
+                old.filter((x) => x.id !== watcherId)
+            ),
+    })
 
     return (
         <Button

@@ -1,4 +1,4 @@
-import type { IListing} from '@wille430/common'
+import type { IListing } from '@wille430/common'
 import type { ReactElement } from 'react'
 import Head from 'next/head'
 import { Container, HorizontalLine } from '@wille430/ui'

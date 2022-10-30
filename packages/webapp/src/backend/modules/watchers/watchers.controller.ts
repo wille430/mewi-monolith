@@ -40,7 +40,7 @@ export class WatchersController {
 
     @Put('/:id')
     @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body() updateWatcherDto: UpdateWatcherDto) {
+    update(@Param('id') id: string, @Body(ValidationPipe) updateWatcherDto: UpdateWatcherDto) {
         return this.watchersService.update(id, updateWatcherDto)
     }
 

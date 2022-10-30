@@ -1,22 +1,10 @@
-import axios from 'axios'
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import { getAccessToken } from './getAccessToken'
-import { getMe } from '../client/users'
+import { getSession } from '@/backend/lib/session/getSession'
 
 export const addUserToRequest = async (context: GetServerSidePropsContext, handler) => {
-    const { req } = context
-    const accessToken = getAccessToken(req)
+    const { req, res } = context
 
-    const user = await getMe(
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        },
-        axios
-    )
-
-    req.user = user
+    await getSession(req as any, res as any)
 
     return handler(context)
 }
