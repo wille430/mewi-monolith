@@ -10,7 +10,7 @@ import { useStore } from 'react-redux'
 import type { Store } from '@/store'
 import { wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { useUser } from '@/hooks/useUser'
 
 type NextPageWithLayout = NextPage & {
@@ -32,7 +32,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store
-        window.axios = instance
+        window.axios = client
     }
 
     return (

@@ -1,19 +1,14 @@
 import type { HTMLAttributes } from 'react'
 import type { DropDownMenuProps } from '../../components/DropdownMenu/DropdownMenu'
 import DropdownMenu from '../../components/DropdownMenu/DropdownMenu'
-import type { Override } from '@/types/types'
 
-export type LabeledDropdownProps = Override<
-    DropDownMenuProps,
-    {
-        onChange?: (val: any) => void
-        value?: string[] | string | null
-        closeMenuOnSelect?: boolean
-        isMulti?: boolean
-        label?: string
-    }
-> &
-    Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>
+export type LabeledDropdownProps = DropDownMenuProps & {
+    onChange?: (val: any) => void
+    value?: string[] | string | null
+    closeMenuOnSelect?: boolean
+    isMulti?: boolean
+    label?: string
+} & Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>
 
 const LabeledDropdown = (props: LabeledDropdownProps) => {
     const { closeMenuOnSelect, isMulti, label } = props

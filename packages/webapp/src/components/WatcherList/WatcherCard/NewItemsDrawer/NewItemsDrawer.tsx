@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 import queryString from 'query-string'
 import classNames from 'classnames'
 import styles from './NewItemsDrawer.module.scss'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { openListing } from '@/store/listings'
 import { useAppDispatch } from '@/hooks'
 import StyledLoader from '@/components/StyledLoader'
@@ -34,7 +34,7 @@ const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
     } = useQuery(
         ['watcherListings', { id: watcher.id }],
         async () =>
-            await instance
+            await client
                 .get(
                     '/listings?' +
                         queryString.stringify({

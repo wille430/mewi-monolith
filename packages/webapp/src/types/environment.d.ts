@@ -1,4 +1,3 @@
-
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -8,6 +7,12 @@ declare global {
             JWT_SECRET_KEY?: string
             REFRESH_TOKEN_SECRET?: string
         }
+    }
+
+    interface Window {
+        Cypress?: any
+        store: Store
+        axios?: Axios
     }
 }
 

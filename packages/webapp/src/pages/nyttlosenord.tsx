@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import Router, { useRouter } from 'next/router'
 import Head from 'next/head'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { pushToSnackbar } from '@/store/snackbar/creators'
 import { useAppDispatch } from '@/hooks'
 import { Layout } from '@/components/Layout/Layout'
@@ -33,7 +33,7 @@ const ForgottenPassword = () => {
 
     const mutation = useMutation(
         async () =>
-            instance.put('/users/password', {
+            client.put('/users/password', {
                 token,
                 password: formData.password,
                 passwordConfirm: formData.repassword,

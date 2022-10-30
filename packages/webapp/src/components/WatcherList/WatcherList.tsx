@@ -6,7 +6,7 @@ import { useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'
 import WatcherPopUpButton from './WatcherPopUpButton'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 
 const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))
 
@@ -19,7 +19,7 @@ const WatcherList = ({ watchers }: WatcherListProps) => {
 
     const { data } = useQuery(
         'watchers',
-        () => instance.get<IUserWatcher[]>('/user-watchers').then((res) => res.data),
+        () => client.get<IUserWatcher[]>('/user-watchers').then((res) => res.data),
         {
             initialData: watchers ?? [],
             enabled: false,

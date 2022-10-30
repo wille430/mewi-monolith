@@ -6,7 +6,7 @@ import type { ListingSearchFilters, IUserWatcher } from '@wille430/common'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import type { PopUpModalProps } from '../PopUpModal/PopUpModal'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
 
@@ -39,7 +39,7 @@ export const CreateWatcherButton = ({
 
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
-            return instance
+            return client
                 .post<IUserWatcher>('/user-watchers', { metadata: newWatcher })
                 .then((res) => res.data)
         },

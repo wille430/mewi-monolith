@@ -6,44 +6,40 @@ import { LoginStrategy } from '@wille430/common'
 import { Button, TextField } from '@wille430/ui'
 import { randomString } from '@wille430/common'
 import styles from './AccountDetails.module.scss'
-import { instance } from '@/lib/axios'
-import type { ApiErrorResponse } from '@/types/types'
+import { client } from '@/lib/client'
 
 export interface AccountDetailsProps {
     user: IUser
 }
 
 const AccountDetails = ({ user }: AccountDetailsProps) => {
-    const mutation = useMutation(
-        () => instance.put('/users/email', { newEmail: formData?.email }),
-        {
-            onError: (e: ApiErrorResponse) => {
-                setSuccess(undefined)
-                const newErrors: typeof errors = {}
-                for (const error of e.message) {
-                    for (const constraint of Object.keys(error.constraints)) {
-                        switch (constraint) {
-                            case 'isEmail':
-                                newErrors.email = 'Felaktig e-postadress'
-                                break
-                            case 'UniqueEmail':
-                                newErrors.email = 'E-postadressen är upptagen'
-                                break
-                        }
+    const mutation = useMutation(() => client.put('/users/email', { newEmail: formData?.email }), {
+        onError: (e: any) => {
+            setSuccess(undefined)
+            const newErrors: typeof errors = {}
+            for (const error of e.message) {
+                for (const constraint of Object.keys(error.constraints)) {
+                    switch (constraint) {
+                        case 'isEmail':
+                            newErrors.email = 'Felaktig e-postadress'
+                            break
+                        case 'UniqueEmail':
+                            newErrors.email = 'E-postadressen är upptagen'
+                            break
                     }
                 }
-                setErrors(newErrors)
-            },
-            onMutate: () => {
-                setSuccess(undefined)
-                setErrors({})
-            },
-            onSuccess: () =>
-                setSuccess(
-                    `Ett meddelande har skickats till ${formData.email} för att verifiera adressen`
-                ),
-        }
-    )
+            }
+            setErrors(newErrors)
+        },
+        onMutate: () => {
+            setSuccess(undefined)
+            setErrors({})
+        },
+        onSuccess: () =>
+            setSuccess(
+                `Ett meddelande har skickats till ${formData.email} för att verifiera adressen`
+            ),
+    })
 
     interface UpdateIUserInfo {
         email?: string

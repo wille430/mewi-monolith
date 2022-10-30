@@ -7,5 +7,4 @@ export enum UserActionTypes {
     LOGIN = 'user/login',
     SIGNUP = 'user/signup',
     LOGOUT = 'user/logout',
-    FETCH = 'user/fetch',
 }

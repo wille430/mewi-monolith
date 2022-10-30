@@ -5,14 +5,14 @@ import { useQuery } from 'react-query'
 import WatcherList from '@/components/WatcherList/WatcherList'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { useUser } from '@/hooks/useUser'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
 const Bevakningar = () => {
     const { data: watchers, refetch: fetchWatchers } = useQuery(
         'user-watchers',
-        () => instance.get('/user-watchers').then((res) => res.data),
+        () => client.get('/user-watchers').then((res) => res.data),
         {
             initialData: [],
             refetchOnMount: false,

@@ -5,7 +5,7 @@ import { motion, useAnimation } from 'framer-motion'
 import type { IListing, IUserLean } from '@wille430/common'
 import { useMutation } from 'react-query'
 import { useAppSelector } from '../../hooks'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 
 export type ListingLikeButtonProps = {
     listing: IListing
@@ -28,10 +28,10 @@ export const ListingLikeButton = ({
         setLiked(user?.likedListings.includes(listing.id) ?? false)
     }, [user?.likedListings, user])
 
-    const likeMutation = useMutation(() => instance.put(`/listings/${listing.id}/like`), {
+    const likeMutation = useMutation(() => client.put(`/listings/${listing.id}/like`), {
         onMutate: () => setLiked(true),
     })
-    const unlikeMutation = useMutation(() => instance.put(`/listings/${listing.id}/unlike`), {
+    const unlikeMutation = useMutation(() => client.put(`/listings/${listing.id}/unlike`), {
         onMutate: () => setLiked(false),
     })
 

@@ -7,7 +7,7 @@ import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { serialize } from '@/lib/serialize'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
-import { withAuth } from '@/lib/auth/withAuth'
+import { withAuth } from '@/backend/lib/session/withAuth'
 
 interface KontoPageProps {
     user: IUser

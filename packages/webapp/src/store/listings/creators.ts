@@ -3,7 +3,7 @@ import type { IListing, IUser } from '@wille430/common'
 import type { ListingSearchFilters } from '@wille430/common'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 
 export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listing: IListing) => {
     return {
@@ -29,7 +29,7 @@ export const likeListing = createAsyncThunk(
     async (args: LikeListingArgs, thunkAPI) => {
         const { listing } = args
         try {
-            await instance.put(`/listings/${listing.id}/like`).catch((e) => {
+            await client.put(`/listings/${listing.id}/like`).catch((e) => {
                 throw e
             })
             return args
@@ -49,7 +49,7 @@ export const unlikeListing = createAsyncThunk(
     async (args: UnlikeListingArgs, thunkAPI) => {
         const { listing } = args
         try {
-            await instance.put(`/listings/${listing.id}/unlike`).catch((e) => {
+            await client.put(`/listings/${listing.id}/unlike`).catch((e) => {
                 throw e
             })
             return args
@@ -63,7 +63,7 @@ export const searchListings = createAsyncThunk(
     ListingsActionTypes.FETCH_SEARCH,
     async (filters: ListingSearchFilters, thunkAPI) => {
         try {
-            return await instance
+            return await client
                 .get<{ hits: IListing[]; totalHits: number }>(
                     '/listings?' + queryString.stringify(filters)
                 )

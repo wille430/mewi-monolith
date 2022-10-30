@@ -37,8 +37,8 @@ $layout-width: theme('screens.lg');
 }
 
 @font-face {
-    font-family: 'Inter';
-    src: local('Inter'), url(../fonts/Inter/Inter-VariableFont_slntwght.ttf);
+    font-family: 'Inter', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
 }
 
 @media (min-width: 640px) {

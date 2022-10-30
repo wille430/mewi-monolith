@@ -1,10 +1,10 @@
 import { Button, TextField } from '@wille430/ui'
-import type { ReactElement} from 'react'
+import type { ReactElement } from 'react'
 import { useState } from 'react'
 import Head from 'next/head'
 import { Formik } from 'formik'
 import Link from 'next/link'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import { Layout } from '@/components/Layout/Layout'
 import { useUser } from '@/hooks/useUser'
 
@@ -30,7 +30,7 @@ const ForgottenPassword = () => {
                     <Formik
                         initialValues={{ email: '' }}
                         onSubmit={({ email }, actions) => {
-                            instance
+                            client
                                 .put('/users/password', { email })
                                 .then(() => {
                                     setSuccess(true)

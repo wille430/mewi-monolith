@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { AxisOptions, UserSerie } from 'react-charts'
 import { Chart } from 'react-charts'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 
 type Series = {
     label: string
@@ -15,7 +15,7 @@ export const ScraperLogs = () => {
     const { data, isLoading } = useQuery(
         'scraperLogs',
         (): Promise<Series[]> =>
-            instance
+            client
                 .post<IScrapingLog[]>('/scrapers/logs', {
                     createdAt: {
                         gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),

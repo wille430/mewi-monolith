@@ -11,7 +11,7 @@ import { GiPauseButton } from 'react-icons/gi'
 import { BsSkipForward } from 'react-icons/bs'
 import { IoMdHammer } from 'react-icons/io'
 import StyledLoader from '../StyledLoader'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import Checkbox from '@/components/Checkbox/Checkbox'
 
 const scraperStatusIconMap: Record<ScraperStatus, JSX.Element> = {
@@ -59,7 +59,7 @@ export const ScraperPanel = () => {
 
     const { data: scraperStatus } = useQuery<Record<ListingOrigin, ScraperStatusReport>>(
         'scrapers',
-        () => instance.get('/scrapers/status').then((res) => res.data),
+        () => client.get('/scrapers/status').then((res) => res.data),
         {
             initialData: initialScraperStatus,
             refetchInterval: 1000,
@@ -69,7 +69,7 @@ export const ScraperPanel = () => {
 
     const startScrapers = useMutation(
         () =>
-            instance
+            client
                 .post('/scrapers/start', {
                     scrapers: Object.keys(selectedScrapers).filter(
                         (key) => selectedScrapers[key] === true
@@ -218,7 +218,7 @@ export const DeleteButton = ({
     const mutation = useMutation(
         async () =>
             // Delete listings from selected origins
-            await instance.delete('/listings', {
+            await client.delete('/listings', {
                 data: {
                     origin: selected,
                 },

@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { EditRolePanel } from './../../components/EditRolePanel/EditRolePanel'
 import { ScraperPanel } from './../../components/ScraperPanel/ScraperPanel'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { withAuth } from '@/lib/auth/withAuth'
+import { withAuth } from '@/backend/lib/session/withAuth'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {

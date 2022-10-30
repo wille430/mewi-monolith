@@ -7,14 +7,14 @@ import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
 
     const { data, refetch, isLoading } = useQuery(
         'users',
-        () => instance.get<IUser[]>(`/users?email=${email}`).then((res) => res.data),
+        () => client.get<IUser[]>(`/users?email=${email}`).then((res) => res.data),
         {
             refetchOnMount: false,
             refetchOnReconnect: false,
@@ -71,7 +71,7 @@ export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
 
     const updateIUserMutation = useMutation(
         ({ user, newRole }: { user: IUser; newRole: Role }) =>
-            instance.patch('/users/' + user.id, {
+            client.patch('/users/' + user.id, {
                 roles: [...user.roles, newRole],
             }),
         {
@@ -89,7 +89,7 @@ export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
 
     const deleteIUserRoleMutation = useMutation(
         ({ user, roleToDelete }: { user: IUser; roleToDelete: Role }) =>
-            instance.patch('/users/' + user.id, {
+            client.patch('/users/' + user.id, {
                 roles: user.roles.filter((x) => x != roleToDelete),
             }),
         {

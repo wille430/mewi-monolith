@@ -8,13 +8,13 @@ import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
 import { ListingRow } from '@/components/ListingRow/ListingRow'
 import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
 import { useUser } from '@/hooks/useUser'
-import { instance } from '@/lib/axios'
+import { client } from '@/lib/client'
 import StyledLoader from '@/components/StyledLoader'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 
 const Gillade = () => {
     const { data: listings, isLoading } = useQuery('liked-listings', () =>
-        instance.get<IListing[]>('/users/me/likes').then((res) => res.data)
+        client.get<IListing[]>('/users/me/likes').then((res) => res.data)
     )
 
     useUser({ redirectTo: ON_UNAUTHENTICATED_GOTO })
