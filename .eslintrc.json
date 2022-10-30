@@ -38,7 +38,7 @@
                 "singleReturnOnly": true
             }
         ],
-        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/consistent-type-imports": "off",
         "no-case-declarations": "off"
     },
     "overrides": [
