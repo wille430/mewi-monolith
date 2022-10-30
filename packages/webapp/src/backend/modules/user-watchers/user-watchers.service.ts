@@ -91,17 +91,23 @@ export class UserWatchersService {
 
         await this.userWatchersRepository.findByIdAndUpdate(id, {
             $set: {
-                watcher: watcher,
+                watcher: watcher.id,
             },
         })
 
-        await oldUserWatcher?.populate('watcher')
+        console.log({
+            oldUserWatcher,
+            watcher,
+            subs: await this.watchersService.subscriberCount(watcher.id),
+        })
+
+        const oldWatcherId = (oldUserWatcher.watcher as mongoose.Types.ObjectId).toString()
         if (
             oldUserWatcher &&
             watcher &&
-            (await this.watchersService.subscriberCount(watcher.id)) === 0
+            (await this.watchersService.subscriberCount(oldWatcherId)) === 0
         ) {
-            await this.watchersService.remove(watcher.id)
+            await this.watchersService.remove(oldWatcherId)
         }
 
         return this.findOne(id, userId)

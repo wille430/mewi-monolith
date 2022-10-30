@@ -1,21 +1,29 @@
 import type { Document } from 'mongoose'
-import type { Currency } from '@wille430/common'
+import { Currency } from '@wille430/common'
 import { Category, ListingOrigin } from '@wille430/common'
-import type { Ref } from '@typegoose/typegoose'
 import { getModelForClass, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document
 
 export class Price {
-    @prop()
+    @prop({
+        required: true,
+    })
     value!: number
 
-    @prop()
+    @prop({
+        enum: Currency,
+        type: String,
+        required: true,
+    })
     currency!: Currency
 }
 
 export class Parameter {
+    @prop()
     label!: string
+
+    @prop()
     value!: string
 }
 
@@ -68,7 +76,7 @@ export class Listing {
     imageUrl!: string[]
 
     @prop()
-    price!: Price
+    price?: Price
 
     @prop(String)
     region?: string
@@ -76,7 +84,7 @@ export class Listing {
     @prop({
         _id: false,
     })
-    parameters?: Ref<Parameter[]>
+    parameters?: Parameter[]
 
     @prop({
         type: String,

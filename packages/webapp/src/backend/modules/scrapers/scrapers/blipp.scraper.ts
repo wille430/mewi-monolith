@@ -1,12 +1,13 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { NextScraper } from '../classes/NextScraper'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingsRepository } from '../../listings/listings.repository'
 
+@autoInjectable()
 export class BlippScraper extends NextScraper {
     baseUrl = 'https://blipp.se/'
     origin: ListingOrigin = ListingOrigin.Blipp

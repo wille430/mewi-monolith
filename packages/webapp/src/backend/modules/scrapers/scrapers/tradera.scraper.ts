@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
@@ -20,6 +20,7 @@ interface TraderaCategory {
     }[]
 }
 
+@autoInjectable()
 export class TraderaScraper extends ListingScraper {
     currentCategoryIndex = 0
     categories: TraderaCategory[] | undefined

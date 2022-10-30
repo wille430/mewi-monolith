@@ -18,6 +18,10 @@ export abstract class MockModel<T> {
         return [this.entityStub]
     }
 
+    async create(): Promise<T> {
+        return this.entityStub
+    }
+
     async save(): Promise<T> {
         return this.entityStub
     }

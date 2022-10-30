@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker'
-import { ConfigService } from '@nestjs/config'
-import { Test } from '@nestjs/testing'
 import { Role } from '@wille430/common'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
 import { userPayloadStub } from './stubs/user-payload.stub'
 import { userStub } from './stubs/user.stub'
 import type ChangePasswordDto from '../dto/change-password.dto'
@@ -9,11 +9,10 @@ import type { CreateUserDto } from '../dto/create-user.dto'
 import type { UpdateEmailDto } from '../dto/update-email.dto'
 import type { UpdateUserDto } from '../dto/update-user.dto'
 import { UsersController } from '../users.controller'
-import { UsersRepository } from '../users.repository'
 import { UsersService } from '../users.service'
-import type { User } from '@/schemas/user.schema'
-import type { Listing } from '@/schemas/listing.schema'
-import type { UserPayload } from '@/auth/jwt-strategy'
+import { User } from '../../schemas/user.schema'
+import { Listing } from '../../schemas/listing.schema'
+import { UserPayload } from '../../common/types/UserPayload'
 
 jest.mock('../users.service')
 jest.mock('../users.repository')
@@ -23,14 +22,8 @@ describe('UsersController', () => {
     let usersService: UsersService
 
     beforeEach(async () => {
-        const moduleRef = await Test.createTestingModule({
-            imports: [],
-            controllers: [UsersController],
-            providers: [UsersService, ConfigService, UsersRepository],
-        }).compile()
-
-        usersController = moduleRef.get<UsersController>(UsersController)
-        usersService = moduleRef.get<UsersService>(UsersService)
+        usersController = container.resolve(UsersController)
+        usersService = container.resolve(UsersService)
         jest.clearAllMocks()
     })
 
@@ -39,7 +32,7 @@ describe('UsersController', () => {
             let user: User
 
             beforeEach(async () => {
-                user = (await usersController.findOne(userStub().id))!
+                user = (await usersController.findOne(userStub().id)) as User
             })
 
             it('then it should call usersService', () => {
@@ -57,7 +50,7 @@ describe('UsersController', () => {
             let user: User
 
             beforeEach(async () => {
-                user = (await usersController.getMe(userPayloadStub()))!
+                user = (await usersController.getMe(userPayloadStub())) as User
             })
 
             it('then it should call usersService', () => {
@@ -139,7 +132,7 @@ describe('UsersController', () => {
                     email: faker.internet.email(),
                     roles: [Role.ADMIN],
                 }
-                user = (await usersController.update(userStub().id, updateUserDto))!
+                user = (await usersController.update(userStub().id, updateUserDto)) as User
             })
 
             it('then it should call usersService', () => {
@@ -181,7 +174,7 @@ describe('UsersController', () => {
                         newEmail: userStub().email,
                     }
                     userPayload = userPayloadStub()
-                    await usersController.updateEmail(userPayload, updateEmailDto)
+                    await usersController.updateEmail(updateEmailDto, userPayload)
                 })
 
                 it('then it should have called usersService', () => {
@@ -201,7 +194,7 @@ describe('UsersController', () => {
                         token: faker.random.alphaNumeric(32),
                     }
                     userPayload = userPayloadStub()
-                    await usersController.updateEmail(userPayload, updateEmailDto)
+                    await usersController.updateEmail(updateEmailDto, userPayload)
                 })
 
                 it('then it should have called usersService', () => {

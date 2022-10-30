@@ -1,6 +1,6 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { ListingOrigin, Currency } from '@wille430/common'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import type { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
@@ -10,6 +10,7 @@ import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingsRepository } from '../../listings/listings.repository'
 import type { Listing } from '../../schemas/listing.schema'
 
+@autoInjectable()
 export class BlocketScraper extends ListingScraper {
     baseUrl = 'https://www.blocket.se/'
     origin: ListingOrigin = ListingOrigin.Blocket

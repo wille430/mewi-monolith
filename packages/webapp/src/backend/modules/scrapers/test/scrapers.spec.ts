@@ -1,16 +1,15 @@
 import faker from '@faker-js/faker'
-import { ConfigModule } from '@nestjs/config'
-import { Test } from '@nestjs/testing'
 import { Category, ScraperStatus, ScraperTrigger } from '@wille430/common'
-import * as crypto from 'crypto'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
+import crypto from 'crypto'
 import type { BaseListingScraper } from '../classes/BaseListingScraper'
 import Scrapers from '../scrapers'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import type { ShpockScraper } from '../scrapers/shpock.scraper'
-import type { ScrapingLog } from '@/schemas/scraping-log.schema'
-import { listingStub } from '@/listings/test/stubs/listing.stub'
-import { ListingsRepository } from '@/listings/listings.repository'
-import scraperConfig from '@/config/scraper.config'
+import { ListingsRepository } from '../../listings/listings.repository'
+import { listingStub } from '../../listings/test/stubs/listing.stub'
+import { ScrapingLog } from '../../schemas/scraping-log.schema'
 
 jest.mock('../../listings/listings.repository')
 jest.mock('../scraping-logs.repository')
@@ -23,20 +22,9 @@ describe('Scrapers', () => {
         let scraper: BaseListingScraper
 
         beforeEach(async () => {
-            const moduleRef = await Test.createTestingModule({
-                imports: [
-                    ConfigModule.forRoot({
-                        load: [scraperConfig],
-                    }),
-                ],
-                providers: [Scraper, ListingsRepository, ScrapingLogsRepository],
-            }).compile()
-
-            listingsRepository = await moduleRef.get<ListingsRepository>(ListingsRepository)
-            scrapingLogsRepository = await moduleRef.get<ScrapingLogsRepository>(
-                ScrapingLogsRepository
-            )
-            scraper = await moduleRef.get<BaseListingScraper>(Scraper)
+            listingsRepository = container.resolve(ListingsRepository)
+            scrapingLogsRepository = container.resolve(ScrapingLogsRepository)
+            scraper = container.resolve(Scraper as any)
             scraper.verbose = false
 
             jest.clearAllMocks()
@@ -59,7 +47,7 @@ describe('Scrapers', () => {
                 let limit: number | undefined
 
                 beforeEach(async () => {
-                    limit = scraper.getConfig<number>('limit')
+                    limit = scraper.config.limit
                 })
 
                 it('then it should return a number', () => {
@@ -72,7 +60,6 @@ describe('Scrapers', () => {
             describe('when start is called', () => {
                 beforeEach(async () => {
                     jest.spyOn(scraper, 'initialize')
-                    jest.spyOn(scraper, 'getConfig')
                     jest.spyOn(scraper, 'deleteOldListings')
                     jest.spyOn(scraper, 'reset')
                     await scraper.start()
@@ -80,10 +67,6 @@ describe('Scrapers', () => {
 
                 it('then initialize should be called', () => {
                     expect(scraper.initialize).toHaveBeenCalledTimes(1)
-                })
-
-                it('then config should be called', () => {
-                    expect(scraper.getConfig).toHaveBeenCalledWith('limit')
                 })
 
                 it('then entryPoint.getMostRecetLog should be called', () => {
@@ -155,7 +138,7 @@ describe('Scrapers', () => {
                     expect(listingsRepository.deleteMany).toHaveBeenCalledWith(
                         expect.objectContaining({
                             date: {
-                                lte: new Date(scraper.deleteOlderThan),
+                                lte: new Date(scraper.config.deleteOlderThan),
                             },
                         })
                     )

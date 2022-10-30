@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
-import { scrapeResultStub } from '@/scrapers/test/stubs/scrape-result.stub'
-import { scrapingLogStub } from '@/scrapers/test/stubs/scraping-log.stub'
+import { scrapeResultStub } from '../../test/stubs/scrape-result.stub'
+import { scrapingLogStub } from '../../test/stubs/scraping-log.stub'
 
 export const BaseEntryPoint = jest.fn().mockReturnValue({
     getMostRecentLog: jest.fn().mockResolvedValue(scrapingLogStub()),

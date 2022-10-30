@@ -10,7 +10,6 @@
     },
     "include": [
         "src/**/*",
-        "node_modules",
         "**/test/**/*",
         "**/__mocks__/**/*",
         "./src/**/*.spec.ts",

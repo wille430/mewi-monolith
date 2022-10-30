@@ -6,9 +6,11 @@ import { getSession } from '../lib/session/getSession'
 export const SessionGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
         const session = await getSession(req, res)
-        const user = session.user
+        let user = session.user
 
-        req.session = session
+        if (!user && process.env.NODE_ENV !== 'production') {
+            user = req.session?.user
+        }
 
         if (!user) {
             throw new UnauthorizedException('Not logged in')

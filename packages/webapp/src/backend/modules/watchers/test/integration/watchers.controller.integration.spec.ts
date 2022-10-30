@@ -1,39 +1,34 @@
 import faker from '@faker-js/faker'
-import type { INestApplication } from '@nestjs/common'
 import type { Collection, Connection } from 'mongoose'
 import mongoose from 'mongoose'
-import * as request from 'supertest'
+import request from 'supertest'
+import { createHandler } from 'next-api-decorators'
+import { Server } from 'http'
 import { watcherStub } from '../stubs/watcher.stub'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { createJwtAuthGuard } from '@/auth/test/support/jwt-auth.guard'
-import { initTestModule } from '@/common/test/initTestModule'
-import { transformDate } from '@/listings/helpers/transform-dates'
-import type { User } from '@/schemas/user.schema'
-import type { Watcher } from '@/schemas/watcher.schema'
-import { adminUserPayloadStub } from '@/users/test/stubs/admin-user-payload.stub'
-import { adminStub } from '@/users/test/stubs/admin.stub'
-import type { CreateWatcherDto } from '@/watchers/dto/create-watcher.dto'
-import type { FindAllWatchersDto } from '@/watchers/dto/find-all-watchers.dto'
-import type { UpdateWatcherDto } from '@/watchers/dto/update-watcher.dto'
+import { CreateWatcherDto } from '../../dto/create-watcher.dto'
+import { FindAllWatchersDto } from '../../dto/find-all-watchers.dto'
+import { UpdateWatcherDto } from '../../dto/update-watcher.dto'
+import { WatchersController } from '../../watchers.controller'
+import { Watcher } from '@/backend/modules/schemas/watcher.schema'
+import { User } from '@/backend/modules/schemas/user.schema'
+import { dbConnection } from '@/lib/dbConnection'
+import { createTestClient } from '@/backend/modules/common/test/createTestClient'
+import { adminUserPayloadStub } from '@/backend/modules/users/test/stubs/admin-user-payload.stub'
+import { adminStub } from '@/backend/modules/users/test/stubs/admin.stub'
+import { transformDate } from '@/backend/modules/listings/helpers/transform-dates'
 
 describe('WatchersController', () => {
-    let dbConnection: Connection
+    let dbConn: Connection
     let watchersCollection: Collection<Watcher>
     let usersCollection: Collection<User>
-    let httpServer: any
-    let app: INestApplication
+    let httpServer: Server
 
     beforeEach(async () => {
-        const testModule = await initTestModule((builder) => {
-            builder.overrideGuard(JwtAuthGuard).useClass(createJwtAuthGuard(adminUserPayloadStub()))
-        })
+        dbConn = await dbConnection()
+        httpServer = createTestClient(createHandler(WatchersController), adminUserPayloadStub())
 
-        dbConnection = testModule.dbConnection
-        app = testModule.app
-        httpServer = testModule.httpServer
-
-        watchersCollection = dbConnection.collection('watchers')
-        usersCollection = dbConnection.collection('users')
+        watchersCollection = dbConn.collection('watchers')
+        usersCollection = dbConn.collection('users')
     })
 
     beforeEach(async () => {
@@ -42,16 +37,16 @@ describe('WatchersController', () => {
         await usersCollection.insertOne(adminStub())
     })
 
-    afterAll(async () => {
-        await app.close()
+    afterAll(() => {
+        httpServer.close()
     })
 
-    describe('POST /watchers', () => {
+    describe('POST /api/watchers', () => {
         it('should return watcher and create it', async () => {
             const dto: CreateWatcherDto = {
                 metadata: watcherStub().metadata,
             }
-            const response = await request(httpServer).post('/watchers').send(dto)
+            const response = await request(httpServer).post('/api/watchers').send(dto)
 
             expect(response.status).toBe(201)
             expect(response.body).toMatchObject(dto)
@@ -63,12 +58,12 @@ describe('WatchersController', () => {
         })
     })
 
-    describe('GET /watchers', () => {
+    describe('GET /api/watchers', () => {
         describe('without filters', () => {
             it('it should return watchers', async () => {
                 await watchersCollection.insertOne(watcherStub())
 
-                const response = await request(httpServer).get('/watchers')
+                const response = await request(httpServer).get('/api/watchers')
 
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject([transformDate(watcherStub())])
@@ -90,7 +85,7 @@ describe('WatchersController', () => {
             it('it should return watchers', async () => {
                 await watchersCollection.insertOne(watcherStub())
 
-                const response = await request(httpServer).get('/watchers')
+                const response = await request(httpServer).get('/api/watchers')
 
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject([transformDate(watcherStub())])
@@ -98,18 +93,18 @@ describe('WatchersController', () => {
         })
     })
 
-    describe('GET /watchers/:id', () => {
+    describe('GET /api/watchers/:id', () => {
         it('should return watcher', async () => {
             await watchersCollection.insertOne(watcherStub())
 
-            const response = await request(httpServer).get('/watchers/' + watcherStub().id)
+            const response = await request(httpServer).get('/api/watchers/' + watcherStub().id)
 
             expect(response.status).toBe(200)
             expect(response.body).toMatchObject(transformDate(watcherStub()))
         })
     })
 
-    describe('PUT /watchers/:id', () => {
+    describe('PUT /api/watchers/:id', () => {
         it('should return watcher and update document', async () => {
             await watchersCollection.insertOne(watcherStub())
 
@@ -121,13 +116,14 @@ describe('WatchersController', () => {
             }
 
             const response = await request(httpServer)
-                .put('/watchers/' + watcherStub().id)
+                .put('/api/watchers/' + watcherStub().id)
                 .send(dto)
 
             expect(response.status).toBe(200)
             expect(response.body).toMatchObject({
                 ...transformDate(watcherStub()),
                 ...dto,
+                updatedAt: expect.any(String),
             })
 
             const watcher = await watchersCollection.findOne({
@@ -137,11 +133,11 @@ describe('WatchersController', () => {
         })
     })
 
-    describe('DELETE /watchers/:id', () => {
+    describe('DELETE /api/watchers/:id', () => {
         it('it should delete watcher', async () => {
             await watchersCollection.insertOne(watcherStub())
 
-            const response = await request(httpServer).del('/watchers/' + watcherStub().id)
+            const response = await request(httpServer).del('/api/watchers/' + watcherStub().id)
 
             expect(response.status).toBe(200)
 

@@ -1,8 +1,7 @@
-import type { ListingSearchFilters as ListingFilters } from '@wille430/common'
-import type { ChangeEvent} from 'react'
+import { ListingSearchFilters as ListingFilters } from '@wille430/common'
+import type { ChangeEvent } from 'react'
 import React, { useRef } from 'react'
 import queryString from 'query-string'
-import { keys } from 'ts-transformer-keys'
 import Router, { useRouter } from 'next/router'
 import { Category, ListingOrigin } from '@wille430/common'
 import isEqual from 'lodash/isEqual'
@@ -206,7 +205,7 @@ export const parseSearchParams = (
     excludeInParams: Array<keyof ListingFilters> = []
 ): ListingFilters => {
     const unvalidatedFilters: Partial<ListingFilters> = omit(
-        pick(query, ...keys<ListingFilters>()),
+        pick(query, Object.keys(ListingFilters)),
         excludeInParams
     )
 

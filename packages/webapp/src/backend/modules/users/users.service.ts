@@ -2,7 +2,7 @@ import { LoginStrategy } from '@wille430/common'
 import { autoInjectable, inject } from 'tsyringe'
 import bcrypt from 'bcrypt'
 import { BadRequestException, NotFoundException } from 'next-api-decorators'
-import * as crypto from 'crypto'
+import crypto from 'crypto'
 import type { CreateUserDto } from './dto/create-user.dto'
 import type { UpdateUserDto } from './dto/update-user.dto'
 import type { RequestEmailUpdateDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
@@ -14,6 +14,7 @@ import type {
     ChangePasswordWithToken,
 } from './dto/change-password.dto'
 import type { User } from '../schemas/user.schema'
+import { Listing } from '../schemas/listing.schema'
 
 @autoInjectable()
 export class UsersService {
@@ -228,6 +229,6 @@ export class UsersService {
         if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
 
         await user.populate('likedListings')
-        return user.likedListings
+        return user.likedListings as Listing[]
     }
 }

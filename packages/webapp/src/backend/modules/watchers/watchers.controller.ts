@@ -1,5 +1,15 @@
 import { Role } from '@wille430/common'
-import { Body, Delete, Get, Param, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
+import {
+    Body,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Put,
+    Query,
+    ValidationPipe,
+} from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { WatchersService } from './watchers.service'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
@@ -12,6 +22,7 @@ export class WatchersController {
     constructor(@inject(WatchersService) private readonly watchersService: WatchersService) {}
 
     @Post()
+    @HttpCode(201)
     @Roles(Role.ADMIN)
     async create(@Body(ValidationPipe) createWatcherDto: CreateWatcherDto) {
         console.log(createWatcherDto)
@@ -46,7 +57,8 @@ export class WatchersController {
 
     @Delete('/:id')
     @Roles(Role.ADMIN)
-    remove(@Param('id') id: string) {
-        return this.watchersService.remove(id)
+    async remove(@Param('id') id: string) {
+        await this.watchersService.remove(id)
+        return 'OK'
     }
 }

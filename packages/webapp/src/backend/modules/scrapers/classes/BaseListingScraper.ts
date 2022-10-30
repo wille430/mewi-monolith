@@ -1,7 +1,7 @@
 import type { ListingOrigin } from '@wille430/common'
 import { ScraperStatus, stringSimilarity, ScraperTrigger, Category } from '@wille430/common'
 import type { FilterQuery } from 'mongoose'
-import * as crypto from 'crypto'
+import crypto from 'crypto'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
 import type { BaseEntryPoint } from './BaseEntryPoint'
 import type { ScrapedListing } from './types/ScrapedListing'

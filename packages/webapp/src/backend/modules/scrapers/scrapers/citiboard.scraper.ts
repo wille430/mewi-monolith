@@ -1,6 +1,6 @@
 import { Category, Currency, ListingOrigin, safeToDate } from '@wille430/common'
 import type { AxiosResponse } from 'axios'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
@@ -8,6 +8,7 @@ import { ListingScraper } from '../classes/ListingScraper'
 import { ListingsRepository } from '../../listings/listings.repository'
 
 // TODO: find maximum offset
+@autoInjectable()
 export class CitiboardScraper extends ListingScraper {
     readonly defaultScrapeUrl = 'https://api42.citiboard.se/cb/annonslista'
     limit = 60

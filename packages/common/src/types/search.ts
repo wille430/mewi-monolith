@@ -1,9 +1,9 @@
-import { IWatcher, Category, ListingOrigin } from '../schemas'
-import { ListingSort } from './listingSort'
+import type { ListingSort } from './listingSort'
+import type { IWatcher, Category, ListingOrigin } from '../schemas'
 
 type Metadata = IWatcher['metadata']
 
-export interface ListingSearchFilters extends Partial<Metadata> {
+export class ListingSearchFilters implements Partial<Metadata> {
     keyword?: string
     region?: string
     categories?: Category[]

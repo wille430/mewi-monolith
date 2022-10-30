@@ -40,7 +40,7 @@ export class User {
     loginStrategy!: LoginStrategy
 
     @prop({
-        type: PasswordReset,
+        _id: false,
     })
     passwordReset?: PasswordReset
 

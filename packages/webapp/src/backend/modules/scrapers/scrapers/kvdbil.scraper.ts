@@ -1,12 +1,13 @@
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import type { AxiosResponse } from 'axios'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { ListingsRepository } from '../../listings/listings.repository'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
+@autoInjectable()
 export class KvdbilScraper extends ListingScraper {
     limit = 20
     origin = ListingOrigin.Kvdbil

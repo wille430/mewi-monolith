@@ -1,5 +1,15 @@
 import { Role } from '@wille430/common'
-import { Post, Put, Get, Body, ValidationPipe, Param, Delete, Query } from 'next-api-decorators'
+import {
+    Post,
+    Put,
+    Get,
+    Body,
+    ValidationPipe,
+    Param,
+    Delete,
+    Query,
+    HttpCode,
+} from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { ListingsService } from './listings.service'
@@ -11,14 +21,13 @@ import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import type { ListingDocument } from '../schemas/listing.schema'
 import { Roles } from '@/backend/middlewares/Roles'
-import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 
 @autoInjectable()
-@SessionGuard()
 export class ListingsController {
     constructor(@inject(ListingsService) private readonly listingsService: ListingsService) {}
 
     @Post()
+    @HttpCode(201)
     @Roles(Role.ADMIN)
     create(@Body(ValidationPipe) createListingDto: CreateListingDto) {
         return this.listingsService.create(createListingDto)
@@ -37,7 +46,7 @@ export class ListingsController {
     }
 
     // TODO: CACHE?
-    @Get('featured')
+    @Get('/featured')
     @Public()
     async featured() {
         // let cachedListings: IListing[] | undefined = await this.cacheManager.get('featured')
@@ -52,38 +61,41 @@ export class ListingsController {
         return cachedListings
     }
 
-    @Get('autocomplete/:keyword')
+    @Get('/autocomplete/:keyword')
     @Public()
     async autocomplete(@Param('keyword') keyword: string) {
         return this.listingsService.autocomplete(keyword)
     }
 
-    @Get(':id')
+    @Get('/:id')
     @Public()
     findOne(@Param('id') id: string) {
         return this.listingsService.findOne(id)
     }
 
-    @Put(':id')
+    @Put('/:id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body(ValidationPipe) updateListingDto: UpdateListingDto) {
         return this.listingsService.update(id, updateListingDto)
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @Roles(Role.ADMIN)
-    remove(@Param('id') id: string) {
-        return this.listingsService.remove(id)
+    async remove(@Param('id') id: string) {
+        await this.listingsService.remove(id)
+        return 'OK'
     }
 
-    @Put(':id/like')
+    @Put('/:id/like')
     @Roles(Role.USER)
-    likeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
-        return this.listingsService.like(user.userId, id)
+    async likeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
+        await this.listingsService.like(user.userId, id)
+        return 'OK'
     }
-    @Put(':id/unlike')
+    @Put('/:id/unlike')
     @Roles(Role.USER)
-    unlikeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
-        return this.listingsService.unlike(user.userId, id)
+    async unlikeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
+        await this.listingsService.unlike(user.userId, id)
+        return 'OK'
     }
 }

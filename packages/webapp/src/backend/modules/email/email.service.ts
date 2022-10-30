@@ -1,7 +1,7 @@
-import * as nodeMailer from 'nodemailer'
+import nodeMailer from 'nodemailer'
 import type { TestAccount } from 'nodemailer'
 import { autoInjectable } from 'tsyringe'
-import * as path from 'path'
+import path from 'path'
 
 @autoInjectable()
 export class EmailService {

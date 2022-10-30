@@ -1,12 +1,13 @@
 import type { ElementHandle } from 'puppeteer'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingsRepository } from '../../listings/listings.repository'
 
+@autoInjectable()
 export class BytbilScraper extends ListingWebCrawler {
     baseUrl = 'https://bytbil.com/'
     defaultScrapeUrl = 'https://bytbil.com/'

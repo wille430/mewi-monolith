@@ -18,7 +18,7 @@ export class FindAllListingsDto {
     @IsNumber()
     @Transform(({ value }) => Number.parseInt(value))
     @Min(0)
-    limit = DEFAULT_LIMIT
+    limit? = DEFAULT_LIMIT
 
     @IsOptional()
     @IsString()

@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker'
-import { ConfigService } from '@nestjs/config'
-import { Test } from '@nestjs/testing'
-import * as bcrypt from 'bcryptjs'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
+import bcrypt from 'bcrypt'
 import { userStub } from './stubs/user.stub'
 import type {
     ChangePasswordAuth,
@@ -14,10 +14,9 @@ import type { UpdateUserDto } from '../dto/update-user.dto'
 import { UsersRepository } from '../users.repository'
 import { UsersService } from '../users.service'
 import type { AuthorizedUpdateEmailDto, RequestEmailUpdateDto } from '../dto/update-email.dto'
-import type { User } from '@/schemas/user.schema'
-import { EmailService } from '@/email/email.service'
-import type { Listing } from '@/schemas/listing.schema'
-import { listingStub } from '@/listings/test/stubs/listing.stub'
+import { User } from '../../schemas/user.schema'
+import { listingStub } from '../../listings/test/stubs/listing.stub'
+import { Listing } from '../../schemas/listing.schema'
 
 jest.mock('../users.repository')
 
@@ -26,12 +25,8 @@ describe('UsersService', () => {
     let usersRepository: UsersRepository
 
     beforeEach(async () => {
-        const moduleRef = await Test.createTestingModule({
-            providers: [EmailService, ConfigService, UsersRepository, UsersService],
-        }).compile()
-
-        usersService = moduleRef.get<UsersService>(UsersService)
-        usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
+        usersService = container.resolve(UsersService)
+        usersRepository = container.resolve(UsersRepository)
 
         jest.clearAllMocks()
     })

@@ -1,4 +1,4 @@
-import type { RunPipelineEvent } from '@/scrapers/events/run-pipeline.event'
+import { RunPipelineEvent } from '../../events/run-pipeline.event'
 
 export const runPipelineEventStub = (): RunPipelineEvent => ({
     count: 1,

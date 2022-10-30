@@ -1,8 +1,8 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
-import * as puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer'
 import { Category, Currency, ListingOrigin } from '@wille430/common'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { ListingScraper } from '../classes/ListingScraper'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { getNextDataEval } from '../helpers/getNextData'
@@ -10,6 +10,7 @@ import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingsRepository } from '../../listings/listings.repository'
 
+@autoInjectable()
 export class ShpockScraper extends ListingScraper {
     limit = 25
     _token: undefined | string

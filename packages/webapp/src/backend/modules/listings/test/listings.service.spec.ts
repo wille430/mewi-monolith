@@ -1,15 +1,14 @@
-import { ConfigService } from '@nestjs/config'
-import { Test } from '@nestjs/testing'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
+import { userStub } from '@mewi/test-utils'
 import { listingStub } from './stubs/listing.stub'
 import type { DeleteListingsDto } from '../dto/delete-listings.dto'
 import type { FindAllListingsDto } from '../dto/find-all-listing.dto'
 import type { UpdateListingDto } from '../dto/update-listing.dto'
 import { ListingsRepository } from '../listings.repository'
 import { ListingsService } from '../listings.service'
-import { EmailService } from '@/email/email.service'
-import type { Listing } from '@/schemas/listing.schema'
-import { userStub } from '@/users/test/stubs/user.stub'
-import { UsersRepository } from '@/users/users.repository'
+import { UsersRepository } from '../../users/users.repository'
+import { Listing } from '../../schemas/listing.schema'
 
 jest.mock('../listings.repository')
 jest.mock('../../users/users.repository')
@@ -20,19 +19,9 @@ describe('ListingsService', () => {
     let usersRepository: UsersRepository
 
     beforeEach(async () => {
-        const moduleRef = await Test.createTestingModule({
-            providers: [
-                ListingsService,
-                EmailService,
-                ConfigService,
-                ListingsRepository,
-                UsersRepository,
-            ],
-        }).compile()
-
-        listingsService = moduleRef.get<ListingsService>(ListingsService)
-        listingsRepository = moduleRef.get<ListingsRepository>(ListingsRepository)
-        usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
+        listingsService = container.resolve(ListingsService)
+        listingsRepository = container.resolve(ListingsRepository)
+        usersRepository = container.resolve(UsersRepository)
 
         jest.clearAllMocks()
     })
@@ -202,6 +191,7 @@ describe('ListingsService', () => {
             beforeEach(async () => {
                 dto = {
                     auction: listingStub().isAuction,
+                    limit: 20,
                 }
                 res = await listingsService.deleteMany(dto)
             })

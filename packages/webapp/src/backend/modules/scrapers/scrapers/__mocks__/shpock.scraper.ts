@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
 import { ListingOrigin } from '@wille430/common'
-import { ListingScraper } from '@/scrapers/classes/__mocks__/ListingScraper'
+import { ListingScraper } from '../../classes/__mocks__/ListingScraper'
 
 export const ShpockScraper = jest.fn().mockReturnValue({
     ...new ListingScraper(),

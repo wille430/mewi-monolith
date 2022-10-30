@@ -1,5 +1,5 @@
 import { Role } from '@wille430/common'
-import { Body, Delete, Get, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
+import { Body, Delete, Get, HttpCode, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
@@ -16,6 +16,7 @@ export class MyWatchersController {
     ) {}
 
     @Post()
+    @HttpCode(201)
     @SessionGuard()
     create(
         @Body(ValidationPipe) createUserWatcherDto: CreateUserWatcherDto,
@@ -36,7 +37,7 @@ export class MyWatchersController {
         return this.userWatchersService.findOne(id, user.userId)
     }
 
-    @Put(':id')
+    @Put('/:id')
     @SessionGuard()
     update(
         @Param('id') id: string,

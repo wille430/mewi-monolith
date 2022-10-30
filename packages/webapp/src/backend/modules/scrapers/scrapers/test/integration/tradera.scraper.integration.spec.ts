@@ -1,24 +1,12 @@
-import { ConfigService } from '@nestjs/config'
-import type { TestingModule } from '@nestjs/testing'
-import { Test } from '@nestjs/testing'
-import { ScrapingLogsRepository } from '../../../scraping-logs.repository'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
 import { TraderaScraper } from '../../tradera.scraper'
-import { ListingsRepository } from '@/listings/listings.repository'
-import { AppModule } from '@/app.module'
 
 describe('Tradera Scraper', () => {
     let scraper: TraderaScraper
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile()
-
-        scraper = new TraderaScraper(
-            module.get<ListingsRepository>(ListingsRepository),
-            module.get<ScrapingLogsRepository>(ScrapingLogsRepository),
-            module.get<ConfigService>(ConfigService)
-        )
+        scraper = container.resolve(TraderaScraper)
         scraper.limit = 10
     })
 

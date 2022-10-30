@@ -1,25 +1,13 @@
-import type { TestingModule } from '@nestjs/testing'
-import { Test } from '@nestjs/testing'
-import { ConfigService } from '@nestjs/config'
-import * as puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
 import { BytbilScraper } from '../../bytbil.scraper'
-import { ScrapingLogsRepository } from '../../../scraping-logs.repository'
-import { ListingsRepository } from '@/listings/listings.repository'
-import { AppModule } from '@/app.module'
 
 describe('Bytbil Scraper', () => {
     let scraper: BytbilScraper
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile()
-
-        scraper = new BytbilScraper(
-            module.get<ListingsRepository>(ListingsRepository),
-            module.get<ScrapingLogsRepository>(ScrapingLogsRepository),
-            module.get<ConfigService>(ConfigService)
-        )
+        scraper = container.resolve(BytbilScraper)
         scraper.limit = 10
     })
 

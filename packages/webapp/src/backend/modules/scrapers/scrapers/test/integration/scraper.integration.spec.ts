@@ -1,32 +1,20 @@
-import type { TestingModule } from '@nestjs/testing'
-import { Test } from '@nestjs/testing'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { ListingOrigin } from '@wille430/common'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
 import { validateListingTest } from '../validate-listing.spec'
-import { ListingsRepository } from '@/listings/listings.repository'
-import { ScrapingLogsRepository } from '@/scrapers/scraping-logs.repository'
-import type { BaseListingScraper } from '@/scrapers/classes/BaseListingScraper'
-import type { BaseEntryPoint } from '@/scrapers/classes/BaseEntryPoint'
-import { AppModule } from '@/app.module'
-import { ScrapersService } from '@/scrapers/scrapers.service'
+import { ScrapersService } from '../../../scrapers.service'
+import { BaseListingScraper } from '../../../classes/BaseListingScraper'
+import { BaseEntryPoint } from '../../../classes/BaseEntryPoint'
 
 const testScrapers = Object.values(ListingOrigin).map((x) => [x])
 
 describe('Scraper Integration', () => {
     describe.each(testScrapers)(`%s`, (origin) => {
-        let listingsRepository: ListingsRepository
-        let scrapingLogsRepository: ScrapingLogsRepository
         let scraper: BaseListingScraper
 
         beforeAll(async () => {
-            const module: TestingModule = await Test.createTestingModule({
-                imports: [AppModule],
-            }).compile()
-
-            listingsRepository = module.get<ListingsRepository>(ListingsRepository)
-            scrapingLogsRepository = module.get<ScrapingLogsRepository>(ScrapingLogsRepository)
-            const scrapersService = module.get<ScrapersService>(ScrapersService)
-
+            const scrapersService = container.resolve(ScrapersService)
             scraper = scrapersService.scrapers[origin]
 
             await scraper.initialize()
@@ -43,7 +31,7 @@ describe('Scraper Integration', () => {
             let entryPoint: BaseEntryPoint
 
             beforeEach(async () => {
-                entryPoint = _.sample(scraper.entryPoints)!
+                entryPoint = _.sample(scraper.entryPoints) as BaseEntryPoint
             })
 
             it('should return array of Listings', async () => {
@@ -51,7 +39,7 @@ describe('Scraper Integration', () => {
                 const result = await entryPoint.scrape(page, {})
 
                 expect(result.listings).toBeInstanceOf(Array)
-                expect(result.listings.length).toBeGreaterThan(0)
+                expect(result.listings.length).toBeGreaterThanOrEqual(0)
                 expect(typeof result.continue).toBe('boolean')
                 expect(result.page).toBe(page)
 

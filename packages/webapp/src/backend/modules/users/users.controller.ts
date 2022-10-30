@@ -9,6 +9,7 @@ import {
     UnprocessableEntityException,
     Param,
     Delete,
+    HttpCode,
 } from 'next-api-decorators'
 import type { IUser } from '@wille430/common'
 import { SuccessParam } from '@wille430/common'
@@ -34,7 +35,8 @@ export class UsersController {
     constructor(@inject(UsersService) private readonly usersService: UsersService) {}
 
     @Post()
-    @SessionGuard()
+    @HttpCode(201)
+    @Roles(Role.ADMIN)
     create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto)
     }
@@ -57,26 +59,28 @@ export class UsersController {
         return this.usersService.getLikedListings(user.userId)
     }
 
-    @Put('email')
+    @Put('/email')
     async updateEmail(
         @Body(ValidationPipe) updateEmailDto: UpdateEmailDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (updateEmailDto.newEmail && user) {
-            return this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
+            await this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
         } else if (updateEmailDto.token) {
-            return this.usersService.updateEmail(updateEmailDto)
+            await this.usersService.updateEmail(updateEmailDto)
         }
+        return 'OK'
     }
 
-    @Post('email')
+    @Post('/email')
     async updateEmailPost(
         @GetUser() user: UserPayload,
         @Body(ValidationPipe) updateEmailDto: UpdateEmailDto,
         @Res() res: NextApiResponse
     ) {
         if (updateEmailDto.newEmail && user) {
-            return this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
+            await this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
+            return 'OK'
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 
@@ -89,14 +93,14 @@ export class UsersController {
         }
     }
 
-    @Put('password')
+    @Put('/password')
     async changePassword(
         @Body(ValidationPipe) dto: ChangePasswordDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (dto.password && dto.passwordConfirm) {
             if (user?.userId) {
-                return this.usersService.changePassword(
+                await this.usersService.changePassword(
                     {
                         password: dto.password,
                         passwordConfirm: dto.passwordConfirm,
@@ -104,30 +108,32 @@ export class UsersController {
                     user.userId
                 )
             } else if (dto.token && dto.email) {
-                return this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
+                await this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
             }
+            return 'OK'
         } else if (dto.email) {
-            return this.usersService.sendPasswordResetEmail({
+            await this.usersService.sendPasswordResetEmail({
                 email: dto.email,
             })
+            return 'OK'
         }
 
         throw new UnprocessableEntityException()
     }
 
-    @Get(':id')
+    @Get('/:id')
     @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
         return this.usersService.findOne(id)
     }
 
-    @Put(':id')
+    @Put('/:id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body(ValidationPipe) updateUserDto: UpdateUserDto) {
         return this.usersService.update(id, updateUserDto)
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string) {
         return this.usersService.remove(id)

@@ -1,7 +1,7 @@
 import type { ValidatorConstraintInterface } from 'class-validator'
 import { ValidatorConstraint } from 'class-validator'
-import { UsersRepository } from '@Backend/modules/users/users.repository'
 import { autoInjectable, inject } from 'tsyringe'
+import { UsersRepository } from '@/backend/modules/users/users.repository'
 
 @ValidatorConstraint({ name: 'UniqueEmail', async: true })
 @autoInjectable()

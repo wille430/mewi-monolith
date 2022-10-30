@@ -1,12 +1,13 @@
 import { Category, Currency, ListingOrigin } from '@wille430/common'
 import type { ElementHandle } from 'puppeteer'
-import { inject } from 'tsyringe'
+import { autoInjectable, inject } from 'tsyringe'
 import { ListingsRepository } from '../../listings/listings.repository'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 
+@autoInjectable()
 export class BilwebScraper extends ListingWebCrawler {
     defaultScrapeUrl = 'https://bilweb.se/sok'
     limit = 30

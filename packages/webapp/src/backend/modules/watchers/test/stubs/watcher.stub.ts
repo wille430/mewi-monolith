@@ -1,7 +1,7 @@
+import { timestampsStub } from '@mewi/test-utils'
 import type { IWatcher } from '@wille430/common'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
-import { timestampsStub } from '@/common/test/stubs/timestamps.stub'
 
 const notifiedAt = new Date(Date.now() - 99999)
 const id = '6335c3600ad468323536e432'

@@ -1,10 +1,12 @@
-import { getModelToken } from '@nestjs/mongoose'
-import { Test } from '@nestjs/testing'
 import type { FilterQuery } from 'mongoose'
+import 'reflect-metadata'
+import { container } from 'tsyringe'
 import { userStub } from './stubs/user.stub'
-import { UserModel } from './support/user.model'
 import { UsersRepository } from '../users.repository'
-import { User } from '@/schemas/user.schema'
+import { User } from '../../schemas/user.schema'
+import { UserModel } from '../../schemas/__mocks__/user.schema'
+
+jest.mock('../../schemas/user.schema')
 
 describe('UsersRepository', () => {
     let usersRepository: UsersRepository
@@ -14,18 +16,8 @@ describe('UsersRepository', () => {
         let userFilterQuery: FilterQuery<User>
 
         beforeEach(async () => {
-            const moduleRef = await Test.createTestingModule({
-                providers: [
-                    UsersRepository,
-                    {
-                        provide: getModelToken(User.name),
-                        useClass: UserModel,
-                    },
-                ],
-            }).compile()
-
-            usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
-            userModel = moduleRef.get<UserModel>(getModelToken(User.name))
+            usersRepository = container.resolve(UsersRepository)
+            userModel = new UserModel(userStub())
 
             userFilterQuery = {
                 id: userStub().id,
@@ -103,17 +95,7 @@ describe('UsersRepository', () => {
 
     describe('create operations', () => {
         beforeEach(async () => {
-            const moduleRef = await Test.createTestingModule({
-                providers: [
-                    UsersRepository,
-                    {
-                        provide: getModelToken(User.name),
-                        useValue: UserModel,
-                    },
-                ],
-            }).compile()
-
-            usersRepository = moduleRef.get<UsersRepository>(UsersRepository)
+            usersRepository = container.resolve(UsersRepository)
         })
 
         describe('create', () => {

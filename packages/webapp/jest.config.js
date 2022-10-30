@@ -1,18 +1,38 @@
 const nextJest = require('next/jest')
 
 const createJestConfig = nextJest({
-    dit: './'
+    dir: './'
 })
 
 module.exports = createJestConfig({
-    testEnvironment: "jest-environment-jsdom",
+    testEnvironment: "node",
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
     },
     transform: {
-        "^.+\\.(ts|tsx)$": ['@swc/jest']
+        "^.+\\.(ts|tsx)$": ['@swc/jest', {
+            "jsc": {
+                "parser": {
+                    "syntax": "typescript",
+                    "tsx": false,
+                    "decorators": true
+                },
+                "transform": {
+                    "legacyDecorator": true,
+                    "decoratorMetadata": true
+                },
+                "target": "es2018"
+            },
+            "module": {
+                "type": "commonjs",
+                "noInterop": true
+            }
+        }]
     },
     testPathIgnorePatterns: [
-        '<rootDir>/cypress/'
+        './cypress/'
     ],
+    setupFiles: ["<rootDir>/jest.setup.js"],
+    globalTeardown: '<rootDir>/script/test-teardown-globals.js',
+    moduleFileExtensions: ["ts", "tsx", "js", "jsx"]
 });

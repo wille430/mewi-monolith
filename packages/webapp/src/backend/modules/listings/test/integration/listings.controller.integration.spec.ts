@@ -1,57 +1,50 @@
 import faker from '@faker-js/faker'
-import type { INestApplication } from '@nestjs/common'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import type { Collection, Connection } from 'mongoose'
 import mongoose from 'mongoose'
-import * as request from 'supertest'
+import request from 'supertest'
+import { createHandler } from 'next-api-decorators'
+import { Server } from 'http'
 import { listingStub } from '../stubs/listing.stub'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { createJwtAuthGuard } from '@/auth/test/support/jwt-auth.guard'
-import { initTestModule } from '@/common/test/initTestModule'
-import type { CreateListingDto } from '@/listings/dto/create-listing.dto'
-import type { DeleteListingsDto } from '@/listings/dto/delete-listings.dto'
-import type { UpdateListingDto } from '@/listings/dto/update-listing.dto'
-import { transformDate } from '@/listings/helpers/transform-dates'
-import type { Listing } from '@/schemas/listing.schema'
-import type { User } from '@/schemas/user.schema'
-import { adminUserPayloadStub } from '@/users/test/stubs/admin-user-payload.stub'
-import { adminStub } from '@/users/test/stubs/admin.stub'
-import { userPayloadStub } from '@/users/test/stubs/user-payload.stub'
-import { userStub } from '@/users/test/stubs/user.stub'
+import { ListingsController } from '../../listings.controller'
+import { CreateListingDto } from '../../dto/create-listing.dto'
+import { transformDate } from '../../helpers/transform-dates'
+import { DeleteListingsDto } from '../../dto/delete-listings.dto'
+import { UpdateListingDto } from '../../dto/update-listing.dto'
+import { dbConnection } from '@/lib/dbConnection'
+import { User } from '@/backend/modules/schemas/user.schema'
+import { Listing } from '@/backend/modules/schemas/listing.schema'
+import { createTestClient } from '@/backend/modules/common/test/createTestClient'
+import { adminStub } from '@/backend/modules/users/test/stubs/admin.stub'
+import { adminUserPayloadStub } from '@/backend/modules/users/test/stubs/admin-user-payload.stub'
+import { userPayloadStub } from '@/backend/modules/users/test/stubs/user-payload.stub'
+import { userStub } from '@/backend/modules/users/test/stubs/user.stub'
 
 const ADMIN_ENDPOINTS = [
-    ['POST', '/listings'],
-    ['DELETE', '/listings'],
-    ['PUT', '/listings/' + listingStub().id],
-    ['DELETE', '/listings/' + listingStub().id],
+    ['POST', '/api/listings'],
+    ['DELETE', '/api/listings'],
+    ['PUT', '/api/listings/' + listingStub().id],
+    ['DELETE', '/api/listings/' + listingStub().id],
 ]
 
 const USER_ENDPOINTS = [
-    ['PUT', `/listings/${listingStub().id}/like`],
-    ['PUT', `/listings/${listingStub().id}/unlike`],
+    ['PUT', `/api/listings/${listingStub().id}/like`],
+    ['PUT', `/api/listings/${listingStub().id}/unlike`],
 ]
 
 describe('ListingsController', () => {
-    let dbConnection: Connection
+    let dbConn: Connection
     let listingsCollection: Collection<Listing>
     let usersCollection: Collection<User>
-    let httpServer: any
-    let app: INestApplication
+    let httpServer: Server
 
     describe('when authenticated as admin', () => {
         beforeEach(async () => {
-            const testModule = await initTestModule((builder) => {
-                builder
-                    .overrideGuard(JwtAuthGuard)
-                    .useClass(createJwtAuthGuard(adminUserPayloadStub()))
-            })
+            httpServer = createTestClient(createHandler(ListingsController), adminUserPayloadStub())
+            dbConn = await dbConnection()
 
-            dbConnection = testModule.dbConnection
-            app = testModule.app
-            httpServer = testModule.httpServer
-
-            listingsCollection = dbConnection.collection('listings')
-            usersCollection = dbConnection.collection('users')
+            listingsCollection = dbConn.collection('listings')
+            usersCollection = dbConn.collection('users')
         })
 
         beforeEach(async () => {
@@ -60,14 +53,14 @@ describe('ListingsController', () => {
             await usersCollection.insertOne(adminStub())
         })
 
-        afterAll(async () => {
-            await app.close()
+        afterAll(() => {
+            httpServer.close()
         })
 
         describe('POST /listings', () => {
             it('should return listing and create document', async () => {
                 const dto: CreateListingDto = _.omit(listingStub(), '_id', 'id')
-                const response = await request(httpServer).post('/listings').send(dto)
+                const response = await request(httpServer).post('/api/listings').send(dto)
 
                 expect(response.status).toBe(201)
                 expect(response.body).toMatchObject({
@@ -95,7 +88,7 @@ describe('ListingsController', () => {
                     origins: [listingStub().origin],
                 }
 
-                const response = await request(httpServer).del('/listings').send(dto)
+                const response = await request(httpServer).del('/api/listings').send(dto)
 
                 expect(response.status).toBe(200)
 
@@ -114,7 +107,7 @@ describe('ListingsController', () => {
                     title: faker.commerce.product(),
                 }
                 const response = await request(httpServer)
-                    .put('/listings/' + listingStub().id)
+                    .put('/api/listings/' + listingStub().id)
                     .send(dto)
 
                 expect(response.status).toBe(200)
@@ -141,7 +134,7 @@ describe('ListingsController', () => {
             it('should return OK and delete document', async () => {
                 await listingsCollection.insertOne(listingStub())
 
-                const response = await request(httpServer).del('/listings/' + listingStub().id)
+                const response = await request(httpServer).del('/api/listings/' + listingStub().id)
 
                 expect(response.status).toBe(200)
 
@@ -155,16 +148,11 @@ describe('ListingsController', () => {
 
     describe('when authenticated as user', () => {
         beforeEach(async () => {
-            const testModule = await initTestModule((builder) => {
-                builder.overrideGuard(JwtAuthGuard).useClass(createJwtAuthGuard(userPayloadStub()))
-            })
+            dbConn = await dbConnection()
+            httpServer = createTestClient(createHandler(ListingsController), userPayloadStub())
 
-            dbConnection = testModule.dbConnection
-            app = testModule.app
-            httpServer = testModule.httpServer
-
-            listingsCollection = dbConnection.collection('listings')
-            usersCollection = dbConnection.collection('users')
+            listingsCollection = dbConn.collection('listings')
+            usersCollection = dbConn.collection('users')
         })
 
         beforeEach(async () => {
@@ -173,8 +161,8 @@ describe('ListingsController', () => {
             await usersCollection.insertOne(userStub())
         })
 
-        afterAll(async () => {
-            await app.close()
+        afterAll(() => {
+            httpServer.close()
         })
 
         describe.each(ADMIN_ENDPOINTS)('%s %s', (method: string, path: string) => {
@@ -193,7 +181,9 @@ describe('ListingsController', () => {
             it('should return listing and create relation', async () => {
                 await listingsCollection.insertOne(listingStub())
 
-                const response = await request(httpServer).put(`/listings/${listingStub().id}/like`)
+                const response = await request(httpServer).put(
+                    `/api/listings/${listingStub().id}/like`
+                )
 
                 expect(response.status).toBe(200)
 
@@ -209,10 +199,10 @@ describe('ListingsController', () => {
                 await listingsCollection.insertOne(listingStub())
 
                 // like first
-                await request(httpServer).put(`/listings/${listingStub().id}/like`)
+                await request(httpServer).put(`/api/listings/${listingStub().id}/like`)
                 // unlike
                 const response = await request(httpServer).put(
-                    `/listings/${listingStub().id}/unlike`
+                    `/api/listings/${listingStub().id}/unlike`
                 )
 
                 expect(response.status).toBe(200)
@@ -227,14 +217,11 @@ describe('ListingsController', () => {
 
     describe('when not authenticated', () => {
         beforeEach(async () => {
-            const testModule = await initTestModule()
+            dbConn = await dbConnection()
+            httpServer = createTestClient(createHandler(ListingsController))
 
-            dbConnection = testModule.dbConnection
-            app = testModule.app
-            httpServer = testModule.httpServer
-
-            listingsCollection = dbConnection.collection('listings')
-            usersCollection = dbConnection.collection('users')
+            listingsCollection = dbConn.collection('listings')
+            usersCollection = dbConn.collection('users')
         })
 
         beforeEach(async () => {
@@ -242,8 +229,8 @@ describe('ListingsController', () => {
             await usersCollection.deleteMany({})
         })
 
-        afterAll(async () => {
-            await app.close()
+        afterAll(() => {
+            httpServer.close()
         })
 
         describe.each([...USER_ENDPOINTS, ...ADMIN_ENDPOINTS])(
@@ -265,7 +252,7 @@ describe('ListingsController', () => {
             it('should return listings', async () => {
                 await listingsCollection.insertOne(listingStub())
 
-                const response = await request(httpServer).get('/listings')
+                const response = await request(httpServer).get('/api/listings')
 
                 expect(response.status).toBe(200)
                 expect(response.body.totalHits).toBe(1)
@@ -277,7 +264,7 @@ describe('ListingsController', () => {
             it('should return listings', async () => {
                 await listingsCollection.insertOne(listingStub())
 
-                const response = await request(httpServer).get('/listings/featured')
+                const response = await request(httpServer).get('/api/listings/featured')
 
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject([transformDate(listingStub())])
@@ -289,7 +276,7 @@ describe('ListingsController', () => {
                 await listingsCollection.insertOne(listingStub())
 
                 const response = await request(httpServer).get(
-                    '/listings/autocomplete/' + _.take(listingStub().title, 4).join('')
+                    '/api/listings/autocomplete/' + _.take(listingStub().title, 4).join('')
                 )
 
                 expect(response.status).toBe(200)
@@ -301,7 +288,7 @@ describe('ListingsController', () => {
             it('should return listing', async () => {
                 await listingsCollection.insertOne(listingStub())
 
-                const response = await request(httpServer).get('/listings/' + listingStub().id)
+                const response = await request(httpServer).get('/api/listings/' + listingStub().id)
 
                 expect(response.status).toBe(200)
                 expect(response.body).toMatchObject(transformDate(listingStub()))

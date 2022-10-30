@@ -1,36 +1,36 @@
-import type { INestApplication } from '@nestjs/common'
 import type { Collection, Connection } from 'mongoose'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { createJwtAuthGuard } from '@/auth/test/support/jwt-auth.guard'
-import { initTestModule } from '@/common/test/initTestModule'
-import type { User } from '@/schemas/user.schema'
-import { adminUserPayloadStub } from '@/users/test/stubs/admin-user-payload.stub'
-import { adminStub } from '@/users/test/stubs/admin.stub'
+import { createHandler } from 'next-api-decorators'
+import { Server } from 'http'
+import { ScrapersController } from '../../scrapers.controller'
+import { createTestClient } from '@/backend/modules/common/test/createTestClient'
+import { User } from '@/backend/modules/schemas/user.schema'
+import { adminUserPayloadStub } from '@/backend/modules/users/test/stubs/admin-user-payload.stub'
+import { dbConnection } from '@/lib/dbConnection'
+import { adminStub } from '@/backend/modules/users/test/stubs/admin.stub'
 
 describe('ScrapersController', () => {
-    let dbConnection: Connection
+    let dbConn: Connection
     let usersCollection: Collection<User>
-    let httpServer: any
-    let app: INestApplication
+    let httpServer: Server
 
     beforeAll(async () => {
-        const testModule = await initTestModule((builder) => {
-            builder.overrideGuard(JwtAuthGuard).useClass(createJwtAuthGuard(adminUserPayloadStub()))
-        })
-        dbConnection = testModule.dbConnection
-        httpServer = testModule.httpServer
-        app = testModule.app
-        usersCollection = dbConnection.collection('users')
+        dbConn = await dbConnection()
+        httpServer = createTestClient(createHandler(ScrapersController), adminUserPayloadStub())
+        usersCollection = dbConn.collection('users')
 
         jest.resetAllMocks()
     })
 
-    afterAll(async () => {
-        await app.close()
+    afterAll(() => {
+        httpServer.close()
     })
 
     beforeEach(async () => {
         await usersCollection.deleteMany({})
         await usersCollection.insertOne(adminStub())
+    })
+
+    it('should', () => {
+        expect(true).toBe(true)
     })
 })
