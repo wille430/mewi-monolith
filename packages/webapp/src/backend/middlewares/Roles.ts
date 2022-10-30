@@ -5,23 +5,25 @@ import { createMiddlewareDecorator, UnauthorizedException } from 'next-api-decor
 import { getSession } from '../lib/session/getSession'
 
 export const Roles = (...allowedRoles: Role[]) =>
-    createMiddlewareDecorator(
-        async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
-            const session = await getSession(req, res)
-            let user = session.user
+    createMiddlewareDecorator(rolesMiddleware(...allowedRoles))()
 
-            if (!user && process.env.NODE_ENV !== 'production') {
-                user = req.session?.user
-            }
+export const rolesMiddleware =
+    (...allowedRoles: Role[]) =>
+    async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
+        const session = await getSession(req, res)
+        let user = session.user
 
-            if (!user) {
-                throw new UnauthorizedException('Not logged in')
-            }
-
-            if (!user.roles?.some((role) => allowedRoles.includes(role))) {
-                throw new ForbiddenException()
-            }
-
-            next()
+        if (!user && process.env.NODE_ENV !== 'production') {
+            user = req.session?.user
         }
-    )()
+
+        if (!user) {
+            throw new UnauthorizedException('Not logged in')
+        }
+
+        if (!user.roles?.some((role) => allowedRoles.includes(role))) {
+            throw new ForbiddenException()
+        }
+
+        next()
+    }
