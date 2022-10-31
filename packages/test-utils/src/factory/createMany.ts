@@ -5,7 +5,7 @@ export const createMany = async <T, R>(
     create: CreateFactoryReturn<T, R>['create'],
     attrs?: Partial<T>
 ) => {
-    let records: R[] = []
+    const records: R[] = []
 
     for (let i = 0; i < num; i++) {
         records.push(await create(attrs))
