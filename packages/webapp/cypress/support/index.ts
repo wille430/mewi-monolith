@@ -17,8 +17,9 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import 'cypress-real-events'
-import { ListingFiltersContext } from '../../src/hooks/useListingFilters'
 import { AuthTokens } from '@wille430/common'
+import { Context } from 'react'
+import { ListingFiltersContext } from '../../src/hooks/useListingFilters'
 
 beforeEach(() => {
     cy.log('BRRRRUUUUUUUHHH')
@@ -45,6 +46,6 @@ declare global {
         }
     }
     interface Window {
-        ListingFilterContext: React.Context<ListingFiltersContext | undefined>
+        ListingFilterContext: Context<ListingFiltersContext | undefined>
     }
 }

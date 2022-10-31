@@ -1,4 +1,4 @@
-import type { MutableRefObject} from 'react'
+import type { MutableRefObject, MouseEvent } from 'react'
 import { memo, useMemo } from 'react'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
@@ -124,7 +124,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
 interface NavButtonProps {
     label: number
     selected: boolean
-    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
+    onClick: (e: MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
 }
 
 const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
@@ -133,7 +133,7 @@ const NavButton = ({ label, selected, onClick }: NavButtonProps) => {
             className={`mx-2 h-12 w-12 transform shadow hover:scale-110 hover:shadow-md ${
                 selected && 'border-b-2 border-black'
             }`}
-            onClick={(e) => onClick(e, label)}
+            onClick={(e) => onClick(e as any, label)}
             data-testid={`pageNavButton`}
         >
             <span className='font-bold'>{label}</span>

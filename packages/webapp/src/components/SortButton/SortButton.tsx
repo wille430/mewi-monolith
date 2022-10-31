@@ -1,4 +1,5 @@
 import { ListingSort } from '@wille430/common'
+import { ChangeEvent } from 'react'
 import { useListingFilters } from '@/hooks/useListingFilters'
 
 const SortButton = () => {
@@ -24,7 +25,7 @@ const SortButton = () => {
         },
     ]
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setFilters(
             (prev) => ({
                 ...prev,
