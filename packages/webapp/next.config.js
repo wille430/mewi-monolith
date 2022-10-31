@@ -1,9 +1,16 @@
 const flowRight = require('lodash/flowRight')
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: process.env.ANALYZE === 'true',
-})
 
-const withTM = require('next-transpile-modules')(['@wille430/ui', '@wille430/common'])
+const funcs = []
+
+if (process.env.NODE_ENV === 'development') {
+    funcs.push(require('next-transpile-modules')(['@wille430/ui', '@wille430/common']))
+
+    funcs.push(
+        require('@next/bundle-analyzer')({
+            enabled: process.env.ANALYZE === 'true',
+        })
+    )
+}
 
 /**
  * @type {import('next').NextConfig}
@@ -19,4 +26,4 @@ const config = {
 
 }
 
-module.exports = flowRight([withBundleAnalyzer, withTM])(config)
+module.exports = flowRight(funcs)(config)
