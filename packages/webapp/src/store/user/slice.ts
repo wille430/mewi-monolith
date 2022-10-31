@@ -3,7 +3,7 @@ import { login, logout, setLoggedInStatus, signup } from './creators'
 import type { UserState } from './types'
 
 const initialState: UserState = {
-    isLoggedIn: false,
+    isLoggedIn: false
 }
 
 export const userSlice = createSlice({
@@ -13,7 +13,8 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(setLoggedInStatus, (state, action) => {
-                state.isLoggedIn = action.payload
+                state.isLoggedIn = action.payload.status
+                state.user = action.payload.user
             })
             .addCase(login.fulfilled, (state) => {
                 state.isLoggedIn = true

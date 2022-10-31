@@ -16,7 +16,7 @@
         "isolate:api": "pnpm run isolate -F nest-api",
         "db:up": "docker-compose up db -d || sudo docker compose up db -d",
         "db:down": "docker-compose down db || sudo docker compose down db",
-        "vercel-install": "./tools/vercel-submodule-workaround.sh && pnpm i --unsafe-perm"
+        "vercel-install": "pnpm i --unsafe-perm"
     },
     "private": true,
     "devDependencies": {

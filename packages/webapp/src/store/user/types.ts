@@ -1,5 +1,8 @@
+import { IUser } from "@wille430/common"
+
 export interface UserState {
     isLoggedIn: boolean
+    user?: IUser
 }
 
 export enum UserActionTypes {

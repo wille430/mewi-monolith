@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import {
     createMiddlewareDecorator,
     Middleware,
@@ -8,7 +7,7 @@ import {
 
 export const AnyGuard = (...middlewares: Middleware[]) => {
     return createMiddlewareDecorator(
-        async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
+        async (req: any, res: any, next: NextFunction) => {
             let i = 0
 
             for (const f of middlewares) {

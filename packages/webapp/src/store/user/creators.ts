@@ -1,12 +1,13 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { IUser } from '@wille430/common'
 import { UserActionTypes } from './types'
 import { client } from '@/lib/client'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
-    (status: boolean) => {
+    (status: boolean, user: IUser) => {
         return {
-            payload: status,
+            payload: {status, user},
         }
     }
 )
