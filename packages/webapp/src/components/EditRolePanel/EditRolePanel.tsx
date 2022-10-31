@@ -51,7 +51,7 @@ export function EditRolePanel() {
                     ) : (
                         <ul>
                             {data?.map((user) => (
-                                <IUserRolesWidget user={user} />
+                                <IUserRolesWidget key={user.id} user={user} />
                             ))}
                         </ul>
                     )}
@@ -124,6 +124,7 @@ export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
             <div className={styles['user-roles']}>
                 {user.roles.map((key) => (
                     <span
+                        key={key}
                         className={styles['role-label']}
                         onClick={() =>
                             deleteIUserRoleMutation.mutate({
@@ -138,6 +139,7 @@ export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
 
                 {missingRoles.map((key) => (
                     <span
+                        key={key}
                         className={classNames({
                             [styles['role-label']]: true,
                             [styles['unselected']]: true,

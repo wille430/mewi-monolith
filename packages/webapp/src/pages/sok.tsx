@@ -13,7 +13,11 @@ const SearchPage = () => {
     return (
         <>
             <Head>
-                <title>"{router.query.keyword ?? ''}" | Mewi.se</title>
+                <title>
+                    {'"'}
+                    {router.query.keyword ?? ''}
+                    {'"'}| Mewi.se
+                </title>
             </Head>
 
             <ListingFiltersProvider>

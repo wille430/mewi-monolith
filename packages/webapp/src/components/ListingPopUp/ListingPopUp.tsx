@@ -85,7 +85,7 @@ const SpecificationsView = ({ parameters }) =>
             <table className={styles['specs-table']}>
                 <tbody>
                     {parameters?.map(({ label, value }) => (
-                        <tr>
+                        <tr key={value}>
                             <td>{label}:</td>
                             <td>{value}</td>
                         </tr>

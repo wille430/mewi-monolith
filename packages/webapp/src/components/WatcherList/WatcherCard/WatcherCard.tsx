@@ -3,7 +3,7 @@ import { CategoryLabel } from '@wille430/common'
 import type { IListing } from '@wille430/common'
 import { Button } from '@wille430/ui'
 import queryString from 'query-string'
-import type { Dispatch} from 'react'
+import type { Dispatch } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
@@ -24,6 +24,7 @@ const WatcherCard = ({
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
     const { watcher } = userWatcher
 
@@ -85,7 +86,9 @@ const WatcherCard = ({
                                         : 'Kategorier:'}
                                 </label>
                                 {watcher.metadata.categories.map((cat) => (
-                                    <span className='mr-2'>{CategoryLabel[cat]}</span>
+                                    <span key={cat} className='mr-2'>
+                                        {CategoryLabel[cat]}
+                                    </span>
                                 ))}
                             </div>
                         ) : (

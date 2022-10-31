@@ -1,13 +1,7 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint",
-        "unused-imports",
-        "prettier",
-        "eslint-plugin-import",
-        "prefer-arrow"
-    ],
+    "plugins": ["@typescript-eslint", "unused-imports", "prettier", "prefer-arrow"],
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",

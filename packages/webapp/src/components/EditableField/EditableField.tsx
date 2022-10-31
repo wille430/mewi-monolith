@@ -36,7 +36,13 @@ const EditableField = ({ label, onEditComplete, disabled, ...rest }: EditableFie
                     className={styles.editable}
                     value={_value}
                     onChange={(e) => _setValue(e.target.value)}
-                    endComponent={[<Button onClick={handleEditComplete} icon={<FiCheck />} />]}
+                    endComponent={[
+                        <Button
+                            key={'edit-button'}
+                            onClick={handleEditComplete}
+                            icon={<FiCheck />}
+                        />,
+                    ]}
                 />
             ) : (
                 <div className={styles.noneditable}>

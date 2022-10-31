@@ -93,6 +93,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
             </>
         )
     })
+    RenderButtons.displayName = 'Buttons'
 
     const changePage = (increment: number) => {
         const newPage = filters.page ?? 1 + increment
