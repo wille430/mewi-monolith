@@ -1,0 +1,43 @@
+.stack {
+    position: relative;
+
+    & > .stackChild {
+        position: absolute;
+    }
+}
+
+.hide {
+    opacity: 0;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin clamp(
+    $property,
+    $min-size,
+    $scaler,
+    $max-size,
+    $min-size-left: false,
+    $scaler-left: false,
+    $max-size-left: false
+) {
+    @if $min-size-left == false {
+        #{$property}: $max-size;
+        #{$property}: #{'min(max(#{$min-size}, #{$scaler}), #{$max-size})'};
+        #{$property}: clamp($min-size, $scaler, $max-size);
+    } @else if $min-size-left == 0 or $min-size-left == auto {
+        #{$property}: $max-size $min-size-left;
+        #{$property}: #{'min(max(#{$min-size}, #{$scaler}), #{$max-size})'} $min-size-left;
+        #{$property}: clamp($min-size, $scaler, $max-size) $min-size-left;
+    } @else {
+        #{$property}: $max-size $min-size-left;
+        #{$property}: #{'min(max(#{$min-size}, #{$scaler}), #{$max-size})'}
+            #{'min(max(#{$min-size-left}, #{$scaler-left}), #{$max-size-left})'};
+        #{$property}: clamp($min-size, $scaler, $max-size)
+            clamp($min-size-left, $scaler-left, $max-size-left);
+    }
+}

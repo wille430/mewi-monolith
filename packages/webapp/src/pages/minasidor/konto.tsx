@@ -1,13 +1,14 @@
-import { Container, HorizontalLine } from '@wille430/ui'
 import type { ReactElement } from 'react'
 import type { IUser } from '@wille430/common'
 import { Role } from '@wille430/common'
 import Head from 'next/head'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { serialize } from '@/lib/serialize'
+import { serialize } from '@/utils/serialize'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 import { withAuth } from '@/backend/lib/session/withAuth'
+import { Container } from '@/components/Container/Container'
+import { HorizontalLine } from '@/components/HorizontalLine/HorizontalLine'
 
 interface KontoPageProps {
     user: IUser

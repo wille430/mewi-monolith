@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import type { ListingSearchFilters } from '@wille430/common'
-import { Button, Container, HorizontalLine } from '@wille430/ui'
 import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
+import { Container } from '../Container/Container'
+import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
+import { Button } from '../Button/Button'
 import { PopUp } from '@/components/PopUp/PopUp'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
@@ -17,7 +19,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
     return (
         <PopUp onOutsideClick={hidePopUp} show={show}>
             <div className='p-2 sm:mt-32'>
-                <Container className='sm:mx-auto max-w-4xl' data-testid='addWatcherPopUp'>
+                <Container className='max-w-4xl sm:mx-auto' data-testid='addWatcherPopUp'>
                     <h3>Lägg till en bevakning</h3>
                     <HorizontalLine />
                     <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>

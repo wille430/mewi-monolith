@@ -12,8 +12,8 @@ import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
-import { dbConnection } from '@/lib/dbConnection'
-import { serialize } from '@/lib/serialize'
+import { dbConnection } from '@/backend/lib/dbConnection'
+import { serialize } from '@/utils/serialize'
 
 const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 

@@ -1,15 +1,15 @@
 import type { IListing } from '@wille430/common'
 import classNames from 'classnames'
-import { Container } from '@wille430/ui'
-import { HorizontalLine } from '@wille430/ui'
-import { Button } from '@wille430/ui'
 import { FiX } from 'react-icons/fi'
 import clsx from 'clsx'
 import styles from './ListingPopUp.module.scss'
 import Description from './Description/Description'
+import { Container } from '../Container/Container'
 import { OriginLabel } from '../OriginLabel/OriginLabel'
 import { PopUp } from '../PopUp/PopUp'
 import DefaultImage from '../DefaultImage/DefaultImage'
+import { Button } from '../Button/Button'
+import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
 import { CategoryPathLabel } from '@/components/CategoryPathLabel/CategoryPathLabel'
 
 const cx = classNames.bind(styles)

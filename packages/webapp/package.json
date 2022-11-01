@@ -24,7 +24,6 @@
         "@reduxjs/toolkit": "^1.8.0",
         "@typegoose/typegoose": "^9.12.1",
         "@wille430/common": "workspace:^1.0.1",
-        "@wille430/ui": "workspace:^1.0.2",
         "axios": "^0.26.1",
         "bcrypt": "^5.1.0",
         "bson": "^4.6.4",

@@ -1,4 +1,3 @@
-import { Button, TextField } from '@wille430/ui'
 import type { ReactElement } from 'react'
 import { useState } from 'react'
 import Head from 'next/head'
@@ -7,6 +6,8 @@ import Link from 'next/link'
 import { client } from '@/lib/client'
 import { Layout } from '@/components/Layout/Layout'
 import { useUser } from '@/hooks/useUser'
+import { TextField } from '@/components/TextField/TextField'
+import { Button } from '@/components/Button/Button'
 
 const ForgottenPassword = () => {
     useUser({

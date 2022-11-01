@@ -3,9 +3,10 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import type { IUser } from '@wille430/common'
 import { LoginStrategy } from '@wille430/common'
-import { Button, TextField } from '@wille430/ui'
 import { randomString } from '@wille430/common'
 import styles from './AccountDetails.module.scss'
+import { TextField } from '../TextField/TextField'
+import { Button } from '../Button/Button'
 import { client } from '@/lib/client'
 
 export interface AccountDetailsProps {

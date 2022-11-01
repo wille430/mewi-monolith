@@ -5,7 +5,7 @@ import { ScrapersController } from '../../scrapers.controller'
 import { createTestClient } from '@/backend/modules/common/test/createTestClient'
 import { User } from '@/backend/modules/schemas/user.schema'
 import { adminUserPayloadStub } from '@/backend/modules/users/test/stubs/admin-user-payload.stub'
-import { dbConnection } from '@/lib/dbConnection'
+import { dbConnection } from '@/backend/lib/dbConnection'
 import { adminStub } from '@/backend/modules/users/test/stubs/admin.stub'
 
 describe('ScrapersController', () => {

@@ -9,7 +9,7 @@ import type {
     UpdateQuery,
 } from 'mongoose'
 import type { Pagination } from './dto/pagination.dto'
-import { dbConnection } from '@/lib/dbConnection'
+import { dbConnection } from '@/backend/lib/dbConnection'
 
 export abstract class EntityRepository<T extends Document> {
     defaultProjection = {

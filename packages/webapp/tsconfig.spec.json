@@ -4,8 +4,7 @@
         "composite": true,
         "types": ["node", "@types/jest"],
         "paths": {
-            "@/*": ["./src/*"],
-            "@Backend/*": ["./src/backend/*"]
+            "@/*": ["./src/*"]
         }
     },
     "include": [

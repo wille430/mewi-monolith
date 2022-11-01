@@ -1,7 +1,6 @@
-import type { ButtonProps } from '@wille430/ui'
-import { Button } from '@wille430/ui'
 import { useState } from 'react'
 import AddWatcherPopUp from './AddWatcherPopUp'
+import { Button, ButtonProps } from '../Button/Button'
 
 const WatcherPopUpButton = (props: ButtonProps) => {
     const [show, setShow] = useState(false)

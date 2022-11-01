@@ -19,8 +19,7 @@
         "resolveJsonModule": true,
         "typeRoots": ["src/types/**/*"],
         "paths": {
-            "@/*": ["./src/*"],
-            "@Backend/*": ["./src/backend/*"]
+            "@/*": ["./src/*"]
         },
         "strict": true,
         "sourceMap": true,

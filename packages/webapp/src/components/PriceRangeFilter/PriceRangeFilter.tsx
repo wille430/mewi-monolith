@@ -1,5 +1,5 @@
-import { TextField } from '@wille430/ui'
 import type { HTMLAttributes } from 'react'
+import { TextField } from '../TextField/TextField'
 
 export interface PriceRangeFilterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
     gte?: number

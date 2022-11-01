@@ -1,5 +1,5 @@
-import { Container } from '@wille430/ui'
 import style from './FeaturedListings.module.scss'
+import { Container } from '../Container/Container'
 import { ListingWidget } from '@/components/ListingWidget/ListingWidget'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { openListing } from '@/store/listings'

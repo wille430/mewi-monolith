@@ -1,5 +1,4 @@
-import type { TextFieldProps } from '@wille430/ui'
-import { TextField } from '@wille430/ui'
+import { TextField, TextFieldProps } from "../TextField/TextField"
 
 export const LabeledTextField = ({ label, ...rest }: TextFieldProps & { label?: string }) => (
     <div>

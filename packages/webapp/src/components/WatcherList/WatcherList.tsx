@@ -1,4 +1,3 @@
-import { Container, HorizontalLine } from '@wille430/ui'
 import type { ReactElement } from 'react'
 import { useState } from 'react'
 import type { IUserWatcher } from '@wille430/common'
@@ -6,6 +5,8 @@ import { useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'
 import WatcherPopUpButton from './WatcherPopUpButton'
+import { Container } from '../Container/Container'
+import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
 import { client } from '@/lib/client'
 
 const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))

@@ -1,7 +1,6 @@
 import type { IListing } from '@wille430/common'
 import type { ReactElement } from 'react'
 import Head from 'next/head'
-import { Container, HorizontalLine } from '@wille430/ui'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
@@ -11,6 +10,8 @@ import { useUser } from '@/hooks/useUser'
 import { client } from '@/lib/client'
 import StyledLoader from '@/components/StyledLoader'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
+import { Container } from '@/components/Container/Container'
+import { HorizontalLine } from '@/components/HorizontalLine/HorizontalLine'
 
 const Gillade = () => {
     const { data: listings, isLoading } = useQuery('liked-listings', () =>

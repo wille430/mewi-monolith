@@ -1,7 +1,6 @@
 import type { IUserWatcher } from '@wille430/common'
 import { CategoryLabel } from '@wille430/common'
 import type { IListing } from '@wille430/common'
-import { Button } from '@wille430/ui'
 import queryString from 'query-string'
 import type { Dispatch } from 'react'
 import { useEffect, useRef, useState } from 'react'
@@ -12,6 +11,7 @@ import styles from './WatcherCard.module.scss'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
 import RemoveButton from './RemoveWatcherButton'
 import ExpandButton from './ExpandButton/ExpandButton'
+import { Button } from '@/components/Button/Button'
 
 const WatcherCard = ({
     userWatcher,

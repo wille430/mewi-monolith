@@ -1,7 +1,7 @@
 import { FiTrash } from 'react-icons/fi'
-import { Button } from '@wille430/ui'
 import { useMutation, useQueryClient } from 'react-query'
 import { client } from '@/lib/client'
+import { Button } from '@/components/Button/Button'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
     const queryClient = useQueryClient()

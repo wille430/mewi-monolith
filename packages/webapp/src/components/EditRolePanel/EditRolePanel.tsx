@@ -1,4 +1,3 @@
-import { Button, TextField } from '@wille430/ui'
 import capitalize from 'lodash/capitalize'
 import type { IUser } from '@wille430/common'
 import { Role } from '@wille430/common'
@@ -7,6 +6,8 @@ import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
+import { TextField } from '../TextField/TextField'
+import { Button } from '../Button/Button'
 import { client } from '@/lib/client'
 
 export function EditRolePanel() {

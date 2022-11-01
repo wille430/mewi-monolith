@@ -3,7 +3,7 @@ const flowRight = require('lodash/flowRight')
 const funcs = []
 
 if (process.env.NODE_ENV === 'development') {
-    funcs.push(require('next-transpile-modules')(['@wille430/ui', '@wille430/common']))
+    funcs.push(require('next-transpile-modules')(['@wille430/common']))
 
     funcs.push(
         require('@next/bundle-analyzer')({
