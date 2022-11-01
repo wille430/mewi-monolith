@@ -1,5 +1,5 @@
 import type { ElementHandle } from 'puppeteer'
-import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import { ListingWebCrawler } from '../classes/ListingWebCrawler'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'

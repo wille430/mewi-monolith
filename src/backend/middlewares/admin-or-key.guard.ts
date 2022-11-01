@@ -1,4 +1,4 @@
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import { adminApiKeyMiddleware } from './admin-api-key.middleware'
 import { AnyGuard } from './any.guard'
 import { rolesMiddleware } from './Roles'

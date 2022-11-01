@@ -1,5 +1,5 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import { NextScraper } from '../classes/NextScraper'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'

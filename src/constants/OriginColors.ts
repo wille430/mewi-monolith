@@ -1,4 +1,4 @@
-import type { ListingOrigin } from '@wille430/common'
+import type { ListingOrigin } from '@/common/schemas'
 import { hexToRgb, relativeLuminance } from '@/utils/colors'
 
 export const BLOCKET_COLOR = '#f71414'

@@ -1,4 +1,4 @@
-import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import type { AxiosResponse } from 'axios'
 import { autoInjectable, inject } from 'tsyringe'
 import { ListingsRepository } from '../../listings/listings.repository'

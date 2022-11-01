@@ -1,4 +1,4 @@
-import { LoginStrategy } from '@wille430/common'
+import { LoginStrategy } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import bcrypt from 'bcrypt'
 import { BadRequestException, NotFoundException } from 'next-api-decorators'

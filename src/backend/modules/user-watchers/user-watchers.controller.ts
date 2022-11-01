@@ -1,4 +1,4 @@
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import { Body, Delete, Get, HttpCode, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { UserWatchersService } from './user-watchers.service'

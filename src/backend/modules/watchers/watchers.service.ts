@@ -1,5 +1,5 @@
 import { autoInjectable, inject } from 'tsyringe'
-import type { ListingSearchFilters } from '@wille430/common'
+import type { ListingSearchFilters } from '@/common/schemas'
 import { ObjectId } from 'mongodb'
 import { EJSON } from 'bson'
 import Email from 'email-templates'

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import type { WithId } from 'mongodb'
-import { LoginStrategy, Role } from '@wille430/common'
+import { LoginStrategy, Role } from '@/common/schemas'
 import { timestampsStub } from '@mewi/test-utils'
 import { User } from '@/backend/modules/schemas/user.schema'
 

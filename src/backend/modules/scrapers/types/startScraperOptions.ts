@@ -1,4 +1,4 @@
-import type { ScraperTrigger } from '@wille430/common'
+import type { ScraperTrigger } from '@/common/schemas'
 import type { WatchOptions } from '../classes/types/WatchOptions'
 
 export interface StartScraperOptions {

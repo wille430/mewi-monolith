@@ -1,5 +1,5 @@
-import type { Currency } from '@wille430/common'
-import { Category, ListingOrigin } from '@wille430/common'
+import type { Currency } from '@/common/schemas'
+import { Category, ListingOrigin } from '@/common/schemas'
 import { Transform } from 'class-transformer'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 import type { Listing } from '../../schemas/listing.schema'

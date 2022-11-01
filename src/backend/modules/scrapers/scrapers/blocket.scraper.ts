@@ -1,5 +1,5 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { ListingOrigin, Currency } from '@wille430/common'
+import { ListingOrigin, Currency } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import type { BlocketListing } from '../types/blocketListing'
 import { ListingScraper } from '../classes/ListingScraper'

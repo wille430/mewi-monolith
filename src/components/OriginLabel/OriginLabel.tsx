@@ -1,4 +1,4 @@
-import type { ListingOrigin } from '@wille430/common'
+import type { ListingOrigin } from '@/common/schemas'
 import { getColor } from '@/constants/OriginColors'
 
 export const OriginLabel = ({ origin }: { origin: ListingOrigin }) => {

@@ -1,4 +1,4 @@
-import { Category, ListingOrigin, ListingSort } from '@wille430/common'
+import { Category, ListingOrigin, ListingSort } from '@/common/schemas'
 import { Transform } from 'class-transformer'
 import {
     IsOptional,

@@ -1,6 +1,6 @@
 import type { AxiosResponse } from 'axios'
 import axios from 'axios'
-import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
 import { ListingScraper } from '../classes/ListingScraper'

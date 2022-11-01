@@ -1,5 +1,5 @@
-import type { Category } from '@wille430/common'
-import { CategoryLabel } from '@wille430/common'
+import type { Category } from '@/common/schemas'
+import { CategoryLabel } from '@/common/schemas'
 import Link from 'next/link'
 import styles from './CategoryPathLabel.module.scss'
 

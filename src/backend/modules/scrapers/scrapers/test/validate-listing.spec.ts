@@ -1,4 +1,4 @@
-import { Category, Currency } from '@wille430/common'
+import { Category, Currency } from '@/common/schemas'
 import type { ScrapeContext } from '../../classes/types/ScrapeContext'
 
 const urlRegex =

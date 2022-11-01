@@ -1,4 +1,4 @@
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import {
     Post,
     Put,

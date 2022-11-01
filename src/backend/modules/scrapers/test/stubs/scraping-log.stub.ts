@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
 import { timestampsStub } from '@mewi/test-utils'
-import { ScraperTrigger } from '@wille430/common'
+import { ScraperTrigger } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 import { ScrapingLog } from '@/backend/modules/schemas/scraping-log.schema'

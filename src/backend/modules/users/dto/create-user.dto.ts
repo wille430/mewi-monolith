@@ -1,4 +1,4 @@
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator'
 import type { User } from '../../schemas/user.schema'
 

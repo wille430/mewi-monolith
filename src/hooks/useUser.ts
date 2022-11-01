@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import useSWR from 'swr'
 import router from 'next/router'
-import { IUser } from '@wille430/common'
+import { IUser } from '@/common/schemas'
 import { useAppDispatch } from '.'
 import { setLoggedInStatus } from '@/store/user'
 

@@ -1,6 +1,6 @@
 import type { Ref } from '@typegoose/typegoose'
 import { getModelForClass, prop } from '@typegoose/typegoose'
-import { LoginStrategy, Role } from '@wille430/common'
+import { LoginStrategy, Role } from '@/common/schemas'
 import type { Document } from 'mongoose'
 import { EmailUpdate } from './class/EmailUpdate'
 import { PasswordReset } from './class/PasswordReset'

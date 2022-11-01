@@ -1,4 +1,4 @@
-import type { IListing } from '@wille430/common'
+import type { IListing } from '@/common/schemas'
 import type { AnimationProps, HTMLMotionProps } from 'framer-motion'
 import { motion } from 'framer-motion'
 import { useState } from 'react'

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { ListingSearchFilters } from '@wille430/common'
+import type { ListingSearchFilters } from '@/common/schemas'
 import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { Container } from '../Container/Container'

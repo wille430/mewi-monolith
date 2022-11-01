@@ -1,4 +1,4 @@
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import { userStub } from './user.stub'
 import { UserPayload } from '@/backend/modules/common/types/UserPayload'
 

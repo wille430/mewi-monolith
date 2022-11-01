@@ -1,4 +1,4 @@
-import type { IUser } from '@wille430/common'
+import type { IUser } from '@/common/schemas'
 import type { AxiosRequestConfig } from 'axios'
 import { client } from '.'
 

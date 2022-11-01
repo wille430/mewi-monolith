@@ -1,5 +1,5 @@
 import { prop } from '@typegoose/typegoose'
-import { Category, ListingOrigin } from '@wille430/common'
+import { Category, ListingOrigin } from '@/common/schemas'
 import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { FindAllListingsDto } from '../../listings/dto/find-all-listing.dto'
 

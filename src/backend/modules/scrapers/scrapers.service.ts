@@ -1,5 +1,5 @@
-import type { ScraperStatusReport } from '@wille430/common'
-import { ListingOrigin, ScraperStatus, ScraperTrigger } from '@wille430/common'
+import type { ScraperStatusReport } from '@/common/schemas'
+import { ListingOrigin, ScraperStatus, ScraperTrigger } from '@/common/schemas'
 import type { FilterQuery } from 'mongoose'
 import { NotFoundException } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'

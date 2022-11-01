@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { ListingOrigin } from '@wille430/common'
+import { ListingOrigin } from '@/common/schemas'
 import { ListingScraper } from '../../classes/__mocks__/ListingScraper'
 
 export const TraderaScraper = jest.fn().mockReturnValue({

@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
 import { useState } from 'react'
-import type { IUserWatcher } from '@wille430/common'
+import type { IUserWatcher } from '@/common/schemas'
 import { useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'

@@ -1,4 +1,4 @@
-import type { IListing } from '@wille430/common'
+import type { IListing } from '@/common/schemas'
 import type { ResourceType } from '..'
 
 export interface ListingsState {

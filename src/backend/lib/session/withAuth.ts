@@ -1,4 +1,4 @@
-import type { Role } from '@wille430/common'
+import type { Role } from '@/common/schemas'
 import type { GetServerSideProps } from 'next'
 import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
 import { withSessionSsr } from '@/backend/lib/session/withSessionSsr'

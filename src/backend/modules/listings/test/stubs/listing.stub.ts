@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker'
 import { timestampsStub } from '@mewi/test-utils'
-import { Category, Currency, ListingOrigin } from '@wille430/common'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 import { Listing } from '@/backend/modules/schemas/listing.schema'

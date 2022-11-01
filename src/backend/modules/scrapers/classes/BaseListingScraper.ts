@@ -1,5 +1,5 @@
-import type { ListingOrigin } from '@wille430/common'
-import { ScraperStatus, stringSimilarity, ScraperTrigger, Category } from '@wille430/common'
+import type { ListingOrigin } from '@/common/schemas'
+import { ScraperStatus, stringSimilarity, ScraperTrigger, Category } from '@/common/schemas'
 import type { FilterQuery } from 'mongoose'
 import crypto from 'crypto'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'

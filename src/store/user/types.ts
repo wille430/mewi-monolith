@@ -1,4 +1,4 @@
-import { IUser } from "@wille430/common"
+import { IUser } from "@/common/schemas"
 
 export interface UserState {
     isLoggedIn: boolean

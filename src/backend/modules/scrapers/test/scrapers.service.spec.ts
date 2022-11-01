@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { ListingOrigin, ScraperStatus } from '@wille430/common'
+import { ListingOrigin, ScraperStatus } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { scraperStatusReportStub } from './stubs/scraper-status-report.stub'

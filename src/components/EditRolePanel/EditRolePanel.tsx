@@ -1,6 +1,6 @@
 import capitalize from 'lodash/capitalize'
-import type { IUser } from '@wille430/common'
-import { Role } from '@wille430/common'
+import type { IUser } from '@/common/schemas'
+import { Role } from '@/common/schemas'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'

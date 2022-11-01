@@ -1,5 +1,5 @@
-import type { IScrapingLog } from '@wille430/common'
-import { ListingOrigin } from '@wille430/common'
+import type { IScrapingLog } from '@/common/schemas'
+import { ListingOrigin } from '@/common/schemas'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { AxisOptions, UserSerie } from 'react-charts'

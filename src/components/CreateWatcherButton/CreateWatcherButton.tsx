@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import type { ListingSearchFilters, IUserWatcher } from '@wille430/common'
+import type { ListingSearchFilters, IUserWatcher } from '@/common/schemas'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import type { PopUpModalProps } from '../PopUpModal/PopUpModal'

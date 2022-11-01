@@ -1,5 +1,5 @@
-import type { ScraperStatusReport } from '@wille430/common'
-import { ScraperStatus } from '@wille430/common'
+import type { ScraperStatusReport } from '@/common/schemas'
+import { ScraperStatus } from '@/common/schemas'
 import { scraperConfigStub } from './scraper-config.stub'
 import { scrapingLogStub } from './scraping-log.stub'
 

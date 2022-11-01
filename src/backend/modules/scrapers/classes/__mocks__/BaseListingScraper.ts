@@ -1,4 +1,4 @@
-import { ScraperStatus } from '@wille430/common'
+import { ScraperStatus } from '@/common/schemas'
 import { scraperConfigStub } from '../../test/stubs/scraper-config.stub'
 import { listingStub } from '@/backend/modules/listings/test/stubs/listing.stub'
 

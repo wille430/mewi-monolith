@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
-import type { IScrapingLog } from '@wille430/common'
-import { ListingOrigin, ScraperTrigger } from '@wille430/common'
+import type { IScrapingLog } from '@/common/schemas'
+import { ListingOrigin, ScraperTrigger } from '@/common/schemas'
 import type { Document } from 'mongoose'
 
 export type ScrapingLogDocument = ScrapingLog & Document

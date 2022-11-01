@@ -1,6 +1,6 @@
 import type { Document } from 'mongoose'
-import { Currency } from '@wille430/common'
-import { Category, ListingOrigin } from '@wille430/common'
+import { Currency } from '@/common/schemas'
+import { Category, ListingOrigin } from '@/common/schemas'
 import { getModelForClass, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document

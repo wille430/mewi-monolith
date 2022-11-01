@@ -1,4 +1,4 @@
-import { Category, Currency, ListingOrigin, safeToDate } from '@wille430/common'
+import { Category, Currency, ListingOrigin, safeToDate } from '@/common/schemas'
 import type { AxiosResponse } from 'axios'
 import { autoInjectable, inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'

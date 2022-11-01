@@ -1,6 +1,6 @@
 import { randomEmail, randomPassword } from '@mewi/test-utils'
 import { Injectable } from '@nestjs/common'
-import type { AuthTokens } from '@wille430/common'
+import type { AuthTokens } from '@/common/schemas'
 import type { AuthService } from '@/auth/auth.service'
 import type { LoginDto } from '@/auth/dto/login.dto'
 import type { UsersRepository } from '@/users/users.repository'

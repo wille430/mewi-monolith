@@ -1,5 +1,5 @@
-import { Category } from '@wille430/common'
-import { CategoryLabel } from '@wille430/common'
+import { Category } from '@/common/schemas'
+import { CategoryLabel } from '@/common/schemas'
 import type { LinkProps } from 'next/link'
 import type { RootState } from '@/store'
 

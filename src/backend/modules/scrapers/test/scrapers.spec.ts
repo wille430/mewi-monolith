@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { Category, ScraperStatus, ScraperTrigger } from '@wille430/common'
+import { Category, ScraperStatus, ScraperTrigger } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
 import crypto from 'crypto'

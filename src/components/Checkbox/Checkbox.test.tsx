@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { randomString } from '@wille430/common'
+import { randomString } from '@/common/schemas'
 import Checkbox from './Checkbox'
 
 it('renders correctly', () => {

@@ -1,4 +1,4 @@
-import { ListingOrigin } from '@wille430/common'
+import { ListingOrigin } from '@/common/schemas'
 import { IsArray, IsEnum, IsOptional } from 'class-validator'
 
 export class StartScrapersDto {

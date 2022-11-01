@@ -1,5 +1,5 @@
 import { Container } from '../Container/Container'
-import { Role } from '@wille430/common'
+import { Role } from '@/common/schemas'
 import styles from './SideNav.module.scss'
 import SideNavButton from './SideNavButton/SideNavButton'
 import { useAppSelector } from '@/hooks'

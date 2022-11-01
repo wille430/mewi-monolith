@@ -11,9 +11,9 @@ import {
     Delete,
     HttpCode,
 } from 'next-api-decorators'
-import type { IUser } from '@wille430/common'
-import { SuccessParam } from '@wille430/common'
-import { Role } from '@wille430/common'
+import type { IUser } from '@/common/schemas'
+import { SuccessParam } from '@/common/schemas'
+import { Role } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import type { NextApiResponse } from 'next'
 import { UsersService } from './users.service'

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ListingOrigin } from '@wille430/common'
+import { ListingOrigin } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { validateListingTest } from '../validate-listing.spec'

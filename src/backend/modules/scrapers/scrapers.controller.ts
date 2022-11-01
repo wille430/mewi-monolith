@@ -1,5 +1,5 @@
-import type { ListingOrigin, ScraperStatusReport } from '@wille430/common'
-import { Role, ScraperTrigger } from '@wille430/common'
+import type { ListingOrigin, ScraperStatusReport } from '@/common/schemas'
+import { Role, ScraperTrigger } from '@/common/schemas'
 import capitalize from 'lodash/capitalize'
 import { Body, Get, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'

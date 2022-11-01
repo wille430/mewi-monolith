@@ -1,4 +1,4 @@
-import type { ListingSearchFilters } from '@wille430/common'
+import type { ListingSearchFilters } from '@/common/schemas'
 import { useEffect, useRef } from 'react'
 import isEqual from 'lodash/isEqual'
 import PageNav from '../PageNav/PageNav'

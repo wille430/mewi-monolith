@@ -1,4 +1,4 @@
-import { Category } from '@wille430/common'
+import { Category } from '@/common/schemas'
 import { CategoryListItem } from './CategoryListItem/CategoryListItem'
 
 export const CategoryList = () => (

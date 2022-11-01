@@ -1,4 +1,4 @@
-import { safeToDate } from '@wille430/common'
+import { safeToDate } from '@/common/schemas'
 import type { ScrapePredicate } from '../classes/types/ScrapePredicate'
 import type { ScrapeCompareValue } from '../classes/types/ScrapeCompareValue'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'

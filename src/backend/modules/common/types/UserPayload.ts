@@ -1,4 +1,4 @@
-import type { Role } from '@wille430/common'
+import type { Role } from '@/common/schemas'
 
 export interface UserPayload {
     userId: string

@@ -1,4 +1,4 @@
-import { ListingSort } from '@wille430/common'
+import { ListingSort } from '@/common/schemas'
 import { ChangeEvent } from 'react'
 import { useListingFilters } from '@/hooks/useListingFilters'
 

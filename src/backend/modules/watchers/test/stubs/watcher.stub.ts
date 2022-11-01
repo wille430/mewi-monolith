@@ -1,5 +1,5 @@
 import { timestampsStub } from '@mewi/test-utils'
-import type { IWatcher } from '@wille430/common'
+import type { IWatcher } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 

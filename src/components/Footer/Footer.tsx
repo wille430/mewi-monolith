@@ -1,5 +1,5 @@
-import { Category } from '@wille430/common'
-import { CategoryLabel } from '@wille430/common'
+import { Category } from '@/common/schemas'
+import { CategoryLabel } from '@/common/schemas'
 import Link from 'next/link'
 import styles from './Footer.module.scss'
 import { Arch } from '../Arch/Arch'

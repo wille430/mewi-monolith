@@ -1,4 +1,4 @@
-import type { Role } from '@wille430/common'
+import type { Role } from '@/common/schemas'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ForbiddenException, NextFunction } from 'next-api-decorators'
 import { createMiddlewareDecorator, UnauthorizedException } from 'next-api-decorators'

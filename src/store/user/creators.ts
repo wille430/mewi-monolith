@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { IUser } from '@wille430/common'
+import { IUser } from '@/common/schemas'
 import { UserActionTypes } from './types'
 import { client } from '@/lib/client'
 
