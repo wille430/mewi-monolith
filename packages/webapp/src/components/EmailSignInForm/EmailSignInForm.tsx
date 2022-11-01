@@ -83,9 +83,9 @@ export const EmailSignInForm = () => {
                     fullWidth={true}
                     disabled={isSubmitting}
                 />
-                <a className='block text-sm hover:underline' href='/glomtlosenord'>
+                <Link className='block text-sm hover:underline' href='/glomtlosenord'>
                     Har du glömt lösenordet?
-                </a>
+                </Link>
             </div>
 
             {errors.password && <span className='text-red-400'>{errors.password}</span>}

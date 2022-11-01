@@ -1,6 +1,0 @@
-{
-    "extends": ["../../.eslintrc", "next"],
-    "rules": {
-        "@typescript-eslint/consistent-type-imports": "off"
-    }
-}

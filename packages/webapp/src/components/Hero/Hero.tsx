@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+import Link from 'next/link'
 import style from './Hero.module.scss'
 import { SearchInput } from '@/components/SearchInput/SearchInput'
 
@@ -14,9 +16,9 @@ export const Hero = () => {
                     <div className='flex w-full flex-col items-end'>
                         <SearchInput data-testid='search-input' />
 
-                        <a className='mt-2 text-secondary' href='/filter'>
+                        <Link className='mt-2 text-secondary' href='/filter'>
                             {'Advancerade filter >>'}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
