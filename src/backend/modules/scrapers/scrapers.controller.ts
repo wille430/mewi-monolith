@@ -13,7 +13,6 @@ import { AdminOrKeyGuard } from '@/backend/middlewares/admin-or-key.guard'
 import { ScraperStatusReport } from '@/common/types'
 
 @autoInjectable()
-@SessionGuard()
 export class ScrapersController {
     constructor(@inject(ScrapersService) private readonly scrapersService: ScrapersService) {}
 

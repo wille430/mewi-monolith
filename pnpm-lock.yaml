@@ -40,6 +40,7 @@ specifiers:
   next-redux-wrapper: ^8.0.0
   nodemailer: ^6.8.0
   path-to-regex: ^1.3.8
+  path-to-regexp: ^6.2.1
   postcss: ^8.4.18
   puppeteer: ^19.2.0
   query-string: ^7.1.1
@@ -90,6 +91,7 @@ dependencies:
   next-redux-wrapper: 8.0.0_7zaz4jxdgd6dxvio4pui5sg4o4
   nodemailer: 6.8.0
   path-to-regex: 1.3.8
+  path-to-regexp: 6.2.1
   puppeteer: 19.2.0
   query-string: 7.1.1
   react: 18.2.0
@@ -6853,6 +6855,10 @@ packages:
   /path-to-regex/1.3.8:
     resolution: {integrity: sha512-LKzBjGETV/O+7naBRwthW8OMD7ztjmbZcNnf0pl0H21/1eIil5I4ByERzuGhSr7SNQxxVbynA7K4MxSGM7LSpg==}
     engines: {node: '>=10.11.0'}
+    dev: false
+
+  /path-to-regexp/6.2.1:
+    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
     dev: false
 
   /path-type/4.0.0:
