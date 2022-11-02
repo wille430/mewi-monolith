@@ -9,8 +9,6 @@ export const adminApiKeyMiddleware = (
     const words = req.headers.authorization?.split(' ') ?? []
     const token = words[1]
 
-    console.log("AUTH TOKEN: ", token)
-
     if (token === process.env.ADMIN_API_KEY && process.env.ADMIN_API_KEY != null) {
         next()
     } else {

@@ -13,8 +13,6 @@ export const rolesMiddleware =
         const session = await getSession(req, res)
         let user = session.user
 
-        console.log({user})
-
         if (!user && process.env.NODE_ENV !== 'production') {
             user = req.session?.user
         }

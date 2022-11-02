@@ -84,12 +84,7 @@ export class UsersController {
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 
-            const webappUrl = new URL(
-                `/?success=${SuccessParam.UPDATED_EMAIL}`,
-                process.env.NEXT_PUBLIC_API_URL
-            ).toString()
-
-            res.redirect(webappUrl)
+            res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`)
         }
     }
 
