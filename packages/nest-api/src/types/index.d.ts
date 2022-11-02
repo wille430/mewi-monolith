@@ -1,3 +1,0 @@
-interface Element {
-    style: CSSStyleDeclaration
-}

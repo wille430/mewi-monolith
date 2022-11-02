@@ -1,0 +1,20 @@
+.container {
+    @apply border-4 shadow-md;
+    padding: 1rem;
+    background-color: theme('colors.paper');
+    border-radius: 0.15rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    flex: none;
+}
+
+.content {
+    flex-grow: 1;
+}
+
+.footer {
+    flex: none;
+}

@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+$layout-width: theme('screens.lg');
+
+@layer components {
+    .form {
+        @apply mx-auto flex max-w-md flex-col space-y-8;
+    }
+
+    .section {
+        @apply mx-auto  overflow-hidden rounded-md border-2 border-gray-300 bg-white p-4;
+    }
+
+    .btn-group {
+        @apply flex space-x-4 md:justify-center;
+    }
+
+    .box {
+        @apply rounded-md bg-gray-100 p-4;
+    }
+
+    .divided-content {
+        @apply space-y-12 p-4;
+        margin: 0 auto;
+        max-width: $layout-width;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        @screen lg {
+            @apply space-x-16 space-y-0;
+            flex-direction: row;
+        }
+    }
+}
+
+@layer utilities {
+    .max-width {
+        @apply w-full max-w-screen-lg;
+    }
+}
+
+@media (min-width: 640px) {
+    .w-fixed {
+        flex: 0 1 230px;
+        min-width: 230px;
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', 'Urbanist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+h1 {
+    font-size: 93px;
+}
+h2 {
+    font-size: 2rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+h4 {
+    font-size: 1rem;
+}
+h5 {
+    font-size: 0.75rem;
+}
+h6 {
+    font-size: 0.5rem;
+}
+p {
+    font-size: 1rem;
+}
+p.body2 {
+    font-size: 0.875rem;
+}
+caption {
+    font-size: 0.75rem;
+}
+
+body {
+    background-color: theme('colors.gray.200');
+}
+
+.basic-layout {
+    @apply flex flex-col gap-4 p-4;
+    margin: 0 auto;
+    height: 100%;
+
+    @screen xl {
+        grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
+        display: grid;
+        max-width: none;
+        margin: none;
+    }
+
+    & > main {
+        flex-grow: 1;
+    }
+}
+
+.search-layout {
+    @extend .basic-layout;
+
+    @screen md {
+        grid-template-columns: 16rem 1fr;
+        display: grid;
+    }
+
+    @screen xl {
+        grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
+    }
+}
+
+/* REACT SELECT */
+.Select__control {
+    min-height: 42px !important;
+
+    &--is-focused {
+        border-color: theme('colors.primary') !important;
+        box-shadow: 0 0 0 1px theme('colors.primary') !important;
+    }
+
+    & > span {
+        z-index: 2;
+    }
+}
+
+.card {
+    @apply section w-full max-w-none rounded p-0;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    &__body {
+        @apply p-1 px-2.5 py-1.5;
+        flex: 2;
+    }
+
+    &__heading {
+        @apply mb-1 text-base text-primary;
+    }
+
+    &__text {
+        @apply text-sm;
+    }
+
+    &__image-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: max(8rem, 30%);
+    }
+
+    &__img {
+        height: auto;
+        width: 100%;
+        object-fit: cover;
+    }
+}

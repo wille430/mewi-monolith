@@ -18,7 +18,7 @@
 1. Install dependencies:
 
 ```
-pnpm i -F schemas && pnpm i -F !schemas
+pnpm install
 ```
 
 2. Start servers:
@@ -42,3 +42,13 @@ sudo sh ./tools/deploy_api.sh
 ### Deploy webapp
 
 On each commit to the main branch, Vercel will begin building a production build and deploy it. [Vercel Dashboard](https://vercel.com/dashboard)
+
+## Known issues
+
+### Missing schema.prisma
+
+In packages/webapp/node_modules/@mewi/prisma/client/index.js somewhere at line 51052, replace the line with:
+```
+const myPath = config2.generator.output.value + '/schema.prisma';
+this.datamodel = import_fs3.default.readFileSync(myPath, "utf-8");
+```
