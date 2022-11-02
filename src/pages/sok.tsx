@@ -1,11 +1,11 @@
 import type { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { SearchSection } from '@/components/SearchSection/SearchSection'
-import { ListingFiltersProvider } from '@/hooks/useListingFilters'
-import { SideFilters } from '@/components/SideFilters/SideFilters'
-import { Layout } from '@/components/Layout/Layout'
-import { SearchInput } from '@/components/SearchInput/SearchInput'
+import { SearchSection } from '@/lib/components/SearchSection/SearchSection'
+import { ListingFiltersProvider } from '@/lib/hooks/useListingFilters'
+import { SideFilters } from '@/lib/components/SideFilters/SideFilters'
+import { Layout } from '@/lib/components/Layout/Layout'
+import { SearchInput } from '@/lib/components/SearchInput/SearchInput'
 
 const SearchPage = () => {
     const router = useRouter()

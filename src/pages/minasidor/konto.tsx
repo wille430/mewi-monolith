@@ -1,12 +1,12 @@
 import type { ReactElement } from 'react'
 import Head from 'next/head'
-import AccountDetails from '@/components/AccountDetails/AccountDetails'
-import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { serialize } from '@/utils/serialize'
-import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
-import { withAuth } from '@/backend/lib/session/withAuth'
-import { Container } from '@/components/Container/Container'
-import { HorizontalLine } from '@/components/HorizontalLine/HorizontalLine'
+import AccountDetails from '@/lib/components/AccountDetails/AccountDetails'
+import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import { serialize } from '@/lib/utils/serialize'
+import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
+import { withAuth } from '@/lib/session/withAuth'
+import { Container } from '@/lib/components/Container/Container'
+import { HorizontalLine } from '@/lib/components/HorizontalLine/HorizontalLine'
 import { IUser, Role } from '@/common/schemas'
 
 interface KontoPageProps {
@@ -17,7 +17,7 @@ export const getServerSideProps = withAuth(
     async ({ req }) => {
         await import('reflect-metadata')
         const container = await import('tsyringe').then(({ container }) => container)
-        const UsersService = await import('@/backend/modules/users/users.service').then(
+        const UsersService = await import('@/lib/modules/users/users.service').then(
             ({ UsersService }) => UsersService
         )
         const usersService = container.resolve(UsersService)

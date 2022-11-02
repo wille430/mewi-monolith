@@ -4,18 +4,18 @@ import type { GetStaticProps } from 'next'
 import dynamic from 'next/dynamic'
 import max from 'lodash/max'
 import uniqBy from 'lodash/uniqBy'
-import { Layout } from '@/components/Layout/Layout'
-import { Hero } from '@/components/Hero/Hero'
-import { DecorativeWaves } from '@/components/DecorativeWaves/DecorativeWaves'
-import { FeaturedListings } from '@/components/FeaturedListings/FeaturedListings'
-import { useAppDispatch, useAppSelector } from '@/hooks'
-import { closeListing, setFeatured } from '@/store/listings'
-import { wrapper } from '@/store'
-import { dbConnection } from '@/backend/lib/dbConnection'
-import { serialize } from '@/utils/serialize'
+import { Layout } from '@/lib/components/Layout/Layout'
+import { Hero } from '@/lib/components/Hero/Hero'
+import { DecorativeWaves } from '@/lib/components/DecorativeWaves/DecorativeWaves'
+import { FeaturedListings } from '@/lib/components/FeaturedListings/FeaturedListings'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { closeListing, setFeatured } from '@/lib/store/listings'
+import { wrapper } from '@/lib/store'
+import { dbConnection } from '@/lib/dbConnection'
+import { serialize } from '@/lib/utils/serialize'
 import { IListing, IUser } from '@/common/schemas'
 
-const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
+const ListingPopUp = dynamic(() => import('@/lib/components/ListingPopUp/ListingPopUp'))
 
 interface IndexPageProps {
     featuredListings: IListing[]

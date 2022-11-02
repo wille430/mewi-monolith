@@ -7,11 +7,11 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
-import type { Store } from '@/store'
-import { wrapper } from '@/store'
+import type { Store } from '@/lib/store'
+import { wrapper } from '@/lib/store'
 import { fetchJson } from '@/lib/fetchJson'
 import { client } from '@/lib/client'
-import { useUser } from '@/hooks/useUser'
+import { useUser } from '@/lib/hooks/useUser'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode

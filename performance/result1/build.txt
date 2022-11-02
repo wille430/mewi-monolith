@@ -14,10 +14,10 @@ info  - Linting and checking validity of types...
 7:1  Warning: `next/dynamic` import should occur before import of `./EditableField.module.scss`  import/order
 
 ./src/components/ListingFilters/ListingFilters.tsx
-1:1  Warning: `@/utils/toggleFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
+1:1  Warning: `@/lib/utils/toggleFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
 
 ./src/components/ListingPopUp/ListingPopUpContainer.tsx
-3:1  Warning: `next/dynamic` import should occur before import of `@/hooks`  import/order
+3:1  Warning: `next/dynamic` import should occur before import of `@/lib/hooks`  import/order
 
 ./src/components/ListingWidget/ListingWidget.tsx
 11:1  Warning: `@mewi/prisma/index-browser` import should occur before import of `./ListingWidget.module.scss`  import/order
@@ -30,8 +30,8 @@ info  - Linting and checking validity of types...
 37:25  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/SideFilters/SideFilters.tsx
-1:1  Warning: `@/hooks/useListingFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
-2:1  Warning: `@/utils/toggleFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
+1:1  Warning: `@/lib/hooks/useListingFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
+2:1  Warning: `@/lib/utils/toggleFilters` import should occur after import of `../PriceRangeFilter/PriceRangeFilter`  import/order
 
 ./src/types/types.ts
 386:24  Warning: 'T' is defined but never used. Allowed unused vars must match /^_/u.  unused-imports/no-unused-vars

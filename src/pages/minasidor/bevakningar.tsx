@@ -2,12 +2,12 @@ import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 import Head from 'next/head'
 import { useQuery } from 'react-query'
-import WatcherList from '@/components/WatcherList/WatcherList'
-import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
+import WatcherList from '@/lib/components/WatcherList/WatcherList'
+import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import { ListingPopUpContainer } from '@/lib/components/ListingPopUp/ListingPopUpContainer'
 import { client } from '@/lib/client'
-import { useUser } from '@/hooks/useUser'
-import { ON_UNAUTHENTICATED_GOTO } from '@/constants/paths'
+import { useUser } from '@/lib/hooks/useUser'
+import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
 
 const Bevakningar = () => {
     const { data: watchers, refetch: fetchWatchers } = useQuery(

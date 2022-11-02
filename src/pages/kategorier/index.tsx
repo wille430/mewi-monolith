@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react'
 import Head from 'next/head'
-import { CategoryList } from '@/components/CategoryList/CategoryList'
-import { Layout } from '@/components/Layout/Layout'
+import { CategoryList } from '@/lib/components/CategoryList/CategoryList'
+import { Layout } from '@/lib/components/Layout/Layout'
 
 const Kategorier = () => (
     <main className='max-w-2xl mx-auto sm:mt-32 m-0'>
