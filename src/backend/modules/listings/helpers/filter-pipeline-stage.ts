@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { ListingSort } from '@/common/schemas'
+import { ListingSort } from '@/common/types'
 import { DEFAULT_LIMIT, MIN_SEARCH_SCORE } from '../constants'
 import type { FindAllListingsDto } from '../dto/find-all-listing.dto'
 

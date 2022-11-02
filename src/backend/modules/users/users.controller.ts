@@ -12,7 +12,6 @@ import {
     HttpCode,
 } from 'next-api-decorators'
 import type { IUser } from '@/common/schemas'
-import { SuccessParam } from '@/common/schemas'
 import { Role } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
 import type { NextApiResponse } from 'next'
@@ -27,6 +26,7 @@ import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 import { Roles } from '@/backend/middlewares/Roles'
+import { SuccessParam } from '../common/enum/successParam'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 
@@ -85,7 +85,7 @@ export class UsersController {
             await this.usersService.updateEmail(updateEmailDto)
 
             const webappUrl = new URL(
-                `/?success=${SuccessParam.UpdatedEmail}`,
+                `/?success=${SuccessParam.UPDATED_EMAIL}`,
                 process.env.NEXT_PUBLIC_API_URL
             ).toString()
 

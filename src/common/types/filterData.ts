@@ -1,5 +1,4 @@
-import { Category } from '../schemas'
-import { CategoryLabel } from './category.enum'
+import { Category, CategoryLabel } from '../schemas'
 
 export const regions = [
     { value: 'norrbotten', label: 'Norrbotten' },

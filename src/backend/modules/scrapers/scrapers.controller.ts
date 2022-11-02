@@ -1,4 +1,4 @@
-import type { ListingOrigin, ScraperStatusReport } from '@/common/schemas'
+import type { ListingOrigin } from '@/common/schemas'
 import { Role, ScraperTrigger } from '@/common/schemas'
 import capitalize from 'lodash/capitalize'
 import { Body, Get, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
@@ -10,6 +10,7 @@ import { ScrapersService } from './scrapers.service'
 import { Roles } from '@/backend/middlewares/Roles'
 import { SessionGuard } from '@/backend/middlewares/SessionGuard'
 import { AdminOrKeyGuard } from '@/backend/middlewares/admin-or-key.guard'
+import { ScraperStatusReport } from '@/common/types'
 
 @autoInjectable()
 @SessionGuard()

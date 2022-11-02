@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import type { ListingSearchFilters, IUserWatcher } from '@/common/schemas'
+import type { IUserWatcher } from '@/common/schemas'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import type { PopUpModalProps } from '../PopUpModal/PopUpModal'
@@ -8,6 +8,7 @@ import { Button, ButtonProps } from '../Button/Button'
 import { client } from '@/lib/client'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { pushToSnackbar } from '@/store/snackbar'
+import { ListingSearchFilters } from '@/common/types'
 
 const PopUpModal = dynamic<PopUpModalProps>(
     () => import('../PopUpModal/PopUpModal').then((mod) => mod.PopUpModal),

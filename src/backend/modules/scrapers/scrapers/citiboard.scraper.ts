@@ -1,4 +1,4 @@
-import { Category, Currency, ListingOrigin, safeToDate } from '@/common/schemas'
+import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import type { AxiosResponse } from 'axios'
 import { autoInjectable, inject } from 'tsyringe'
 import type { ScrapeContext } from '../classes/types/ScrapeContext'
@@ -6,6 +6,7 @@ import type { ScrapedListing } from '../classes/types/ScrapedListing'
 import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingScraper } from '../classes/ListingScraper'
 import { ListingsRepository } from '../../listings/listings.repository'
+import { safeToDate } from '@/utils/dateUtils'
 
 // TODO: find maximum offset
 @autoInjectable()

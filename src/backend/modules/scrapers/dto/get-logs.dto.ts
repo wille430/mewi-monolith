@@ -1,4 +1,4 @@
-import { safeToDate } from '@/common/schemas'
+import { safeToDate } from '@/utils/dateUtils'
 import { Transform } from 'class-transformer'
 import { IsDate } from 'class-validator'
 import type { FilterQuery } from 'mongoose'

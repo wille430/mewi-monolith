@@ -1,5 +1,4 @@
-import { IUser, IUserWatcher } from '../schemas'
-import { Watcher } from 'error'
+import { IUser, IUserWatcher, IWatcher } from '../schemas'
 
 export interface FilterStates {
     regionState: { state: string; setState: any }
@@ -28,4 +27,4 @@ export interface AuthTokens {
 
 export type EditableUserFields = keyof Pick<IUser, 'email'>
 
-export type PopulatedUserWatcher = IUserWatcher & { watcher: Watcher }
+export type PopulatedUserWatcher = IUserWatcher & { watcher: IWatcher }

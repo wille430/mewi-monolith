@@ -1,5 +1,5 @@
 import type { Category, ListingOrigin } from '@/common/schemas'
-import type { ListingSearchFilters } from '@/common/schemas'
+import { ListingSearchFilters } from '@/common/types'
 import type { Dispatch, SetStateAction } from 'react'
 
 export const toggleCategory = (

@@ -1,11 +1,10 @@
-import type { ListingSearchFilters } from '@/common/schemas'
-import { categories } from '@/common/schemas'
 import dynamic from 'next/dynamic'
 import type { Dispatch, SetStateAction } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 import { LabeledTextField } from '../LabeledTextField/LabeledTextField'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 import { toggleCategory } from '@/utils/toggleFilters'
+import { categories, ListingSearchFilters } from '@/common/types'
 
 const LabeledDropdown = dynamic(() => import('../LabeledDropdown/LabeledDropdown'))
 

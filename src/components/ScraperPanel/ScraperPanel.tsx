@@ -1,8 +1,6 @@
 import { ListingOrigin } from '@/common/schemas'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import type { ScraperStatusReport } from '@/common/schemas'
-import { ScraperStatus } from '@/common/schemas'
 import { formatDistance } from 'date-fns'
 import { sv } from 'date-fns/locale'
 import { GiPauseButton } from 'react-icons/gi'
@@ -13,6 +11,7 @@ import { Table } from '../Table/Table'
 import { Button, ButtonProps } from '../Button/Button'
 import { client } from '@/lib/client'
 import Checkbox from '@/components/Checkbox/Checkbox'
+import { ScraperStatus, ScraperStatusReport } from '@/common/types'
 
 const scraperStatusIconMap: Record<ScraperStatus, JSX.Element> = {
     IDLE: (

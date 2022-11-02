@@ -1,5 +1,5 @@
-import { LoginStrategy } from '../enums/login-strategy.enum'
-import { Role } from '../enums/user-role.enum'
+import { LoginStrategy } from './enums/login-strategy.enum'
+import { Role } from './enums/user-role.enum'
 import { IEmailUpdate } from './IEmailUpdate'
 import { IEntity } from './IEntity'
 import { IListing } from './IListing'

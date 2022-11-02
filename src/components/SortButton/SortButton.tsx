@@ -1,6 +1,6 @@
-import { ListingSort } from '@/common/schemas'
 import { ChangeEvent } from 'react'
 import { useListingFilters } from '@/hooks/useListingFilters'
+import { ListingSort } from '@/common/types'
 
 const SortButton = () => {
     const { setFilters, debouncedFilters } = useListingFilters()

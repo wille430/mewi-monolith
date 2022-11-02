@@ -1,5 +1,4 @@
 import { autoInjectable, inject } from 'tsyringe'
-import type { ListingSearchFilters } from '@/common/schemas'
 import { ObjectId } from 'mongodb'
 import { EJSON } from 'bson'
 import Email from 'email-templates'
@@ -14,6 +13,7 @@ import { UserWatchersRepository } from '../user-watchers/user-watchers.repositor
 import { UsersRepository } from '../users/users.repository'
 import type { User } from '../schemas/user.schema'
 import type { WatcherDocument } from '../schemas/watcher.schema'
+import { ListingSearchFilters } from '@/common/types'
 
 @autoInjectable()
 export class WatchersService {

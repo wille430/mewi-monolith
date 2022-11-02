@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import type { ListingSearchFilters } from '@/common/schemas'
 import { ListingFilters } from '../ListingFilters/ListingFilters'
 import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { Container } from '../Container/Container'
 import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
 import { Button } from '../Button/Button'
 import { PopUp } from '@/components/PopUp/PopUp'
+import { ListingSearchFilters } from '@/common/types'
 
 const AddWatcherPopUp = ({ useShow }: any) => {
     const { show, setShow } = useShow

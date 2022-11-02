@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import type { ReactElement } from 'react'
 import type { GetStaticProps } from 'next'
-import type { IListing, IUser } from '@/common/schemas'
 import dynamic from 'next/dynamic'
 import max from 'lodash/max'
 import uniqBy from 'lodash/uniqBy'
@@ -14,6 +13,7 @@ import { closeListing, setFeatured } from '@/store/listings'
 import { wrapper } from '@/store'
 import { dbConnection } from '@/backend/lib/dbConnection'
 import { serialize } from '@/utils/serialize'
+import { IListing, IUser } from '@/common/schemas'
 
 const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 

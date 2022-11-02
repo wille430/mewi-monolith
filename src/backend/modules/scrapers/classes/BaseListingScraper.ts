@@ -1,5 +1,4 @@
-import type { ListingOrigin } from '@/common/schemas'
-import { ScraperStatus, stringSimilarity, ScraperTrigger, Category } from '@/common/schemas'
+import { Category, ListingOrigin, ScraperTrigger } from '@/common/schemas'
 import type { FilterQuery } from 'mongoose'
 import crypto from 'crypto'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
@@ -13,6 +12,8 @@ import type { ScrapingLogsRepository } from '../scraping-logs.repository'
 import type { ListingsRepository } from '../../listings/listings.repository'
 import type { ScraperOptions } from '../../common/types/scraperOptions'
 import type { UserDocument } from '../../schemas/user.schema'
+import { ScraperStatus } from '@/common/types'
+import { stringSimilarity } from '@/utils/stringUtils'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE

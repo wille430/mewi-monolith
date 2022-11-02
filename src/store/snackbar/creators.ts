@@ -1,8 +1,8 @@
 import { createAction } from '@reduxjs/toolkit'
-import { SuccessParam } from '@/common/schemas'
 import uniqueId from 'lodash/uniqueId'
 import { SnackbarActionTypes } from './types'
 import type { SnackbarProps } from '@/components/Snackbar/Snackbar'
+import { SuccessParam } from '@/common/types'
 
 export const pushToSnackbar = createAction(
     SnackbarActionTypes.PUSH,

@@ -1,6 +1,5 @@
 import type { Category } from '@/common/schemas'
 import { ListingOrigin } from '@/common/schemas'
-import { categories } from '@/common/schemas'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
@@ -12,6 +11,7 @@ import { Button } from '../Button/Button'
 import { TextField } from '../TextField/TextField'
 import { toggleCategory, toggleOrigin } from '@/utils/toggleFilters'
 import { useListingFilters } from '@/hooks/useListingFilters'
+import { categories } from '@/common/types'
 
 export const SideFilters = () => {
     const { filters, setFilters, setField, clear } = useListingFilters()

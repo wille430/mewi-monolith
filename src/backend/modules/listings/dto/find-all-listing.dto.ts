@@ -1,4 +1,5 @@
-import { Category, ListingOrigin, ListingSort } from '@/common/schemas'
+import { Category, ListingOrigin } from '@/common/schemas'
+import { ListingSort } from '@/common/types'
 import { Transform } from 'class-transformer'
 import {
     IsOptional,

@@ -1,4 +1,4 @@
-import { ListingSearchFilters as ListingFilters } from '@/common/schemas'
+import { ListingSearchFilters as ListingFilters } from '@/common/types'
 import type { ChangeEvent } from 'react'
 import React, { useRef } from 'react'
 import queryString from 'query-string'

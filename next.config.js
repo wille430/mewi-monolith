@@ -14,6 +14,13 @@ if (process.env.NODE_ENV === 'development') {
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
+    redirects: () => [
+        {
+            source: '/minasidor',
+            destination: '/minasidor/bevakningar',
+            permanent: true,
+        },
+    ],
 }
 
 module.exports = flowRight(funcs)(nextConfig)

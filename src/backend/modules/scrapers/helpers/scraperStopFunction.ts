@@ -1,7 +1,7 @@
-import { safeToDate } from '@/common/schemas'
 import type { ScrapePredicate } from '../classes/types/ScrapePredicate'
 import type { ScrapeCompareValue } from '../classes/types/ScrapeCompareValue'
 import type { ScrapedListing } from '../classes/types/ScrapedListing'
+import { safeToDate } from '@/utils/dateUtils'
 
 /**
  * Creates a predicate function used for determining whether

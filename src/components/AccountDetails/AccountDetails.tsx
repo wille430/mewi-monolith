@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import type { IUser } from '@/common/schemas'
 import { LoginStrategy } from '@/common/schemas'
-import { randomString } from '@/common/schemas'
 import styles from './AccountDetails.module.scss'
 import { TextField } from '../TextField/TextField'
 import { Button } from '../Button/Button'
 import { client } from '@/lib/client'
+import { randomString } from '@/utils/stringUtils'
 
 export interface AccountDetailsProps {
     user: IUser

@@ -1,5 +1,4 @@
-import type { ScraperStatusReport } from '@/common/schemas'
-import { ListingOrigin, ScraperStatus, ScraperTrigger } from '@/common/schemas'
+import { ListingOrigin, ScraperTrigger } from '@/common/schemas'
 import type { FilterQuery } from 'mongoose'
 import { NotFoundException } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
@@ -10,6 +9,7 @@ import { ScrapingLogsRepository } from './scraping-logs.repository'
 import type { StartScraperOptions } from './types/startScraperOptions'
 import type { ScrapingLog } from '../schemas/scraping-log.schema'
 import { ListingsRepository } from '../listings/listings.repository'
+import { ScraperStatus, ScraperStatusReport } from '@/common/types'
 
 @autoInjectable()
 export class ScrapersService {

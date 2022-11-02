@@ -1,4 +1,3 @@
-import type { ListingSearchFilters } from '@/common/schemas'
 import { useEffect, useRef } from 'react'
 import isEqual from 'lodash/isEqual'
 import PageNav from '../PageNav/PageNav'
@@ -9,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks'
 import { searchListings } from '@/store/listings'
 import { useListingFilters } from '@/hooks/useListingFilters'
 import ListingGrid from '@/components/ListingGrid/ListingGrid'
+import { ListingSearchFilters } from '@/common/types'
 
 export interface SearchSectionProps {
     defaultFilters?: Partial<ListingSearchFilters>

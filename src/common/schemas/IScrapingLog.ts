@@ -1,5 +1,5 @@
-import { ListingOrigin } from '../enums/listing-origin.enum'
-import { ScraperTrigger } from '../enums/scraper-trigger.enum'
+import { ListingOrigin } from './enums/listing-origin.enum'
+import { ScraperTrigger } from './enums/scraper-trigger.enum'
 import { IEntity } from './IEntity'
 
 export interface IScrapingLog extends IEntity {

@@ -1,5 +1,5 @@
-import { Category } from '../enums/category.enum'
-import { ListingOrigin } from '../enums/listing-origin.enum'
+import { Category } from './enums/category.enum'
+import { ListingOrigin } from './enums/listing-origin.enum'
 
 export interface IWatcherMetadata {
     keyword?: string
