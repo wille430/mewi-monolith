@@ -10,6 +10,11 @@ import {
 } from 'mongoose'
 import type { Pagination } from './dto/pagination.dto'
 import { dbConnection } from '@/lib/dbConnection'
+import { Ref } from '@typegoose/typegoose'
+
+export type PopulationArg<T> = Partial<{
+    [P in keyof T]: T[P] extends Ref<any> ? boolean : undefined
+}>
 
 export abstract class EntityRepository<T extends Document> {
     defaultProjection = {
@@ -83,25 +88,20 @@ export abstract class EntityRepository<T extends Document> {
 
     async find(
         entityFilterQuery: FilterQuery<T>,
-        pagination: Pagination = {}
+        pagination: Pagination = {},
+        populate: PopulationArg<T> = {} as any
     ): Promise<T[] | null> {
-        try {
-            return this.applyPagination(
-                pagination,
-                this.entityModel.find(entityFilterQuery, {
-                    ...this.defaultProjection,
-                })
-            ).exec()
-        } catch (e) {
-            // @ts-ignore
-            return this.applyPagination(
-                pagination,
-                // @ts-ignore
-                this.entityModel.find(entityFilterQuery, {
-                    ...this.defaultProjection,
-                })
-            )
+        const query = this.entityModel.find(entityFilterQuery, {
+            ...this.defaultProjection,
+        })
+
+        for (const key of Object.keys(populate)) {
+            if (populate[key] === true) {
+                query.populate(key)
+            }
         }
+
+        return this.applyPagination(pagination, query).exec()
     }
 
     async create(createEntityData: unknown): Promise<T> {

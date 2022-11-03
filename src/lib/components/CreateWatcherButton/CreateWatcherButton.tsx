@@ -5,10 +5,11 @@ import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import type { PopUpModalProps } from '../PopUpModal/PopUpModal'
 import { Button, ButtonProps } from '../Button/Button'
-import { client } from '@/lib/client'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { pushToSnackbar } from '@/lib/store/snackbar'
 import { ListingSearchFilters } from '@/common/types'
+import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
+import { useSWRConfig } from 'swr'
 
 const PopUpModal = dynamic<PopUpModalProps>(
     () => import('../PopUpModal/PopUpModal').then((mod) => mod.PopUpModal),
@@ -36,12 +37,11 @@ export const CreateWatcherButton = ({
     const queryClient = useQueryClient()
     const { isLoggedIn } = useAppSelector((state) => state.user)
     const router = useRouter()
+    const { mutate } = useSWRConfig()
 
     const mutation = useMutation(
         async (newWatcher: ListingSearchFilters) => {
-            return client
-                .post<IUserWatcher>('/user-watchers', { metadata: newWatcher })
-                .then((res) => res.data)
+            return mutate(...createUserWatcher({ metadata: newWatcher }))
         },
         {
             onMutate: () => {

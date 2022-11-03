@@ -1,34 +1,20 @@
 import type { ReactElement } from 'react'
 import { useState } from 'react'
 import type { IUserWatcher } from '@/common/schemas'
-import { useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import styles from './WatcherList.module.scss'
 import WatcherPopUpButton from './WatcherPopUpButton'
 import { Container } from '../Container/Container'
 import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
-import { client } from '@/lib/client'
+import useSWR from 'swr'
+import { MY_WATCHERS_KEY } from '@/lib/client/user-watchers/swr-keys'
 
 const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))
 
-interface WatcherListProps {
-    watchers: IUserWatcher[]
-}
-
-const WatcherList = ({ watchers }: WatcherListProps) => {
+const WatcherList = () => {
     const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
 
-    const { data } = useQuery(
-        'watchers',
-        () => client.get<IUserWatcher[]>('/user-watchers').then((res) => res.data),
-        {
-            initialData: watchers ?? [],
-            enabled: false,
-            refetchOnMount: false,
-            refetchOnReconnect: false,
-            refetchOnWindowFocus: false,
-        }
-    )
+    const { data = [] } = useSWR<IUserWatcher[]>(MY_WATCHERS_KEY)
 
     const withWrapper = (component: ReactElement) => (
         <Container className={styles.watcherList}>

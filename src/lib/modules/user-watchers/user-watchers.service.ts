@@ -31,13 +31,13 @@ export class UserWatchersService {
         const user = await this.usersRepository.findById(userId)
         if (!user) return null
 
-        // 2. If user is already subscribed to the watcher, throw error
-        if (
-            await this.userWatchersRepository.count({
-                userId: user.id,
-                watcherId: watcher.id,
-            })
-        ) {
+        // 3. If user is already subscribed to the watcher, throw error
+        const count = await this.userWatchersRepository.count({
+            user: user.id,
+            watcher: watcher.id,
+        })
+        const isSubscribed = count > 0
+        if (isSubscribed) {
             throw new ConflictException('You are already subscribed to a similar watcher')
         } else {
             const userWatcher = await this.userWatchersRepository.create({
@@ -50,13 +50,15 @@ export class UserWatchersService {
     }
 
     async findAll(userId: string) {
-        try {
-            return await this.userWatchersRepository.find({
+        return await this.userWatchersRepository.find(
+            {
                 user: userId,
-            })
-        } catch (e) {
-            return []
-        }
+            },
+            {},
+            {
+                watcher: true,
+            }
+        )
     }
 
     async findOne(id: string, userId: string) {
