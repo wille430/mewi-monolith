@@ -16,7 +16,25 @@ export abstract class EntityRepository<T extends Document> {
         __v: 0,
     }
     constructor(protected readonly entityModel: Model<T>) {
-        dbConnection()
+        return new Proxy(this, {
+            get(target, prop) {
+                if (typeof target[prop] == 'function') {
+                    return new Proxy(target[prop], {
+                        apply: async (target, thisArg, args) => {
+                            // target(prop, args)
+                            await dbConnection()
+                            return Reflect.apply(target, thisArg, args)
+                        }
+                    })
+                } else {
+                    return Reflect.get(target, prop)
+                }
+            }
+        })
+    }
+
+    async setup() {
+        await dbConnection()
     }
 
     private applyPagination<

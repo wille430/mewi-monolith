@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextFunction } from 'next-api-decorators'
 import { createMiddlewareDecorator, UnauthorizedException } from 'next-api-decorators'
-import { getSession } from '../lib/session/getSession'
+import { getSession } from '../session/getSession'
 
 export const SessionGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {

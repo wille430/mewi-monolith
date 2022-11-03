@@ -1,6 +1,6 @@
+import { Match } from '@/lib/decorators/match.decorator'
 import { Expose } from 'class-transformer'
 import { IsEmail, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator'
-import { Match } from '../../common/decorators/match.decorator'
 
 export class ChangePasswordNoAuth {
     @IsString()

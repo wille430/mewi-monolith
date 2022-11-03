@@ -1,92 +1,87 @@
-import type { FormEvent } from 'react'
 import { useState } from 'react'
-import { useMutation } from 'react-query'
 import type { IUser } from '@/common/schemas'
-import { LoginStrategy } from '@/common/schemas'
 import styles from './AccountDetails.module.scss'
 import { TextField } from '../TextField/TextField'
 import { Button } from '../Button/Button'
-import { client } from '@/lib/client'
+import { updateEmail } from '@/lib/client'
 import { randomString } from '@/lib/utils/stringUtils'
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
+import type { UpdateEmailDto } from '@/lib/modules/users/dto/update-email.dto'
+import { handleError } from './handleError'
+import { updateEmailSchema } from '@/lib/client/users/schemas/update-email.schema'
+import { mutate } from 'swr'
 
 export interface AccountDetailsProps {
     user: IUser
 }
 
 const AccountDetails = ({ user }: AccountDetailsProps) => {
-    const mutation = useMutation(() => client.put('/users/email', { newEmail: formData?.email }), {
-        onError: (e: any) => {
-            setSuccess(undefined)
-            const newErrors: typeof errors = {}
-            for (const error of e.message) {
-                for (const constraint of Object.keys(error.constraints)) {
-                    switch (constraint) {
-                        case 'isEmail':
-                            newErrors.email = 'Felaktig e-postadress'
-                            break
-                        case 'UniqueEmail':
-                            newErrors.email = 'E-postadressen är upptagen'
-                            break
-                    }
-                }
-            }
-            setErrors(newErrors)
-        },
-        onMutate: () => {
-            setSuccess(undefined)
-            setErrors({})
-        },
-        onSuccess: () =>
-            setSuccess(
-                `Ett meddelande har skickats till ${formData.email} för att verifiera adressen`
-            ),
-    })
-
-    interface UpdateIUserInfo {
-        email?: string
+    const initialValues: UpdateEmailDto = {
+        newEmail: user.email,
     }
 
-    const [formData, setFormData] = useState<UpdateIUserInfo>(user || {})
-    const [errors, setErrors] = useState<Record<keyof UpdateIUserInfo | string, string>>({
-        email: '',
-    })
     const [success, setSuccess] = useState<string | undefined>()
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = async (
+        values: UpdateEmailDto,
+        { setErrors }: FormikHelpers<UpdateEmailDto>
+    ) => {
         if (
-            formData?.email !== user?.email &&
+            values.newEmail !== user?.email &&
             confirm(
-                `Är du säker att du vill uppdatera din e-postadress från ${user?.email} till ${formData?.email}?`
+                `Är du säker att du vill uppdatera din e-postadress från ${user?.email} till ${values?.newEmail}?`
             )
         ) {
-            mutation.mutate()
+            await mutate(...updateEmail(values.newEmail ?? ''))
+                .then(() =>
+                    setSuccess(
+                        `Ett meddelande har skickats till ${values.newEmail} för att verifiera adressen`
+                    )
+                )
+                .catch((e) => {
+                    setSuccess(undefined)
+                    setErrors(handleError(e))
+                })
         }
     }
 
     return (
         <section className={styles.container}>
             <h4>Kontouppgifter</h4>
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <div>
-                    <label>E-postaddress</label>
-                    <TextField
-                        value={formData?.email}
-                        onChange={(e) =>
-                            setFormData((prev) => ({ ...prev, email: e.target.value }))
-                        }
-                        disabled={user?.loginStrategy !== LoginStrategy.LOCAL || mutation.isLoading}
-                        fullWidth
-                    />
-                    <span className='text-red-400'>{errors.email}</span>
-                </div>
-                <div>
-                    <label>Lösenord</label>
-                    <TextField type='password' value={randomString(16)} disabled fullWidth />
-                </div>
-                <Button type='submit' label='Uppdatera' />
-                <span className='text-green-500'>{success}</span>
-            </form>
+            <Formik
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                validationSchema={updateEmailSchema}
+            >
+                {({ isSubmitting, errors, values }) => (
+                    <Form className={styles.form}>
+                        <div>
+                            <label>E-postaddress</label>
+                            <Field as={TextField} name='newEmail' />
+                            <ErrorMessage name='newEmail' />
+                        </div>
+                        <div>
+                            <label>Lösenord</label>
+                            <TextField
+                                type='password'
+                                value={randomString(16)}
+                                disabled
+                                fullWidth
+                            />
+                        </div>
+                        <Button
+                            type='submit'
+                            label='Uppdatera'
+                            disabled={
+                                isSubmitting ||
+                                Object.keys(errors).length > 0 ||
+                                user.email == values.newEmail
+                            }
+                        />
+                        <span className='text-green-500'>{success}</span>
+                    </Form>
+                )}
+            </Formik>
         </section>
     )
 }

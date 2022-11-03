@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, Validate } from 'class-validator'
-import { Match } from '../../common/decorators/match.decorator'
 import { UniqueEmailRule } from '../../../rules/unique-email.rule'
+import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, Validate } from 'class-validator'
+import { Match } from '@/lib/decorators/match.decorator'
 
 export default class SignUpDto {
     @IsEmail()

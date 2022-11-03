@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import type { ReactElement } from 'react'
-import { CreateAccountInformation } from './../components/CreateAccountInformation'
 import { Layout } from '@/lib/components/Layout/Layout'
 import { EmailSignInForm } from '@/lib/components/EmailSignInForm/EmailSignInForm'
 import { useUser } from '@/lib/hooks/useUser'
+import { CreateAccountInformation } from '@/lib/components/CreateAccountInformation'
 
 const Login = () => {
     useUser({

@@ -33,7 +33,7 @@ export const CreateAccountInformation = () => (
                             Hitta produkter du gillar och spara dem för senare. Dina gillade
                             artiklar hittar du under{' '}
                             <Link href='/minasidor/gillade'>
-                                <a className='text-secondary'>Mina Sidor</a>
+                                <span className='text-secondary'>Mina Sidor</span>
                             </Link>
                             .
                         </>

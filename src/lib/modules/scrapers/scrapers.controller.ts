@@ -8,9 +8,8 @@ import { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import { StartScrapersDto } from './dto/start-scrapers.dto'
 import { ScrapersService } from './scrapers.service'
 import { Roles } from '@/lib/middlewares/Roles'
-import { SessionGuard } from '@/lib/middlewares/SessionGuard'
-import { AdminOrKeyGuard } from '@/backend/middlewares/admin-or-key.guard'
 import { ScraperStatusReport } from '@/common/types'
+import { AdminOrKeyGuard } from '@/lib/middlewares/admin-or-key.guard'
 
 @autoInjectable()
 export class ScrapersController {

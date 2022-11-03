@@ -22,11 +22,11 @@ import { UpdateEmailDto } from './dto/update-email.dto'
 import { ChangePasswordWithToken } from './dto/change-password.dto'
 import ChangePasswordDto from './dto/change-password.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/lib/middlewares/SessionGuard'
 import { Roles } from '@/lib/middlewares/Roles'
 import { SuccessParam } from '../common/enum/successParam'
+import { GetUser } from '@/lib/decorators/user.decorator'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 

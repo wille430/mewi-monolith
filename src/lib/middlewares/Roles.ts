@@ -2,7 +2,7 @@ import type { Role } from '@/common/schemas'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ForbiddenException, NextFunction } from 'next-api-decorators'
 import { createMiddlewareDecorator, UnauthorizedException } from 'next-api-decorators'
-import { getSession } from '../lib/session/getSession'
+import { getSession } from '../session/getSession'
 
 export const Roles = (...allowedRoles: Role[]) =>
     createMiddlewareDecorator(rolesMiddleware(...allowedRoles))()

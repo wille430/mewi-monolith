@@ -16,11 +16,11 @@ import { ListingsService } from './listings.service'
 import { CreateListingDto } from './dto/create-listing.dto'
 import { FindAllListingsDto } from './dto/find-all-listing.dto'
 import { DeleteListingsDto } from './dto/delete-listings.dto'
-import { Public } from '../common/decorators/public.decorator'
-import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import type { ListingDocument } from '../schemas/listing.schema'
 import { Roles } from '@/lib/middlewares/Roles'
+import { Public } from '@/lib/decorators/public.decorator'
+import { GetUser } from '@/lib/decorators/user.decorator'
 
 @autoInjectable()
 export class ListingsController {

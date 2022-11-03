@@ -4,10 +4,10 @@ import { autoInjectable, inject } from 'tsyringe'
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { GetUser } from '../common/decorators/user.decorator'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/lib/middlewares/SessionGuard'
 import { Roles } from '@/lib/middlewares/Roles'
+import { GetUser } from '@/lib/decorators/user.decorator'
 
 @autoInjectable()
 export class MyWatchersController {
