@@ -1,17 +1,15 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint",
-        "unused-imports",
-        "prettier",
-        "eslint-plugin-import",
-        "prefer-arrow"
+    "plugins": ["@typescript-eslint", "unused-imports", "prettier", "import"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:@next/next/recommended"
     ],
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "no-unused-vars": "off",
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
             "warn",
@@ -25,18 +23,7 @@
         "react-hooks/exhaustive-deps": "off",
         "no-control-regex": "off",
         "semi": ["error", "never"],
-        "import/order": [
-            1,
-            { "groups": ["external", "builtin", "internal", "sibling", "parent", "index"] }
-        ],
         "@typescript-eslint/ban-ts-comment": "off",
-        "prefer-arrow/prefer-arrow-functions": [
-            "warn",
-            {
-                "disallowPrototype": true,
-                "singleReturnOnly": true
-            }
-        ],
         "no-case-declarations": "off"
     },
     "overrides": [
