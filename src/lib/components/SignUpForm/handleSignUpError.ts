@@ -1,18 +1,22 @@
-import type { SignUpDto } from './SignUpDto'
-import type { FormError } from '@/types/forms'
+import { ValidationExceptionRes } from '@/lib/exceptions/validation.exception'
+import type SignUpDto from '@/lib/modules/auth/dto/sign-up.dto'
+import { FormError } from '@/lib/types/forms'
 
-export const handleSignUpError = (e: any): FormError<SignUpDto> => {
-    const msg = e.message
+export const handleSignUpError = (res: ValidationExceptionRes): FormError<SignUpDto> => {
+    if (!res) {
+        return { all: 'Ett fel inträffade' }
+    }
+    const { errors } = res
     const newErrors: { [key in keyof Partial<SignUpDto>]: string } = {}
 
-    if (!msg) {
-        newErrors.passwordConfirm = 'Ett fel inträffades'
+    if (!errors) {
+        newErrors.passwordConfirm = 'Ett fel inträffade'
         return newErrors
     }
 
-    for (const validationError of msg) {
+    for (const validationError of errors) {
         if (validationError.property === 'email') {
-            for (const constraint of Object.keys(validationError.constraints)) {
+            for (const constraint of Object.keys(validationError.constraints ?? {})) {
                 switch (constraint) {
                     case 'isEmail':
                         newErrors.email = 'E-postadressen är felaktig'
@@ -25,7 +29,7 @@ export const handleSignUpError = (e: any): FormError<SignUpDto> => {
                 }
             }
         } else if (validationError.property === 'password') {
-            for (const constraint of Object.keys(validationError.constraints)) {
+            for (const constraint of Object.keys(validationError.constraints ?? {})) {
                 switch (constraint) {
                     case 'matches':
                         newErrors.password = 'Lösenordet är för svagt'
@@ -42,10 +46,10 @@ export const handleSignUpError = (e: any): FormError<SignUpDto> => {
             }
         } else if (
             validationError.property === 'passwordConfirm' &&
-            Object.keys(msg.find((x: any) => x.property === 'password')?.constraints || [])
+            Object.keys(errors.find((x: any) => x.property === 'password')?.constraints || [])
                 .length === 0
         ) {
-            for (const constraint of Object.keys(validationError.constraints)) {
+            for (const constraint of Object.keys(validationError.constraints ?? {})) {
                 switch (constraint) {
                     case 'Match':
                         newErrors.password = 'Lösenorden måste matcha'

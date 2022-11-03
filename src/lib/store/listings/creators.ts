@@ -2,8 +2,8 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import type { IListing, IUser } from '@/common/schemas'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
-import { client } from '@/lib/client'
 import { ListingSearchFilters } from '@/common/types'
+import { client } from '@/lib/client'
 
 export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listing: IListing) => {
     return {

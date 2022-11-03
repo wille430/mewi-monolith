@@ -2,15 +2,14 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Link from 'next/link'
 import { handleSignUpError } from './handleSignUpError'
-import type { SignUpDto } from './SignUpDto'
 import { TextField } from '../TextField/TextField'
 import { Button } from '../Button/Button'
-import { useAppDispatch } from '@/lib/hooks'
-import { signup } from '@/lib/store/user'
 import { ON_AUTH_SUCCESS_GOTO } from '@/lib/constants/paths'
+import { signup } from '@/lib/client'
+import type SignUpDto from '@/lib/modules/auth/dto/sign-up.dto'
+import { signUpSchema } from '@/lib/client/auth/schemas/sign-up.schema'
 
 export const SignUpForm = () => {
-    const dispatch = useAppDispatch()
     const router = useRouter()
 
     const formik = useFormik<SignUpDto>({
@@ -18,22 +17,20 @@ export const SignUpForm = () => {
             email: '',
             password: '',
             passwordConfirm: '',
-            'policy-agreement': false,
         },
         onSubmit: () => {
-            dispatch(signup(formik.values))
-                .then((res) => {
-                    if (res.meta.requestStatus === 'fulfilled') {
-                        router.push(ON_AUTH_SUCCESS_GOTO)
-                    } else {
-                        throw res.payload
-                    }
+            signup(formik.values)
+                .then(() => {
+                    router.push(ON_AUTH_SUCCESS_GOTO)
                 })
-                .catch((err: any) => formik.setErrors(handleSignUpError(err)))
+                .catch((err: any) => {
+                    formik.setErrors(handleSignUpError(err))
+                })
                 .finally(() => {
                     formik.setSubmitting(false)
                 })
         },
+        validationSchema: signUpSchema,
     })
 
     return (

@@ -5,7 +5,6 @@ import { rootReducer } from './reducer'
 
 const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
     if (action.type === HYDRATE) {
-        console.log('HYDRATING WITH', state, action.payload)
         const nextState: ReturnType<typeof rootReducer> = {
             ...state, // use previous state
             // ...action.payload, // apply delta from hydration

@@ -13,24 +13,24 @@ import {
 } from 'next-api-decorators'
 import type { IUser } from '@/common/schemas'
 import { Role } from '@/common/schemas'
-import { autoInjectable, inject } from 'tsyringe'
+import { inject } from 'tsyringe'
 import type { NextApiResponse } from 'next'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { FindAllUserDto } from './dto/find-all-user.dto'
 import { UpdateEmailDto } from './dto/update-email.dto'
-import { ChangePasswordWithToken } from './dto/change-password.dto'
-import ChangePasswordDto from './dto/change-password.dto'
+import ChangePasswordDto, { ChangePasswordWithToken } from './dto/change-password.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/lib/middlewares/SessionGuard'
 import { Roles } from '@/lib/middlewares/Roles'
 import { SuccessParam } from '../common/enum/successParam'
 import { GetUser } from '@/lib/decorators/user.decorator'
+import { Controller } from '@/lib/decorators/controller.decorator'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 
-@autoInjectable()
+@Controller()
 export class UsersController {
     constructor(@inject(UsersService) private readonly usersService: UsersService) {}
 

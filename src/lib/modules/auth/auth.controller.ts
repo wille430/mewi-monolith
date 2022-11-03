@@ -1,18 +1,24 @@
 import type { NextApiRequest } from 'next'
 import { Body, Post, Req, ValidationPipe } from 'next-api-decorators'
-import { autoInjectable, inject } from 'tsyringe'
+import { inject } from 'tsyringe'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
 import SignUpDto from './dto/sign-up.dto'
 import { WithSession } from '@/lib/middlewares/SessionGuard'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import { Controller } from '@/lib/decorators/controller.decorator'
 
-@autoInjectable()
+@Controller()
 export class AuthController {
     constructor(@inject(AuthService) private authService: AuthService) {}
 
     @Post('/signup')
     @WithSession()
-    async signUp(@Body(ValidationPipe) signUpDto: SignUpDto, @Req() req: NextApiRequest) {
+    async signUp(
+        @Body(MyValidationPipe)
+        signUpDto: SignUpDto,
+        @Req() req: NextApiRequest
+    ) {
         const user = await this.authService.signUp(signUpDto)
 
         req.session.user = {
