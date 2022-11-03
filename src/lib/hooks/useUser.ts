@@ -1,24 +1,40 @@
-import { useEffect } from 'react'
 import useSWR from 'swr'
 import router from 'next/router'
 import { IUser } from '@/common/schemas'
-import { useAppDispatch } from '.'
+import { useAppDispatch, useAppSelector } from '.'
 import { setLoggedInStatus } from '../store/user'
+import { CURRENT_USER_SWR_KEY } from '../constants/swr-keys'
+import { useEffect, useState } from 'react'
 
 export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
-    const { data: user, mutate: mutateUser } = useSWR<IUser>('/api/users/me')
     const dispatch = useAppDispatch()
+    const { isLoggedIn } = useAppSelector((state) => state.user)
+
+    const [isFirstRender, setIsFirstRender] = useState(true)
+
+    const { data: user, mutate: mutateUser } = useSWR<IUser>(CURRENT_USER_SWR_KEY, {
+        onSuccess: (user) => {
+            if (user) {
+                dispatch(setLoggedInStatus(Boolean(user.id), user))
+            }
+        },
+        onError: () => {
+            dispatch(setLoggedInStatus(false))
+        },
+    })
 
     useEffect(() => {
-        if (!redirectTo || !user) return
+        if (!redirectTo || isFirstRender) {
+            setIsFirstRender(false)
+            return
+        }
 
-        dispatch(setLoggedInStatus(Boolean(user.id), user))
-        if ((!redirectIfFound && !user.id) || (redirectIfFound && user.id)) {
+        if ((!redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
             router.replace(redirectTo, undefined, {
                 shallow: true,
             })
         }
-    }, [user, redirectIfFound, redirectTo, dispatch])
+    }, [isLoggedIn])
 
     return { user, refetchUser: mutateUser }
 }

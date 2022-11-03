@@ -164,12 +164,7 @@ export const NavListLink = ({
                             <NavListLink key={i} {...link} />
                         ))}
                         {label === 'Mina Sidor' && (
-                            <button
-                                className={styles.link}
-                                onClick={() =>
-                                    dispatch(logout()).then(() => router.push('/loggain'))
-                                }
-                            >
+                            <button className={styles.link} onClick={() => dispatch(logout())}>
                                 Logga ut
                             </button>
                         )}

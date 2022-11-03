@@ -5,9 +5,9 @@ import { client } from '@/lib/client'
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
-    (status: boolean, user: IUser) => {
+    (status: boolean, user: IUser | undefined = undefined) => {
         return {
-            payload: {status, user},
+            payload: { status, user },
         }
     }
 )

@@ -3,7 +3,7 @@ import { login, logout, setLoggedInStatus, signup } from './creators'
 import type { UserState } from './types'
 
 const initialState: UserState = {
-    isLoggedIn: false
+    isLoggedIn: false,
 }
 
 export const userSlice = createSlice({
