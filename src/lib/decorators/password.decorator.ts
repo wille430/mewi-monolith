@@ -1,9 +1,5 @@
-import type {
-    ValidationArguments,
-    ValidatorConstraintInterface} from 'class-validator'
-import {
-    ValidatorConstraint
-} from 'class-validator'
+import type { ValidationArguments, ValidatorConstraintInterface } from 'class-validator'
+import { ValidatorConstraint } from 'class-validator'
 import { isString, map } from 'lodash'
 
 @ValidatorConstraint({
@@ -15,7 +11,7 @@ export class IsPassword implements ValidatorConstraintInterface {
         const funcs = [
             isString,
             (s: string) => s.length >= 8,
-            (s: string) => s.length <= 20,
+            (s: string) => s.length <= 32,
             (s: string) =>
                 new RegExp(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/).test(s),
         ]

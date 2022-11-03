@@ -6,6 +6,10 @@ import { ValidationException } from '../exceptions/validation.exception'
 
 export const MyValidationPipe = (options?: ValidationPipeOptions) => {
     return async (value: any, metadata?: PipeMetadata) => {
+        if (value === '') {
+            value = {}
+        }
+
         if (!metadata?.metaType) {
             return value
         }

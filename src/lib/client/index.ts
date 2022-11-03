@@ -9,4 +9,11 @@ export const client = axios.create({
     withCredentials: true,
 })
 
+client.interceptors.response.use(
+    ({ data }) => data,
+    (err) => {
+        throw err.response.data
+    }
+)
+
 export type MutationArgs = Parameters<typeof mutate>

@@ -1,5 +1,5 @@
 import type { NextApiRequest } from 'next'
-import { Body, Post, Req, ValidationPipe } from 'next-api-decorators'
+import { Body, Post, Req } from 'next-api-decorators'
 import { inject } from 'tsyringe'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
@@ -14,11 +14,7 @@ export class AuthController {
 
     @Post('/signup')
     @WithSession()
-    async signUp(
-        @Body(MyValidationPipe)
-        signUpDto: SignUpDto,
-        @Req() req: NextApiRequest
-    ) {
+    async signUp(@Body(MyValidationPipe) signUpDto: SignUpDto, @Req() req: NextApiRequest) {
         const user = await this.authService.signUp(signUpDto)
 
         req.session.user = {
@@ -33,7 +29,7 @@ export class AuthController {
 
     @Post('/login')
     @WithSession()
-    async login(@Body(ValidationPipe) loginDto: LoginDto, @Req() req: NextApiRequest) {
+    async login(@Body(MyValidationPipe) loginDto: LoginDto, @Req() req: NextApiRequest) {
         const user = await this.authService.login(loginDto)
 
         req.session.user = {

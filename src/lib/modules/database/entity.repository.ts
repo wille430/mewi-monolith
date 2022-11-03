@@ -1,5 +1,5 @@
 import type { AggregateOptions, UpdateResult } from 'mongodb'
-import type {
+import {
     Document,
     FilterQuery,
     HydratedDocument,
@@ -18,18 +18,17 @@ export abstract class EntityRepository<T extends Document> {
     constructor(protected readonly entityModel: Model<T>) {
         return new Proxy(this, {
             get(target, prop) {
-                if (typeof target[prop] == 'function') {
-                    return new Proxy(target[prop], {
-                        apply: async (target, thisArg, args) => {
-                            // target(prop, args)
-                            await dbConnection()
-                            return Reflect.apply(target, thisArg, args)
-                        }
-                    })
+                const method = target[prop]
+                if (typeof method === 'function') {
+                    return async (...args: any) => {
+                        await dbConnection()
+                        const res = await method.apply(target, args)
+                        return res
+                    }
                 } else {
                     return Reflect.get(target, prop)
                 }
-            }
+            },
         })
     }
 
@@ -39,7 +38,9 @@ export abstract class EntityRepository<T extends Document> {
 
     private applyPagination<
         R extends Query<
+            // eslint-disable-next-line @typescript-eslint/ban-types
             HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null,
+            // eslint-disable-next-line @typescript-eslint/ban-types
             HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null
         >
     >(pagination: Pagination, query: R): R {

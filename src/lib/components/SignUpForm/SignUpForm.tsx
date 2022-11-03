@@ -8,6 +8,7 @@ import { ON_AUTH_SUCCESS_GOTO } from '@/lib/constants/paths'
 import { signup } from '@/lib/client'
 import type SignUpDto from '@/lib/modules/auth/dto/sign-up.dto'
 import { signUpSchema } from '@/lib/client/auth/schemas/sign-up.schema'
+import { ValidationExceptionRes } from '@/lib/exceptions/validation.exception'
 
 export const SignUpForm = () => {
     const router = useRouter()
@@ -23,7 +24,7 @@ export const SignUpForm = () => {
                 .then(() => {
                     router.push(ON_AUTH_SUCCESS_GOTO)
                 })
-                .catch((err: any) => {
+                .catch((err: ValidationExceptionRes) => {
                     formik.setErrors(handleSignUpError(err))
                 })
                 .finally(() => {

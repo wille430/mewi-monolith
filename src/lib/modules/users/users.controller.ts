@@ -2,7 +2,6 @@ import {
     Post,
     Get,
     Body,
-    ValidationPipe,
     Query,
     Put,
     Res,
@@ -27,9 +26,11 @@ import { Roles } from '@/lib/middlewares/Roles'
 import { SuccessParam } from '../common/enum/successParam'
 import { GetUser } from '@/lib/decorators/user.decorator'
 import { Controller } from '@/lib/decorators/controller.decorator'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 
+@Controller()
 @Controller()
 export class UsersController {
     constructor(@inject(UsersService) private readonly usersService: UsersService) {}
@@ -37,13 +38,13 @@ export class UsersController {
     @Post()
     @HttpCode(201)
     @Roles(Role.ADMIN)
-    create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    create(@Body(MyValidationPipe) createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto)
     }
 
     @Get()
     @Roles(Role.ADMIN)
-    findAll(@Query(ValidationPipe) findAllUserDto: FindAllUserDto = {}) {
+    findAll(@Query(MyValidationPipe) findAllUserDto: FindAllUserDto = {}) {
         return this.usersService.findAll(findAllUserDto)
     }
 
@@ -61,7 +62,7 @@ export class UsersController {
 
     @Put('/email')
     async updateEmail(
-        @Body(ValidationPipe) updateEmailDto: UpdateEmailDto,
+        @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (updateEmailDto.newEmail && user) {
@@ -75,7 +76,7 @@ export class UsersController {
     @Post('/email')
     async updateEmailPost(
         @GetUser() user: UserPayload,
-        @Body(ValidationPipe) updateEmailDto: UpdateEmailDto,
+        @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
         @Res() res: NextApiResponse
     ) {
         if (updateEmailDto.newEmail && user) {
@@ -90,7 +91,7 @@ export class UsersController {
 
     @Put('/password')
     async changePassword(
-        @Body(ValidationPipe) dto: ChangePasswordDto,
+        @Body(MyValidationPipe) dto: ChangePasswordDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (dto.password && dto.passwordConfirm) {
@@ -124,7 +125,7 @@ export class UsersController {
 
     @Put('/:id')
     @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body(ValidationPipe) updateUserDto: UpdateUserDto) {
+    update(@Param('id') id: string, @Body(MyValidationPipe) updateUserDto: UpdateUserDto) {
         return this.usersService.update(id, updateUserDto)
     }
 

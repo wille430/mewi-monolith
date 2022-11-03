@@ -1,8 +1,8 @@
 import type { ListingOrigin } from '@/common/schemas'
 import { Role, ScraperTrigger } from '@/common/schemas'
 import capitalize from 'lodash/capitalize'
-import { Body, Get, Post, Put, Query, ValidationPipe } from 'next-api-decorators'
-import { autoInjectable, inject } from 'tsyringe'
+import { Body, Get, Post, Put, Query } from 'next-api-decorators'
+import { inject } from 'tsyringe'
 import { GetLogsDto } from './dto/get-logs.dto'
 import { StartOneScraperDto } from './dto/start-one-scraper.dto'
 import { StartScrapersDto } from './dto/start-scrapers.dto'
@@ -10,14 +10,16 @@ import { ScrapersService } from './scrapers.service'
 import { Roles } from '@/lib/middlewares/Roles'
 import { ScraperStatusReport } from '@/common/types'
 import { AdminOrKeyGuard } from '@/lib/middlewares/admin-or-key.guard'
+import { Controller } from '@/lib/decorators/controller.decorator'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 
-@autoInjectable()
+@Controller()
 export class ScrapersController {
     constructor(@inject(ScrapersService) private readonly scrapersService: ScrapersService) {}
 
     @Post('/start')
     @AdminOrKeyGuard()
-    async startAll(@Body(ValidationPipe) { scrapers }: StartScrapersDto) {
+    async startAll(@Body(MyValidationPipe) { scrapers }: StartScrapersDto) {
         if (scrapers) {
             const startStatusMap: Partial<Record<ListingOrigin, ScraperStatusReport>> = {}
 
@@ -40,7 +42,7 @@ export class ScrapersController {
 
     @Post('/start/:scraperName')
     @AdminOrKeyGuard()
-    start(@Query(ValidationPipe) startOneScraperDto: StartOneScraperDto) {
+    start(@Query(MyValidationPipe) startOneScraperDto: StartOneScraperDto) {
         const started = this.scrapersService.start(
             capitalize(startOneScraperDto.scraperName) as ListingOrigin,
             { triggeredBy: ScraperTrigger.Manual }
@@ -61,7 +63,7 @@ export class ScrapersController {
 
     @Post('/logs')
     @Roles(Role.ADMIN)
-    async logs(@Body(ValidationPipe) dto: GetLogsDto) {
+    async logs(@Body(MyValidationPipe) dto: GetLogsDto) {
         return this.scrapersService.getLogs(dto)
     }
 

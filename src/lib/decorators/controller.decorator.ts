@@ -4,7 +4,8 @@ import { ValidationException, validationExceptionHandler } from '../exceptions/v
 
 export const Controller = () => {
     return (target: any) => {
-        autoInjectable()(target)
         Catch(validationExceptionHandler, ValidationException)(target)
+
+        return autoInjectable()(target)
     }
 }

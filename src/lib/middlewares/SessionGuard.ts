@@ -10,6 +10,8 @@ export const SessionGuard = createMiddlewareDecorator(
 
         if (!user && process.env.NODE_ENV !== 'production') {
             user = req.session?.user
+        } else {
+            req.session = session
         }
 
         if (!user) {

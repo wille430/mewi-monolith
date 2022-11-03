@@ -1,6 +1,6 @@
 import { Role } from '@/common/schemas'
-import { Body, Delete, Get, HttpCode, Param, Post, Put, ValidationPipe } from 'next-api-decorators'
-import { autoInjectable, inject } from 'tsyringe'
+import { Body, Delete, Get, HttpCode, Param, Post, Put } from 'next-api-decorators'
+import { inject } from 'tsyringe'
 import { UserWatchersService } from './user-watchers.service'
 import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
@@ -8,8 +8,10 @@ import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/lib/middlewares/SessionGuard'
 import { Roles } from '@/lib/middlewares/Roles'
 import { GetUser } from '@/lib/decorators/user.decorator'
+import { Controller } from '@/lib/decorators/controller.decorator'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 
-@autoInjectable()
+@Controller()
 export class MyWatchersController {
     constructor(
         @inject(UserWatchersService) private readonly userWatchersService: UserWatchersService
@@ -19,7 +21,7 @@ export class MyWatchersController {
     @HttpCode(201)
     @SessionGuard()
     create(
-        @Body(ValidationPipe) createUserWatcherDto: CreateUserWatcherDto,
+        @Body(MyValidationPipe) createUserWatcherDto: CreateUserWatcherDto,
         @GetUser() user: UserPayload
     ) {
         return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
@@ -41,7 +43,7 @@ export class MyWatchersController {
     @SessionGuard()
     update(
         @Param('id') id: string,
-        @Body(ValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
+        @Body(MyValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
     ) {
         return this.userWatchersService.update(id, updateUserWatcherDto)
     }
@@ -59,7 +61,7 @@ export class UserWatchersController {
 
     @Post()
     @Roles(Role.ADMIN)
-    create(@Body(ValidationPipe) createUserWatcherDto: CreateUserWatcherDto) {
+    create(@Body(MyValidationPipe) createUserWatcherDto: CreateUserWatcherDto) {
         return this.userWatchersService.create(createUserWatcherDto)
     }
 
@@ -79,7 +81,7 @@ export class UserWatchersController {
     @Roles(Role.ADMIN)
     update(
         @Param('id') id: string,
-        @Body(ValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
+        @Body(MyValidationPipe) updateUserWatcherDto: UpdateUserWatcherDto
     ) {
         return this.userWatchersService.update(id, updateUserWatcherDto)
     }

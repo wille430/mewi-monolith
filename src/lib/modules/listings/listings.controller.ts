@@ -1,16 +1,6 @@
 import { Role } from '@/common/schemas'
-import {
-    Post,
-    Put,
-    Get,
-    Body,
-    ValidationPipe,
-    Param,
-    Delete,
-    Query,
-    HttpCode,
-} from 'next-api-decorators'
-import { autoInjectable, inject } from 'tsyringe'
+import { Post, Put, Get, Body, Param, Delete, Query, HttpCode } from 'next-api-decorators'
+import { inject } from 'tsyringe'
 import { UpdateListingDto } from './dto/update-listing.dto'
 import { ListingsService } from './listings.service'
 import { CreateListingDto } from './dto/create-listing.dto'
@@ -21,27 +11,29 @@ import type { ListingDocument } from '../schemas/listing.schema'
 import { Roles } from '@/lib/middlewares/Roles'
 import { Public } from '@/lib/decorators/public.decorator'
 import { GetUser } from '@/lib/decorators/user.decorator'
+import { Controller } from '@/lib/decorators/controller.decorator'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 
-@autoInjectable()
+@Controller()
 export class ListingsController {
     constructor(@inject(ListingsService) private readonly listingsService: ListingsService) {}
 
     @Post()
     @HttpCode(201)
     @Roles(Role.ADMIN)
-    create(@Body(ValidationPipe) createListingDto: CreateListingDto) {
+    create(@Body(MyValidationPipe) createListingDto: CreateListingDto) {
         return this.listingsService.create(createListingDto)
     }
 
     @Get()
     @Public()
-    findAll(@Query(ValidationPipe) findAllListingsDto: FindAllListingsDto) {
+    findAll(@Query(MyValidationPipe) findAllListingsDto: FindAllListingsDto) {
         return this.listingsService.findAll(findAllListingsDto)
     }
 
     @Delete()
     @Roles(Role.ADMIN)
-    deleteMany(@Body(ValidationPipe) dto: DeleteListingsDto) {
+    deleteMany(@Body(MyValidationPipe) dto: DeleteListingsDto) {
         return this.listingsService.deleteMany(dto)
     }
 
@@ -75,7 +67,7 @@ export class ListingsController {
 
     @Put('/:id')
     @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body(ValidationPipe) updateListingDto: UpdateListingDto) {
+    update(@Param('id') id: string, @Body(MyValidationPipe) updateListingDto: UpdateListingDto) {
         return this.listingsService.update(id, updateListingDto)
     }
 

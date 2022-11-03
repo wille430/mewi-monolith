@@ -5,10 +5,7 @@ import { USER_SWR_KEY } from '../../constants/swr-keys'
 import { UpdateEmailDto } from '../../modules/users/dto/update-email.dto'
 
 export const getMe = async (config: AxiosRequestConfig = {}) => {
-    return client
-        .get<IUser | undefined>('/users/me', config)
-        .then((res) => res.data)
-        .catch(() => undefined)
+    return client.get<IUser | undefined>('/users/me', config).catch(() => undefined)
 }
 
 export const updateEmail = (newEmail: string): MutationArgs => {

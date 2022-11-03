@@ -1,30 +1,22 @@
 import { Role } from '@/common/schemas'
-import {
-    Body,
-    Delete,
-    Get,
-    HttpCode,
-    Param,
-    Post,
-    Put,
-    Query,
-    ValidationPipe,
-} from 'next-api-decorators'
-import { autoInjectable, inject } from 'tsyringe'
+import { Body, Delete, Get, HttpCode, Param, Post, Put, Query } from 'next-api-decorators'
+import { inject } from 'tsyringe'
 import { WatchersService } from './watchers.service'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
 import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
 import { Roles } from '@/lib/middlewares/Roles'
+import { Controller } from '@/lib/decorators/controller.decorator'
+import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 
-@autoInjectable()
+@Controller()
 export class WatchersController {
     constructor(@inject(WatchersService) private readonly watchersService: WatchersService) {}
 
     @Post()
     @HttpCode(201)
     @Roles(Role.ADMIN)
-    async create(@Body(ValidationPipe) createWatcherDto: CreateWatcherDto) {
+    async create(@Body(MyValidationPipe) createWatcherDto: CreateWatcherDto) {
         console.log(createWatcherDto)
         return this.watchersService.create(createWatcherDto)
     }
@@ -33,7 +25,7 @@ export class WatchersController {
     @Roles(Role.ADMIN)
     findAll(
         @Query(
-            ValidationPipe({
+            MyValidationPipe({
                 transformOptions: { enableImplicitConversion: true },
                 forbidNonWhitelisted: true,
             })
@@ -51,7 +43,7 @@ export class WatchersController {
 
     @Put('/:id')
     @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body(ValidationPipe) updateWatcherDto: UpdateWatcherDto) {
+    update(@Param('id') id: string, @Body(MyValidationPipe) updateWatcherDto: UpdateWatcherDto) {
         return this.watchersService.update(id, updateWatcherDto)
     }
 
