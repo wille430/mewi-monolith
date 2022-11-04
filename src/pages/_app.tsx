@@ -1,8 +1,7 @@
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import type { ReactElement, ReactNode } from 'react'
-import { useState } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
@@ -11,7 +10,6 @@ import type { Store } from '@/lib/store'
 import { wrapper } from '@/lib/store'
 import { fetchJson } from '@/lib/fetchJson'
 import { client } from '@/lib/client'
-import { useUser } from '@/lib/hooks/useUser'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -27,8 +25,6 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     const [queryClient] = useState(() => new QueryClient())
     const store = useStore() as Store
-
-    useUser()
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
         window.store = store
@@ -50,7 +46,6 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
             <SWRConfig
                 value={{
                     fetcher: fetchJson,
-                    onError: (err) => console.log(err),
                 }}
             >
                 <QueryClientProvider client={queryClient}>

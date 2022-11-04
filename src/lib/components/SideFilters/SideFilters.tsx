@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 import { CheckboxList } from '../CheckboxList/CheckboxList'
-import { CreateWatcherButton } from '../CreateWatcherButton/CreateWatcherButton'
 import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 import { Container } from '../Container/Container'
 import { Button } from '../Button/Button'
@@ -12,9 +11,16 @@ import { TextField } from '../TextField/TextField'
 import { toggleCategory, toggleOrigin } from '@/lib/utils/toggleFilters'
 import { useListingFilters } from '@/lib/hooks/useListingFilters'
 import { categories } from '@/common/types'
+import { ConfirmModal } from '../ConfirmModal/ConfirmModal'
+import { mutate } from 'swr'
+import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
+import { useAppSelector } from '@/lib/hooks'
+import { useRouter } from 'next/router'
 
 export const SideFilters = () => {
     const { filters, setFilters, setField, clear } = useListingFilters()
+    const { isLoggedIn } = useAppSelector((state) => state.user)
+    const router = useRouter()
     const [addWatcherStatus, setAddWatcherStatus] = useState<boolean | undefined>(undefined)
 
     useEffect(() => {
@@ -108,13 +114,30 @@ export const SideFilters = () => {
 
                 <div className='flex flex-col justify-end space-y-2'>
                     <Button label='Rensa' onClick={clear} />
-                    <CreateWatcherButton
-                        label='Bevaka sökning'
-                        variant='outlined'
-                        filters={filters}
-                        setError={() => setAddWatcherStatus(false)}
-                        onSuccess={() => setAddWatcherStatus(true)}
-                    />
+                    <ConfirmModal
+                        modalProps={{
+                            heading: 'Är du säker att du vill lägga en bevakning på sökningen?',
+                            bodyText:
+                                'Genom att klicka på "Ja" godkänner du att ta emot e-post varje gång det kommer nya föremål som matchar din sökning.',
+                            onAccept: () => mutate(...createUserWatcher({ metadata: filters })),
+                        }}
+                    >
+                        {({ showModal }) => (
+                            <Button
+                                label='Lägg till bevakning'
+                                type='button'
+                                color='primary'
+                                onClick={() => {
+                                    if (isLoggedIn) {
+                                        showModal()
+                                    } else {
+                                        router.push('/loggain')
+                                    }
+                                }}
+                                data-testid='addWatcherButton'
+                            />
+                        )}
+                    </ConfirmModal>
                     <span
                         className={clsx([
                             addWatcherStatus === true ? 'text-green-400' : 'text-red-400',

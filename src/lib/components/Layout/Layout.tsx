@@ -3,6 +3,7 @@ import style from './Layout.module.scss'
 import { Nav } from '../Nav/Nav'
 import { Footer } from '../Footer/Footer'
 import { Arch } from '../Arch/Arch'
+import { useUser } from '@/lib/hooks/useUser'
 
 interface LayoutProps {
     children: ReactNode
@@ -10,6 +11,7 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children, decorations = true }: LayoutProps) => {
+    useUser()
     return (
         <div className='flex min-h-screen flex-col justify-between'>
             <div

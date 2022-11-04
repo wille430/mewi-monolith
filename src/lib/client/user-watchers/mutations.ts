@@ -13,7 +13,11 @@ export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
         return watchers
     }
 
-    const optimisticData = (watchers: IUserWatcher[]) => {
+    const optimisticData = (watchers?: IUserWatcher[]) => {
+        if (!watchers) {
+            watchers = []
+        }
+
         watchers.push({
             id: undefined as any,
             user: undefined as any,

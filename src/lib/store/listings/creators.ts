@@ -49,9 +49,7 @@ export const unlikeListing = createAsyncThunk(
     async (args: UnlikeListingArgs, thunkAPI) => {
         const { listing } = args
         try {
-            await client.put(`/listings/${listing.id}/unlike`).catch((e) => {
-                throw e
-            })
+            await client.put(`/listings/${listing.id}/unlike`)
             return args
         } catch (e) {
             return thunkAPI.rejectWithValue(args)
@@ -63,14 +61,9 @@ export const searchListings = createAsyncThunk(
     ListingsActionTypes.FETCH_SEARCH,
     async (filters: ListingSearchFilters, thunkAPI) => {
         try {
-            return await client
-                .get<{ hits: IListing[]; totalHits: number }>(
-                    '/listings?' + queryString.stringify(filters)
-                )
-                .then((res) => res.data)
-                .catch((e) => {
-                    throw e
-                })
+            return await client.get<{ hits: IListing[]; totalHits: number }>(
+                '/listings?' + queryString.stringify(filters)
+            )
         } catch (e) {
             return thunkAPI.rejectWithValue(null)
         }

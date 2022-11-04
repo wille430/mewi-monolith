@@ -1,6 +1,6 @@
-import { seedDb } from '@mewi/test-utils'
+import { dbConnection } from '@/lib/dbConnection'
 import { exit } from 'process'
-import { dbConnection } from '../backend/lib/dbConnection'
+import { seedDb } from './seed/index'
 
 dbConnection().then(async (db) => {
     await seedDb(db)

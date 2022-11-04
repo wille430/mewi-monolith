@@ -1,11 +1,11 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "composite": true,
-    "types": ["@types/jest"],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["./src/**/*"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "types": ["@types/jest"],
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    },
+    "include": ["./src/**/*", "**/test/**/*.ts"]
 }

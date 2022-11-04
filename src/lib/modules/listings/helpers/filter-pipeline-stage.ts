@@ -35,21 +35,30 @@ export const filterPipelineStage = (
     switch (field) {
         case 'keyword':
             return [
-                {
-                    $search: {
-                        index:
-                            process.env.NODE_ENV === 'production'
-                                ? 'listing_search_prod'
-                                : 'listing_search_dev',
-                        text: {
-                            query: value as string,
-                            path: {
-                                wildcard: '*',
-                            },
-                            fuzzy: {},
-                        },
-                    },
-                },
+                process.env.DATABASE_URI.includes('localhost') &&
+                process.env.NODE_ENV === 'development'
+                    ? {
+                          $match: {
+                              keyword: {
+                                  $regex: new RegExp(value, 'i'),
+                              },
+                          },
+                      }
+                    : {
+                          $search: {
+                              index:
+                                  process.env.NODE_ENV === 'production'
+                                      ? 'listing_search_prod'
+                                      : 'listing_search_dev',
+                              text: {
+                                  query: value as string,
+                                  path: {
+                                      wildcard: '*',
+                                  },
+                                  fuzzy: {},
+                              },
+                          },
+                      },
                 {
                     $addFields: {
                         score: { $meta: 'searchScore' },

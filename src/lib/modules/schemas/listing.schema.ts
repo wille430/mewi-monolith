@@ -1,10 +1,12 @@
 import type { Document } from 'mongoose'
-import { Currency } from '@/common/schemas'
-import { Category, ListingOrigin } from '@/common/schemas'
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import { Currency, Category, ListingOrigin } from '@/common/schemas'
+import { getModelForClass, index, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document
 
+@index({
+    keyword: 1,
+})
 export class Price {
     @prop({
         required: true,
