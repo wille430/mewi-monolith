@@ -23,6 +23,7 @@ export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
             createdAt: new Date(),
             updatedAt: new Date(),
         })
+        return watchers
     }
 
     return [

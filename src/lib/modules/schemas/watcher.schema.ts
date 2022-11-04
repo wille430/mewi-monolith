@@ -8,6 +8,8 @@ export class Watcher {
     // TODO: define metadata
     @prop({
         _id: false,
+        required: true,
+        default: {},
     })
     metadata!: WatcherMetadata
 
@@ -21,5 +23,6 @@ export const WatcherModel = getModelForClass(Watcher, {
         timestamps: true,
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
+        minimize: false,
     },
 })

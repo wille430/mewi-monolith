@@ -4,7 +4,7 @@ import { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
 export class CreateUserWatcherDto {
     @IsOptional()
     @IsMongoId()
-    userId!: string
+    userId?: string
 
     @IsObject()
     @ValidateNested()
