@@ -1,38 +1,50 @@
-import faker from '@faker-js/faker'
-import { Role } from '@/common/schemas'
+import { faker } from '@faker-js/faker'
+import { IUser, Role } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { userPayloadStub } from './stubs/user-payload.stub'
 import { userStub } from './stubs/user.stub'
 import type ChangePasswordDto from '../dto/change-password.dto'
 import type { CreateUserDto } from '../dto/create-user.dto'
-import type { UpdateEmailDto } from '../dto/update-email.dto'
+import { UpdateEmailDto } from '../dto/update-email.dto'
 import type { UpdateUserDto } from '../dto/update-user.dto'
 import { UsersController } from '../users.controller'
 import { UsersService } from '../users.service'
 import { User } from '../../schemas/user.schema'
 import { Listing } from '../../schemas/listing.schema'
-import { UserPayload } from '../../common/types/UserPayload'
+import { createHandler } from 'next-api-decorators'
+import { RequestMock, createRequestMock } from '@/common/test/utils/requestMock'
+import { UsersRepository } from '../users.repository'
+import { plainToInstance } from 'class-transformer'
 
 jest.mock('../users.service')
 jest.mock('../users.repository')
+jest.mock('../../../middlewares/roles.guard')
+jest.mock('../../../session/getSession')
 
 describe('UsersController', () => {
-    let usersController: UsersController
     let usersService: UsersService
+    let usersRepository: UsersRepository
+    let request: RequestMock
 
     beforeEach(async () => {
-        usersController = container.resolve(UsersController)
         usersService = container.resolve(UsersService)
+        usersRepository = container.resolve(UsersRepository)
+
+        request = createRequestMock(createHandler(UsersController))
+
         jest.clearAllMocks()
     })
 
     describe('#findOne', () => {
         describe('when findOne is called', () => {
-            let user: User
+            let user: IUser
 
             beforeEach(async () => {
-                user = (await usersController.findOne(userStub().id)) as User
+                user = await request({
+                    method: 'GET',
+                    url: '/api/users/' + userStub().id,
+                })
             })
 
             it('then it should call usersService', () => {
@@ -50,7 +62,10 @@ describe('UsersController', () => {
             let user: User
 
             beforeEach(async () => {
-                user = (await usersController.getMe(userPayloadStub())) as User
+                user = await request({
+                    method: 'GET',
+                    url: '/api/users/me',
+                })
             })
 
             it('then it should call usersService', () => {
@@ -68,7 +83,10 @@ describe('UsersController', () => {
             let likedListings: Listing[]
 
             beforeEach(async () => {
-                likedListings = await usersController.getMyLikes(userPayloadStub())
+                likedListings = await request({
+                    method: 'GET',
+                    url: '/api/users/me/likes',
+                })
             })
 
             it('then it should call usersService', () => {
@@ -86,7 +104,10 @@ describe('UsersController', () => {
             let users: User[]
 
             beforeEach(async () => {
-                users = (await usersController.findAll()) ?? []
+                users = await request({
+                    method: 'GET',
+                    url: '/api/users',
+                })
             })
 
             it('then it should call usersService', () => {
@@ -109,7 +130,12 @@ describe('UsersController', () => {
                     email: userStub().email,
                     password: faker.internet.password(),
                 }
-                user = await usersController.create(createUserDto)
+
+                user = await request({
+                    method: 'POST',
+                    url: '/api/users',
+                    body: createUserDto,
+                })
             })
 
             it('then it should call usersService', () => {
@@ -132,7 +158,12 @@ describe('UsersController', () => {
                     email: faker.internet.email(),
                     roles: [Role.ADMIN],
                 }
-                user = (await usersController.update(userStub().id, updateUserDto)) as User
+
+                user = await request({
+                    method: 'PUT',
+                    url: '/api/users/' + userStub().id,
+                    body: updateUserDto,
+                })
             })
 
             it('then it should call usersService', () => {
@@ -150,7 +181,10 @@ describe('UsersController', () => {
             let user: User | null
 
             beforeEach(async () => {
-                user = await usersController.remove(userStub().id)
+                user = await request({
+                    method: 'DELETE',
+                    url: '/api/users/' + userStub().id,
+                })
             })
 
             it('then it should call usersService', () => {
@@ -167,34 +201,42 @@ describe('UsersController', () => {
         describe('when updateEmail is called', () => {
             describe('with newEmail', () => {
                 let updateEmailDto: UpdateEmailDto
-                let userPayload: UserPayload
 
                 beforeEach(async () => {
+                    usersRepository.count = jest.fn().mockResolvedValue(0)
                     updateEmailDto = {
-                        newEmail: userStub().email,
+                        newEmail: faker.internet.email(),
                     }
-                    userPayload = userPayloadStub()
-                    await usersController.updateEmail(updateEmailDto, userPayload)
+
+                    await request({
+                        method: 'PUT',
+                        url: '/api/users/email',
+                        body: updateEmailDto,
+                    })
                 })
 
                 it('then it should have called usersService', () => {
                     expect(usersService.requestEmailUpdate).toHaveBeenCalledWith(
-                        updateEmailDto,
-                        userPayload.userId
+                        plainToInstance(UpdateEmailDto, updateEmailDto),
+                        userPayloadStub().userId
                     )
                 })
             })
 
             describe('with token', () => {
                 let updateEmailDto: UpdateEmailDto
-                let userPayload: UserPayload
 
                 beforeEach(async () => {
                     updateEmailDto = {
                         token: faker.random.alphaNumeric(32),
+                        oldEmail: userStub().email,
                     }
-                    userPayload = userPayloadStub()
-                    await usersController.updateEmail(updateEmailDto, userPayload)
+
+                    await request({
+                        method: 'PUT',
+                        url: '/api/users/email',
+                        body: updateEmailDto,
+                    })
                 })
 
                 it('then it should have called usersService', () => {
@@ -215,7 +257,11 @@ describe('UsersController', () => {
                         passwordConfirm: userStub().password,
                     }
 
-                    await usersController.changePassword(changePasswordDto, userPayloadStub())
+                    await request({
+                        method: 'PUT',
+                        url: '/api/users/password',
+                        body: changePasswordDto,
+                    })
                 })
 
                 it('then it should call usersService', () => {
@@ -237,7 +283,11 @@ describe('UsersController', () => {
                         token: faker.random.alphaNumeric(32),
                     }
 
-                    await usersController.changePassword(changePasswordDto)
+                    await request({
+                        method: 'PUT',
+                        url: '/api/users/password',
+                        body: changePasswordDto,
+                    })
                 })
 
                 it('then it should call usersService', () => {
@@ -255,7 +305,11 @@ describe('UsersController', () => {
                         email: userStub().email,
                     }
 
-                    await usersController.changePassword(changePasswordDto)
+                    await request({
+                        method: 'PUT',
+                        url: '/api/users/password',
+                        body: changePasswordDto,
+                    })
                 })
 
                 it('then it should call usersService', () => {

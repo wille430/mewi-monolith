@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import type { WithId } from 'mongodb'
 import { LoginStrategy, Role } from '@/common/schemas'
-import { timestampsStub } from '@mewi/test-utils'
-import { User } from '@/backend/modules/schemas/user.schema'
+import { User } from '@/lib/modules/schemas/user.schema'
+import { timestampsStub } from '@/test/stubs/timestamps.stub'
 
 const id = '6330360f919579b678e3d048'
 export const userStub = (): WithId<User> & { password: string } => ({

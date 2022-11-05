@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { ListingOrigin } from '@/common/schemas'
 import { ListingScraper } from '../../classes/__mocks__/ListingScraper'
 

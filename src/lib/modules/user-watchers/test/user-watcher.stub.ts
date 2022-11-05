@@ -1,4 +1,4 @@
-import { timestampsStub } from '@mewi/test-utils'
+import { timestampsStub } from '@/test/stubs/timestamps.stub'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 import { UserWatcher } from '../../schemas/user-watcher.schema'

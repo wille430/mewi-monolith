@@ -1,6 +1,5 @@
 import 'reflect-metadata'
 import { container } from 'tsyringe'
-import { userStub } from '@mewi/test-utils'
 import { listingStub } from './stubs/listing.stub'
 import type { DeleteListingsDto } from '../dto/delete-listings.dto'
 import type { FindAllListingsDto } from '../dto/find-all-listing.dto'
@@ -9,6 +8,7 @@ import { ListingsRepository } from '../listings.repository'
 import { ListingsService } from '../listings.service'
 import { UsersRepository } from '../../users/users.repository'
 import { Listing } from '../../schemas/listing.schema'
+import { userStub } from '../../users/test/stubs/user.stub'
 
 jest.mock('../listings.repository')
 jest.mock('../../users/users.repository')

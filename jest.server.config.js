@@ -5,6 +5,7 @@ const createJestConfig = nextJest({
 })
 
 module.exports = createJestConfig({
+    displayName: 'server',
     testEnvironment: "node",
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
@@ -32,7 +33,15 @@ module.exports = createJestConfig({
     testPathIgnorePatterns: [
         './cypress/'
     ],
-    setupFiles: ["<rootDir>/jest.setup.js"],
-    globalTeardown: '<rootDir>/script/test-teardown-globals.js',
-    moduleFileExtensions: ["ts", "tsx", "js", "jsx"]
+    setupFiles: ["<rootDir>/jest.server.setup.js"],
+    globalTeardown: '<rootDir>/scripts/test-teardown-globals.js',
+    moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+    testMatch: [
+        "<rootDir>/src/lib/modules/**/*.spec.{ts,tsx}",
+        "<rootDir>/src/lib/pipes/**/*.spec.{ts,tsx}",
+        "<rootDir>/src/lib/rules/**/*.spec.{ts,tsx}",
+        "<rootDir>/src/lib/exceptions/**/*.spec.{ts,tsx}",
+        "<rootDir>/src/lib/decorators/**/*.spec.{ts,tsx}",
+        "<rootDir>/src/lib/middlewares/**/*.spec.{ts,tsx}",
+    ]
 });

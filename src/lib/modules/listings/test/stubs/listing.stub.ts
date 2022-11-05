@@ -1,8 +1,9 @@
-import faker from '@faker-js/faker'
-import { timestampsStub } from '@mewi/test-utils'
+import { faker } from '@faker-js/faker'
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
+import { Listing } from '@/lib/modules/schemas/listing.schema'
+import { timestampsStub } from '@/test/stubs/timestamps.stub'
 
 const id = faker.database.mongodbObjectId()
 const date = new Date()

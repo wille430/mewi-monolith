@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { scrapeResultStub } from '../../test/stubs/scrape-result.stub'
 import { scrapingLogStub } from '../../test/stubs/scraping-log.stub'
 

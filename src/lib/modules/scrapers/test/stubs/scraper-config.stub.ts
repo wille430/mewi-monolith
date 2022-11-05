@@ -1,4 +1,4 @@
-import { ScraperOptions } from '@/backend/modules/common/types/scraperOptions'
+import { ScraperOptions } from '@/lib/modules/common/types/scraperOptions'
 
 export const scraperConfigStub = (): ScraperOptions => ({
     deleteOlderThan: new Date().getTime(),

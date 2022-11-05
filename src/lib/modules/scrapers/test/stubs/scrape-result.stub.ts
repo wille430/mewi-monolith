@@ -1,5 +1,5 @@
 import { ScrapeResult } from '../../classes/types/ScrapeResult'
-import { listingStub } from '@/backend/modules/listings/test/stubs/listing.stub'
+import { listingStub } from '@/lib/modules/listings/test/stubs/listing.stub'
 
 export const scrapeResultStub = (): ScrapeResult => ({
     continue: true,

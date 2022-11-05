@@ -9,18 +9,9 @@ export class UniqueEmailRule implements ValidatorConstraintInterface {
     constructor(@inject(UsersRepository) private usersRepository: UsersRepository) {}
 
     async validate(value: string): Promise<boolean> {
-        try {
-            const userCount =
-                (await this.usersRepository.count({ email: value.toLowerCase() })) ?? 0
+        const userCount = (await this.usersRepository.count({ email: value.toLowerCase() })) ?? 0
 
-            if (userCount === 0) {
-                return true
-            } else {
-                return false
-            }
-        } catch (e) {
-            return false
-        }
+        return userCount === 0
     }
 
     defaultMessage(): string {

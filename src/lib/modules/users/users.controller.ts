@@ -22,15 +22,15 @@ import ChangePasswordDto, { ChangePasswordWithToken } from './dto/change-passwor
 import { UpdateUserDto } from './dto/update-user.dto'
 import type { UserPayload } from '../common/types/UserPayload'
 import { SessionGuard } from '@/lib/middlewares/SessionGuard'
-import { Roles } from '@/lib/middlewares/Roles'
+import { Roles } from '@/lib/middlewares/roles.guard'
 import { SuccessParam } from '../common/enum/successParam'
 import { GetUser } from '@/lib/decorators/user.decorator'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import { OptionalSessionGuard } from '@/lib/middlewares/optional-session.guard'
 
 export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 
-@Controller()
 @Controller()
 export class UsersController {
     constructor(@inject(UsersService) private readonly usersService: UsersService) {}
@@ -61,6 +61,7 @@ export class UsersController {
     }
 
     @Put('/email')
+    @OptionalSessionGuard()
     async updateEmail(
         @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
         @GetUser() user: UserPayload | undefined = undefined
@@ -74,6 +75,7 @@ export class UsersController {
     }
 
     @Post('/email')
+    @OptionalSessionGuard()
     async updateEmailPost(
         @GetUser() user: UserPayload,
         @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
@@ -90,12 +92,15 @@ export class UsersController {
     }
 
     @Put('/password')
+    @OptionalSessionGuard()
     async changePassword(
         @Body(MyValidationPipe) dto: ChangePasswordDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (dto.password && dto.passwordConfirm) {
-            if (user?.userId) {
+            if (dto.token && dto.email) {
+                await this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
+            } else if (user?.userId) {
                 await this.usersService.changePassword(
                     {
                         password: dto.password,
@@ -103,8 +108,6 @@ export class UsersController {
                     },
                     user.userId
                 )
-            } else if (dto.token && dto.email) {
-                await this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
             }
             return 'OK'
         } else if (dto.email) {

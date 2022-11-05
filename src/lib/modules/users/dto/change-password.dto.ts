@@ -32,7 +32,7 @@ export default class ChangePasswordDto {
     @ValidateIf((obj) => obj.password && obj.token)
     @IsString()
     @MinLength(8)
-    @MaxLength(20)
+    @MaxLength(32)
     @Match('password', { message: 'passwords must match' })
     passwordConfirm?: string
 

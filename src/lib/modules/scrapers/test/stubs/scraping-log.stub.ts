@@ -1,10 +1,10 @@
-import faker from '@faker-js/faker'
-import { timestampsStub } from '@mewi/test-utils'
+import { faker } from '@faker-js/faker'
 import { ScraperTrigger } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
-import { ScrapingLog } from '@/backend/modules/schemas/scraping-log.schema'
-import { listingStub } from '@/backend/modules/listings/test/stubs/listing.stub'
+import { ScrapingLog } from '@/lib/modules/schemas/scraping-log.schema'
+import { listingStub } from '@/lib/modules/listings/test/stubs/listing.stub'
+import { timestampsStub } from '@/test/stubs/timestamps.stub'
 
 const id = faker.database.mongodbObjectId()
 export const scrapingLogStub = (): WithId<ScrapingLog> => ({

@@ -1,5 +1,5 @@
-import faker from '@faker-js/faker'
-import { ListingOrigin, ScraperStatus } from '@/common/schemas'
+import { faker } from '@faker-js/faker'
+import { ListingOrigin } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { scraperStatusReportStub } from './stubs/scraper-status-report.stub'
@@ -10,6 +10,7 @@ import { ScrapingLogsRepository } from '../scraping-logs.repository'
 import { ListingsRepository } from '../../listings/listings.repository'
 import { listingStub } from '../../listings/test/stubs/listing.stub'
 import { ScrapingLog, ScrapingLogDocument } from '../../schemas/scraping-log.schema'
+import { ScraperStatus } from '@/common/types'
 
 jest.mock('../scraping-logs.repository')
 jest.mock('../../listings/listings.repository')

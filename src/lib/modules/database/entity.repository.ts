@@ -149,7 +149,7 @@ export abstract class EntityRepository<T extends Document> {
     }
 
     async count(entityFilterQuery: FilterQuery<T>): Promise<number> {
-        return this.entityModel.countDocuments(entityFilterQuery)
+        return this.entityModel.count(entityFilterQuery)
     }
 
     async aggregate(pipeline: PipelineStage[], options: AggregateOptions = {}) {

@@ -1,6 +1,6 @@
-import { ScraperStatus } from '@/common/schemas'
 import { scraperConfigStub } from '../../test/stubs/scraper-config.stub'
-import { listingStub } from '@/backend/modules/listings/test/stubs/listing.stub'
+import { listingStub } from '@/lib/modules/listings/test/stubs/listing.stub'
+import { ScraperStatus } from '@/common/types'
 
 jest.mock('../BaseEntryPoint')
 
