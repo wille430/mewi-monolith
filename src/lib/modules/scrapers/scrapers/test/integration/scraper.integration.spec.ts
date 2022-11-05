@@ -49,7 +49,7 @@ describe('Scraper Integration', () => {
             }, 10000)
 
             it('should error safely', async () => {
-                const page = 999999
+                const page = 9999999
                 const result = await entryPoint.scrape(page, {})
 
                 // TraderaScraper returns a list of items even though the page

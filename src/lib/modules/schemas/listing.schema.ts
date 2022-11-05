@@ -77,7 +77,9 @@ export class Listing {
     })
     imageUrl!: string[]
 
-    @prop()
+    @prop({
+        type: Price,
+    })
     price?: Price
 
     @prop(String)
@@ -85,6 +87,7 @@ export class Listing {
 
     @prop({
         _id: false,
+        type: Parameter,
     })
     parameters?: Parameter[]
 
