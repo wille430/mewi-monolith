@@ -1,10 +1,7 @@
 import type { IScrapingLog } from '@/common/schemas'
-import { ListingOrigin } from '@/common/schemas'
 import { useMemo } from 'react'
-import { useQuery } from 'react-query'
 import type { AxisOptions, UserSerie } from 'react-charts'
 import { Chart } from 'react-charts'
-import { client } from '@/lib/client'
 
 type Series = {
     label: string
@@ -12,33 +9,36 @@ type Series = {
 }
 
 export const ScraperLogs = () => {
-    const { data, isLoading } = useQuery(
-        'scraperLogs',
-        (): Promise<Series[]> =>
-            client
-                .post<IScrapingLog[]>('/scrapers/logs', {
-                    createdAt: {
-                        gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-                    },
-                    take: 20,
-                })
-                .then(({ data }) => {
-                    const series: Series[] = []
+    const data = undefined as Series[] | undefined
+    const isLoading = !data
 
-                    for (const key of Object.keys(ListingOrigin)) {
-                        series.push({
-                            label: key,
-                            data: data.filter((x) => x.target === key),
-                        })
-                    }
+    // const { data, isLoading } = useQuery(
+    //     'scraperLogs',
+    //     (): Promise<Series[]> =>
+    //         client
+    //             .post<IScrapingLog[]>('/scrapers/logs', {
+    //                 createdAt: {
+    //                     gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    //                 },
+    //                 take: 20,
+    //             })
+    //             .then(({ data }) => {
+    //                 const series: Series[] = []
 
-                    return series
-                })
-                .catch((e) => []),
-        {
-            initialData: [],
-        }
-    )
+    //                 for (const key of Object.keys(ListingOrigin)) {
+    //                     series.push({
+    //                         label: key,
+    //                         data: data.filter((x) => x.target === key),
+    //                     })
+    //                 }
+
+    //                 return series
+    //             })
+    //             .catch((e) => []),
+    //     {
+    //         initialData: [],
+    //     }
+    // )
 
     const primaryAxis = useMemo(
         (): AxisOptions<IScrapingLog> => ({

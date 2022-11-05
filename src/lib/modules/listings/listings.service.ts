@@ -1,5 +1,5 @@
 import omit from 'lodash/omit'
-import type { FilterQuery, PipelineStage } from 'mongoose'
+import type { PipelineStage } from 'mongoose'
 import { NotFoundException } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import { FIRST_PL_STAGES, LAST_PL_STAGES } from './constants'
@@ -10,6 +10,7 @@ import { filterPipelineStage } from './helpers/filter-pipeline-stage'
 import { ListingsRepository } from './listings.repository'
 import { UsersRepository } from '../users/users.repository'
 import type { Listing } from '../schemas/listing.schema'
+import { DeleteListingsDto } from './dto/delete-listings.dto'
 
 @autoInjectable()
 export class ListingsService {
@@ -103,8 +104,15 @@ export class ListingsService {
         return response.map((x) => x.title)
     }
 
-    async deleteMany(dto: FilterQuery<Listing>) {
-        return await this.listingsRepository.deleteMany(dto)
+    deleteMany(dto: DeleteListingsDto) {
+        return this.listingsRepository.deleteMany({
+            ...dto,
+            origin: dto.origins
+                ? {
+                      $in: dto.origins,
+                  }
+                : undefined,
+        })
     }
 
     async like(userId: string, listingId: string) {

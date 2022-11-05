@@ -1,9 +1,7 @@
 import type { FormEvent, ReactElement } from 'react'
 import { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
 import Router, { useRouter } from 'next/router'
 import Head from 'next/head'
-import { client } from '@/lib/client'
 import { pushToSnackbar } from '@/lib/store/snackbar/creators'
 import { useAppDispatch } from '@/lib/hooks'
 import { Layout } from '@/lib/components/Layout/Layout'
@@ -12,6 +10,7 @@ import { PASSWORD_RESET_REDIRECT_TO } from '@/lib/constants/paths'
 import { Container } from '@/lib/components/Container/Container'
 import { TextField } from '@/lib/components/TextField/TextField'
 import { Button } from '@/lib/components/Button/Button'
+import { updatePasswordMutation } from '@/lib/client/users/mutations'
 
 const ForgottenPassword = () => {
     useUser({
@@ -33,41 +32,34 @@ const ForgottenPassword = () => {
 
     const { token, email } = { token: router.query.token, email: router.query.email }
 
-    const mutation = useMutation(
-        async () =>
-            client.put('/users/password', {
-                token,
-                password: formData.password,
-                passwordConfirm: formData.repassword,
-                email,
-            }),
-        {
-            onSuccess: () => {
-                Router.push(PASSWORD_RESET_REDIRECT_TO)
-                dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
-            },
-            onError: () => {
-                setErrors({
-                    ...initialState,
-                    general: 'Ett fel inträffade',
-                })
-            },
-        }
-    )
-
     useEffect(() => {
         if (!email || !token) {
             router.push('/')
         }
     }, [])
 
-    const onFormSubmit = (e: FormEvent) => {
+    const onFormSubmit = async (e: FormEvent) => {
         e.preventDefault()
 
         if (email && token && formData.password && formData.repassword) {
             setErrors(initialState)
             setFormData(initialState)
-            mutation.mutate()
+            await updatePasswordMutation({
+                token: token as string,
+                email: email as string,
+                password: formData.password,
+                passwordConfirm: formData.repassword,
+            })
+                .then(() => {
+                    Router.push(PASSWORD_RESET_REDIRECT_TO)
+                    dispatch(pushToSnackbar({ title: 'Lösenordsändringen lyckades' }))
+                })
+                .catch(() => {
+                    setErrors({
+                        ...initialState,
+                        general: 'Ett fel inträffade',
+                    })
+                })
         }
     }
 

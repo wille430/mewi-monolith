@@ -1,8 +1,7 @@
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { ReactElement, ReactNode, useState } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactElement, ReactNode } from 'react'
 import '@/styles/globals.scss'
 import { SWRConfig } from 'swr'
 import { useStore } from 'react-redux'
@@ -23,7 +22,6 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => page)
 
-    const [queryClient] = useState(() => new QueryClient())
     const store = useStore() as Store
 
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
@@ -48,9 +46,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
                     fetcher: fetchJson,
                 }}
             >
-                <QueryClientProvider client={queryClient}>
-                    {getLayout(<Component {...pageProps} />)}
-                </QueryClientProvider>
+                {getLayout(<Component {...pageProps} />)}
             </SWRConfig>
         </>
     )

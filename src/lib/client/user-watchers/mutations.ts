@@ -38,3 +38,16 @@ export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
         },
     ]
 }
+
+export const removeUserWatcher = (watcherId: string): MutationArgs => {
+    const updateFn = async (watchers: IUserWatcher[]) => {
+        await client.delete(`/user-watchers/${watcherId}`)
+        return watchers
+    }
+
+    const optimisticData = (watchers: IUserWatcher[] = []) => {
+        return watchers.filter((watcher) => watcher.id !== watcherId)
+    }
+
+    return [MY_WATCHERS_KEY, updateFn, { optimisticData }]
+}

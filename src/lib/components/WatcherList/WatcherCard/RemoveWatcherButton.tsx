@@ -1,21 +1,14 @@
 import { FiTrash } from 'react-icons/fi'
-import { useMutation, useQueryClient } from 'react-query'
-import { client } from '@/lib/client'
 import { Button } from '@/lib/components/Button/Button'
+import { useSWRConfig } from 'swr'
+import { removeUserWatcher } from '@/lib/client/user-watchers/mutations'
 
 const RemoveWatcherButton = ({ watcherId }: { watcherId: string }) => {
-    const queryClient = useQueryClient()
-    const mutation = useMutation(async () => await client.delete(`/user-watchers/${watcherId}`), {
-        onSuccess: async () =>
-            queryClient.setQueryData('watchers', (old: any) =>
-                old.filter((x) => x.id !== watcherId)
-            ),
-    })
-
+    const { mutate } = useSWRConfig()
     return (
         <Button
             data-testid='removeWatcherButton'
-            onClick={async () => mutation.mutate()}
+            onClick={async () => mutate(...removeUserWatcher(watcherId))}
             color='error'
             icon={<FiTrash color='white' />}
         />

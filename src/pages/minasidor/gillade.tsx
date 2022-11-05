@@ -1,22 +1,21 @@
 import type { ReactElement } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useQuery } from 'react-query'
 import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
 import { ListingRow } from '@/lib/components/ListingRow/ListingRow'
 import { ListingPopUpContainer } from '@/lib/components/ListingPopUp/ListingPopUpContainer'
 import { useUser } from '@/lib/hooks/useUser'
-import { client } from '@/lib/client'
 import StyledLoader from '@/lib/components/StyledLoader'
 import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
 import { Container } from '@/lib/components/Container/Container'
 import { HorizontalLine } from '@/lib/components/HorizontalLine/HorizontalLine'
-import { IListing } from '@/common/schemas'
+import useSWR from 'swr'
+import { MY_LIKED_LISTINGS_KEY } from '@/lib/client/users/swr-keys'
+import { getLikedListings } from '@/lib/client/user-watchers/queries'
 
 const Gillade = () => {
-    const { data: listings, isLoading } = useQuery('liked-listings', () =>
-        client.get<IListing[]>('/users/me/likes').then((res) => res.data)
-    )
+    const { data: listings } = useSWR(MY_LIKED_LISTINGS_KEY, getLikedListings)
+    const isLoading = !listings
 
     useUser({ redirectTo: ON_UNAUTHENTICATED_GOTO })
 

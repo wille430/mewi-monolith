@@ -1,55 +1,28 @@
 import { motion } from 'framer-motion'
-import type { IUserWatcher } from '@/common/schemas'
-import type { IListing } from '@/common/schemas'
-import { useQuery } from 'react-query'
-import queryString from 'query-string'
+import type { IUserWatcher, IListing } from '@/common/schemas'
 import classNames from 'classnames'
 import styles from './NewItemsDrawer.module.scss'
-import { client } from '@/lib/client'
 import { openListing } from '@/lib/store/listings'
 import { useAppDispatch } from '@/lib/hooks'
 import StyledLoader from '@/lib/components/StyledLoader'
 import { ListingRow } from '@/lib/components/ListingRow/ListingRow'
+import useSWR from 'swr'
+import { MY_WATCHERS_KEY } from '@/lib/client/user-watchers/swr-keys'
+import { getWatcherItems } from '@/lib/client/user-watchers/queries'
 
 interface NewItemsDrawerProps {
     newItems: IListing[]
     watcher: IUserWatcher
 }
 
-const removeNullValues = (obj: Record<any, any>) => {
-    return Object.keys(obj)
-        .filter((key) => !!obj[key])
-        .reduce((o, v) => ((o[v] = obj[v]), o), {})
-}
-
 const NewItemsDrawer = ({ newItems, watcher }: NewItemsDrawerProps) => {
-    const LIMIT = 5
-
     const dispatch = useAppDispatch()
 
-    const {
-        data: _newItems,
-        isLoading,
-        error,
-    } = useQuery(
-        ['watcherListings', { id: watcher.id }],
-        async () =>
-            await client
-                .get(
-                    '/listings?' +
-                        queryString.stringify({
-                            dateGte: watcher.createdAt,
-                            limit: LIMIT,
-                            ...removeNullValues(watcher.watcher.metadata),
-                        })
-                )
-                .then((res) => res.data?.hits),
-        {
-            // refetchOnMount: false,
-            refetchOnReconnect: false,
-            refetchOnWindowFocus: false,
-        }
+    const { data: _newItems, error } = useSWR(
+        [MY_WATCHERS_KEY, { id: watcher.id }],
+        getWatcherItems
     )
+    const isLoading = !_newItems
 
     const drawerVariants = {
         hidden: {

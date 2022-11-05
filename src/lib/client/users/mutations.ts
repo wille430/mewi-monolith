@@ -1,4 +1,5 @@
 import { IUser, Role } from '@/common/schemas'
+import type { ChangePasswordWithToken } from '@/lib/modules/users/dto/change-password.dto'
 import { client, MutationArgs } from '..'
 import { ALL_USERS_KEY } from './swr-keys'
 
@@ -29,4 +30,8 @@ export const updateUserRoles = (userId: string, roles: Role[]): MutationArgs => 
             optimisticData,
         },
     ]
+}
+
+export const updatePasswordMutation = (data: ChangePasswordWithToken) => {
+    return client.put<never, any>('/users/password', data)
 }
