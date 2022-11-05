@@ -3,13 +3,13 @@ import type { FilterQuery } from 'mongoose'
 import { NotFoundException } from 'next-api-decorators'
 import { autoInjectable, inject } from 'tsyringe'
 import type { BaseListingScraper } from './classes/BaseListingScraper'
-import type { RunPipelineEvent } from './events/run-pipeline.event'
 import Scrapers from './scrapers'
 import { ScrapingLogsRepository } from './scraping-logs.repository'
 import type { StartScraperOptions } from './types/startScraperOptions'
 import type { ScrapingLog } from '../schemas/scraping-log.schema'
 import { ListingsRepository } from '../listings/listings.repository'
 import { ScraperStatus, ScraperStatusReport } from '@/common/types'
+import { scrapersConfig } from './scrapers.config'
 
 @autoInjectable()
 export class ScrapersService {
@@ -20,8 +20,9 @@ export class ScrapersService {
      */
     pipelineIndex: number | null = null
     startScraperAfterMs = 60 * 60 * 1000
-    pipelineQueue: RunPipelineEvent[] = []
-    scraperPipeline: [ListingOrigin, Partial<StartScraperOptions>][] = []
+
+    scraperQueue: [ListingOrigin, StartScraperOptions][] = []
+    scrapePromises: Partial<Record<ListingOrigin, Promise<any>>> = {}
 
     constructor(
         @inject(ListingsRepository) private listingsRepository: ListingsRepository,
@@ -33,6 +34,7 @@ export class ScrapersService {
     instantiateScrapers() {
         this.scrapers = Scrapers.reduce((prev, Scraper) => {
             const scraper = new Scraper(this.listingsRepository, this.scrapingLogsRepository)
+            scraper.config = scrapersConfig[scraper.origin] ?? scrapersConfig['default']
             prev[scraper.origin] = scraper
             return prev
         }, {} as typeof this.scrapers)
@@ -42,74 +44,57 @@ export class ScrapersService {
         console.log(`[${this.pipelineIndex}/${total}] ${msg}`)
     }
 
-    async handlePipelineRunEvent(payload: RunPipelineEvent) {
-        if (this.pipelineIndex != null) {
-            // Push to queue if pipeline is already running
-            this.pipelineQueue.push(payload)
-            return
-        }
+    private addToQueue(origin: ListingOrigin, options: StartScraperOptions) {
+        this.scraperQueue.push([origin, options])
+    }
 
-        this.pipelineIndex = 0
-        const totalScrapers = this.scraperPipeline.length
+    private startScraper = async (origin: ListingOrigin, options: StartScraperOptions) => {
+        const scraper = this.scrapers[origin]
+        this.pipelineIndex! += 1
 
-        const startScraperNext = async () => {
-            const arr = this.scraperPipeline.shift()
-            if (!arr)
-                throw new Error('startScraperNext: Cannot get next scraper. No scrapers in queue!')
+        // Delete old
+        // this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
+        // await scraper.deleteOld()
+        scraper.reset()
 
-            const [name] = arr
-            this.pipelineIndex! += 1
+        // Begin scraping
+        this.logPipeline(1, `Scraping all listings from ${origin}...`)
+        await scraper.start(options)
 
-            const scraper = this.scrapers[name]
+        this.logPipeline(1, `Successfully scraped all listings from ${origin}`)
 
-            // Delete old
-            // this.logPipeline(totalScrapers, `Deleting old listings from ${name}...`)
-            // await scraper.deleteOld()
-            scraper.reset()
+        if (this.scraperQueue.find((x) => x[0] === scraper.origin))
+            scraper.status = ScraperStatus.QUEUED
 
-            // Begin scraping
-            this.logPipeline(totalScrapers, `Scraping all listings from ${name}...`)
-            await scraper.start()
+        this.logPipeline(1, `Done!`)
+    }
 
-            this.logPipeline(totalScrapers, `Successfully scraped all listings from ${name}`)
+    async runQueue() {
+        const totalScrapers = this.scraperQueue.length
 
-            if (this.scraperPipeline.find((x) => x[0] === scraper.origin))
-                scraper.status = ScraperStatus.QUEUED
+        // run all
+        for (let i = 0; i < totalScrapers; i++) {
+            const args = this.scraperQueue.shift()
 
-            this.logPipeline(totalScrapers, `Done!`)
-        }
-
-        if (payload.count === -1) {
-            // run all
-            while (this.pipelineIndex < totalScrapers) {
-                await startScraperNext()
+            if (args) {
+                await this.startScraper(...args)
             }
-        } else {
-            while (payload.count > 0 && this.pipelineIndex < totalScrapers) {
-                await startScraperNext()
-                payload.count -= 1
-            }
-        }
-
-        this.pipelineIndex = null
-
-        if (this.pipelineQueue.length) {
-            console.log('Running next pipeline in queue...')
-            // this.eventEmitter.emit('pipeline.run', this.pipelineQueue.shift())
-        } else {
-            console.log('Pipeline queue is empty!')
         }
     }
 
     async startAll(...args: Parameters<BaseListingScraper['start']>) {
         for (const [name] of Object.entries(this.scrapers)) {
-            this.scraperPipeline.push([
-                name as ListingOrigin,
-                { triggeredBy: ScraperTrigger.Scheduled, ...args },
-            ])
+            this.addToQueue(name as ListingOrigin, {
+                triggeredBy: ScraperTrigger.Scheduled,
+                ...args,
+            })
+
+            this.scrapers[name as ListingOrigin].status = ScraperStatus.QUEUED
         }
 
-        // this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
+        this.runQueue()
+
+        return this.status()
     }
 
     async start(
@@ -119,10 +104,8 @@ export class ScrapersService {
         const scraper: BaseListingScraper | undefined = this.scrapers[scraperName]
 
         if (scraper) {
-            this.scraperPipeline.push([scraperName, options])
+            this.addToQueue(scraperName, options)
             if (scraper.status !== ScraperStatus.SCRAPING) scraper.status = ScraperStatus.QUEUED
-
-            // this.eventEmitter.emit('pipeline.run', new RunPipelineEvent())
 
             const status = await this.statusOf(scraperName)
             status.started = true

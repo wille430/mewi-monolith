@@ -75,7 +75,7 @@ export class BlippScraper extends NextScraper {
                       currency: Currency.SEK,
                   }
                 : undefined,
-            region: municipality.name,
+            region: municipality?.name,
             origin: ListingOrigin.Blipp,
             entryPoint: context.entryPoint.identifier,
         }

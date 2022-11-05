@@ -101,13 +101,11 @@ describe('ScrapersService', () => {
         describe('when start is called', () => {
             describe('with valid scraper name', () => {
                 beforeEach(async () => {
-                    // jest.spyOn(eventEmitter, 'emit')
-
                     await scrapersService.start(listingStub().origin)
                 })
 
                 it('then scraperPipeline should be updated', () => {
-                    expect(scrapersService.scraperPipeline).toMatchObject([
+                    expect(scrapersService.scraperQueue).toMatchObject([
                         [listingStub().origin, expect.anything()],
                     ])
                 })

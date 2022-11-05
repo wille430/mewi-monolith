@@ -10,10 +10,11 @@ import type { DefaultStartOptions } from '../types/defaultStartOptions'
 import { scraperStopFunction } from '../helpers/scraperStopFunction'
 import type { ScrapingLogsRepository } from '../scraping-logs.repository'
 import type { ListingsRepository } from '../../listings/listings.repository'
-import type { ScraperOptions } from '../../common/types/scraperOptions'
 import type { UserDocument } from '../../schemas/user.schema'
 import { ScraperStatus } from '@/common/types'
 import { stringSimilarity } from '@/lib/utils/stringUtils'
+import { scrapersConfig } from '../scrapers.config'
+import { ScraperOptions } from '../../common/types/scraperOptions'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -47,17 +48,7 @@ export abstract class BaseListingScraper {
         this.initialized = true
     }
 
-    config = Object.assign(
-        {
-            interval: 2.5 * 24 * 60 * 60 * 1000,
-            listingCount: 7,
-            minListings: 1,
-            deleteOlderThan: Date.now() - 2 * 30 * 24 * 60 * 60 * 1000,
-            limit: 40,
-            useRobots: false,
-        } as ScraperOptions,
-        {}
-    )
+    config: ScraperOptions = scrapersConfig['default']
 
     async start(_options: Partial<StartScraperOptions> = this.defaultStartOptions) {
         if (!this.initialized) await this.initialize()
@@ -150,10 +141,10 @@ export abstract class BaseListingScraper {
                 batch = listings
                 shouldContinue = cont
 
-                this.log(`Deleting listings in case duplicates are found`)
-                await this.listingsRepository.deleteMany({
+                const deleteCount = await this.listingsRepository.deleteMany({
                     origin_id: { $in: batch.map((x) => x.origin_id) },
                 })
+                this.log(`Deleted ${deleteCount} listing duplicates`)
 
                 this.log(`Inserting ${batch.length} listings into database`)
 
@@ -205,7 +196,7 @@ export abstract class BaseListingScraper {
     async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {
         await this.listingsRepository.deleteMany({
             date: {
-                lte: new Date(this.config.deleteOlderThan),
+                $lte: new Date(this.config.deleteOlderThan),
             },
             ...args,
         })

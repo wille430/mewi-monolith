@@ -1,7 +1,7 @@
 import type { ListingOrigin } from '@/common/schemas'
 import { Role, ScraperTrigger } from '@/common/schemas'
 import capitalize from 'lodash/capitalize'
-import { Body, Get, Post, Put, Query } from 'next-api-decorators'
+import { Body, Get, HttpCode, Post, Put, Query } from 'next-api-decorators'
 import { inject } from 'tsyringe'
 import { GetLogsDto } from './dto/get-logs.dto'
 import { StartOneScraperDto } from './dto/start-one-scraper.dto'
@@ -68,8 +68,10 @@ export class ScrapersController {
     }
 
     @Put('/next')
+    @HttpCode(200)
     @AdminOrKeyGuard()
     scrapeNext() {
-        return this.scrapersService.scrapeNext()
+        this.scrapersService.scrapeNext()
+        return
     }
 }

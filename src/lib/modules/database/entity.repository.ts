@@ -110,7 +110,7 @@ export abstract class EntityRepository<T extends Document> {
     }
 
     async createMany(createEntityData: unknown[]): Promise<{ count: number }> {
-        const entities = await Promise.all(createEntityData.map(this.create))
+        const entities = await this.entityModel.create(...createEntityData)
 
         return {
             count: entities.length,
@@ -143,9 +143,9 @@ export abstract class EntityRepository<T extends Document> {
         return this.entityModel.findByIdAndDelete(id)
     }
 
-    async deleteMany(entityFilterQuery: FilterQuery<T>): Promise<boolean> {
+    async deleteMany(entityFilterQuery: FilterQuery<T>): Promise<number> {
         const deleteResult = await this.entityModel.deleteMany(entityFilterQuery)
-        return deleteResult.deletedCount >= 1
+        return deleteResult.deletedCount
     }
 
     async count(entityFilterQuery: FilterQuery<T>): Promise<number> {
