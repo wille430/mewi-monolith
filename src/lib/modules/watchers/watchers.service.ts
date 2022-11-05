@@ -94,17 +94,29 @@ export class WatchersService {
      * @returns An array of user ids
      */
     async getUsersInWatcher(watcherId: string): Promise<User[]> {
-        // return (
-        //     await this.userWatchersRepository.aggregate([
-        //         {
-        //             by: ['userId'],
-        //             where: {
-        //                 watcherId,
-        //             },
-        //         },
-        //     ])
-        // ).map((x) => x.userId)
-        return []
+        const aggregation = [
+            {
+                $match: {
+                    watcher: new ObjectId(watcherId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$user',
+                },
+            },
+            { $project: { user: '$user' } },
+        ]
+        const res = await this.userWatchersRepository.aggregate(aggregation)
+        return res.map(({ user }) => user)
     }
 
     async notifyUsersInWatcher(watcherOrId: string | WatcherDocument) {

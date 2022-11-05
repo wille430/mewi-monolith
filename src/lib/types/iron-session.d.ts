@@ -1,4 +1,4 @@
-// eslint-disable-next-line unused-imports/no-unused-imports
+// eslint-disable-next-line unused-imports/no-unused-imports, @typescript-eslint/no-unused-vars
 import * as IronSession from 'iron-session'
 import type { UserPayload } from '@/lib/modules/common/types/UserPayload'
 
