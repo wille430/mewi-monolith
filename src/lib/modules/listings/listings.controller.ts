@@ -75,19 +75,20 @@ export class ListingsController {
     @Roles(Role.ADMIN)
     async remove(@Param('id') id: string) {
         await this.listingsService.remove(id)
-        return 'OK'
+        return { message: 'OK' }
     }
 
     @Put('/:id/like')
     @Roles(Role.USER)
     async likeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         await this.listingsService.like(user.userId, id)
-        return 'OK'
+        return { message: 'OK' }
     }
+
     @Put('/:id/unlike')
     @Roles(Role.USER)
     async unlikeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         await this.listingsService.unlike(user.userId, id)
-        return 'OK'
+        return { message: 'OK' }
     }
 }

@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import type { HTMLMotionProps, Variants } from 'framer-motion'
 import { motion, useAnimation } from 'framer-motion'
-import type { IListing, IUserLean } from '@/common/schemas'
-import { useMutation } from 'react-query'
-import { useAppSelector } from '../../hooks'
-import { client } from '@/lib/client'
+import type { IListing } from '@/common/schemas'
+import { useSWRConfig } from 'swr'
+import { setLikeListing } from '@/lib/client/listings/mutations'
+import { useUser } from '@/lib/hooks/useUser'
 
 export type ListingLikeButtonProps = {
     listing: IListing
@@ -21,19 +21,13 @@ export const ListingLikeButton = ({
     liked: _liked = false,
     ...rest
 }: ListingLikeButtonProps) => {
-    const user = useAppSelector((state) => state.user.user) as IUserLean | undefined
     const [liked, setLiked] = useState(_liked)
+    const { user } = useUser()
+    const { mutate } = useSWRConfig()
 
     useEffect(() => {
-        setLiked(user?.likedListings.includes(listing.id) ?? false)
-    }, [user?.likedListings, user])
-
-    const likeMutation = useMutation(() => client.put(`/listings/${listing.id}/like`), {
-        onMutate: () => setLiked(true),
-    })
-    const unlikeMutation = useMutation(() => client.put(`/listings/${listing.id}/unlike`), {
-        onMutate: () => setLiked(false),
-    })
+        setLiked(user?.likedListings?.includes(listing.id) ?? false)
+    }, [user?.likedListings])
 
     return (
         <LikeButton
@@ -41,13 +35,7 @@ export const ListingLikeButton = ({
             data-testid='like-button'
             {...rest}
             liked={liked}
-            onClick={() => {
-                if (liked) {
-                    unlikeMutation.mutate()
-                } else {
-                    likeMutation.mutate()
-                }
-            }}
+            onClick={() => mutate(...setLikeListing(listing.id, !liked))}
         />
     )
 }

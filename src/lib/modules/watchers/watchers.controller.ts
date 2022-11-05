@@ -50,6 +50,6 @@ export class WatchersController {
     @Roles(Role.ADMIN)
     async remove(@Param('id') id: string) {
         await this.watchersService.remove(id)
-        return 'OK'
+        return { message: 'OK' }
     }
 }

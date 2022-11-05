@@ -3,10 +3,12 @@ import { client, MutationArgs } from '..'
 import { ALL_USERS_KEY } from './swr-keys'
 
 export const updateUserRoles = (userId: string, roles: Role[]): MutationArgs => {
-    const updateFn = () => {
-        return client.put<never, IUser>('/users/' + userId, {
+    const updateFn = async (users: IUser[]) => {
+        await client.put<never, IUser>('/users/' + userId, {
             roles,
         })
+
+        return users
     }
 
     const optimisticData = (users: IUser[] = []) => {

@@ -1,10 +1,10 @@
 import useSWR from 'swr'
 import router from 'next/router'
-import { IUser } from '@/common/schemas'
 import { useAppDispatch, useAppSelector } from '.'
 import { setLoggedInStatus } from '../store/user'
 import { useEffect, useState } from 'react'
 import { CURRENT_USER_SWR_KEY } from '../client/users/swr-keys'
+import { getMe } from '../client'
 
 export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     const dispatch = useAppDispatch()
@@ -12,7 +12,7 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
 
     const [isFirstRender, setIsFirstRender] = useState(true)
 
-    const { data: user, mutate: mutateUser } = useSWR<IUser>(CURRENT_USER_SWR_KEY, {
+    const { data: user, mutate: mutateUser } = useSWR(CURRENT_USER_SWR_KEY, getMe, {
         onSuccess: (user) => {
             if (user) {
                 dispatch(setLoggedInStatus(Boolean(user.id), user))

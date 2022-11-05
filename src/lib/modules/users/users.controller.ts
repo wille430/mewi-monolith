@@ -71,7 +71,7 @@ export class UsersController {
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
         }
-        return 'OK'
+        return { message: 'OK' }
     }
 
     @Post('/email')
@@ -83,7 +83,7 @@ export class UsersController {
     ) {
         if (updateEmailDto.newEmail && user) {
             await this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
-            return 'OK'
+            return { message: 'OK' }
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 
@@ -109,12 +109,12 @@ export class UsersController {
                     user.userId
                 )
             }
-            return 'OK'
+            return { message: 'OK' }
         } else if (dto.email) {
             await this.usersService.sendPasswordResetEmail({
                 email: dto.email,
             })
-            return 'OK'
+            return { message: 'OK' }
         }
 
         throw new UnprocessableEntityException()

@@ -20,6 +20,7 @@ export const rolesMiddleware =
         if (!user && process.env.NODE_ENV !== 'production') {
             user = req.session?.user
         }
+        req.session = session
 
         if (!user) {
             throw new UnauthorizedException('Not logged in')
