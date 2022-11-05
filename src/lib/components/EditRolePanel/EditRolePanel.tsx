@@ -1,27 +1,21 @@
 import capitalize from 'lodash/capitalize'
 import type { IUser } from '@/common/schemas'
 import { Role } from '@/common/schemas'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
 import { TextField } from '../TextField/TextField'
 import { Button } from '../Button/Button'
-import { client } from '@/lib/client'
+import useSWR, { useSWRConfig } from 'swr'
+import { ALL_USERS_KEY } from '@/lib/client/users/swr-keys'
+import { getUsers } from '@/lib/client/users/queries'
+import { updateUserRoles } from '@/lib/client/users/mutations'
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
 
-    const { data, refetch, isLoading } = useQuery(
-        'users',
-        () => client.get<IUser[]>(`/users?email=${email}`).then((res) => res.data),
-        {
-            refetchOnMount: false,
-            refetchOnReconnect: false,
-            refetchOnWindowFocus: false,
-        }
-    )
+    const { data, mutate: refetch } = useSWR(ALL_USERS_KEY, () => getUsers({ email }))
 
     return (
         <div className='spce-y-2 p-2'>
@@ -43,7 +37,7 @@ export function EditRolePanel() {
                     <Button label='Sök' className='ml-1' type='submit' />
                 </form>
                 <div className='w-ful p-2'>
-                    {isLoading ? (
+                    {!data ? (
                         <div className='flex w-full justify-center'>
                             <StyledLoader />
                         </div>
@@ -52,7 +46,7 @@ export function EditRolePanel() {
                     ) : (
                         <ul>
                             {data?.map((user) => (
-                                <IUserRolesWidget key={user.id} user={user} />
+                                <UserRolesWidget key={user.id} user={user} />
                             ))}
                         </ul>
                     )}
@@ -62,49 +56,12 @@ export function EditRolePanel() {
     )
 }
 
-interface IUserRolesWidgetProps {
+interface UserRolesWidgetProps {
     user: IUser
 }
 
-export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
-    const queryClient = useQueryClient()
-    const data = queryClient.getQueryData<IUser[] | undefined>('users')
-
-    const updateIUserMutation = useMutation(
-        ({ user, newRole }: { user: IUser; newRole: Role }) =>
-            client.patch('/users/' + user.id, {
-                roles: [...user.roles, newRole],
-            }),
-        {
-            onSuccess: (res, { user }) => {
-                if (!data) {
-                    return
-                }
-                const userIndex = data.findIndex((u) => u.id === user.id)
-
-                data[userIndex] = res.data
-                queryClient.setQueryData('users', data)
-            },
-        }
-    )
-
-    const deleteIUserRoleMutation = useMutation(
-        ({ user, roleToDelete }: { user: IUser; roleToDelete: Role }) =>
-            client.patch('/users/' + user.id, {
-                roles: user.roles.filter((x) => x != roleToDelete),
-            }),
-        {
-            onSuccess: (res, { user }) => {
-                if (!data) {
-                    return
-                }
-                const userIndex = data.findIndex((u) => u.id === user.id)
-
-                data[userIndex] = res.data
-                queryClient.setQueryData('users', data)
-            },
-        }
-    )
+export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
+    const { mutate } = useSWRConfig()
 
     const missingRoles = useMemo(() => {
         const roles = user.roles
@@ -119,40 +76,43 @@ export const IUserRolesWidget = ({ user }: IUserRolesWidgetProps) => {
         return rolesNotInIUser
     }, [user.roles])
 
+    const removeRole = (role: Role) => {
+        return mutate(
+            ...updateUserRoles(
+                user.id,
+                user.roles.filter((r) => r !== role)
+            )
+        )
+    }
+
+    const addRole = (role: Role) => {
+        return mutate(...updateUserRoles(user.id, [...user.roles, role]))
+    }
+
     return (
         <div className={styles['user-card']}>
             <span className={styles['email-text']}>{user.email}</span>
             <div className={styles['user-roles']}>
-                {user.roles.map((key) => (
+                {user.roles.map((role) => (
                     <span
-                        key={key}
+                        key={role}
                         className={styles['role-label']}
-                        onClick={() =>
-                            deleteIUserRoleMutation.mutate({
-                                user,
-                                roleToDelete: key,
-                            })
-                        }
+                        onClick={() => removeRole(role)}
                     >
-                        {capitalize(key)}
+                        {capitalize(role)}
                     </span>
                 ))}
 
-                {missingRoles.map((key) => (
+                {missingRoles.map((role) => (
                     <span
-                        key={key}
+                        key={role}
                         className={classNames({
                             [styles['role-label']]: true,
                             [styles['unselected']]: true,
                         })}
-                        onClick={() =>
-                            updateIUserMutation.mutate({
-                                user,
-                                newRole: key,
-                            })
-                        }
+                        onClick={() => addRole(role)}
                     >
-                        {capitalize(key)}
+                        {capitalize(role)}
                     </span>
                 ))}
             </div>

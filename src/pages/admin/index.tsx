@@ -1,12 +1,12 @@
 import type { GetServerSideProps } from 'next'
 import type { ReactElement } from 'react'
 import Head from 'next/head'
-import { EditRolePanel } from './../../components/EditRolePanel/EditRolePanel'
-import { ScraperPanel } from './../../components/ScraperPanel/ScraperPanel'
 import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
 import { withAuth } from '@/lib/session/withAuth'
 import { Container } from '@/lib/components/Container/Container'
 import { Role } from '@/common/schemas'
+import { ScraperPanel } from '@/lib/components/ScraperPanel/ScraperPanel'
+import { EditRolePanel } from '@/lib/components/EditRolePanel/EditRolePanel'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {
