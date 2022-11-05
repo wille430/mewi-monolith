@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import ListingFiltersArea from '@/lib/components/ListingFiltersArea/ListingFiltersArea'
-import type { NextPageWithLayout } from '@/types/next'
 import { stringifySearchPath } from '@/lib/hooks/useListingFilters'
 import { BasicLayout } from '@/lib/components/BasicLayout/BasicLayout'
 import { Button } from '@/lib/components/Button/Button'
 import { ListingSearchFilters } from '@/common/types'
+import { NextPageWithLayout } from '@/lib/types/next'
 
 const Filter: NextPageWithLayout = () => {
     const [filters, setFilters] = useState<ListingSearchFilters>({})

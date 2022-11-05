@@ -52,4 +52,4 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     )
 }
 
-export default wrapper.withRedux(MyApp)
+export default wrapper.useWrappedStore(MyApp)

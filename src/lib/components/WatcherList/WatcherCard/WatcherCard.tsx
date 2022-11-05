@@ -1,6 +1,5 @@
-import type { IUserWatcher } from '@/common/schemas'
+import type { IUserWatcher , IListing } from '@/common/schemas'
 import { CategoryLabel } from '@/common/schemas'
-import type { IListing } from '@/common/schemas'
 import queryString from 'query-string'
 import type { Dispatch } from 'react'
 import { useEffect, useRef, useState } from 'react'
@@ -24,7 +23,6 @@ const WatcherCard = ({
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
     const { watcher } = userWatcher
 

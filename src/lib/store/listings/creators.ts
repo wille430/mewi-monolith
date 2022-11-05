@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import type { IListing, IUser } from '@/common/schemas'
+import type { IListing } from '@/common/schemas'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
 import { ListingSearchFilters } from '@/common/types'
@@ -18,41 +18,6 @@ export const setFeatured = createAction(
     (listings: IListing[] = []) => {
         return {
             payload: listings,
-        }
-    }
-)
-
-type LikeListingArgs = UnlikeListingArgs
-
-export const likeListing = createAsyncThunk(
-    ListingsActionTypes.LIKE,
-    async (args: LikeListingArgs, thunkAPI) => {
-        const { listing } = args
-        try {
-            await client.put(`/listings/${listing.id}/like`).catch((e) => {
-                throw e
-            })
-            return args
-        } catch (e) {
-            return thunkAPI.rejectWithValue(args)
-        }
-    }
-)
-
-type UnlikeListingArgs = {
-    listing: IListing
-    user: IUser
-}
-
-export const unlikeListing = createAsyncThunk(
-    ListingsActionTypes.UNLIKE,
-    async (args: UnlikeListingArgs, thunkAPI) => {
-        const { listing } = args
-        try {
-            await client.put(`/listings/${listing.id}/unlike`)
-            return args
-        } catch (e) {
-            return thunkAPI.rejectWithValue(args)
         }
     }
 )

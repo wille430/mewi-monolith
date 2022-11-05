@@ -1,26 +1,23 @@
-import { useRef } from "react";
-import { useEffect } from "react";
-import type { DetailedHTMLProps, ImgHTMLAttributes } from "react";
+import { useRef, useEffect } from 'react'
+import type { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
 
 const DefaultImage = ({
-  src,
-  ...props
-}: DetailedHTMLProps<
-  ImgHTMLAttributes<HTMLImageElement>,
-  HTMLImageElement
->) => {
-  const imgRef = useRef<any>();
+    src,
+    ...props
+}: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+    const imgRef = useRef<any>()
 
-  const replaceImg = (e: any) => {
-    e.target.onerror = null;
-    e.target.src = "/img/missingImage.png";
-  };
+    const replaceImg = (e: any) => {
+        e.target.onerror = null
+        e.target.src = '/img/missingImage.png'
+    }
 
-  useEffect(() => {
-    imgRef.current.src = src;
-  }, []);
+    useEffect(() => {
+        imgRef.current.src = src
+    }, [])
 
-  return <img ref={imgRef} onError={replaceImg} loading="lazy" {...props} />;
-};
+    // TODO: use next Image
+    return <img ref={imgRef} onError={replaceImg} loading='lazy' {...props} />
+}
 
-export default DefaultImage;
+export default DefaultImage
