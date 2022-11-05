@@ -1,7 +1,4 @@
-import { MockModel } from '../../database/test/support/mock.model'
+import { createMockModel } from '@/common/test/utils/createMockModel'
 import { userStub } from '../../users/test/stubs/user.stub'
-import { User } from '../user.schema'
 
-export class UserModel extends MockModel<User> {
-    protected entityStub = userStub()
-}
+export const UserModel = createMockModel(userStub())

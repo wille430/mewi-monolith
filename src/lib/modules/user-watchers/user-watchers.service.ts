@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { autoInjectable, inject } from 'tsyringe'
-import { ConflictException, NotFoundException } from 'next-api-decorators'
+import { BadRequestException, ConflictException, NotFoundException } from 'next-api-decorators'
 import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
 import { UserWatchersRepository } from './user-watchers.repository'
 import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
@@ -20,6 +20,7 @@ export class UserWatchersService {
     ) {}
 
     async create({ userId, metadata }: CreateUserWatcherDto) {
+        userId = userId!
         let watcher = await this.watchersRepository.findOne({ metadata })
 
         // 1. Create new watcher if watcher doesn't exist already
@@ -73,6 +74,10 @@ export class UserWatchersService {
     }
 
     async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+        if (!userId) {
+            throw new BadRequestException(`User id must be defined`)
+        }
+
         const oldUserWatcher = await this.userWatchersRepository.findOne({ id, user: userId })
         if (!oldUserWatcher) {
             throw new NotFoundException(`No user watcher with id ${id} was found`)
@@ -94,12 +99,6 @@ export class UserWatchersService {
             $set: {
                 watcher: watcher.id,
             },
-        })
-
-        console.log({
-            oldUserWatcher,
-            watcher,
-            subs: await this.watchersService.subscriberCount(watcher.id),
         })
 
         const oldWatcherId = (oldUserWatcher.watcher as mongoose.Types.ObjectId).toString()

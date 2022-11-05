@@ -2,11 +2,11 @@ import type { Collection, Connection } from 'mongoose'
 import { createHandler } from 'next-api-decorators'
 import { Server } from 'http'
 import { ScrapersController } from '../../scrapers.controller'
-import { createTestClient } from '@/lib/modules/common/test/createTestClient'
 import { User } from '@/lib/modules/schemas/user.schema'
 import { adminUserPayloadStub } from '@/lib/modules/users/test/stubs/admin-user-payload.stub'
 import { dbConnection } from '@/lib/dbConnection'
 import { adminStub } from '@/lib/modules/users/test/stubs/admin.stub'
+import { createTestClient } from '@/test/createTestClient'
 
 describe('ScrapersController', () => {
     let dbConn: Connection

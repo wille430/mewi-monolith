@@ -6,7 +6,6 @@ import { createHandler } from 'next-api-decorators'
 import { Server } from 'http'
 import { watcherStub } from '../stubs/watcher.stub'
 import { CreateWatcherDto } from '../../dto/create-watcher.dto'
-import { FindAllWatchersDto } from '../../dto/find-all-watchers.dto'
 import { UpdateWatcherDto } from '../../dto/update-watcher.dto'
 import { WatchersController } from '../../watchers.controller'
 import { Watcher } from '@/lib/modules/schemas/watcher.schema'
@@ -60,28 +59,6 @@ describe('WatchersController', () => {
 
     describe('GET /api/watchers', () => {
         describe('without filters', () => {
-            it('it should return watchers', async () => {
-                await watchersCollection.insertOne(watcherStub())
-
-                const response = await request(httpServer).get('/api/watchers')
-
-                expect(response.status).toBe(200)
-                expect(response.body).toMatchObject([transformDate(watcherStub())])
-            })
-        })
-
-        describe('with filters', () => {
-            let filters: FindAllWatchersDto
-
-            beforeEach(() => {
-                filters = {
-                    limit: faker.datatype.number({
-                        min: 1,
-                        max: 100,
-                    }),
-                }
-            })
-
             it('it should return watchers', async () => {
                 await watchersCollection.insertOne(watcherStub())
 

@@ -25,7 +25,8 @@
         "semi": ["error", "never"],
         "@typescript-eslint/ban-ts-comment": "off",
         "no-case-declarations": "off",
-        "import/no-unresolved": "off"
+        "import/no-unresolved": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
     },
     "overrides": [
         {

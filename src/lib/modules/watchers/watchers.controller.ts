@@ -4,10 +4,10 @@ import { inject } from 'tsyringe'
 import { WatchersService } from './watchers.service'
 import { CreateWatcherDto } from './dto/create-watcher.dto'
 import { UpdateWatcherDto } from './dto/update-watcher.dto'
-import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
 import { Roles } from '@/lib/middlewares/roles.guard'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
 
 @Controller()
 export class WatchersController {

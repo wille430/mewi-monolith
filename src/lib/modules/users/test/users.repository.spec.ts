@@ -3,8 +3,7 @@ import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { userStub } from './stubs/user.stub'
 import { UsersRepository } from '../users.repository'
-import { User } from '../../schemas/user.schema'
-import { UserModel } from '../../schemas/__mocks__/user.schema'
+import { User, UserModel } from '../../schemas/user.schema'
 
 jest.mock('../../schemas/user.schema')
 
@@ -12,12 +11,10 @@ describe('UsersRepository', () => {
     let usersRepository: UsersRepository
 
     describe('find operations', () => {
-        let userModel: UserModel
         let userFilterQuery: FilterQuery<User>
 
         beforeEach(async () => {
             usersRepository = container.resolve(UsersRepository)
-            userModel = new UserModel(userStub())
 
             userFilterQuery = {
                 id: userStub().id,
@@ -31,12 +28,11 @@ describe('UsersRepository', () => {
                 let user: User | null
 
                 beforeEach(async () => {
-                    jest.spyOn(userModel, 'findOne')
                     user = await usersRepository.findOne(userFilterQuery)
                 })
 
                 test('then it should call the userModel', () => {
-                    expect(userModel.findOne).toHaveBeenCalledWith(userFilterQuery, {
+                    expect(UserModel.findOne).toHaveBeenCalledWith(userFilterQuery, {
                         __v: 0,
                     })
                 })
@@ -52,12 +48,11 @@ describe('UsersRepository', () => {
                 let users: User[] | null
 
                 beforeEach(async () => {
-                    jest.spyOn(userModel, 'find')
                     users = await usersRepository.find(userFilterQuery)
                 })
 
                 test('then it should call the userModel', () => {
-                    expect(userModel.find).toHaveBeenCalledWith(
+                    expect(UserModel.find).toHaveBeenCalledWith(
                         userFilterQuery,
                         usersRepository.defaultProjection
                     )
@@ -74,12 +69,11 @@ describe('UsersRepository', () => {
                 let user: User | null
 
                 beforeEach(async () => {
-                    jest.spyOn(userModel, 'findOneAndUpdate')
                     user = await usersRepository.findOneAndUpdate(userFilterQuery, userStub())
                 })
 
                 test('then it should call the userModel', () => {
-                    expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
+                    expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
                         userFilterQuery,
                         userStub(),
                         { new: true }
@@ -101,18 +95,9 @@ describe('UsersRepository', () => {
         describe('create', () => {
             describe('when create is called', () => {
                 let user: User
-                let saveSpy: jest.SpyInstance
-                let constructorSpy: jest.SpyInstance
 
                 beforeEach(async () => {
-                    saveSpy = jest.spyOn(UserModel.prototype, 'save')
-                    constructorSpy = jest.spyOn(UserModel.prototype, 'constructorSpy')
                     user = await usersRepository.create(userStub())
-                })
-
-                test('then it should call the userModel', () => {
-                    expect(saveSpy).toHaveBeenCalled()
-                    expect(constructorSpy).toHaveBeenCalledWith(userStub())
                 })
 
                 test('then it should return a user', () => {
