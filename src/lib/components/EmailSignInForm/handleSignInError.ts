@@ -1,5 +1,5 @@
+import { FormError } from '@/lib/types/forms'
 import type { EmailSignInDto } from './EmailSignInDto'
-import type { FormError } from '@/types/forms'
 
 export const handleSignInError = (): FormError<EmailSignInDto> => {
     return {

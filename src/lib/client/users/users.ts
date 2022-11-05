@@ -1,8 +1,8 @@
 import type { IUser } from '@/common/schemas'
 import type { AxiosRequestConfig } from 'axios'
 import { client, MutationArgs } from '..'
-import { CHANGE_EMAIL_SWR_KEY } from '../../constants/swr-keys'
 import { UpdateEmailDto } from '../../modules/users/dto/update-email.dto'
+import { CHANGE_EMAIL_SWR_KEY } from './swr-keys'
 
 export const getMe = async (config: AxiosRequestConfig = {}) => {
     return client.get<IUser | undefined>('/users/me', config).catch(() => undefined)

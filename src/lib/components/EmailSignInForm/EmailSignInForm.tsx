@@ -1,4 +1,3 @@
-import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Link from 'next/link'
@@ -16,6 +15,24 @@ export const EmailSignInForm = () => {
     const dispatch = useAppDispatch()
     const router = useRouter()
 
+    const onSubmit = async () => {
+        setSubmitting(true)
+        const [res] = await Promise.all([
+            dispatch(login(values)),
+            router.prefetch(ON_AUTH_SUCCESS_GOTO),
+        ])
+
+        if (res.meta.requestStatus === 'fulfilled') {
+            window.location.href = ON_AUTH_SUCCESS_GOTO
+        } else {
+            setFieldValue('password', '').then(() => {
+                const formErr = handleSignInError()
+                setErrors(formErr)
+            })
+        }
+        setSubmitting(false)
+    }
+
     const {
         handleSubmit,
         setFieldValue,
@@ -27,35 +44,8 @@ export const EmailSignInForm = () => {
         setSubmitting,
     } = useFormik<EmailSignInDto>({
         initialValues,
-        onSubmit: () => mutation.mutate(),
+        onSubmit: onSubmit,
     })
-
-    const mutation: any = useMutation(
-        () =>
-            dispatch(login(values)).then((res: any) => {
-                if (res.meta.requestStatus === 'rejected') {
-                    throw res.payload
-                }
-            }),
-        {
-            onMutate: () => {
-                router.prefetch(ON_AUTH_SUCCESS_GOTO)
-                setSubmitting(true)
-            },
-            onSuccess: () => {
-                window.location.href = ON_AUTH_SUCCESS_GOTO
-            },
-            onError: () => {
-                setFieldValue('password', '').then(() => {
-                    const formErr = handleSignInError()
-                    setErrors(formErr)
-                })
-            },
-            onSettled: () => {
-                setSubmitting(false)
-            },
-        }
-    )
 
     return (
         <form className='form' onSubmit={handleSubmit}>

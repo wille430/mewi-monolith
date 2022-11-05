@@ -3,8 +3,8 @@ import router from 'next/router'
 import { IUser } from '@/common/schemas'
 import { useAppDispatch, useAppSelector } from '.'
 import { setLoggedInStatus } from '../store/user'
-import { CURRENT_USER_SWR_KEY } from '../constants/swr-keys'
 import { useEffect, useState } from 'react'
+import { CURRENT_USER_SWR_KEY } from '../client/users/swr-keys'
 
 export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     const dispatch = useAppDispatch()
