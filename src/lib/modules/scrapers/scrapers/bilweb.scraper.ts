@@ -23,11 +23,6 @@ export class BilwebScraper extends ListingWebCrawler {
         })
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
-
-        this.defaultStartOptions.watchOptions = {
-            ...this.defaultStartOptions.watchOptions,
-            findFirst: 'origin_id',
-        }
     }
 
     createScrapeUrl = (page: number) => {

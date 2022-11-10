@@ -15,10 +15,5 @@ export const BaseListingScraper = jest.fn().mockReturnValue({
     createEntryPoint: jest.fn(),
     getTotalPages: jest.fn().mockResolvedValue(10),
     status: ScraperStatus.IDLE,
-    defaultStartOptions: {
-        watchOptions: {
-            findFirst: 'date',
-        },
-    },
     config: scraperConfigStub(),
 })

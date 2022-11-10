@@ -44,12 +44,6 @@ export class BytbilScraper extends ListingWebCrawler {
                 o
             )
         )
-
-        Object.assign(this.defaultStartOptions, {
-            watchOptions: {
-                findFirst: 'origin_id',
-            },
-        })
     }
 
     newVehicleTypesScrapedMap() {

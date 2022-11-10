@@ -24,11 +24,6 @@ export class CitiboardScraper extends ListingScraper {
         super(listingsRepository, scrapingLogsRepository)
 
         this.createEntryPoint((p) => ({ url: this.createScrapeUrl(p) }))
-
-        this.defaultStartOptions.watchOptions = {
-            ...this.defaultStartOptions.watchOptions,
-            findFirst: 'date',
-        }
     }
 
     createScrapeUrl = (page: number) => this.defaultScrapeUrl + `?url=/&sida=${page}&sort=&sok=`

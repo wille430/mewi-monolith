@@ -55,11 +55,12 @@ export abstract class BaseEntryPoint {
         options: ScrapeOptions = {}
     ): ScrapeResult {
         const maxPages = res && this.scraper.getTotalPages(res)
-        const [retListings, shouldContinue] = this.sliceListings(listings, options)
+        const [retListings, hasNotSliced] = this.sliceListings(listings, options)
+        const emptyListings = retListings.length === 0
 
         return {
             listings: retListings,
-            continue: shouldContinue,
+            continue: hasNotSliced && !emptyListings,
             maxPages: maxPages,
             page: pageNumber,
         }
@@ -82,16 +83,18 @@ export abstract class BaseEntryPoint {
         options: ScrapeOptions
     ): [ScrapedListing[], boolean] {
         let retListings = listings
+        let shouldContinue = true
 
-        if (options.maxScrapeCount && options.maxScrapeCount < listings.length) {
-            retListings = retListings.splice(0, options.maxScrapeCount)
+        if (options.scrapeAmount && options.scrapeAmount < listings.length) {
+            retListings = retListings.splice(0, options.scrapeAmount)
+            shouldContinue = false
         }
 
-        if (options.findIndex) {
-            retListings = sliceAtIndex(retListings, options.findIndex)
+        if (options.stopAtPredicate) {
+            retListings = sliceAtIndex(retListings, options.stopAtPredicate)
+            shouldContinue = false
         }
 
-        const shouldContinue = retListings.length < listings.length && listings.length > 0
         return [retListings, shouldContinue]
     }
 }

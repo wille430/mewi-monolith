@@ -39,7 +39,7 @@ describe('Scraper Integration', () => {
                 const result = await entryPoint.scrape(page, {})
 
                 expect(result.listings).toBeInstanceOf(Array)
-                expect(result.listings.length).toBeGreaterThanOrEqual(0)
+                expect(result.listings.length).toBeGreaterThan(0)
                 expect(typeof result.continue).toBe('boolean')
                 expect(result.page).toBe(page)
 

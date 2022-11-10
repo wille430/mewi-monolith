@@ -27,4 +27,12 @@ describe('Tradera Scraper', () => {
             }
         })
     })
+
+    describe('#scrape', () => {
+        it('should return listings', async () => {
+            const { listings } = await scraper.entryPoints[0].scrape(1)
+
+            expect(listings.length).toBeGreaterThan(0)
+        })
+    })
 })

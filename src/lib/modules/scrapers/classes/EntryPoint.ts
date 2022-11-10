@@ -1,4 +1,3 @@
-import type { AxiosResponse } from 'axios'
 import { BaseEntryPoint } from './BaseEntryPoint'
 import type { ScrapeResult } from './types/ScrapeResult'
 import type { ScrapeOptions } from './types/ScrapeOptions'
@@ -15,17 +14,7 @@ export class EntryPoint extends BaseEntryPoint {
             ...(await this.createConfig(page)),
         }
 
-        let res: AxiosResponse
-        try {
-            res = await client(config)
-        } catch (e) {
-            this.scraper.log('ERROR: ' + (e as any).response?.data ?? e)
-            return {
-                continue: false,
-                listings: [],
-                page: page,
-            }
-        }
+        const res = await client(config)
 
         const data: any[] = this.scraper.extractRawListingsArray(res)
         const listings = await Promise.all(

@@ -4,9 +4,6 @@ import { getModelForClass, index, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document
 
-@index({
-    keyword: 1,
-})
 export class Price {
     @prop({
         required: true,
@@ -29,6 +26,9 @@ export class Parameter {
     value!: string
 }
 
+@index({
+    keyword: 1,
+})
 export class Listing {
     id!: string
 

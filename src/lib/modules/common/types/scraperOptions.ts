@@ -1,3 +1,5 @@
+import { ScrapePredicate } from '../../scrapers/classes/types/ScrapePredicate'
+
 export interface ScraperOptions {
     useRobots: boolean
     deleteOlderThan: number
@@ -5,4 +7,6 @@ export interface ScraperOptions {
     interval: number
     listingCount: number
     minListings: number
+    scrapeStopAt: ScrapePredicate
+    onNextEntryPoint?: () => any
 }

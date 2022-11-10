@@ -3,10 +3,7 @@ import type { FilterQuery } from 'mongoose'
 import crypto from 'crypto'
 import type { CreateConfigFunction } from './types/CreateConfigFunction'
 import type { BaseEntryPoint } from './BaseEntryPoint'
-import type { ScrapedListing } from './types/ScrapedListing'
-import type { WatchOptions } from './types/WatchOptions'
 import type { StartScraperOptions } from '../types/startScraperOptions'
-import type { DefaultStartOptions } from '../types/defaultStartOptions'
 import { scraperStopFunction } from '../helpers/scraperStopFunction'
 import type { ScrapingLogsRepository } from '../scraping-logs.repository'
 import type { ListingsRepository } from '../../listings/listings.repository'
@@ -15,6 +12,9 @@ import { ScraperStatus } from '@/common/types'
 import { stringSimilarity } from '@/lib/utils/stringUtils'
 import { scrapersConfig } from '../scrapers.config'
 import { ScraperOptions } from '../../common/types/scraperOptions'
+import { Listing } from '../../schemas/listing.schema'
+import { ScrapingLog } from '../../schemas/scraping-log.schema'
+import { ScrapeOptions } from './types/ScrapeOptions'
 
 export abstract class BaseListingScraper {
     status: ScraperStatus = ScraperStatus.IDLE
@@ -30,143 +30,102 @@ export abstract class BaseListingScraper {
     abstract listingsRepository: ListingsRepository
     abstract scrapingLogsRepository: ScrapingLogsRepository
 
-    readonly watchOptions: WatchOptions = {
-        findFirst: 'date',
-    }
-
-    defaultStartOptions: DefaultStartOptions = {
-        watchOptions: {
-            findFirst: 'date',
-        },
-    }
-
-    async initialize(): Promise<void> {
-        if (this.initialized) {
-            return
-        }
-
-        this.initialized = true
-    }
-
     config: ScraperOptions = scrapersConfig['default']
 
-    async start(_options: Partial<StartScraperOptions> = this.defaultStartOptions) {
-        if (!this.initialized) await this.initialize()
+    initialize(): BaseListingScraper {
+        if (!this.initialized) {
+            this.initialized = true
+        }
+        return this
+    }
+
+    private async createScrapePredicate(entryPoint: BaseEntryPoint) {
+        const { scrapeStopAt } = this.config
+        const recentLog = await entryPoint.getMostRecentLog()
+        let predicateVal: any
+
+        if (scrapeStopAt === 'date' && recentLog?.scrapeToDate) {
+            predicateVal = recentLog.scrapeToDate.toString()
+        } else if (scrapeStopAt === 'origin_id' && recentLog?.scrapeToId) {
+            predicateVal = recentLog.scrapeToId.toString()
+        }
+
+        return scraperStopFunction(scrapeStopAt, predicateVal)
+    }
+
+    async scrape(index: number, page: number) {
+        const entryPoint = this.entryPoints[index]
+
+        const maxScrapeCount = Math.floor(this.config.limit / this.entryPoints.length)
+
+        const options: ScrapeOptions = {
+            // TODO
+            scrapeAmount: maxScrapeCount,
+            stopAtPredicate: await this.createScrapePredicate(entryPoint),
+        }
+
+        const { listings, ...scrapeRes } = await entryPoint.scrape(page, options)
+
+        const deleteCount = await this.deleteDups(listings)
+        this.log(`Deleted ${deleteCount} listing duplicates`)
+
+        await this.listingsRepository.createMany(
+            listings.map(
+                (listing) => ({ ...listing, entryPoint: entryPoint.identifier } as Listing)
+            )
+        )
+
+        return {
+            futurePred: this.getFuturePredicateValue(page, listings),
+            count: listings.length,
+            ...scrapeRes,
+        }
+    }
+
+    async start(_options: Partial<StartScraperOptions> = {}) {
+        if (!this.initialized) this.initialize()
 
         const options = {
             triggeredBy: ScraperTrigger.Scheduled,
             scrapeCount: this.config.limit,
-            ...this.defaultStartOptions,
         }
-
         Object.assign(options, _options)
-
-        const { watchOptions, scrapeCount } = options
 
         this.status = ScraperStatus.SCRAPING
 
-        let batch: ScrapedListing[] = []
-
         this.log(`Scraping listings from ${this.entryPoints.length} entry points`)
-        for (const entryPoint of this.entryPoints) {
-            let shouldContinue = true
-            let targetScrapeCount = 0
-            let maxScrapeCount = scrapeCount
-                ? Math.floor(scrapeCount / this.entryPoints.length)
-                : undefined
-            let scrapeToValue: string | Date | undefined
 
-            const recentLog = await entryPoint.getMostRecentLog()
-            let findIndexValue: string | Date | undefined
-
-            const findFirst = watchOptions?.findFirst
-            if (findFirst === 'date' && recentLog?.scrapeToDate) {
-                findIndexValue = recentLog.scrapeToDate.toString()
-            } else if (findFirst === 'origin_id' && recentLog?.scrapeToId) {
-                findIndexValue = recentLog.scrapeToId.toString()
-            }
-
-            let totalPageCount: number | undefined
-
-            // Compose log
-            this.log('', false)
-            this.verbose &&
-                process.stdout.write(
-                    `Scraping ${maxScrapeCount ? maxScrapeCount : ''} listings from ${
-                        (await entryPoint.createConfig(1)).url
-                    } `
-                )
-
-            const findIndex = scraperStopFunction(watchOptions.findFirst, findIndexValue)
-
-            // This block is only used for logging
-            if (findIndexValue) {
-                if (watchOptions?.findFirst === 'date') {
-                    this.verbose && process.stdout.write(`created after ${findIndexValue}`)
-                } else if (options.watchOptions?.findFirst === 'origin_id') {
-                    this.verbose &&
-                        process.stdout.write(
-                            `until listing with origin_id ${findIndexValue} is found`
-                        )
-                }
-            } else {
-                this.verbose && process.stdout.write('until last page or max scrape count reached')
-            }
-            this.verbose && process.stdout.write('\n')
+        let totalCount = 0
+        for (let i = 0; i < this.entryPoints.length; i++) {
+            const entryPoint = this.entryPoints[i]
 
             let page = 1
-            while (shouldContinue) {
+            let shouldScrape = true
+            let futurePredVal: string | Date | undefined
+            let scrapeCount = 0
+            let totalPageCount: number | undefined
+
+            await this.beginScrapeMessage(entryPoint)
+
+            while (shouldScrape) {
                 this.log(`Scraping page ${page}/${totalPageCount ?? '?'}...`)
-
                 const {
-                    listings,
-                    continue: cont,
+                    continue: _shouldScrape,
+                    futurePred,
+                    count,
                     maxPages,
-                } = await entryPoint.scrape(page, {
-                    findIndex,
-                    maxScrapeCount,
-                })
+                } = await this.scrape(i, page)
 
-                if (page == 1 && listings.length > 0) {
-                    scrapeToValue =
-                        listings[0][
-                            watchOptions?.findFirst ??
-                                this.defaultStartOptions.watchOptions.findFirst
-                        ]
-                }
+                this.log(`Inserting ${count} listings into database`)
 
                 totalPageCount = maxPages
+                shouldScrape = this.shouldScrape(_shouldScrape, totalPageCount, page)
+                futurePredVal = futurePred
                 page += 1
-
-                batch = listings
-                shouldContinue = cont
-
-                const deleteCount = await this.listingsRepository.deleteMany({
-                    origin_id: { $in: batch.map((x) => x.origin_id) },
-                })
-                this.log(`Deleted ${deleteCount} listing duplicates`)
-
-                this.log(`Inserting ${batch.length} listings into database`)
-
-                // 1.5 Add the scraped listings
-                if (batch.length) {
-                    const { count } = await this.listingsRepository.createMany(
-                        batch.map((o) => ({ ...o, entryPoint: entryPoint.identifier }))
-                    )
-                    targetScrapeCount += count
-
-                    if (maxScrapeCount) maxScrapeCount -= count
-                }
-
-                if (totalPageCount && page > totalPageCount) {
-                    this.log(
-                        'Scraper exceeded the total page count. Stopping scraper on this entry point.'
-                    )
-                    shouldContinue = false
-                }
+                scrapeCount += count
             }
 
-            if (options.onNextEntryPoint) options.onNextEntryPoint()
+            this.config.onNextEntryPoint && this.config.onNextEntryPoint()
 
             this.log(
                 `Scraping of entrypoint ${entryPoint.identifier} complete. Deleting old listings and creating log...`
@@ -176,21 +135,72 @@ export abstract class BaseListingScraper {
                 entryPoint: entryPoint.identifier,
             })
 
-            await this.scrapingLogsRepository.create({
-                added_count: targetScrapeCount,
-                // TODO: correct error count value
-                error_count: 0,
-                entryPoint: entryPoint.identifier,
-                scrapeToDate: scrapeToValue instanceof Date ? scrapeToValue : undefined,
-                scrapeToId: typeof scrapeToValue === 'string' ? scrapeToValue : undefined,
-                target: this.origin,
-                triggered_by: options.triggeredBy,
-            })
+            await this.createReport(scrapeCount, entryPoint, futurePredVal, options)
+            totalCount += scrapeCount
         }
 
-        this.log('DONE')
+        this.log('Total scraped: ' + totalCount)
 
         this.reset()
+    }
+
+    private shouldScrape(
+        _shouldScrape: boolean,
+        totalPageCount: number | undefined,
+        page: number
+    ): boolean {
+        return _shouldScrape && totalPageCount != null && totalPageCount > page
+    }
+
+    private async createReport(
+        targetScrapeCount: number,
+        entryPoint: BaseEntryPoint,
+        predicateVal: any,
+        options: { triggeredBy: ScraperTrigger; scrapeCount: number }
+    ) {
+        const report: Partial<ScrapingLog> = {
+            addedCount: targetScrapeCount,
+            // TODO: correct error count value
+            errorCount: 0,
+            entryPoint: entryPoint.identifier,
+            target: this.origin,
+            triggeredBy: options.triggeredBy,
+        }
+
+        if (this.config.scrapeStopAt === 'date') {
+            report.scrapeToDate = predicateVal
+        } else if (this.config.scrapeStopAt === 'origin_id') {
+            report.scrapeToId = predicateVal
+        }
+
+        await this.scrapingLogsRepository.create(report)
+    }
+
+    private getFuturePredicateValue(
+        page: number,
+        listings: Partial<Listing>[],
+        scrapeToValue?: any
+    ) {
+        if (page == 1 && listings.length > 0) {
+            scrapeToValue = listings[0][this.config.scrapeStopAt]
+        }
+        return scrapeToValue
+    }
+
+    private async deleteDups(listings: Partial<Listing>[]) {
+        return this.listingsRepository.deleteMany({
+            origin_id: { $in: listings.map((x) => x.origin_id) },
+        })
+    }
+
+    private async beginScrapeMessage(entryPoint: BaseEntryPoint, maxScrapeCount?: number) {
+        // Compose log
+        this.verbose &&
+            this.log(
+                `Scraping ${maxScrapeCount ? maxScrapeCount : ''} listings from ${
+                    (await entryPoint.createConfig(1)).url
+                } `
+            )
     }
 
     async deleteOldListings(args: FilterQuery<UserDocument> = {}): Promise<void> {

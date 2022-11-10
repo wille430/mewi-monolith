@@ -23,7 +23,39 @@ interface TraderaCategory {
 @autoInjectable()
 export class TraderaScraper extends ListingScraper {
     currentCategoryIndex = 0
-    categories: TraderaCategory[] | undefined
+    categories = [
+        { href: '/category/1612', title: 'Accessoarer' },
+        { href: '/category/20', title: 'Antikt & Design' },
+        { href: '/category/1611', title: 'Barnartiklar' },
+        { href: '/category/33', title: 'Barnkläder & Barnskor' },
+        { href: '/category/302571', title: 'Barnleksaker' },
+        { href: '/category/34', title: 'Biljetter & Resor' },
+        { href: '/category/32', title: 'Bygg & Verktyg' },
+        { href: '/category/11', title: 'Böcker & Tidningar' },
+        { href: '/category/12', title: 'Datorer & Tillbehör' },
+        { href: '/category/13', title: 'DVD & Videofilmer' },
+        { href: '/category/10', title: 'Fordon, Båtar & Delar' },
+        { href: '/category/14', title: 'Foto, Kameror & Optik' },
+        { href: '/category/15', title: 'Frimärken' },
+        { href: '/category/36', title: 'Handgjort & Konsthantverk' },
+        { href: '/category/31', title: 'Hem & Hushåll' },
+        { href: '/category/17', title: 'Hemelektronik' },
+        { href: '/category/18', title: 'Hobby' },
+        { href: '/category/19', title: 'Klockor' },
+        { href: '/category/16', title: 'Kläder' },
+        { href: '/category/23', title: 'Konst' },
+        { href: '/category/21', title: 'Musik' },
+        { href: '/category/22', title: 'Mynt & Sedlar' },
+        { href: '/category/29', title: 'Samlarsaker' },
+        { href: '/category/1623', title: 'Skor' },
+        { href: '/category/340736', title: 'Skönhetsvård' },
+        { href: '/category/24', title: 'Smycken & Ädelstenar' },
+        { href: '/category/25', title: 'Sport & Fritid' },
+        { href: '/category/26', title: 'Telefoni, Tablets & Wearables' },
+        { href: '/category/1605', title: 'Trädgård & Växter' },
+        { href: '/category/30', title: 'TV-spel & Datorspel' },
+        { href: '/category/27', title: 'Vykort & Bilder' },
+    ]
 
     itemsPerCategory!: number
     limit = 50
@@ -41,32 +73,17 @@ export class TraderaScraper extends ListingScraper {
     ) {
         super(listingsRepository, scrapingLogsRepository)
 
-        Object.assign(this.defaultStartOptions, {
-            onNextEntryPoint: () => {
-                this.currentCategoryIndex += 1
-            },
-        })
-    }
-
-    async initialize(): Promise<void> {
-        await super.initialize()
-
-        this.log('Fetching categories and updating entry points...')
-        this.categories = await this.getCategories()
-
         for (const category of this.categories) {
-            if (!category.href == null) {
-                throw new Error(
-                    `Href to Tradera ${category.id} is undefined. Could not create entrypoint for category.`
-                )
-            }
-
             this.createEntryPoint(
                 (p) => ({
-                    url: this.createScrapeUrl(category.href!, p),
+                    url: this.createScrapeUrl(category.href, p),
                 }),
                 category.href
             )
+        }
+
+        this.config.onNextEntryPoint = () => {
+            this.currentCategoryIndex += 1
         }
     }
 

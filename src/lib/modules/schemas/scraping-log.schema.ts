@@ -18,10 +18,10 @@ export class ScrapingLog implements IScrapingLog {
     entryPoint!: string
 
     @prop(String)
-    scrapeToId!: string
+    scrapeToId?: string
 
     @prop(Date)
-    scrapeToDate!: Date
+    scrapeToDate?: Date
 
     @prop({
         type: String,
