@@ -7,4 +7,5 @@ export const scraperConfigStub = (): ScraperOptions => ({
     listingCount: 200,
     minListings: 10,
     useRobots: false,
+    scrapeStopAt: 'date',
 })
