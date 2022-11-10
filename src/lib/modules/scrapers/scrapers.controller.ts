@@ -70,8 +70,8 @@ export class ScrapersController {
     @Put('/next')
     @HttpCode(200)
     @AdminOrKeyGuard()
-    scrapeNext() {
-        this.scrapersService.scrapeNext()
-        return
+    async scrapeNext() {
+        await this.scrapersService.scrapeNext()
+        return true
     }
 }
