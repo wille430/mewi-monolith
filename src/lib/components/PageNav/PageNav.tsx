@@ -2,7 +2,8 @@ import type { MutableRefObject, MouseEvent } from 'react'
 import { memo, useMemo } from 'react'
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
-import { useListingFilters } from '@/lib/hooks/useListingFilters'
+import { useSearchContext } from '@/lib/hooks/useSearch'
+import { ListingSearchFilters } from '@/common/types'
 
 interface PageNavProps {
     anchorEle?: MutableRefObject<HTMLDivElement | null>
@@ -10,7 +11,7 @@ interface PageNavProps {
 }
 
 const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
-    const { setFilters, filters } = useListingFilters()
+    const { setFilters, filters } = useSearchContext<ListingSearchFilters>()
 
     const totalPages = useMemo(() => Math.ceil(totalHits / 24) ?? 1, [totalHits])
 
@@ -22,7 +23,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
             scrollToAnchorEle()
-            setFilters((prev) => ({ ...prev, page: args[1] }), true)
+            setFilters((prev) => ({ ...prev, page: args[1] }))
         }
 
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons
@@ -99,7 +100,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
         const newPage = filters.page ?? 1 + increment
         if (newPage <= totalPages && newPage >= 1) {
             scrollToAnchorEle()
-            setFilters((prev) => ({ ...prev, page: newPage }), true)
+            setFilters((prev) => ({ ...prev, page: newPage }))
         }
     }
 

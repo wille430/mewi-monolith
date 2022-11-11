@@ -11,6 +11,8 @@ import { ListingsRepository } from './listings.repository'
 import { UsersRepository } from '../users/users.repository'
 import type { Listing } from '../schemas/listing.schema'
 import { DeleteListingsDto } from './dto/delete-listings.dto'
+import { FindAllListingsReponse } from './dto/find-all-listings-response.dto'
+import { IListing } from '@/common/schemas'
 
 @autoInjectable()
 export class ListingsService {
@@ -23,14 +25,14 @@ export class ListingsService {
         return this.listingsRepository.create(createListingDto)
     }
 
-    async findAll(dto: FindAllListingsDto) {
+    async findAll(dto: FindAllListingsDto): Promise<FindAllListingsReponse> {
         const totalHitsPipeline = this.metadataToPL(omit(dto, 'page', 'limit'))
         const hitsPipeline = this.metadataToPL(dto)
 
-        let totalHits = (await this.listingsRepository.aggregate([
+        let totalHits: any = (await this.listingsRepository.aggregate([
             ...totalHitsPipeline,
             { $count: 'totalHits' },
-        ])) as unknown as any[]
+        ])) as unknown as [{ totalHits: number }]
         totalHits = totalHits[0]?.totalHits ?? 0
 
         const hits =
@@ -41,7 +43,7 @@ export class ListingsService {
         return {
             filters: dto,
             totalHits,
-            hits,
+            hits: hits as IListing[],
         }
     }
 

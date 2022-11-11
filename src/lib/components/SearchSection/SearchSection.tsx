@@ -1,43 +1,30 @@
-import { useEffect, useRef } from 'react'
-import isEqual from 'lodash/isEqual'
+import { useRef } from 'react'
 import PageNav from '../PageNav/PageNav'
 import { ListingResultText } from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
 import { ListingPopUpContainer } from '../ListingPopUp/ListingPopUpContainer'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { searchListings } from '@/lib/store/listings'
-import { useListingFilters } from '@/lib/hooks/useListingFilters'
 import ListingGrid from '@/lib/components/ListingGrid/ListingGrid'
 import { ListingSearchFilters } from '@/common/types'
+import { useListingsSearch } from '@/lib/hooks/useListingsResult'
 
 export interface SearchSectionProps {
     defaultFilters?: Partial<ListingSearchFilters>
 }
 
 export const SearchSection = () => {
-    const lastFilters = useRef({})
-    const { debouncedFilters } = useListingFilters()
     const scrollUpRef = useRef<HTMLDivElement | null>(null)
-
-    const search = useAppSelector((state) => state.listings.search)
-    const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        if (!isEqual(lastFilters.current, debouncedFilters)) {
-            lastFilters.current = debouncedFilters
-            dispatch(searchListings(debouncedFilters))
-        }
-    }, [debouncedFilters])
+    const { data } = useListingsSearch()
+    const { totalHits = 0 } = data ?? {}
 
     return (
         <section className='flex h-full w-full flex-col'>
             <div ref={scrollUpRef} />
             <div className='my-4 flex justify-between'>
-                <ListingResultText totalHits={search.totalHits} />
+                <ListingResultText totalHits={totalHits} />
                 <SortButton />
             </div>
             <ListingGrid />
-            <PageNav anchorEle={scrollUpRef} totalHits={search.totalHits} />
+            <PageNav anchorEle={scrollUpRef} totalHits={totalHits} />
             <ListingPopUpContainer />
         </section>
     )

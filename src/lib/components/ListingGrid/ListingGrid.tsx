@@ -2,14 +2,17 @@ import classNames from 'classnames'
 import styles from './ListingGrid.module.scss'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { useAppDispatch } from '@/lib/hooks'
 import { openListing } from '@/lib/store/listings'
+import { useListingsSearch } from '@/lib/hooks/useListingsResult'
 
 const cx = classNames.bind(styles)
 
 const ListingGrid = () => {
     const dispatch = useAppDispatch()
-    const { hits, isLoading, error } = useAppSelector((state) => state.listings.search)
+    const { data, error } = useListingsSearch()
+    const isLoading = !data
+    const { hits } = data ?? {}
 
     if (isLoading) {
         return (

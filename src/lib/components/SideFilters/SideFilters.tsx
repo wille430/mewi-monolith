@@ -9,16 +9,16 @@ import { Container } from '../Container/Container'
 import { Button } from '../Button/Button'
 import { TextField } from '../TextField/TextField'
 import { toggleCategory, toggleOrigin } from '@/lib/utils/toggleFilters'
-import { useListingFilters } from '@/lib/hooks/useListingFilters'
-import { categories } from '@/common/types'
+import { categories, ListingSearchFilters } from '@/common/types'
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal'
 import { mutate } from 'swr'
 import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
 import { useAppSelector } from '@/lib/hooks'
 import { useRouter } from 'next/router'
+import { useSearchContext } from '@/lib/hooks/useSearch'
 
 export const SideFilters = () => {
-    const { filters, setFilters, setField, clear } = useListingFilters()
+    const { filters, setFilters, setField, clear } = useSearchContext<ListingSearchFilters>()
     const { isLoggedIn } = useAppSelector((state) => state.user)
     const router = useRouter()
     const [addWatcherStatus, setAddWatcherStatus] = useState<boolean | undefined>(undefined)
@@ -61,7 +61,9 @@ export const SideFilters = () => {
                             placeholder='Plats (stad, region, etc)'
                             name='region'
                             showLabel={false}
-                            onChange={setField}
+                            onChange={(e) => {
+                                setField('region', e.target.value)
+                            }}
                             value={filters.region}
                             data-testid='regionInput'
                             fullWidth
