@@ -1,4 +1,4 @@
-import { Role } from '@/common/schemas'
+import { IListing, Role } from '@/common/schemas'
 import { Post, Put, Get, Body, Param, Delete, Query, HttpCode } from 'next-api-decorators'
 import { inject } from 'tsyringe'
 import { UpdateListingDto } from './dto/update-listing.dto'
@@ -7,12 +7,12 @@ import { CreateListingDto } from './dto/create-listing.dto'
 import { FindAllListingsDto } from './dto/find-all-listing.dto'
 import { DeleteListingsDto } from './dto/delete-listings.dto'
 import type { UserPayload } from '../common/types/UserPayload'
-import type { ListingDocument } from '../schemas/listing.schema'
 import { Roles } from '@/lib/middlewares/roles.guard'
 import { Public } from '@/lib/decorators/public.decorator'
 import { GetUser } from '@/lib/decorators/user.decorator'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import cache from 'memory-cache'
 
 @Controller()
 export class ListingsController {
@@ -41,13 +41,10 @@ export class ListingsController {
     @Get('/featured')
     @Public()
     async featured() {
-        // let cachedListings: IListing[] | undefined = await this.cacheManager.get('featured')
-        let cachedListings: ListingDocument[] | undefined = undefined
+        let cachedListings: IListing[] | undefined = await cache.get('featured')
         if (!cachedListings) {
-            cachedListings = await this.listingsService.sample(5)
-            // await this.cacheManager.set('featured', cachedListings, {
-            //     ttl: 60 * 60,
-            // })
+            cachedListings = await this.listingsService.sample(8)
+            cache.put('featured', cachedListings, 60 * 60 * 15)
         }
 
         return cachedListings

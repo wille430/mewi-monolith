@@ -168,7 +168,7 @@ export abstract class EntityRepository<T extends Document> {
 
         for (const i of randomNums) {
             if (!addedDocNums.includes(i)) {
-                const entity = await this.entityModel.findOne({}, { skip: i })
+                const entity = await this.findOne({}, { skip: i })
 
                 if (entity) randomDocs.push(entity)
                 addedDocNums.push(i)

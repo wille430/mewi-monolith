@@ -7,7 +7,7 @@ const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
     if (action.type === HYDRATE) {
         const nextState: ReturnType<typeof rootReducer> = {
             ...state, // use previous state
-            // ...action.payload, // apply delta from hydration
+            ...action.payload, // apply delta from hydration
         }
         return nextState
     } else {
