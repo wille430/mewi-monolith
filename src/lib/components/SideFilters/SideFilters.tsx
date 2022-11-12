@@ -21,15 +21,8 @@ export const SideFilters = () => {
     const [addWatcherStatus, setAddWatcherStatus] = useState<boolean | undefined>(undefined)
 
     useEffect(() => {
-        const reset = () => {
-            setAddWatcherStatus(undefined)
-        }
-        window.addEventListener('click', reset)
-
-        return () => {
-            window.removeEventListener('click', reset)
-        }
-    }, [])
+        setAddWatcherStatus(undefined)
+    }, [filters])
 
     return (
         <aside className='ml-auto md:max-w-xxs'>
@@ -53,7 +46,10 @@ export const SideFilters = () => {
                             heading: 'Är du säker att du vill lägga en bevakning på sökningen?',
                             bodyText:
                                 'Genom att klicka på "Ja" godkänner du att ta emot e-post varje gång det kommer nya föremål som matchar din sökning.',
-                            onAccept: () => mutate(...createUserWatcher({ metadata: filters })),
+                            onAccept: () =>
+                                mutate(...createUserWatcher({ metadata: filters }))
+                                    .then(() => setAddWatcherStatus(true))
+                                    .catch(() => setAddWatcherStatus(false)),
                         }}
                     >
                         {({ showModal }) => (

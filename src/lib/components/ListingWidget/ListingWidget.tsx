@@ -1,15 +1,15 @@
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import type { IListing } from '@/common/schemas'
+import type { IListing, ListingOrigin } from '@/common/schemas'
 import type { HTMLAttributes } from 'react'
 import classNames from 'classnames'
-import Link from 'next/link'
-import type { ListingOrigin } from '@/common/schemas'
 import style from './ListingWidget.module.scss'
-import { LikeButton, ListingLikeButton } from '../LikeButton/LikeButton'
 import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'
 import { useAppSelector } from '@/lib/hooks'
 import { getColor, getTextColor } from '@/lib/constants/OriginColors'
+import clsx from 'clsx'
+import Link from 'next/link'
+import { LikeButton, ListingLikeButton } from '../LikeButton/LikeButton'
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
     listing: IListing
@@ -46,13 +46,17 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                     })}
                 />
             ) : (
-                <Link href='/loggain'>
-                    <LikeButton data-testid='like-button' className={style['like-button']} />
+                <Link href='/loggain' className={style['like-button']}>
+                    <LikeButton data-testid='like-button' />
                 </Link>
             )}
 
-            <div className={style['image-wrapper']}>
-                <DefaultImage src={listing.imageUrl && listing.imageUrl[0]} alt={listing.title} />
+            <div className={clsx(style['image-wrapper'], 'relative')}>
+                <DefaultImage
+                    src={listing.imageUrl && listing.imageUrl[0]}
+                    alt={listing.title}
+                    fill
+                />
             </div>
 
             <div className={style['details']}>
@@ -82,7 +86,7 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
 const OriginTag = ({ origin }: { origin: ListingOrigin }) => {
     return (
         <div
-            className={`absolute py-0.5 pr-3 pl-1  text-xs font-bold`}
+            className={`absolute top-0 left-0 py-0.5 pr-3 pl-1  text-xs font-bold z-10`}
             style={{
                 backgroundColor: getColor(origin),
                 color: getTextColor(origin),

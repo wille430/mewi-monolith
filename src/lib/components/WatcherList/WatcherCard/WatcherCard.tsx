@@ -1,4 +1,4 @@
-import type { IUserWatcher , IListing } from '@/common/schemas'
+import type { IUserWatcher } from '@/common/schemas'
 import { CategoryLabel } from '@/common/schemas'
 import queryString from 'query-string'
 import type { Dispatch } from 'react'
@@ -14,12 +14,10 @@ import { Button } from '@/lib/components/Button/Button'
 
 const WatcherCard = ({
     userWatcher,
-    newItems,
     expand,
     onExpand,
 }: {
     userWatcher: IUserWatcher
-    newItems?: IListing[]
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
@@ -134,9 +132,7 @@ const WatcherCard = ({
                     </div>
                 </footer>
             </article>
-            <AnimatePresence>
-                {_expand && <NewItemsDrawer watcher={userWatcher} newItems={newItems || []} />}
-            </AnimatePresence>
+            <AnimatePresence>{_expand && <NewItemsDrawer watcher={userWatcher} />}</AnimatePresence>
         </div>
     )
 }

@@ -8,6 +8,7 @@ import { Button } from '../Button/Button'
 import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'
 import { useAppDispatch } from '@/lib/hooks'
 import { openListing } from '@/lib/store/listings'
+import clsx from 'clsx'
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
     listing: IListing
@@ -44,7 +45,9 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
             data-id={listing.id}
             {...rest}
         >
-            <DefaultImage className={styles.image} src={listing.imageUrl[0]} alt={listing.title} />
+            <div className={clsx(styles.image, 'relative')}>
+                <DefaultImage fill src={listing.imageUrl[0]} alt={listing.title} />
+            </div>
             <motion.div className={styles.description}>
                 <h4>{listing.title}</h4>
                 <p>{listing.body}</p>

@@ -8,6 +8,7 @@ import { WatchersRepository } from '../watchers/watchers.repository'
 import { WatchersService } from '../watchers/watchers.service'
 import { UsersRepository } from '../users/users.repository'
 import { WatcherDocument } from '../schemas/watcher.schema'
+import { ObjectId } from 'bson'
 
 @autoInjectable()
 export class UserWatchersService {
@@ -121,21 +122,17 @@ export class UserWatchersService {
      * @returns True if the user watcher was deleted, else false
      */
     async remove(id: string, userId: string): Promise<boolean> {
-        const { id: watcherId } =
-            (await this.userWatchersRepository.findOne({
-                id,
-                userId,
-            })) ?? {}
+        const userWatcher = await this.userWatchersRepository.findOne({
+            id,
+            user: userId,
+        })
+        const watcherId = (userWatcher?.watcher as ObjectId)?.toString()
         if (!watcherId) return false
 
         // delete from user
-        await this.userWatchersRepository.deleteMany({
-            id,
-            userId,
-        })
+        await this.userWatchersRepository.findByIdAndDelete(userWatcher?.id)
 
         // delete watcher if no one is subscribed
-
         const subCount = await this.watchersService.subscriberCount(watcherId)
 
         if (subCount <= 0) {

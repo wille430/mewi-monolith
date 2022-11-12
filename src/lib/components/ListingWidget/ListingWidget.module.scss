@@ -27,11 +27,6 @@ $fade-transition: all 150ms linear;
     }
 }
 
-.card :global(img) {
-    object-fit: cover;
-    width: 100%;
-}
-
 .image-wrapper {
     flex-grow: 1;
     height: auto;
