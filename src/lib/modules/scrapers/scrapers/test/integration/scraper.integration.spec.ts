@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { ListingOrigin } from '@/common/schemas'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
@@ -6,6 +5,8 @@ import { validateListingTest } from '../validate-listing'
 import { ScrapersService } from '../../../scrapers.service'
 import { BaseListingScraper } from '../../../classes/BaseListingScraper'
 import { BaseEntryPoint } from '../../../classes/BaseEntryPoint'
+import uniq from 'lodash/uniq'
+import sample from 'lodash/sample'
 
 const testScrapers = Object.values(ListingOrigin).map((x) => [x])
 
@@ -23,7 +24,7 @@ describe('Scraper Integration', () => {
         describe('entryPoints', () => {
             it('should have unique entry points', () => {
                 const identifiers = scraper.entryPoints.map((o) => o.identifier)
-                expect(_.uniq(identifiers)).toEqual(identifiers)
+                expect(uniq(identifiers)).toEqual(identifiers)
             })
         })
 
@@ -31,7 +32,7 @@ describe('Scraper Integration', () => {
             let entryPoint: BaseEntryPoint
 
             beforeEach(async () => {
-                entryPoint = _.sample(scraper.entryPoints) as BaseEntryPoint
+                entryPoint = sample(scraper.entryPoints) as BaseEntryPoint
             })
 
             it('should return array of Listings', async () => {

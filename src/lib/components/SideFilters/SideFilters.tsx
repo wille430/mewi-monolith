@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { useSearchContext } from '@/lib/hooks/useSearch'
 import { Formik } from 'formik'
 import { ListingSearchForm } from '../ListingSearchForm/ListingSearchForm'
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 import { useSyncValues } from '@/lib/hooks/useSyncValues'
 
 export const SideFilters = () => {

@@ -1,11 +1,12 @@
-import _ from 'lodash'
+import fromPairs from 'lodash/fromPairs'
+import map from 'lodash/map'
 
 export type ObjectWithMaybeCallback<T> = {
     [key in keyof T]: T[keyof T] | (() => T[keyof T])
 }
 
 export const createFactory = <T>(requiredAttrs: ObjectWithMaybeCallback<Partial<T>>) => {
-    const mappedAttrs = _.map(Object.entries(requiredAttrs), ([key, value]) => {
+    const mappedAttrs = map(Object.entries(requiredAttrs), ([key, value]) => {
         let retVal
         if (typeof value === 'function') {
             retVal = value()
@@ -17,7 +18,7 @@ export const createFactory = <T>(requiredAttrs: ObjectWithMaybeCallback<Partial<
 
     const build = (attrs: Partial<T> = {}): T => {
         return {
-            ...(_.fromPairs(mappedAttrs) as T),
+            ...(fromPairs(mappedAttrs) as T),
             ...attrs,
         }
     }

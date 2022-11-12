@@ -1,5 +1,4 @@
-import { Category } from '@/common/schemas'
-import { CategoryLabel } from '@/common/schemas'
+import { Category , CategoryLabel } from '@/common/schemas'
 import type { LinkProps } from 'next/link'
 import type { RootState } from '@/lib/store'
 

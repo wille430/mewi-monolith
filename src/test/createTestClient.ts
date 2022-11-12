@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next'
 import { apiResolver } from 'next/dist/server/api-utils/node'
-import { isFunction } from 'lodash'
+import isFunction from 'lodash/isFunction'
 import { createHandler } from 'next-api-decorators'
 import { RequestListener, createServer } from 'http'
 import { withSessionRoute } from '@/lib/session/withSessionRoute'

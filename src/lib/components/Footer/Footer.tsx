@@ -1,5 +1,4 @@
-import { Category } from '@/common/schemas'
-import { CategoryLabel } from '@/common/schemas'
+import { Category , CategoryLabel } from '@/common/schemas'
 import Link from 'next/link'
 import styles from './Footer.module.scss'
 import { Arch } from '../Arch/Arch'

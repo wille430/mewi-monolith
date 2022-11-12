@@ -1,14 +1,12 @@
 import { ListingSearchFilters } from '@/common/types'
-import {
-    differenceWith,
-    entries,
-    flowRight,
-    fromPairs,
-    isEmpty,
-    isEqual,
-    isFunction,
-    pick,
-} from 'lodash'
+import differenceWith from 'lodash/differenceWith'
+import toPairs from 'lodash/toPairs'
+import flow from 'lodash/flow'
+import isEmpty from 'lodash/isEmpty'
+import isEqual from 'lodash/isEqual'
+import isFunction from 'lodash/isFunction'
+import pick from 'lodash/pick'
+import fromPairs from 'lodash/fromPairs'
 import Router, { useRouter } from 'next/router'
 import { stringify } from 'query-string'
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react'
@@ -108,7 +106,7 @@ export const useSearch = <T extends Record<string, any>>(
         const newFilters = isFunction(args[0]) ? args[0](filters) : args[0]
 
         const diff = fromPairs(
-            differenceWith(entries(newFilters), entries(oldFilters.current), isEqual)
+            differenceWith(toPairs(newFilters), toPairs(oldFilters.current), isEqual)
         )
         const diffKeys = Object.keys(diff)
 
@@ -122,7 +120,7 @@ export const useSearch = <T extends Record<string, any>>(
 
     return {
         filters: debouncedFilters,
-        setFilters: flowRight(setFilters, setDefaults),
+        setFilters: flow(setDefaults, setFilters),
         setDebouncedFilters,
         setField,
         clear,

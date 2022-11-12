@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import _ from 'lodash'
 import type { Collection, Connection } from 'mongoose'
 import mongoose from 'mongoose'
 import request from 'supertest'
@@ -19,6 +18,8 @@ import { adminUserPayloadStub } from '@/lib/modules/users/test/stubs/admin-user-
 import { userPayloadStub } from '@/lib/modules/users/test/stubs/user-payload.stub'
 import { userStub } from '@/lib/modules/users/test/stubs/user.stub'
 import { createTestClient } from '@/test/createTestClient'
+import take from 'lodash/take'
+import omit from 'lodash/omit'
 
 const ADMIN_ENDPOINTS = [
     ['POST', '/api/listings'],
@@ -59,7 +60,7 @@ describe('ListingsController', () => {
 
         describe('POST /listings', () => {
             it('should return listing and create document', async () => {
-                const dto: CreateListingDto = _.omit(listingStub(), '_id', 'id')
+                const dto: CreateListingDto = omit(listingStub(), '_id', 'id')
                 const response = await request(httpServer).post('/api/listings').send(dto)
 
                 expect(response.status).toBe(201)
@@ -276,7 +277,7 @@ describe('ListingsController', () => {
                 await listingsCollection.insertOne(listingStub())
 
                 const response = await request(httpServer).get(
-                    '/api/listings/autocomplete/' + _.take(listingStub().title, 4).join('')
+                    '/api/listings/autocomplete/' + take(listingStub().title, 4).join('')
                 )
 
                 expect(response.status).toBe(200)

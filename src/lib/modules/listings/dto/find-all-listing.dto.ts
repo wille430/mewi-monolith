@@ -11,7 +11,7 @@ import {
     IsEnum,
     IsArray,
 } from 'class-validator'
-import { isString } from 'lodash'
+import isString from 'lodash/isString'
 import { DEFAULT_LIMIT } from '../constants'
 
 export class FindAllListingsDto {

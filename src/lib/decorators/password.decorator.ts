@@ -1,6 +1,7 @@
-import type { ValidationArguments, ValidatorConstraintInterface } from 'class-validator'
+import type { ValidatorConstraintInterface } from 'class-validator'
 import { ValidatorConstraint } from 'class-validator'
-import { isString, map } from 'lodash'
+import isString from 'lodash/isString'
+import map from 'lodash/map'
 
 @ValidatorConstraint({
     name: 'IsPassword',
@@ -17,7 +18,7 @@ export class IsPassword implements ValidatorConstraintInterface {
         ]
         return map(funcs, value).some((x) => !x)
     }
-    defaultMessage?(_validationArguments?: ValidationArguments | undefined): string {
+    defaultMessage?(): string {
         return 'Password is too weak'
     }
 }

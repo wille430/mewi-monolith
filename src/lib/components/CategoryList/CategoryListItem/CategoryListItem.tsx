@@ -1,5 +1,4 @@
-import { CategoryLabel } from '@/common/schemas'
-import { Category } from '@/common/schemas'
+import { CategoryLabel , Category } from '@/common/schemas'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { AiFillCar, AiOutlineMobile } from 'react-icons/ai'
