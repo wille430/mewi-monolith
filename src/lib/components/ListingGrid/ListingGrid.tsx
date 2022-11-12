@@ -1,12 +1,10 @@
-import classNames from 'classnames'
 import styles from './ListingGrid.module.scss'
 import { ListingWidget } from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
 import { useAppDispatch } from '@/lib/hooks'
 import { openListing } from '@/lib/store/listings'
 import { useListingsSearch } from '@/lib/hooks/useListingsResult'
-
-const cx = classNames.bind(styles)
+import clsx from 'clsx'
 
 const ListingGrid = () => {
     const dispatch = useAppDispatch()
@@ -17,7 +15,7 @@ const ListingGrid = () => {
     if (isLoading) {
         return (
             <section
-                className={cx({
+                className={clsx({
                     [styles.center]: true,
                 })}
             >
@@ -45,7 +43,7 @@ const ListingGrid = () => {
         )
     } else {
         return (
-            <section className={cx({ [styles.center]: true, [styles.section]: true })}>
+            <section className={clsx({ [styles.center]: true, [styles.section]: true })}>
                 <span>Inget resultat hittades för din sökning.</span>
             </section>
         )

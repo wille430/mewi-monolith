@@ -1,11 +1,9 @@
 import { ReactNode, useState, MouseEvent } from 'react'
 import * as ReactLoader from 'react-loader-spinner'
-import classNames from 'classnames'
 import { HTMLMotionProps, motion, useAnimation, Variants } from 'framer-motion'
 import styles from './Button.module.scss'
 import utilities from '../../../styles/utilities.module.scss'
-
-const cx = classNames.bind(styles)
+import clsx from 'clsx'
 
 export type Variant = 'text' | 'outlined' | 'contained'
 
@@ -88,7 +86,7 @@ export const Button = (props: ButtonProps) => {
 
     return (
         <motion.button
-            className={cx({
+            className={clsx({
                 [styles[`button--${variant}--${size}`]]: true,
                 [styles[color]]: true,
                 ['w-full']: fullWidth,
@@ -131,14 +129,14 @@ export const Button = (props: ButtonProps) => {
                 animate={rest.disabled ? 'hide' : rippleController}
             />
             <div
-                className={cx({
+                className={clsx({
                     [utilities['center']]: true,
                 })}
             >
                 {icon && <div className={styles.icon}>{icon}</div>}
                 {label && (
                     <div
-                        className={cx({
+                        className={clsx({
                             [utilities['stack']]: true,
                             [utilities['center']]: true,
                             'ml-2 flex-grow': true,
@@ -148,7 +146,7 @@ export const Button = (props: ButtonProps) => {
                             {defaultCasing ? label : label?.toUpperCase()}
                         </span>
                         <span
-                            className={cx({
+                            className={clsx({
                                 [utilities['stackChild']]: true,
                                 [utilities['hide']]: isLoading,
                                 'pointer-events-none': true,
@@ -158,7 +156,7 @@ export const Button = (props: ButtonProps) => {
                             {defaultCasing ? label : label?.toUpperCase()}
                         </span>
                         <div
-                            className={cx({
+                            className={clsx({
                                 [utilities['stackChild']]: true,
                                 [utilities['hide']]: !isLoading,
                             })}

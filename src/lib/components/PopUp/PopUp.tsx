@@ -1,6 +1,6 @@
-import type { HTMLAttributes} from 'react'
+import clsx from 'clsx'
+import type { HTMLAttributes } from 'react'
 import { useRef } from 'react'
-import classNames from 'classnames'
 
 interface PopUpProps {
     onOutsideClick?: () => void
@@ -24,7 +24,7 @@ export const PopUp = ({
 
                 if (e.target === popUpRef.current) onOutsideClick && onOutsideClick()
             }}
-            className={classNames({
+            className={clsx({
                 ['fixed top-0 left-0 w-full h-screen bg-black/25 z-20']: true,
                 ['hidden']: !show,
                 [props.className ?? '']: Boolean(props.className),

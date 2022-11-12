@@ -1,5 +1,4 @@
 import type { IListing } from '@/common/schemas'
-import classNames from 'classnames'
 import { FiX } from 'react-icons/fi'
 import clsx from 'clsx'
 import styles from './ListingPopUp.module.scss'
@@ -11,8 +10,6 @@ import DefaultImage from '../DefaultImage/DefaultImage'
 import { Button } from '../Button/Button'
 import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
 import { CategoryPathLabel } from '@/lib/components/CategoryPathLabel/CategoryPathLabel'
-
-const cx = classNames.bind(styles)
 
 interface ListingPopUp {
     onClose?: () => void
@@ -32,7 +29,7 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
             <Container className={styles.container}>
                 <Container.Header className={styles.header}>
                     <span
-                        className={cx({
+                        className={clsx({
                             [styles.categoryPath]: true,
                         })}
                     >

@@ -1,7 +1,5 @@
-import classNames from 'classnames'
+import clsx from 'clsx'
 import styles from './HorizontalLine.module.scss'
-
-const cx = classNames.bind(styles)
 
 interface HorizontalLineProps {
     fullWidth?: boolean
@@ -12,7 +10,7 @@ export const HorizontalLine = (props: HorizontalLineProps) => {
     return (
         <hr
             color={props.color || 'lightgray'}
-            className={cx({
+            className={clsx({
                 [styles['hr']]: true,
                 [styles['fullWidth']]: props.fullWidth,
             })}

@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import type { IUserWatcher } from '@/common/schemas'
-import classNames from 'classnames'
 import styles from './NewItemsDrawer.module.scss'
 import { openListing } from '@/lib/store/listings'
 import { useAppDispatch } from '@/lib/hooks'
@@ -9,6 +8,7 @@ import { ListingRow } from '@/lib/components/ListingRow/ListingRow'
 import { MY_WATCHERS_KEY } from '@/lib/client/user-watchers/swr-keys'
 import { getWatcherItems } from '@/lib/client/user-watchers/queries'
 import useSWR from 'swr'
+import clsx from 'clsx'
 
 interface NewItemsDrawerProps {
     watcher: IUserWatcher
@@ -45,7 +45,7 @@ const NewItemsDrawer = ({ watcher }: NewItemsDrawerProps) => {
 
     return (
         <motion.div
-            className={classNames({
+            className={clsx({
                 [styles.itemDrawer]: true,
                 [styles.empty]: !hits?.length,
             })}

@@ -1,9 +1,7 @@
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 import styles from './DrawerAnimation.module.scss'
-
-const cx = classNames.bind(styles)
 
 interface DrawerAnimationProps {
     open: boolean
@@ -22,7 +20,7 @@ const DrawerAnimation = ({ open, children }: DrawerAnimationProps) => {
 
     return (
         <motion.div
-            className={cx({
+            className={clsx({
                 [styles.container]: true,
             })}
             variants={drawerVariants}

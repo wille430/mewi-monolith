@@ -2,7 +2,6 @@ import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
 import type { IListing, ListingOrigin } from '@/common/schemas'
 import type { HTMLAttributes } from 'react'
-import classNames from 'classnames'
 import style from './ListingWidget.module.scss'
 import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'
 import { useAppSelector } from '@/lib/hooks'
@@ -21,7 +20,7 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
     return (
         <article
             {...rest}
-            className={classNames({
+            className={clsx({
                 [style['card']]: true,
                 [rest.className ?? '']: !!rest.className,
             })}
@@ -41,7 +40,7 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
             {isLoggedIn ? (
                 <ListingLikeButton
                     listing={listing}
-                    className={classNames({
+                    className={clsx({
                         [style['like-button']]: true,
                     })}
                 />

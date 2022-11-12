@@ -1,13 +1,12 @@
-import React from 'react'
-import { DetailedHTMLProps, HTMLAttributes } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
+import React, { DetailedHTMLProps, HTMLAttributes } from 'react'
 import styles from './Container.module.scss'
 
 export type ContainerProps = HTMLAttributes<HTMLDivElement>
 
 export const Container = ({ className, children, ...rest }: ContainerProps) => (
     <section
-        className={classNames({
+        className={clsx({
             [styles['container']]: true,
             [className ?? '']: !!className,
         })}

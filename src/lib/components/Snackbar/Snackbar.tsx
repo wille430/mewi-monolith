@@ -1,12 +1,10 @@
+import clsx from 'clsx'
 import type { Variants } from 'framer-motion'
 import { motion } from 'framer-motion'
-import type { HTMLAttributes} from 'react'
+import type { HTMLAttributes } from 'react'
 import { useEffect, useRef } from 'react'
 import { FiX } from 'react-icons/fi'
-import classNames from 'classnames'
 import styles from './Snackbar.module.scss'
-
-const cx = classNames.bind(styles)
 
 export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     title?: string
@@ -74,7 +72,7 @@ const Snackbar = ({ title, body, handleClose, autoHideDuration = 6000, type }: S
 
     return (
         <motion.div
-            className={cx({
+            className={clsx({
                 [styles.snackbar]: true,
                 [styles.small]: !body,
                 [styles.error]: type === 'error',
@@ -100,7 +98,7 @@ const Snackbar = ({ title, body, handleClose, autoHideDuration = 6000, type }: S
 
             {body && (
                 <p
-                    className={cx({
+                    className={clsx({
                         [styles.bodyText]: true,
                     })}
                     data-testid='snackbarText'

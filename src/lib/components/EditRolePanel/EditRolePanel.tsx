@@ -2,7 +2,6 @@ import capitalize from 'lodash/capitalize'
 import type { IUser } from '@/common/schemas'
 import { Role } from '@/common/schemas'
 import { useMemo, useState } from 'react'
-import classNames from 'classnames'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
 import { TextField } from '../TextField/TextField'
@@ -11,6 +10,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import { ALL_USERS_KEY } from '@/lib/client/users/swr-keys'
 import { getUsers } from '@/lib/client/users/queries'
 import { updateUserRoles } from '@/lib/client/users/mutations'
+import clsx from 'clsx'
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
@@ -106,7 +106,7 @@ export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
                 {missingRoles.map((role) => (
                     <span
                         key={role}
-                        className={classNames({
+                        className={clsx({
                             [styles['role-label']]: true,
                             [styles['unselected']]: true,
                         })}

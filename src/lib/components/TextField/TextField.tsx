@@ -1,6 +1,6 @@
-import React, { InputHTMLAttributes, ReactNode , DetailedHTMLProps, useState } from 'react'
+import clsx from 'clsx'
+import React, { InputHTMLAttributes, ReactNode, DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import cx from 'classnames'
 import styles from './TextField.module.scss'
 
 export type TextFieldProps = DetailedHTMLProps<
@@ -63,7 +63,7 @@ export const TextField = ({
             data-active={!!inputRef?.value || isFocused}
             data-type={type}
             data-width={fullWidth ? 'full' : 'auto'}
-            className={cx({
+            className={clsx({
                 [styles['container']]: true,
                 [styles['show-top-border']]: !placeholder || !showLabel,
                 [className ?? '']: !!className,
@@ -73,7 +73,7 @@ export const TextField = ({
                 <header className={styles['header']}>
                     <label className={styles['label']}>{placeholder}</label>
                     <hr
-                        className={cx({
+                        className={clsx({
                             [styles['top-border']]: true,
                             [styles['full-width']]: !placeholder,
                         })}
