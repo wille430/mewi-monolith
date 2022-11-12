@@ -76,7 +76,7 @@ export const useSearch = <T extends Record<string, any>>(
      * from query params
      */
     useEffect(() => {
-        if (!Router.isReady || hasParsedQuery || isEmpty(Router.query)) {
+        if (!Router.isReady || hasParsedQuery || (isEmpty(Router.query) && !router.isReady)) {
             return
         }
 
