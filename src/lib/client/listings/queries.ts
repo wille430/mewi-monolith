@@ -3,6 +3,6 @@ import type { FindAllListingsReponse } from '@/lib/modules/listings/dto/find-all
 import { stringify } from 'query-string'
 import { client } from '..'
 
-export const getListings = (filters: FindAllListingsDto) => {
-    return client.get<never, FindAllListingsReponse>('/listings?' + stringify(filters))
+export const getListings = (url, filters: FindAllListingsDto) => {
+    return client.get<never, FindAllListingsReponse>(url + '?' + stringify(filters))
 }

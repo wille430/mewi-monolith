@@ -11,7 +11,7 @@ interface PageNavProps {
 }
 
 const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
-    const { setFilters, filters } = useSearchContext<ListingSearchFilters>()
+    const { setDebouncedFilters: setFilters, filters } = useSearchContext<ListingSearchFilters>()
 
     const totalPages = useMemo(() => Math.ceil(totalHits / 24) ?? 1, [totalHits])
 
@@ -23,7 +23,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
             scrollToAnchorEle()
-            setFilters((prev) => ({ ...prev, page: args[1] }))
+            setFilters((prev) => ({ ...prev, page: args[1] }), true)
         }
 
         const totalNumButtons = totalPages < 5 ? totalPages : maxNumButtons

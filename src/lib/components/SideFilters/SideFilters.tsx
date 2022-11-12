@@ -1,24 +1,21 @@
-import type { Category } from '@/common/schemas'
-import { ListingOrigin } from '@/common/schemas'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import Checkbox from '../Checkbox/Checkbox'
-import { CheckboxList } from '../CheckboxList/CheckboxList'
-import { PriceRangeFilter } from '../PriceRangeFilter/PriceRangeFilter'
 import { Container } from '../Container/Container'
 import { Button } from '../Button/Button'
-import { TextField } from '../TextField/TextField'
-import { toggleCategory, toggleOrigin } from '@/lib/utils/toggleFilters'
-import { categories, ListingSearchFilters } from '@/common/types'
+import { ListingSearchFilters } from '@/common/types'
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal'
 import { mutate } from 'swr'
 import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
 import { useAppSelector } from '@/lib/hooks'
 import { useRouter } from 'next/router'
 import { useSearchContext } from '@/lib/hooks/useSearch'
+import { Formik } from 'formik'
+import { ListingSearchForm } from '../ListingSearchForm/ListingSearchForm'
+import { noop } from 'lodash'
+import { useSyncValues } from '@/lib/hooks/useSyncValues'
 
 export const SideFilters = () => {
-    const { filters, setFilters, setField, clear } = useSearchContext<ListingSearchFilters>()
+    const { filters, setFilters, clear } = useSearchContext<ListingSearchFilters>()
     const { isLoggedIn } = useAppSelector((state) => state.user)
     const router = useRouter()
     const [addWatcherStatus, setAddWatcherStatus] = useState<boolean | undefined>(undefined)
@@ -32,7 +29,7 @@ export const SideFilters = () => {
         return () => {
             window.removeEventListener('click', reset)
         }
-    })
+    }, [])
 
     return (
         <aside className='ml-auto md:max-w-xxs'>
@@ -40,78 +37,13 @@ export const SideFilters = () => {
                 <h3>Filter</h3>
 
                 <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:block md:space-y-4'>
-                    <div>
-                        <h4>Kategorier</h4>
-                        <CheckboxList
-                            list={categories.map(({ label, value }) => ({
-                                value: value,
-                                checked: filters.categories?.includes(value as Category),
-                                onClick: (val) =>
-                                    toggleCategory(value as Category, val, setFilters),
-                                label,
-                            }))}
-                            prefix='category'
-                        />
-                    </div>
+                    <Formik initialValues={filters} onSubmit={noop}>
+                        {({ values, setValues }) => {
+                            useSyncValues([values, setValues], [filters, setFilters])
 
-                    <div>
-                        <h4>Plats</h4>
-
-                        <TextField
-                            placeholder='Plats (stad, region, etc)'
-                            name='region'
-                            showLabel={false}
-                            onChange={(e) => {
-                                setField('region', e.target.value)
-                            }}
-                            value={filters.region}
-                            data-testid='regionInput'
-                            fullWidth
-                        />
-                    </div>
-
-                    <div>
-                        <h4>Prisintervall</h4>
-
-                        <PriceRangeFilter
-                            lte={filters.priceRangeLte}
-                            gte={filters.priceRangeGte}
-                            onChange={(key, val) =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    [key]: val,
-                                }))
-                            }
-                            data-testid='priceRangeSlider'
-                        />
-                    </div>
-
-                    <div className='ml-4'>
-                        <Checkbox
-                            label='Auktion'
-                            name='auction'
-                            data-testid='auctionCheckbox'
-                            checked={filters.auction}
-                            onClick={(val) =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    auction: val,
-                                }))
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div>
-                    <h4>Sajter</h4>
-                    <CheckboxList
-                        list={Object.keys(ListingOrigin).map((o) => ({
-                            value: o,
-                            checked: filters.origins?.includes(o as ListingOrigin),
-                            onClick: (val) => toggleOrigin(o as ListingOrigin, val, setFilters),
-                        }))}
-                        prefix='origin'
-                    />
+                            return <ListingSearchForm categoryField='LIST' />
+                        }}
+                    </Formik>
                 </div>
 
                 <div className='flex flex-col justify-end space-y-2'>

@@ -1,1 +1,1 @@
-export const LISTINGS_KEY = '/api/listings'
+export const LISTINGS_KEY = '/listings'

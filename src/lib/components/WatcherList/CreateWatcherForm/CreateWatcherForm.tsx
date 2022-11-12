@@ -3,17 +3,14 @@ import { createUserWatcherSchema } from '@/lib/client/user-watchers/schemas/crea
 import { useAppSelector } from '@/lib/hooks'
 import type { WatcherMetadata } from '@/lib/modules/schemas/class/WatcherMetadata'
 import type { CreateUserWatcherDto } from '@/lib/modules/user-watchers/dto/create-user-watcher.dto'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { ErrorMessage, Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { useSWRConfig } from 'swr'
 import { Button } from '../../Button/Button'
 import { ConfirmModal } from '../../ConfirmModal/ConfirmModal'
-import { LabeledTextField } from '../../LabeledTextField/LabeledTextField'
 import { handleError } from './handleError'
-import LabeledDropdown from '../../LabeledDropdown/LabeledDropdown'
-import { categories } from '@/common/types'
-import { Category } from '@/common/schemas'
+import { ListingSearchForm } from '../../ListingSearchForm/ListingSearchForm'
 
 const initialValues: CreateUserWatcherDto['metadata'] = {}
 
@@ -46,66 +43,9 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
             initialValues={initialValues}
             validationSchema={createUserWatcherSchema}
         >
-            {({ setFieldValue, resetForm, submitForm }) => (
+            {({ resetForm, submitForm }) => (
                 <Form>
-                    <Field
-                        label='Sökord'
-                        as={LabeledTextField}
-                        placeholder='Filtrera efter produktnamn...'
-                        showLabel={false}
-                        name='keyword'
-                        data-testid='keywordInput'
-                        fullWidth
-                    />
-                    <ErrorMessage name='keyword' />
-
-                    <Field
-                        label='Plats'
-                        as={LabeledTextField}
-                        placeholder='Plats (stad, region, etc)'
-                        name='region'
-                        showLabel={false}
-                        data-testid='regionInput'
-                        fullWidth
-                    />
-                    <ErrorMessage name='region' />
-
-                    <Field
-                        label='Kategori'
-                        as={LabeledDropdown}
-                        name='categories'
-                        onChange={(cats: Category[]) => {
-                            setFieldValue('categories', cats)
-                        }}
-                        isMulti
-                        options={categories}
-                        data-testid='categorySelect'
-                    />
-                    <ErrorMessage name='categories' />
-
-                    <Field
-                        as={LabeledTextField}
-                        name='priceRangeGte'
-                        placeholder='Från (kr)'
-                        onReset={() => setFieldValue('priceRangeGte', undefined)}
-                        showClearButton
-                        fullWidth
-                        type='number'
-                        data-testid='priceGte'
-                    />
-                    <ErrorMessage name='priceRangeGte' />
-
-                    <Field
-                        as={LabeledTextField}
-                        name='priceRangeLte'
-                        placeholder='Till (kr)'
-                        onReset={() => setFieldValue('priceRangeLte', undefined)}
-                        showClearButton
-                        fullWidth
-                        type='number'
-                        data-testid='priceLte'
-                    />
-                    <ErrorMessage name='priceRangeLte' />
+                    <ListingSearchForm />
 
                     {/* <div className='px-4 pt-4 pb-2'>
                         <Checkbox

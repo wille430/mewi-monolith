@@ -5,11 +5,11 @@ import { array, boolean, date, mixed, number, object, string } from 'yup'
 
 export const searchListingsSchema = object().shape<Record<keyof FindAllListingsDto, any>>({
     auction: boolean(),
-    categories: array(mixed().oneOf(Object.values(Category) as Category[])),
+    categories: array(mixed().oneOf(Object.values(Category) as Category[])).ensure(),
     dateGte: date(),
     keyword: string(),
     limit: number().min(0),
-    origins: array(mixed().oneOf(Object.values(ListingOrigin) as ListingOrigin[])),
+    origins: array(mixed().oneOf(Object.values(ListingOrigin) as ListingOrigin[])).ensure(),
     page: number().min(1),
     priceRangeGte: number(),
     priceRangeLte: number(),

@@ -3,6 +3,8 @@ import type { IWatcher, Category, ListingOrigin } from '../schemas'
 
 type Metadata = IWatcher['metadata']
 
+export const nonDebouncedListingFilters: (keyof ListingSearchFilters)[] = ['page', 'sort']
+
 export class ListingSearchFilters implements Partial<Metadata> {
     keyword?: string
     region?: string

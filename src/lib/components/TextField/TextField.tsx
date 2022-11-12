@@ -1,5 +1,4 @@
-import { InputHTMLAttributes, ReactNode } from 'react'
-import React, { DetailedHTMLProps, useState } from 'react'
+import React, { InputHTMLAttributes, ReactNode , DetailedHTMLProps, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import cx from 'classnames'
 import styles from './TextField.module.scss'
@@ -23,6 +22,7 @@ export const TextField = ({
     fullWidth,
     endComponent,
     showLabel = true,
+    value,
     ...rest
 }: TextFieldProps) => {
     const { placeholder, className, type } = rest
@@ -82,6 +82,7 @@ export const TextField = ({
             )}
             <input
                 ref={(newRef) => setInputRef(newRef)}
+                value={value ?? ''}
                 {...rest}
                 className={styles['input']}
                 placeholder={isFocused && showLabel ? '' : placeholder}

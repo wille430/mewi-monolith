@@ -14,14 +14,19 @@ const SearchPage = () => {
     return (
         <>
             <Head>
-                <title>
-                    {'"'}
-                    {router.query.keyword ?? ''}
-                    {'"'}| Mewi.se
-                </title>
+                <title>"{router.query.keyword ?? ' '}" | Mewi.se</title>
             </Head>
 
-            <SearchProvider search={[searchListingsSchema]}>
+            <SearchProvider
+                search={[
+                    searchListingsSchema,
+                    {
+                        defaultValue: {
+                            page: 1,
+                        },
+                    },
+                ]}
+            >
                 <aside>
                     <SideFilters />
                 </aside>
