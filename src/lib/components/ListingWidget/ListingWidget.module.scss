@@ -31,7 +31,10 @@ $fade-transition: all 150ms linear;
     flex-grow: 1;
     height: auto;
     overflow: hidden;
-    display: flex;
+
+    img {
+        object-fit: cover;
+    }
 }
 
 .details {

@@ -1,15 +1,23 @@
-import { useState } from 'react'
-import Image, { ImageProps } from 'next/image'
+import { useRef, useEffect } from 'react'
+import type { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
 
-const DefaultImage = ({ src, ...props }: ImageProps) => {
-    const [realSrc, setSrc] = useState(src)
+const DefaultImage = ({
+    src,
+    ...props
+}: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+    const imgRef = useRef<any>()
 
-    const replaceImg = () => {
-        setSrc('/img/missingImage.png')
+    const replaceImg = (e: any) => {
+        e.target.onerror = null
+        e.target.src = '/img/missingImage.png'
     }
 
-    // TODO: use next Image
-    return <Image {...props} src={realSrc} onError={replaceImg} />
+    useEffect(() => {
+        imgRef.current.src = src
+    }, [])
+
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img ref={imgRef} onError={replaceImg} loading='lazy' {...props} />
 }
 
 export default DefaultImage

@@ -94,7 +94,7 @@ export const ScraperPanel = () => {
                                     <td>
                                         {scraperStatus[key as ListingOrigin].started ? (
                                             <div className='flex items-center space-x-2'>
-                                                <StyledLoader height='1rem' width='1rem' />
+                                                <StyledLoader height={16} width='1rem' />
                                                 <span>{key}</span>
                                             </div>
                                         ) : (

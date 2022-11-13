@@ -46,7 +46,7 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
             {...rest}
         >
             <div className={clsx(styles.image, 'relative')}>
-                <DefaultImage fill src={listing.imageUrl[0]} alt={listing.title} />
+                <DefaultImage src={listing.imageUrl[0]} alt={listing.title} />
             </div>
             <motion.div className={styles.description}>
                 <h4>{listing.title}</h4>

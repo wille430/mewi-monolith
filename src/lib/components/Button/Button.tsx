@@ -161,7 +161,7 @@ export const Button = (props: ButtonProps) => {
                                 [utilities['hide']]: !isLoading,
                             })}
                         >
-                            <ReactLoader.TailSpin color='white' height='1rem' width='1rem' />
+                            <ReactLoader.TailSpin color='white' height={16} width='1rem' />
                         </div>
                     </div>
                 )}

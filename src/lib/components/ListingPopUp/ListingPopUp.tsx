@@ -42,7 +42,7 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                 <Container.Content className='flex flex-grow flex-col'>
                     <div className={clsx(styles['image-wrapper'], 'relative')}>
                         {/* TODO: Implement image carousel */}
-                        <DefaultImage src={imageUrl[0]} fill alt={listing.title} />
+                        <DefaultImage src={imageUrl[0]} alt={listing.title} />
                     </div>
                     <article className={styles.content}>
                         <InfoHeader

@@ -50,12 +50,8 @@ export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {
                 </Link>
             )}
 
-            <div className={clsx(style['image-wrapper'], 'relative')}>
-                <DefaultImage
-                    src={listing.imageUrl && listing.imageUrl[0]}
-                    alt={listing.title}
-                    fill
-                />
+            <div className={clsx(style['image-wrapper'])}>
+                <DefaultImage src={listing.imageUrl && listing.imageUrl[0]} alt={listing.title} />
             </div>
 
             <div className={style['details']}>
