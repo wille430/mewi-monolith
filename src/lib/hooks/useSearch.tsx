@@ -12,6 +12,8 @@ import { stringify } from 'query-string'
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { ObjectSchema } from 'yup'
 import { useDebounce } from './useDebounce'
+import { FormikProvider, useFormik } from 'formik'
+import noop from 'lodash/noop'
 
 export type UseSearchOptions<T = Record<string, never>> = {
     exclude?: Partial<T>
@@ -30,27 +32,21 @@ export const useSearch = <T extends Record<string, any>>(
 ) => {
     const { defaultValue } = options
     const router = useRouter()
-    const [filters, setFilters] = useState<T>({} as T)
     const [hasParsedQuery, setHasParsedQuery] = useState(false)
+
+    const formik = useFormik<T>({
+        initialValues: (defaultValue ?? {}) as T,
+        onSubmit: noop,
+    })
+    const { values, setValues } = formik
 
     /**
      * Debounced values
      */
     const [debouncedIsReady] = useDebounce(hasParsedQuery, 1000)
-    const [debouncedFilters, setDebouncedFilters] = useDebounce(filters, undefined, {
-        setInputValue: setFilters,
+    const [debouncedFilters, setDebouncedFilters] = useDebounce(values, undefined, {
+        setInputValue: setValues,
     })
-
-    const setField = (field: keyof T, value: T[keyof T]) => {
-        return setFilters((prev) => ({
-            ...prev,
-            [field]: value,
-        }))
-    }
-
-    const clear = () => {
-        setFilters((defaultValue as T) ?? ({} as T))
-    }
 
     const isSame = (obj1: any, obj2: any) => {
         return stringify(obj1) === stringify(obj2)
@@ -59,7 +55,7 @@ export const useSearch = <T extends Record<string, any>>(
     const updateQuery = () => {
         router.push(
             {
-                query: stringify(filters),
+                query: stringify(values),
             },
             undefined,
             {
@@ -78,7 +74,7 @@ export const useSearch = <T extends Record<string, any>>(
             return
         }
 
-        setFilters({
+        setValues({
             ...defaultValue,
             ...(schema.cast(Router.query) as any),
         })
@@ -87,14 +83,14 @@ export const useSearch = <T extends Record<string, any>>(
     }, [queryParams])
 
     useEffect(() => {
-        if (!hasParsedQuery || isEmpty(filters) || isSame(filters, router.query)) {
+        if (!hasParsedQuery || isEmpty(values) || isSame(values, router.query)) {
             return
         }
 
         updateQuery()
-    }, [filters])
+    }, [values])
 
-    const oldFilters = useRef(filters)
+    const oldFilters = useRef(values)
 
     /**
      * Used in composition with setFilters to set values to defaults
@@ -102,8 +98,8 @@ export const useSearch = <T extends Record<string, any>>(
      * the page value could be set page to 1 every time the keyword
      * changes.
      */
-    const setDefaults = (...args: Parameters<typeof setFilters>) => {
-        const newFilters = isFunction(args[0]) ? args[0](filters) : args[0]
+    const setDefaults = (...args: Parameters<typeof setValues>) => {
+        const newFilters = isFunction(args[0]) ? args[0](values) : args[0]
 
         const diff = fromPairs(
             differenceWith(toPairs(newFilters), toPairs(oldFilters.current), isEqual)
@@ -119,11 +115,10 @@ export const useSearch = <T extends Record<string, any>>(
     }
 
     return {
+        formik,
         filters: debouncedFilters,
-        setFilters: flow(setDefaults, setFilters),
         setDebouncedFilters,
-        setField,
-        clear,
+        setFilters: flow(setDefaults, setValues),
         isReady: debouncedIsReady,
     }
 }
@@ -137,5 +132,9 @@ export const SearchProvider = (props: SearchProviderProps) => {
     const { children, search } = props
     const value = useSearch(...search)
 
-    return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+    return (
+        <FormikProvider value={value.formik}>
+            <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+        </FormikProvider>
+    )
 }

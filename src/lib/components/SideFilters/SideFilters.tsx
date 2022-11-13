@@ -9,13 +9,13 @@ import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
 import { useAppSelector } from '@/lib/hooks'
 import { useRouter } from 'next/router'
 import { useSearchContext } from '@/lib/hooks/useSearch'
-import { Formik } from 'formik'
 import { ListingSearchForm } from '../ListingSearchForm/ListingSearchForm'
-import noop from 'lodash/noop'
-import { useSyncValues } from '@/lib/hooks/useSyncValues'
 
 export const SideFilters = () => {
-    const { filters, setFilters, clear } = useSearchContext<ListingSearchFilters>()
+    const {
+        filters,
+        formik: { resetForm },
+    } = useSearchContext<ListingSearchFilters>()
     const { isLoggedIn } = useAppSelector((state) => state.user)
     const router = useRouter()
     const [addWatcherStatus, setAddWatcherStatus] = useState<boolean | undefined>(undefined)
@@ -30,17 +30,17 @@ export const SideFilters = () => {
                 <h3>Filter</h3>
 
                 <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:block md:space-y-4'>
-                    <Formik initialValues={filters} onSubmit={noop}>
-                        {({ values, setValues }) => {
-                            useSyncValues([values, setValues], [filters, setFilters])
-
-                            return <ListingSearchForm categoryField='LIST' originField='LIST' />
+                    <ListingSearchForm
+                        fieldTypes={{
+                            keyword: false,
+                            categories: 'LIST',
+                            origins: 'LIST',
                         }}
-                    </Formik>
+                    />
                 </div>
 
                 <div className='flex flex-col justify-end space-y-2'>
-                    <Button label='Rensa' onClick={clear} />
+                    <Button label='Rensa' onClick={() => resetForm()} />
                     <ConfirmModal
                         modalProps={{
                             heading: 'Är du säker att du vill lägga en bevakning på sökningen?',

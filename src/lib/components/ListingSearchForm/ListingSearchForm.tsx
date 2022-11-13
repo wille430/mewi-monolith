@@ -9,12 +9,11 @@ import { useMemo } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
 
 export type ListingSearchFormProps = {
-    categoryField?: 'LIST' | 'DROPDOWN'
-    originField?: 'LIST' | 'DROPDOWN'
+    fieldTypes?: Partial<Record<keyof ListingSearchFilters, 'LIST' | 'DROPDOWN' | boolean>>
 }
 
 export const ListingSearchForm = (props: ListingSearchFormProps) => {
-    const { categoryField = 'DROPDOWN', originField = 'DROPDOWN' } = props
+    const { fieldTypes = { categories: 'DROPDOWN', origins: 'DROPDOWN' } } = props
     const { setFieldValue, values } = useFormikContext<ListingSearchFilters>()
 
     const origins = useMemo(() => {
@@ -26,16 +25,20 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
 
     return (
         <>
-            <Field
-                label='Sökord'
-                as={LabeledTextField}
-                placeholder='Filtrera efter produktnamn...'
-                showLabel={false}
-                name='keyword'
-                data-testid='keywordInput'
-                fullWidth
-            />
-            <ErrorMessage name='keyword' />
+            {fieldTypes.keyword === false ? undefined : (
+                <>
+                    <Field
+                        label='Sökord'
+                        as={LabeledTextField}
+                        placeholder='Filtrera efter produktnamn...'
+                        showLabel={false}
+                        name='keyword'
+                        data-testid='keywordInput'
+                        fullWidth
+                    />
+                    <ErrorMessage name='keyword' />
+                </>
+            )}
 
             <Field
                 label='Plats'
@@ -48,7 +51,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
             />
             <ErrorMessage name='region' />
 
-            {categoryField === 'LIST' ? (
+            {fieldTypes.categories === 'LIST' ? (
                 <div>
                     <h4>Kategorier</h4>
                     <FormikCheckboxList name='categories' options={categories} />
@@ -96,7 +99,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                 <ErrorMessage name='priceRangeLte' />
             </div>
 
-            {originField === 'DROPDOWN' ? (
+            {fieldTypes.origins === 'DROPDOWN' ? (
                 <Field
                     label='Sajter'
                     as={LabeledDropdown}
