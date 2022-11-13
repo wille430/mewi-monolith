@@ -16,9 +16,11 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                 <Container className='max-w-4xl sm:mx-auto' data-testid='addWatcherPopUp'>
                     <h3>Lägg till en bevakning</h3>
                     <HorizontalLine />
-                    <div className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'>
-                        <CreateWatcherForm onSuccess={() => setShow(false)} />
-                    </div>
+
+                    <CreateWatcherForm
+                        className='grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3'
+                        onSuccess={() => setShow(false)}
+                    />
                 </Container>
             </div>
         </PopUp>

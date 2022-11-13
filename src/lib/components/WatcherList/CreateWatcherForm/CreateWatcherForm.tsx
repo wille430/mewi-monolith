@@ -3,7 +3,7 @@ import { createUserWatcherSchema } from '@/lib/client/user-watchers/schemas/crea
 import { useAppSelector } from '@/lib/hooks'
 import type { WatcherMetadata } from '@/lib/modules/schemas/class/WatcherMetadata'
 import type { CreateUserWatcherDto } from '@/lib/modules/user-watchers/dto/create-user-watcher.dto'
-import { ErrorMessage, Form, Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { useSWRConfig } from 'swr'
@@ -11,31 +11,37 @@ import { Button } from '../../Button/Button'
 import { ConfirmModal } from '../../ConfirmModal/ConfirmModal'
 import { handleError } from './handleError'
 import { ListingSearchForm } from '../../ListingSearchForm/ListingSearchForm'
+import clsx from 'clsx'
 
 const initialValues: CreateUserWatcherDto['metadata'] = {}
 
 export type CreateWatcherFormProps = {
     onSuccess?: () => any
+    className?: string
 }
 
 export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
-    const { onSuccess } = props
+    const { onSuccess, className } = props
     const { mutate } = useSWRConfig()
 
     const router = useRouter()
     const { isLoggedIn } = useAppSelector((state) => state.user)
 
-    const handleSubmit = (
+    const handleSubmit = async (
         values: typeof initialValues,
         { setErrors }: FormikHelpers<WatcherMetadata>
-    ) =>
-        mutate(
-            ...createUserWatcher({
-                metadata: values,
-            })
-        )
-            .then(() => onSuccess && onSuccess())
-            .catch((e) => setErrors(handleError(e)))
+    ) => {
+        try {
+            await mutate(
+                ...createUserWatcher({
+                    metadata: values,
+                })
+            )
+            return onSuccess && onSuccess()
+        } catch (e) {
+            return setErrors(handleError(e))
+        }
+    }
 
     return (
         <Formik
@@ -43,29 +49,15 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
             initialValues={initialValues}
             validationSchema={createUserWatcherSchema}
         >
-            {({ resetForm, submitForm }) => (
+            {({ resetForm, submitForm, errors }) => (
                 <Form>
-                    <ListingSearchForm />
-
-                    {/* <div className='px-4 pt-4 pb-2'>
-                        <Checkbox
-                            label='Auktion'
-                            name='auction'
-                            onClick={(val: any) =>
-                                setFilters({
-                                    ...filters,
-                                    auction: val,
-                                })
-                            }
-                            checked={filters.auction}
-                            data-testid='auctionCheckbox'
-                        />
-                    </div> */}
+                    <div className={clsx('space-y-2', className)}>
+                        <ListingSearchForm />
+                    </div>
 
                     <footer className='flex justify-end pt-4'>
-                        <ErrorMessage name='all' />
+                        <span className='text-red-400'>{(errors as any).all}</span>
                         <div className='flex flex-col-reverse gap-2 sm:flex-row'>
-                            {/* <span className='text-red-400'>{error}</span> */}
                             <Button
                                 label='Rensa filter'
                                 color='error'

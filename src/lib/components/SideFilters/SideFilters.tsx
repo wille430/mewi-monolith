@@ -34,7 +34,7 @@ export const SideFilters = () => {
                         {({ values, setValues }) => {
                             useSyncValues([values, setValues], [filters, setFilters])
 
-                            return <ListingSearchForm categoryField='LIST' />
+                            return <ListingSearchForm categoryField='LIST' originField='LIST' />
                         }}
                     </Formik>
                 </div>

@@ -5,14 +5,24 @@ import { LabeledTextField } from '../LabeledTextField/LabeledTextField'
 import { categories, ListingSearchFilters } from '@/common/types'
 import { TextField } from '../TextField/TextField'
 import { FormikCheckboxList } from '../FormikCheckboxList/FormikCheckboxList'
+import { useMemo } from 'react'
+import Checkbox from '../Checkbox/Checkbox'
 
 export type ListingSearchFormProps = {
     categoryField?: 'LIST' | 'DROPDOWN'
+    originField?: 'LIST' | 'DROPDOWN'
 }
 
 export const ListingSearchForm = (props: ListingSearchFormProps) => {
-    const { categoryField } = props
-    const { setFieldValue } = useFormikContext<ListingSearchFilters>()
+    const { categoryField = 'DROPDOWN', originField = 'DROPDOWN' } = props
+    const { setFieldValue, values } = useFormikContext<ListingSearchFilters>()
+
+    const origins = useMemo(() => {
+        return Object.keys(ListingOrigin).map((val) => ({
+            label: val,
+            value: val,
+        }))
+    }, [])
 
     return (
         <>
@@ -86,14 +96,41 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                 <ErrorMessage name='priceRangeLte' />
             </div>
 
-            <div>
-                <h4>Sajter</h4>
-                <FormikCheckboxList
+            {originField === 'DROPDOWN' ? (
+                <Field
+                    label='Sajter'
+                    as={LabeledDropdown}
                     name='origins'
-                    options={Object.values(ListingOrigin).map((key) => ({
-                        value: key,
-                        label: undefined,
-                    }))}
+                    onChange={(origins: ListingOrigin[]) => {
+                        setFieldValue('origins', origins)
+                    }}
+                    isMulti
+                    options={origins}
+                    data-testid='originsSelect'
+                />
+            ) : (
+                <div>
+                    <h4>Sajter</h4>
+                    <FormikCheckboxList
+                        name='origins'
+                        options={Object.values(ListingOrigin).map((key) => ({
+                            value: key,
+                            label: undefined,
+                        }))}
+                    />
+                </div>
+            )}
+
+            <div className='px-2 pt-4 pb-2'>
+                <Checkbox
+                    label='Auktion'
+                    name='auction'
+                    onClick={(val: any) =>
+                        // TODO: use a tri-state checkbox instead
+                        setFieldValue('auction', val === false ? undefined : val)
+                    }
+                    checked={values.auction}
+                    data-testid='auctionCheckbox'
                 />
             </div>
         </>
