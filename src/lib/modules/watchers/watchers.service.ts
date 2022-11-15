@@ -1,7 +1,6 @@
 import { autoInjectable, inject } from 'tsyringe'
 import { ObjectId } from 'mongodb'
 import { EJSON } from 'bson'
-import Email from 'email-templates'
 import { WatchersRepository } from './watchers.repository'
 import type { CreateWatcherDto } from './dto/create-watcher.dto'
 import type { FindAllWatchersDto } from './dto/find-all-watchers.dto'
@@ -14,6 +13,7 @@ import { UsersRepository } from '../users/users.repository'
 import type { User } from '../schemas/user.schema'
 import type { WatcherDocument } from '../schemas/watcher.schema'
 import { ListingSearchFilters } from '@/common/types'
+import { EmailTemplate } from '../email/enums/email-template.enum'
 
 @autoInjectable()
 export class WatchersService {
@@ -144,8 +144,6 @@ export class WatchersService {
         userId: string,
         watcherOrId: string | WatcherDocument
     ): Promise<boolean> {
-        const transporter = await this.emailService.transporter()
-
         const watcher =
             typeof watcherOrId === 'string'
                 ? await this.watchersRepository.findById(watcherOrId)
@@ -166,13 +164,6 @@ export class WatchersService {
         const newListings = await this.newListings(pipeline)
 
         if (newListings.length >= this.config.notifications.minListings) {
-            const email = new Email({
-                message: {
-                    from: this.emailService.credentials.email,
-                },
-                transport: transporter,
-            })
-
             const locals = {
                 newItemCount: await this.listingsRepository
                     .aggregate([
@@ -184,25 +175,12 @@ export class WatchersService {
                 items: newListings,
             }
 
-            const emailInfo = await email.send({
-                template: this.emailService.templates.newItems,
-                message: {
-                    to: user.email,
-                },
-                locals: locals,
-            })
-            await transporter.sendMail(emailInfo.originalMessage)
-
-            // TODO:
-            // Save email record
-            // await this.prisma.emailRecord.create({
-            //     data: {
-            //         from: this.emailService.credentials.email,
-            //         to: user.email,
-            //         userId: user.id,
-            //         type: EmailType.WATCHER,
-            //     },
-            // })
+            await this.emailService.sendEmail(
+                user,
+                'Nya begagnade föremål',
+                locals,
+                EmailTemplate.NEW_ITEMS
+            )
 
             // Set new notifiedAt date
             await this.userWatchersRepository.findOneAndUpdate(

@@ -1,21 +1,39 @@
 import nodeMailer from 'nodemailer'
 import type { TestAccount } from 'nodemailer'
-import { autoInjectable } from 'tsyringe'
-import path from 'path'
+import { autoInjectable, inject } from 'tsyringe'
+import { EmailTemplate } from './enums/email-template.enum'
+import Email, { EmailOptions } from 'email-templates'
+import { SendEmailResultDto } from './dto/send-email-result.dto'
+import { EmailRecordsRepository } from './email-records.repository'
+import { User } from '../schemas/user.schema'
+import { verifyEmailTemplate } from './templates/verifyEmailTemplate'
+
+type SendEmailOptions = EmailOptions & {
+    createRecord?: boolean
+    send?: boolean
+}
 
 @autoInjectable()
 export class EmailService {
-    credentials = {
+    private credentials = {
         email: process.env.GMAIL_MAIL ?? 'email@test.com',
         pass: process.env.GMAIL_PASS,
     }
 
-    templatesDir = '../emails'
+    constructor(
+        @inject(EmailRecordsRepository)
+        private readonly emailRecordsRepository: EmailRecordsRepository
+    ) {}
 
-    templates = {
-        forgottenPassword: path.resolve(__dirname, this.templatesDir, 'forgottenPassword'),
-        newItems: path.resolve(__dirname, this.templatesDir, 'newItems'),
-        verifyEmail: path.resolve(__dirname, this.templatesDir, 'verifyEmail'),
+    getTemplate(template: EmailTemplate) {
+        switch (template) {
+            case EmailTemplate.VERIFY_EMAIL:
+                return verifyEmailTemplate
+            case EmailTemplate.NEW_ITEMS:
+                throw new Error('Not implemented')
+            case EmailTemplate.FORGOTTEN_PASSWORD:
+                throw new Error('Not implemented')
+        }
     }
 
     private _account?: TestAccount
@@ -27,9 +45,13 @@ export class EmailService {
         return this._account
     }
 
-    async transporter(real?: boolean) {
+    async createTransport(real?: boolean) {
         if (!real && process.env.NODE_ENV !== 'production') {
             const account = await this.getTestAccount()
+
+            console.log('Created email test account. Log in with the following credentials:')
+            console.log('Email:', account.user)
+            console.log('Password:', account.pass)
 
             return nodeMailer.createTransport({
                 host: account.smtp.host,
@@ -50,6 +72,63 @@ export class EmailService {
                     pass: this.credentials.pass,
                 },
             })
+        }
+    }
+
+    async sendEmail<T>(
+        toUser: User,
+        subject: string,
+        locals: T,
+        template: EmailTemplate,
+        options: SendEmailOptions = { createRecord: true, send: true }
+    ): Promise<SendEmailResultDto<T>> {
+        const { createRecord, send } = options
+        const transport = await this.createTransport()
+
+        const email = new Email({
+            message: {
+                from: this.credentials.email,
+            },
+            transport,
+        })
+
+        const templatePath = this.getTemplate(template)
+
+        const info = await email.send({
+            ...options,
+            message: {
+                to: toUser.email,
+                subject: subject,
+                html: templatePath(locals as any).html,
+                ...options?.message,
+            },
+            locals: locals,
+        })
+
+        let emailRecordId: string | undefined = undefined
+        if (createRecord) {
+            const emailRecord = await this.emailRecordsRepository.create({
+                template,
+                arguments: locals,
+                user: toUser,
+            })
+            emailRecordId = emailRecord.id
+        }
+
+        if (send) {
+            await transport.sendMail(info.originalMessage)
+
+            if (process.env.NODE_ENV === 'development') {
+                console.log('Email preview:', nodeMailer.getTestMessageUrl(info))
+            }
+        }
+
+        return {
+            info: info,
+            sent: send ?? false,
+            template,
+            arguments: locals,
+            emailRecordId: emailRecordId,
         }
     }
 }

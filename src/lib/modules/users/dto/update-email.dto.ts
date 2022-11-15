@@ -32,5 +32,5 @@ export class RequestEmailUpdateDto {
     @IsString()
     @IsEmail()
     @Validate(UniqueEmailRule)
-    newEmail?: string
+    newEmail!: string
 }

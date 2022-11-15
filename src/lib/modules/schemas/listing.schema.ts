@@ -1,6 +1,6 @@
 import type { Document } from 'mongoose'
 import { Currency, Category, ListingOrigin } from '@/common/schemas'
-import { getModelForClass, index, prop } from '@typegoose/typegoose'
+import { getModelForClass, prop } from '@typegoose/typegoose'
 
 export type ListingDocument = Listing & Document
 
@@ -26,9 +26,6 @@ export class Parameter {
     value!: string
 }
 
-@index({
-    keyword: 1,
-})
 export class Listing {
     id!: string
 
@@ -79,6 +76,7 @@ export class Listing {
 
     @prop({
         type: Price,
+        _id: false,
     })
     price?: Price
 

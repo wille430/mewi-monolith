@@ -1,6 +1,6 @@
 import { LoginStrategy } from '@/common/schemas'
 import { autoInjectable, inject } from 'tsyringe'
-import bcrypt from 'bcrypt'
+import bcrypt, { compare } from 'bcrypt'
 import { BadRequestException, NotFoundException } from 'next-api-decorators'
 import crypto from 'crypto'
 import type { CreateUserDto } from './dto/create-user.dto'
@@ -15,10 +15,16 @@ import type {
 } from './dto/change-password.dto'
 import type { User } from '../schemas/user.schema'
 import { Listing } from '../schemas/listing.schema'
+import { EmailService } from '../email/email.service'
+import { EmailTemplate } from '../email/enums/email-template.enum'
+import { stringify } from 'query-string'
 
 @autoInjectable()
 export class UsersService {
-    constructor(@inject(UsersRepository) private readonly usersRepository: UsersRepository) {}
+    constructor(
+        @inject(UsersRepository) private readonly usersRepository: UsersRepository,
+        @inject(EmailService) private readonly emailService: EmailService
+    ) {}
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
@@ -97,65 +103,44 @@ export class UsersService {
     }
 
     async sendPasswordResetEmail({ email }: ChangePasswordNoAuth) {
-        try {
-            const user = await this.usersRepository.findOne({ email })
-            if (!user) return
+        const user = await this.usersRepository.findOne({ email })
+        if (!user) return
 
-            if (user.loginStrategy !== LoginStrategy.LOCAL) {
-                return
-            }
-
-            const token = crypto.randomBytes(32).toString('hex')
-
-            await this.usersRepository.findByIdAndUpdate(user.id, {
-                passwordReset: {
-                    tokenHash: await bcrypt.hash(token, 10),
-                    // expire in 15 minutes
-                    expiration: Date.now() + 15 * 60 * 60 * 1000,
-                },
-            })
-
-            // TODO: uncomment
-            // const transporter = await this.emailService.transporter()
-
-            // const emailObj = new Email({
-            //     message: {
-            //         from: this.emailService.credentials.email,
-            //         to: email,
-            //         subject: 'Lösenordsåterställning',
-            //         html: forgottenPasswordEmail({
-            //             link: new URL(
-            //                 `/nyttlosenord?email=${email}&token=${token}`,
-            //                 this.configService.get<string>('CLIENT_URL')
-            //             ).toString(),
-            //         }).html,
-            //     },
-            //     transport: transporter,
-            // })
-
-            // const emailInfo = await emailObj.send()
-
-            // await transporter.sendMail(emailInfo.originalMessage)
-
-            // TODO: Create email record
-            // await this.prisma.emailRecord.create({
-            //     data: {
-            //         to: user.email,
-            //         from: this.emailService.credentials.email,
-            //         userId: user.id,
-            //         type: EmailType.PASSWORD_RESET,
-            //     },
-            // })
-        } catch (e) {
-            console.log(e)
+        if (user.loginStrategy !== LoginStrategy.LOCAL) {
+            return
         }
+
+        const token = crypto.randomBytes(32).toString('hex')
+
+        await this.usersRepository.findByIdAndUpdate(user.id, {
+            passwordReset: {
+                tokenHash: await bcrypt.hash(token, 10),
+                // expire in 15 minutes
+                expiration: Date.now() + 15 * 60 * 60 * 1000,
+            },
+        })
+
+        const locals = {
+            link: new URL(
+                `/nyttlosenord?email=${email}&token=${token}`,
+                process.env.CLIENT_URL
+            ).toString(),
+        }
+
+        await this.emailService.sendEmail(
+            user,
+            'Lösenordsåterställning',
+            locals,
+            EmailTemplate.FORGOTTEN_PASSWORD
+        )
     }
 
     async updateEmail({ token, oldEmail }: AuthorizedUpdateEmailDto) {
         const user = await this.usersRepository.findOne({ email: oldEmail })
         if (!user) throw new NotFoundException(`No users with email ${oldEmail} was found`)
 
-        const isValidToken = token != null && token === user.emailUpdate?.tokenHash
+        const isValidToken =
+            user.emailUpdate && token && compare(token, user.emailUpdate?.tokenHash)
 
         if (
             user.emailUpdate &&
@@ -168,7 +153,7 @@ export class UsersService {
                 emailUpdate: null,
             })
         } else {
-            throw new Error('Invalid token')
+            throw new BadRequestException('Invalid token')
         }
     }
 
@@ -199,29 +184,25 @@ export class UsersService {
             return
         }
 
-        // TODO: uncomment
-        // const transporter = await this.emailService.transporter()
+        const locals = {
+            link: new URL(
+                `/api/users/email/verify?${stringify({
+                    token,
+                    oldEmail: user.email,
+                })}`,
+                process.env.CLIENT_URL
+            ).toString(),
+        }
 
-        // const email = new Email({
-        //     message: {
-        //         from: this.emailService.credentials.email,
-        //     },
-        //     transport: transporter,
-        // })
-
-        // const emailInfo = await email.send({
-        //     template: this.emailService.templates.verifyEmail,
-        //     message: {
-        //         to: user.email,
-        //     },
-        //     locals: {
-        //         redirectUrl: this.configService.get<string>('API_URL') + '/users/email',
-        //         token,
-        //         oldEmail: user.email,
-        //     },
-        // })
-
-        // await transporter.sendMail(emailInfo.originalMessage)
+        await this.emailService.sendEmail(
+            {
+                ...user,
+                email: newEmail,
+            },
+            'Verifiera e-postadress',
+            locals,
+            EmailTemplate.VERIFY_EMAIL
+        )
     }
 
     async getLikedListings(userId: string) {

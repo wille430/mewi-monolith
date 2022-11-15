@@ -9,6 +9,7 @@ import {
     Param,
     Delete,
     HttpCode,
+    BadRequestException,
 } from 'next-api-decorators'
 import type { IUser } from '@/common/schemas'
 import { Role } from '@/common/schemas'
@@ -17,7 +18,11 @@ import type { NextApiResponse } from 'next'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { FindAllUserDto } from './dto/find-all-user.dto'
-import { UpdateEmailDto } from './dto/update-email.dto'
+import {
+    AuthorizedUpdateEmailDto,
+    RequestEmailUpdateDto,
+    UpdateEmailDto,
+} from './dto/update-email.dto'
 import ChangePasswordDto, { ChangePasswordWithToken } from './dto/change-password.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import type { UserPayload } from '../common/types/UserPayload'
@@ -67,7 +72,10 @@ export class UsersController {
         @GetUser() user: UserPayload | undefined = undefined
     ) {
         if (updateEmailDto.newEmail && user) {
-            await this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
+            await this.usersService.requestEmailUpdate(
+                updateEmailDto as RequestEmailUpdateDto,
+                user.userId
+            )
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
         }
@@ -82,13 +90,31 @@ export class UsersController {
         @Res() res: NextApiResponse
     ) {
         if (updateEmailDto.newEmail && user) {
-            await this.usersService.requestEmailUpdate(updateEmailDto, user.userId)
+            await this.usersService.requestEmailUpdate(
+                updateEmailDto as RequestEmailUpdateDto,
+                user.userId
+            )
             return { message: 'OK' }
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 
             res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`)
         }
+    }
+
+    @Get('/email/verify')
+    async verifyEmail(@Query() dto: AuthorizedUpdateEmailDto, @Res() res: NextApiResponse) {
+        try {
+            await this.usersService.updateEmail(dto)
+        } catch (e) {
+            if (e instanceof BadRequestException) {
+                return res.redirect(`/?success=${SuccessParam.VERIFY_EMAIL_FAILED}`)
+            } else {
+                throw e
+            }
+        }
+
+        return res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`)
     }
 
     @Put('/password')
