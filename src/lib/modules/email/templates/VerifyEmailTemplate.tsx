@@ -5,7 +5,7 @@ type VerifyEmailTemplateProps = {
     link: string
 }
 
-export const verifyEmailTemplate = ({ link }: VerifyEmailTemplateProps) => {
+export const VerifyEmailTemplate = ({ link }: VerifyEmailTemplateProps) => {
     return render(
         <Template>
             <MjmlSection backgroundColor='#EFEFEF'>

@@ -165,14 +165,14 @@ export class WatchersService {
 
         if (newListings.length >= this.config.notifications.minListings) {
             const locals = {
-                newItemCount: await this.listingsRepository
+                listingCount: await this.listingsRepository
                     .aggregate([
                         ...this.listingService.metadataToPL(watcher.metadata as any),
                         { $count: 'totalHits' },
                     ])
                     .then((res) => (res as any)[0]?.totalHits ?? 0),
-                keyword: watcher.metadata.keyword,
-                items: newListings,
+                filters: watcher.metadata,
+                listings: newListings,
             }
 
             await this.emailService.sendEmail(

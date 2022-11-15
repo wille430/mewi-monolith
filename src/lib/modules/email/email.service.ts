@@ -6,7 +6,8 @@ import Email, { EmailOptions } from 'email-templates'
 import { SendEmailResultDto } from './dto/send-email-result.dto'
 import { EmailRecordsRepository } from './email-records.repository'
 import { User } from '../schemas/user.schema'
-import { verifyEmailTemplate } from './templates/verifyEmailTemplate'
+import { VerifyEmailTemplate } from './templates/VerifyEmailTemplate'
+import { WatcherNotifyTemplate } from './templates/WatcherNotifyTemplate'
 
 type SendEmailOptions = EmailOptions & {
     createRecord?: boolean
@@ -28,9 +29,9 @@ export class EmailService {
     getTemplate(template: EmailTemplate) {
         switch (template) {
             case EmailTemplate.VERIFY_EMAIL:
-                return verifyEmailTemplate
+                return VerifyEmailTemplate
             case EmailTemplate.NEW_ITEMS:
-                throw new Error('Not implemented')
+                return WatcherNotifyTemplate
             case EmailTemplate.FORGOTTEN_PASSWORD:
                 throw new Error('Not implemented')
         }
