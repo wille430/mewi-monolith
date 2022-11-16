@@ -69,7 +69,7 @@ export const WatcherNotifyTemplate = ({
                                             listing.imageUrl[0] ??
                                             new URL(
                                                 '/img/missingImage.png',
-                                                process.env.CLIENT_URL
+                                                process.env.VERCEL_URL
                                             ).toString()
                                         }
                                     />
@@ -121,7 +121,7 @@ export const WatcherNotifyTemplate = ({
                         <a
                             href={new URL(
                                 '/minasidor/bevakningar',
-                                process.env.CLIENT_URL
+                                process.env.VERCEL_URL
                             ).toString()}
                         >
                             Gå till mina bevakningar

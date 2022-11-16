@@ -4,7 +4,7 @@ declare global {
             DATABASE_URI: string
             SESSION_PASSWORD: string
             ADMIN_API_KEY?: string
-            CLIENT_URL?: string
+            VERCEL_URL?: string
         }
     }
 

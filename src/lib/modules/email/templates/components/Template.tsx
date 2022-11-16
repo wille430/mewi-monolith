@@ -42,7 +42,7 @@ export const Template = ({ children }: { children: ReactNode }) => {
                 {children}
                 <MjmlSection backgroundColor='#253c4c' padding='20px'>
                     <MjmlColumn>
-                        <MjmlNavbar baseUrl={process.env.CLIENT_URL}>
+                        <MjmlNavbar baseUrl={process.env.VERCEL_URL}>
                             <MjmlNavbarLink href='/' color='white'>
                                 Hem
                             </MjmlNavbarLink>
