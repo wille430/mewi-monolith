@@ -18,6 +18,7 @@ import { Listing } from '../schemas/listing.schema'
 import { EmailService } from '../email/email.service'
 import { EmailTemplate } from '../email/enums/email-template.enum'
 import { stringify } from 'query-string'
+import { ValidationException } from '@/lib/exceptions/validation.exception'
 
 @autoInjectable()
 export class UsersService {
@@ -83,13 +84,18 @@ export class UsersService {
         if (!user) throw new NotFoundException()
         if (!user.passwordReset) throw new BadRequestException('User has no pending password reset')
 
-        const isValidToken = token != null && token === user.passwordReset.tokenHash
+        const isValidToken = await bcrypt.compare(token, user.passwordReset.tokenHash)
         // class-validator validates password validity
         const isValidPassword = !(await bcrypt.compare(password, user?.password ?? ''))
         if (!isValidPassword) {
-            throw new BadRequestException(
-                'The provided password is already in use. Please provide an unique password.'
-            )
+            throw new ValidationException([
+                {
+                    property: 'password',
+                    constraints: {
+                        isNew: 'The provided password is already in use. Please provide an unique password.',
+                    },
+                },
+            ])
         }
 
         if (user.passwordReset && user.passwordReset.expiration > Date.now() && isValidToken) {
@@ -98,7 +104,14 @@ export class UsersService {
                 passwordReset: null,
             })
         } else {
-            throw new BadRequestException('Invalid token')
+            throw new ValidationException([
+                {
+                    property: 'token',
+                    constraints: {
+                        isValid: 'Token is not valid',
+                    },
+                },
+            ])
         }
     }
 

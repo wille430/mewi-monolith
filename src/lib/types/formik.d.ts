@@ -2,7 +2,13 @@
 import * as Formik from 'formik'
 
 declare module 'formik' {
-    export interface FormikErrors<T> {
-        all?: string
+    type FormikErrors<T> = {
+        [K in keyof Values & { all?: string }]?: Values[K] extends any[]
+            ? Values[K][number] extends object
+                ? FormikErrors<Values[K][number]>[] | string | string[]
+                : string | string[]
+            : Values[K] extends object
+            ? FormikErrors<Values[K]>
+            : string
     }
 }

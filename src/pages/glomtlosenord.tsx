@@ -67,7 +67,7 @@ const ForgottenPassword = () => {
                                     <>
                                         <div>
                                             <Link href='/loggain'>
-                                                <a>{'<<'} Logga in istället</a>
+                                                <span>{'<<'} Logga in istället</span>
                                             </Link>
                                         </div>
                                         <div className='mb-8 pt-12'>
@@ -92,15 +92,13 @@ const ForgottenPassword = () => {
                                                 <span className='text-red-400'>{errors.email}</span>
                                             </div>
 
-                                            <div className='btn-group'>
-                                                <Button
-                                                    label='Byt lösenord'
-                                                    size='lg'
-                                                    type='submit'
-                                                    data-testid='formSubmitButton'
-                                                    disabled={isSubmitting}
-                                                />
-                                            </div>
+                                            <Button
+                                                label='Byt lösenord'
+                                                size='lg'
+                                                type='submit'
+                                                data-testid='formSubmitButton'
+                                                disabled={isSubmitting}
+                                            />
                                         </form>
                                     </>
                                 </>

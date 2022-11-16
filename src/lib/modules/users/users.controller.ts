@@ -123,7 +123,7 @@ export class UsersController {
         @Body(MyValidationPipe) dto: ChangePasswordDto,
         @GetUser() user: UserPayload | undefined = undefined
     ) {
-        if (dto.password && dto.passwordConfirm) {
+        if (dto.password != null && dto.passwordConfirm != null) {
             if (dto.token && dto.email) {
                 await this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken)
             } else if (user?.userId) {
