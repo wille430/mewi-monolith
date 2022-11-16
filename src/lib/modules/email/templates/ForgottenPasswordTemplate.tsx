@@ -26,7 +26,7 @@ export const ForgottenPasswordTemplate = ({ link }: ForgottenPasswordTemplatePro
                         paddingBottom='4px'
                         align='center'
                     >
-                        <a href={link}>Verifiera e-postadress</a>
+                        <a href={link}>Ändra lösenordet här</a>
                     </MjmlText>
 
                     <MjmlText fontSize='12px' align='center'>

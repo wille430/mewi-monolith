@@ -8,6 +8,7 @@ import { EmailRecordsRepository } from './email-records.repository'
 import { User } from '../schemas/user.schema'
 import { VerifyEmailTemplate } from './templates/VerifyEmailTemplate'
 import { WatcherNotifyTemplate } from './templates/WatcherNotifyTemplate'
+import { ForgottenPasswordTemplate } from './templates/ForgottenPasswordTemplate'
 
 type SendEmailOptions = EmailOptions & {
     createRecord?: boolean
@@ -33,7 +34,7 @@ export class EmailService {
             case EmailTemplate.NEW_ITEMS:
                 return WatcherNotifyTemplate
             case EmailTemplate.FORGOTTEN_PASSWORD:
-                throw new Error('Not implemented')
+                return ForgottenPasswordTemplate
         }
     }
 
