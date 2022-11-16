@@ -39,13 +39,14 @@ export const EmailSignInForm = () => {
         setErrors,
         values,
         handleChange,
-        errors,
+        errors: _errors,
         isSubmitting,
         setSubmitting,
     } = useFormik<EmailSignInDto>({
         initialValues,
         onSubmit: onSubmit,
     })
+    const errors = _errors as any
 
     return (
         <form className='form' onSubmit={handleSubmit}>

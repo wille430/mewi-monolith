@@ -61,7 +61,9 @@ export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswor
                         <ErrorMessage name='passwordConfirm' />
                     </div>
 
-                    {errors.all && <span className='w-full text-red-400'>{errors.all}</span>}
+                    {errors.all && (
+                        <span className='w-full text-red-400'>{(errors as any).all}</span>
+                    )}
                     <ErrorMessage name='all' />
 
                     <Button label='Ändra lösenord' data-testid='formSubmitButton' />

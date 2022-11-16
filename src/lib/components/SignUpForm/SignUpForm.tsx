@@ -34,6 +34,8 @@ export const SignUpForm = () => {
         validationSchema: signUpSchema,
     })
 
+    const errors = formik.errors as any
+
     return (
         <form className='form' onSubmit={formik.handleSubmit}>
             <div>
@@ -46,7 +48,7 @@ export const SignUpForm = () => {
                     fullWidth={true}
                     disabled={formik.isSubmitting}
                 />
-                <span className='text-red-400'>{formik.errors.email}</span>
+                <span className='text-red-400'>{errors.email}</span>
             </div>
             <div>
                 <TextField
@@ -59,7 +61,7 @@ export const SignUpForm = () => {
                     data-testid='passwordInput'
                     fullWidth={true}
                 />
-                <span className='text-red-400'>{formik.errors.password}</span>
+                <span className='text-red-400'>{errors.password}</span>
             </div>
             <div>
                 <TextField
@@ -72,7 +74,7 @@ export const SignUpForm = () => {
                     data-testid='repasswordInput'
                     fullWidth={true}
                 />
-                <span className='text-red-400'>{formik.errors.passwordConfirm}</span>
+                <span className='text-red-400'>{errors.passwordConfirm}</span>
             </div>
             {/* 
                 <div className='flex flex-col'>

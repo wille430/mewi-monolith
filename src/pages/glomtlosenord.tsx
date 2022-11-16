@@ -89,7 +89,9 @@ const ForgottenPassword = () => {
                                                     data-testid='emailInput'
                                                     fullWidth={true}
                                                 />
-                                                <span className='text-red-400'>{errors.email}</span>
+                                                <span className='text-red-400'>
+                                                    {(errors as any).email}
+                                                </span>
                                             </div>
 
                                             <Button
