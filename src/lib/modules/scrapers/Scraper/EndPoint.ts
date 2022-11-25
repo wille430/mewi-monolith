@@ -1,5 +1,4 @@
 import { ScrapeOptions } from '../ScrapeOptions'
-import { BrowserService } from './BrowserService'
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import flow from 'lodash/flow'
@@ -116,37 +115,30 @@ export abstract class EndPointDOM<T> extends AbstractEndPoint<T, CheerioAPI, Che
 }
 
 export abstract class NextEndPoint<T> extends ApiEndPoint<T> {
-    private browserService: BrowserService
     private tokenUrl: string
 
     constructor(tokenUrl: string, identifier: string) {
         super(identifier)
 
-        this.browserService = new BrowserService()
         this.tokenUrl = tokenUrl
     }
 
     async getNextData(): Promise<Record<any, any>> {
-        try {
-            const page = await this.browserService.getPage(this.tokenUrl)
+        const { data: html } = await axios.get(this.tokenUrl)
+        const $ = load(html)
 
-            return await page.evaluate(() => {
-                const nextDataSelector = '#__NEXT_DATA__'
-                const text = document.querySelector(nextDataSelector)?.textContent
+        const nextDataSelector = '#__NEXT_DATA__'
+        const text = $(nextDataSelector).first().text()
 
-                if (text == null) {
-                    throw new Error(
-                        `Could not scrape token from ${document.location.href}. Selector ${nextDataSelector} might be missing`
-                    )
-                }
-
-                const json: Record<any, any> = JSON.parse(text)
-
-                return json
-            })
-        } finally {
-            await this.browserService.close()
+        if (text == null) {
+            throw new Error(
+                `Could not scrape token from ${document.location.href}. Selector ${nextDataSelector} might be missing`
+            )
         }
+
+        const json: Record<any, any> = JSON.parse(text)
+
+        return json
     }
 }
 
