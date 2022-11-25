@@ -1,5 +1,5 @@
 import isFunction from 'lodash/isFunction'
-import { ElementHandle, Page } from 'puppeteer'
+import { ElementHandle, Page } from 'puppeteer-core'
 
 export type PropertySelectors<T> = {
     [K in keyof T]: T[K] extends Record<any, any>

@@ -1,5 +1,5 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { ElementHandle } from 'puppeteer'
+import { ElementHandle } from 'puppeteer-core'
 import { Listing } from '../../../schemas/listing.schema'
 import { ConfigMiddleware, EndPointDOM } from '../EndPoint'
 import { ScrapePagination } from '../interface/scrape-pagination.inteface'

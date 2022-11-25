@@ -1,6 +1,6 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
-import { ElementHandle } from 'puppeteer'
+import { ElementHandle } from 'puppeteer-core'
 import { EndPointDOM } from '../EndPoint'
 import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'

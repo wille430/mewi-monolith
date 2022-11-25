@@ -1,6 +1,6 @@
 import { ScrapeOptions } from '../ScrapeOptions'
 import { BrowserService } from './BrowserService'
-import { ElementHandle, Page } from 'puppeteer'
+import { ElementHandle, Page } from 'puppeteer-core'
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import flow from 'lodash/flow'
