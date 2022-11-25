@@ -1,12 +1,13 @@
 import { ScrapeOptions } from '../ScrapeOptions'
 import { BrowserService } from './BrowserService'
-import { ElementHandle, Page } from 'puppeteer-core'
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import flow from 'lodash/flow'
 import { ScrapeMetadata, ScrapeReturn } from './Scraper'
 import { Selectors } from './Selectors'
 import { ScrapePagination } from './interface/scrape-pagination.inteface'
+import { load } from 'cheerio'
+import type { CheerioAPI, Cheerio } from 'cheerio'
 
 interface EndPoint<T> {
     scrape(pagination: ScrapePagination, options: ScrapeOptions): Promise<ScrapeReturn<T>>
@@ -87,8 +88,7 @@ export abstract class ApiEndPoint<T> extends AbstractEndPoint<T, AxiosResponse> 
     ): Promise<AxiosRequestConfig>
 }
 
-export abstract class EndPointDOM<T> extends AbstractEndPoint<T, Page, ElementHandle<Element>> {
-    private browserService: BrowserService = new BrowserService()
+export abstract class EndPointDOM<T> extends AbstractEndPoint<T, CheerioAPI, Cheerio<any>> {
     private selectors: Selectors<T>
 
     constructor(identifier: string, selectors: Selectors<T>) {
@@ -101,16 +101,17 @@ export abstract class EndPointDOM<T> extends AbstractEndPoint<T, Page, ElementHa
     protected async getResponse(
         pagination: ScrapePagination,
         options: ScrapeOptions
-    ): Promise<Page> {
-        const page = await this.browserService.getPage()
-        await page.goto(this.createUrl(pagination, options))
-        return page
+    ): Promise<CheerioAPI> {
+        const { data: html } = await axios.get(this.createUrl(pagination, options))
+        const $ = load(html)
+
+        return $
     }
 
-    protected extractEntities(
-        page: Page
-    ): ElementHandle<Element>[] | Promise<ElementHandle<Element>[]> {
-        return this.selectors.getListElements(page)
+    protected async extractEntities($: CheerioAPI): Promise<Cheerio<any>[]> {
+        const nodes = await this.selectors.getListElements($)
+
+        return nodes.map((node) => $(node))
     }
 }
 

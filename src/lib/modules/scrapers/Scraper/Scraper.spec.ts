@@ -1,8 +1,16 @@
 import { Scraper } from './Scraper'
-import { BlocketEndPoint } from './Blocket/BlocketEndPoint'
+import { BytbilEndPoint } from './Bytbil/BytbilEndPoint'
 import { AbstractEndPoint } from './EndPoint'
+import { BlippEndPoint } from './Blipp/BlippEndPoint'
 import { BlocketScraper } from './Blocket/BlocketScraper'
+import { CitiboardEndPoint } from './Citiboard/CitiboardEndPoint'
+import { KvdBilEndPoint } from './KvdBil/KvdBilEndPoint'
+import { SellpyEndPoint } from './Sellpy/SellpyEndPoint'
+import { ShpockEndPoint } from './Shpock/ShpockEndPoint'
+import { TraderaEndPoint } from './Tradera/TraderaEndPoint'
 import { validateListingTest } from './test/validate-listing'
+import { BlocketEndPoint } from './Blocket/BlocketEndPoint'
+import { BilwebEndPoint } from './Bilweb/BilwebEndPoint'
 
 describe('Scraper', () => {
     describe('BlocketScraper', () => {
@@ -18,8 +26,7 @@ describe('Scraper', () => {
                     const scrapeAmount = 10
                     const { entities: listings, metadata } = await scraper.endPoints[0].scrape(
                         {
-                            limit: scrapeAmount,
-                            skip: 0,
+                            page: 1,
                         },
                         {
                             scrapeAmount,
@@ -41,7 +48,17 @@ describe('Scraper', () => {
 })
 
 describe('EndPoint', () => {
-    describe.each([new BlocketEndPoint()])('%s', (endPoint: AbstractEndPoint<any>) => {
+    describe.each([
+        new BlocketEndPoint(),
+        new BytbilEndPoint('moped'),
+        new BlippEndPoint(),
+        new BilwebEndPoint(),
+        new CitiboardEndPoint(),
+        new KvdBilEndPoint(),
+        new SellpyEndPoint(),
+        new ShpockEndPoint(),
+        new TraderaEndPoint('/category/1612'),
+    ])('%s', (endPoint: AbstractEndPoint<any>) => {
         describe('#scrape', () => {
             let res: Awaited<ReturnType<typeof endPoint['scrape']>>
             const scrapeAmount = 10

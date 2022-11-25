@@ -1,62 +1,20 @@
-import isFunction from 'lodash/isFunction'
-import { ElementHandle, Page } from 'puppeteer-core'
-
-export type PropertySelectors<T> = {
-    [K in keyof T]: T[K] extends Record<any, any>
-        ? PropertySelectors<T[K]>
-        : T[K] extends undefined
-        ? undefined
-        : string | ((ele: ElementHandle<Element>) => T[K])
-}
+import type { AnyNode, Cheerio, CheerioAPI } from 'cheerio'
 
 export class Selectors<T> {
     private list: string
     private item: string
-    private properties?: PropertySelectors<T>
 
-    constructor(list: string, item: string, properties?: PropertySelectors<T>) {
+    constructor(list: string, item: string) {
         this.list = list
         this.item = item
-        this.properties = properties
     }
 
-    getList(page: Page): Promise<ElementHandle<Element> | null> {
-        return page.$(this.list)
+    getList($: CheerioAPI): Cheerio<any> {
+        return $(this.list).first()
     }
 
-    async getListElements(page: Page): Promise<ElementHandle<Element>[]> {
-        return page.$$(`${this.list} > ${this.item}`)
-    }
-
-    async getProperty(ele: ElementHandle<Element>, property: keyof PropertySelectors<T>) {
-        if (!this.properties) {
-            throw new Error('Properties is undefined')
-        }
-
-        const f = this.properties[property]
-
-        if (!f) {
-            return undefined
-        }
-
-        if (isFunction(f)) {
-            return f(ele)
-        }
-
-        return ele.$(f as string)
-    }
-
-    async getProperties(ele: ElementHandle<Element>) {
-        if (!this.properties) {
-            throw new Error('Properties is undefined')
-        }
-
-        const entity = {}
-
-        for (const key of Object.keys(this.properties)) {
-            entity[key] = await this.getProperty(ele, key as keyof PropertySelectors<T>)
-        }
-
-        return entity
+    async getListElements($: CheerioAPI): Promise<AnyNode[]> {
+        const nodes = $(`${this.list} > ${this.item}`).toArray()
+        return nodes
     }
 }

@@ -1,5 +1,5 @@
-import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { ElementHandle } from 'puppeteer-core'
+import { Currency, ListingOrigin } from '@/common/schemas'
+import type { Cheerio } from 'cheerio'
 import { Listing } from '../../../schemas/listing.schema'
 import { ConfigMiddleware, EndPointDOM } from '../EndPoint'
 import { ScrapePagination } from '../interface/scrape-pagination.inteface'
@@ -24,42 +24,25 @@ export class BytbilEndPoint extends EndPointDOM<Listing> {
         return `https://bytbil.com/${this.identifier}?Page=${page}`
     }
 
-    protected async parseRawEntity(ele: ElementHandle<Element>): Promise<Partial<Listing>> {
-        const listing: any = await ele.evaluate(async (ele) => {
-            const href = ele.querySelector('.car-list-header > a')?.getAttribute('href')
-            const priceString = ele
-                .querySelector('.car-price-main')
-                ?.textContent?.replace(/\D/g, '')
-
-            return {
-                origin_id: ele.querySelector('.uk-grid')?.getAttribute('data-model-id'),
-                title: ele.querySelector('.car-list-header > a')?.textContent,
-                // TODO
-                // imageUrl: [],
-                redirectUrl: href,
-                isAuction: false,
-                price: priceString
-                    ? {
-                          value: parseInt(priceString),
-                      }
-                    : undefined,
-                category: this.category,
-            }
-        })
+    protected async parseRawEntity(ele: Cheerio<any>): Promise<Partial<Listing>> {
+        const href = ele.find('.car-list-header > a')?.attr('href')
+        const priceString = ele.find('.car-price-main')?.text()?.replace(/\D/g, '')
 
         return this.parser.parseListing({
-            ...listing,
-            redirectUrl: listing.redirectUrl
-                ? new URL(listing.redirectUrl, this.baseUrl).toString()
-                : this.baseUrl,
-            price: listing.price
+            origin_id: ele.find('.uk-grid')?.attr('data-model-id'),
+            title: ele.find('.car-list-header > a')?.text(),
+            // TODO
+            // imageUrl: [],
+            isAuction: false,
+            redirectUrl: href ? new URL(href, this.baseUrl).toString() : this.baseUrl,
+            price: priceString
                 ? {
-                      ...listing.price,
+                      value: parseInt(priceString),
                       currency: Currency.SEK,
                   }
                 : undefined,
-            category: Category.FORDON,
             date: new Date(),
+            category: await this.parser.parseCategory(this.category),
         })
     }
 
