@@ -78,6 +78,8 @@ export class ScrapersService {
             addedCount = count
         }
 
+        await this.removeListings(entities.map(({ origin_id }) => origin_id))
+
         const log = await this.scrapingLogsRepository.create({
             addedCount,
             entryPoint: nextEndPoint.getIdentifier(),
@@ -91,6 +93,14 @@ export class ScrapersService {
                 entryPoint: nextEndPoint.getIdentifier(),
             }),
         }
+    }
+
+    private async removeListings(ids: string[]) {
+        return this.listingsRepository.deleteMany({
+            origin_id: {
+                $in: ids,
+            },
+        })
     }
 
     /**
