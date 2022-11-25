@@ -1,5 +1,5 @@
-import Chromium from '@sparticuz/chrome-aws-lambda'
-import { Browser, PuppeteerLaunchOptions } from 'puppeteer'
+import Chromium from 'chrome-aws-lambda'
+import puppeteer, { Browser, PuppeteerLaunchOptions } from 'puppeteer-core'
 
 export class BrowserService {
     options: PuppeteerLaunchOptions = {
@@ -28,7 +28,15 @@ export class BrowserService {
                 executablePath: await Chromium.executablePath,
             }
         } else {
-            return {}
+            return {
+                args: [],
+                executablePath:
+                    process.platform === 'win32'
+                        ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+                        : process.platform === 'linux'
+                        ? '/usr/bin/chromium'
+                        : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            }
         }
     }
 
@@ -36,7 +44,7 @@ export class BrowserService {
         if (this.browser) {
             return this.browser
         } else {
-            this.browser = (await Chromium.puppeteer.launch(await this.getLaunchOptions())) as any
+            this.browser = (await puppeteer.launch(await this.getLaunchOptions())) as any
         }
 
         return this.browser as Browser
