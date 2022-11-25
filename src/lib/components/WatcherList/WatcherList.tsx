@@ -45,7 +45,7 @@ const WatcherList = () => {
                 (watcherObj, i) =>
                     watcherObj && (
                         <WatcherCard
-                            key={i}
+                            key={watcherObj.id}
                             userWatcher={watcherObj}
                             expand={expandedId === watcherObj.id}
                             onExpand={(val?: boolean) => {
