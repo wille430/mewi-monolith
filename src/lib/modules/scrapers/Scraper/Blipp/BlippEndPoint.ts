@@ -1,13 +1,13 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { NextEndPointWithBuildId } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 
 export class BlippEndPoint extends NextEndPointWithBuildId<Listing> {
-    private limit?: number
+    private limit = 40
     private parser: ListingParser
 
     constructor() {
@@ -15,15 +15,15 @@ export class BlippEndPoint extends NextEndPointWithBuildId<Listing> {
         this.parser = new ListingParser(ListingOrigin.Blipp, this)
     }
 
-    protected createAxiosConfig(pagination: Pagination): Promise<AxiosRequestConfig<any>> {
-        const { page = 1, limit = this.limit } = pagination
+    protected createAxiosConfig(pagination: ScrapePagination): Promise<AxiosRequestConfig<any>> {
+        const { page = 1 } = pagination
 
         return Promise.resolve({
             url: 'https://blipp.se/api/proxy',
             data: {
                 method: 'getMarketplaceAds',
                 payload: {
-                    params: `filters%5Btag%5D=&sort%5Bcolumn%5D=published_date&sort%5Border%5D=desc&page=${page}&per_page=${limit}`,
+                    params: `filters%5Btag%5D=&sort%5Bcolumn%5D=published_date&sort%5Border%5D=desc&page=${page}&per_page=${this.limit}`,
                 },
             },
         })

@@ -15,7 +15,7 @@ export const scrapingLogStub = (): WithId<ScrapingLog> => ({
     errorCount: 0,
     scrapeToDate: listingStub().date,
     scrapeToId: listingStub().origin_id,
-    target: listingStub().origin,
+    origin: listingStub().origin,
     triggeredBy: ScraperTrigger.Manual,
     ...timestampsStub(),
 })

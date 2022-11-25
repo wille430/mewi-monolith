@@ -1,25 +1,28 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import { ElementHandle } from 'puppeteer'
 import { EndPointDOM } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 import { Selectors } from '../Selectors'
 
-export class BilwebEndpoint extends EndPointDOM<Listing> {
+export class BilwebEndPoint extends EndPointDOM<Listing> {
     private parser: ListingParser
     private baseUrl = 'https://bilweb.se/'
     private limit = 30
 
     constructor() {
-        super(BilwebEndpoint.name, new Selectors('.Card-Wrapper', '.Card'))
+        super(BilwebEndPoint.name, new Selectors('.Card-Wrapper', '.Card'))
         this.parser = new ListingParser(ListingOrigin.Bilweb, this)
     }
 
-    protected createUrl({ page = 1 }: Pagination): string {
+    protected createUrl({ page = 1 }: ScrapePagination): string {
         const offset = (page - 1) * this.limit
-        return new URL(`?limit=${this.limit}&offset=${offset}`, this.baseUrl).toString()
+        return new URL(
+            `/sok?query=&type=1&limit=${this.limit}&offset=${offset}`,
+            this.baseUrl
+        ).toString()
     }
 
     protected async parseRawEntity(ele: ElementHandle<Element>): Promise<Partial<Listing>> {

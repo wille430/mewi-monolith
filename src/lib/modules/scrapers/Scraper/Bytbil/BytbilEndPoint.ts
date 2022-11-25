@@ -1,9 +1,8 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
 import { ElementHandle } from 'puppeteer'
-import { Pagination } from '../../../database/dto/pagination.dto'
 import { Listing } from '../../../schemas/listing.schema'
-import { ScrapeOptions } from '../../classes/types/ScrapeOptions'
 import { ConfigMiddleware, EndPointDOM } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 import { Selectors } from '../Selectors'
@@ -20,12 +19,8 @@ export class BytbilEndPoint extends EndPointDOM<Listing> {
         this.parser = new ListingParser(ListingOrigin.Bytbil, this)
     }
 
-    protected createUrl = (pagination: Pagination, options: ScrapeOptions) => {
-        const { limit = 40, skip = 0 } = pagination
-        const realLimit = Math.min(options.scrapeAmount ?? 0, limit)
-
-        const page = skip / realLimit + 1
-
+    protected createUrl = (pagination: ScrapePagination) => {
+        const { page = 1 } = pagination
         return `https://bytbil.com/${this.identifier}?Page=${page}`
     }
 

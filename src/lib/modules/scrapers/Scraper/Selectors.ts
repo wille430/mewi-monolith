@@ -25,10 +25,7 @@ export class Selectors<T> {
     }
 
     async getListElements(page: Page): Promise<ElementHandle<Element>[]> {
-        const list = await this.getList(page)
-        const eles = await list?.$$(this.item)
-
-        return eles ?? []
+        return page.$$(`${this.list} > ${this.item}`)
     }
 
     async getProperty(ele: ElementHandle<Element>, property: keyof PropertySelectors<T>) {

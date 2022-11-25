@@ -1,15 +1,15 @@
-import { ScrapeOptions } from '../classes/types/ScrapeOptions'
+import { ScrapeOptions } from '../ScrapeOptions'
 import { BrowserService } from './BrowserService'
 import { ElementHandle, Page } from 'puppeteer'
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Pagination } from '../../database/dto/pagination.dto'
 import flow from 'lodash/flow'
 import { ScrapeMetadata, ScrapeReturn } from './Scraper'
 import { Selectors } from './Selectors'
+import { ScrapePagination } from './interface/scrape-pagination.inteface'
 
 interface EndPoint<T> {
-    scrape(pagination: Pagination, options: ScrapeOptions): Promise<ScrapeReturn<T>>
+    scrape(pagination: ScrapePagination, options: ScrapeOptions): Promise<ScrapeReturn<T>>
 }
 
 export abstract class AbstractEndPoint<Entity, Response = any, RawEntity = any>
@@ -21,7 +21,10 @@ export abstract class AbstractEndPoint<Entity, Response = any, RawEntity = any>
         this.identifier = identifier
     }
 
-    async scrape(pagination: Pagination, options: ScrapeOptions): Promise<ScrapeReturn<Entity>> {
+    async scrape(
+        pagination: ScrapePagination = {},
+        options: ScrapeOptions = {}
+    ): Promise<ScrapeReturn<Entity>> {
         const res = await this.getResponse(pagination, options)
 
         const entities = await this.extractEntities(res)
@@ -49,7 +52,7 @@ export abstract class AbstractEndPoint<Entity, Response = any, RawEntity = any>
     }
 
     protected abstract getResponse(
-        pagination: Pagination,
+        pagination: ScrapePagination,
         options: ScrapeOptions
     ): Promise<Response>
 
@@ -70,7 +73,7 @@ export abstract class ApiEndPoint<T> extends AbstractEndPoint<T, AxiosResponse> 
     protected abstract configMiddlewares: ConfigMiddleware[]
 
     protected async getResponse(
-        pagination: Pagination,
+        pagination: ScrapePagination,
         options: ScrapeOptions
     ): Promise<AxiosResponse<any, any>> {
         const applyMiddlewares = flow(...this.configMiddlewares)
@@ -79,7 +82,7 @@ export abstract class ApiEndPoint<T> extends AbstractEndPoint<T, AxiosResponse> 
     }
 
     protected abstract createAxiosConfig(
-        pagination: Pagination,
+        pagination: ScrapePagination,
         options: ScrapeOptions
     ): Promise<AxiosRequestConfig>
 }
@@ -93,9 +96,12 @@ export abstract class EndPointDOM<T> extends AbstractEndPoint<T, Page, ElementHa
         this.selectors = selectors
     }
 
-    protected abstract createUrl(pagination: Pagination, options: ScrapeOptions): string
+    protected abstract createUrl(pagination: ScrapePagination, options: ScrapeOptions): string
 
-    protected async getResponse(pagination: Pagination, options: ScrapeOptions): Promise<Page> {
+    protected async getResponse(
+        pagination: ScrapePagination,
+        options: ScrapeOptions
+    ): Promise<Page> {
         const page = await this.browserService.getPage()
         await page.goto(this.createUrl(pagination, options))
         return page

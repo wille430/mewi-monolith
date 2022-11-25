@@ -1,8 +1,8 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ApiEndPoint, ConfigMiddleware } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 
@@ -15,7 +15,7 @@ export class KvdBilEndPoint extends ApiEndPoint<Listing> {
         super(KvdBilEndPoint.name)
     }
 
-    protected createAxiosConfig({ page = 1 }: Pagination): Promise<AxiosRequestConfig<any>> {
+    protected createAxiosConfig({ page = 1 }: ScrapePagination): Promise<AxiosRequestConfig<any>> {
         const offset = (page - 1) * this.limit
 
         return Promise.resolve({

@@ -8,11 +8,15 @@ import { ListingsRepository } from '../listings/listings.repository'
 import { Scraper } from './Scraper/Scraper'
 import { Listing } from '../schemas/listing.schema'
 import { AbstractEndPoint } from './Scraper/EndPoint'
+import { ScrapeNextResult } from './dto/scrape-next-result.dto'
+import { ScrapeNextQuery } from './dto/scrape-next-query.dto'
+import { NotFoundException } from 'next-api-decorators'
 
 @autoInjectable()
 export class ScrapersService {
     scrapers!: Record<ListingOrigin, Scraper<Listing>>
     endPoints!: AbstractEndPoint<Listing>[]
+    endPointScraperMap!: Record<string, Scraper<Listing>>
     /**
      * The current index in the scraper pipeline, is null if pipeline is not running
      * @see {@link scraperPipeline}
@@ -38,6 +42,13 @@ export class ScrapersService {
             prev.push(...scraper.endPoints)
             return prev
         }, [] as AbstractEndPoint<Listing>[])
+
+        this.endPointScraperMap = Object.values(this.scrapers).reduce((prev, scraper) => {
+            for (const endPoint of scraper.endPoints) {
+                prev[endPoint.getIdentifier()] = scraper
+            }
+            return prev
+        }, {} as typeof this.endPointScraperMap)
     }
 
     logPipeline(total: number, msg: string) {
@@ -47,16 +58,39 @@ export class ScrapersService {
     /**
      * Scrapes the next endpoint
      */
-    async scrapeNext(): Promise<void> {
-        const nextEndPoint = (await this.getNextEndPoint()) ?? this.endPoints[0]
-        const { entities } = await nextEndPoint.scrape(
-            {
-                page: 1,
-            },
-            {}
-        )
+    async scrapeNext({ endpoint }: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
+        if (endpoint && !this.endPointScraperMap[endpoint]) {
+            throw new NotFoundException(`There is not endpoint with name ${endpoint}`)
+        }
 
-        await this.listingsRepository.createMany(entities)
+        const nextEndPoint = endpoint
+            ? this.endPoints.find((o) => o.getIdentifier() == endpoint)!
+            : (await this.getNextEndPoint()) ?? this.endPoints[0]
+        const res = await nextEndPoint.scrape({
+            page: 1,
+        })
+        const { entities } = res
+
+        let addedCount = 0
+
+        if (entities.length) {
+            const { count } = await this.listingsRepository.createMany(entities)
+            addedCount = count
+        }
+
+        const log = await this.scrapingLogsRepository.create({
+            addedCount,
+            entryPoint: nextEndPoint.getIdentifier(),
+            errorCount: 0,
+            origin: this.endPointScraperMap[nextEndPoint.getIdentifier()].origin,
+        })
+
+        return {
+            scrapingLog: log.toObject(),
+            totalCount: await this.listingsRepository.count({
+                entryPoint: nextEndPoint.getIdentifier(),
+            }),
+        }
     }
 
     /**

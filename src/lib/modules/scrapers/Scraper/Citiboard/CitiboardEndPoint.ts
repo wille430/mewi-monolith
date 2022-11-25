@@ -1,9 +1,9 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import { safeToDate } from '@/lib/utils/dateUtils'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ApiEndPoint, ConfigMiddleware } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 
@@ -16,7 +16,7 @@ export class CitiboardEndPoint extends ApiEndPoint<Listing> {
         this.parser = new ListingParser(ListingOrigin.Citiboard, this)
     }
 
-    protected createAxiosConfig({ page = 1 }: Pagination): Promise<AxiosRequestConfig<any>> {
+    protected createAxiosConfig({ page = 1 }: ScrapePagination): Promise<AxiosRequestConfig<any>> {
         return Promise.resolve({
             url: `https://api42.citiboard.se/cb/annonslista?url=/&sida=${page}&sort=&sok=`,
         })

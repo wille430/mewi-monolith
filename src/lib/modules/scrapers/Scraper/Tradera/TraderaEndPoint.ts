@@ -1,9 +1,9 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { ApiEndPoint, ConfigMiddleware } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 import { TraderaCategories } from './TraderaCategories'
@@ -32,7 +32,7 @@ export class TraderaEndPoint extends ApiEndPoint<Listing> {
         this.categoryHref = category
     }
 
-    protected createAxiosConfig({ page = 1 }: Pagination): Promise<AxiosRequestConfig<any>> {
+    protected createAxiosConfig({ page = 1 }: ScrapePagination): Promise<AxiosRequestConfig<any>> {
         return Promise.resolve({
             url: `https://www.tradera.com${this.categoryHref}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&spage=${page}`,
         })

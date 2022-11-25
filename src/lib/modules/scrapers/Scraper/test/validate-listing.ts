@@ -1,17 +1,18 @@
 import { Category, Currency } from '@/common/schemas'
-import type { ScrapeContext } from '../../classes/types/ScrapeContext'
+import { AbstractEndPoint } from '../EndPoint'
+import { Scraper } from '../Scraper'
 
 const urlRegex =
     /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
 
 export const validateListingTest = (
     listing: any,
-    { scraper, entryPoint }: Partial<ScrapeContext> = {}
+    scraper?: Scraper<any>,
+    endPoint?: AbstractEndPoint<any>
 ) => {
     expect(typeof listing.title).toBe('string')
 
     expect(typeof listing.origin_id).toBe('string')
-
     if (scraper) {
         expect(listing.origin_id).toMatch(new RegExp(`^(${scraper.origin}-)`))
         expect(listing.origin).toBe(scraper.origin)
@@ -39,7 +40,7 @@ export const validateListingTest = (
         expect(typeof listing.price.value).toBe('number')
     }
 
-    if (entryPoint) {
-        expect(listing.entryPoint).toBe(entryPoint.identifier)
+    if (endPoint) {
+        expect(listing.entryPoint).toBe(endPoint.getIdentifier())
     }
 }

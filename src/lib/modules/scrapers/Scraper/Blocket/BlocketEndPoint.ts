@@ -1,24 +1,24 @@
 import { Currency, ListingOrigin } from '@/common/schemas'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Pagination } from '../../../database/dto/pagination.dto'
 import { Listing } from '../../../schemas/listing.schema'
-import { ScrapeOptions } from '../../classes/types/ScrapeOptions'
-import { BlocketListing } from '../../types/blocketListing'
+import { ScrapeOptions } from '../../ScrapeOptions'
+import { BlocketListing } from './BlocketListing.interface'
 import { ConfigMiddleware, NextEndPoint } from '../EndPoint'
 import { ScrapeMetadata } from '../Scraper'
 import { ListingParser } from '../ListingParser'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 
-export class BlocketEndpoint extends NextEndPoint<Listing> {
+export class BlocketEndPoint extends NextEndPoint<Listing> {
     protected configMiddlewares: (<T>(
         config: AxiosRequestConfig<T>
     ) => Promise<AxiosRequestConfig<T>>)[]
     private parser: ListingParser
 
     constructor() {
-        super('https://www.blocket.se/', BlocketEndpoint.name)
+        super('https://www.blocket.se/', BlocketEndPoint.name)
 
         this.configMiddlewares = [this.addBearer.bind(this)]
-        this.parser = new ListingParser(this.identifier as ListingOrigin, this)
+        this.parser = new ListingParser(ListingOrigin.Blocket, this)
     }
 
     protected extractEntities(res: AxiosResponse<any, any>): any[] | Promise<any[]> {
@@ -57,15 +57,13 @@ export class BlocketEndpoint extends NextEndPoint<Listing> {
     }
 
     protected createAxiosConfig(
-        pagination: Pagination,
+        pagination: ScrapePagination,
         options: ScrapeOptions
     ): Promise<AxiosRequestConfig<any>> {
-        let page = pagination.page ? pagination.page - 1 : null
-
-        const { limit = 40, skip = 0 } = pagination
-        const realLimit = Math.min(options.scrapeAmount ?? 0, limit)
-
-        page ??= skip / realLimit
+        const { page } = pagination
+        const { scrapeAmount } = options
+        const limit = 40
+        const realLimit = scrapeAmount ? Math.min(scrapeAmount, limit) : limit
 
         return Promise.resolve({
             url: `https://api.blocket.se/search_bff/v2/content?lim=${realLimit}&page=${page}&st=s&status=active&include=placements&gl=3&include=extend_with_shipping`,

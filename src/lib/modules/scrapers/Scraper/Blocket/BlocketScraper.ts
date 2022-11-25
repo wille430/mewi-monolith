@@ -1,11 +1,11 @@
 import { ListingOrigin } from '@/common/schemas'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import { Scraper } from '../Scraper'
-import { BlocketEndpoint } from './BlocketEndpoint'
+import { BlocketEndPoint } from './BlocketEndPoint'
 
 export class BlocketScraper extends Scraper<Listing> {
     constructor() {
         const baseUrl = 'https://www.blocket.se/'
-        super(ListingOrigin.Blocket, baseUrl, [new BlocketEndpoint()])
+        super(ListingOrigin.Blocket, baseUrl, [new BlocketEndPoint()])
     }
 }

@@ -1,8 +1,8 @@
 import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import { Pagination } from '@/lib/modules/database/dto/pagination.dto'
 import { Listing } from '@/lib/modules/schemas/listing.schema'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ConfigMiddleware, NextEndPoint } from '../EndPoint'
+import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 
@@ -16,7 +16,9 @@ export class ShpockEndPoint extends NextEndPoint<Listing> {
         super('https://shpock.com/en-gb/results', ShpockEndPoint.name)
     }
 
-    protected async createAxiosConfig({ page = 1 }: Pagination): Promise<AxiosRequestConfig<any>> {
+    protected async createAxiosConfig({
+        page = 1,
+    }: ScrapePagination): Promise<AxiosRequestConfig<any>> {
         return {
             method: 'POST',
             url: 'https://www.shpock.com/graphql',

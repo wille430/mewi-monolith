@@ -1,6 +1,6 @@
 import { ListingOrigin } from '@/common/schemas'
 import constant from 'lodash/constant'
-import { ScrapeOptions } from '../classes/types/ScrapeOptions'
+import { ScrapeOptions } from '../ScrapeOptions'
 import { AbstractEndPoint } from './EndPoint'
 
 export type ScrapeReturn<T> = {
