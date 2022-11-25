@@ -1,5 +1,5 @@
 import { ListingOrigin } from '@/common/schemas'
-import { ScraperStatus, ScraperStatusReport } from '@/common/types'
+import { ScraperStatusReport } from '@/common/types'
 import type { DeleteListingsDto } from '@/lib/modules/listings/dto/delete-listings.dto'
 import { client, MutationArgs } from '..'
 import { SCRAPERS_STATUS_KEY } from './swr-keys'
@@ -13,7 +13,7 @@ export const startScrapers = (scrapers: ListingOrigin[]): MutationArgs => {
     }
 
     const optimisticData = (statusReports: Record<string, ScraperStatusReport> = {}) => {
-        statusReports[scrapers[0]].status = ScraperStatus.QUEUED
+        // TODO: deprecate
         return statusReports
     }
 
