@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { ScraperTrigger } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 import { ScrapingLog } from '@/lib/modules/schemas/scraping-log.schema'
@@ -16,6 +15,5 @@ export const scrapingLogStub = (): WithId<ScrapingLog> => ({
     scrapeToDate: listingStub().date,
     scrapeToId: listingStub().origin_id,
     origin: listingStub().origin,
-    triggeredBy: ScraperTrigger.Manual,
     ...timestampsStub(),
 })

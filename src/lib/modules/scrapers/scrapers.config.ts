@@ -1,7 +1,6 @@
 import { ListingOrigin } from '@/common/schemas'
-import { ScraperOptions } from '../common/types/scraperOptions'
 
-const createConfig = (override: Partial<ScraperOptions> = {}): ScraperOptions => {
+const createConfig = (override: Partial<any> = {}): any => {
     if (override.limit && process.env.NODE_ENV !== 'production') {
         override.limit = Math.min(40, override.limit)
     }
@@ -34,6 +33,6 @@ const createFullConfig = () => {
     return config as any
 }
 
-export const scrapersConfig: Partial<Record<ListingOrigin, ScraperOptions>> & {
-    default: ScraperOptions
+export const scrapersConfig: Partial<Record<ListingOrigin, any>> & {
+    default: any
 } = createFullConfig()

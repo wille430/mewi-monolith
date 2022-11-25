@@ -6,9 +6,7 @@ import { SCRAPERS_STATUS_KEY } from './swr-keys'
 
 export const startScrapers = (scrapers: ListingOrigin[]): MutationArgs => {
     const updateFn = async (statusReports: Record<string, ScraperStatusReport>) => {
-        await client.post('/scrapers/start', {
-            scrapers,
-        })
+        throw new Error('Not implemented')
         return statusReports
     }
 

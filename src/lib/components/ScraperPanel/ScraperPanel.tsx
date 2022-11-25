@@ -74,10 +74,9 @@ export const ScraperPanel = () => {
                 <Table className='table-auto'>
                     <thead>
                         <tr>
-                            <th className='w-32 text-left'>Skrapare</th>
+                            <th className='text-left'>Skrapare</th>
                             <th>Produkter</th>
                             <th>Senast skrapad</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
 
