@@ -1,23 +1,23 @@
-import { BilwebScraper } from './scrapers/bilweb.scraper'
-import { BlippScraper } from './scrapers/blipp.scraper'
-import { BlocketScraper } from './scrapers/blocket.scraper'
-import { BytbilScraper } from './scrapers/bytbil.scraper'
-import { CitiboardScraper } from './scrapers/citiboard.scraper'
-import { KvdbilScraper } from './scrapers/kvdbil.scraper'
-import { SellpyScraper } from './scrapers/sellpy.scraper'
-import { ShpockScraper } from './scrapers/shpock.scraper'
-import { TraderaScraper } from './scrapers/tradera.scraper'
+import { BilwebScraper } from './Scraper/Bilweb/BilwebScraper'
+import { BlippScraper } from './Scraper/Blipp/BlippScraper'
+import { BlocketScraper } from './Scraper/Blocket/BlocketScraper'
+import { BytbilScraper } from './Scraper/Bytbil/BytbilScraper'
+import { CitiboardScraper } from './Scraper/Citiboard/CitiboardScraper'
+import { KvdBilScraper } from './Scraper/KvdBil/KvdBilScraper'
+import { SellpyScraper } from './Scraper/Sellpy/SellpyScraper'
+import { ShpockScraper } from './Scraper/Shpock/ShpockScraper'
+import { TraderaScraper } from './Scraper/Tradera/TraderaScraper'
 
 const Scrapers = [
-    BlippScraper,
-    TraderaScraper,
-    SellpyScraper,
-    BlocketScraper,
-    CitiboardScraper,
-    ShpockScraper,
-    BytbilScraper,
-    KvdbilScraper,
     BilwebScraper,
+    BlippScraper,
+    BlocketScraper,
+    BytbilScraper,
+    CitiboardScraper,
+    KvdBilScraper,
+    SellpyScraper,
+    ShpockScraper,
+    TraderaScraper,
 ]
 
 export default Scrapers

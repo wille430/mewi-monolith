@@ -4,7 +4,13 @@ export const toUnixTime = (dateObj: Date) => {
 
 export const safeToDate = (date: string | number | Date | undefined): Date | undefined => {
     if (date) {
-        return new Date(date)
+        const obj = new Date(date)
+
+        if (obj instanceof Date && isFinite(obj as any)) {
+            return obj
+        } else {
+            return undefined
+        }
     } else {
         return undefined
     }

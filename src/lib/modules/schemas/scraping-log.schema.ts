@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
 import type { IScrapingLog } from '@/common/schemas'
-import { ListingOrigin, ScraperTrigger } from '@/common/schemas'
+import { ListingOrigin } from '@/common/schemas'
 import type { Document } from 'mongoose'
 
 export type ScrapingLogDocument = ScrapingLog & Document
@@ -27,13 +27,7 @@ export class ScrapingLog implements IScrapingLog {
         type: String,
         enum: ListingOrigin,
     })
-    target!: ListingOrigin
-
-    @prop({
-        type: String,
-        enum: ScraperTrigger,
-    })
-    triggeredBy!: ScraperTrigger
+    origin!: ListingOrigin
 
     createdAt!: Date
     updatedAt!: Date

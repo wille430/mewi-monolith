@@ -1,19 +1,17 @@
 import { ListingOrigin } from '@/common/schemas'
-import { ScraperStatus, ScraperStatusReport } from '@/common/types'
+import { ScraperStatusReport } from '@/common/types'
 import type { DeleteListingsDto } from '@/lib/modules/listings/dto/delete-listings.dto'
 import { client, MutationArgs } from '..'
 import { SCRAPERS_STATUS_KEY } from './swr-keys'
 
 export const startScrapers = (scrapers: ListingOrigin[]): MutationArgs => {
     const updateFn = async (statusReports: Record<string, ScraperStatusReport>) => {
-        await client.post('/scrapers/start', {
-            scrapers,
-        })
+        throw new Error('Not implemented')
         return statusReports
     }
 
     const optimisticData = (statusReports: Record<string, ScraperStatusReport> = {}) => {
-        statusReports[scrapers[0]].status = ScraperStatus.QUEUED
+        // TODO: deprecate
         return statusReports
     }
 

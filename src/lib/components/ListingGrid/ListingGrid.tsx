@@ -33,7 +33,7 @@ const ListingGrid = () => {
             <section className={styles.grid}>
                 {hits.map((listing, i) => (
                     <ListingWidget
-                        key={i}
+                        key={listing.id}
                         onClick={() => dispatch(openListing(listing))}
                         data-testid={`listing-${i}`}
                         listing={listing}

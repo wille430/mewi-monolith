@@ -5,7 +5,6 @@ import { sv } from 'date-fns/locale'
 import { GiPauseButton } from 'react-icons/gi'
 import { BsSkipForward } from 'react-icons/bs'
 import { IoMdHammer } from 'react-icons/io'
-import StyledLoader from '../StyledLoader'
 import { Table } from '../Table/Table'
 import { Button, ButtonProps } from '../Button/Button'
 import Checkbox from '@/lib/components/Checkbox/Checkbox'
@@ -47,9 +46,7 @@ export const ScraperPanel = () => {
 
         for (const key of Object.keys(ListingOrigin)) {
             scraperStatus[key] = {
-                started: false,
                 listings_current: 0,
-                status: ScraperStatus.IDLE,
                 listings_remaining: 0,
                 last_scraped: new Date(),
             }
@@ -77,10 +74,9 @@ export const ScraperPanel = () => {
                 <Table className='table-auto'>
                     <thead>
                         <tr>
-                            <th className='w-32 text-left'>Skrapare</th>
+                            <th className='text-left'>Skrapare</th>
                             <th>Produkter</th>
                             <th>Senast skrapad</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
 
@@ -92,23 +88,16 @@ export const ScraperPanel = () => {
                             return (
                                 <tr key={key}>
                                     <td>
-                                        {scraperStatus[key as ListingOrigin].started ? (
-                                            <div className='flex items-center space-x-2'>
-                                                <StyledLoader height={16} width='1rem' />
-                                                <span>{key}</span>
-                                            </div>
-                                        ) : (
-                                            <Checkbox
-                                                label={key}
-                                                onClick={() =>
-                                                    setSelectedScrapers((prev) => ({
-                                                        ...prev,
-                                                        [key]: !selectedScrapers[key],
-                                                    }))
-                                                }
-                                                checked={selectedScrapers[key]}
-                                            />
-                                        )}
+                                        <Checkbox
+                                            label={key}
+                                            onClick={() =>
+                                                setSelectedScrapers((prev) => ({
+                                                    ...prev,
+                                                    [key]: !selectedScrapers[key],
+                                                }))
+                                            }
+                                            checked={selectedScrapers[key]}
+                                        />
                                     </td>
 
                                     <td>
@@ -128,12 +117,6 @@ export const ScraperPanel = () => {
                                                   }
                                               ).replace('ungefär', 'ca.')
                                             : 'Aldrig'}
-                                    </td>
-
-                                    <td>
-                                        <span className='flex items-center text-gray-400'>
-                                            {scraperStatusIconMap[status.status]}
-                                        </span>
                                     </td>
                                 </tr>
                             )
