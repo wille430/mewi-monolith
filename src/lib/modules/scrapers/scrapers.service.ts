@@ -17,12 +17,9 @@ export class ScrapersService {
     scrapers!: Record<ListingOrigin, Scraper<Listing>>
     endPoints!: AbstractEndPoint<Listing>[]
     endPointScraperMap!: Record<string, Scraper<Listing>>
-    /**
-     * The current index in the scraper pipeline, is null if pipeline is not running
-     * @see {@link scraperPipeline}
-     */
-    pipelineIndex: number | null = null
-    startScraperAfterMs = 60 * 60 * 1000
+
+    // 14 days
+    private DELETE_OLDER_THAN = 14 * 24 * 60 * 60 * 1000
 
     constructor(
         @inject(ListingsRepository) private listingsRepository: ListingsRepository,
@@ -51,22 +48,18 @@ export class ScrapersService {
         }, {} as typeof this.endPointScraperMap)
     }
 
-    logPipeline(total: number, msg: string) {
-        console.log(`[${this.pipelineIndex}/${total}] ${msg}`)
-    }
-
     /**
      * Scrapes the next endpoint
      */
-    async scrapeNext({ endpoint }: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
-        if (endpoint && !this.endPointScraperMap[endpoint]) {
-            throw new NotFoundException(`There is not endpoint with name ${endpoint}`)
+    async scrapeNext({ endpoint: identifier }: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
+        if (identifier && !this.endPointScraperMap[identifier]) {
+            throw new NotFoundException(`There is not endpoint with name ${identifier}`)
         }
 
-        const nextEndPoint = endpoint
-            ? this.endPoints.find((o) => o.getIdentifier() == endpoint)!
+        const endPoint = identifier
+            ? this.endPoints.find((o) => o.getIdentifier() == identifier)!
             : (await this.getNextEndPoint()) ?? this.endPoints[0]
-        const res = await nextEndPoint.scrape({
+        const res = await endPoint.scrape({
             page: 1,
         })
         const { entities } = res
@@ -78,19 +71,20 @@ export class ScrapersService {
             addedCount = count
         }
 
+        await this.removeOld(endPoint)
         await this.removeListings(entities.map(({ origin_id }) => origin_id))
 
         const log = await this.scrapingLogsRepository.create({
             addedCount,
-            entryPoint: nextEndPoint.getIdentifier(),
+            entryPoint: endPoint.getIdentifier(),
             errorCount: 0,
-            origin: this.endPointScraperMap[nextEndPoint.getIdentifier()].origin,
+            origin: this.endPointScraperMap[endPoint.getIdentifier()].origin,
         })
 
         return {
             scrapingLog: log.toObject(),
             totalCount: await this.listingsRepository.count({
-                entryPoint: nextEndPoint.getIdentifier(),
+                entryPoint: endPoint.getIdentifier(),
             }),
         }
     }
@@ -99,6 +93,15 @@ export class ScrapersService {
         return this.listingsRepository.deleteMany({
             origin_id: {
                 $in: ids,
+            },
+        })
+    }
+
+    private async removeOld(endPoint: AbstractEndPoint<Listing>) {
+        return this.listingsRepository.deleteMany({
+            entryPoint: endPoint.getIdentifier(),
+            createdAt: {
+                $lt: new Date(Date.now() - this.DELETE_OLDER_THAN),
             },
         })
     }
