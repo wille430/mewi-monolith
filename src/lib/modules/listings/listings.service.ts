@@ -35,10 +35,17 @@ export class ListingsService {
         ])) as unknown as [{ totalHits: number }]
         totalHits = totalHits[0]?.totalHits ?? 0
 
-        const hits =
+        let hits =
             hitsPipeline.length === 0
                 ? await this.listingsRepository.find({})
                 : await this.listingsRepository.aggregate(hitsPipeline)
+        hits ??= []
+
+        // aggregation will not cast _id to id apparently
+        hits = hits.map((o) => ({
+            ...o,
+            id: o._id,
+        }))
 
         return {
             filters: dto,
