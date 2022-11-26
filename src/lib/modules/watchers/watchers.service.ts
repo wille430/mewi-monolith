@@ -14,6 +14,7 @@ import type { User } from '../schemas/user.schema'
 import type { WatcherDocument } from '../schemas/watcher.schema'
 import { ListingSearchFilters } from '@/common/types'
 import { EmailTemplate } from '../email/enums/email-template.enum'
+import { NotifyUsersResult } from './dto/notify-users-result.dto'
 
 @autoInjectable()
 export class WatchersService {
@@ -71,8 +72,11 @@ export class WatchersService {
         await this.watchersRepository.findByIdAndDelete(id)
     }
 
-    async notifyAll() {
+    async notifyAll(): Promise<NotifyUsersResult> {
         const watcherCount = await this.watchersRepository.count({})
+
+        let usersNotified = 0
+        let watchersNotified = 0
 
         let i = 0
         while (watcherCount > i) {
@@ -81,10 +85,16 @@ export class WatchersService {
                 orderBy: { id: 'asc' },
             })
 
-            if (watcher) await this.notifyUsersInWatcher(watcher)
+            if (watcher) {
+                const res = await this.notifyUsersInWatcher(watcher)
+                usersNotified += res.usersNotified
+                watchersNotified += res.watchersNotified
+            }
 
             i += 1
         }
+
+        return { usersNotified, watchersNotified }
     }
 
     /**
@@ -119,18 +129,29 @@ export class WatchersService {
         return res.map(({ user }) => user)
     }
 
-    async notifyUsersInWatcher(watcherOrId: string | WatcherDocument) {
+    async notifyUsersInWatcher(watcherOrId: string | WatcherDocument): Promise<NotifyUsersResult> {
         const watcher =
             typeof watcherOrId === 'string'
                 ? await this.watchersRepository.findById(watcherOrId)
                 : watcherOrId
 
-        if (!watcher) return
+        if (!watcher)
+            return {
+                usersNotified: 0,
+                watchersNotified: 0,
+            }
 
         const users = await this.getUsersInWatcher(watcher.id)
 
+        let userCounter = 0
         for (const user of users) {
             await this.notifyUserOfWatcher(user.toString(), watcher)
+            userCounter++
+        }
+
+        return {
+            usersNotified: userCounter,
+            watchersNotified: 1,
         }
     }
 

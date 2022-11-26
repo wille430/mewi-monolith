@@ -8,6 +8,8 @@ import { Roles } from '@/lib/middlewares/roles.guard'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
+import { AdminOrKeyGuard } from '@/lib/middlewares/admin-or-key.guard'
+import { NotifyUsersResult } from './dto/notify-users-result.dto'
 
 @Controller()
 export class WatchersController {
@@ -38,6 +40,13 @@ export class WatchersController {
     @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
         return this.watchersService.findOne(id)
+    }
+
+    @Put('/notify')
+    @AdminOrKeyGuard()
+    async notify(): Promise<NotifyUsersResult> {
+        // TODO: this function call will take a long time to resolve
+        return this.watchersService.notifyAll()
     }
 
     @Put('/:id')
