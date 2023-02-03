@@ -1,16 +1,16 @@
-import { ListingOrigin } from '@/common/schemas'
-import type { FilterQuery } from 'mongoose'
-import { autoInjectable, inject } from 'tsyringe'
+import {ListingOrigin} from '@/common/schemas'
+import type {FilterQuery} from 'mongoose'
+import {autoInjectable, inject} from 'tsyringe'
 import Scrapers from './scrapers'
-import { ScrapingLogsRepository } from './scraping-logs.repository'
-import type { ScrapingLog } from '../schemas/scraping-log.schema'
-import { ListingsRepository } from '../listings/listings.repository'
-import { Scraper } from './Scraper/Scraper'
-import { Listing } from '../schemas/listing.schema'
-import { AbstractEndPoint } from './Scraper/EndPoint'
-import { ScrapeNextResult } from './dto/scrape-next-result.dto'
-import { ScrapeNextQuery } from './dto/scrape-next-query.dto'
-import { NotFoundException } from 'next-api-decorators'
+import {ScrapingLogsRepository} from './scraping-logs.repository'
+import type {ScrapingLog} from '../schemas/scraping-log.schema'
+import {ListingsRepository} from '../listings/listings.repository'
+import {Scraper} from './Scraper/Scraper'
+import {Listing} from '../schemas/listing.schema'
+import {AbstractEndPoint} from './Scraper/EndPoint'
+import {ScrapeNextResult} from './dto/scrape-next-result.dto'
+import {ScrapeNextQuery} from './dto/scrape-next-query.dto'
+import {NotFoundException} from 'next-api-decorators'
 
 @autoInjectable()
 export class ScrapersService {
@@ -51,7 +51,7 @@ export class ScrapersService {
     /**
      * Scrapes the next endpoint
      */
-    async scrapeNext({ endpoint: identifier }: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
+    async scrapeNext({endpoint: identifier}: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
         if (identifier && !this.endPointScraperMap[identifier]) {
             throw new NotFoundException(`There is not endpoint with name ${identifier}`)
         }
@@ -62,17 +62,17 @@ export class ScrapersService {
         const res = await endPoint.scrape({
             page: 1,
         })
-        const { entities } = res
+        const {entities} = res
 
         let addedCount = 0
 
         if (entities.length) {
-            const { count } = await this.listingsRepository.createMany(entities)
+            const {count} = await this.listingsRepository.createMany(entities)
             addedCount = count
         }
 
         await this.removeOld(endPoint)
-        await this.removeListings(entities.map(({ origin_id }) => origin_id))
+        await this.removeListings(entities.map(({origin_id}) => origin_id))
 
         const log = await this.scrapingLogsRepository.create({
             addedCount,
@@ -113,6 +113,7 @@ export class ScrapersService {
      */
     async getNextEndPoint(): Promise<AbstractEndPoint<Listing> | undefined> {
         const log = await this.scrapingLogsRepository.findOne(
+            {},
             {},
             {
                 sort: {

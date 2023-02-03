@@ -1,4 +1,3 @@
-import type { IListing } from '@/common/schemas'
 import type { AnimationProps, HTMLMotionProps } from 'framer-motion'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -9,9 +8,10 @@ import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'
 import { useAppDispatch } from '@/lib/hooks'
 import { openListing } from '@/lib/store/listings'
 import clsx from 'clsx'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 interface ListingRowprops extends HTMLMotionProps<'article'> {
-    listing: IListing
+    listing: ListingDto
 }
 
 export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {

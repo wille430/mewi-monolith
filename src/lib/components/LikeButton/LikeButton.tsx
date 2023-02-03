@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import type { HTMLMotionProps, Variants } from 'framer-motion'
 import { motion, useAnimation } from 'framer-motion'
-import type { IListing } from '@/common/schemas'
 import { useSWRConfig } from 'swr'
 import { setLikeListing } from '@/lib/client/listings/mutations'
 import { useUser } from '@/lib/hooks/useUser'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 export type ListingLikeButtonProps = {
-    listing: IListing
+    listing: ListingDto
     liked?: boolean
 } & HTMLMotionProps<'button'>
 

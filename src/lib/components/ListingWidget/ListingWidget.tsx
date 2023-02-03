@@ -1,6 +1,6 @@
 import { formatDistance } from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import type { IListing, ListingOrigin } from '@/common/schemas'
+import type { ListingOrigin } from '@/common/schemas'
 import type { HTMLAttributes } from 'react'
 import style from './ListingWidget.module.scss'
 import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'
@@ -9,9 +9,10 @@ import { getColor, getTextColor } from '@/lib/constants/OriginColors'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { LikeButton, ListingLikeButton } from '../LikeButton/LikeButton'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
-    listing: IListing
+    listing: ListingDto
 }
 
 export const ListingWidget = ({ listing, onClick, ...rest }: ListingProps) => {

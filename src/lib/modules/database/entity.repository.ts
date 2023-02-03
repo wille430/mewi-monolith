@@ -1,16 +1,9 @@
-import type { AggregateOptions, UpdateResult } from 'mongodb'
-import {
-    Document,
-    FilterQuery,
-    HydratedDocument,
-    Model,
-    PipelineStage,
-    Query,
-    UpdateQuery,
-} from 'mongoose'
-import type { Pagination } from './dto/pagination.dto'
-import { dbConnection } from '@/lib/dbConnection'
-import { Ref } from '@typegoose/typegoose'
+import type {AggregateOptions, UpdateResult} from 'mongodb'
+import {Document, FilterQuery, HydratedDocument, Model, PipelineStage, Query, UpdateQuery,} from 'mongoose'
+import {dbConnection} from '@/lib/dbConnection'
+import {Ref} from '@typegoose/typegoose'
+import {IPagination} from "@/lib/modules/filtering/IPagination"
+import {ISortable} from "@/lib/modules/filtering/ISortable"
 
 export type PopulationArg<T> = Partial<{
     [P in keyof T]: T[P] extends Ref<any> ? boolean : undefined
@@ -20,7 +13,8 @@ export abstract class EntityRepository<T extends Document> {
     defaultProjection = {
         __v: 0,
     }
-    constructor(protected readonly entityModel: Model<T>) {
+
+    protected constructor(protected readonly entityModel: Model<T>) {
         return new Proxy(this, {
             get(target, prop) {
                 const method = target[prop]
@@ -43,52 +37,65 @@ export abstract class EntityRepository<T extends Document> {
 
     private applyPagination<
         R extends Query<
-            // eslint-disable-next-line @typescript-eslint/ban-types
-            HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null,
-            // eslint-disable-next-line @typescript-eslint/ban-types
-            HydratedDocument<T, {}, {}> | HydratedDocument<T, {}, {}>[] | null
+            HydratedDocument<T> | HydratedDocument<T>[] | null,
+            HydratedDocument<T> | HydratedDocument<T>[] | null
         >
-    >(pagination: Pagination, query: R): R {
-        pagination?.skip && query.skip(pagination.skip)
+    >(pagination: IPagination, query: R): R {
+        const {page, limit} = pagination
+        const skip = page ? (page - 1) * (limit ?? 0) : 0
 
-        pagination?.limit && query.limit(pagination.limit)
+        query.skip(skip)
 
-        pagination?.sort && query.sort(pagination.sort)
+        limit != null && query.limit(limit)
 
+        return query
+    }
+
+
+    private applySorting<
+        R extends Query<
+            HydratedDocument<T> | HydratedDocument<T>[] | null,
+            HydratedDocument<T> | HydratedDocument<T>[] | null
+        >
+    >({sort}: ISortable, query: R): R {
+        if (sort) {
+            query.sort(sort)
+        }
         return query
     }
 
     async findOne(
         entityFilterQuery: FilterQuery<T>,
-        pagination: Pagination = {},
+        pagination: IPagination = {},
+        sorting: ISortable = {},
         projection?: Record<string, unknown>
     ): Promise<T | null> {
-        return this.applyPagination(
-            pagination,
-            this.entityModel.findOne(entityFilterQuery, {
-                ...this.defaultProjection,
-                ...projection,
-            })
-        ).exec()
+        const q = this.entityModel.findOne(entityFilterQuery, {
+            ...this.defaultProjection,
+            ...projection,
+        })
+        this.applyPagination(pagination, q)
+        this.applySorting(sorting, q)
+        return q.exec()
     }
 
     async findById(
         id: string,
-        pagination: Pagination = {},
+        pagination: IPagination = {},
         projection?: Record<string, unknown>
     ): Promise<T | null> {
-        return this.applyPagination(
-            pagination,
-            this.entityModel.findById(id, {
-                ...this.defaultProjection,
-                ...projection,
-            })
-        ).exec()
+        const q = this.entityModel.findById(id, {
+            ...this.defaultProjection,
+            ...projection,
+        })
+
+        this.applyPagination(pagination, q)
+        return q.exec()
     }
 
     async find(
         entityFilterQuery: FilterQuery<T>,
-        pagination: Pagination = {},
+        pagination: IPagination = {},
         populate: PopulationArg<T> = {} as any
     ): Promise<T[] | null> {
         const query = this.entityModel.find(entityFilterQuery, {
@@ -159,7 +166,7 @@ export abstract class EntityRepository<T extends Document> {
     async sample(count: number) {
         const totalDocs = await this.entityModel.count({})
 
-        const randomNums = Array.from({ length: Math.min(count, totalDocs) }, () =>
+        const randomNums = Array.from({length: Math.min(count, totalDocs)}, () =>
             Math.floor(Math.random() * (totalDocs - 1))
         )
 
@@ -168,7 +175,7 @@ export abstract class EntityRepository<T extends Document> {
 
         for (const i of randomNums) {
             if (!addedDocNums.includes(i)) {
-                const entity = await this.findOne({}, { skip: i })
+                const entity = await this.entityModel.findOne().skip(i).exec()
 
                 if (entity) randomDocs.push(entity)
                 addedDocNums.push(i)

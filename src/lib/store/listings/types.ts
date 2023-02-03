@@ -1,11 +1,11 @@
-import type { IListing } from '@/common/schemas'
 import type { ResourceType } from '..'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 export interface ListingsState {
-    opened?: IListing
-    featured: IListing[]
+    opened?: ListingDto
+    featured: ListingDto[]
     search: ResourceType & {
-        hits: IListing[] | null
+        hits: ListingDto[] | null
         totalHits: number
     }
 }

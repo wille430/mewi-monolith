@@ -1,6 +1,7 @@
-import type { Document } from 'mongoose'
-import { Currency, Category, ListingOrigin } from '@/common/schemas'
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import type {Document, Model} from 'mongoose'
+import {Currency, Category, ListingOrigin} from '@/common/schemas'
+import {getModelForClass, prop} from '@typegoose/typegoose'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 export type ListingDocument = Listing & Document
 
@@ -113,13 +114,49 @@ export class Listing {
 
     createdAt!: Date
     updatedAt!: Date
+
+    public convertToDto(this: Listing): ListingDto {
+        return {
+            auctionEnd: this.auctionEnd,
+            body: this.body,
+            category: this.category,
+            date: this.date,
+            id: this.id,
+            imageUrl: this.imageUrl,
+            isAuction: this.isAuction,
+            origin: this.origin,
+            parameters: this.parameters,
+            price: this.price,
+            redirectUrl: this.redirectUrl,
+            region: this.region,
+            title: this.title
+        }
+    }
+
+    public static convertToDto(obj: Listing): ListingDto {
+        return {
+            auctionEnd: obj.auctionEnd,
+            body: obj.body,
+            category: obj.category,
+            date: obj.date,
+            id: obj.id,
+            imageUrl: obj.imageUrl,
+            isAuction: obj.isAuction,
+            origin: obj.origin,
+            parameters: obj.parameters,
+            price: obj.price,
+            redirectUrl: obj.redirectUrl,
+            region: obj.region,
+            title: obj.title
+        }
+    }
 }
 
 export const ListingModel = getModelForClass(Listing, {
     schemaOptions: {
         id: true,
         timestamps: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true},
     },
 })

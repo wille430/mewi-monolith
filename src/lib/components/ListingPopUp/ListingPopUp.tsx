@@ -1,24 +1,24 @@
-import type { IListing } from '@/common/schemas'
-import { FiX } from 'react-icons/fi'
+import {FiX} from 'react-icons/fi'
 import clsx from 'clsx'
 import styles from './ListingPopUp.module.scss'
 import Description from './Description/Description'
-import { Container } from '../Container/Container'
-import { OriginLabel } from '../OriginLabel/OriginLabel'
-import { PopUp } from '../PopUp/PopUp'
+import {Container} from '../Container/Container'
+import {OriginLabel} from '../OriginLabel/OriginLabel'
+import {PopUp} from '../PopUp/PopUp'
 import DefaultImage from '../DefaultImage/DefaultImage'
-import { Button } from '../Button/Button'
-import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
-import { CategoryPathLabel } from '@/lib/components/CategoryPathLabel/CategoryPathLabel'
+import {Button} from '../Button/Button'
+import {HorizontalLine} from '../HorizontalLine/HorizontalLine'
+import {CategoryPathLabel} from '@/lib/components/CategoryPathLabel/CategoryPathLabel'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 interface ListingPopUp {
     onClose?: () => void
-    listing: IListing
+    listing: ListingDto
 }
 
 // TODO: disable scroll outside element
-const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
-    const { category, imageUrl, title, body, region, price, origin, parameters, redirectUrl } =
+const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
+    const {category, imageUrl, title, body, region, price, origin, parameters, redirectUrl} =
         listing
     const handleClose = () => {
         onClose && onClose()
@@ -33,16 +33,16 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                             [styles.categoryPath]: true,
                         })}
                     >
-                        <CategoryPathLabel category={category} />
+                        <CategoryPathLabel category={category}/>
                     </span>
                     <span>
-                        <Button onClick={handleClose} variant='text' size='lg' icon={<FiX />} />
+                        <Button onClick={handleClose} variant="text" size="lg" icon={<FiX/>}/>
                     </span>
                 </Container.Header>
-                <Container.Content className='flex flex-grow flex-col'>
+                <Container.Content className="flex flex-grow flex-col">
                     <div className={clsx(styles['image-wrapper'], 'relative')}>
                         {/* TODO: Implement image carousel */}
-                        <DefaultImage src={imageUrl[0]} alt={listing.title} />
+                        <DefaultImage src={imageUrl[0]} alt={listing.title}/>
                     </div>
                     <article className={styles.content}>
                         <InfoHeader
@@ -52,55 +52,55 @@ const ListingPopUp = ({ onClose, listing }: ListingPopUp) => {
                             redirectUrl={redirectUrl}
                             origin={origin}
                         />
-                        <HorizontalLine />
+                        <HorizontalLine/>
                         <div className={styles['info-body']}>
-                            <DescriptionView body={body} />
-                            <HorizontalLine />
-                            <SpecificationsView parameters={parameters ?? []} />
+                            <DescriptionView body={body}/>
+                            <HorizontalLine/>
+                            <SpecificationsView parameters={parameters ?? []}/>
                         </div>
                     </article>
                 </Container.Content>
-                <Container.Footer />
+                <Container.Footer/>
             </Container>
         </PopUp>
     )
 }
 
-const DescriptionView = ({ body }) => (
+const DescriptionView = ({body}) => (
     <div data-content-length={body?.length ?? 0} className={clsx('box', styles.description)}>
         <h4>Beskrivning</h4>
-        <Description text={body || ''} />
+        <Description text={body || ''}/>
     </div>
 )
 
 export default ListingPopUp
 
-const SpecificationsView = ({ parameters }) =>
+const SpecificationsView = ({parameters}) =>
     parameters.length ? (
         <aside className={clsx('box', styles['specs'])}>
             <h4>Specifikationer</h4>
             <table className={styles['specs-table']}>
                 <tbody>
-                    {parameters?.map(({ label, value }) => (
-                        <tr key={value}>
-                            <td>{label}:</td>
-                            <td>{value}</td>
-                        </tr>
-                    ))}
+                {parameters?.map(({label, value}) => (
+                    <tr key={value}>
+                        <td>{label}:</td>
+                        <td>{value}</td>
+                    </tr>
+                ))}
                 </tbody>
             </table>
         </aside>
     ) : (
-        <aside className={styles['specs-hidden']} />
+        <aside className={styles['specs-hidden']}/>
     )
 
 const InfoHeader = ({
-    region,
-    title,
-    price,
-    redirectUrl,
-    origin,
-}: Pick<IListing, 'region' | 'title' | 'price' | 'redirectUrl' | 'origin'>) => {
+                        region,
+                        title,
+                        price,
+                        redirectUrl,
+                        origin,
+                    }: Pick<ListingDto, 'region' | 'title' | 'price' | 'redirectUrl' | 'origin'>) => {
     const handleRedirect = () => {
         window.open(redirectUrl)
     }
@@ -117,8 +117,8 @@ const InfoHeader = ({
                 )}
             </div>
             <div>
-                <OriginLabel origin={origin} />
-                <Button label='Till artikeln >>' size='lg' onClick={handleRedirect} />
+                <OriginLabel origin={origin}/>
+                <Button label="Till artikeln >>" size="lg" onClick={handleRedirect}/>
             </div>
         </header>
     )
