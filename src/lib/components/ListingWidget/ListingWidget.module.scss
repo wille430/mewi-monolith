@@ -6,7 +6,7 @@ $like-button-padding: 0.25rem;
 $fade-transition: all 150ms linear;
 
 .card {
-    @apply border-2 rounded-sm bg-paper;
+    @apply border border-gray-300 rounded-md bg-paper;
     width: 16rem;
     height: 16rem;
     cursor: pointer;
@@ -28,11 +28,13 @@ $fade-transition: all 150ms linear;
 }
 
 .image-wrapper {
+    @apply bg-gray-300;
     flex-grow: 1;
-    height: auto;
     overflow: hidden;
 
-    img {
+    & > img {
+        height: 100%;
+        width: 100%;
         object-fit: cover;
     }
 }

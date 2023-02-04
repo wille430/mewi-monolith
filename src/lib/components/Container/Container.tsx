@@ -7,7 +7,8 @@ export type ContainerProps = HTMLAttributes<HTMLDivElement>
 export const Container = ({ className, children, ...rest }: ContainerProps) => (
     <section
         className={clsx({
-            [styles['container']]: true,
+            [styles.container]: true,
+            ["container card"]: true,
             [className ?? '']: !!className,
         })}
         {...rest}

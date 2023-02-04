@@ -2,6 +2,7 @@ import { Category , CategoryLabel } from '@/common/schemas'
 import Link from 'next/link'
 import styles from './Footer.module.scss'
 import { Arch } from '../Arch/Arch'
+import clsx from "clsx"
 
 export const Footer = () => {
     return (
@@ -10,7 +11,7 @@ export const Footer = () => {
                 <Arch />
             </div>
             <footer className={styles.footer}>
-                <div className={styles['inner-footer']}>
+                <div className={clsx(styles['inner-footer'], "container")}>
                     <ul className={styles['link-list']}>
                         <li>
                             <Link href='/'>Hem</Link>
@@ -38,7 +39,7 @@ export const Footer = () => {
                     </ul>
                     <ul className={styles['link-list']}>
                         <li>
-                            <Link href='/minasidor'>Mina sidor</Link>
+                            <Link href='/minasidor/bevakningar'>Mina sidor</Link>
                         </li>
                         <li>
                             <Link href='/minasidor/bevakningar'>Bevakningar</Link>

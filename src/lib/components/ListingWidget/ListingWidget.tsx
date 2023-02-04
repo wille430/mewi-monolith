@@ -82,7 +82,7 @@ export const ListingWidget = ({listing, onClick, ...rest}: ListingProps) => {
 const OriginTag = ({origin}: { origin: ListingOrigin }) => {
     return (
         <div
-            className={`absolute top-0 left-0 py-0.5 pr-3 pl-1  text-xs font-bold z-10`}
+            className={`absolute top-0 left-0 py-0.5 pr-3 pl-1  text-xs font-bold z-1`}
             style={{
                 backgroundColor: getColor(origin),
                 color: getTextColor(origin),

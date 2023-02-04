@@ -15,6 +15,10 @@ $layout-width: theme('screens.lg');
         @apply mx-auto  overflow-hidden rounded-md border-2 border-gray-300 bg-white p-4;
     }
 
+    .container {
+        @apply mx-auto;
+    }
+
     .btn-group {
         @apply flex space-x-4 md:justify-center;
     }
@@ -98,7 +102,7 @@ caption {
 }
 
 body {
-    background-color: theme('colors.gray.200');
+    background-color: theme('backgroundColor.white');
 }
 
 .basic-layout {
@@ -110,7 +114,7 @@ body {
         grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
         display: grid;
         max-width: none;
-        margin: none;
+        margin: 0;
     }
 
     & > main {
@@ -119,7 +123,9 @@ body {
 }
 
 .search-layout {
+    @apply container;
     @extend .basic-layout;
+    @apply gap-8;
 
     @screen md {
         grid-template-columns: 16rem 1fr;
@@ -127,7 +133,7 @@ body {
     }
 
     @screen xl {
-        grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
+        grid-template-columns: theme('maxWidth.xxs') auto;
     }
 }
 
@@ -146,8 +152,7 @@ body {
 }
 
 .card {
-    @apply section w-full max-w-none rounded p-0;
-    display: flex;
+    @apply border border-gray-300 p-4 rounded bg-paper;
     justify-content: space-between;
     align-items: stretch;
 

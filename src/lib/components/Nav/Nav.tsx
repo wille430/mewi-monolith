@@ -72,7 +72,7 @@ export const Nav = () => {
     }, [isDrawer, mobileOpen])
 
     return (
-        <nav className={styles.nav}>
+        <nav className={clsx(styles.nav, "container")}>
             <motion.a
                 variants={logoVariants}
                 animate={showLogo ? 'show' : 'hidden'}
@@ -125,7 +125,6 @@ export const NavListLink = ({
 }: NavLink & { variants?: Variants; onExpand?: () => any; expand?: boolean }) => {
     const state = useAppSelector((state) => state)
     const dispatch = useAppDispatch()
-    const router = useRouter()
 
     let shouldRender = true
 

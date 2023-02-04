@@ -17,7 +17,7 @@ export const SearchSection = () => {
     const { totalHits = 0 } = data ?? {}
 
     return (
-        <section className='flex h-full w-full flex-col'>
+        <section>
             <div ref={scrollUpRef} />
             <div className='my-4 flex justify-between'>
                 <ListingResultText totalHits={totalHits} />

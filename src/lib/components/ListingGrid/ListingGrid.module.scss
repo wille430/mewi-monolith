@@ -1,5 +1,5 @@
 .grid {
-    @apply mx-auto flex w-full flex-none flex-wrap justify-center gap-4;
+    @apply mx-auto flex w-full flex-wrap gap-4;
 
     & > * {
         aspect-ratio: 1 / 1;
@@ -20,10 +20,6 @@
             height: auto !important;
         }
     }
-}
-
-.section {
-    min-height: 24rem;
 }
 
 .center {

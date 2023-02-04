@@ -25,7 +25,7 @@ export const SideFilters = () => {
     }, [filters])
 
     return (
-        <aside className='ml-auto md:max-w-xxs'>
+        <aside className='md'>
             <Container className='flex space-y-4'>
                 <h3>Filter</h3>
 

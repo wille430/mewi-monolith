@@ -16,11 +16,11 @@ export const DisplayListingsRow = (params: DisplayListingsRowParams) => {
     const {listings, title, showMoreHref} = params
 
     return (
-        <Container className={style.container}>
+        <Container className="container">
             <div className="flex justify-between">
                 <h4>{title}</h4>
                 {showMoreHref && <a href={showMoreHref}>
-                    <span>Visa mer ${"==>"}</span>
+                    <span>Visa mer {"==>"}</span>
                 </a>}
             </div>
             {listings == null || listings.length === 0 ? (

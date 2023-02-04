@@ -8,19 +8,19 @@ const SortButton = () => {
     const options: { label: string; value: ListingSort }[] = [
         { label: 'Relevans', value: ListingSort.RELEVANCE },
         {
-            label: 'Pris fallande',
+            label: 'Högsta pris',
             value: ListingSort.PRICE_DESC,
         },
         {
-            label: 'Pris stigande',
+            label: 'Lägsta pris',
             value: ListingSort.PRICE_ASC,
         },
         {
-            label: 'Datum stigande',
+            label: 'Äldsta',
             value: ListingSort.DATE_ASC,
         },
         {
-            label: 'Datum fallande',
+            label: 'Senaste',
             value: ListingSort.DATE_DESC,
         },
     ]

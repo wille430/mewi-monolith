@@ -5,6 +5,7 @@ module.exports = {
         "./src/lib/components/**/*.{js,ts,jsx,tsx}",
     ],
     plugins: [require('tailwind-scrollbar')],
+    purge: true,
     theme: {
         extend: {
             colors: {
@@ -20,7 +21,7 @@ module.exports = {
                 },
                 primary: '#253C4C',
                 secondary: '#4CEB74',
-                paper: '#ebebeb',
+                paper: '#ffffff',
             },
             gridTemplateColumns: {
                 'fit-12': 'repeat(auto-fit, minmax(12rem, 1fr))',
