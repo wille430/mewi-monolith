@@ -59,6 +59,10 @@ export class ScrapersService {
         const endPoint = identifier
             ? this.endPoints.find((o) => o.getIdentifier() == identifier)!
             : (await this.getNextEndPoint()) ?? this.endPoints[0]
+
+
+        await this.removeOld()
+
         const res = await endPoint.scrape({
             page: 1,
         })
@@ -71,7 +75,6 @@ export class ScrapersService {
             addedCount = count
         }
 
-        await this.removeOld(endPoint)
         await this.removeListings(entities.map(({origin_id}) => origin_id))
 
         const log = await this.scrapingLogsRepository.create({
@@ -97,11 +100,10 @@ export class ScrapersService {
         })
     }
 
-    private async removeOld(endPoint: AbstractEndPoint<Listing>) {
+    private async removeOld() {
         return this.listingsRepository.deleteMany({
-            entryPoint: endPoint.getIdentifier(),
             createdAt: {
-                $lt: new Date(Date.now() - this.DELETE_OLDER_THAN),
+                $lt: new Date(Date.now() - this.DELETE_OLDER_THAN).toISOString(),
             },
         })
     }

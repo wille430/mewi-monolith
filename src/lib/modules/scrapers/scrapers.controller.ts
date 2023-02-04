@@ -1,5 +1,5 @@
 import { Role } from '@/common/schemas'
-import { Body, HttpCode, Post, Put, Query } from 'next-api-decorators'
+import {Body, HttpCode, Post, Put, Query} from 'next-api-decorators'
 import { inject } from 'tsyringe'
 import { GetLogsDto } from './dto/get-logs.dto'
 import { ScrapersService } from './scrapers.service'
