@@ -1,16 +1,16 @@
 import styles from './ListingGrid.module.scss'
-import { ListingWidget } from '../ListingWidget/ListingWidget'
+import {ListingWidget} from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
-import { useAppDispatch } from '@/lib/hooks'
-import { openListing } from '@/lib/store/listings'
-import { useListingsSearch } from '@/lib/hooks/useListingsResult'
+import {useAppDispatch} from '@/lib/hooks'
+import {openListing} from '@/lib/store/listings'
+import {useListingsSearch} from '@/lib/hooks/useListingsResult'
 import clsx from 'clsx'
 
 const ListingGrid = () => {
     const dispatch = useAppDispatch()
-    const { data, error } = useListingsSearch()
+    const {data, error} = useListingsSearch()
     const isLoading = !data
-    const { hits } = data ?? {}
+    const {hits} = data ?? {}
 
     if (isLoading) {
         return (
@@ -19,7 +19,7 @@ const ListingGrid = () => {
                     [styles.center]: true,
                 })}
             >
-                <StyledLoader />
+                <StyledLoader/>
             </section>
         )
     } else if (error) {
@@ -43,7 +43,7 @@ const ListingGrid = () => {
         )
     } else {
         return (
-            <section className={clsx({ [styles.center]: true, [styles.section]: true })}>
+            <section className={clsx({[styles.center]: true, [styles.section]: true})}>
                 <span>Inget resultat hittades för din sökning.</span>
             </section>
         )

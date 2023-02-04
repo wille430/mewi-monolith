@@ -14,7 +14,7 @@ const DefaultImage = ({
 
     useEffect(() => {
         imgRef.current.src = src
-    }, [])
+    }, [src])
 
     // eslint-disable-next-line @next/next/no-img-element
     return <img ref={imgRef} onError={replaceImg} loading='lazy' {...props} />

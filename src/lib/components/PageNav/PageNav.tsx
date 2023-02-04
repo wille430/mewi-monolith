@@ -11,7 +11,7 @@ interface PageNavProps {
 }
 
 const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
-    const { setDebouncedFilters: setFilters, filters } = useSearchContext<ListingSearchFilters>()
+    const { setFilters, filters } = useSearchContext<ListingSearchFilters>()
 
     const totalPages = useMemo(() => Math.ceil(totalHits / 24) ?? 1, [totalHits])
 
@@ -97,7 +97,7 @@ const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
     RenderButtons.displayName = 'Buttons'
 
     const changePage = (increment: number) => {
-        const newPage = filters.page ?? 1 + increment
+        const newPage = (filters.page ?? 1) + increment
         if (newPage <= totalPages && newPage >= 1) {
             scrollToAnchorEle()
             setFilters((prev) => ({ ...prev, page: newPage }))
