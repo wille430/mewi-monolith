@@ -27,7 +27,7 @@ export const SideFilters = () => {
     return (
         <aside className='md'>
             <Container className='flex space-y-4'>
-                <h3>Filter</h3>
+                <h4>Filtrera</h4>
 
                 <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:block md:space-y-4'>
                     <ListingSearchForm

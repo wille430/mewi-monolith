@@ -186,7 +186,7 @@ export class ListingsService {
 
         switch (field) {
             case 'keyword':
-                pipeline.push(
+                pipeline.splice(0, 0,
                     process.env.DATABASE_URI.includes('localhost') &&
                     process.env.NODE_ENV === 'development'
                         ? {
@@ -216,7 +216,7 @@ export class ListingsService {
                             score: {$meta: 'searchScore'},
                         },
                     },
-                    {$match: {score: {$gte: MIN_SEARCH_SCORE}}},
+                    {$match: {score: {$gte: MIN_SEARCH_SCORE}}}
                 )
                 break
             case 'auction':
@@ -246,7 +246,7 @@ export class ListingsService {
                 break
             case 'region':
                 const regions = value
-                    .split(/(\.|,| )? /i)
+                    .split(/([., ])? /i)
                     .filter((x: string) => !!x && !new RegExp(/^,$/).test(x))
                     .map((x: string) => x.trim())
 

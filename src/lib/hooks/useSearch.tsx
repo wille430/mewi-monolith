@@ -1,19 +1,17 @@
-import { ListingSearchFilters } from '@/common/types'
 import differenceWith from 'lodash/differenceWith'
 import toPairs from 'lodash/toPairs'
 import flow from 'lodash/flow'
-import isEmpty from 'lodash/isEmpty'
 import isEqual from 'lodash/isEqual'
 import isFunction from 'lodash/isFunction'
-import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
-import Router, { useRouter } from 'next/router'
-import { stringify } from 'query-string'
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { ObjectSchema } from 'yup'
-import { useDebounce } from './useDebounce'
-import { FormikProvider, useFormik } from 'formik'
+import {useRouter} from 'next/router'
+import {stringify} from 'query-string'
+import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
+import {ObjectSchema} from 'yup'
+import {useDebounce} from './useDebounce'
+import {FormikProvider, useFormik} from 'formik'
 import noop from 'lodash/noop'
+import {ParsedUrlQuery} from "querystring"
 
 export type UseSearchOptions<T = Record<string, never>> = {
     exclude?: Partial<T>
@@ -30,7 +28,7 @@ export const useSearch = <T extends Record<string, any>>(
     schema: ObjectSchema<any, any>,
     options: UseSearchOptions<T> = {}
 ) => {
-    const { defaultValue } = options
+    const {defaultValue} = options
     const router = useRouter()
     const [hasParsedQuery, setHasParsedQuery] = useState(false)
 
@@ -38,59 +36,46 @@ export const useSearch = <T extends Record<string, any>>(
         initialValues: (defaultValue ?? {}) as T,
         onSubmit: noop,
     })
-    const { values, setValues } = formik
+    const {values: filters, setValues: setFilters} = formik
+
+    // Get filters from query
+    useEffect(() => {
+        setFilters(parseQuery(router.query))
+        setHasParsedQuery(true)
+    }, [router.query])
+
+    const parseQuery = (urlQuery: ParsedUrlQuery): T => {
+        return setDefaults(schema.cast(urlQuery))
+    }
+
+    useEffect(() => {
+        if (!hasParsedQuery) return
+
+        if (isEqual(parseQuery(router.query), filters)) {
+            return
+        }
+
+        (async () => {
+            await router.push(
+                {
+                    query: stringify(filters),
+                },
+                undefined,
+                {
+                    shallow: true,
+                }
+            )
+        })()
+
+    }, [filters])
 
     /**
      * Debounced values
      */
     const [debouncedIsReady] = useDebounce(hasParsedQuery, 1000)
-    const [debouncedFilters, setDebouncedFilters] = useDebounce(values, undefined, {
-        setInputValue: setValues,
+    const [debouncedFilters, setDebouncedFilters] = useDebounce(filters, undefined, {
+        setInputValue: setFilters,
     })
-
-    const isSame = (obj1: any, obj2: any) => {
-        return stringify(obj1) === stringify(obj2)
-    }
-
-    const updateQuery = () => {
-        router.push(
-            {
-                query: stringify(values),
-            },
-            undefined,
-            {
-                shallow: true,
-            }
-        )
-    }
-
-    const queryParams = pick(router.query, Object.keys(ListingSearchFilters))
-    /**
-     * Before url is manipulated elsewhere, this block will set filters
-     * from query params
-     */
-    useEffect(() => {
-        if (!Router.isReady || hasParsedQuery || (isEmpty(Router.query) && !router.isReady)) {
-            return
-        }
-
-        setValues({
-            ...defaultValue,
-            ...(schema.cast(Router.query) as any),
-        })
-
-        setHasParsedQuery(true)
-    }, [queryParams])
-
-    useEffect(() => {
-        if (!hasParsedQuery || isEmpty(values) || isSame(values, router.query)) {
-            return
-        }
-
-        updateQuery()
-    }, [values])
-
-    const oldFilters = useRef(values)
 
     /**
      * Used in composition with setFilters to set values to defaults
@@ -98,18 +83,17 @@ export const useSearch = <T extends Record<string, any>>(
      * the page value could be set page to 1 every time the keyword
      * changes.
      */
-    const setDefaults = (...args: Parameters<typeof setValues>) => {
-        const newFilters = isFunction(args[0]) ? args[0](values) : args[0]
+    const setDefaults = (...args: Parameters<typeof setFilters>) => {
+        const newFilters = isFunction(args[0]) ? args[0](filters) : args[0]
 
         const diff = fromPairs(
-            differenceWith(toPairs(newFilters), toPairs(oldFilters.current), isEqual)
+            differenceWith(toPairs(newFilters), toPairs(filters), isEqual)
         )
         const diffKeys = Object.keys(diff)
 
         if (!(diffKeys.length === 1 && diffKeys.some((val) => val in (defaultValue ?? {})))) {
             Object.assign(newFilters, defaultValue)
         }
-        oldFilters.current = newFilters
 
         return newFilters
     }
@@ -118,7 +102,7 @@ export const useSearch = <T extends Record<string, any>>(
         formik,
         filters: debouncedFilters,
         setDebouncedFilters,
-        setFilters: flow(setDefaults, setValues),
+        setFilters: flow(setDefaults, setFilters),
         isReady: debouncedIsReady,
     }
 }
@@ -129,7 +113,7 @@ type SearchProviderProps = {
 }
 
 export const SearchProvider = (props: SearchProviderProps) => {
-    const { children, search } = props
+    const {children, search} = props
     const value = useSearch(...search)
 
     return (

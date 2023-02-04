@@ -4,6 +4,7 @@ import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
 import { useSearchContext } from '@/lib/hooks/useSearch'
 import { ListingSearchFilters } from '@/common/types'
+import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants"
 
 interface PageNavProps {
     anchorEle?: MutableRefObject<HTMLDivElement | null>
@@ -11,12 +12,12 @@ interface PageNavProps {
 }
 
 const PageNav = ({ anchorEle, totalHits = 0 }: PageNavProps) => {
-    const { setFilters, filters } = useSearchContext<ListingSearchFilters>()
+    const { setDebouncedFilters: setFilters, filters } = useSearchContext<ListingSearchFilters>()
 
-    const totalPages = useMemo(() => Math.ceil(totalHits / 24) ?? 1, [totalHits])
+    const totalPages = useMemo(() => Math.ceil(totalHits / DEFAULT_LIMIT) ?? 1, [totalHits])
 
     const scrollToAnchorEle = () =>
-        anchorEle?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        anchorEle?.current?.scrollIntoView({ behavior: 'auto', block: 'center' })
 
     const RenderButtons = memo(() => {
         const maxNumButtons = 5
