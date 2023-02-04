@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { closeListing, openListing, searchListings, setFeatured } from './creators'
+import { closeListing, openListing, searchListings } from './creators'
 import type { ListingsState } from './types'
 
 const initialState: ListingsState = {
-    featured: [],
     search: {
         hits: null,
         totalHits: 0,
@@ -23,9 +22,6 @@ export const listingsSlice = createSlice({
             })
             .addCase(closeListing, (state) => {
                 state.opened = undefined
-            })
-            .addCase(setFeatured, (state, action) => {
-                state.featured = action.payload
             })
             .addCase(searchListings.pending, (state: ListingsState) => {
                 state.search = {

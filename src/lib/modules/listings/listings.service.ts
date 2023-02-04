@@ -171,6 +171,10 @@ export class ListingsService {
         return
     }
 
+    public async getFeatured() {
+        return this.sample(8)
+    }
+
     private applyFieldsFilter(dto: Partial<FindAllListingsDto>, pipeline: PipelineStage[]) {
         for (const kv of Object.entries(dto)) {
             this.applyFieldFilter(kv[0], kv[1], pipeline)
@@ -265,5 +269,15 @@ export class ListingsService {
             default:
                 break
         }
+    }
+
+    async getRecent() {
+        const listings = await this.listingsRepository.find({}, {
+            sort: {
+                date: -1
+            },
+            limit: 8
+        })
+        return listings ?? []
     }
 }

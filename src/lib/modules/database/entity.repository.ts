@@ -95,7 +95,7 @@ export abstract class EntityRepository<T extends Document> {
 
     async find(
         entityFilterQuery: FilterQuery<T>,
-        pagination: IPagination = {},
+        pagination: IPagination & ISortable = {},
         populate: PopulationArg<T> = {} as any
     ): Promise<T[] | null> {
         const query = this.entityModel.find(entityFilterQuery, {
@@ -108,7 +108,10 @@ export abstract class EntityRepository<T extends Document> {
             }
         }
 
-        return this.applyPagination(pagination, query).exec()
+        this.applyPagination(pagination, query)
+        this.applySorting(pagination, query)
+
+        return await query.exec()
     }
 
     async create(createEntityData: unknown): Promise<T> {

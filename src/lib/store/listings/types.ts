@@ -3,7 +3,6 @@ import {ListingDto} from "@/common/dtos/ListingDto"
 
 export interface ListingsState {
     opened?: ListingDto
-    featured: ListingDto[]
     search: ResourceType & {
         hits: ListingDto[] | null
         totalHits: number

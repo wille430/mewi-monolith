@@ -13,15 +13,6 @@ export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listi
 
 export const closeListing = createAction(ListingsActionTypes.CLOSE_LISTING)
 
-export const setFeatured = createAction(
-    ListingsActionTypes.SET_FEATURED,
-    (listings: ListingDto[] = []) => {
-        return {
-            payload: listings,
-        }
-    }
-)
-
 export const searchListings = createAsyncThunk(
     ListingsActionTypes.FETCH_SEARCH,
     async (filters: ListingSearchFilters, thunkAPI) => {
