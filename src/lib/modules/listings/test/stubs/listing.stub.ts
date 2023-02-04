@@ -1,9 +1,10 @@
-import { faker } from '@faker-js/faker'
-import { Category, Currency, ListingOrigin } from '@/common/schemas'
-import type { WithId } from 'mongodb'
+import {faker} from '@faker-js/faker'
+import {Category, Currency, ListingOrigin} from '@/common/schemas'
+import type {WithId} from 'mongodb'
 import mongoose from 'mongoose'
-import { Listing } from '@/lib/modules/schemas/listing.schema'
-import { timestampsStub } from '@/test/stubs/timestamps.stub'
+import {Listing} from '@/lib/modules/schemas/listing.schema'
+import {timestampsStub} from '@/test/stubs/timestamps.stub'
+import {ListingDto} from "@/common/dtos/ListingDto"
 
 const id = faker.database.mongodbObjectId()
 const date = new Date()
@@ -24,4 +25,7 @@ export const listingStub = (): WithId<Listing> => ({
     },
     entryPoint: '/',
     ...timestampsStub(),
+    convertToDto(this: Listing): ListingDto {
+        return Listing.convertToDto(this)
+    }
 })

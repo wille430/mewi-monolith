@@ -1,7 +1,6 @@
 import {ISortable} from "@/lib/modules/filtering/ISortable"
 import {IPagination} from "@/lib/modules/filtering/IPagination"
 import {PipelineStage} from "mongoose"
-import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants"
 import {autoInjectable} from "tsyringe"
 
 

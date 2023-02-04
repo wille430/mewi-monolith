@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const DATABASE_URI = process.env.DATABASE_URI
 
 if (!DATABASE_URI) {
-    throw new Error('Environment variable DATABSE_URI is not defined')
+    throw new Error('Environment variable DATABASE_URI is not defined')
 }
 
 let cached: any
