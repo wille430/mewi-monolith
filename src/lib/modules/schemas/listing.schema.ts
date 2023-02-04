@@ -1,4 +1,4 @@
-import type {Document, Model} from 'mongoose'
+import type {Document} from 'mongoose'
 import {Currency, Category, ListingOrigin} from '@/common/schemas'
 import {getModelForClass, prop} from '@typegoose/typegoose'
 import {ListingDto} from "@/common/dtos/ListingDto"
@@ -61,10 +61,10 @@ export class Listing {
     date!: Date
 
     @prop({
-        type: String,
         required: true,
+        type: String,
         validate:
-            /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/,
+            /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_+.~#?&/=]*$/,
     })
     redirectUrl!: string
 
