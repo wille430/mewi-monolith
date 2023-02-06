@@ -5,6 +5,9 @@ import { WatcherMetadata } from './class/WatcherMetadata'
 export type WatcherDocument = Watcher & Document
 
 export class Watcher {
+
+    id!: string
+
     // TODO: define metadata
     @prop({
         _id: false,

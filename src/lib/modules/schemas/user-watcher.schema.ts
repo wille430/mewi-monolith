@@ -1,9 +1,9 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
-import type { Ref } from '@typegoose/typegoose'
-import type { Document } from 'mongoose'
+import {getModelForClass, prop} from '@typegoose/typegoose'
+import type {Ref} from '@typegoose/typegoose'
+import type {Document} from 'mongoose'
 import mongoose from 'mongoose'
-import { User } from './user.schema'
-import { Watcher } from './watcher.schema'
+import {User} from './user.schema'
+import {Watcher} from './watcher.schema'
 
 export type UserWatcherDocument = UserWatcher & Document
 
@@ -22,7 +22,7 @@ export class UserWatcher {
         ref: User.name,
         required: true,
     })
-    user!: User
+    user!: Ref<User>
 
     @prop(Date)
     notifiedAt?: Date
@@ -35,7 +35,7 @@ export const UserWatcherModel = getModelForClass(UserWatcher, {
     schemaOptions: {
         id: true,
         timestamps: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true},
     },
 })

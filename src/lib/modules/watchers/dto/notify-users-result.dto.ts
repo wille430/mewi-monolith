@@ -1,4 +1,4 @@
 export class NotifyUsersResult {
-    usersNotified!: number
-    watchersNotified!: number
+    usersNotified = 0
+    watchersNotified = 0
 }

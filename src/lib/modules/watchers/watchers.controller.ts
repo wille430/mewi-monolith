@@ -1,19 +1,23 @@
-import { Role } from '@/common/schemas'
-import { Body, Delete, Get, HttpCode, Param, Post, Put, Query } from 'next-api-decorators'
-import { inject } from 'tsyringe'
-import { WatchersService } from './watchers.service'
-import { CreateWatcherDto } from './dto/create-watcher.dto'
-import { UpdateWatcherDto } from './dto/update-watcher.dto'
-import { Roles } from '@/lib/middlewares/roles.guard'
-import { Controller } from '@/lib/decorators/controller.decorator'
-import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
-import { FindAllWatchersDto } from './dto/find-all-watchers.dto'
-import { AdminOrKeyGuard } from '@/lib/middlewares/admin-or-key.guard'
-import { NotifyUsersResult } from './dto/notify-users-result.dto'
+import {Role} from '@/common/schemas'
+import {Body, Delete, Get, HttpCode, Param, Post, Put, Query} from 'next-api-decorators'
+import {inject} from 'tsyringe'
+import {WatchersService} from './watchers.service'
+import {CreateWatcherDto} from './dto/create-watcher.dto'
+import {UpdateWatcherDto} from './dto/update-watcher.dto'
+import {Roles} from '@/lib/middlewares/roles.guard'
+import {Controller} from '@/lib/decorators/controller.decorator'
+import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
+import {FindAllWatchersDto} from './dto/find-all-watchers.dto'
+import {AdminOrKeyGuard} from '@/lib/middlewares/admin-or-key.guard'
+import {NotifyUsersResult} from './dto/notify-users-result.dto'
+import {WatchersNotificationService} from "@/lib/modules/watchers/watchers-notification.service"
 
 @Controller()
 export class WatchersController {
-    constructor(@inject(WatchersService) private readonly watchersService: WatchersService) {}
+    constructor(@inject(WatchersService) private readonly watchersService: WatchersService,
+                @inject(WatchersNotificationService) private readonly watchersNotificationService: WatchersNotificationService
+    ) {
+    }
 
     @Post()
     @HttpCode(201)
@@ -27,11 +31,11 @@ export class WatchersController {
     findAll(
         @Query(
             MyValidationPipe({
-                transformOptions: { enableImplicitConversion: true },
+                transformOptions: {enableImplicitConversion: true},
                 forbidNonWhitelisted: true,
             })
         )
-        query: FindAllWatchersDto
+            query: FindAllWatchersDto
     ) {
         return this.watchersService.findAll(query)
     }
@@ -46,7 +50,7 @@ export class WatchersController {
     @AdminOrKeyGuard()
     async notify(): Promise<NotifyUsersResult> {
         // TODO: this function call will take a long time to resolve
-        return this.watchersService.notifyAll()
+        return this.watchersNotificationService.notifyAll()
     }
 
     @Put('/:id')
@@ -59,6 +63,6 @@ export class WatchersController {
     @Roles(Role.ADMIN)
     async remove(@Param('id') id: string) {
         await this.watchersService.remove(id)
-        return { message: 'OK' }
+        return {message: 'OK'}
     }
 }
