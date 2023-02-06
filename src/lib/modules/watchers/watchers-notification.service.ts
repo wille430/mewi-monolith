@@ -48,15 +48,20 @@ export class WatchersNotificationService {
 
     private async notifyUsers(watcher: Watcher): Promise<NotifyUsersResult> {
         let usersNotified = 0
+        let start = new Date()
+        let timeTaken: number | null = null
 
         for await (const userWatcher of UserWatcherModel.find({watcher: watcher}).populate('watcher').populate('user')) {
-            if (Date.now() - this.startedAt.getTime() > this.timeoutDurationMs) {
+            if (Date.now() - this.startedAt.getTime() > this.timeoutDurationMs ||
+                (timeTaken != null && this.startedAt.getTime() + this.timeoutDurationMs > Date.now() + timeTaken)) {
                 break
             }
 
             if (await this.notifyUser(userWatcher)) {
                 usersNotified++
+                timeTaken = Date.now() - start.getTime()
             }
+            start = new Date()
         }
 
         return {
