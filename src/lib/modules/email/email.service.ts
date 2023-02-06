@@ -1,14 +1,14 @@
 import nodeMailer from 'nodemailer'
-import type { TestAccount } from 'nodemailer'
-import { autoInjectable, inject } from 'tsyringe'
-import { EmailTemplate } from './enums/email-template.enum'
-import Email, { EmailOptions } from 'email-templates'
-import { SendEmailResultDto } from './dto/send-email-result.dto'
-import { EmailRecordsRepository } from './email-records.repository'
-import { User } from '../schemas/user.schema'
-import { VerifyEmailTemplate } from './templates/VerifyEmailTemplate'
-import { WatcherNotifyTemplate } from './templates/WatcherNotifyTemplate'
-import { ForgottenPasswordTemplate } from './templates/ForgottenPasswordTemplate'
+import type {TestAccount} from 'nodemailer'
+import {autoInjectable, inject} from 'tsyringe'
+import {EmailTemplate} from './enums/email-template.enum'
+import Email, {EmailOptions} from 'email-templates'
+import {SendEmailResultDto} from './dto/send-email-result.dto'
+import {EmailRecordsRepository} from './email-records.repository'
+import {User} from '../schemas/user.schema'
+import {VerifyEmailTemplate} from './templates/VerifyEmailTemplate'
+import {WatcherNotifyTemplate} from './templates/WatcherNotifyTemplate'
+import {ForgottenPasswordTemplate} from './templates/ForgottenPasswordTemplate'
 
 type SendEmailOptions = EmailOptions & {
     createRecord?: boolean
@@ -18,14 +18,15 @@ type SendEmailOptions = EmailOptions & {
 @autoInjectable()
 export class EmailService {
     private credentials = {
-        email: process.env.GMAIL_MAIL ?? 'email@test.com',
+        email: process.env.GMAIL_MAIL,
         pass: process.env.GMAIL_PASS,
     }
 
     constructor(
         @inject(EmailRecordsRepository)
         private readonly emailRecordsRepository: EmailRecordsRepository
-    ) {}
+    ) {
+    }
 
     getTemplate(template: EmailTemplate) {
         switch (template) {
@@ -39,6 +40,7 @@ export class EmailService {
     }
 
     private _account?: TestAccount
+
     async getTestAccount(): Promise<TestAccount> {
         if (!this._account) {
             this._account = await nodeMailer.createTestAccount()
@@ -82,9 +84,9 @@ export class EmailService {
         subject: string,
         locals: T,
         template: EmailTemplate,
-        options: SendEmailOptions = { createRecord: true, send: true }
+        options: SendEmailOptions = {createRecord: true, send: true}
     ): Promise<SendEmailResultDto<T>> {
-        const { createRecord, send } = options
+        const {createRecord, send} = options
         const transport = await this.createTransport()
 
         const email = new Email({
@@ -107,6 +109,14 @@ export class EmailService {
             locals: locals,
         })
 
+        if (send) {
+            await transport.sendMail(info.originalMessage)
+
+            if (process.env.NODE_ENV === 'development') {
+                console.log('Email preview:', nodeMailer.getTestMessageUrl(info))
+            }
+        }
+
         let emailRecordId: string | undefined = undefined
         if (createRecord) {
             const emailRecord = await this.emailRecordsRepository.create({
@@ -117,13 +127,6 @@ export class EmailService {
             emailRecordId = emailRecord.id
         }
 
-        if (send) {
-            await transport.sendMail(info.originalMessage)
-
-            if (process.env.NODE_ENV === 'development') {
-                console.log('Email preview:', nodeMailer.getTestMessageUrl(info))
-            }
-        }
 
         return {
             info: info,
