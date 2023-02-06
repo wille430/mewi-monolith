@@ -12,6 +12,10 @@ import {NotifyUsersResult} from "@/lib/modules/watchers/dto/notify-users-result.
 @autoInjectable()
 export class WatchersNotificationService {
 
+    private startedAt: Date
+    // Used to prevent Next.js serverless function to timeout
+    private timeoutDurationMs = 8 * 1000
+
     private readonly config = {
         notifications: {
             interval: process.env.NODE_ENV === 'development' ? 0 : 2.5 * 24 * 60 * 60 * 1000,
@@ -21,11 +25,14 @@ export class WatchersNotificationService {
     }
 
     constructor(@inject(ListingsService) private readonly listingsService: ListingsService,
-                @inject(EmailService) private readonly emailService: EmailService) {
+                @inject(EmailService) private readonly emailService: EmailService
+    ) {
+        this.startedAt = new Date()
     }
 
     public async notifyAll(): Promise<NotifyUsersResult> {
         const notifyRes = new NotifyUsersResult()
+        this.startedAt = new Date()
 
         /**
          * Streaming query results to reduce memory usage potentially (?)
@@ -43,6 +50,10 @@ export class WatchersNotificationService {
         let usersNotified = 0
 
         for await (const userWatcher of UserWatcherModel.find({watcher: watcher}).populate('watcher').populate('user')) {
+            if (Date.now() - this.startedAt.getTime() > this.timeoutDurationMs) {
+                break
+            }
+
             if (await this.notifyUser(userWatcher)) {
                 usersNotified++
             }
