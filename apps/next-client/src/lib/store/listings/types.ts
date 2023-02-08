@@ -12,8 +12,5 @@ export interface ListingsState {
 export enum ListingsActionTypes {
     OPEN_LISTING = 'listings/open',
     CLOSE_LISTING = 'listings/close',
-    SET_FEATURED = 'listings/set-featured',
-    LIKE = 'listings/like',
-    UNLIKE = 'listings/unlike',
     FETCH_SEARCH = 'listings/search',
 }

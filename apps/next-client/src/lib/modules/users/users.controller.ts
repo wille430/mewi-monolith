@@ -11,7 +11,6 @@ import {
     HttpCode,
     BadRequestException,
 } from 'next-api-decorators'
-import type { IUser } from '@/common/schemas'
 import { Role } from '@/common/schemas'
 import { inject } from 'tsyringe'
 import type { NextApiResponse } from 'next'
@@ -33,8 +32,6 @@ import { GetUser } from '@/lib/decorators/user.decorator'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
 import { OptionalSessionGuard } from '@/lib/middlewares/optional-session.guard'
-
-export const hiddenUserFields: (keyof IUser)[] = ['emailUpdate', 'password', 'passwordReset']
 
 @Controller()
 export class UsersController {

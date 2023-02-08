@@ -4,23 +4,10 @@ import { autoInjectable, inject } from 'tsyringe'
 import type SignUpDto from './dto/sign-up.dto'
 import type { LoginDto } from './dto/login.dto'
 import { UsersRepository } from '../users/users.repository'
-import type { User } from '../schemas/user.schema'
 
 @autoInjectable()
 export class AuthService {
     constructor(@inject(UsersRepository) private readonly usersRepository: UsersRepository) {}
-
-    async validateUser(email: string, pass: string): Promise<User | null> {
-        const user = await this.usersRepository.findOne({
-            email,
-        })
-
-        if (user?.password && (await compare(pass, user.password))) {
-            return user
-        }
-
-        return null
-    }
 
     async signUp(signUpDto: SignUpDto) {
         const { password, email } = signUpDto

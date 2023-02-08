@@ -1,14 +1,14 @@
 import { Currency, ListingOrigin } from '@/common/schemas'
 import type { Cheerio } from 'cheerio'
 import { Listing } from '../../../schemas/listing.schema'
-import { ConfigMiddleware, EndPointDOM } from '../EndPoint'
+import { EndPointDOM } from '../EndPoint'
 import { ScrapePagination } from '../interface/scrape-pagination.inteface'
 import { ListingParser } from '../ListingParser'
 import { ScrapeMetadata } from '../Scraper'
 import { Selectors } from '../Selectors'
 
 export class BytbilEndPoint extends EndPointDOM<Listing> {
-    protected configMiddlewares: ConfigMiddleware[] = []
+
     private category: string
     private baseUrl = 'https://bytbil.com/'
     private parser: ListingParser
