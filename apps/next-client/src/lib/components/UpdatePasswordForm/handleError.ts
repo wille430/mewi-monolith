@@ -1,9 +1,9 @@
-import { getPwdValidationErrorMsg } from '@/lib/client/common/errors'
-import { ChangePasswordWithToken } from '@/lib/modules/users/dto/change-password.dto'
-import { createValidationHandler } from '@/lib/utils/createValidationHandler'
+import {getPwdValidationErrorMsg} from '@/lib/client/common/errors'
+import {ChangePasswordWithToken} from '@/lib/modules/users/dto/change-password.dto'
+import {createValidationHandler} from '@/lib/utils/createValidationHandler'
 
 export const handleError = createValidationHandler<ChangePasswordWithToken>(
-    (property, constraint, { errors }) => {
+    (property, constraint, {errors}) => {
         switch (property) {
             case 'password':
                 if (constraint === 'isNew') {
@@ -23,7 +23,7 @@ export const handleError = createValidationHandler<ChangePasswordWithToken>(
                 }
                 break
             case 'token':
-                errors.all =
+                (errors as any).all =
                     'Länken är felaktig. Var vänlig be om en ny lösenordåterställning för att försöka igen.'
                 break
         }

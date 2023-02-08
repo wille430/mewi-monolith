@@ -162,8 +162,10 @@ export abstract class EntityRepository<T extends Document> {
         return this.entityModel.count(entityFilterQuery)
     }
 
-    async aggregate(pipeline: PipelineStage[], options: AggregateOptions = {}) {
-        return this.entityModel.aggregate(pipeline, options)
+    async aggregate(pipeline: PipelineStage[], options: AggregateOptions = {}): Promise<any> {
+        // @ts-ignore
+        const agg = this.entityModel.aggregate(pipeline, options) as any
+        return await agg
     }
 
     async sample(count: number) {
