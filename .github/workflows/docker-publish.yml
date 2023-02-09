@@ -57,5 +57,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           file: "docker/Dockerfile"
           build-args: |
-            FOLDER=app/email-service
+            FOLDER=apps/email-service
             SCOPE=email-service
