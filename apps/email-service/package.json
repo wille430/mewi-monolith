@@ -2,9 +2,11 @@
   "name": "email-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/email-service.js",
   "scripts": {
-    "dev": "ts-node src/main.ts"
+    "dev": "ts-node src/main.ts",
+    "build": "tsc",
+    "start": "node ./dist/email-service.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,8 @@
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "email-templates": "^10.0.1",
+    "esbuild": "^0.17.6",
+    "esbuild-node-externals": "^1.6.0",
     "nodemailer": "^6.8.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",

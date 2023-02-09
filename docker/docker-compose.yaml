@@ -12,7 +12,24 @@ services:
       - 5672:5672
     networks:
       - rabbitmq_go_net
-
+  email-service:
+    container_name: email-service
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      args:
+        FOLDER: apps/email-service
+        SCOPE: email-service
+    environment:
+      - "MQ_CONNECTION_STRING=amqp://username:password@rabbitmq:5672"
+      - "SMTP_HOST=send.one.com"
+      - "SMTP_PASSWORD=dXR7v8F0CSGq/mFFo9oGtA=="
+      - "SMTP_USERNAME=noreply@mewi.se"
+      - "CLIENT_URL=http://localhost:3000"
+    depends_on:
+      - rabbitmq
+    networks:
+      - rabbitmq_go_net
 networks:
   rabbitmq_go_net:
     driver: bridge

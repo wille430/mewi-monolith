@@ -2,10 +2,9 @@ import "reflect-metadata"
 import {Channel, ConsumeMessage} from "amqplib"
 import * as dotenv from "dotenv"
 import {getConnection} from "./connection"
-import {MQQueues} from "@mewi/mq-dtos/src/MQQueues"
 import {EmailService} from "./services/EmailService"
 import {container} from "tsyringe"
-import {SendEmailDto} from "@mewi/mq-dtos/src/SendEmailDto"
+import {SendEmailDto,MQQueues} from "@mewi/mq-dtos"
 
 const consumer = (channel: Channel, emailService: EmailService) => async (msg: ConsumeMessage | null): Promise<void> => {
     if (msg) {

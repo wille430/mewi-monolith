@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
     "typeRoots": [
@@ -11,7 +11,9 @@
     "jsx": "react-jsx",
     "lib": [
       "ES2021"
-    ]
+    ],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
