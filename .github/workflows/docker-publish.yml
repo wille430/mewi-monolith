@@ -47,7 +47,7 @@ jobs:
           compose-file: "./docker/docker-compose.build.yaml"
           up-flags: "--build"
           services: |
-            email-services
+            email-service
             
       - name: Extract metadata (tags, labels) for Docker
         id: meta
