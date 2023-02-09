@@ -41,13 +41,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        
-      - uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: "./docker/docker-compose.build.yaml"
-          up-flags: "--build"
-          services: |
-            email-service
             
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -55,8 +48,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
-          
-    
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
