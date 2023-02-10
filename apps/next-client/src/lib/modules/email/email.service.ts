@@ -7,11 +7,14 @@ import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib"
 
 @autoInjectable()
 export class EmailService {
+
+    private readonly messageBroker: MessageBroker
+
     constructor(
         @inject(EmailRecordsRepository)
         private readonly emailRecordsRepository: EmailRecordsRepository,
-        @inject(MessageBroker) private readonly messageBroker: MessageBroker
     ) {
+        this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     }
 
     async sendEmail<T>(

@@ -1,83 +1,49 @@
-import {ListingOrigin} from '@/common/schemas'
 import type {FilterQuery} from 'mongoose'
 import {autoInjectable, inject} from 'tsyringe'
-import Scrapers from './scrapers'
 import {ScrapingLogsRepository} from './scraping-logs.repository'
 import type {ScrapingLog} from '../schemas/scraping-log.schema'
 import {ListingsRepository} from '../listings/listings.repository'
-import {Scraper} from './Scraper/Scraper'
-import {Listing} from '../schemas/listing.schema'
-import {AbstractEndPoint} from './Scraper/EndPoint'
-import {ScrapeNextResult} from './dto/scrape-next-result.dto'
 import {ScrapeNextQuery} from './dto/scrape-next-query.dto'
-import {NotFoundException} from 'next-api-decorators'
+import {MessageBroker, MQQueues, RunScrapeDto} from "@mewi/mqlib"
+import {ListingOrigin} from "@mewi/models"
 
 @autoInjectable()
 export class ScrapersService {
-    scrapers!: Record<ListingOrigin, Scraper<Listing>>
-    endPoints!: AbstractEndPoint<Listing>[]
-    endPointScraperMap!: Record<string, Scraper<Listing>>
-
-    // 14 days
-    private DELETE_OLDER_THAN = 14 * 24 * 60 * 60 * 1000
+    private readonly messageBroker: MessageBroker
 
     constructor(
         @inject(ListingsRepository) private listingsRepository: ListingsRepository,
         @inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository
     ) {
-        this.instantiateScrapers()
-    }
-
-    instantiateScrapers() {
-        this.scrapers = Scrapers.reduce((prev, Scraper) => {
-            const scraper = new Scraper()
-            prev[scraper.origin] = scraper
-            return prev
-        }, {} as typeof this.scrapers)
-
-        this.endPoints = Object.values(this.scrapers).reduce((prev, scraper) => {
-            prev.push(...scraper.endPoints)
-            return prev
-        }, [] as AbstractEndPoint<Listing>[])
-
-        this.endPointScraperMap = Object.values(this.scrapers).reduce((prev, scraper) => {
-            for (const endPoint of scraper.endPoints) {
-                prev[endPoint.getIdentifier()] = scraper
-            }
-            return prev
-        }, {} as typeof this.endPointScraperMap)
+        this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     }
 
     /**
      * Scrapes the next endpoint
      */
-    async scrapeNext({endpoint: identifier}: ScrapeNextQuery = {}): Promise<ScrapeNextResult> {
+    async scrapeNext(args: ScrapeNextQuery = {}): Promise<void> {
+        // TODO: validate endpoint
+        /*
         if (identifier && !this.endPointScraperMap[identifier]) {
             throw new NotFoundException(`There is not endpoint with name ${identifier}`)
         }
+         */
 
+        /*
         const endPoint = identifier
             ? this.endPoints.find((o) => o.getIdentifier() == identifier)!
             : (await this.getNextEndPoint()) ?? this.endPoints[0]
+         */
 
+        // TODO: variable input
+        const msg = new RunScrapeDto()
+        msg.scrapeAmount = 40
+        msg.endpoint = "BlocketEndPoint"
+        msg.origin = ListingOrigin.Blocket
+        await this.messageBroker.sendMessage(MQQueues.RunScrape, msg)
 
-        await this.removeOld()
-
-        const res = await endPoint.scrape({
-            page: 1,
-        })
-        const {entities} = res
-
-        let addedCount = 0
-
-        if (entities.length) {
-            const {count} = await this.listingsRepository.createMany(entities)
-            addedCount = count
-        }
-
-        await this.removeListings(entities.map(({origin_id}) => origin_id))
-
-        const log = await this.scrapingLogsRepository.create({
+        /*
+           const log = await this.scrapingLogsRepository.create({
             addedCount,
             entryPoint: endPoint.getIdentifier(),
             errorCount: 0,
@@ -90,22 +56,7 @@ export class ScrapersService {
                 entryPoint: endPoint.getIdentifier(),
             }),
         }
-    }
-
-    private async removeListings(ids: string[]) {
-        return this.listingsRepository.deleteMany({
-            origin_id: {
-                $in: ids,
-            },
-        })
-    }
-
-    private async removeOld() {
-        return this.listingsRepository.deleteMany({
-            createdAt: {
-                $lt: new Date(Date.now() - this.DELETE_OLDER_THAN).toISOString(),
-            },
-        })
+         */
     }
 
     /**
@@ -113,7 +64,7 @@ export class ScrapersService {
      *
      * @returns Index of the last scraped scraper. Returns 0 if no logs were found.
      */
-    async getNextEndPoint(): Promise<AbstractEndPoint<Listing> | undefined> {
+    async getNextEndPoint(): Promise<string | undefined> {
         const log = await this.scrapingLogsRepository.findOne(
             {},
             {},
@@ -128,8 +79,8 @@ export class ScrapersService {
             return undefined
         }
 
-        const index = this.endPoints.findIndex((o) => o.getIdentifier() == log.entryPoint)
-        return this.endPoints[(index + 1) % this.endPoints.length]
+        // TODO: calculate next
+        return log.entryPoint
     }
 
     async getLogs(dto: FilterQuery<ScrapingLog>) {

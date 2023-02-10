@@ -1,8 +1,6 @@
 import {Channel, connect, Connection, ConsumeMessage, Replies} from "amqplib"
 import * as assert from "assert"
 
-export type Consumer = (channel: Channel, ...args: any[]) => (msg: ConsumeMessage) => Promise<void>
-
 export class MessageBroker {
     private readonly connectionString: string
     private _connection: Connection | null = null
@@ -48,13 +46,27 @@ export class MessageBroker {
     /**
      * amqplib wrapper for the consume function
      * @param queue     - the queue name
-     * @param consumer  - a function that returns a function which handles incoming messages
-     * @param args      - a list of arguments to pass to the consumer function
+     * @param handleMsg - do something with the message
      */
-    public async consume(queue: string, consumer: Consumer, ...args: any[]): Promise<Replies.Consume> {
+    public async consume<T>(queue: string, handleMsg: (content: T) => Promise<any> | any): Promise<Replies.Consume> {
         const channel = await this.getChannel()
         await channel.assertQueue(queue)
 
-        return channel.consume(queue, consumer(channel, ...args))
+        return channel.consume(queue, async (msg: ConsumeMessage | null) => {
+                if (msg) {
+                    let content: T
+                    try {
+                        content = JSON.parse(msg.content.toString()) as T
+                    } catch (e) {
+                        console.error("Could not parse message content")
+                        channel.reject(msg, false)
+                        return
+                    }
+
+                    await handleMsg(content)
+                    channel.ack(msg)
+                }
+            }
+        )
     }
 }
