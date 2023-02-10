@@ -2,11 +2,11 @@
   "name": "email-service",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/email-service.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "ts-node src/main.ts",
     "build": "tsc",
-    "start": "node ./dist/email-service.js"
+    "start": "node ./dist/main.js"
   },
   "keywords": [],
   "author": "",

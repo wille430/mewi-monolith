@@ -1,12 +1,11 @@
 import "reflect-metadata"
 import {Channel, ConsumeMessage} from "amqplib"
 import * as dotenv from "dotenv"
-import {getConnection} from "./connection"
 import {EmailService} from "./services/EmailService"
 import {container} from "tsyringe"
-import {SendEmailDto,MQQueues} from "@mewi/mqlib"
+import {SendEmailDto, MQQueues, MessageBroker} from "@mewi/mqlib"
 
-const consumer = (channel: Channel, emailService: EmailService) => async (msg: ConsumeMessage | null): Promise<void> => {
+const sendEmailConsumer = (channel: Channel, emailService: EmailService) => async (msg: ConsumeMessage | null): Promise<void> => {
     if (msg) {
         let content: SendEmailDto
         try {
@@ -22,18 +21,12 @@ const consumer = (channel: Channel, emailService: EmailService) => async (msg: C
     }
 }
 
-const startup = () => {
-
+const startup = async () => {
     dotenv.config()
-
-    getConnection().then(async (conn) => {
-        const channel: Channel = await conn.createChannel()
-        await channel.assertQueue(MQQueues.SendEmail)
-
-
-        const emailService = container.resolve(EmailService)
-        await channel.consume(MQQueues.SendEmail, consumer(channel, emailService))
-    })
+    const mb = new MessageBroker(process.env.MQ_CONNECTION_STRING)
+    const emailService = container.resolve(EmailService)
+    await mb.consume(MQQueues.SendEmail, sendEmailConsumer, emailService)
 }
 
+// noinspection JSIgnoredPromiseFromCall
 startup()

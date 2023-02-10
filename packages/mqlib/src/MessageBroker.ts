@@ -1,5 +1,7 @@
-import {Channel, connect, Connection} from "amqplib"
+import {Channel, connect, Connection, ConsumeMessage, Replies} from "amqplib"
 import * as assert from "assert"
+
+export type Consumer = (channel: Channel, ...args: any[]) => (msg: ConsumeMessage) => Promise<void>
 
 export class MessageBroker {
     private readonly connectionString: string
@@ -15,6 +17,7 @@ export class MessageBroker {
     private async getConnection(): Promise<Connection> {
         if (!this._connection) {
             this._connection = await connect(this.connectionString)
+            console.log(`[@mewi/mqlib]: connection established to ${this.connectionString}`)
         }
 
         return this._connection
@@ -40,5 +43,18 @@ export class MessageBroker {
             console.log(e)
             return false
         }
+    }
+
+    /**
+     * amqplib wrapper for the consume function
+     * @param queue     - the queue name
+     * @param consumer  - a function that returns a function which handles incoming messages
+     * @param args      - a list of arguments to pass to the consumer function
+     */
+    public async consume(queue: string, consumer: Consumer, ...args: any[]): Promise<Replies.Consume> {
+        const channel = await this.getChannel()
+        await channel.assertQueue(queue)
+
+        return channel.consume(queue, consumer(channel, ...args))
     }
 }
