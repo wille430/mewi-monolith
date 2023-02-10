@@ -20,7 +20,7 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@mewi/models": "workspace:^1.0.0",
-    "@mewi/mq-dtos": "workspace:^1.0.0",
+    "@mewi/mqlib": "workspace:^1.0.0",
     "@nestjs/common": "^9.1.6",
     "@nestjs/mapped-types": "^1.2.0",
     "@reduxjs/toolkit": "^1.8.6",

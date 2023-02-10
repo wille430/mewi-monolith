@@ -1,5 +1,5 @@
 {
-  "name": "@mewi/mq-dtos",
+  "name": "@mewi/mqlib",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -13,6 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "@mewi/models": "workspace:^1.0.0",
+    "@types/node": "18.11.9",
+    "amqplib": "^0.10.3",
     "typescript": "4.8.4"
   }
 }

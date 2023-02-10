@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@mewi/email-templates": "workspace:^1.0.0",
-    "@mewi/mq-dtos": "workspace:^1.0.0",
+    "@mewi/mqlib": "workspace:^1.0.0",
     "@types/amqplib": "^0.10.1",
     "@types/email-templates": "^10.0.1",
     "@types/node": "18.11.9",

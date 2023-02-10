@@ -3,7 +3,7 @@ import type {TestAccount} from 'nodemailer'
 import {autoInjectable} from 'tsyringe'
 import * as Email from "email-templates"
 import {getEmailTemplate} from "@mewi/email-templates"
-import {SendEmailDto} from "@mewi/mq-dtos"
+import {SendEmailDto} from "@mewi/mqlib"
 import * as assert from "assert"
 
 @autoInjectable()

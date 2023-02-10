@@ -1,15 +1,15 @@
-import {autoInjectable} from "tsyringe"
 import {Channel, connect, Connection} from "amqplib"
-import assert from "assert"
+import * as assert from "assert"
 
-@autoInjectable()
 export class MessageBroker {
-    private readonly connectionString = process.env.MQ_CONNECTION_STRING
+    private readonly connectionString: string
     private _connection: Connection | null = null
     private _channel: Channel | null = null
 
-    constructor() {
-        assert(this.connectionString)
+    constructor(connectionString: string) {
+        assert(connectionString)
+
+        this.connectionString = connectionString
     }
 
     private async getConnection(): Promise<Connection> {

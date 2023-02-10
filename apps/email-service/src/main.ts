@@ -4,7 +4,7 @@ import * as dotenv from "dotenv"
 import {getConnection} from "./connection"
 import {EmailService} from "./services/EmailService"
 import {container} from "tsyringe"
-import {SendEmailDto,MQQueues} from "@mewi/mq-dtos"
+import {SendEmailDto,MQQueues} from "@mewi/mqlib"
 
 const consumer = (channel: Channel, emailService: EmailService) => async (msg: ConsumeMessage | null): Promise<void> => {
     if (msg) {
