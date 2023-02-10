@@ -16,7 +16,7 @@ import type {
 import type { User } from '../schemas/user.schema'
 import { Listing } from '../schemas/listing.schema'
 import { EmailService } from '../email/email.service'
-import { EmailTemplate } from '@mewi/email-templates'
+import { EmailTemplate } from '@mewi/models'
 import { stringify } from 'query-string'
 import { ValidationException } from '@/lib/exceptions/validation.exception'
 

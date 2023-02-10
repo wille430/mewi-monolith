@@ -2,10 +2,9 @@ import {autoInjectable, inject} from 'tsyringe'
 import {SendEmailResultDto} from './dto/send-email-result.dto'
 import {EmailRecordsRepository} from './email-records.repository'
 import {User} from '../schemas/user.schema'
-import {EmailTemplate} from "@mewi/email-templates"
+import {EmailTemplate} from "@mewi/models"
 import {MessageBroker} from "@/lib/services/MessageBroker"
-import {MQQueues} from "@mewi/mq-dtos"
-import {SendEmailDto} from "@mewi/mq-dtos"
+import {MQQueues, SendEmailDto} from "@mewi/mq-dtos"
 
 @autoInjectable()
 export class EmailService {

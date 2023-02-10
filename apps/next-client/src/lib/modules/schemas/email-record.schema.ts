@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
-import { EmailTemplate } from '@mewi/email-templates'
+import { EmailTemplate } from '@mewi/models'
 import { User } from './user.schema'
 
 export class EmailRecord {

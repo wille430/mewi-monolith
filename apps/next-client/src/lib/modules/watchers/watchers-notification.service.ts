@@ -5,7 +5,7 @@ import {ListingsService} from "@/lib/modules/listings/listings.service"
 import {ListingModel} from "@/lib/modules/schemas/listing.schema"
 import {EJSON} from "bson"
 import {EmailService} from "@/lib/modules/email/email.service"
-import {EmailTemplate} from "@mewi/email-templates"
+import {EmailTemplate} from "@mewi/models"
 import {UserWatcher, UserWatcherModel} from "@/lib/modules/schemas/user-watcher.schema"
 import {NotifyUsersResult} from "@/lib/modules/watchers/dto/notify-users-result.dto"
 
@@ -13,8 +13,6 @@ import {NotifyUsersResult} from "@/lib/modules/watchers/dto/notify-users-result.
 export class WatchersNotificationService {
 
     private startedAt: Date
-    // Used to prevent Next.js serverless function to timeout
-    private timeoutDurationMs = 8 * 1000
 
     private readonly config = {
         notifications: {
