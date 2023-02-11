@@ -27,4 +27,8 @@ export abstract class Scraper<Entity> {
                                                 Valid values are ${this.endPoints.map(e => e.getIdentifier()).join(", ")}`)
         return endPoint.scrape(scrapeAmount)
     }
+
+    public getEndpoints(): AbstractEndPoint<Entity, any, any>[] {
+        return this.endPoints
+    }
 }

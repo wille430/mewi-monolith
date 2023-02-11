@@ -1,4 +1,4 @@
-import {ListingModel} from "@mewi/entities"
+import {Listing, ListingModel} from "@mewi/entities"
 import {RunScrapeDto} from "@mewi/mqlib"
 import {ListingOrigin} from "@mewi/models"
 import {BlocketScraper} from "../scrapers/Blocket/BlocketScraper"
@@ -10,6 +10,8 @@ import {KvdBilScraper} from "../scrapers/KvdBil/KvdBilScraper"
 import {SellpyScraper} from "../scrapers/Sellpy/SellpyScraper"
 import {ShpockScraper} from "../scrapers/Shpock/ShpockScraper"
 import {TraderaScraper} from "../scrapers/Tradera/TraderaScraper"
+import {Scraper} from "../scrapers/Scraper"
+import {floor} from "lodash"
 
 export class ListingScraperService {
     // 14 days
@@ -17,24 +19,90 @@ export class ListingScraperService {
 
     async scrape(args: RunScrapeDto) {
         const {origin, endpoint, scrapeAmount} = args
+        if (origin == null && endpoint == null && scrapeAmount != null && Number.isInteger(scrapeAmount)) {
+            return this.scrapeAll(args)
+        }
+
         // validate args
+        if (scrapeAmount == null || !Number.isInteger(scrapeAmount)) throw Error(`scrapeAmount must be a non-null number`)
         if (!Object.values(ListingOrigin).includes(origin)) throw Error(`origin must be a valid enum value`)
-        if (endpoint == null) throw Error(`endpoint must be a non-null string`)
-        if (scrapeAmount == null) throw Error(`scrapeAmount must be a non-null number`)
+
+        if (endpoint == null) {
+            return this.scrapeOrigin(origin, scrapeAmount)
+        }
+
+        if (typeof endpoint != 'string') throw Error(`endpoint must be a non-null string`)
+        await this.scrapeEndpoint(args)
+    }
+
+    private async scrapeOrigin(origin: ListingOrigin, scrapeAmount: number) {
+        const scraper = this.getScraper(origin)
+        const endpoints = scraper.getEndpoints()
+        const scrapeAmountEndpoint = floor(scrapeAmount / endpoints.length)
+
+        console.log(`Scraping ${scrapeAmount} listings from ${origin}...`)
+
+        const listings = []
+        for (const endpoint of endpoints) {
+            try {
+                const {entities} = await endpoint.scrape(scrapeAmountEndpoint)
+                listings.push(...entities)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+
+        console.log(`Successfully scraped ${listings.length} listings from ${origin}`)
+        await this.createListings(listings)
+    }
+
+    private async scrapeEndpoint(args: RunScrapeDto) {
+        const {origin, endpoint, scrapeAmount} = args
+
+        console.log(`Scraping ${scrapeAmount} listings from ${origin} (${endpoint})...`)
 
         // run scraper
         const scraper = this.getScraper(origin)
-        const {entities} = await scraper.scrapeEndpoint(args.endpoint, scrapeAmount)
+        const {entities} = await scraper.scrapeEndpoint(endpoint, scrapeAmount)
+        await this.createListings(entities)
 
+        console.log(`Successfully scraped ${entities.length} listings from ${origin}`)
+    }
+
+    private async createListings(entities) {
         // remove old
         await this.removeOld()
         // remove already existing listings with same origin id
         await this.removeListings(entities.map(({origin_id}) => origin_id))
-
-        // create entities
         await ListingModel.create(entities)
+    }
 
-        // create scrape log (deprecate?)
+    private async scrapeAll(args: RunScrapeDto) {
+        const start = Date.now()
+        const {scrapeAmount} = args
+
+        const scrapeAmountScraper = floor(scrapeAmount / Object.keys(ListingOrigin).length)
+        console.log(`Scraping ${scrapeAmount} listings from all endpoints (${scrapeAmountScraper} from each website)...`)
+
+        for (const origin of Object.values(ListingOrigin)) {
+            const scraper = this.getScraper(origin)
+            const endpoints = scraper.getEndpoints()
+
+            const scrapeAmountEndpoint = scrapeAmountScraper / endpoints.length
+            const listings = []
+
+            for (const endpoint of endpoints) {
+                try {
+                    const {entities} = await endpoint.scrape(scrapeAmountEndpoint)
+                    listings.push(...entities)
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+            await this.createListings(listings)
+        }
+
+        console.log(`Finished scraping all endpoints. It took ${(Date.now() - start) / 1000}s`)
     }
 
     private async removeListings(ids: string[]) {
@@ -53,7 +121,7 @@ export class ListingScraperService {
         })
     }
 
-    private getScraper(origin: ListingOrigin) {
+    private getScraper(origin: ListingOrigin): Scraper<Listing> {
         switch (origin) {
             case ListingOrigin.Blocket:
                 return new BlocketScraper()
