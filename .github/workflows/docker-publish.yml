@@ -18,7 +18,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  
 
 jobs:
   build:
@@ -42,20 +42,43 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
             
+      # Build and push email-service image
+            
       - name: Extract metadata (tags, labels) for Docker
-        id: meta
+        id: meta0
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/email-service
           
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta0.outputs.tags }}
+          labels: ${{ steps.meta0.outputs.labels }}
           file: "docker/Dockerfile"
           build-args: |
             FOLDER=apps/email-service
             SCOPE=email-service
+            
+            
+      # Build and push scrape-service image
+            
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta1
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/scrape-service
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta1.outputs.tags }}
+          labels: ${{ steps.meta1.outputs.labels }}
+          file: "docker/Dockerfile"
+          build-args: |
+            FOLDER=apps/scrape-service
+            SCOPE=scrape-service
