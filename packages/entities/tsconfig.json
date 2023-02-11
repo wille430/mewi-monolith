@@ -2,7 +2,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "moduleResolution": "node",
+    "module": "CommonJS",
     "target": "es5",
     "sourceMap": true,
     "outDir": "./dist",

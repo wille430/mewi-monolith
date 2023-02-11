@@ -1,31 +1,32 @@
-import { LoginStrategy } from '@/common/schemas'
-import { autoInjectable, inject } from 'tsyringe'
-import bcrypt, { compare } from 'bcrypt'
-import { BadRequestException, NotFoundException } from 'next-api-decorators'
+import {LoginStrategy} from '@/common/schemas'
+import {autoInjectable, inject} from 'tsyringe'
+import bcrypt, {compare} from 'bcrypt'
+import {BadRequestException, NotFoundException} from 'next-api-decorators'
 import crypto from 'crypto'
-import type { CreateUserDto } from './dto/create-user.dto'
-import type { UpdateUserDto } from './dto/update-user.dto'
-import type { RequestEmailUpdateDto, AuthorizedUpdateEmailDto } from './dto/update-email.dto'
-import type { FindAllUserDto } from './dto/find-all-user.dto'
-import { UsersRepository } from './users.repository'
+import type {CreateUserDto} from './dto/create-user.dto'
+import type {UpdateUserDto} from './dto/update-user.dto'
+import type {RequestEmailUpdateDto, AuthorizedUpdateEmailDto} from './dto/update-email.dto'
+import type {FindAllUserDto} from './dto/find-all-user.dto'
+import {UsersRepository} from './users.repository'
 import type {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
     ChangePasswordWithToken,
 } from './dto/change-password.dto'
-import type { User } from '../schemas/user.schema'
-import { Listing } from '../schemas/listing.schema'
-import { EmailService } from '../email/email.service'
-import { EmailTemplate } from '@mewi/models'
-import { stringify } from 'query-string'
-import { ValidationException } from '@/lib/exceptions/validation.exception'
+import type {User} from '../schemas/user.schema'
+import {EmailService} from '../email/email.service'
+import {EmailTemplate} from '@mewi/models'
+import {stringify} from 'query-string'
+import {ValidationException} from '@/lib/exceptions/validation.exception'
+import {Listing} from "@mewi/entities"
 
 @autoInjectable()
 export class UsersService {
     constructor(
         @inject(UsersRepository) private readonly usersRepository: UsersRepository,
         @inject(EmailService) private readonly emailService: EmailService
-    ) {}
+    ) {
+    }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
@@ -53,7 +54,7 @@ export class UsersService {
     }
 
     async changePassword(
-        { password, passwordConfirm }: ChangePasswordAuth,
+        {password, passwordConfirm}: ChangePasswordAuth,
         userId?: string
     ): Promise<void> {
         if (!userId) {
@@ -72,15 +73,15 @@ export class UsersService {
     }
 
     async changePasswordWithToken({
-        password,
-        passwordConfirm,
-        token,
-        email,
-    }: ChangePasswordWithToken) {
+                                      password,
+                                      passwordConfirm,
+                                      token,
+                                      email,
+                                  }: ChangePasswordWithToken) {
         if (password !== passwordConfirm) {
             throw new BadRequestException('Password and password confirmation must match')
         }
-        const user = await this.usersRepository.findOne({ email })
+        const user = await this.usersRepository.findOne({email})
         if (!user) throw new NotFoundException()
         if (!user.passwordReset) throw new BadRequestException('User has no pending password reset')
 
@@ -115,8 +116,8 @@ export class UsersService {
         }
     }
 
-    async sendPasswordResetEmail({ email }: ChangePasswordNoAuth) {
-        const user = await this.usersRepository.findOne({ email })
+    async sendPasswordResetEmail({email}: ChangePasswordNoAuth) {
+        const user = await this.usersRepository.findOne({email})
         if (!user) return
 
         if (user.loginStrategy !== LoginStrategy.LOCAL) {
@@ -148,12 +149,12 @@ export class UsersService {
         )
     }
 
-    async updateEmail({ token, oldEmail }: AuthorizedUpdateEmailDto) {
-        const user = await this.usersRepository.findOne({ email: oldEmail })
+    async updateEmail({token, oldEmail}: AuthorizedUpdateEmailDto) {
+        const user = await this.usersRepository.findOne({email: oldEmail})
         if (!user) throw new NotFoundException(`No users with email ${oldEmail} was found`)
 
         const isValidToken =
-            user.emailUpdate && token && compare(token, user.emailUpdate?.tokenHash)
+            user.emailUpdate && token && await compare(token, user.emailUpdate?.tokenHash)
 
         if (
             user.emailUpdate &&
@@ -170,7 +171,7 @@ export class UsersService {
         }
     }
 
-    async requestEmailUpdate({ newEmail }: RequestEmailUpdateDto, userId: string) {
+    async requestEmailUpdate({newEmail}: RequestEmailUpdateDto, userId: string) {
         const user = await this.usersRepository.findById(userId)
         if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
 

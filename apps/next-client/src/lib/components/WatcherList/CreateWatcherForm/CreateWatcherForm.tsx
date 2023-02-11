@@ -79,11 +79,11 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
                                         label='Lägg till bevakning'
                                         type='button'
                                         color='primary'
-                                        onClick={() => {
+                                        onClick={async () => {
                                             if (isLoggedIn) {
                                                 showModal()
                                             } else {
-                                                router.push('/loggain')
+                                                await router.push('/loggain')
                                             }
                                         }}
                                         data-testid='addWatcherButton'

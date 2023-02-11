@@ -1,19 +1,16 @@
-import {autoInjectable, inject} from 'tsyringe'
+import {autoInjectable} from 'tsyringe'
 import {SendEmailResultDto} from './dto/send-email-result.dto'
-import {EmailRecordsRepository} from './email-records.repository'
 import {User} from '../schemas/user.schema'
 import {EmailTemplate} from "@mewi/models"
 import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib"
+import {EmailRecordModel} from "@/lib/modules/schemas/email-record.schema"
 
 @autoInjectable()
 export class EmailService {
 
     private readonly messageBroker: MessageBroker
 
-    constructor(
-        @inject(EmailRecordsRepository)
-        private readonly emailRecordsRepository: EmailRecordsRepository,
-    ) {
+    constructor() {
         this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     }
 
@@ -24,7 +21,7 @@ export class EmailService {
         template: EmailTemplate,
     ): Promise<SendEmailResultDto<T>> {
 
-        const emailRecord = await this.emailRecordsRepository.create({
+        const emailRecord = await EmailRecordModel.create({
             template,
             arguments: locals,
             user: toUser,

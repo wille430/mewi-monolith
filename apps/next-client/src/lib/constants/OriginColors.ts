@@ -1,5 +1,5 @@
 import type { ListingOrigin } from '@/common/schemas'
-import { hexToRgb, relativeLuminance } from '../utils/colors'
+import { hexToRgb, relativeLuminance } from '@mewi/utilities'
 
 export const BLOCKET_COLOR = '#f71414'
 export const BLIPP_COLOR = '#000033'

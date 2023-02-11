@@ -1,6 +1,6 @@
-import { ReactNode, useState, MouseEvent } from 'react'
+import {ReactNode, useState, MouseEvent} from 'react'
 import * as ReactLoader from 'react-loader-spinner'
-import { HTMLMotionProps, motion, useAnimation, Variants } from 'framer-motion'
+import {HTMLMotionProps, motion, useAnimation, Variants} from 'framer-motion'
 import styles from './Button.module.scss'
 import utilities from '../../../styles/utilities.module.scss'
 import clsx from 'clsx'
@@ -18,13 +18,11 @@ export type ButtonProps = HTMLMotionProps<'button'> & {
     className?: string
     color?: 'primary' | 'secondary' | 'error' | string
     size?: 'sm' | 'md' | 'lg'
-    children?: ReactNode
 }
 
 export const Button = (props: ButtonProps) => {
     const {
         onClick,
-        children,
         label,
         variant = 'contained',
         icon,
@@ -36,7 +34,7 @@ export const Button = (props: ButtonProps) => {
         ...rest
     } = props
     const [isLoading, setLoading] = useState(false)
-    const [tapPos, setTapPos] = useState({ x: 0, y: 0 })
+    const [tapPos, setTapPos] = useState({x: 0, y: 0})
     const rippleController = useAnimation()
 
     const handleClick = async (e: MouseEvent) => {
@@ -92,10 +90,10 @@ export const Button = (props: ButtonProps) => {
                 ['w-full']: fullWidth,
                 [className || '']: true,
             })}
-            data-testid='button'
+            data-testid="button"
             variants={buttonVariants}
-            initial='initial'
-            whileHover='hover'
+            initial="initial"
+            whileHover="hover"
             whileTap={rest.disabled ? undefined : 'tap'}
             onClick={handleClick}
             onTapStart={(e) => {
@@ -107,6 +105,7 @@ export const Button = (props: ButtonProps) => {
                 })
 
                 rippleController.set('position')
+                // noinspection JSIgnoredPromiseFromCall
                 rippleController.start('ripple')
             }}
             {...rest}
@@ -125,7 +124,7 @@ export const Button = (props: ButtonProps) => {
             <motion.div
                 className={styles.touchRipples}
                 variants={rippleVariants}
-                initial='hide'
+                initial="hide"
                 animate={rest.disabled ? 'hide' : rippleController}
             />
             <div
@@ -161,7 +160,7 @@ export const Button = (props: ButtonProps) => {
                                 [utilities['hide']]: !isLoading,
                             })}
                         >
-                            <ReactLoader.TailSpin color='white' height={16} width='1rem' />
+                            <ReactLoader.TailSpin color="white" height={16} width="1rem"/>
                         </div>
                     </div>
                 )}

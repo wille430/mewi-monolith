@@ -1,10 +1,10 @@
-import { Category , CategoryLabel } from '@/common/schemas'
-import type { LinkProps } from 'next/link'
-import type { RootState } from '@/lib/store'
+import {Category, CategoryLabel} from '@/common/schemas'
+import type {LinkProps} from 'next/link'
+import type {RootState} from '@/lib/store'
 
 export type NavLink = {
     label: string
-    condition?: (state: RootState) => boolean | boolean
+    condition?: ((state: RootState) => boolean) | boolean
     sublinks?: NavLink[]
     className?: string
 } & LinkProps

@@ -2,7 +2,7 @@ import type { Currency } from '@/common/schemas'
 import { Category, ListingOrigin } from '@/common/schemas'
 import { Transform } from 'class-transformer'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
-import type { Listing } from '../../schemas/listing.schema'
+import type { Listing } from '@mewi/entities'
 
 export class CreateListingDto implements Partial<Listing> {
     @IsString()

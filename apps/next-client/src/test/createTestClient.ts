@@ -39,6 +39,5 @@ export const createTestClient = (
             false
         )
 
-    const server = createServer(requestHandle)
-    return server
+    return createServer(requestHandle)
 }

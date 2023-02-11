@@ -74,7 +74,7 @@ export const EmailSignInForm = () => {
                     fullWidth={true}
                     disabled={isSubmitting}
                 />
-                <Link className='block text-sm hover:underline' href='/apps/next-client/src/pages/glomtlosenord'>
+                <Link className='block text-sm hover:underline' href='/glomtlosenord'>
                     Har du glömt lösenordet?
                 </Link>
             </div>
@@ -89,7 +89,7 @@ export const EmailSignInForm = () => {
                     disabled={isSubmitting}
                     className='flex-grow md:flex-none'
                 />
-                <Link href='/apps/next-client/src/pages/nyttkonto'>
+                <Link href='/nyttkonto'>
                     <Button
                         label='Nytt konto'
                         variant='outlined'

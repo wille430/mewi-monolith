@@ -27,11 +27,11 @@ const WatcherCard = ({
     const scrollRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
 
-    const handleSearchButtonClick = () => {
+    const handleSearchButtonClick = async () => {
         const filters = omit(watcher.metadata, ['category'])
         const pathname = '/sok'
 
-        router.push({
+        await router.push({
             pathname,
             search: queryString.stringify(filters),
         })

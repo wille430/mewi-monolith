@@ -21,7 +21,6 @@ export const handleError = createValidationHandler<ChangePasswordWithToken>(
                     default:
                         return getPwdValidationErrorMsg(constraint)
                 }
-                break
             case 'token':
                 (errors as any).all =
                     'Länken är felaktig. Var vänlig be om en ny lösenordåterställning för att försöka igen.'

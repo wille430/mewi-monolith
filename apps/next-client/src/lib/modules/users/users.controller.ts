@@ -11,31 +11,32 @@ import {
     HttpCode,
     BadRequestException,
 } from 'next-api-decorators'
-import { Role } from '@/common/schemas'
-import { inject } from 'tsyringe'
-import type { NextApiResponse } from 'next'
-import { UsersService } from './users.service'
-import { CreateUserDto } from './dto/create-user.dto'
-import { FindAllUserDto } from './dto/find-all-user.dto'
+import {Role} from '@/common/schemas'
+import {inject} from 'tsyringe'
+import type {NextApiResponse} from 'next'
+import {UsersService} from './users.service'
+import {CreateUserDto} from './dto/create-user.dto'
+import {FindAllUserDto} from './dto/find-all-user.dto'
 import {
     AuthorizedUpdateEmailDto,
     RequestEmailUpdateDto,
     UpdateEmailDto,
 } from './dto/update-email.dto'
-import ChangePasswordDto, { ChangePasswordWithToken } from './dto/change-password.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import type { UserPayload } from '../common/types/UserPayload'
-import { SessionGuard } from '@/lib/middlewares/SessionGuard'
-import { Roles } from '@/lib/middlewares/roles.guard'
-import { SuccessParam } from '../common/enum/successParam'
-import { GetUser } from '@/lib/decorators/user.decorator'
-import { Controller } from '@/lib/decorators/controller.decorator'
-import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
-import { OptionalSessionGuard } from '@/lib/middlewares/optional-session.guard'
+import ChangePasswordDto, {ChangePasswordWithToken} from './dto/change-password.dto'
+import {UpdateUserDto} from './dto/update-user.dto'
+import type {UserPayload} from '../common/types/UserPayload'
+import {SessionGuard} from '@/lib/middlewares/SessionGuard'
+import {Roles} from '@/lib/middlewares/roles.guard'
+import {SuccessParam} from '../common/enum/successParam'
+import {GetUser} from '@/lib/decorators/user.decorator'
+import {Controller} from '@/lib/decorators/controller.decorator'
+import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
+import {OptionalSessionGuard} from '@/lib/middlewares/optional-session.guard'
 
 @Controller()
 export class UsersController {
-    constructor(@inject(UsersService) private readonly usersService: UsersService) {}
+    constructor(@inject(UsersService) private readonly usersService: UsersService) {
+    }
 
     @Post()
     @HttpCode(201)
@@ -59,7 +60,7 @@ export class UsersController {
     @Get('/me/likes')
     @SessionGuard()
     async getMyLikes(@GetUser() user: UserPayload) {
-        return this.usersService.getLikedListings(user.userId)
+        return this.usersService.getLikedListings(user.userId).then(arr => arr.map(o => o.convertToDto()))
     }
 
     @Put('/email')
@@ -76,7 +77,7 @@ export class UsersController {
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
         }
-        return { message: 'OK' }
+        return {message: 'OK'}
     }
 
     @Post('/email')
@@ -91,7 +92,7 @@ export class UsersController {
                 updateEmailDto as RequestEmailUpdateDto,
                 user.userId
             )
-            return { message: 'OK' }
+            return {message: 'OK'}
         } else if (updateEmailDto.token) {
             await this.usersService.updateEmail(updateEmailDto)
 
@@ -132,12 +133,12 @@ export class UsersController {
                     user.userId
                 )
             }
-            return { message: 'OK' }
+            return {message: 'OK'}
         } else if (dto.email) {
             await this.usersService.sendPasswordResetEmail({
                 email: dto.email,
             })
-            return { message: 'OK' }
+            return {message: 'OK'}
         }
 
         throw new UnprocessableEntityException()

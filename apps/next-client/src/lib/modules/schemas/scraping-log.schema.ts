@@ -1,9 +1,6 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
-import type { IScrapingLog } from '@/common/schemas'
-import { ListingOrigin } from '@/common/schemas'
-import type { Document } from 'mongoose'
-
-export type ScrapingLogDocument = ScrapingLog & Document
+import {getModelForClass, prop} from '@typegoose/typegoose'
+import type {IScrapingLog} from '@/common/schemas'
+import {ListingOrigin} from '@/common/schemas'
 
 export class ScrapingLog implements IScrapingLog {
     id!: string
@@ -36,8 +33,8 @@ export class ScrapingLog implements IScrapingLog {
 export const ScrapingLogModel = getModelForClass(ScrapingLog, {
     schemaOptions: {
         id: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true},
         timestamps: true,
     },
 })

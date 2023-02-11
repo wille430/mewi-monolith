@@ -21,8 +21,8 @@ export const SignUpForm = () => {
         },
         onSubmit: () => {
             signup(formik.values)
-                .then(() => {
-                    router.push(ON_AUTH_SUCCESS_GOTO)
+                .then(async () => {
+                    await router.push(ON_AUTH_SUCCESS_GOTO)
                 })
                 .catch((err: ValidationExceptionRes) => {
                     formik.setErrors(handleSignUpError(err))
@@ -102,7 +102,7 @@ export const SignUpForm = () => {
                     type='submit'
                     className='flex-grow md:flex-none'
                 />
-                <Link href='/apps/next-client/src/pages/loggain'>
+                <Link href='/loggain'>
                     <Button
                         label='Logga in'
                         variant='outlined'

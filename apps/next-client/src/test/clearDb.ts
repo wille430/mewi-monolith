@@ -13,6 +13,7 @@ const clearDb = async () => {
     exit(0)
 }
 
+// noinspection JSIgnoredPromiseFromCall
 clearDb()
 
 export {}

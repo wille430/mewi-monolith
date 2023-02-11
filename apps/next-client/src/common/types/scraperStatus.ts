@@ -3,9 +3,3 @@ export interface ScraperStatusReport {
     listings_current: number
     last_scraped?: Date
 }
-
-export enum ScraperStatus {
-    SCRAPING = 'SCRAPING',
-    QUEUED = 'QUEUED',
-    IDLE = 'IDLE',
-}

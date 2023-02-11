@@ -1,4 +1,4 @@
-import { randomString } from '@/lib/utils/stringUtils'
+import { randomString } from '@mewi/utilities'
 import { render } from '@testing-library/react'
 import Checkbox from './Checkbox'
 

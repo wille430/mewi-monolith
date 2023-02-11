@@ -11,11 +11,7 @@ export class UserExistsRule implements ValidatorConstraintInterface {
     async validate(value: string): Promise<boolean> {
         try {
             const user = await this.usersRepository.findOne({ email: value })
-            if (!user) {
-                return false
-            } else {
-                return true
-            }
+            return user != null
         } catch (e) {
             return false
         }

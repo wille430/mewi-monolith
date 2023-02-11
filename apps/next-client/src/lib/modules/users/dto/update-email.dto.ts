@@ -1,6 +1,6 @@
 import { IsEmail, IsString, Validate, ValidateIf } from 'class-validator'
 import { Transform } from 'class-transformer'
-import { UniqueEmailRule } from '../../../rules/unique-email.rule'
+import { UniqueEmailRule } from '@/lib/rules/unique-email.rule'
 
 export class UpdateEmailDto {
     @Transform(({ value }) => value.toLowerCase())

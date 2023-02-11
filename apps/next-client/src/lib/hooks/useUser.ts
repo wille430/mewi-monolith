@@ -30,6 +30,7 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
         }
 
         if ((!redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
+            // noinspection JSIgnoredPromiseFromCall
             router.replace(redirectTo, undefined, {
                 shallow: true,
             })

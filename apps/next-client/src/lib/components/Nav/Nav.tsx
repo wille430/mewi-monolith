@@ -1,3 +1,5 @@
+// noinspection SuspiciousTypeOfGuard
+
 import Link from 'next/link'
 import clsx from 'clsx'
 import { GiHamburgerMenu } from 'react-icons/gi'

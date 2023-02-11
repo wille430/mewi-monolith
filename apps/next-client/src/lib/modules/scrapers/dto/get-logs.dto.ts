@@ -1,4 +1,4 @@
-import {safeToDate} from '@/lib/utils/dateUtils'
+import {safeToDate} from '@mewi/utilities'
 import {Transform} from 'class-transformer'
 import {IsDate} from 'class-validator'
 import type {FilterQuery} from 'mongoose'

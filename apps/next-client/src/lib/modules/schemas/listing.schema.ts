@@ -115,13 +115,13 @@ export class Listing {
     createdAt!: Date
     updatedAt!: Date
 
-    public convertToDto(this: Listing): ListingDto {
+    public convertToDto(this: ListingDocument): ListingDto {
         return {
+            id: this._id.toString(),
             auctionEnd: this.auctionEnd,
             body: this.body,
             category: this.category,
             date: this.date,
-            id: this.id,
             imageUrl: this.imageUrl,
             isAuction: this.isAuction,
             origin: this.origin,
@@ -133,13 +133,13 @@ export class Listing {
         }
     }
 
-    public static convertToDto(obj: Listing): ListingDto {
+    public static convertToDto(obj: ListingDocument): ListingDto {
         return {
+            id: obj._id.toString(),
             auctionEnd: obj.auctionEnd,
             body: obj.body,
             category: obj.category,
             date: obj.date,
-            id: obj.id,
             imageUrl: obj.imageUrl,
             isAuction: obj.isAuction,
             origin: obj.origin,

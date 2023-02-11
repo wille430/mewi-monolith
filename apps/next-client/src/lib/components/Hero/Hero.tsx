@@ -16,7 +16,7 @@ export const Hero = () => {
                     <div className='flex w-full flex-col items-end'>
                         <SearchInput data-testid='search-input' />
 
-                        <Link className='mt-2 text-secondary' href='/apps/next-client/src/pages/filter'>
+                        <Link className='mt-2 text-secondary' href='/filter'>
                             {'Advancerade filter >>'}
                         </Link>
                     </div>

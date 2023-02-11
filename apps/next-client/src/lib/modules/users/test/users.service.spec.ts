@@ -16,7 +16,7 @@ import { UsersService } from '../users.service'
 import type { AuthorizedUpdateEmailDto, RequestEmailUpdateDto } from '../dto/update-email.dto'
 import { User } from '../../schemas/user.schema'
 import { listingStub } from '../../listings/test/stubs/listing.stub'
-import { Listing } from '../../schemas/listing.schema'
+import { Listing } from '@mewi/entities'
 
 jest.mock('../users.repository')
 

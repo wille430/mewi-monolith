@@ -1,12 +1,11 @@
-import { ListingOrigin } from '@/common/schemas'
-import { ScraperStatusReport } from '@/common/types'
-import type { DeleteListingsDto } from '@/lib/modules/listings/dto/delete-listings.dto'
-import { client, MutationArgs } from '../index'
-import { SCRAPERS_STATUS_KEY } from './swr-keys'
+import {ListingOrigin} from '@/common/schemas'
+import {ScraperStatusReport} from '@/common/types'
+import type {DeleteListingsDto} from '@/lib/modules/listings/dto/delete-listings.dto'
+import {client, MutationArgs} from '../index'
+import {SCRAPERS_STATUS_KEY} from './swr-keys'
 
-export const startScrapers = (scrapers: ListingOrigin[]): MutationArgs => {
+export const startScrapers = (): MutationArgs => {
     const updateFn = async (statusReports: Record<string, ScraperStatusReport>) => {
-        throw new Error('Not implemented')
         return statusReports
     }
 

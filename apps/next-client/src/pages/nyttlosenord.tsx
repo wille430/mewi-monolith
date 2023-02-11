@@ -1,4 +1,4 @@
-import { UpdatePasswordForm } from '../lib/components/UpdatePasswordForm/UpdatePasswordForm'
+import { UpdatePasswordForm } from '@/lib/components/UpdatePasswordForm/UpdatePasswordForm'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -18,6 +18,7 @@ const ForgottenPassword = () => {
     useEffect(() => {
         const { email, token } = router.query
         if ((!email || !token) && router.isReady) {
+            // noinspection JSIgnoredPromiseFromCall
             router.push('/')
         }
     }, [router.isReady])

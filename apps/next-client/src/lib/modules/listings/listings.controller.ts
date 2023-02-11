@@ -1,22 +1,23 @@
-import { IListing, Role } from '@/common/schemas'
-import { Post, Put, Get, Body, Param, Delete, Query, HttpCode } from 'next-api-decorators'
-import { inject } from 'tsyringe'
-import { UpdateListingDto } from './dto/update-listing.dto'
-import { ListingsService } from './listings.service'
-import { CreateListingDto } from './dto/create-listing.dto'
-import { FindAllListingsDto } from './dto/find-all-listing.dto'
-import { DeleteListingsDto } from './dto/delete-listings.dto'
-import type { UserPayload } from '../common/types/UserPayload'
-import { Roles } from '@/lib/middlewares/roles.guard'
-import { Public } from '@/lib/decorators/public.decorator'
-import { GetUser } from '@/lib/decorators/user.decorator'
-import { Controller } from '@/lib/decorators/controller.decorator'
-import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import {IListing, Role} from '@/common/schemas'
+import {Post, Put, Get, Body, Param, Delete, Query, HttpCode} from 'next-api-decorators'
+import {inject} from 'tsyringe'
+import {UpdateListingDto} from './dto/update-listing.dto'
+import {ListingsService} from './listings.service'
+import {CreateListingDto} from './dto/create-listing.dto'
+import {FindAllListingsDto} from './dto/find-all-listing.dto'
+import {DeleteListingsDto} from './dto/delete-listings.dto'
+import type {UserPayload} from '../common/types/UserPayload'
+import {Roles} from '@/lib/middlewares/roles.guard'
+import {Public} from '@/lib/decorators/public.decorator'
+import {GetUser} from '@/lib/decorators/user.decorator'
+import {Controller} from '@/lib/decorators/controller.decorator'
+import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import cache from 'memory-cache'
 
 @Controller()
 export class ListingsController {
-    constructor(@inject(ListingsService) private readonly listingsService: ListingsService) {}
+    constructor(@inject(ListingsService) private readonly listingsService: ListingsService) {
+    }
 
     @Post()
     @HttpCode(201)
@@ -27,7 +28,7 @@ export class ListingsController {
 
     @Get()
     @Public()
-    findAll(@Query(MyValidationPipe) findAllListingsDto: FindAllListingsDto) {
+    async findAll(@Query(MyValidationPipe) findAllListingsDto: FindAllListingsDto) {
         return this.listingsService.findAll(findAllListingsDto)
     }
 
@@ -72,20 +73,20 @@ export class ListingsController {
     @Roles(Role.ADMIN)
     async remove(@Param('id') id: string) {
         await this.listingsService.remove(id)
-        return { message: 'OK' }
+        return {message: 'OK'}
     }
 
     @Put('/:id/like')
     @Roles(Role.USER)
     async likeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         await this.listingsService.like(user.userId, id)
-        return { message: 'OK' }
+        return {message: 'OK'}
     }
 
     @Put('/:id/unlike')
     @Roles(Role.USER)
     async unlikeOne(@Param('id') id: string, @GetUser() user: UserPayload) {
         await this.listingsService.unlike(user.userId, id)
-        return { message: 'OK' }
+        return {message: 'OK'}
     }
 }

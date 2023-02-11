@@ -23,9 +23,9 @@ export function EditRolePanel() {
             <div className='bg-gray-150 space-y-4 rounded p-2'>
                 <form
                     className='flex max-w-sm'
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         e.preventDefault()
-                        refetch()
+                        await refetch()
                     }}
                 >
                     <TextField

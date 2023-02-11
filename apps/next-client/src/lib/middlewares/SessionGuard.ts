@@ -24,10 +24,7 @@ export const SessionGuard = createMiddlewareDecorator(
 
 export const WithSession = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
-        const session = await getSession(req, res)
-
-        req.session = session
-
+        req.session = await getSession(req, res)
         next()
     }
 )

@@ -1,4 +1,4 @@
-import { UniqueEmailRule } from '../../../rules/unique-email.rule'
+import { UniqueEmailRule } from '@/lib/rules/unique-email.rule'
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, Validate } from 'class-validator'
 import { Match } from '@/lib/decorators/match.decorator'
 

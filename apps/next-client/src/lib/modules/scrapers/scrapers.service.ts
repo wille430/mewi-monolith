@@ -1,9 +1,9 @@
 import type {FilterQuery} from 'mongoose'
 import {autoInjectable, inject} from 'tsyringe'
-import {ScrapingLogsRepository} from './scraping-logs.repository'
 import type {ScrapingLog} from '../schemas/scraping-log.schema'
 import {ListingsRepository} from '../listings/listings.repository'
 import {MessageBroker, MQQueues, RunScrapeDto} from "@mewi/mqlib"
+import {ScrapingLogModel} from "../schemas/scraping-log.schema"
 
 @autoInjectable()
 export class ScrapersService {
@@ -11,7 +11,6 @@ export class ScrapersService {
 
     constructor(
         @inject(ListingsRepository) private listingsRepository: ListingsRepository,
-        @inject(ScrapingLogsRepository) private scrapingLogsRepository: ScrapingLogsRepository
     ) {
         this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     }
@@ -26,6 +25,6 @@ export class ScrapersService {
     }
 
     async getLogs(dto: FilterQuery<ScrapingLog>) {
-        return await this.scrapingLogsRepository.find(dto)
+        return ScrapingLogModel.find(dto)
     }
 }

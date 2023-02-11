@@ -66,7 +66,7 @@ const ForgottenPassword = () => {
                                 <>
                                     <>
                                         <div>
-                                            <Link href='/apps/next-client/src/pages/loggain'>
+                                            <Link href='/loggain'>
                                                 <span>{'<<'} Logga in istället</span>
                                             </Link>
                                         </div>

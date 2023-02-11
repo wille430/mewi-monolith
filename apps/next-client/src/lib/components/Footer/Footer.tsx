@@ -17,10 +17,10 @@ export const Footer = () => {
                             <Link href='/'>Hem</Link>
                         </li>
                         <li>
-                            <Link href='/apps/next-client/src/pages/loggain'>Logga in</Link>
+                            <Link href='/loggain'>Logga in</Link>
                         </li>
                         <li>
-                            <Link href='/apps/next-client/src/pages/nyttkonto'>Skapa ett konto</Link>
+                            <Link href='/nyttkonto'>Skapa ett konto</Link>
                         </li>
                     </ul>
                     <ul className={styles['link-list']}>

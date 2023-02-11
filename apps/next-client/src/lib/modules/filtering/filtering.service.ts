@@ -3,7 +3,6 @@ import {IPagination} from "@/lib/modules/filtering/IPagination"
 import {PipelineStage} from "mongoose"
 import {autoInjectable} from "tsyringe"
 
-
 @autoInjectable()
 export class FilteringService {
     public applySort(obj: ISortable, pipeline: PipelineStage[]): void {

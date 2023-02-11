@@ -3,7 +3,6 @@ import {ErrorMessage, Field, Form, Formik} from 'formik'
 import type {FormikHelpers, FormikErrors} from 'formik'
 import {updatePasswordMutation} from '@/lib/client/users/mutations'
 import {PASSWORD_RESET_REDIRECT_TO} from '@/lib/constants/paths'
-import {pushToSnackbar} from '@/lib/store/snackbar'
 import {useAppDispatch} from '@/lib/hooks'
 import Router from 'next/router'
 import {Button} from '../Button/Button'
@@ -28,8 +27,7 @@ export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswor
                 ...values,
                 ...props.initialValues,
             })
-            Router.push(PASSWORD_RESET_REDIRECT_TO)
-            dispatch(pushToSnackbar({title: 'Lösenordsändringen lyckades'}))
+            await Router.push(PASSWORD_RESET_REDIRECT_TO)
         } catch (error: any) {
             setErrors(handleError(error))
         }

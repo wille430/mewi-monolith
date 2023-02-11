@@ -21,18 +21,13 @@ export abstract class EntityRepository<T extends Document> {
                 if (typeof method === 'function') {
                     return async (...args: any) => {
                         await dbConnection()
-                        const res = await method.apply(target, args)
-                        return res
+                        return method.apply(target, args)
                     }
                 } else {
                     return Reflect.get(target, prop)
                 }
             },
         })
-    }
-
-    async setup() {
-        await dbConnection()
     }
 
     private applyPagination<

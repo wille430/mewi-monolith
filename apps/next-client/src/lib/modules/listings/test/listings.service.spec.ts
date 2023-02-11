@@ -7,7 +7,7 @@ import type { UpdateListingDto } from '../dto/update-listing.dto'
 import { ListingsRepository } from '../listings.repository'
 import { ListingsService } from '../listings.service'
 import { UsersRepository } from '../../users/users.repository'
-import { Listing } from '../../schemas/listing.schema'
+import { Listing } from '@mewi/entities'
 import { userStub } from '../../users/test/stubs/user.stub'
 
 jest.mock('../listings.repository')

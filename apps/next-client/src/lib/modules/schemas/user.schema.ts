@@ -4,7 +4,7 @@ import { LoginStrategy, Role } from '@/common/schemas'
 import type { Document } from 'mongoose'
 import { EmailUpdate } from './class/EmailUpdate'
 import { PasswordReset } from './class/PasswordReset'
-import { Listing } from './listing.schema'
+import {Listing} from "@mewi/entities"
 
 export type UserDocument = User & Document
 

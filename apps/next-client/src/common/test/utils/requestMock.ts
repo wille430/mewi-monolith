@@ -6,6 +6,7 @@ export const createRequestMock = (handler: (req: any, res: any) => any): (() => 
     let req: ReturnType<typeof createMocks>['req']
     let res: ReturnType<typeof createMocks>['res']
 
+    // noinspection UnnecessaryLocalVariableJS
     const requestMock = async <T>(...args: Parameters<typeof createMocks>): Promise<T> => {
         ({ req, res } = createMocks(...args))
         await handler(req, res)

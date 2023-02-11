@@ -17,9 +17,7 @@ export class AuthService {
         }
 
         const hashedPassword = await hash(password, 10)
-        const newUser = await this.usersRepository.create({ email, password: hashedPassword })
-
-        return newUser
+        return this.usersRepository.create({ email, password: hashedPassword })
     }
 
     async login(loginDto: LoginDto) {
