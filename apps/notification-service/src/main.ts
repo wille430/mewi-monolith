@@ -10,7 +10,13 @@ const startup = async () => {
 
     const mb = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     const watchersNotificationService = new WatchersNotificationService()
-    await mb.consume<SendEmailDto>(MQQueues.NotifyWatchers, watchersNotificationService.notifyAll)
+    await mb.consume<SendEmailDto>(MQQueues.NotifyWatchers, async (_) => {
+        try {
+            await watchersNotificationService.notifyAll()
+        } catch (e) {
+            console.error(e)
+        }
+    })
 }
 
 // noinspection JSIgnoredPromiseFromCall
