@@ -1,4 +1,4 @@
-import {getModelForClass, prop} from '@typegoose/typegoose'
+import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
 import type {Document} from 'mongoose'
 import {ListingOrigin} from "@mewi/models"
 
@@ -32,7 +32,7 @@ export class ScrapingLog {
     updatedAt!: Date
 }
 
-export const ScrapingLogModel = getModelForClass(ScrapingLog, {
+export const ScrapingLogModel: ReturnModelType<typeof ScrapingLog> = getModelForClass(ScrapingLog, {
     schemaOptions: {
         id: true,
         toObject: {virtuals: true},

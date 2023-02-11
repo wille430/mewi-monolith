@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   scrape-service:
-    container_name: email-service
+    container_name: scrape-service
     build:
       context: ../
       dockerfile: ./docker/Dockerfile

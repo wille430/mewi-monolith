@@ -1,5 +1,5 @@
 import type {Document} from 'mongoose'
-import {getModelForClass, prop} from '@typegoose/typegoose'
+import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
 import {ListingDto, Currency, Category, ListingOrigin} from "@mewi/models"
 
 export type ListingDocument = Listing & Document
@@ -151,7 +151,7 @@ export class Listing {
     }
 }
 
-export const ListingModel = getModelForClass(Listing, {
+export const ListingModel: ReturnModelType<typeof Listing> = getModelForClass(Listing, {
     schemaOptions: {
         id: true,
         timestamps: true,
