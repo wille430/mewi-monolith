@@ -22,6 +22,7 @@
     "cheerio": "1.0.0-rc.12",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
+    "mongoose": "6.7.2",
     "ts-node": "^10.9.1",
     "typescript": "4.8.4"
   }
