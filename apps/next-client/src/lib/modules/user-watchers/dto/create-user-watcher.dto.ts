@@ -1,5 +1,5 @@
 import { IsMongoId, IsObject, IsOptional, ValidateNested } from 'class-validator'
-import { WatcherMetadata } from '../../schemas/class/WatcherMetadata'
+import { WatcherMetadata } from '@mewi/entities'
 
 export class CreateUserWatcherDto {
     @IsOptional()

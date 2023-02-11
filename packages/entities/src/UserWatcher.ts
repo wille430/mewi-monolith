@@ -1,9 +1,9 @@
-import {getModelForClass, prop} from '@typegoose/typegoose'
+import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
 import type {Ref} from '@typegoose/typegoose'
 import type {Document} from 'mongoose'
 import mongoose from 'mongoose'
-import {User} from './user.schema'
-import {Watcher} from './watcher.schema'
+import {Watcher} from "./Watcher"
+import {User} from "./User"
 
 export type UserWatcherDocument = UserWatcher & Document
 
@@ -31,7 +31,7 @@ export class UserWatcher {
     updatedAt!: Date
 }
 
-export const UserWatcherModel = getModelForClass(UserWatcher, {
+export const UserWatcherModel: ReturnModelType<typeof UserWatcher> = getModelForClass(UserWatcher, {
     schemaOptions: {
         id: true,
         timestamps: true,

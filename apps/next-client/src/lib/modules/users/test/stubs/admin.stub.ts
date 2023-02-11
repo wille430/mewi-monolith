@@ -1,7 +1,7 @@
 import { LoginStrategy, Role } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
-import { User } from '@/lib/modules/schemas/user.schema'
+import { User } from '@mewi/entities'
 import { timestampsStub } from '@/test/stubs/timestamps.stub'
 
 const id = '633036188f8fd81317025659'

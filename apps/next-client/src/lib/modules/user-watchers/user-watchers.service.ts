@@ -1,14 +1,14 @@
 import mongoose from 'mongoose'
-import { autoInjectable, inject } from 'tsyringe'
-import { BadRequestException, ConflictException, NotFoundException } from 'next-api-decorators'
-import type { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
-import { UserWatchersRepository } from './user-watchers.repository'
-import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import { WatchersRepository } from '../watchers/watchers.repository'
-import { WatchersService } from '../watchers/watchers.service'
-import { UsersRepository } from '../users/users.repository'
-import { WatcherDocument } from '../schemas/watcher.schema'
-import { ObjectId } from 'bson'
+import {autoInjectable, inject} from 'tsyringe'
+import {BadRequestException, ConflictException, NotFoundException} from 'next-api-decorators'
+import type {CreateUserWatcherDto} from './dto/create-user-watcher.dto'
+import {UserWatchersRepository} from './user-watchers.repository'
+import {UpdateUserWatcherDto} from './dto/update-user-watcher.dto'
+import {WatchersRepository} from '../watchers/watchers.repository'
+import {WatchersService} from '../watchers/watchers.service'
+import {UsersRepository} from '../users/users.repository'
+import {WatcherDocument} from '@mewi/entities'
+import {ObjectId} from 'bson'
 
 @autoInjectable()
 export class UserWatchersService {
@@ -18,15 +18,16 @@ export class UserWatchersService {
         private readonly userWatchersRepository: UserWatchersRepository,
         @inject(WatchersRepository) private readonly watchersRepository: WatchersRepository,
         @inject(UsersRepository) private readonly usersRepository: UsersRepository
-    ) {}
+    ) {
+    }
 
-    async create({ userId, metadata }: CreateUserWatcherDto) {
+    async create({userId, metadata}: CreateUserWatcherDto) {
         userId = userId!
-        let watcher = await this.watchersRepository.findOne({ metadata })
+        let watcher = await this.watchersRepository.findOne({metadata})
 
         // 1. Create new watcher if watcher doesn't exist already
         if (!watcher) {
-            watcher = await this.watchersRepository.create({ metadata })
+            watcher = await this.watchersRepository.create({metadata})
         }
 
         // 2. Append user watcher to user
@@ -42,12 +43,10 @@ export class UserWatchersService {
         if (isSubscribed) {
             throw new ConflictException('You are already subscribed to a similar watcher')
         } else {
-            const userWatcher = await this.userWatchersRepository.create({
+            return this.userWatchersRepository.create({
                 user: user,
                 watcher: watcher,
             })
-
-            return userWatcher
         }
     }
 
@@ -74,12 +73,12 @@ export class UserWatchersService {
         return userWatcher
     }
 
-    async update(id: string, { userId, metadata }: UpdateUserWatcherDto) {
+    async update(id: string, {userId, metadata}: UpdateUserWatcherDto) {
         if (!userId) {
             throw new BadRequestException(`User id must be defined`)
         }
 
-        const oldUserWatcher = await this.userWatchersRepository.findOne({ id, user: userId })
+        const oldUserWatcher = await this.userWatchersRepository.findOne({id, user: userId})
         if (!oldUserWatcher) {
             throw new NotFoundException(`No user watcher with id ${id} was found`)
         }

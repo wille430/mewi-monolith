@@ -1,50 +1,48 @@
-import {autoInjectable, inject} from "tsyringe"
-import {User} from "@/lib/modules/schemas/user.schema"
-import {Watcher, WatcherModel} from "@/lib/modules/schemas/watcher.schema"
-import {ListingsService} from "@/lib/modules/listings/listings.service"
-import {ListingModel} from "@mewi/entities"
-import {EJSON} from "bson"
-import {EmailService} from "@/lib/modules/email/email.service"
+import {ListingModel, User, UserWatcher, UserWatcherModel, Watcher, WatcherModel} from "@mewi/entities"
+import {FilteringService} from "@mewi/business"
 import {EmailTemplate} from "@mewi/models"
-import {UserWatcher, UserWatcherModel} from "@/lib/modules/schemas/user-watcher.schema"
-import {NotifyUsersResult} from "@/lib/modules/watchers/dto/notify-users-result.dto"
+import {EJSON} from "bson"
+import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib"
 
-@autoInjectable()
 export class WatchersNotificationService {
-
-    private startedAt: Date
 
     private readonly config = {
         notifications: {
             interval: process.env.NODE_ENV === 'development' ? 0 : 2.5 * 24 * 60 * 60 * 1000,
-            listingCount: 7,
+            listingsToShow: 7,
             minListings: 1
         }
     }
 
-    constructor(@inject(ListingsService) private readonly listingsService: ListingsService,
-                @inject(EmailService) private readonly emailService: EmailService
-    ) {
-        this.startedAt = new Date()
+    private readonly filteringService: FilteringService
+    private readonly messageBroker: MessageBroker
+
+    constructor() {
+        this.filteringService = new FilteringService()
+        this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
     }
 
-    public async notifyAll(): Promise<NotifyUsersResult> {
-        const notifyRes = new NotifyUsersResult()
-        this.startedAt = new Date()
-
+    public async notifyAll(): Promise<void> {
+        let usersNotified = 0
+        const start = Date.now()
         /**
          * Streaming query results to reduce memory usage potentially (?)
          */
         for await (const watcher of WatcherModel.find()) {
-            const res = await this.notifyUsers(watcher)
-            notifyRes.usersNotified += res.usersNotified
-            notifyRes.watchersNotified += res.watchersNotified
+            usersNotified += await this.notifyUsers(watcher)
         }
 
-        return notifyRes
+        const elapsedTime = (Date.now() - start) / 1000
+        console.log(`Notified ${usersNotified} users after ${elapsedTime}s`)
     }
 
-    private async notifyUsers(watcher: Watcher): Promise<NotifyUsersResult> {
+    /**
+     * Notify all users that subscribes to a watcher
+     * @param watcher - {@link Watcher}
+     * @private
+     * @return number - number of users that were notified
+     */
+    private async notifyUsers(watcher: Watcher): Promise<number> {
         let usersNotified = 0
 
         for await (const userWatcher of UserWatcherModel.find({watcher: watcher}).populate('watcher').populate('user')) {
@@ -53,22 +51,19 @@ export class WatchersNotificationService {
             }
         }
 
-        return {
-            usersNotified,
-            watchersNotified: 1
-        }
+        return usersNotified
     }
 
     /**
      * Notify a user of watcher
-     * @param userWatcher - UserWatcher
+     * @param userWatcher - {@link UserWatcher}
      * @returns true if user was notified, else false
      */
     private async notifyUser(userWatcher: UserWatcher): Promise<boolean> {
         const watcher = userWatcher.watcher as Watcher
         const user = userWatcher.user as User
 
-        const pipeline = this.listingsService.metadataToPL(watcher.metadata)
+        const pipeline = this.filteringService.convertToPipeline(watcher.metadata)
         const newListings = await this.newListings(pipeline)
 
         if (newListings.length < this.config.notifications.minListings || !(await this.shouldNotifyUser(userWatcher))) {
@@ -77,7 +72,13 @@ export class WatchersNotificationService {
 
         const locals = await this.getNotificationEmailLocals(watcher, newListings)
 
-        await this.emailService.sendEmail(user, "Nya begagnade föremål", locals, EmailTemplate.NEW_ITEMS)
+        const sendEmailDto = new SendEmailDto()
+        sendEmailDto.userId = user.id
+        sendEmailDto.locals = locals
+        sendEmailDto.userEmail = user.email
+        sendEmailDto.subject = "Nya begagnade annonser"
+        sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS
+        await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto)
 
         // Update notifiedAt property of user watcher
         await UserWatcherModel.findOneAndUpdate({
@@ -92,9 +93,9 @@ export class WatchersNotificationService {
 
     private async getNotificationEmailLocals(watcher: Watcher, newListings: any[]) {
         return {
-            listingCount: await ListingModel
+            listingsToShow: await ListingModel
                 .aggregate([
-                    ...this.listingsService.metadataToPL(watcher.metadata as any),
+                    ...this.filteringService.convertToPipeline(watcher.metadata as any),
                     {$count: 'totalHits'},
                 ])
                 .then((res) => (res as any)[0]?.totalHits ?? 0),

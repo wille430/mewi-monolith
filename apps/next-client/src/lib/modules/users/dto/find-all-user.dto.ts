@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator'
 import type { FilterQuery } from 'mongoose'
-import type { User } from '../../schemas/user.schema'
+import type { User } from '@mewi/entities'
 
 export class FindAllUserDto implements FilterQuery<User> {
     @IsOptional()

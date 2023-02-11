@@ -1,7 +1,7 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import {getModelForClass, prop} from '@typegoose/typegoose'
 import mongoose from 'mongoose'
-import { EmailTemplate } from '@mewi/models'
-import { User } from './user.schema'
+import {EmailTemplate} from '@mewi/models'
+import {User} from '@mewi/entities'
 
 export class EmailRecord {
     id!: string
@@ -27,7 +27,7 @@ export class EmailRecord {
 export const EmailRecordModel = getModelForClass(EmailRecord, {
     schemaOptions: {
         id: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true},
     },
 })

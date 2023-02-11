@@ -34,6 +34,9 @@ jobs:
           - image: ghcr.io/wille430/scrape-service
             folder: apps/scrape-service
             scope: scrape-service
+          - image: ghcr.io/wille430/notification-service
+            folder: apps/notification-service
+            scope: notification-service
     permissions:
       contents: read
       packages: write

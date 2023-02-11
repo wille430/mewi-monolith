@@ -1,6 +1,5 @@
-import { EntityRepository } from '../database/entity.repository'
-import type { ListingDocument } from '../schemas/listing.schema'
-import { ListingModel } from '../schemas/listing.schema'
+import {EntityRepository} from '../database/entity.repository'
+import {ListingModel, ListingDocument} from '@mewi/entities'
 
 export class ListingsRepository extends EntityRepository<ListingDocument> {
     constructor() {

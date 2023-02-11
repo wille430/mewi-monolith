@@ -1,7 +1,7 @@
 import { createUserWatcher } from '@/lib/client/user-watchers/mutations'
 import { createUserWatcherSchema } from '@/lib/client/user-watchers/schemas/create-user-watcher.schema'
 import { useAppSelector } from '@/lib/hooks'
-import type { WatcherMetadata } from '@/lib/modules/schemas/class/WatcherMetadata'
+import type { WatcherMetadata } from '@mewi/entities'
 import type { CreateUserWatcherDto } from '@/lib/modules/user-watchers/dto/create-user-watcher.dto'
 import { Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'

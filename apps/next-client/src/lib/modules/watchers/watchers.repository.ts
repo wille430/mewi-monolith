@@ -1,6 +1,6 @@
 import { EntityRepository } from '../database/entity.repository'
-import type { WatcherDocument } from '../schemas/watcher.schema'
-import { WatcherModel } from '../schemas/watcher.schema'
+import type { WatcherDocument } from '@mewi/entities'
+import { WatcherModel } from '@mewi/entities'
 
 export class WatchersRepository extends EntityRepository<WatcherDocument> {
     constructor() {

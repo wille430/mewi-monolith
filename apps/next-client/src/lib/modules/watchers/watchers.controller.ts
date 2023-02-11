@@ -9,14 +9,10 @@ import {Controller} from '@/lib/decorators/controller.decorator'
 import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import {FindAllWatchersDto} from './dto/find-all-watchers.dto'
 import {AdminOrKeyGuard} from '@/lib/middlewares/admin-or-key.guard'
-import {NotifyUsersResult} from './dto/notify-users-result.dto'
-import {WatchersNotificationService} from "@/lib/modules/watchers/watchers-notification.service"
 
 @Controller()
 export class WatchersController {
-    constructor(@inject(WatchersService) private readonly watchersService: WatchersService,
-                @inject(WatchersNotificationService) private readonly watchersNotificationService: WatchersNotificationService
-    ) {
+    constructor(@inject(WatchersService) private readonly watchersService: WatchersService) {
     }
 
     @Post()
@@ -48,9 +44,8 @@ export class WatchersController {
 
     @Put('/notify')
     @AdminOrKeyGuard()
-    async notify(): Promise<NotifyUsersResult> {
-        // TODO: this function call will take a long time to resolve
-        return this.watchersNotificationService.notifyAll()
+    async notify(): Promise<boolean> {
+        return this.watchersService.notifyAll()
     }
 
     @Put('/:id')

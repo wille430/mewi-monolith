@@ -13,7 +13,7 @@ import type {
     ChangePasswordNoAuth,
     ChangePasswordWithToken,
 } from './dto/change-password.dto'
-import type {User} from '../schemas/user.schema'
+import type {User} from '@mewi/entities'
 import {EmailService} from '../email/email.service'
 import {EmailTemplate} from '@mewi/models'
 import {stringify} from 'query-string'

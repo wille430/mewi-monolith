@@ -1,7 +1,7 @@
 import { timestampsStub } from '@/test/stubs/timestamps.stub'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
-import { UserWatcher } from '../../schemas/user-watcher.schema'
+import { UserWatcher } from '@mewi/entities'
 import { userStub } from '../../users/test/stubs/user.stub'
 import { watcherStub } from '../../watchers/test/stubs/watcher.stub'
 

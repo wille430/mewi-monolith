@@ -16,3 +16,11 @@ services:
       args:
         FOLDER: apps/email-service
         SCOPE: email-service
+  notfification-service:
+    container_name: notification-service
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      args:
+        FOLDER: apps/notification-service
+        SCOPE: notification-service

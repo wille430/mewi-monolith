@@ -1,10 +1,9 @@
-import { prop } from '@typegoose/typegoose'
-import { Category, ListingOrigin } from '@/common/schemas'
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator'
-import { FindAllListingsDto } from '../../listings/dto/find-all-listing.dto'
+import {prop} from '@typegoose/typegoose'
+import {IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min} from 'class-validator'
+import {Category, ListingOrigin} from "@mewi/models"
 
 // TODO: fix
-export class WatcherMetadata implements Partial<FindAllListingsDto> {
+export class WatcherMetadata {
     @prop()
     @IsOptional()
     @IsString()
@@ -22,7 +21,7 @@ export class WatcherMetadata implements Partial<FindAllListingsDto> {
         default: undefined,
     })
     @IsOptional()
-    @IsEnum(Category, { each: true })
+    @IsEnum(Category, {each: true})
     categories?: Category[]
 
     @prop({
@@ -31,7 +30,7 @@ export class WatcherMetadata implements Partial<FindAllListingsDto> {
         default: undefined,
     })
     @IsOptional()
-    @IsEnum(ListingOrigin, { each: true })
+    @IsEnum(ListingOrigin, {each: true})
     origins?: ListingOrigin[]
 
     @prop()

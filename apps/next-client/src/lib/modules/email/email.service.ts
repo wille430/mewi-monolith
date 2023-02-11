@@ -1,6 +1,6 @@
 import {autoInjectable} from 'tsyringe'
 import {SendEmailResultDto} from './dto/send-email-result.dto'
-import {User} from '../schemas/user.schema'
+import {User} from '@mewi/entities'
 import {EmailTemplate} from "@mewi/models"
 import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib"
 import {EmailRecordModel} from "@/lib/modules/schemas/email-record.schema"

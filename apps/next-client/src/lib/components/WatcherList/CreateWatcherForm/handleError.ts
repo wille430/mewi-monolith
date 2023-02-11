@@ -1,4 +1,4 @@
-import type { WatcherMetadata } from '@/lib/modules/schemas/class/WatcherMetadata'
+import type { WatcherMetadata } from '@mewi/entities'
 import { FormError } from '@/lib/types/forms'
 
 export const handleError = (e: any): FormError<WatcherMetadata> => {

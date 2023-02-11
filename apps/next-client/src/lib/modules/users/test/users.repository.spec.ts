@@ -3,9 +3,9 @@ import 'reflect-metadata'
 import { container } from 'tsyringe'
 import { userStub } from './stubs/user.stub'
 import { UsersRepository } from '../users.repository'
-import { User, UserModel } from '../../schemas/user.schema'
+import { User, UserModel } from '@mewi/entities'
 
-jest.mock('../../schemas/user.schema')
+jest.mock('@mewi/entities')
 
 describe('UsersRepository', () => {
     let usersRepository: UsersRepository

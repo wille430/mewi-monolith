@@ -1,4 +1,4 @@
-import { prop } from '@typegoose/typegoose'
+import {prop} from '@typegoose/typegoose'
 
 export class EmailUpdate {
     @prop({

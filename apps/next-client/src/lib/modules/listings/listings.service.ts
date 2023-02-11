@@ -1,38 +1,18 @@
 import omit from 'lodash/omit'
-import type {PipelineStage} from 'mongoose'
 import {NotFoundException} from 'next-api-decorators'
 import {autoInjectable, inject} from 'tsyringe'
-import {MIN_SEARCH_SCORE} from './constants'
 import type {CreateListingDto} from './dto/create-listing.dto'
 import type {FindAllListingsDto} from './dto/find-all-listing.dto'
 import type {UpdateListingDto} from './dto/update-listing.dto'
 import {ListingsRepository} from './listings.repository'
 import {UsersRepository} from '../users/users.repository'
-import {Listing} from '../schemas/listing.schema'
+import {Listing} from '@mewi/entities'
 import {DeleteListingsDto} from './dto/delete-listings.dto'
 import {FindAllListingsReponse} from './dto/find-all-listings-response.dto'
-import {ListingSort} from "@/common/types"
-import {FilteringService} from "@/lib/modules/filtering/filtering.service"
+import {FilteringService} from "@mewi/business"
 
 @autoInjectable()
 export class ListingsService {
-
-    private static readonly sortToSortObjMap: Record<ListingSort, any> = {
-        [ListingSort.DATE_ASC]: {
-            date: 1,
-        },
-        [ListingSort.DATE_DESC]: {
-            date: -1,
-        },
-        [ListingSort.PRICE_ASC]: {
-            'price.value': 1,
-        },
-        [ListingSort.PRICE_DESC]: {
-            'price.value': -1,
-        },
-        [ListingSort.RELEVANCE]: undefined,
-    }
-
     constructor(
         @inject(ListingsRepository) private readonly listingsRepository: ListingsRepository,
         @inject(UsersRepository) private readonly usersRepository: UsersRepository,
@@ -45,8 +25,8 @@ export class ListingsService {
     }
 
     async findAll(dto: FindAllListingsDto): Promise<FindAllListingsReponse> {
-        const totalHitsPipeline = this.metadataToPL(omit(dto, 'page', 'limit'))
-        const hitsPipeline = this.metadataToPL(dto)
+        const totalHitsPipeline = this.filteringService.convertToPipeline(omit(dto, 'page', 'limit'))
+        const hitsPipeline = this.filteringService.convertToPipeline(dto)
 
         let totalHits: any = (await this.listingsRepository.aggregate([
             ...totalHitsPipeline,
@@ -65,29 +45,6 @@ export class ListingsService {
             totalHits,
             hits: hitDtos,
         }
-    }
-
-    public metadataToPL(dto: Partial<FindAllListingsDto>): PipelineStage[] {
-        const pipeline: PipelineStage[] = []
-
-        this.applyFieldsFilter(dto, pipeline)
-
-        if (dto.sort) {
-            this.filteringService.applySort({
-                sort: ListingsService.sortToSortObjMap[dto.sort]
-            }, pipeline)
-        } else if (!dto.keyword) {
-            this.filteringService.applySort({
-                sort: ListingsService.sortToSortObjMap[ListingSort.DATE_DESC]
-            }, pipeline)
-        }
-
-        if (!dto.sort && dto.keyword) {
-            pipeline.push({$sort: {score: -1}})
-        }
-
-        this.filteringService.applyPagination(dto, pipeline)
-        return pipeline
     }
 
     async findOne(id: string) {
@@ -173,102 +130,6 @@ export class ListingsService {
 
     public async getFeatured() {
         return this.sample(8)
-    }
-
-    private applyFieldsFilter(dto: Partial<FindAllListingsDto>, pipeline: PipelineStage[]) {
-        for (const kv of Object.entries(dto)) {
-            this.applyFieldFilter(kv[0], kv[1], pipeline)
-        }
-    }
-
-    private applyFieldFilter(field: string, value: any, pipeline: PipelineStage[]) {
-        if (!value) return
-
-        switch (field) {
-            case 'keyword':
-                pipeline.splice(0, 0,
-                    process.env.DATABASE_URI.includes('localhost') &&
-                    process.env.NODE_ENV === 'development'
-                        ? {
-                            $match: {
-                                keyword: {
-                                    $regex: new RegExp(value, 'i'),
-                                },
-                            },
-                        }
-                        : {
-                            $search: {
-                                index:
-                                    process.env.NODE_ENV === 'production'
-                                        ? 'listing_search_prod'
-                                        : 'listing_search_dev',
-                                text: {
-                                    query: value as string,
-                                    path: {
-                                        wildcard: '*',
-                                    },
-                                    fuzzy: {},
-                                },
-                            },
-                        },
-                    {
-                        $addFields: {
-                            score: {$meta: 'searchScore'},
-                        },
-                    },
-                    {$match: {score: {$gte: MIN_SEARCH_SCORE}}}
-                )
-                break
-            case 'auction':
-                pipeline.push({$match: {auction: value}})
-                break
-            case 'categories':
-                pipeline.push({$match: {category: {$in: value}}})
-                break
-            case 'dateGte':
-                pipeline.push(
-                    {
-                        $match: {
-                            date: {
-                                $gte: {
-                                    $date: value,
-                                },
-                            },
-                        },
-                    },
-                )
-                break
-            case 'priceRangeGte':
-                pipeline.push({$match: {'price.value': {$gte: value}}})
-                break
-            case 'priceRangeLte':
-                pipeline.push({$match: {'price.value': {$lte: value}}})
-                break
-            case 'region':
-                const regions = value
-                    .split(/([., ])? /i)
-                    .filter((x: string) => !!x && !new RegExp(/^,$/).test(x))
-                    .map((x: string) => x.trim())
-
-                pipeline.push(
-                    {
-                        $match: {
-                            region: {
-                                $regex: (`^` +
-                                    regions.map((reg: any) => '(?=.*\\b' + reg + '\\b)').join('') +
-                                    '.+') as any,
-                                $options: 'i',
-                            },
-                        },
-                    },
-                )
-                break
-            case 'origins':
-                pipeline.push({$match: {origin: {$in: value}}})
-                break
-            default:
-                break
-        }
     }
 
     async getRecent() {

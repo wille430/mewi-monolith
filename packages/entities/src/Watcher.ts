@@ -1,6 +1,6 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
-import type { Document } from 'mongoose'
-import { WatcherMetadata } from './class/WatcherMetadata'
+import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
+import type {Document} from 'mongoose'
+import {WatcherMetadata} from "./WatcherMetadata"
 
 export type WatcherDocument = Watcher & Document
 
@@ -20,12 +20,12 @@ export class Watcher {
     notifiedAt?: Date
 }
 
-export const WatcherModel = getModelForClass(Watcher, {
+export const WatcherModel: ReturnModelType<typeof Watcher> = getModelForClass(Watcher, {
     schemaOptions: {
         id: true,
         timestamps: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true},
         minimize: false,
     },
 })
