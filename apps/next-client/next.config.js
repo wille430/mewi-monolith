@@ -1,5 +1,4 @@
 const flowRight = require('lodash/flowRight')
-const {join} = require("lodash")
 
 const funcs = [
     require('@next/bundle-analyzer')({
@@ -11,10 +10,6 @@ const funcs = [
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
-    output: "standalone",
-    experimental: {
-        outputFileTracingRoot: join(__dirname, "../../")
-    },
     redirects: () => [
         {
             source: '/minasidor',
