@@ -1,9 +1,8 @@
 import type {AggregateOptions, UpdateResult} from 'mongodb'
 import {Document, FilterQuery, HydratedDocument, Model, PipelineStage, Query, UpdateQuery,} from 'mongoose'
+import {IPagination, ISortable} from "@mewi/models"
 import {dbConnection} from '@/lib/dbConnection'
 import {Ref} from '@typegoose/typegoose'
-import {IPagination} from "@/lib/modules/filtering/IPagination"
-import {ISortable} from "@/lib/modules/filtering/ISortable"
 
 export type PopulationArg<T> = Partial<{
     [P in keyof T]: T[P] extends Ref<any> ? boolean : undefined
