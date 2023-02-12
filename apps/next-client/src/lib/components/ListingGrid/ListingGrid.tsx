@@ -18,6 +18,9 @@ const ListingGrid = () => {
                 className={clsx({
                     [styles.center]: true,
                 })}
+                style={{
+                    minHeight: "60vh"
+                }}
             >
                 <StyledLoader/>
             </section>
@@ -30,7 +33,9 @@ const ListingGrid = () => {
         )
     } else if (hits?.length) {
         return (
-            <section className="min-h-screen">
+            <section style={{
+                minHeight: "60vh"
+            }}>
                 <div className={styles.grid}>
                     {hits.map((listing, i) => (
                         <ListingWidget
@@ -45,7 +50,9 @@ const ListingGrid = () => {
         )
     } else {
         return (
-            <section className={clsx({[styles.center]: true, [styles.section]: true})}>
+            <section className={clsx(styles.center, styles.section)} style={{
+                minHeight: "60vh"
+            }}>
                 <span>Inget resultat hittades för din sökning.</span>
             </section>
         )

@@ -24,9 +24,11 @@ export const DisplayListingsRow = (params: DisplayListingsRowParams) => {
                 </a>}
             </div>
             {listings == null || listings.length === 0 ? (
-                <span className={style.emptyText}>
+                <div className={style.emptyText}>
+                    <span>
                     Det finns inga produkter i blickfånget för tillfället
-                </span>
+                    </span>
+                </div>
             ) : (
                 <>
                     <div className={style.scrollableView}>
