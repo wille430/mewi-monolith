@@ -1,5 +1,4 @@
 export * from './filterData'
-export * from './successParam.enum'
 export * from './listingSort'
 export * from './search'
 export * from './scraperStatus'

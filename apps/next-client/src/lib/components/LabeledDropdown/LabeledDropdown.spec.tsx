@@ -1,5 +1,5 @@
-import { randomString } from '@mewi/utilities'
-import { render } from '@testing-library/react'
+import {randomString} from '@mewi/utilities'
+import {render} from '@testing-library/react'
 import LabeledDropdown from './LabeledDropdown'
 
 it('renders correctly', () => {
@@ -14,8 +14,8 @@ it('renders correctly', () => {
         })
     }
 
-    const { queryByTestId, queryByText } = render(
-        <LabeledDropdown options={mockOptions} label={mockLabel} name={mockLabel} />
+    const {queryByTestId, queryByText} = render(
+        <LabeledDropdown options={mockOptions} label={mockLabel} name={mockLabel}/>
     )
 
     const filterLabel = queryByText(mockLabel)

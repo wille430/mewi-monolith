@@ -1,4 +1,5 @@
 version: "3.7"
+name: mewi
 services:
   scrape-service:
     container_name: scrape-service

@@ -8,7 +8,6 @@ import {WatchersRepository} from '../watchers/watchers.repository'
 import {WatchersService} from '../watchers/watchers.service'
 import {UsersRepository} from '../users/users.repository'
 import {WatcherDocument} from '@mewi/entities'
-import {ObjectId} from 'bson'
 
 @autoInjectable()
 export class UserWatchersService {
@@ -125,7 +124,7 @@ export class UserWatchersService {
             id,
             user: userId,
         })
-        const watcherId = (userWatcher?.watcher as ObjectId)?.toString()
+        const watcherId = (userWatcher?.watcher as any)?.toString()
         if (!watcherId) return false
 
         // delete from user

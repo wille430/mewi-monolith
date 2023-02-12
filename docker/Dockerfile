@@ -3,7 +3,7 @@
 
 # base node image
 # https://github.com/prisma/prisma/issues/861#issuecomment-881992292
-FROM node:lts-buster-slim AS pnpm
+FROM node:lts-alpine3.17 AS pnpm
 
 ARG SCOPE
 ENV SCOPE=${SCOPE}
