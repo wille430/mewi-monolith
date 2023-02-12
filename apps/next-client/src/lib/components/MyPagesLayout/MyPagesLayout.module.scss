@@ -1,16 +1,17 @@
 .grid {
-    @apply flex flex-col-reverse gap-4 p-4 container;
-    grid-template-columns: 1fr auto 1fr;
+  @apply flex flex-col-reverse gap-4 p-4 container;
+  grid-template-columns: 1fr auto 1fr;
+  max-width: 100% !important;
+
+  @screen lg {
+    display: grid;
+  }
+
+  .content {
+    min-width: auto;
 
     @screen lg {
-        display: grid;
+      min-width: theme('screens.md');
     }
-
-    .content {
-        min-width: auto;
-
-        @screen lg {
-            min-width: theme('screens.md');
-        }
-    }
+  }
 }
