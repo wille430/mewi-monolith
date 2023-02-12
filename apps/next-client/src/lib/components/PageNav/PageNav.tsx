@@ -15,13 +15,13 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
     const {setDebouncedFilters: setFilters, filters} = useSearchContext<ListingSearchFilters>()
 
     const totalPages = useMemo(() => Math.ceil(totalHits / DEFAULT_LIMIT) ?? 1, [totalHits])
+    const maxNumButtons = 5
+    const numberOfButtons = totalPages < 5 ? totalPages : maxNumButtons
 
     const scrollToAnchorEle = () =>
         anchorEle?.current?.scrollIntoView({behavior: 'auto', block: 'center'})
 
-    const numberOfButtons = totalPages < 5 ? totalPages : maxNumButtons
     const RenderButtons = memo(() => {
-        const maxNumButtons = 5
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
             scrollToAnchorEle()
