@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps<IndexPageProps> = async () => {
             featuredListings: serialize(featuredListings.map(o => o.convertToDto())),
             newListings: serialize(newListings.map(o => o.convertToDto()))
         },
-        revalidate: process.env.NODE_ENV === 'production' ? 15 * 60 * 60 : 1,
+        revalidate: process.env.NODE_ENV === 'production' ? 15 * 60 : 1,
     }
 }
 
@@ -60,7 +60,8 @@ const Index = ({featuredListings, newListings}: IndexPageProps) => {
                 <div className="space-y-12">
                     <DisplayListingsRow title="Annonser i blickfånget" showMoreHref="/sok" listings={featuredListings}/>
 
-                    <DisplayListingsRow title="Senaste annonser" showMoreHref={`/sok?sort=${ListingSort.DATE_DESC}`} listings={newListings}/>
+                    <DisplayListingsRow title="Senaste annonser" showMoreHref={`/sok?sort=${ListingSort.DATE_DESC}`}
+                                        listings={newListings}/>
                 </div>
 
                 <div className="h-32"/>
