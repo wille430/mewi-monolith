@@ -1,20 +1,21 @@
-import { Category, ListingOrigin } from '@/common/schemas'
-import { ErrorMessage, Field, useFormikContext } from 'formik'
+import {Category, ListingOrigin} from '@mewi/models'
+import {ErrorMessage, Field, useFormikContext} from 'formik'
 import LabeledDropdown from '../LabeledDropdown/LabeledDropdown'
-import { LabeledTextField } from '../LabeledTextField/LabeledTextField'
-import { categories, ListingSearchFilters } from '@/common/types'
-import { TextField } from '../TextField/TextField'
-import { FormikCheckboxList } from '../FormikCheckboxList/FormikCheckboxList'
-import { useMemo } from 'react'
+import {LabeledTextField} from '../LabeledTextField/LabeledTextField'
+import {TextField} from '../TextField/TextField'
+import {FormikCheckboxList} from '../FormikCheckboxList/FormikCheckboxList'
+import {useMemo} from 'react'
 import Checkbox from '../Checkbox/Checkbox'
+import {listingCategories} from "@/common/types/listingCategories"
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters"
 
 export type ListingSearchFormProps = {
     fieldTypes?: Partial<Record<keyof ListingSearchFilters, 'LIST' | 'DROPDOWN' | boolean>>
 }
 
 export const ListingSearchForm = (props: ListingSearchFormProps) => {
-    const { fieldTypes = { categories: 'DROPDOWN', origins: 'DROPDOWN' } } = props
-    const { setFieldValue, values } = useFormikContext<ListingSearchFilters>()
+    const {fieldTypes = {categories: 'DROPDOWN', origins: 'DROPDOWN'}} = props
+    const {setFieldValue, values} = useFormikContext<ListingSearchFilters>()
 
     const origins = useMemo(() => {
         return Object.keys(ListingOrigin).map((val) => ({
@@ -28,94 +29,94 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
             {fieldTypes.keyword === false ? undefined : (
                 <>
                     <Field
-                        label='Sökord'
+                        label="Sökord"
                         as={LabeledTextField}
-                        placeholder='Filtrera efter produktnamn...'
+                        placeholder="Filtrera efter produktnamn..."
                         showLabel={false}
-                        name='keyword'
-                        data-testid='keywordInput'
+                        name="keyword"
+                        data-testid="keywordInput"
                         fullWidth
                     />
-                    <ErrorMessage name='keyword' />
+                    <ErrorMessage name="keyword"/>
                 </>
             )}
 
             <Field
-                label='Plats'
+                label="Plats"
                 as={LabeledTextField}
-                placeholder='Plats (stad, region, etc)'
-                name='region'
+                placeholder="Plats (stad, region, etc)"
+                name="region"
                 showLabel={false}
-                data-testid='regionInput'
+                data-testid="regionInput"
                 fullWidth
             />
-            <ErrorMessage name='region' />
+            <ErrorMessage name="region"/>
 
             {fieldTypes.categories === 'LIST' ? (
                 <div>
                     <h4>Kategorier</h4>
-                    <FormikCheckboxList name='categories' options={categories} />
+                    <FormikCheckboxList name="categories" options={listingCategories}/>
                 </div>
             ) : (
                 <Field
-                    label='Kategori'
+                    label="Kategori"
                     as={LabeledDropdown}
-                    name='categories'
+                    name="categories"
                     onChange={(cats: Category[]) => {
                         setFieldValue('categories', cats)
                     }}
                     isMulti
-                    options={categories}
-                    data-testid='categorySelect'
+                    options={listingCategories}
+                    data-testid="categorySelect"
                 />
             )}
-            <ErrorMessage name='categories' />
+            <ErrorMessage name="categories"/>
 
-            <div className='space-y-2'>
+            <div className="space-y-2">
                 <h4>Prisintervall</h4>
 
                 <Field
                     as={TextField}
-                    name='priceRangeGte'
-                    placeholder='Från (kr)'
+                    name="priceRangeGte"
+                    placeholder="Från (kr)"
                     onReset={() => setFieldValue('priceRangeGte', undefined)}
                     showClearButton
                     fullWidth
-                    type='number'
-                    data-testid='priceGte'
+                    type="number"
+                    data-testid="priceGte"
                 />
-                <ErrorMessage name='priceRangeGte' />
+                <ErrorMessage name="priceRangeGte"/>
 
                 <Field
                     as={TextField}
-                    name='priceRangeLte'
-                    placeholder='Till (kr)'
+                    name="priceRangeLte"
+                    placeholder="Till (kr)"
                     onReset={() => setFieldValue('priceRangeLte', undefined)}
                     showClearButton
                     fullWidth
-                    type='number'
-                    data-testid='priceLte'
+                    type="number"
+                    data-testid="priceLte"
                 />
-                <ErrorMessage name='priceRangeLte' />
+                <ErrorMessage name="priceRangeLte"/>
             </div>
 
             {fieldTypes.origins === 'DROPDOWN' ? (
                 <Field
-                    label='Sajter'
+                    label="Sajter"
                     as={LabeledDropdown}
-                    name='origins'
+                    name="origins"
                     onChange={(origins: ListingOrigin[]) => {
                         setFieldValue('origins', origins)
                     }}
                     isMulti
                     options={origins}
-                    data-testid='originsSelect'
+                    data-testid="originsSelect"
                 />
             ) : (
                 <div>
                     <h4>Sajter</h4>
                     <FormikCheckboxList
-                        name='origins'
+                        name="origins"
                         options={Object.values(ListingOrigin).map((key) => ({
                             value: key,
                             label: undefined,
@@ -124,16 +125,16 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                 </div>
             )}
 
-            <div className='px-2 pt-4 pb-2'>
+            <div className="px-2 pt-4 pb-2">
                 <Checkbox
-                    label='Auktion'
-                    name='auction'
+                    label="Auktion"
+                    name="auction"
                     onClick={(val: any) =>
                         // TODO: use a tri-state checkbox instead
                         setFieldValue('auction', val === false ? undefined : val)
                     }
                     checked={values.auction}
-                    data-testid='auctionCheckbox'
+                    data-testid="auctionCheckbox"
                 />
             </div>
         </>

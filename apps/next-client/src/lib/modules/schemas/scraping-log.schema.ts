@@ -1,6 +1,6 @@
 import {getModelForClass, prop} from '@typegoose/typegoose'
-import type {IScrapingLog} from '@/common/schemas'
-import {ListingOrigin} from '@/common/schemas'
+import {IScrapingLog} from "@/common/schemas/IScrapingLog"
+import {ListingOrigin} from "@mewi/models"
 
 export class ScrapingLog implements IScrapingLog {
     id!: string

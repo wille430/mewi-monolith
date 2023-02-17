@@ -2,13 +2,14 @@ import type {Ref, ReturnModelType} from '@typegoose/typegoose'
 import {getModelForClass, prop} from '@typegoose/typegoose'
 import type {Document} from 'mongoose'
 import {Listing} from "./Listing"
-import {LoginStrategy, Role} from "@mewi/models"
+import {LoginStrategy, Role, UserDto} from "@mewi/models"
 import {PasswordReset} from "./PasswordReset"
 import {EmailUpdate} from "./EmailUpdate"
+import {Entity} from "./Entity"
 
 export type UserDocument = User & Document
 
-export class User {
+export class User extends Entity {
     id!: string
 
     @prop({type: String, required: true})
@@ -57,8 +58,19 @@ export class User {
 
     // TODO: implement email record relation?
 
-    createdAt!: Date
-    updatedAt!: Date
+    public static convertToDto(obj: User): UserDto {
+        return {
+            email: obj.email,
+            id: obj.id,
+            likedListings: obj.likedListings as any,
+            loginStrategy: obj.loginStrategy,
+            premium: false,
+            roles: obj.roles,
+            createdAt: obj.createdAt,
+            updatedAt: obj.updatedAt
+
+        }
+    }
 }
 
 export const UserModel: ReturnModelType<typeof User> = getModelForClass(User, {

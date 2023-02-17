@@ -30,18 +30,16 @@ export const DisplayListingsRow = (params: DisplayListingsRowParams) => {
                     </span>
                 </div>
             ) : (
-                <>
-                    <div className={style.scrollableView}>
-                        {listings?.map((listing, i) => (
-                            <ListingWidget
-                                key={listing.id}
-                                data-testid={`listing-${i}`}
-                                onClick={() => dispatch(openListing(listing))}
-                                listing={listing}
-                            />
-                        ))}
-                    </div>
-                </>
+                <div className={style.scrollableView}>
+                    {listings?.map((listing, i) => (
+                        <ListingWidget
+                            key={listing.id}
+                            data-testid={`listing-${i}`}
+                            onClick={() => dispatch(openListing(listing))}
+                            listing={listing}
+                        />
+                    ))}
+                </div>
             )}
         </Container>
     )

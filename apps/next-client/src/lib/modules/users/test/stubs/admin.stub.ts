@@ -1,8 +1,8 @@
-import { LoginStrategy, Role } from '@/common/schemas'
 import type { WithId } from 'mongodb'
 import mongoose from 'mongoose'
 import { User } from '@mewi/entities'
 import { timestampsStub } from '@/test/stubs/timestamps.stub'
+import {LoginStrategy, Role} from "@mewi/models"
 
 const id = '633036188f8fd81317025659'
 export const adminStub = (): WithId<User> & { password: string } => ({

@@ -1,7 +1,6 @@
-import { Category, ListingOrigin } from '@/common/schemas'
-import { ListingSort } from '@/common/types'
-import type { FindAllListingsDto } from '@/lib/modules/listings/dto/find-all-listing.dto'
-import { array, boolean, date, mixed, number, object, string } from 'yup'
+import type {FindAllListingsDto} from '@/lib/modules/listings/dto/find-all-listing.dto'
+import {array, boolean, date, mixed, number, object, string} from 'yup'
+import {Category, ListingOrigin, ListingSort} from "@mewi/models"
 
 export const searchListingsSchema = object().shape<Record<keyof FindAllListingsDto, any>>({
     auction: boolean(),

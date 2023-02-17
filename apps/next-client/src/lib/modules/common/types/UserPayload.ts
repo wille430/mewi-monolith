@@ -1,4 +1,4 @@
-import type {Role} from '@/common/schemas'
+import {Role} from "@mewi/models"
 
 export interface UserPayload {
     userId: string

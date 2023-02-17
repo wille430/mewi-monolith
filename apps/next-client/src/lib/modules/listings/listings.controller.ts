@@ -1,4 +1,3 @@
-import {IListing, Role} from '@/common/schemas'
 import {Post, Put, Get, Body, Param, Delete, Query, HttpCode} from 'next-api-decorators'
 import {inject} from 'tsyringe'
 import {UpdateListingDto} from './dto/update-listing.dto'
@@ -13,6 +12,7 @@ import {GetUser} from '@/lib/decorators/user.decorator'
 import {Controller} from '@/lib/decorators/controller.decorator'
 import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import cache from 'memory-cache'
+import {ListingDto, Role} from "@mewi/models"
 
 @Controller()
 export class ListingsController {
@@ -42,7 +42,7 @@ export class ListingsController {
     @Get('/featured')
     @Public()
     async featured() {
-        let cachedListings: IListing[] | undefined = await cache.get('featured')
+        let cachedListings: ListingDto[] | undefined = await cache.get('featured')
         if (!cachedListings) {
             cachedListings = await this.listingsService.sample(8)
             cache.put('featured', cachedListings, 60 * 60 * 15)

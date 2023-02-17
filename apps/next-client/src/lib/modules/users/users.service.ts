@@ -1,4 +1,3 @@
-import {LoginStrategy} from '@/common/schemas'
 import {autoInjectable, inject} from 'tsyringe'
 import bcrypt, {compare} from 'bcrypt'
 import {BadRequestException, NotFoundException} from 'next-api-decorators'
@@ -15,7 +14,7 @@ import type {
 } from './dto/change-password.dto'
 import type {User} from '@mewi/entities'
 import {EmailService} from '../email/email.service'
-import {EmailTemplate} from '@mewi/models'
+import {EmailTemplate, LoginStrategy} from '@mewi/models'
 import {stringify} from 'query-string'
 import {ValidationException} from '@/lib/exceptions/validation.exception'
 import {Listing} from "@mewi/entities"

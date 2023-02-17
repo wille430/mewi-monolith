@@ -1,21 +1,22 @@
-import { Role } from '@/common/schemas'
-import { Body, Delete, Get, HttpCode, Param, Post, Put } from 'next-api-decorators'
-import { inject } from 'tsyringe'
-import { UserWatchersService } from './user-watchers.service'
-import { CreateUserWatcherDto } from './dto/create-user-watcher.dto'
-import { UpdateUserWatcherDto } from './dto/update-user-watcher.dto'
-import type { UserPayload } from '../common/types/UserPayload'
-import { SessionGuard } from '@/lib/middlewares/SessionGuard'
-import { Roles } from '@/lib/middlewares/roles.guard'
-import { GetUser } from '@/lib/decorators/user.decorator'
-import { Controller } from '@/lib/decorators/controller.decorator'
-import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import {Body, Delete, Get, HttpCode, Param, Post, Put} from 'next-api-decorators'
+import {inject} from 'tsyringe'
+import {UserWatchersService} from './user-watchers.service'
+import {CreateUserWatcherDto} from './dto/create-user-watcher.dto'
+import {UpdateUserWatcherDto} from './dto/update-user-watcher.dto'
+import type {UserPayload} from '../common/types/UserPayload'
+import {SessionGuard} from '@/lib/middlewares/SessionGuard'
+import {Roles} from '@/lib/middlewares/roles.guard'
+import {GetUser} from '@/lib/decorators/user.decorator'
+import {Controller} from '@/lib/decorators/controller.decorator'
+import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
+import {Role} from "@mewi/models"
 
 @Controller()
 export class MyWatchersController {
     constructor(
         @inject(UserWatchersService) private readonly userWatchersService: UserWatchersService
-    ) {}
+    ) {
+    }
 
     @Post()
     @HttpCode(201)
@@ -24,7 +25,7 @@ export class MyWatchersController {
         @Body(MyValidationPipe) createUserWatcherDto: CreateUserWatcherDto,
         @GetUser() user: UserPayload
     ) {
-        return this.userWatchersService.create({ ...createUserWatcherDto, userId: user.userId })
+        return this.userWatchersService.create({...createUserWatcherDto, userId: user.userId})
     }
 
     @Get()
@@ -57,7 +58,8 @@ export class MyWatchersController {
 
 @SessionGuard()
 export class UserWatchersController {
-    constructor(private readonly userWatchersService: UserWatchersService) {}
+    constructor(private readonly userWatchersService: UserWatchersService) {
+    }
 
     @Post()
     @Roles(Role.ADMIN)

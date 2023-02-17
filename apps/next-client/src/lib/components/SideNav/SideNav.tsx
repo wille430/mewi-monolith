@@ -1,8 +1,8 @@
 import { Container } from '../Container/Container'
-import { Role } from '@/common/schemas'
 import styles from './SideNav.module.scss'
 import SideNavButton from './SideNavButton/SideNavButton'
 import { useAppSelector } from '@/lib/hooks'
+import {Role} from "@mewi/models"
 
 const SideNav = () => {
     const { user } = useAppSelector((state) => state.user)

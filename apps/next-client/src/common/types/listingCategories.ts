@@ -1,6 +1,6 @@
-import {Category, CategoryLabel} from '../schemas'
+import {Category, CategoryLabel} from '@mewi/models'
 
-export const categories: {
+export const listingCategories: {
     value: Category
     label: CategoryLabel
 }[] = [

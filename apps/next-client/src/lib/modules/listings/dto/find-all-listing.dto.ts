@@ -1,5 +1,3 @@
-import {Category, ListingOrigin} from '@/common/schemas'
-import {ListingSort} from '@/common/types'
 import {Transform} from 'class-transformer'
 import {
     IsOptional,
@@ -14,6 +12,7 @@ import {
 import isString from 'lodash/isString'
 import {DEFAULT_LIMIT} from '../constants'
 import {IPagination} from "@/lib/modules/filtering/IPagination"
+import {Category, ListingOrigin, ListingSort} from "@mewi/models"
 
 export class FindAllListingsDto implements IPagination {
     @IsOptional()

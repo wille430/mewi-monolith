@@ -1,6 +1,6 @@
 import {formatDistance} from 'date-fns'
 import sv from 'date-fns/locale/sv'
-import type {ListingOrigin} from '@/common/schemas'
+import type {ListingOrigin} from '@mewi/models'
 import type {HTMLAttributes} from 'react'
 import style from './ListingWidget.module.scss'
 import DefaultImage from '@/lib/components/DefaultImage/DefaultImage'

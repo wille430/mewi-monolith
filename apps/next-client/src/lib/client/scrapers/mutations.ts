@@ -1,15 +1,14 @@
-import {ListingOrigin} from '@/common/schemas'
-import {ScraperStatusReport} from '@/common/types'
 import type {DeleteListingsDto} from '@/lib/modules/listings/dto/delete-listings.dto'
 import {client, MutationArgs} from '../index'
 import {SCRAPERS_STATUS_KEY} from './swr-keys'
+import {ListingOrigin} from "@mewi/models"
 
 export const startScrapers = (): MutationArgs => {
-    const updateFn = async (statusReports: Record<string, ScraperStatusReport>) => {
+    const updateFn = async (statusReports: Record<string, any>) => {
         return statusReports
     }
 
-    const optimisticData = (statusReports: Record<string, ScraperStatusReport> = {}) => {
+    const optimisticData = (statusReports: Record<string, any> = {}) => {
         // TODO: deprecate
         return statusReports
     }
@@ -33,7 +32,7 @@ export const deleteListingsFrom = (origins: ListingOrigin[]): MutationArgs => {
         return data
     }
 
-    const optimisticData = (statusReports: Record<string, ScraperStatusReport> = {}) => {
+    const optimisticData = (statusReports: Record<string, any> = {}) => {
         for (const origin of origins) {
             statusReports[origin].listings_current = 0
         }

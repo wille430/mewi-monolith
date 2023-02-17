@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { mutate } from 'swr'
+import type {mutate} from 'swr'
 
 export * from './users/users'
 export * from './auth/auth'
@@ -10,7 +10,7 @@ export const client = axios.create({
 })
 
 client.interceptors.response.use(
-    ({ data }) => data,
+    ({data}) => data,
     (err) => {
         throw err.response.data
     }

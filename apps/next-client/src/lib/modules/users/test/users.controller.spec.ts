@@ -1,20 +1,20 @@
-import { faker } from '@faker-js/faker'
-import { IUser, Role } from '@/common/schemas'
+import {faker} from '@faker-js/faker'
 import 'reflect-metadata'
-import { container } from 'tsyringe'
-import { userPayloadStub } from './stubs/user-payload.stub'
-import { userStub } from './stubs/user.stub'
+import {container} from 'tsyringe'
+import {userPayloadStub} from './stubs/user-payload.stub'
+import {userStub} from './stubs/user.stub'
 import type ChangePasswordDto from '../dto/change-password.dto'
-import type { CreateUserDto } from '../dto/create-user.dto'
-import { UpdateEmailDto } from '../dto/update-email.dto'
-import type { UpdateUserDto } from '../dto/update-user.dto'
-import { UsersController } from '../users.controller'
-import { UsersService } from '../users.service'
-import { User, Listing } from '@mewi/entities'
-import { createHandler } from 'next-api-decorators'
-import { RequestMock, createRequestMock } from '@/common/test/utils/requestMock'
-import { UsersRepository } from '../users.repository'
-import { plainToInstance } from 'class-transformer'
+import type {CreateUserDto} from '../dto/create-user.dto'
+import {UpdateEmailDto} from '../dto/update-email.dto'
+import type {UpdateUserDto} from '../dto/update-user.dto'
+import {UsersController} from '../users.controller'
+import {UsersService} from '../users.service'
+import {User, Listing} from '@mewi/entities'
+import {createHandler} from 'next-api-decorators'
+import {RequestMock, createRequestMock} from '@/common/test/utils/requestMock'
+import {UsersRepository} from '../users.repository'
+import {plainToInstance} from 'class-transformer'
+import {Role, UserDto} from "@mewi/models"
 
 jest.mock('../users.service')
 jest.mock('../users.repository')
@@ -37,7 +37,7 @@ describe('UsersController', () => {
 
     describe('#findOne', () => {
         describe('when findOne is called', () => {
-            let user: IUser
+            let user: UserDto
 
             beforeEach(async () => {
                 user = await request({

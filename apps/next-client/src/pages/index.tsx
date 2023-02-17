@@ -12,8 +12,8 @@ import {serialize} from '@/lib/utils/serialize'
 import 'reflect-metadata'
 import {container} from 'tsyringe'
 import {ListingsService} from '@/lib/modules/listings/listings.service'
-import {ListingDto} from "@mewi/models"
-import {ListingSort} from "@/common/types"
+import {ListingDto, ListingSort} from "@mewi/models"
+import {Listing} from "@mewi/entities"
 
 const ListingPopUp = dynamic(() => import('@/lib/components/ListingPopUp/ListingPopUp'))
 
@@ -29,8 +29,8 @@ export const getStaticProps: GetStaticProps<IndexPageProps> = async () => {
 
     return {
         props: {
-            featuredListings: serialize(featuredListings.map(o => o.convertToDto())),
-            newListings: serialize(newListings.map(o => o.convertToDto()))
+            featuredListings: serialize(featuredListings.map(Listing.convertToDto)),
+            newListings: serialize(newListings.map(Listing.convertToDto))
         },
         revalidate: process.env.NODE_ENV === 'production' ? 15 * 60 : 1,
     }

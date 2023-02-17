@@ -11,7 +11,6 @@ import {
     HttpCode,
     BadRequestException,
 } from 'next-api-decorators'
-import {Role} from '@/common/schemas'
 import {inject} from 'tsyringe'
 import type {NextApiResponse} from 'next'
 import {UsersService} from './users.service'
@@ -32,6 +31,7 @@ import {GetUser} from '@/lib/decorators/user.decorator'
 import {Controller} from '@/lib/decorators/controller.decorator'
 import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import {OptionalSessionGuard} from '@/lib/middlewares/optional-session.guard'
+import {Role} from "@mewi/models"
 
 @Controller()
 export class UsersController {

@@ -1,4 +1,4 @@
-import type { Role } from '@/common/schemas'
+import type { Role } from '@mewi/models'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {
     ForbiddenException,

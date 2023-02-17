@@ -4,6 +4,7 @@ import type {Document} from 'mongoose'
 import mongoose from 'mongoose'
 import {Watcher} from "./Watcher"
 import {User} from "./User"
+import {UserWatcherDto} from "@mewi/models"
 
 export type UserWatcherDocument = UserWatcher & Document
 
@@ -29,6 +30,17 @@ export class UserWatcher {
 
     createdAt!: Date
     updatedAt!: Date
+
+    public static convertToDto(obj: UserWatcher): UserWatcherDto {
+        return {
+            id: obj.id,
+            watcher: obj.watcher as any,
+            user: obj.user as any,
+            notifiedAt: obj.notifiedAt,
+            createdAt: obj.createdAt,
+            updatedAt: obj.updatedAt
+        }
+    }
 }
 
 export const UserWatcherModel: ReturnModelType<typeof UserWatcher> = getModelForClass(UserWatcher, {

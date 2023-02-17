@@ -1,12 +1,12 @@
-import type { GetServerSideProps } from 'next'
-import type { ReactElement } from 'react'
+import type {GetServerSideProps} from 'next'
+import type {ReactElement} from 'react'
 import Head from 'next/head'
-import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
-import { withAuth } from '@/lib/session/withAuth'
-import { Container } from '@/lib/components/Container/Container'
-import { Role } from '@/common/schemas'
-import { ScraperPanel } from '@/lib/components/ScraperPanel/ScraperPanel'
-import { EditRolePanel } from '@/lib/components/EditRolePanel/EditRolePanel'
+import {MyAccountLayout} from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import {withAuth} from '@/lib/session/withAuth'
+import {Container} from '@/lib/components/Container/Container'
+import {Role} from '@mewi/models'
+import {ScraperPanel} from '@/lib/components/ScraperPanel/ScraperPanel'
+import {EditRolePanel} from '@/lib/components/EditRolePanel/EditRolePanel'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {
@@ -29,9 +29,9 @@ const AdminIndex = () => {
                 <Container.Header>
                     <h3>Admin panel</h3>
                 </Container.Header>
-                <Container.Content className='space-y-4'>
-                    <ScraperPanel />
-                    <EditRolePanel />
+                <Container.Content className="space-y-4">
+                    <ScraperPanel/>
+                    <EditRolePanel/>
                 </Container.Content>
             </Container>
         </>

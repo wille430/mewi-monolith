@@ -1,7 +1,7 @@
-import type {ListingSort} from './listingSort'
-import type {IWatcher, Category, ListingOrigin} from '../schemas'
+import type {WatcherDto, Category, ListingOrigin} from '@mewi/models'
+import {ListingSort} from "@mewi/models"
 
-type Metadata = IWatcher['metadata']
+type Metadata = WatcherDto['metadata']
 
 export class ListingSearchFilters implements Partial<Metadata> {
     keyword?: string

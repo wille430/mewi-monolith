@@ -1,24 +1,24 @@
-import type { ReactElement } from 'react'
+import type {ReactElement} from 'react'
 import Head from 'next/head'
 import AccountDetails from '@/lib/components/AccountDetails/AccountDetails'
-import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
-import { serialize } from '@/lib/utils/serialize'
-import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
-import { withAuth } from '@/lib/session/withAuth'
-import { Container } from '@/lib/components/Container/Container'
-import { HorizontalLine } from '@/lib/components/HorizontalLine/HorizontalLine'
-import { IUser, Role } from '@/common/schemas'
+import {MyAccountLayout} from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import {serialize} from '@/lib/utils/serialize'
+import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
+import {withAuth} from '@/lib/session/withAuth'
+import {Container} from '@/lib/components/Container/Container'
+import {HorizontalLine} from '@/lib/components/HorizontalLine/HorizontalLine'
+import {UserDto, Role} from '@mewi/models'
 
 interface KontoPageProps {
-    user: IUser
+    user: UserDto
 }
 
 export const getServerSideProps = withAuth(
-    async ({ req }) => {
+    async ({req}) => {
         await import('reflect-metadata')
-        const container = await import('tsyringe').then(({ container }) => container)
+        const container = await import('tsyringe').then(({container}) => container)
         const UsersService = await import('@/lib/modules/users/users.service').then(
-            ({ UsersService }) => UsersService
+            ({UsersService}) => UsersService
         )
         const usersService = container.resolve(UsersService)
 
@@ -43,7 +43,7 @@ export const getServerSideProps = withAuth(
     [Role.USER]
 )
 
-const Konto = ({ user }: KontoPageProps) => {
+const Konto = ({user}: KontoPageProps) => {
     return (
         <>
             <Head>
@@ -58,11 +58,11 @@ const Konto = ({ user }: KontoPageProps) => {
                 >
                     <Container.Header>
                         <h3>Mitt Konto</h3>
-                        <HorizontalLine />
+                        <HorizontalLine/>
                     </Container.Header>
 
                     <Container.Content>
-                        <AccountDetails user={user} />
+                        <AccountDetails user={user}/>
                     </Container.Content>
                     <Container.Footer></Container.Footer>
                 </Container>

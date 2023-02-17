@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import type {IUser} from '@/common/schemas'
 import styles from './AccountDetails.module.scss'
 import {TextField} from '../TextField/TextField'
 import {Button} from '../Button/Button'
@@ -11,9 +10,10 @@ import type {UpdateEmailDto} from '@/lib/modules/users/dto/update-email.dto'
 import {handleError} from './handleError'
 import {updateEmailSchema} from '@/lib/client/users/schemas/update-email.schema'
 import {mutate} from 'swr'
+import {UserDto} from "@mewi/models"
 
 export interface AccountDetailsProps {
-    user: IUser
+    user: UserDto
 }
 
 const AccountDetails = ({user}: AccountDetailsProps) => {

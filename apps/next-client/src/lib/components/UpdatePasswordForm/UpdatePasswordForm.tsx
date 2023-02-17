@@ -3,15 +3,12 @@ import {ErrorMessage, Field, Form, Formik} from 'formik'
 import type {FormikHelpers, FormikErrors} from 'formik'
 import {updatePasswordMutation} from '@/lib/client/users/mutations'
 import {PASSWORD_RESET_REDIRECT_TO} from '@/lib/constants/paths'
-import {useAppDispatch} from '@/lib/hooks'
 import Router from 'next/router'
 import {Button} from '../Button/Button'
 import {handleError} from './handleError'
 import {TextField} from '../TextField/TextField'
 
 export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswordWithToken> }) => {
-    const dispatch = useAppDispatch()
-
     const initialValues: ChangePasswordWithToken = {
         ...(props.initialValues as ChangePasswordWithToken),
         password: '',

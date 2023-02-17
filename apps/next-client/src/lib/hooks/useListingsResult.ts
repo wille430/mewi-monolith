@@ -1,4 +1,4 @@
-import { ListingSearchFilters } from '@/common/types'
+import { ListingSearchFilters } from '@/common/types/ListingSearchFilters'
 import useSWR from 'swr'
 import { getListings } from '../client/listings/queries'
 import { LISTINGS_KEY } from '../client/listings/swr-keys'

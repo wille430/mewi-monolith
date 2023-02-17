@@ -1,10 +1,10 @@
-import { IListing, IUserWatcher } from '@/common/schemas'
-import type { FindAllListingsReponse } from '@/lib/modules/listings/dto/find-all-listings-response.dto'
-import { removeNullValues } from '@/lib/utils/removeNullValues'
-import { stringify } from 'query-string'
-import { client } from '../index'
+import type {FindAllListingsReponse} from '@/lib/modules/listings/dto/find-all-listings-response.dto'
+import {removeNullValues} from '@/lib/utils/removeNullValues'
+import {stringify} from 'query-string'
+import {client} from '../index'
+import {ListingDto, UserWatcherDto} from "@mewi/models"
 
-export const getWatcherItems = async (watcher: IUserWatcher) => {
+export const getWatcherItems = async (watcher: UserWatcherDto) => {
     const query = stringify({
         dateGte: watcher.createdAt,
         limit: 5,
@@ -15,5 +15,5 @@ export const getWatcherItems = async (watcher: IUserWatcher) => {
 }
 
 export const getLikedListings = () => {
-    return client.get<never, IListing[]>('/users/me/likes')
+    return client.get<never, ListingDto[]>('/users/me/likes')
 }

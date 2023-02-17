@@ -1,4 +1,3 @@
-import { Role } from '@/common/schemas'
 import {Body, HttpCode, Post, Put} from 'next-api-decorators'
 import { inject } from 'tsyringe'
 import { GetLogsDto } from './dto/get-logs.dto'
@@ -7,6 +6,7 @@ import { Roles } from '@/lib/middlewares/roles.guard'
 import { AdminOrKeyGuard } from '@/lib/middlewares/admin-or-key.guard'
 import { Controller } from '@/lib/decorators/controller.decorator'
 import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
+import {Role} from "@mewi/models"
 
 @Controller()
 export class ScrapersController {

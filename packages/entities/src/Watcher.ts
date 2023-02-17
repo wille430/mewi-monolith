@@ -1,10 +1,12 @@
 import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
 import type {Document} from 'mongoose'
 import {WatcherMetadata} from "./WatcherMetadata"
+import {WatcherDto} from "@mewi/models"
+import {Entity} from "./Entity"
 
 export type WatcherDocument = Watcher & Document
 
-export class Watcher {
+export class Watcher extends Entity {
 
     id!: string
 
@@ -18,6 +20,16 @@ export class Watcher {
 
     @prop(Date)
     notifiedAt?: Date
+
+    public static convertToDto(obj: Watcher): WatcherDto {
+        return {
+            createdAt: obj.createdAt,
+            id: obj.id,
+            metadata: obj.metadata,
+            notifiedAt: obj.notifiedAt,
+            updatedAt: obj.updatedAt
+        }
+    }
 }
 
 export const WatcherModel: ReturnModelType<typeof Watcher> = getModelForClass(Watcher, {

@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import type { IUserWatcher } from '@/common/schemas'
 import styles from './NewItemsDrawer.module.scss'
 import { openListing } from '@/lib/store/listings'
 import { useAppDispatch } from '@/lib/hooks'
@@ -9,9 +8,10 @@ import { MY_WATCHERS_KEY } from '@/lib/client/user-watchers/swr-keys'
 import { getWatcherItems } from '@/lib/client/user-watchers/queries'
 import useSWR from 'swr'
 import clsx from 'clsx'
+import {UserWatcherDto} from "@mewi/models"
 
 interface NewItemsDrawerProps {
-    watcher: IUserWatcher
+    watcher: UserWatcherDto
 }
 
 const NewItemsDrawer = ({ watcher }: NewItemsDrawerProps) => {

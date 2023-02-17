@@ -1,7 +1,7 @@
-import { IUser, LoginStrategy, Role } from '@/common/schemas'
-import { faker } from '@faker-js/faker'
+import {faker} from '@faker-js/faker'
+import {LoginStrategy, Role, UserDto} from "@mewi/models"
 
-export const createFakeUser = (overrides: Partial<IUser>): IUser => ({
+export const createFakeUser = (overrides: Partial<UserDto>): UserDto => ({
     id: faker.database.mongodbObjectId(),
     email: faker.internet.email(),
     password: faker.random.alphaNumeric(32),

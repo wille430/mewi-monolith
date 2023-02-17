@@ -1,5 +1,4 @@
-import type { Currency } from '@/common/schemas'
-import { Category, ListingOrigin } from '@/common/schemas'
+import { Category, ListingOrigin, Currency } from '@mewi/models'
 import { Transform } from 'class-transformer'
 import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 import type { Listing } from '@mewi/entities'

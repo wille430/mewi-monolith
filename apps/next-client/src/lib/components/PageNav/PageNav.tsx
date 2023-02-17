@@ -3,7 +3,7 @@ import {memo, useMemo} from 'react'
 import {FiArrowRight, FiArrowLeft} from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
 import {useSearchContext} from '@/lib/hooks/useSearch'
-import {ListingSearchFilters} from '@/common/types'
+import {ListingSearchFilters} from '@/common/types/ListingSearchFilters'
 import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants"
 
 interface PageNavProps {

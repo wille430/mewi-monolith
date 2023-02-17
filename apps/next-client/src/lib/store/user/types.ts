@@ -1,8 +1,8 @@
-import { IUser } from "@/common/schemas"
+import {UserDto} from "@mewi/models"
 
 export interface UserState {
     isLoggedIn: boolean
-    user?: IUser
+    user?: UserDto
 }
 
 export enum UserActionTypes {

@@ -1,18 +1,18 @@
-import { IUser, Role } from '@/common/schemas'
-import type { ChangePasswordWithToken } from '@/lib/modules/users/dto/change-password.dto'
-import { client, MutationArgs } from '../index'
-import { ALL_USERS_KEY } from './swr-keys'
+import type {ChangePasswordWithToken} from '@/lib/modules/users/dto/change-password.dto'
+import {client, MutationArgs} from '../index'
+import {ALL_USERS_KEY} from './swr-keys'
+import {Role, UserDto} from "@mewi/models"
 
 export const updateUserRoles = (userId: string, roles: Role[]): MutationArgs => {
-    const updateFn = async (users: IUser[]) => {
-        await client.put<never, IUser>('/users/' + userId, {
+    const updateFn = async (users: UserDto[]) => {
+        await client.put<never, UserDto>('/users/' + userId, {
             roles,
         })
 
         return users
     }
 
-    const optimisticData = (users: IUser[] = []) => {
+    const optimisticData = (users: UserDto[] = []) => {
         const index = users?.findIndex((user) => user.id === userId)
 
         users[index] = {

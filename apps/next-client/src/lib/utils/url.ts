@@ -1,4 +1,4 @@
-import { ListingSearchFilters as ListingFilters } from '@/common/types'
+import { ListingSearchFilters as ListingFilters } from '@/common/types/ListingSearchFilters'
 import omit from 'lodash/omit'
 import { stringify } from 'query-string'
 

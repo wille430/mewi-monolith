@@ -1,4 +1,4 @@
-import {Category, CategoryLabel} from '@/common/schemas'
+import {Category, CategoryLabel} from '@mewi/models'
 import type {LinkProps} from 'next/link'
 import type {RootState} from '@/lib/store'
 

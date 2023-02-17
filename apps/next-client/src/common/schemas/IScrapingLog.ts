@@ -1,7 +1,6 @@
-import { ListingOrigin } from './enums/listing-origin.enum'
-import { IEntity } from './IEntity'
+import {ListingOrigin} from "@mewi/models"
 
-export interface IScrapingLog extends IEntity {
+export interface IScrapingLog {
     id: string
     addedCount: number
 
@@ -11,4 +10,6 @@ export interface IScrapingLog extends IEntity {
     scrapeToDate?: Date
 
     origin: ListingOrigin
+    createdAt: Date
+    updatedAt: Date
 }

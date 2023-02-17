@@ -1,13 +1,13 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { IUser } from '@/common/schemas'
-import { UserActionTypes } from './types'
-import { client } from '@/lib/client'
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit'
+import {UserActionTypes} from './types'
+import {client} from '@/lib/client'
+import {UserDto} from "@mewi/models"
 
 export const setLoggedInStatus = createAction(
     UserActionTypes.SET_LOGGED_IN_STATUS,
-    (status: boolean, user: IUser | undefined = undefined) => {
+    (status: boolean, user: UserDto | undefined = undefined) => {
         return {
-            payload: { status, user },
+            payload: {status, user},
         }
     }
 )
@@ -19,10 +19,10 @@ export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
 
 export const login = createAsyncThunk(
     UserActionTypes.LOGIN,
-    async ({ email, password }: { email: string; password: string }, thunkApi) => {
+    async ({email, password}: { email: string; password: string }, thunkApi) => {
         try {
             await client
-                .post('/auth/login', { email, password })
+                .post('/auth/login', {email, password})
                 .then((res: any) => res.data)
                 .catch((e: any) => {
                     throw e.data

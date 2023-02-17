@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import queryString from 'query-string'
 import { ListingsActionTypes } from './types'
-import { ListingSearchFilters } from '@/common/types'
+import { ListingSearchFilters } from '@/common/types/ListingSearchFilters'
 import { client } from '@/lib/client'
 import {ListingDto} from "@mewi/models"
 

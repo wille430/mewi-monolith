@@ -1,11 +1,11 @@
-import type { Role } from '@/common/schemas'
-import type { GetServerSideProps } from 'next'
-import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
-import { withSessionSsr } from '@/lib/session/withSessionSsr'
+import type {GetServerSideProps} from 'next'
+import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
+import {withSessionSsr} from '@/lib/session/withSessionSsr'
+import {Role} from "@mewi/models"
 
 export const withAuth = (handler: GetServerSideProps, allowedRoles: Role[]): GetServerSideProps => {
     return withSessionSsr(async (context) => {
-        const { req } = context
+        const {req} = context
         const roles = req.session.user?.roles
 
         if (!roles) {

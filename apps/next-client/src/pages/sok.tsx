@@ -9,7 +9,7 @@ import {searchListingsSchema} from '@/lib/client/listings/schemas/search-listing
 import clsx from 'clsx'
 import {TextField} from '@/lib/components/TextField/TextField'
 import {Field} from 'formik'
-import {ListingSearchFilters} from "@/common/types"
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters"
 import React from "react"
 
 const SearchPage = () => {

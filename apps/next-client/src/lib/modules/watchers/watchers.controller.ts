@@ -1,4 +1,3 @@
-import {Role} from '@/common/schemas'
 import {Body, Delete, Get, HttpCode, Param, Post, Put, Query} from 'next-api-decorators'
 import {inject} from 'tsyringe'
 import {WatchersService} from './watchers.service'
@@ -9,6 +8,7 @@ import {Controller} from '@/lib/decorators/controller.decorator'
 import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import {FindAllWatchersDto} from './dto/find-all-watchers.dto'
 import {AdminOrKeyGuard} from '@/lib/middlewares/admin-or-key.guard'
+import {Role} from "@mewi/models"
 
 @Controller()
 export class WatchersController {

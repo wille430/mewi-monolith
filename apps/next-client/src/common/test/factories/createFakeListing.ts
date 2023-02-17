@@ -1,7 +1,8 @@
-import { faker } from '@faker-js/faker'
-import { Category, IListing, ListingOrigin } from '@/common/schemas'
+import {faker} from '@faker-js/faker'
+import { Listing } from '@mewi/entities'
+import {Category, ListingOrigin} from "@mewi/models"
 
-export const createFakeListing = (overrides: Partial<IListing> = {}): IListing => {
+export const createFakeListing = (overrides: Partial<Listing> = {}): Listing => {
     const origin = faker.helpers.arrayElement(Object.values(ListingOrigin))
 
     return {
@@ -10,7 +11,7 @@ export const createFakeListing = (overrides: Partial<IListing> = {}): IListing =
         body: faker.commerce.productDescription(),
         category: faker.helpers.arrayElement(Object.values(Category)),
         date: faker.date.recent(),
-        origin_id: `${origin.toLowerCase()}-${faker.random.alphaNumeric(16)}`,
+        origin_id: `${origin.toLowerCase()}-${faker.random.alphaNumeric(16)}` as string,
         imageUrl: [],
         isAuction: faker.datatype.boolean(),
         origin: origin,
@@ -18,5 +19,5 @@ export const createFakeListing = (overrides: Partial<IListing> = {}): IListing =
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent(),
         ...overrides,
-    }
+    } as Listing
 }

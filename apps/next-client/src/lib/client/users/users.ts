@@ -1,10 +1,10 @@
-import type { IUser } from '@/common/schemas'
 import { client, MutationArgs } from '../index'
 import { UpdateEmailDto } from '../../modules/users/dto/update-email.dto'
 import { CHANGE_EMAIL_SWR_KEY } from './swr-keys'
+import {UserDto} from "@mewi/models"
 
 export const getMe = async () => {
-    return client.get<never, IUser>('/users/me')
+    return client.get<never, UserDto>('/users/me')
 }
 
 export const updateEmail = (newEmail: string): MutationArgs => {

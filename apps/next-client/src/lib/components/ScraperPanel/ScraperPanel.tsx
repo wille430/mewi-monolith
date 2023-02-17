@@ -1,11 +1,10 @@
-import {ListingOrigin} from '@/common/schemas'
+import {ListingOrigin} from '@mewi/models'
 import {useMemo, useState} from 'react'
 import {formatDistance} from 'date-fns'
 import {sv} from 'date-fns/locale'
 import {Table} from '../Table/Table'
 import {Button, ButtonProps} from '../Button/Button'
 import Checkbox from '@/lib/components/Checkbox/Checkbox'
-import {ScraperStatusReport} from '@/common/types'
 import useSWR, {useSWRConfig} from 'swr'
 import {SCRAPERS_STATUS_KEY} from '@/lib/client/scrapers/swr-keys'
 import {getScrapersStatus} from '@/lib/client/scrapers/queries'
@@ -19,7 +18,7 @@ export const ScraperPanel = () => {
 
     // noinspection UnnecessaryLocalVariableJS
     const initialScraperStatus = useMemo(() => {
-        const scraperStatus: Record<string, ScraperStatusReport> = {}
+        const scraperStatus: Record<string, any> = {}
 
         for (const key of Object.keys(ListingOrigin)) {
             scraperStatus[key] = {

@@ -1,11 +1,11 @@
-import { IUserWatcher } from '@/common/schemas'
-import type { CreateWatcherDto } from '@/lib/modules/watchers/dto/create-watcher.dto'
-import { client, MutationArgs } from '../index'
-import { MY_WATCHERS_KEY } from './swr-keys'
+import type {CreateWatcherDto} from '@/lib/modules/watchers/dto/create-watcher.dto'
+import {client, MutationArgs} from '../index'
+import {MY_WATCHERS_KEY} from './swr-keys'
+import {UserWatcherDto} from "@mewi/models"
 
 export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
-    const updateFn = async (watchers: IUserWatcher[]) => {
-        const watcher = await client.post<never, IUserWatcher>('/user-watchers', data)
+    const updateFn = async (watchers: UserWatcherDto[]) => {
+        const watcher = await client.post<never, UserWatcherDto>('/user-watchers', data)
 
         const i = watchers.findIndex((x) => x.id === undefined)
         watchers[i] = watcher
@@ -13,7 +13,7 @@ export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
         return watchers
     }
 
-    const optimisticData = (watchers?: IUserWatcher[]) => {
+    const optimisticData = (watchers?: UserWatcherDto[]) => {
         if (!watchers) {
             watchers = []
         }
@@ -40,14 +40,14 @@ export const createUserWatcher = (data: CreateWatcherDto): MutationArgs => {
 }
 
 export const removeUserWatcher = (watcherId: string): MutationArgs => {
-    const updateFn = async (watchers: IUserWatcher[]) => {
+    const updateFn = async (watchers: UserWatcherDto[]) => {
         await client.delete(`/user-watchers/${watcherId}`)
         return watchers
     }
 
-    const optimisticData = (watchers: IUserWatcher[] = []) => {
+    const optimisticData = (watchers: UserWatcherDto[] = []) => {
         return watchers.filter((watcher) => watcher.id !== watcherId)
     }
 
-    return [MY_WATCHERS_KEY, updateFn, { optimisticData }]
+    return [MY_WATCHERS_KEY, updateFn, {optimisticData}]
 }

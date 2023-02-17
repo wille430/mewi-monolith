@@ -1,6 +1,6 @@
-import { Role } from '@/common/schemas'
 import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator'
 import type { User } from '@mewi/entities'
+import {Role} from "@mewi/models"
 
 export class CreateUserDto implements Partial<User> {
     @IsEmail()

@@ -6,7 +6,7 @@ import {stringifySearchPath} from '@/lib/utils/url'
 import {Container} from '@/lib/components/Container/Container'
 import {ListingSearchForm} from '@/lib/components/ListingSearchForm/ListingSearchForm'
 import {Form, Formik} from 'formik'
-import {ListingSearchFilters} from '@/common/types'
+import {ListingSearchFilters} from '@/common/types/ListingSearchFilters'
 
 const Filter: NextPageWithLayout = () => {
     const router = useRouter()

@@ -1,52 +1,51 @@
 import capitalize from 'lodash/capitalize'
-import type { IUser } from '@/common/schemas'
-import { Role } from '@/common/schemas'
-import { useMemo, useState } from 'react'
+import {useMemo, useState} from 'react'
 import styles from './EditRolePanel.module.scss'
 import StyledLoader from '../StyledLoader'
-import { TextField } from '../TextField/TextField'
-import { Button } from '../Button/Button'
-import useSWR, { useSWRConfig } from 'swr'
-import { ALL_USERS_KEY } from '@/lib/client/users/swr-keys'
-import { getUsers } from '@/lib/client/users/queries'
-import { updateUserRoles } from '@/lib/client/users/mutations'
+import {TextField} from '../TextField/TextField'
+import {Button} from '../Button/Button'
+import useSWR, {useSWRConfig} from 'swr'
+import {ALL_USERS_KEY} from '@/lib/client/users/swr-keys'
+import {getUsers} from '@/lib/client/users/queries'
+import {updateUserRoles} from '@/lib/client/users/mutations'
 import clsx from 'clsx'
+import {Role, UserDto} from "@mewi/models"
 
 export function EditRolePanel() {
     const [email, setEmail] = useState<string | undefined>()
 
-    const { data, mutate: refetch } = useSWR(ALL_USERS_KEY, () => getUsers({ email }))
+    const {data, mutate: refetch} = useSWR(ALL_USERS_KEY, () => getUsers({email}))
 
     return (
-        <div className='spce-y-2 p-2'>
-            <h4 className='mb-2'>Hantera roller</h4>
-            <div className='bg-gray-150 space-y-4 rounded p-2'>
+        <div className="spce-y-2 p-2">
+            <h4 className="mb-2">Hantera roller</h4>
+            <div className="bg-gray-150 space-y-4 rounded p-2">
                 <form
-                    className='flex max-w-sm'
+                    className="flex max-w-sm"
                     onSubmit={async (e) => {
                         e.preventDefault()
                         await refetch()
                     }}
                 >
                     <TextField
-                        placeholder='E-postaddress'
+                        placeholder="E-postaddress"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
                     />
-                    <Button label='Sök' className='ml-1' type='submit' />
+                    <Button label="Sök" className="ml-1" type="submit"/>
                 </form>
-                <div className='w-ful p-2'>
+                <div className="w-ful p-2">
                     {!data ? (
-                        <div className='flex w-full justify-center'>
-                            <StyledLoader />
+                        <div className="flex w-full justify-center">
+                            <StyledLoader/>
                         </div>
                     ) : !data?.length ? (
                         <span>Inga användare hittades</span>
                     ) : (
                         <ul>
                             {data?.map((user) => (
-                                <UserRolesWidget key={user.id} user={user} />
+                                <UserRolesWidget key={user.id} user={user}/>
                             ))}
                         </ul>
                     )}
@@ -57,23 +56,23 @@ export function EditRolePanel() {
 }
 
 interface UserRolesWidgetProps {
-    user: IUser
+    user: UserDto
 }
 
-export const UserRolesWidget = ({ user }: UserRolesWidgetProps) => {
-    const { mutate } = useSWRConfig()
+export const UserRolesWidget = ({user}: UserRolesWidgetProps) => {
+    const {mutate} = useSWRConfig()
 
     const missingRoles = useMemo(() => {
         const roles = user.roles
-        const rolesNotInIUser: Role[] = []
+        const rolesNotInUserDto: Role[] = []
 
         for (const role of Object.keys(Role)) {
             if (!roles.includes(role as Role)) {
-                rolesNotInIUser.push(role as Role)
+                rolesNotInUserDto.push(role as Role)
             }
         }
 
-        return rolesNotInIUser
+        return rolesNotInUserDto
     }, [user.roles])
 
     const removeRole = (role: Role) => {

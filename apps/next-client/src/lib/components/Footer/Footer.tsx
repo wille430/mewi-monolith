@@ -1,7 +1,7 @@
-import {Category, CategoryLabel} from '@/common/schemas'
 import Link from 'next/link'
 import styles from './Footer.module.scss'
 import clsx from "clsx"
+import {Category, CategoryLabel} from "@mewi/models"
 
 export const Footer = () => {
     return (
