@@ -74,7 +74,7 @@ export const Nav = () => {
     }, [isDrawer, mobileOpen])
 
     return (
-        <nav className={clsx(styles.nav, "container")}>
+        <nav className={clsx(styles.nav, "container px-0 lg:px-4")}>
             <motion.a
                 variants={logoVariants}
                 animate={showLogo ? 'show' : 'hidden'}
