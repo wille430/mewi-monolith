@@ -5,7 +5,6 @@ module.exports = {
         "./src/lib/components/**/*.{js,ts,jsx,tsx}",
     ],
     plugins: [require('tailwind-scrollbar')],
-    purge: true,
     theme: {
         extend: {
             colors: {

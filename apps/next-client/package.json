@@ -11,8 +11,6 @@
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest --filter=./scripts/unit-tests-filter.js",
     "test:integration": "jest --filter=./scripts/integration-tests-filter.js --runInBand",
-    "db:up": "docker-compose up db -d || sudo docker compose up db -d",
-    "db:down": "docker-compose down db || sudo docker compose down db",
     "env:load": "dotenv -e .env.development",
     "db:seed": "npm run env:load -- ts-node --project='tsconfig.json' src/test/seed.ts",
     "db:reset": "npm run env:load -- ts-node --project='tsconfig.json' src/test/clearDb.ts"

@@ -24,7 +24,7 @@ const Header = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElemen
 )
 
 const Content = (props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => (
-    <section className={styles['header']} {...props}>
+    <section className={styles['content']} {...props}>
         {props.children}
     </section>
 )

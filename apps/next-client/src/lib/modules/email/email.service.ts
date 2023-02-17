@@ -3,7 +3,7 @@ import {SendEmailResultDto} from './dto/send-email-result.dto'
 import {User} from '@mewi/entities'
 import {EmailTemplate} from "@mewi/models"
 import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib"
-import {EmailRecordModel} from "@/lib/modules/schemas/email-record.schema"
+import {EmailRecordModel} from "@/lib/modules/email/email-record.schema"
 
 @autoInjectable()
 export class EmailService {
