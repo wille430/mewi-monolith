@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import * as assert from "assert"
+import assert from "assert"
 
 
 let cached: any

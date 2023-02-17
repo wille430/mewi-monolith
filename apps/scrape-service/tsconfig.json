@@ -5,7 +5,9 @@
     "target": "es5",
     "sourceMap": true,
     "outDir": "./dist",
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "types": ["vitest/globals"]
   },
   "exclude": [
     "node_modules"

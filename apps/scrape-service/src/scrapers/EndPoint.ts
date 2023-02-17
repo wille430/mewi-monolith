@@ -1,7 +1,7 @@
-import {ScrapeMetadata, ScrapeReturn} from './Scraper'
+import {ScrapeMetadata, ScrapeResponse} from './Scraper'
 
 interface EndPoint<T> {
-    scrape(page: number): Promise<ScrapeReturn<T>>
+    scrape(page: number): Promise<ScrapeResponse<T>>
 }
 
 export abstract class AbstractEndPoint<Entity, Response, RawEntity>
@@ -12,7 +12,7 @@ export abstract class AbstractEndPoint<Entity, Response, RawEntity>
         this.identifier = identifier
     }
 
-    async scrape(scrapeAmount: number): Promise<ScrapeReturn<Entity>> {
+    async scrape(scrapeAmount: number): Promise<ScrapeResponse<Entity>> {
         const parsedEntities = []
 
         let entities = []

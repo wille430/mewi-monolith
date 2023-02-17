@@ -16,11 +16,13 @@ export class BytbilScraper extends Scraper<Listing> {
         'slap',
     ]
 
+    public static createEndpoints = () => BytbilScraper.vehicleTypes.map((o) => new BytbilEndPoint(o))
+
     constructor() {
         super(
             ListingOrigin.Bytbil,
             'https://bytbil.com/',
-            BytbilScraper.vehicleTypes.map((o) => new BytbilEndPoint(o))
+            BytbilScraper.createEndpoints()
         )
     }
 }

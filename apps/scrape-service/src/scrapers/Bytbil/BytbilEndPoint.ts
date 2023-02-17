@@ -41,11 +41,13 @@ export class BytbilEndPoint extends AbstractEndPoint<Listing, CheerioAPI, Cheeri
         const href = ele.find('.car-list-header > a')?.attr('href')
         const priceString = ele.find('.car-price-main')?.text()?.replace(/\D/g, '')
 
+        const imageEle = ele.find("div.car-image")
+        const imageUrl = imageEle.attr('style').match(/background-image: url\((.*)\)/)?.at(1)
+
         return this.parser.parseListing({
             origin_id: ele.find('.uk-grid')?.attr('data-model-id'),
             title: ele.find('.car-list-header > a')?.text(),
-            // TODO
-            // imageUrl: [],
+            imageUrl: imageUrl ? [imageUrl] : [],
             isAuction: false,
             redirectUrl: href ? new URL(href, this.baseUrl).toString() : this.baseUrl,
             price: priceString

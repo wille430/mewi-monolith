@@ -28,7 +28,8 @@ export class BilwebEndPoint extends AbstractEndPoint<Listing, CheerioAPI, Cheeri
     }
 
     protected parseRawEntity(ele: Cheerio<any>): Promise<Partial<Listing>> | Partial<Listing> {
-        const imageUrl = ele.find('img.goToObject')?.attr('src')
+        const imageEle = ele.find('img.goToObject')
+        const imageUrl = imageEle?.attr("data-src") ?? imageEle.attr("src")
         const priceString = ele.find('.Card-mainPrice')?.text()
         const redirectPath = ele.find('.Card-heading a')?.attr('href')
 

@@ -1,7 +1,7 @@
 import {AbstractEndPoint} from './EndPoint'
 import {ListingOrigin} from "@mewi/models"
 
-export type ScrapeReturn<T> = {
+export type ScrapeResponse<T> = {
     entities: T[]
     metadata: ScrapeMetadata
 }

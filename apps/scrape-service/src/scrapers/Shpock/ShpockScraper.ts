@@ -4,7 +4,10 @@ import {Listing} from "@mewi/entities"
 import {ListingOrigin} from "@mewi/models"
 
 export class ShpockScraper extends Scraper<Listing> {
+
+    public static createEndpoints = () => [new ShpockEndPoint()]
+
     constructor() {
-        super(ListingOrigin.Shpock, 'https://shpock.com/', [new ShpockEndPoint()])
+        super(ListingOrigin.Shpock, 'https://shpock.com/', ShpockScraper.createEndpoints())
     }
 }

@@ -4,8 +4,11 @@ import {ListingOrigin} from "@mewi/models"
 import {Listing} from "@mewi/entities"
 
 export class BlocketScraper extends Scraper<Listing> {
+
+    public static createEndpoints = () => [new BlocketEndPoint()]
+
     constructor() {
         const baseUrl = 'https://www.blocket.se/'
-        super(ListingOrigin.Blocket, baseUrl, [new BlocketEndPoint()])
+        super(ListingOrigin.Blocket, baseUrl, BlocketScraper.createEndpoints())
     }
 }
