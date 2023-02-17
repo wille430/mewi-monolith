@@ -162,8 +162,8 @@ export abstract class EntityRepository<T extends Document> {
         return await agg
     }
 
-    async sample(count: number) {
-        const totalDocs = await this.entityModel.count({})
+    async sample(count: number, filterQuery: FilterQuery<T> = {}) {
+        const totalDocs = await this.entityModel.count(filterQuery)
 
         const randomNums = Array.from({length: Math.min(count, totalDocs)}, () =>
             Math.floor(Math.random() * (totalDocs - 1))

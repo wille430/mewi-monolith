@@ -129,7 +129,14 @@ export class ListingsService {
     }
 
     public async getFeatured() {
-        return this.sample(8)
+        return this.listingsRepository.sample(8, {
+            imageUrl: {
+                $exists: true,
+                $not: {
+                    $size: 0
+                }
+            }
+        })
     }
 
     async getRecent() {
