@@ -1,12 +1,12 @@
 import type {ReactElement} from 'react'
 import Head from 'next/head'
-import AccountDetails from '@/lib/components/AccountDetails/AccountDetails'
-import {MyAccountLayout} from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import AccountDetails from '@/components/AccountDetails/AccountDetails'
+import {MyAccountLayout} from '@/components/MyPagesLayout/MyPagesLayout'
 import {serialize} from '@/lib/utils/serialize'
 import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
 import {withAuth} from '@/lib/session/withAuth'
-import {Container} from '@/lib/components/Container/Container'
-import {HorizontalLine} from '@/lib/components/HorizontalLine/HorizontalLine'
+import {Container} from '@/components/Container/Container'
+import {HorizontalLine} from '@/components/HorizontalLine/HorizontalLine'
 import {UserDto, Role} from '@mewi/models'
 
 interface KontoPageProps {

@@ -1,11 +1,11 @@
 import type {GetServerSideProps} from 'next'
 import type {ReactElement} from 'react'
 import Head from 'next/head'
-import {MyAccountLayout} from '@/lib/components/MyPagesLayout/MyPagesLayout'
+import {MyAccountLayout} from '@/components/MyPagesLayout/MyPagesLayout'
 import {withAuth} from '@/lib/session/withAuth'
-import {Container} from '@/lib/components/Container/Container'
+import {Container} from '@/components/Container/Container'
 import {Role} from '@mewi/models'
-import {EditRolePanel} from '@/lib/components/EditRolePanel/EditRolePanel'
+import {EditRolePanel} from '@/components/EditRolePanel/EditRolePanel'
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
     return {

@@ -3,11 +3,11 @@ import { useState } from 'react'
 import Head from 'next/head'
 import { Formik } from 'formik'
 import Link from 'next/link'
-import { client } from '@/lib/client'
-import { Layout } from '@/lib/components/Layout/Layout'
-import { useUser } from '@/lib/hooks/useUser'
-import { TextField } from '@/lib/components/TextField/TextField'
-import { Button } from '@/lib/components/Button/Button'
+import { client } from '@/client'
+import { Layout } from '@/components/Layout/Layout'
+import { useUser } from '@/hooks/useUser'
+import { TextField } from '@/components/TextField/TextField'
+import { Button } from '@/components/Button/Button'
 
 const ForgottenPassword = () => {
     useUser({

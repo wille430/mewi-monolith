@@ -5,9 +5,9 @@ import { ReactElement, ReactNode } from 'react'
 import '@/styles/app.scss'
 import { SWRConfig } from 'swr'
 import { Provider } from 'react-redux'
-import { wrapper } from '@/lib/store'
+import { wrapper } from '@/store'
 import { fetchJson } from '@/lib/fetchJson'
-import { client } from '@/lib/client'
+import { client } from '@/client'
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode

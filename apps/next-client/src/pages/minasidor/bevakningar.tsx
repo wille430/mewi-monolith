@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react'
 import Head from 'next/head'
-import WatcherList from '@/lib/components/WatcherList/WatcherList'
-import { MyAccountLayout } from '@/lib/components/MyPagesLayout/MyPagesLayout'
-import { ListingPopUpContainer } from '@/lib/components/ListingPopUp/ListingPopUpContainer'
-import { useUser } from '@/lib/hooks/useUser'
+import WatcherList from '@/components/WatcherList/WatcherList'
+import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
+import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
+import { useUser } from '@/hooks/useUser'
 import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
 
 const Bevakningar = () => {

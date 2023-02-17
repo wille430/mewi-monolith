@@ -2,12 +2,12 @@ import Head from 'next/head'
 import type {ReactElement} from 'react'
 import type {GetStaticProps} from 'next'
 import dynamic from 'next/dynamic'
-import {Layout} from '@/lib/components/Layout/Layout'
-import {Hero} from '@/lib/components/Hero/Hero'
-import {DecorativeWaves} from '@/lib/components/DecorativeWaves/DecorativeWaves'
-import {DisplayListingsRow} from '@/lib/components/DisplayListingsRow/DisplayListingsRow'
-import {useAppDispatch, useAppSelector} from '@/lib/hooks'
-import {closeListing} from '@/lib/store/listings'
+import {Layout} from '@/components/Layout/Layout'
+import {Hero} from '@/components/Hero/Hero'
+import {DecorativeWaves} from '@/components/DecorativeWaves/DecorativeWaves'
+import {DisplayListingsRow} from '@/components/DisplayListingsRow/DisplayListingsRow'
+import {useAppDispatch, useAppSelector} from '@/hooks'
+import {closeListing} from '@/store/listings'
 import {serialize} from '@/lib/utils/serialize'
 import 'reflect-metadata'
 import {container} from 'tsyringe'
@@ -15,7 +15,7 @@ import {ListingsService} from '@/lib/modules/listings/listings.service'
 import {ListingDto, ListingSort} from "@mewi/models"
 import {Listing} from "@mewi/entities"
 
-const ListingPopUp = dynamic(() => import('@/lib/components/ListingPopUp/ListingPopUp'))
+const ListingPopUp = dynamic(() => import('@/components/ListingPopUp/ListingPopUp'))
 
 interface IndexPageProps {
     featuredListings: ListingDto[]

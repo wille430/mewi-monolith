@@ -1,11 +1,11 @@
-import { UpdatePasswordForm } from '@/lib/components/UpdatePasswordForm/UpdatePasswordForm'
+import { UpdatePasswordForm } from '@/components/UpdatePasswordForm/UpdatePasswordForm'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { Layout } from '@/lib/components/Layout/Layout'
-import { useUser } from '@/lib/hooks/useUser'
-import { Container } from '@/lib/components/Container/Container'
+import { Layout } from '@/components/Layout/Layout'
+import { useUser } from '@/hooks/useUser'
+import { Container } from '@/components/Container/Container'
 
 const ForgottenPassword = () => {
     useUser({
