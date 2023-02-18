@@ -3,7 +3,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "CommonJS",
-    "target": "es5",
+    "target": "es2020",
     "sourceMap": true,
     "outDir": "./dist",
     "declaration": true,

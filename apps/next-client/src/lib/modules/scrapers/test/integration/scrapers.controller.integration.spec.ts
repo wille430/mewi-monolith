@@ -1,5 +1,5 @@
 import type { Collection, Connection } from 'mongoose'
-import { createHandler } from 'next-api-decorators'
+import {createHandler} from '@/lib/middlewares/createHandler'
 import { Server } from 'http'
 import { ScrapersController } from '../../scrapers.controller'
 import { User } from '@mewi/entities'

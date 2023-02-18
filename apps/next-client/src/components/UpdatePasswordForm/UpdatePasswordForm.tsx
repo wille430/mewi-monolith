@@ -61,7 +61,9 @@ export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswor
                     )}
                     <ErrorMessage name="all"/>
 
-                    <Button label="Ändra lösenord" data-testid="formSubmitButton"/>
+                    <Button data-testid="formSubmitButton">
+                        Ändra lösenord
+                    </Button>
                 </Form>
             )}
         </Formik>

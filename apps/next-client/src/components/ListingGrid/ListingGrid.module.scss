@@ -1,27 +1,8 @@
 .grid {
-    @apply mx-auto flex w-full flex-wrap gap-4;
-
-    & > * {
-        aspect-ratio: 1 / 1;
-    }
-
-    @media (max-width: theme('screens.md')) {
-        & > * {
-            width: 45% !important;
-            height: auto !important;
-        }
-    }
-    @media (max-width: calc(theme('screens.sm') * 0.75)) {
-        padding: 0 1rem;
-        gap: 2rem;
-
-        & > * {
-            width: 100% !important;
-            height: auto !important;
-        }
-    }
+  @apply flex flex-wrap gap-4 mx-auto;
+  max-width: theme("screens.lg");
 }
 
 .center {
-    @apply flex flex-grow items-center justify-center;
+  @apply flex flex-grow items-center justify-center;
 }

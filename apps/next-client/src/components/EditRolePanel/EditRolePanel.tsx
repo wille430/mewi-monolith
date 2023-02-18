@@ -1,3 +1,4 @@
+"use client"
 import capitalize from 'lodash/capitalize'
 import {useMemo, useState} from 'react'
 import styles from './EditRolePanel.module.scss'
@@ -33,7 +34,9 @@ export function EditRolePanel() {
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
                     />
-                    <Button label="Sök" className="ml-1" type="submit"/>
+                    <Button className="ml-1" type="submit">
+                        Sök
+                    </Button>
                 </form>
                 <div className="w-ful p-2">
                     {!data ? (

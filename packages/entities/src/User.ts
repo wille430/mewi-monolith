@@ -51,8 +51,7 @@ export class User extends Entity {
     emailUpdate?: EmailUpdate
 
     @prop({
-        default: [],
-        ref: () => Listing,
+        ref: () => Listing
     })
     likedListings!: Ref<Listing>[]
 
@@ -61,14 +60,13 @@ export class User extends Entity {
     public static convertToDto(obj: User): UserDto {
         return {
             email: obj.email,
-            id: obj.id,
+            id: obj._id.toString(),
             likedListings: obj.likedListings as any,
             loginStrategy: obj.loginStrategy,
             premium: false,
             roles: obj.roles,
             createdAt: obj.createdAt,
             updatedAt: obj.updatedAt
-
         }
     }
 }

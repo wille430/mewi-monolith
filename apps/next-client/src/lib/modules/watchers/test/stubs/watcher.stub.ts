@@ -1,5 +1,5 @@
 import { timestampsStub } from '@/test/stubs/timestamps.stub'
-import type { WithId } from 'mongodb'
+import type { WithId } from '@/lib/types/utils'
 import mongoose from 'mongoose'
 import {WatcherDto} from "@mewi/models"
 

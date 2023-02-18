@@ -1,6 +1,6 @@
 import type { Collection, Connection } from 'mongoose'
 import { faker } from '@faker-js/faker'
-import { createHandler } from 'next-api-decorators'
+import {createHandler} from '@/lib/middlewares/createHandler'
 import { hash } from 'bcrypt'
 import { container } from 'tsyringe'
 import { Server } from 'http'

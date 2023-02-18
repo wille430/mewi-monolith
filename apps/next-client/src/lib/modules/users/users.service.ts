@@ -6,7 +6,6 @@ import type {CreateUserDto} from './dto/create-user.dto'
 import type {UpdateUserDto} from './dto/update-user.dto'
 import type {RequestEmailUpdateDto, AuthorizedUpdateEmailDto} from './dto/update-email.dto'
 import type {FindAllUserDto} from './dto/find-all-user.dto'
-import {UsersRepository} from './users.repository'
 import type {
     ChangePasswordAuth,
     ChangePasswordNoAuth,
@@ -17,12 +16,11 @@ import {EmailService} from '../email/email.service'
 import {EmailTemplate, LoginStrategy} from '@mewi/models'
 import {stringify} from 'query-string'
 import {ValidationException} from '@/lib/exceptions/validation.exception'
-import {Listing} from "@mewi/entities"
+import {Listing, UserModel} from "@mewi/entities"
 
 @autoInjectable()
 export class UsersService {
     constructor(
-        @inject(UsersRepository) private readonly usersRepository: UsersRepository,
         @inject(EmailService) private readonly emailService: EmailService
     ) {
     }
@@ -31,25 +29,25 @@ export class UsersService {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
         createUserDto.email = createUserDto.email.toLowerCase()
 
-        return this.usersRepository.create(createUserDto)
+        return UserModel.create(createUserDto)
     }
 
     async findAll(findAllUserDto: FindAllUserDto = {}): Promise<User[] | null> {
-        return await this.usersRepository.find(findAllUserDto)
+        return UserModel.find(findAllUserDto)
     }
 
     async findOne(id: string): Promise<User | null> {
-        return await this.usersRepository.findById(id)
+        return UserModel.findById(id)
     }
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
-        await this.usersRepository.findByIdAndUpdate(id, updateUserDto)
+        await UserModel.findByIdAndUpdate(id, updateUserDto)
 
-        return await this.findOne(id)
+        return this.findOne(id)
     }
 
     async remove(id: string): Promise<User | null> {
-        return await this.usersRepository.findByIdAndDelete(id)
+        return UserModel.findByIdAndDelete(id)
     }
 
     async changePassword(
@@ -63,7 +61,7 @@ export class UsersService {
         if (password === passwordConfirm) {
             const newPasswordHash = await bcrypt.hash(password, 10)
 
-            await this.usersRepository.findByIdAndUpdate(userId, {
+            await UserModel.findByIdAndUpdate(userId, {
                 password: newPasswordHash,
             })
         } else {
@@ -80,7 +78,7 @@ export class UsersService {
         if (password !== passwordConfirm) {
             throw new BadRequestException('Password and password confirmation must match')
         }
-        const user = await this.usersRepository.findOne({email})
+        const user = await UserModel.findOne({email})
         if (!user) throw new NotFoundException()
         if (!user.passwordReset) throw new BadRequestException('User has no pending password reset')
 
@@ -99,7 +97,7 @@ export class UsersService {
         }
 
         if (user.passwordReset && user.passwordReset.expiration > Date.now() && isValidToken) {
-            await this.usersRepository.findByIdAndUpdate(user.id, {
+            await UserModel.findByIdAndUpdate(user.id, {
                 password: await bcrypt.hash(password, 10),
                 passwordReset: null,
             })
@@ -116,7 +114,7 @@ export class UsersService {
     }
 
     async sendPasswordResetEmail({email}: ChangePasswordNoAuth) {
-        const user = await this.usersRepository.findOne({email})
+        const user = await UserModel.findOne({email})
         if (!user) return
 
         if (user.loginStrategy !== LoginStrategy.LOCAL) {
@@ -125,7 +123,7 @@ export class UsersService {
 
         const token = crypto.randomBytes(32).toString('hex')
 
-        await this.usersRepository.findByIdAndUpdate(user.id, {
+        await UserModel.findByIdAndUpdate(user.id, {
             passwordReset: {
                 tokenHash: await bcrypt.hash(token, 10),
                 // expire in 15 minutes
@@ -149,7 +147,7 @@ export class UsersService {
     }
 
     async updateEmail({token, oldEmail}: AuthorizedUpdateEmailDto) {
-        const user = await this.usersRepository.findOne({email: oldEmail})
+        const user = await UserModel.findOne({email: oldEmail})
         if (!user) throw new NotFoundException(`No users with email ${oldEmail} was found`)
 
         const isValidToken =
@@ -161,7 +159,7 @@ export class UsersService {
             token &&
             isValidToken
         ) {
-            await this.usersRepository.findByIdAndUpdate(user.id, {
+            await UserModel.findByIdAndUpdate(user.id, {
                 email: user.emailUpdate.newEmail,
                 emailUpdate: null,
             })
@@ -171,7 +169,7 @@ export class UsersService {
     }
 
     async requestEmailUpdate({newEmail}: RequestEmailUpdateDto, userId: string) {
-        const user = await this.usersRepository.findById(userId)
+        const user = await UserModel.findById(userId)
         if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
 
         if (user.loginStrategy !== LoginStrategy.LOCAL) {
@@ -182,7 +180,7 @@ export class UsersService {
 
         const token = crypto.randomBytes(32).toString('hex')
 
-        await this.usersRepository.findByIdAndUpdate(user.id, {
+        await UserModel.findByIdAndUpdate(user.id, {
             $set: {
                 emailUpdate: {
                     tokenHash: await bcrypt.hash(token, 10),
@@ -219,10 +217,10 @@ export class UsersService {
     }
 
     async getLikedListings(userId: string) {
-        const user = await this.usersRepository.findById(userId)
+        const user = await UserModel.findById(userId)
         if (!user) throw new NotFoundException(`No user with id ${userId} was found`)
+        await user.populate("likedListings")
 
-        await user.populate('likedListings')
         return user.likedListings as Listing[]
     }
 }

@@ -1,17 +1,19 @@
+"use client"
 import differenceWith from 'lodash/differenceWith'
 import toPairs from 'lodash/toPairs'
 import flow from 'lodash/flow'
 import isEqual from 'lodash/isEqual'
 import isFunction from 'lodash/isFunction'
 import fromPairs from 'lodash/fromPairs'
-import {useRouter} from 'next/router'
+import {ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {stringify} from 'query-string'
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
 import {ObjectSchema} from 'yup'
 import {useDebounce} from '@/hooks/useDebounce'
 import {FormikProvider, useFormik} from 'formik'
 import noop from 'lodash/noop'
-import {ParsedUrlQuery} from "querystring"
+import {removeNullValues} from "@/lib/utils/removeNullValues"
+import {searchParamsToObject} from "@mewi/utilities"
 
 export type UseSearchOptions<T = Record<string, never>> = {
     exclude?: Partial<T>
@@ -30,6 +32,8 @@ const useSearch = <T extends Record<string, any>>(
 ) => {
     const {defaultValue} = options
     const router = useRouter()
+    const pathname = usePathname()
+    const params = useSearchParams()
     const [hasParsedQuery, setHasParsedQuery] = useState(false)
 
     const formik = useFormik<T>({
@@ -37,45 +41,6 @@ const useSearch = <T extends Record<string, any>>(
         onSubmit: noop,
     })
     const {values: filters, setValues: setFilters} = formik
-
-    // Get filters from query
-    useEffect(() => {
-        setFilters(parseQuery(router.query))
-        setHasParsedQuery(true)
-    }, [router.query])
-
-    const parseQuery = (urlQuery: ParsedUrlQuery): T => {
-        return setDefaults(schema.cast(urlQuery))
-    }
-
-    useEffect(() => {
-        if (!hasParsedQuery) return
-
-        if (isEqual(parseQuery(router.query), filters)) {
-            return
-        }
-
-        (async () => {
-            await router.push(
-                {
-                    query: stringify(filters),
-                },
-                undefined,
-                {
-                    shallow: true,
-                }
-            )
-        })()
-
-    }, [filters])
-
-    /**
-     * Debounced values
-     */
-    const [debouncedIsReady] = useDebounce(hasParsedQuery, 1000)
-    const [debouncedFilters, setDebouncedFilters] = useDebounce(filters, undefined, {
-        setInputValue: setFilters,
-    })
 
     /**
      * Used in composition with setFilters to set values to defaults
@@ -85,18 +50,39 @@ const useSearch = <T extends Record<string, any>>(
      */
     const setDefaults = (...args: Parameters<typeof setFilters>) => {
         const newFilters = isFunction(args[0]) ? args[0](filters) : args[0]
-
-        const diff = fromPairs(
-            differenceWith(toPairs(newFilters), toPairs(filters), isEqual)
-        )
+        const diff = fromPairs(differenceWith(toPairs(newFilters), toPairs(filters), isEqual))
         const diffKeys = Object.keys(diff)
 
         if (!(diffKeys.length === 1 && diffKeys.some((val) => val in (defaultValue ?? {})))) {
             Object.assign(newFilters, defaultValue)
         }
-
         return newFilters
     }
+
+    // Get filters from query
+    useEffect(() => {
+        params && setFilters(parseQuery(params))
+        setHasParsedQuery(true)
+    }, [])
+
+    const castToSchema = (obj: T) => schema.cast(obj, {stripUnknown: true})
+    const parseQuery = (params: ReadonlyURLSearchParams | null): T => params ? flow(searchParamsToObject, castToSchema, setDefaults)(params) : defaultValue
+    const validateFilters = (filters: T) => flow(removeNullValues, castToSchema)(filters)
+
+    useEffect(() => {
+        if (!hasParsedQuery) return
+        if (isEqual(parseQuery(params), filters)) return
+
+        router.push(pathname + "?" + stringify(validateFilters(filters)))
+    }, [filters])
+
+    /**
+     * Debounced values
+     */
+    const [debouncedIsReady] = useDebounce(hasParsedQuery, 1000)
+    const [debouncedFilters, setDebouncedFilters] = useDebounce(filters, undefined, {
+        setInputValue: setFilters,
+    })
 
     return {
         formik,

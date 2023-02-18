@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import type {WithId} from 'mongodb'
+import type {WithId} from '@/lib/types/utils'
 import {User} from '@mewi/entities'
 import {timestampsStub} from '@/test/stubs/timestamps.stub'
 import {LoginStrategy, Role} from "@mewi/models"

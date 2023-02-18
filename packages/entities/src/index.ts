@@ -1,5 +1,4 @@
 export * from "./Listing"
-export * from "./ScrapingLog"
 export * from "./Watcher"
 export * from "./WatcherMetadata"
 export * from "./UserWatcher"

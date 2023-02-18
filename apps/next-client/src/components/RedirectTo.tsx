@@ -1,9 +1,11 @@
 import {useEffect} from "react"
-import Router from "next/router"
+import {useRouter} from "next/navigation"
 
 export const RedirectTo = ({to}: { to: string }) => {
+    const router = useRouter()
+
     useEffect(() => {
-        Router.push(to).then()
+        router.push(to)
     }, [])
 
     return null

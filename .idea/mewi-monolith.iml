@@ -13,5 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="platform" level="application" />
+    <orderEntry type="library" name="uc" level="application" />
   </component>
 </module>

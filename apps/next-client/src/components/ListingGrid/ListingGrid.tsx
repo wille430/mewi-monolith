@@ -36,11 +36,12 @@ const ListingGrid = () => {
             <section style={{
                 minHeight: "60vh"
             }}>
-                <div className={styles.grid}>
+                <div className={styles["grid"]}>
                     {hits.map((listing, i) => (
                         <ListingWidget
                             key={listing.id}
                             onClick={() => dispatch(openListing(listing))}
+                            className="flex-grow"
                             data-testid={`listing-${i}`}
                             listing={listing}
                         />

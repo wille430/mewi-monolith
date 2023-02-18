@@ -1,12 +1,12 @@
-import type { AnimationProps, HTMLMotionProps } from 'framer-motion'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import type {AnimationProps, HTMLMotionProps} from 'framer-motion'
+import {motion} from 'framer-motion'
+import {useState} from 'react'
 import styles from './ListingRow.module.scss'
-import { ListingLikeButton } from '../LikeButton/LikeButton'
-import { Button } from '../Button/Button'
+import {ListingLikeButton} from '../LikeButton/LikeButton'
+import {Button} from '../Button/Button'
 import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import { useAppDispatch } from '@/hooks'
-import { openListing } from '@/store/listings'
+import {useAppDispatch} from '@/hooks'
+import {openListing} from '@/store/listings'
 import clsx from 'clsx'
 import {ListingDto} from "@mewi/models"
 
@@ -14,7 +14,7 @@ interface ListingRowprops extends HTMLMotionProps<'article'> {
     listing: ListingDto
 }
 
-export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
+export const ListingRow = ({listing, ...rest}: ListingRowprops) => {
     const [isHovered, setHovered] = useState(false)
     const dispatch = useAppDispatch()
 
@@ -31,8 +31,8 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
         },
     }
     const scaleVariants: AnimationProps['variants'] = {
-        initial: { scale: 1 },
-        scale: { scale: 1.0025 },
+        initial: {scale: 1},
+        scale: {scale: 1.0025},
     }
 
     return (
@@ -46,14 +46,14 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
             {...rest}
         >
             <div className={clsx(styles.image, 'relative')}>
-                <DefaultImage src={listing.imageUrl[0]} alt={listing.title} />
+                <DefaultImage src={listing.imageUrl[0]} alt={listing.title}/>
             </div>
             <motion.div className={styles.description}>
                 <h4>{listing.title}</h4>
                 <p>{listing.body}</p>
             </motion.div>
 
-            <motion.div className='relative h-full'>
+            <motion.div className="relative h-full">
                 <motion.div
                     className={styles.details}
                     variants={fadeVariants}
@@ -79,12 +79,13 @@ export const ListingRow = ({ listing, ...rest }: ListingRowprops) => {
                     initial={'hide'}
                     animate={isHovered ? 'show' : 'hide'}
                 >
-                    <ListingLikeButton listing={listing} className='ml-auto' />
+                    <ListingLikeButton listing={listing} className="ml-auto"/>
                     <Button
                         className={styles.redirect}
-                        label='>>'
                         onClick={() => dispatch(openListing(listing))}
-                    />
+                    >
+                        {">>"}
+                    </Button>
                 </motion.div>
             </motion.div>
 

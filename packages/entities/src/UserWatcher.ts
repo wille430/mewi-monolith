@@ -5,10 +5,11 @@ import mongoose from 'mongoose'
 import {Watcher} from "./Watcher"
 import {User} from "./User"
 import {UserWatcherDto} from "@mewi/models"
+import {Entity} from "./Entity"
 
 export type UserWatcherDocument = UserWatcher & Document
 
-export class UserWatcher {
+export class UserWatcher extends Entity {
     id!: string
 
     @prop({
@@ -28,12 +29,9 @@ export class UserWatcher {
     @prop(Date)
     notifiedAt?: Date
 
-    createdAt!: Date
-    updatedAt!: Date
-
     public static convertToDto(obj: UserWatcher): UserWatcherDto {
         return {
-            id: obj.id,
+            id: obj._id.toString(),
             watcher: obj.watcher as any,
             user: obj.user as any,
             notifiedAt: obj.notifiedAt,

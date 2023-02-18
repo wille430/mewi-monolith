@@ -4,7 +4,12 @@
     "target": "es5",
     "sourceMap": true,
     "outDir": "./dist",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2019"
+    ]
   },
   "exclude": [
     "node_modules",

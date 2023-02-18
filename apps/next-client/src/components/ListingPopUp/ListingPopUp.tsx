@@ -36,7 +36,9 @@ const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
                         <CategoryPathLabel category={category}/>
                     </span>
                     <span>
-                        <Button onClick={handleClose} variant="text" size="lg" icon={<FiX/>}/>
+                        <Button onClick={handleClose}>
+                            <FiX/>
+                        </Button>
                     </span>
                 </Container.Header>
                 <Container.Content className="flex flex-grow flex-col">
@@ -118,7 +120,9 @@ const InfoHeader = ({
             </div>
             <div>
                 <OriginLabel origin={origin}/>
-                <Button label="Till artikeln >>" size="lg" onClick={handleRedirect}/>
+                <Button onClick={handleRedirect}>
+                    Till artikeln {">>"}
+                </Button>
             </div>
         </header>
     )

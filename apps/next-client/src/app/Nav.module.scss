@@ -2,7 +2,6 @@
 .inner-nav {
   @apply container mx-auto px-4 py-2 pt-3;
   display: flex;
-  align-items: start;
   justify-content: space-between;
   position: relative;
 
@@ -21,6 +20,7 @@
   }
 
   @screen md {
+    @apply pt-1;
     display: grid;
     grid-template-columns: 1rem min(100%, theme("maxWidth.lg")) 1rem;
 
@@ -38,6 +38,7 @@
       width: 100%;
       padding-top: 0.35rem;
       padding-bottom: 0.35rem;
+      height: auto !important;
 
       .nav-link {
         @apply text-sm w-auto;

@@ -1,4 +1,4 @@
-import type { WithId } from 'mongodb'
+import type {WithId} from '@/lib/types/utils'
 import mongoose from 'mongoose'
 import { User } from '@mewi/entities'
 import { timestampsStub } from '@/test/stubs/timestamps.stub'

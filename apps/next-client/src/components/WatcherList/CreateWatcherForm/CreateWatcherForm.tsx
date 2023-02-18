@@ -1,16 +1,16 @@
-import { createUserWatcher } from '@/client/user-watchers/mutations'
-import { createUserWatcherSchema } from '@/client/user-watchers/schemas/create-user-watcher.schema'
-import { useAppSelector } from '@/hooks'
-import type { WatcherMetadata } from '@mewi/entities'
-import type { CreateUserWatcherDto } from '@/lib/modules/user-watchers/dto/create-user-watcher.dto'
-import { Form, Formik } from 'formik'
-import type { FormikHelpers } from 'formik'
-import { useRouter } from 'next/router'
-import { useSWRConfig } from 'swr'
-import { Button } from '../../Button/Button'
-import { ConfirmModal } from '../../ConfirmModal/ConfirmModal'
-import { handleError } from './handleError'
-import { ListingSearchForm } from '../../ListingSearchForm/ListingSearchForm'
+import {createUserWatcher} from '@/client/user-watchers/mutations'
+import {createUserWatcherSchema} from '@/client/user-watchers/schemas/create-user-watcher.schema'
+import {useAppSelector} from '@/hooks'
+import type {WatcherMetadata} from '@mewi/entities'
+import type {CreateUserWatcherDto} from '@/lib/modules/user-watchers/dto/create-user-watcher.dto'
+import {Form, Formik} from 'formik'
+import type {FormikHelpers} from 'formik'
+import {useRouter} from 'next/navigation'
+import {useSWRConfig} from 'swr'
+import {Button} from '../../Button/Button'
+import {ConfirmModal} from '../../ConfirmModal/ConfirmModal'
+import {handleError} from './handleError'
+import {ListingSearchForm} from '../../ListingSearchForm/ListingSearchForm'
 import clsx from 'clsx'
 
 const initialValues: CreateUserWatcherDto['metadata'] = {}
@@ -21,15 +21,15 @@ export type CreateWatcherFormProps = {
 }
 
 export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
-    const { onSuccess, className } = props
-    const { mutate } = useSWRConfig()
+    const {onSuccess, className} = props
+    const {mutate} = useSWRConfig()
 
     const router = useRouter()
-    const { isLoggedIn } = useAppSelector((state) => state.user)
+    const {isLoggedIn} = useAppSelector((state) => state.user)
 
     const handleSubmit = async (
         values: typeof initialValues,
-        { setErrors }: FormikHelpers<WatcherMetadata>
+        {setErrors}: FormikHelpers<WatcherMetadata>
     ) => {
         try {
             await mutate(
@@ -49,22 +49,22 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
             initialValues={initialValues}
             validationSchema={createUserWatcherSchema}
         >
-            {({ resetForm, submitForm, errors }) => (
+            {({resetForm, submitForm, errors}) => (
                 <Form>
                     <div className={clsx('space-y-2', className)}>
-                        <ListingSearchForm />
+                        <ListingSearchForm/>
                     </div>
 
-                    <footer className='flex justify-end pt-4'>
-                        <span className='text-red-400'>{(errors as any).all}</span>
-                        <div className='flex flex-col-reverse gap-2 sm:flex-row'>
+                    <footer className="flex justify-end pt-4">
+                        <span className="text-red-400">{(errors as any).all}</span>
+                        <div className="flex flex-col-reverse gap-2 sm:flex-row">
                             <Button
-                                label='Rensa filter'
-                                color='error'
-                                type='button'
-                                variant='outlined'
+                                type="button"
                                 onClick={() => resetForm}
-                            />
+                                className="btn-outlined"
+                            >
+                                Rensa filter
+                            </Button>
                             <ConfirmModal
                                 modalProps={{
                                     heading:
@@ -74,11 +74,9 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
                                     onAccept: submitForm,
                                 }}
                             >
-                                {({ showModal }) => (
+                                {({showModal}) => (
                                     <Button
-                                        label='Lägg till bevakning'
-                                        type='button'
-                                        color='primary'
+                                        type="button"
                                         onClick={async () => {
                                             if (isLoggedIn) {
                                                 showModal()
@@ -86,8 +84,10 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
                                                 await router.push('/loggain')
                                             }
                                         }}
-                                        data-testid='addWatcherButton'
-                                    />
+                                        data-testid="addWatcherButton"
+                                    >
+                                        Lägg till bevakning
+                                    </Button>
                                 )}
                             </ConfirmModal>
                         </div>

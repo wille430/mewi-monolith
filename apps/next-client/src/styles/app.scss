@@ -6,7 +6,33 @@
 
 $layout-width: theme('screens.lg');
 
+
 @layer components {
+
+  .btn {
+    @apply px-3 py-1 text-white bg-primary rounded;
+
+    &:disabled {
+      @apply bg-gray-300 text-gray-600;
+    }
+  }
+
+  .btn-outlined {
+    @apply bg-transparent border-primary border-2 text-black;
+
+    &:disabled {
+      @apply border-0;
+    }
+  }
+
+  .btn-sm {
+    @apply px-2 py-0 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-3 py-2;
+  }
+
   .form {
     @apply mx-auto flex max-w-md flex-col space-y-8;
   }
@@ -40,11 +66,25 @@ $layout-width: theme('screens.lg');
       flex-direction: row;
     }
   }
+
+  .double-col-grid {
+    @apply container mx-auto gap-4 py-16 flex flex-col-reverse px-3 lg:grid lg:grid-cols-[1fr_4fr_1fr];
+  }
+
+  .single-col-grid {
+    @apply container mx-auto gap-4 py-16 px-3;
+    display: grid !important;
+    grid-template-columns: 275px 4fr;
+  }
 }
 
 @layer utilities {
   .max-width {
     @apply w-full max-w-screen-lg;
+  }
+
+  .centered {
+    @apply flex justify-center items-center;
   }
 }
 
@@ -113,38 +153,6 @@ body {
   background-color: theme('backgroundColor.white');
 }
 
-.basic-layout {
-  @apply flex flex-col gap-4 p-4;
-  margin: 0 auto;
-  height: 100%;
-
-  @screen xl {
-    grid-template-columns: 1fr calc(theme('screens.md') + 2rem) 1fr;
-    display: grid;
-    max-width: none;
-    margin: 0;
-  }
-
-  & > main {
-    flex-grow: 1;
-  }
-}
-
-.search-layout {
-  @apply container;
-  @extend .basic-layout;
-  @apply gap-8;
-
-  @screen md {
-    grid-template-columns: 16rem 1fr;
-    display: grid;
-  }
-
-  @screen xl {
-    grid-template-columns: theme('maxWidth.xxs') auto;
-  }
-}
-
 /* REACT SELECT */
 .Select__control {
   min-height: 42px !important;
@@ -189,3 +197,4 @@ body {
     object-fit: cover;
   }
 }
+

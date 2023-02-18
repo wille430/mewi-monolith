@@ -2,7 +2,7 @@ import queryString from 'query-string'
 import type {Dispatch} from 'react'
 import {useEffect, useRef, useState} from 'react'
 import {AnimatePresence} from 'framer-motion'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import omit from 'lodash/omit'
 import styles from './WatcherCard.module.scss'
 import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
@@ -30,10 +30,7 @@ const WatcherCard = ({
         const filters = omit(watcher.metadata, ['category'])
         const pathname = '/sok'
 
-        await router.push({
-            pathname,
-            search: queryString.stringify(filters),
-        })
+        await router.push(pathname + "?" + queryString.stringify(filters))
     }
 
     const handleExpand = () => {
@@ -121,10 +118,11 @@ const WatcherCard = ({
                     <div className="flex w-full justify-end space-x-2 sm:w-auto sm:justify-start">
                         <Button
                             onClick={handleSearchButtonClick}
-                            label="Sök på min bevakning"
                             data-testid="watcherSearchButton"
-                            variant="text"
-                        />
+                            className="btn-sm"
+                        >
+                            Sök på min bevakning
+                        </Button>
                         <RemoveButton watcherId={userWatcher.id}/>
 
                         <ExpandButton handleExpand={handleExpand} expand={_expand}/>

@@ -1,4 +1,3 @@
-
 module.exports = {
     content: [
         "./src/app/**/*.{js,ts,jsx,tsx}",
@@ -21,6 +20,10 @@ module.exports = {
                 primary: '#253C4C',
                 secondary: '#4CEB74',
                 paper: '#ffffff',
+                error: '#cc0000'
+            },
+            screens: {
+                xs: "540px"
             },
             gridTemplateColumns: {
                 'fit-12': 'repeat(auto-fit, minmax(12rem, 1fr))',

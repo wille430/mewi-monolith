@@ -24,7 +24,7 @@ export class Watcher extends Entity {
     public static convertToDto(obj: Watcher): WatcherDto {
         return {
             createdAt: obj.createdAt,
-            id: obj.id,
+            id: obj._id.toString(),
             metadata: obj.metadata,
             notifiedAt: obj.notifiedAt,
             updatedAt: obj.updatedAt

@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker'
-import type {WithId} from 'mongodb'
+import type {WithId} from '@/lib/types/utils'
 import mongoose from 'mongoose'
 import {Listing} from '@mewi/entities'
 import {timestampsStub} from '@/test/stubs/timestamps.stub'
@@ -8,7 +8,7 @@ import {Category, Currency, ListingDto, ListingOrigin} from "@mewi/models"
 const id = faker.database.mongodbObjectId()
 const date = new Date()
 export const listingStub = (): WithId<Listing> => ({
-    _id: new mongoose.Types.ObjectId(id),
+    _id: new mongoose.Types.ObjectId(id) as any,
     id,
     category: Category.FORDON,
     date: date,

@@ -46,7 +46,7 @@ export const ListingWidget = ({listing, onClick, ...rest}: ListingProps) => {
                     })}
                 />
             ) : (
-                <Link href="/apps/next-client/src/pages/loggain" className={style['like-button']}>
+                <Link href="/loggain" className={style['like-button']}>
                     <LikeButton data-testid="like-button"/>
                 </Link>
             )}

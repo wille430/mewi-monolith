@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import type { Collection, Connection } from 'mongoose'
 import mongoose from 'mongoose'
 import request from 'supertest'
-import { createHandler } from 'next-api-decorators'
+import {createHandler} from '@/lib/middlewares/createHandler'
 import { Server } from 'http'
 import { listingStub } from '../stubs/listing.stub'
 import { ListingsController } from '../../listings.controller'
@@ -70,7 +70,7 @@ describe('ListingsController', () => {
                 })
 
                 const listing = await listingsCollection.findOne({
-                    _id: new mongoose.Types.ObjectId(response.body._id),
+                    _id: new mongoose.Types.ObjectId(response.body._id) as any,
                 })
                 expect(listing).toMatchObject({
                     ...dto,

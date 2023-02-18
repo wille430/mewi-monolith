@@ -10,6 +10,7 @@ import {Listing} from '@mewi/entities'
 import {DeleteListingsDto} from './dto/delete-listings.dto'
 import {FindAllListingsReponse} from './dto/find-all-listings-response.dto'
 import {FilteringService} from "@mewi/business"
+import {ObjectId} from "mongodb"
 
 @autoInjectable()
 export class ListingsService {
@@ -99,7 +100,7 @@ export class ListingsService {
         if (!user) throw new NotFoundException('User not found')
         if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-        if (!user.likedListings.includes(listing)) {
+        if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
                 $push: {
                     likedListings: listingId,
@@ -117,7 +118,7 @@ export class ListingsService {
         if (!user) throw new NotFoundException('User not found')
         if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
 
-        if (!user.likedListings.includes(listing)) {
+        if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
                 $pull: {
                     likedListings: listingId,

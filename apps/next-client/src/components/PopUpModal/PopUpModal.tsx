@@ -18,12 +18,15 @@ export const PopUpModal = ({ open, onExit, onAccept, ...rest }: PopUpModalProps)
                         <>
                             <Button
                                 key=''
-                                label='Nej'
-                                variant='text'
                                 onClick={onExit}
                                 data-testid='modalDecline'
-                            />
-                            <Button label='Ja' onClick={onAccept} data-testid='modalAccept' />
+                                className="btn-outlined"
+                            >
+                                Nej
+                            </Button>
+                            <Button onClick={onAccept} data-testid='modalAccept' >
+                                Ja
+                            </Button>
                             {rest.actions}
                         </>
                     }

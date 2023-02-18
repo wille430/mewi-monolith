@@ -8,9 +8,10 @@ import {usePathname} from 'next/navigation'
 import {useWindowSize} from '@/hooks/useWindowSize'
 import {motion} from "framer-motion"
 import styles from "./Nav.module.scss"
-import {logout} from "@/store/user"
-import {useAppDispatch} from "@/hooks"
+import {getUser, logout} from "@/store/user"
+import {useAppDispatch, useAppSelector} from "@/hooks"
 import clsx from "clsx"
+import {Arc} from "@/components/Arc/Arc"
 
 const hideLogoInRoutes = ['/']
 
@@ -31,7 +32,7 @@ export const navLinks = [
 
 export const drawerVariants: Variants = {
     hidden: {
-        maxHeight: 0,
+        height: 0,
         transition: {
             when: 'afterChildren',
             staggerChildren: 0.01,
@@ -40,7 +41,7 @@ export const drawerVariants: Variants = {
         },
     },
     show: {
-        maxHeight: '20rem',
+        height: "auto",
     },
 }
 
@@ -80,39 +81,63 @@ export const Nav = () => {
     const isDrawer = useMemo(() => size.width < 768, [size])
     const [showLogo, setShowLogo] = useState(!isDrawer || (isDrawer && !mobileOpen))
 
+    const {isLoggedIn} = useAppSelector(state => state.user)
+
     useEffect(() => {
         setShowLogo(!isDrawer || (isDrawer && !mobileOpen))
     }, [isDrawer, mobileOpen])
 
+    // fetch user status
+    // DO NOT REMOVE
+    const {isReady} = useAppSelector(state => state.user)
+    useEffect(() => {
+        if (!isReady) {
+            dispatch(getUser())
+        }
+    }, [])
+
     return (
-        <nav className="bg-primary text-white">
-            <div className={styles["inner-nav"]}>
-                <motion.figure className="h-auto w-20" variants={logoVariants}
-                               animate={showLogo ? 'show' : 'hidden'}>
-                    <Link href="/">
-                        {!hideLogoInRoutes.includes(pathname ?? "/") && (
-                            <></>
-                        )}
-                        <img src="/img/logo.png" alt="Mewi logo"/>
-                    </Link>
-                </motion.figure>
+        <>
+            <nav className="bg-primary text-white">
+                <div className={styles["inner-nav"]}>
+                    <motion.figure className="h-auto w-20" variants={logoVariants}
+                                   animate={showLogo ? 'show' : 'hidden'}>
+                        <Link href="/">
+                            {!hideLogoInRoutes.includes(pathname ?? "/") && (
+                                <img src="/img/logo.png" alt="Mewi logo"/>
+                            )}
+                        </Link>
+                    </motion.figure>
 
-                <motion.ul variants={isDrawer ? drawerVariants : undefined} animate={mobileOpen ? "show" : "hidden"}>
-                    {navLinks.map(o => (
-                        <motion.li className={styles["nav-link"]} variants={isDrawer ? linkVariants : undefined}>
-                            <Link href={o.path}>{o.label}</Link>
+                    <motion.ul variants={isDrawer ? drawerVariants : undefined}
+                               animate={mobileOpen ? "show" : "hidden"}>
+                        {navLinks.map(o => (
+                            <motion.li key={o.path} className={styles["nav-link"]}
+                                       variants={isDrawer ? linkVariants : undefined}>
+                                <Link href={o.path}>{o.label}</Link>
+                            </motion.li>
+                        ))}
+
+                        <motion.li className={clsx(styles["logout-btn"], styles["nav-link"])}
+                                   variants={isDrawer ? linkVariants : undefined}>
+
+                            {isLoggedIn ? (
+                                <button aria-label="Logga ut" onClick={() => dispatch(logout())}>Logga ut</button>
+                            ) : (
+                                <Link href="/loggain">Logga in</Link>
+                            )}
                         </motion.li>
-                    ))}
+                    </motion.ul>
 
-                    <motion.li className={clsx(styles["logout-btn"], styles["nav-link"])} variants={isDrawer ? linkVariants : undefined}>
-                        <button aria-label="Logga ut" onClick={() => dispatch(logout())}>Logga ut</button>
-                    </motion.li>
-                </motion.ul>
+                    <button className={styles["menu-toggle"]} onClick={() => setMobileOpen((prev) => !prev)}>
+                        <GiHamburgerMenu size={32}/>
+                    </button>
+                </div>
+            </nav>
 
-                <button className={styles["menu-toggle"]} onClick={() => setMobileOpen((prev) => !prev)}>
-                    <GiHamburgerMenu size={32}/>
-                </button>
-            </div>
-        </nav>
+            {!hideLogoInRoutes.includes(pathname ?? "/") && (
+                <Arc/>
+            )}
+        </>
     )
 }

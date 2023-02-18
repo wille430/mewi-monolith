@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import {HTMLAttributes, useState} from 'react'
 import AddWatcherPopUp from './AddWatcherPopUp'
-import { Button, ButtonProps } from '../Button/Button'
+import {Button} from '../Button/Button'
 
-const WatcherPopUpButton = (props: ButtonProps) => {
+const WatcherPopUpButton = (props: HTMLAttributes<HTMLButtonElement>) => {
     const [show, setShow] = useState(false)
 
     const handleClick = () => {
@@ -11,8 +11,10 @@ const WatcherPopUpButton = (props: ButtonProps) => {
 
     return (
         <>
-            <AddWatcherPopUp useShow={{ show, setShow }} />
-            <Button onClick={handleClick} label='Skapa bevakning' {...props} />
+            <AddWatcherPopUp useShow={{show, setShow}}/>
+            <Button onClick={handleClick} {...props} >
+                Skapa bevakning
+            </Button>
         </>
     )
 }

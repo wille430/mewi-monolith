@@ -8,6 +8,8 @@ import {serialize} from "@/lib/utils/serialize"
 const getFeaturedListings = () => container.resolve(ListingsService).getFeatured().then(o => o.map(Listing.convertToDto))
 const getRecentListings = () => container.resolve(ListingsService).getRecent().then(o => o.map(Listing.convertToDto))
 
+export const revalidate = 15 * 60
+
 export const metadata = {
     title: "Mewi.se - Sök efter begagnade produkter på ett enda ställe",
     description: "Sök och hitta begagnade produkter på ett enda ställe",

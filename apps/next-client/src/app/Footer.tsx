@@ -52,14 +52,16 @@ export const FooterLinks: FooterLink[] = [
 export const Footer = () => {
 
     const renderLinks = (link: FooterLink) => {
-        return <ul className="mr-4 mb-2">
-            <li className="mb-1">
-                <Link href={link.path}>{link.label}</Link>
-            </li>
-            {link.children && <ul className="text-sm">
-                {link.children.map(renderLinks)}
-            </ul>}
-        </ul>
+        return (
+            <ul key={link.path} className="mr-4 mb-2">
+                <li className="mb-1">
+                    <Link href={link.path}>{link.label}</Link>
+                </li>
+                {link.children && <ul className="text-sm">
+                    {link.children.map(renderLinks)}
+                </ul>}
+            </ul>
+        )
     }
 
     return (

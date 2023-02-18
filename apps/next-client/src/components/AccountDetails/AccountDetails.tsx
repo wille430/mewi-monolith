@@ -72,13 +72,14 @@ const AccountDetails = ({user}: AccountDetailsProps) => {
                         </div>
                         <Button
                             type="submit"
-                            label="Uppdatera"
                             disabled={
                                 isSubmitting ||
                                 Object.keys(errors).length > 0 ||
                                 user.email == values.newEmail
                             }
-                        />
+                        >
+                            Uppdatera
+                        </Button>
                         <span className="text-green-500">{success}</span>
                     </Form>
                 )}

@@ -1,6 +1,7 @@
 import type {Document} from 'mongoose'
 import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
 import {ListingDto, Currency, Category, ListingOrigin} from "@mewi/models"
+import {Entity} from "./Entity"
 
 export type ListingDocument = Listing & Document
 
@@ -26,7 +27,7 @@ export class Parameter {
     value!: string
 }
 
-export class Listing {
+export class Listing extends Entity {
     id!: string
 
     @prop({
@@ -111,9 +112,6 @@ export class Listing {
     })
     entryPoint!: string
 
-    createdAt!: Date
-    updatedAt!: Date
-
     public convertToDto(this: Listing): ListingDto {
         return {
             auctionEnd: this.auctionEnd,
@@ -138,7 +136,7 @@ export class Listing {
             body: obj.body,
             category: obj.category,
             date: obj.date,
-            id: obj.id,
+            id: obj._id.toString(),
             imageUrl: obj.imageUrl,
             isAuction: obj.isAuction,
             origin: obj.origin,
