@@ -1,41 +1,21 @@
-import useSWR from 'swr'
 import router from 'next/router'
-import { useAppDispatch, useAppSelector } from './index'
-import { setLoggedInStatus } from '../store/user'
-import { useEffect, useState } from 'react'
-import { CURRENT_USER_SWR_KEY } from '../client/users/swr-keys'
-import { getMe } from '../client'
+import {useAppSelector} from './index'
+import {useEffect} from 'react'
 
-export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
-    const dispatch = useAppDispatch()
-    const { isLoggedIn } = useAppSelector((state) => state.user)
-
-    const [isFirstRender, setIsFirstRender] = useState(true)
-
-    const { data: user, mutate: mutateUser } = useSWR(CURRENT_USER_SWR_KEY, getMe, {
-        onSuccess: (user) => {
-            if (user) {
-                dispatch(setLoggedInStatus(Boolean(user.id), user))
-            }
-        },
-        onError: () => {
-            dispatch(setLoggedInStatus(false))
-        },
-    })
+export const useUser = ({redirectTo = '', redirectIfFound = false} = {}) => {
+    const {isLoggedIn, user, isReady} = useAppSelector((state) => state.user)
 
     useEffect(() => {
-        if (!redirectTo || isFirstRender) {
-            setIsFirstRender(false)
+        if (!redirectTo || !isReady) {
             return
         }
 
         if ((!redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
-            // noinspection JSIgnoredPromiseFromCall
             router.replace(redirectTo, undefined, {
                 shallow: true,
-            })
+            }).then()
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn, isReady])
 
-    return { user, refetchUser: mutateUser }
+    return {user}
 }

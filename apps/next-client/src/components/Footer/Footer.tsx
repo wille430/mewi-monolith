@@ -1,3 +1,4 @@
+"use client"
 import Link from 'next/link'
 import styles from './Footer.module.scss'
 import clsx from "clsx"

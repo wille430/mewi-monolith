@@ -1,12 +1,12 @@
+"use client"
 // noinspection SuspiciousTypeOfGuard
-
 import Link from 'next/link'
 import clsx from 'clsx'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useEffect, useState } from 'react'
 import type { Variants } from 'framer-motion'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import type { NavLink } from './links'
 import { links } from './links'

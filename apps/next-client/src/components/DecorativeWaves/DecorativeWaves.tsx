@@ -1,3 +1,4 @@
+"use client"
 import style from './DecorativeWaves.module.scss'
 
 export const DecorativeWaves = () => (

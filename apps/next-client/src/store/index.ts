@@ -1,7 +1,7 @@
-import { createWrapper, HYDRATE } from 'next-redux-wrapper'
-import { configureStore } from '@reduxjs/toolkit'
-import type { AnyAction, Store as ReduxStore } from 'redux'
-import { rootReducer } from './reducer'
+import {createWrapper, HYDRATE} from 'next-redux-wrapper'
+import {configureStore} from '@reduxjs/toolkit'
+import type {AnyAction, Store as ReduxStore} from 'redux'
+import {rootReducer} from './reducer'
 
 const reducer = (state: ReturnType<typeof rootReducer>, action: AnyAction) => {
     if (action.type === HYDRATE) {
@@ -22,6 +22,8 @@ export const makeStore = () =>
         // @ts-ignore
         middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     })
+
+export const store = makeStore()
 
 export type Store = ReturnType<typeof makeStore>
 export type RootState = ReturnType<Store['getState']>

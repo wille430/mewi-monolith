@@ -8,7 +8,7 @@ import { mutate } from 'swr'
 import { createUserWatcher } from '@/client/user-watchers/mutations'
 import { useAppSelector } from '@/hooks'
 import { useRouter } from 'next/router'
-import { useSearchContext } from '@/hooks/useSearch'
+import { useSearchContext } from '@/context/SearchContext'
 import { ListingSearchForm } from '../ListingSearchForm/ListingSearchForm'
 
 export const SideFilters = () => {

@@ -8,8 +8,6 @@ const funcs = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
-    swcMinify: true,
     redirects: () => [
         {
             source: '/minasidor',
@@ -17,6 +15,9 @@ const nextConfig = {
             permanent: true,
         },
     ],
+    experimental: {
+        appDir: true
+    }
 }
 
 module.exports = flowRight(funcs)(nextConfig)

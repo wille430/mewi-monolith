@@ -1,14 +1,13 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit'
+import {createAsyncThunk} from '@reduxjs/toolkit'
 import {UserActionTypes} from './types'
 import {client} from '@/client'
 import {UserDto} from "@mewi/models"
 
-export const setLoggedInStatus = createAction(
-    UserActionTypes.SET_LOGGED_IN_STATUS,
-    (status: boolean, user: UserDto | undefined = undefined) => {
-        return {
-            payload: {status, user},
-        }
+export const getUser = createAsyncThunk(
+    UserActionTypes.GET_USER,
+    async () => {
+        const user: UserDto | null = await client.get('/users/me')
+        return {user}
     }
 )
 

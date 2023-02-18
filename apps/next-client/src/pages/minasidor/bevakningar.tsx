@@ -1,24 +1,18 @@
-import type { ReactElement } from 'react'
+import type {ReactElement} from 'react'
 import Head from 'next/head'
 import WatcherList from '@/components/WatcherList/WatcherList'
-import { MyAccountLayout } from '@/components/MyPagesLayout/MyPagesLayout'
-import { ListingPopUpContainer } from '@/components/ListingPopUp/ListingPopUpContainer'
-import { useUser } from '@/hooks/useUser'
-import { ON_UNAUTHENTICATED_GOTO } from '@/lib/constants/paths'
+import {MyAccountLayout} from '@/components/MyAccountLayout/MyAccountLayout'
+import {ListingPopUpContainer} from '@/components/ListingPopUp/ListingPopUpContainer'
 
 const Bevakningar = () => {
-    useUser({
-        redirectTo: ON_UNAUTHENTICATED_GOTO,
-    })
-
     return (
         <>
             <Head>
                 <title>Mina bevakningar | Mewi.se</title>
             </Head>
             <main>
-                <WatcherList />
-                <ListingPopUpContainer />
+                <WatcherList/>
+                <ListingPopUpContainer/>
             </main>
         </>
     )

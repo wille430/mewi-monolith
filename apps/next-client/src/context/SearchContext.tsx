@@ -8,7 +8,7 @@ import {useRouter} from 'next/router'
 import {stringify} from 'query-string'
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
 import {ObjectSchema} from 'yup'
-import {useDebounce} from './useDebounce'
+import {useDebounce} from '@/hooks/useDebounce'
 import {FormikProvider, useFormik} from 'formik'
 import noop from 'lodash/noop'
 import {ParsedUrlQuery} from "querystring"
@@ -24,7 +24,7 @@ export const useSearchContext = <T extends Record<string, any>>(): ReturnType<
     typeof useSearch<T>
 > => useContext(SearchContext)
 
-export const useSearch = <T extends Record<string, any>>(
+const useSearch = <T extends Record<string, any>>(
     schema: ObjectSchema<any, any>,
     options: UseSearchOptions<T> = {}
 ) => {

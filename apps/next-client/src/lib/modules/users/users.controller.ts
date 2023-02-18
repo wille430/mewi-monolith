@@ -32,6 +32,7 @@ import {Controller} from '@/lib/decorators/controller.decorator'
 import {MyValidationPipe} from '@/lib/pipes/validation.pipe'
 import {OptionalSessionGuard} from '@/lib/middlewares/optional-session.guard'
 import {Role} from "@mewi/models"
+import {User} from "@mewi/entities"
 
 @Controller()
 export class UsersController {
@@ -48,13 +49,17 @@ export class UsersController {
     @Get()
     @Roles(Role.ADMIN)
     findAll(@Query(MyValidationPipe) findAllUserDto: FindAllUserDto = {}) {
-        return this.usersService.findAll(findAllUserDto)
+        return this.usersService
+            .findAll(findAllUserDto)
+            .then(arr => arr?.map(User.convertToDto))
     }
 
     @Get('/me')
     @SessionGuard()
     async getMe(@GetUser() user: UserPayload) {
-        return this.usersService.findOne(user.userId)
+        return this.usersService.findOne(user.userId).then((o) => {
+            return o ? User.convertToDto(o) : null
+        })
     }
 
     @Get('/me/likes')

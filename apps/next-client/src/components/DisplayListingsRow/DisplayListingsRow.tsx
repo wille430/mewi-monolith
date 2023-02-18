@@ -1,3 +1,4 @@
+"use client"
 import style from './DisplayListingsRow.module.scss'
 import {Container} from '../Container/Container'
 import {ListingWidget} from '@/components/ListingWidget/ListingWidget'

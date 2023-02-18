@@ -1,12 +1,12 @@
 import type {ReactElement} from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import {MyAccountLayout} from '@/components/MyPagesLayout/MyPagesLayout'
+import {MyAccountLayout} from '@/components/MyAccountLayout/MyAccountLayout'
 import {ListingRow} from '@/components/ListingRow/ListingRow'
 import {ListingPopUpContainer} from '@/components/ListingPopUp/ListingPopUpContainer'
 import {useUser} from '@/hooks/useUser'
 import StyledLoader from '@/components/StyledLoader'
-import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
+import {UNAUTHORIZED_REDIRECT_TO} from '@/lib/constants/paths'
 import {Container} from '@/components/Container/Container'
 import {HorizontalLine} from '@/components/HorizontalLine/HorizontalLine'
 import useSWR from 'swr'
@@ -17,7 +17,7 @@ const Gillade = () => {
     const {data: listings} = useSWR(MY_LIKED_LISTINGS_KEY, getLikedListings)
     const isLoading = !listings
 
-    useUser({redirectTo: ON_UNAUTHENTICATED_GOTO})
+    useUser({redirectTo: UNAUTHORIZED_REDIRECT_TO})
 
     return (
         <>

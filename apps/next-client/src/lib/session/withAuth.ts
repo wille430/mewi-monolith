@@ -1,5 +1,5 @@
 import type {GetServerSideProps} from 'next'
-import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
+import {UNAUTHORIZED_REDIRECT_TO} from '@/lib/constants/paths'
 import {withSessionSsr} from '@/lib/session/withSessionSsr'
 import {Role} from "@mewi/models"
 
@@ -11,7 +11,7 @@ export const withAuth = (handler: GetServerSideProps, allowedRoles: Role[]): Get
         if (!roles) {
             return {
                 redirect: {
-                    destination: ON_UNAUTHENTICATED_GOTO,
+                    destination: UNAUTHORIZED_REDIRECT_TO,
                     permanent: false,
                 },
             }

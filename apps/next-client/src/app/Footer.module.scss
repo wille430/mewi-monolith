@@ -1,0 +1,18 @@
+
+.arc {
+  $arc-height: 2vw;
+
+  position: relative;
+  margin-top: $arc-height;
+
+  &:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: $arc-height;
+    top: -$arc-height;
+    border-radius: 100% 100% 0 0;
+    background-color: theme("colors.primary");
+    position: relative;
+  }
+}

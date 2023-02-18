@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { ListingSearchFilters } from '@/common/types/ListingSearchFilters'
-import { useSearchContext } from '@/hooks/useSearch'
+import { useSearchContext } from '@/context/SearchContext'
 import {ListingSort} from "@mewi/models"
 
 const SortButton = () => {

@@ -1,7 +1,7 @@
 import type {GetServerSideProps} from 'next'
 import type {ReactElement} from 'react'
 import Head from 'next/head'
-import {MyAccountLayout} from '@/components/MyPagesLayout/MyPagesLayout'
+import {MyAccountLayout} from '@/components/MyAccountLayout/MyAccountLayout'
 import {withAuth} from '@/lib/session/withAuth'
 import {Container} from '@/components/Container/Container'
 import {Role} from '@mewi/models'

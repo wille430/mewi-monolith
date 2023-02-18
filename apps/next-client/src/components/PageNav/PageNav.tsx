@@ -2,7 +2,7 @@ import type {MutableRefObject, MouseEvent} from 'react'
 import {memo, useMemo} from 'react'
 import {FiArrowRight, FiArrowLeft} from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
-import {useSearchContext} from '@/hooks/useSearch'
+import {useSearchContext} from '@/context/SearchContext'
 import {ListingSearchFilters} from '@/common/types/ListingSearchFilters'
 import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants"
 

@@ -1,9 +1,9 @@
 import type {ReactElement} from 'react'
 import Head from 'next/head'
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
-import {MyAccountLayout} from '@/components/MyPagesLayout/MyPagesLayout'
+import {MyAccountLayout} from '@/components/MyAccountLayout/MyAccountLayout'
 import {serialize} from '@/lib/utils/serialize'
-import {ON_UNAUTHENTICATED_GOTO} from '@/lib/constants/paths'
+import {UNAUTHORIZED_REDIRECT_TO} from '@/lib/constants/paths'
 import {withAuth} from '@/lib/session/withAuth'
 import {Container} from '@/components/Container/Container'
 import {HorizontalLine} from '@/components/HorizontalLine/HorizontalLine'
@@ -28,7 +28,7 @@ export const getServerSideProps = withAuth(
         if (!user) {
             return {
                 redirect: {
-                    destination: ON_UNAUTHENTICATED_GOTO,
+                    destination: UNAUTHORIZED_REDIRECT_TO,
                     permanent: false,
                 },
             }
