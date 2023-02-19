@@ -89,7 +89,11 @@ $layout-width: theme('screens.lg');
   }
 
   .centered {
-    @apply flex justify-center items-center;
+    @apply center-x items-center;
+  }
+
+  .center-x {
+    @apply flex justify-center;
   }
 }
 

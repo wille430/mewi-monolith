@@ -1,23 +1,18 @@
-import styles from './ListingGrid.module.scss'
 import {ListingWidget} from '../ListingWidget/ListingWidget'
 import StyledLoader from '../StyledLoader'
 import {useAppDispatch} from '@/hooks'
 import {openListing} from '@/store/listings'
 import {useListingsSearch} from '@/hooks/useListingsResult'
-import clsx from 'clsx'
 
 const ListingGrid = () => {
     const dispatch = useAppDispatch()
     const {data, error} = useListingsSearch()
-    const isLoading = !data
     const {hits} = data ?? {}
 
-    if (isLoading) {
+    if (data == null) {
         return (
             <section
-                className={clsx({
-                    [styles.center]: true,
-                })}
+                className="centered"
                 style={{
                     minHeight: "60vh"
                 }}
@@ -27,7 +22,7 @@ const ListingGrid = () => {
         )
     } else if (error) {
         return (
-            <section className={styles.center}>
+            <section className="centered">
                 <span>Ett fel inträffade</span>
             </section>
         )
@@ -36,25 +31,27 @@ const ListingGrid = () => {
             <section style={{
                 minHeight: "60vh"
             }}>
-                <div className={styles["grid"]}>
-                    {hits.map((listing, i) => (
-                        <ListingWidget
-                            key={listing.id}
-                            onClick={() => dispatch(openListing(listing))}
-                            className="flex-grow"
-                            data-testid={`listing-${i}`}
-                            listing={listing}
-                        />
-                    ))}
+                <div className="center-x">
+                    <div className="max-w-screen-lg flex flex-wrap gap-4 mx-auto
+                                after:block after:flex-grow-[999]">
+                        {hits.map((listing, i) => (
+                            <ListingWidget
+                                key={listing.id}
+                                onClick={() => dispatch(openListing(listing))}
+                                data-testid={`listing-${i}`}
+                                listing={listing}
+                            />
+                        ))}
+                    </div>
                 </div>
             </section>
         )
     } else {
         return (
-            <section className={clsx(styles.center, styles.section)} style={{
+            <section className="centered" style={{
                 minHeight: "60vh"
             }}>
-                <span>Inget resultat hittades för din sökning.</span>
+                <span className="text-muted">Inga resultat hittades för din sökning</span>
             </section>
         )
     }
