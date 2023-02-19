@@ -1,23 +1,45 @@
-import { Container } from "../Container/Container";
+"use client";
+import {Container} from "../Container/Container";
 import styles from "./SideNav.module.scss";
-import SideNavButton from "./SideNavButton/SideNavButton";
-import { useAppSelector } from "@/hooks";
-import {Role} from "@mewi/models";
+import {BsFillBinocularsFill, FiHeart, FiUser} from "react-icons/all";
+import Link from "next/link";
+import clsx from "clsx";
+import {usePathname} from "next/navigation";
+
+const links = [
+    {
+        label: "Bevakningar",
+        path: "/minasidor/bevakningar",
+        icon: <BsFillBinocularsFill className="mr-2"/>,
+    },
+    {
+        label: "Konto",
+        path: "/minasidor/konto",
+        icon: <FiUser className="mr-2"/>,
+    },
+    {
+        label: "Gillade annonser",
+        path: "/minasidor/gillade",
+        icon: <FiHeart className="mr-2"/>,
+    },
+];
 
 const SideNav = () => {
-    const { user } = useAppSelector((state) => state.user);
+
+    const pathname = usePathname();
 
     return (
-        <Container className={styles.container} data-testid='side-nav'>
+        <Container className={styles.container} data-testid="side-nav">
             <h4>Mina Sidor</h4>
 
             <ul>
-                <SideNavButton href='/minasidor/bevakningar'>Bevakningar</SideNavButton>
-                <SideNavButton href='/minasidor/konto'>Konto</SideNavButton>
-                <SideNavButton href='/minasidor/gillade'>Gillade produkter</SideNavButton>
-                {user?.roles?.includes(Role.ADMIN) && (
-                    <SideNavButton href='/admin'>Admin</SideNavButton>
-                )}
+                {links.map(o => (
+                    <li className={clsx("hover:bg-gray-300 py-1.5 px-2", pathname === o.path && "bg-gray-200")}>
+                        <Link className="center-y" href={o.path}>
+                            {o.icon} {o.label}
+                        </Link>
+                    </li>
+                ))}
             </ul>
         </Container>
     );

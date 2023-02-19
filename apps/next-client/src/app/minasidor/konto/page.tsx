@@ -1,9 +1,9 @@
 "use client";
 import Head from "next/head";
 import AccountDetails from "@/components/AccountDetails/AccountDetails";
-import {Container} from "@/components/Container/Container";
 import {HorizontalLine} from "@/components/HorizontalLine/HorizontalLine";
 import {useAppSelector} from "@/hooks";
+import {withAuthorized} from "@/hocs/withAuthorized";
 
 const Konto = () => {
 
@@ -17,24 +17,23 @@ const Konto = () => {
             </Head>
 
             <main>
-                <Container
+                <section
                     style={{
                         minHeight: "50vh",
                     }}
                 >
-                    <Container.Header>
+                    <div>
                         <h3>Mitt Konto</h3>
                         <HorizontalLine/>
-                    </Container.Header>
+                    </div>
 
-                    <Container.Content>
+                    <div>
                         <AccountDetails user={user!}/>
-                    </Container.Content>
-                    <Container.Footer></Container.Footer>
-                </Container>
+                    </div>
+                </section>
             </main>
         </>
     );
 };
 
-export default Konto;
+export default withAuthorized(Konto);

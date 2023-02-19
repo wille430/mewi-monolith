@@ -1,5 +1,6 @@
 "use client";
 import WatcherList from "@/components/WatcherList/WatcherList";
+import {withAuthorized} from "@/hocs/withAuthorized";
 
 const Bevakningar = () => {
     return (
@@ -9,4 +10,4 @@ const Bevakningar = () => {
     );
 };
 
-export default Bevakningar;
+export default withAuthorized(Bevakningar);

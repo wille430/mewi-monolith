@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import "reflect-metadata";
 import { container } from "tsyringe";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { userStub } from "./stubs/user.stub";
 import type {
     ChangePasswordAuth,

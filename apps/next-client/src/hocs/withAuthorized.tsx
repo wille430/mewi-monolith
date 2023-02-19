@@ -1,3 +1,4 @@
+"use client";
 import {ComponentType, useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "@/hooks";
 import {RedirectTo} from "@/components/RedirectTo";
@@ -13,9 +14,11 @@ export const withAuthorized = <P extends object>(Component: ComponentType<P>) =>
         dispatch(getUser());
     }, []);
 
-    if (!isReady) return <div className="flex-grow centered">
-        <StyledLoader/>
-    </div>;
+    if (!isReady) return (
+        <div className="flex-grow centered">
+            <StyledLoader/>
+        </div>
+    );
     if (!isLoggedIn) return <RedirectTo to={UNAUTHORIZED_REDIRECT_TO}/>;
 
     return <Component {...props}/>;

@@ -95,6 +95,10 @@ $layout-width: theme('screens.lg');
   .center-x {
     @apply flex justify-center;
   }
+
+  .center-y {
+    @apply flex items-center;
+  }
 }
 
 @media (min-width: 640px) {

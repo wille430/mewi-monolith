@@ -1,5 +1,5 @@
 import {autoInjectable, inject} from "tsyringe";
-import bcrypt, {compare} from "bcrypt";
+import bcrypt, {compare} from "bcryptjs";
 import {BadRequestException, NotFoundException} from "next-api-decorators";
 import crypto from "crypto";
 import type {CreateUserDto} from "./dto/create-user.dto";
