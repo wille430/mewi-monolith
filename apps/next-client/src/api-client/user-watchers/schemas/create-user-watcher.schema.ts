@@ -1,7 +1,7 @@
-import type {CreateUserWatcherDto} from "@/lib/modules/user-watchers/dto/create-user-watcher.dto";
-import {AnyRecord} from "@/lib/types/utils";
-import {array, boolean, number, object, string} from "yup";
-import {Category, ListingOrigin} from "@mewi/models";
+import type { CreateUserWatcherDto } from "@/lib/modules/user-watchers/dto/create-user-watcher.dto";
+import { AnyRecord } from "@/lib/types/utils";
+import { array, boolean, number, object, string } from "yup";
+import { Category, ListingOrigin } from "@mewi/models";
 
 export const MIN_PRICE_MSG = "Måste vara större eller lika med 0";
 export const MAX_PRICE_MSG = "Talet är för stort";

@@ -1,10 +1,10 @@
-import {getModelForClass, prop, ReturnModelType} from '@typegoose/typegoose'
-import type {Document} from 'mongoose'
-import {WatcherMetadata} from "./WatcherMetadata"
-import {WatcherDto} from "@mewi/models"
-import {Entity} from "./Entity"
+import { getModelForClass, prop, ReturnModelType } from "@typegoose/typegoose";
+import type { Document } from "mongoose";
+import { WatcherMetadata } from "./WatcherMetadata";
+import { WatcherDto } from "@mewi/models";
+import { Entity } from "./Entity";
 
-export type WatcherDocument = Watcher & Document
+export type WatcherDocument = Watcher & Document;
 
 export class Watcher extends Entity {
 
@@ -23,12 +23,12 @@ export class Watcher extends Entity {
 
     public static convertToDto(obj: Watcher): WatcherDto {
         return {
-            createdAt: obj.createdAt,
-            id: obj._id.toString(),
-            metadata: obj.metadata,
-            notifiedAt: obj.notifiedAt,
-            updatedAt: obj.updatedAt
-        }
+          createdAt: obj.createdAt,
+          id: obj._id.toString(),
+          metadata: WatcherMetadata.convertToDto(obj.metadata),
+          notifiedAt: obj.notifiedAt,
+          updatedAt: obj.updatedAt,
+        };
     }
 }
 

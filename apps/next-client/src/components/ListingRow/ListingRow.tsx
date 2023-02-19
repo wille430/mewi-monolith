@@ -1,100 +1,41 @@
 "use client";
-import type {AnimationProps, HTMLMotionProps} from "framer-motion";
-import {motion} from "framer-motion";
-import {useState} from "react";
-import styles from "./ListingRow.module.scss";
-import {ListingLikeButton} from "../LikeButton/LikeButton";
-import {Button} from "../Button/Button";
 import DefaultImage from "@/components/DefaultImage/DefaultImage";
-import {useAppDispatch} from "@/hooks";
-import {openListing} from "@/store/listings";
-import clsx from "clsx";
-import {ListingDto} from "@mewi/models";
+import { ListingDto } from "@mewi/models";
+import { HTMLAttributes } from "react";
 
-interface ListingRowprops extends HTMLMotionProps<"article"> {
-    listing: ListingDto
+interface ListingRowProps extends HTMLAttributes<HTMLDivElement> {
+  listing: ListingDto;
 }
 
-export const ListingRow = ({listing, ...rest}: ListingRowprops) => {
-    const [isHovered, setHovered] = useState(false);
-    const dispatch = useAppDispatch();
+export const ListingRow = ({ listing, ...rest }: ListingRowProps) => {
+  return (
+    <article
+      className="flex overflow-hidden gap-x-4 card p-0 hover:cursor-pointer hover:scale-[1.0025] pr-4 h-32"
+      data-id={listing.id}
+      {...rest}
+    >
+      <DefaultImage
+        className="h-full h-auto object-cover"
+        src={listing.imageUrl[0]}
+        alt={listing.title}
+      />
 
-    const fadeVariants: AnimationProps["variants"] = {
-        hide: {
-            opacity: 0,
-            transitionEnd: {
-                pointerEvents: "none",
-            },
-        },
-        show: {
-            opacity: 1,
-            pointerEvents: "auto",
-        },
-    };
-    const scaleVariants: AnimationProps["variants"] = {
-        initial: {scale: 1},
-        scale: {scale: 1.0025},
-    };
+      <div className="py-2 flex flex-col flex-shrink flex-basis">
+        <span>{listing.title}</span>
+      </div>
 
-    return (
-        <motion.article
-            className={styles.listingContainer}
-            onHoverStart={() => setHovered(true)}
-            onHoverEnd={() => setHovered(false)}
-            variants={scaleVariants}
-            animate={isHovered ? "scale" : "initial"}
-            data-id={listing.id}
-            {...rest}
-        >
-            <div className={clsx(styles.image, "relative")}>
-                <DefaultImage src={listing.imageUrl[0]} alt={listing.title}/>
-            </div>
-            <motion.div className={styles.description}>
-                <h4>{listing.title}</h4>
-                <p>{listing.body}</p>
-            </motion.div>
+      <div className="flex flex-col justify-between py-2 text-right w-56">
+        <span className="text-muted">{listing.region}</span>
 
-            <motion.div className="relative h-full">
-                <motion.div
-                    className={styles.details}
-                    variants={fadeVariants}
-                    animate={isHovered ? "hide" : "show"}
-                >
-                    <span className={styles.regionText}>{listing.region}</span>
-                    {listing.price && (
-                        <span
-                            className={styles.priceText}
-                        >{`${listing.price?.value} ${listing.price?.currency}`}</span>
-                    )}
-                </motion.div>
-
-                <motion.div
-                    className={styles.actions}
-                    variants={{
-                        ...fadeVariants,
-                        hide: {
-                            ...fadeVariants.hide,
-                            transitionEnd: {},
-                        },
-                    }}
-                    initial={"hide"}
-                    animate={isHovered ? "show" : "hide"}
-                >
-                    <ListingLikeButton listing={listing} className="ml-auto"/>
-                    <Button
-                        className={styles.redirect}
-                        onClick={() => dispatch(openListing(listing))}
-                    >
-                        {">>"}
-                    </Button>
-                </motion.div>
-            </motion.div>
-
-            <motion.div
-                className={styles.overlay}
-                variants={fadeVariants}
-                animate={isHovered ? "show" : "hide"}
-            />
-        </motion.article>
-    );
+        {listing.price && (
+          <span>
+            {Intl.NumberFormat("sv-SE", {
+              currency: listing.price.currency,
+              style: "currency",
+            }).format(listing.price.value)}
+          </span>
+        )}
+      </div>
+    </article>
+  );
 };

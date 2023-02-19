@@ -4,9 +4,10 @@ import { UserPayload } from "@/lib/modules/common/types/UserPayload";
 import { SESSION_COOKIE } from "@/lib/constants/cookies";
 import { unsealData } from "iron-session";
 import { sessionOptions } from "@/lib/session/sessionOptions";
+import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 
 export const getUserFromCookies = async (
-  cookies: ReadonlyRequestCookies
+  cookies: ReadonlyRequestCookies | RequestCookies
 ): Promise<UserPayload | null> => {
   const found = cookies.get(SESSION_COOKIE);
 

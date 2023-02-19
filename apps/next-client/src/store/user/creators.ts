@@ -1,15 +1,12 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
-import {UserActionTypes} from "./types";
-import {client} from "@/client";
-import {UserDto} from "@mewi/models";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { UserActionTypes } from "./types";
+import { client } from "@/api-client";
+import { UserDto } from "@mewi/models";
 
-export const getUser = createAsyncThunk(
-    UserActionTypes.GET_USER,
-    async () => {
-        const user: UserDto | null = await client.get("/users/me");
-        return {user};
-    }
-);
+export const getUser = createAsyncThunk(UserActionTypes.GET_USER, async () => {
+  const user: UserDto | null = await client.get("/users/me");
+  return { user };
+});
 
 export const logout = createAsyncThunk(UserActionTypes.LOGOUT, async () => {
     await client.post("/auth/logout");

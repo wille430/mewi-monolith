@@ -1,16 +1,16 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {AiFillHeart, AiOutlineHeart} from "react-icons/ai";
-import type {HTMLMotionProps, Variants} from "framer-motion";
-import {motion, useAnimation} from "framer-motion";
-import {useSWRConfig} from "swr";
-import {setLikeListing} from "@/client/listings/mutations";
-import {useUser} from "@/hooks/useUser";
-import {ListingDto} from "@mewi/models";
+import React, { useEffect, useMemo, useState } from "react";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import type { HTMLMotionProps, Variants } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useSWRConfig } from "swr";
+import { setLikeListing } from "@/api-client/listings/mutations";
+import { useUser } from "@/hooks/useUser";
+import { ListingDto } from "@mewi/models";
 
 export type ListingLikeButtonProps = {
-    listing: ListingDto
-    liked?: boolean
-} & HTMLMotionProps<"button">
+  listing: ListingDto;
+  liked?: boolean;
+} & HTMLMotionProps<"button">;
 
 export type LikeButtonProps = HTMLMotionProps<"button"> & {
     liked?: boolean

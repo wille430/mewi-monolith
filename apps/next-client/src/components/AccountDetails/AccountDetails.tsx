@@ -1,16 +1,17 @@
-import {useState} from "react";
-import styles from "./AccountDetails.module.scss";
-import {TextField} from "../TextField/TextField";
-import {Button} from "../Button/Button";
-import {updateEmail} from "@/client";
-import {randomString} from "@mewi/utilities";
-import {ErrorMessage, Field, Form, Formik} from "formik";
-import type {FormikHelpers} from "formik";
-import type {UpdateEmailDto} from "@/lib/modules/users/dto/update-email.dto";
-import {handleError} from "./handleError";
-import {updateEmailSchema} from "@/client/users/schemas/update-email.schema";
-import {mutate} from "swr";
-import {UserDto} from "@mewi/models";
+"use client";
+import {useState} from "react"
+import styles from "./AccountDetails.module.scss"
+import {TextField} from "../TextField/TextField"
+import type {FormikHelpers} from "formik"
+import {ErrorMessage, Field, Form, Formik} from "formik"
+import type {UpdateEmailDto} from "@/lib/modules/users/dto/update-email.dto"
+import {handleError} from "./handleError"
+import {updateEmailSchema} from "@/api-client/users/schemas/update-email.schema"
+import {mutate} from "swr"
+import {UserDto} from "@mewi/models"
+import {Button} from "../Button/Button;
+import {updateEmail} from "@/api-client;
+import {randomString} from "@mewi/utilities;
 
 export interface AccountDetailsProps {
     user: UserDto

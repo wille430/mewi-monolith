@@ -4,5 +4,7 @@ import { stringify } from "query-string";
 import { client } from "../index";
 
 export const getListings = (url, filters: FindAllListingsDto) => {
-    return client.get<never, FindAllListingsReponse>(url + "?" + stringify(filters));
+  return client.get<never, FindAllListingsReponse>(
+    url + "?" + stringify(filters)
+  );
 };

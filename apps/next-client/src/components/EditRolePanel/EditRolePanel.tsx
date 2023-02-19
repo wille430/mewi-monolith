@@ -1,61 +1,63 @@
 "use client";
 import capitalize from "lodash/capitalize";
-import {useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 import styles from "./EditRolePanel.module.scss";
 import StyledLoader from "../StyledLoader";
-import {TextField} from "../TextField/TextField";
-import {Button} from "../Button/Button";
-import useSWR, {useSWRConfig} from "swr";
-import {ALL_USERS_KEY} from "@/client/users/swr-keys";
-import {getUsers} from "@/client/users/queries";
-import {updateUserRoles} from "@/client/users/mutations";
+import { TextField } from "../TextField/TextField";
+import { Button } from "../Button/Button";
+import useSWR, { useSWRConfig } from "swr";
+import { ALL_USERS_KEY } from "@/api-client/users/swr-keys";
+import { getUsers } from "@/api-client/users/queries";
+import { updateUserRoles } from "@/api-client/users/mutations";
 import clsx from "clsx";
-import {Role, UserDto} from "@mewi/models";
+import { Role, UserDto } from "@mewi/models";
 
 export function EditRolePanel() {
-    const [email, setEmail] = useState<string | undefined>();
+  const [email, setEmail] = useState<string | undefined>();
 
-    const {data, mutate: refetch} = useSWR(ALL_USERS_KEY, () => getUsers({email}));
+  const { data, mutate: refetch } = useSWR(ALL_USERS_KEY, () =>
+    getUsers({ email })
+  );
 
-    return (
-        <div className="spce-y-2 p-2">
-            <h4 className="mb-2">Hantera roller</h4>
-            <div className="bg-gray-150 space-y-4 rounded p-2">
-                <form
-                    className="flex max-w-sm"
-                    onSubmit={async (e) => {
-                        e.preventDefault();
-                        await refetch();
-                    }}
-                >
-                    <TextField
-                        placeholder="E-postaddress"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        fullWidth
-                    />
-                    <Button className="ml-1" type="submit">
-                        Sök
-                    </Button>
-                </form>
-                <div className="w-ful p-2">
-                    {!data ? (
-                        <div className="flex w-full justify-center">
-                            <StyledLoader/>
-                        </div>
-                    ) : !data?.length ? (
-                        <span>Inga användare hittades</span>
-                    ) : (
-                        <ul>
-                            {data?.map((user) => (
-                                <UserRolesWidget key={user.id} user={user}/>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+  return (
+    <div className="spce-y-2 p-2">
+      <h4 className="mb-2">Hantera roller</h4>
+      <div className="bg-gray-150 space-y-4 rounded p-2">
+        <form
+          className="flex max-w-sm"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await refetch();
+          }}
+        >
+          <TextField
+            placeholder="E-postaddress"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+          />
+          <Button className="ml-1" type="submit">
+            Sök
+          </Button>
+        </form>
+        <div className="w-ful p-2">
+          {!data ? (
+            <div className="flex w-full justify-center">
+              <StyledLoader />
             </div>
+          ) : !data?.length ? (
+            <span>Inga användare hittades</span>
+          ) : (
+            <ul>
+              {data?.map((user) => (
+                <UserRolesWidget key={user.id} user={user} />
+              ))}
+            </ul>
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 interface UserRolesWidgetProps {

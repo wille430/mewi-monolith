@@ -11,5 +11,6 @@ export * from "./ISortable"
 export * from "./IPagination"
 export * from "./ListingSort"
 export * from "./UserWatcherDto"
-export * from "./WatcherDto"
-export * from "./UserDto"
+export * from "./WatcherDto";
+export * from "./DetailedUserWatcherDto";
+export * from "./UserDto";

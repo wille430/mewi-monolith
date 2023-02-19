@@ -1,4 +1,4 @@
-import { compare, hash } from "bcrypt";
+import { compare, hash } from "bcryptjs";
 import { BadRequestException, ConflictException } from "next-api-decorators";
 import { autoInjectable, inject } from "tsyringe";
 import type SignUpDto from "./dto/sign-up.dto";

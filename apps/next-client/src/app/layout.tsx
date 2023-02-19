@@ -1,25 +1,26 @@
-import {client} from "@/client";
+import { client } from "@/api-client";
 import Providers from "@/app/providers";
 import "../styles/app.scss";
 import "./Nav.module.scss";
-import {Footer} from "@/app/Footer";
-import {Nav} from "@/app/Nav";
+import { Footer } from "@/app/Footer";
+import { Nav } from "@/app/Nav";
 import Script from "next/script";
-import {NextLayoutProps} from "@/lib/types/next";
-import {ListingPopUpContainer} from "@/components/ListingPopUp/ListingPopUpContainer";
+import { NextLayoutProps } from "@/lib/types/next";
+import { ListingPopUpContainer } from "@/components/ListingPopUp/ListingPopUpContainer";
 
 export const metadata = {
-    viewport: "width=device-width, initial-scale=1",
-    themeColor: "#ffffff",
-    description: "Web site created using create-react-app",
-    "google-signin-client_id": "988378722186-sad5450gog2mdrlef5jrd8ohii22om24.apps.googleusercontent.com",
-    charSet: "utf-8",
-    icon: "/facivon.ico",
-    applicationName: "Mewi.se",
-    title: {
-        default: "Mewi.se",
-        template: "%s | Mewi.se"
-    }
+  viewport: "width=device-width, initial-scale=1",
+  themeColor: "#ffffff",
+  description: "Web site created using create-react-app",
+  "google-signin-client_id":
+    "988378722186-sad5450gog2mdrlef5jrd8ohii22om24.apps.googleusercontent.com",
+  charSet: "utf-8",
+  icon: "/facivon.ico",
+  applicationName: "Mewi.se",
+  title: {
+    default: "Mewi.se",
+    template: "%s | Mewi.se",
+  },
 };
 
 const RootLayout = ({children}: NextLayoutProps) => {

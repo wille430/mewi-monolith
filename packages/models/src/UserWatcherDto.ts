@@ -1,10 +1,8 @@
-import {IEntity} from "./IEntity"
-import {WatcherDto} from "./WatcherDto"
-import {UserDto} from "./UserDto"
+import { IEntity } from "./IEntity";
+import { WatcherDto } from "./WatcherDto";
 
 export interface UserWatcherDto extends IEntity {
-    id: string
-    watcher: WatcherDto
-    user: UserDto
-    notifiedAt?: Date
+  id: string;
+  watcher: WatcherDto;
+  notifiedAt?: Date;
 }

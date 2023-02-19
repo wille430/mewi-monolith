@@ -1,5 +1,5 @@
 import { client, MutationArgs } from "../index";
-import { UpdateEmailDto } from "../../lib/modules/users/dto/update-email.dto";
+import { UpdateEmailDto } from "@/lib/modules/users/dto/update-email.dto";
 import { CHANGE_EMAIL_SWR_KEY } from "./swr-keys";
 import {UserDto} from "@mewi/models";
 

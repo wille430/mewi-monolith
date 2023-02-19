@@ -2,14 +2,17 @@ import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import queryString from "query-string";
 import { ListingsActionTypes } from "./types";
 import { ListingSearchFilters } from "@/common/types/ListingSearchFilters";
-import { client } from "@/client";
-import {ListingDto} from "@mewi/models";
+import { client } from "@/api-client";
+import { ListingDto } from "@mewi/models";
 
-export const openListing = createAction(ListingsActionTypes.OPEN_LISTING, (listing: ListingDto) => {
+export const openListing = createAction(
+  ListingsActionTypes.OPEN_LISTING,
+  (listing: ListingDto) => {
     return {
-        payload: listing,
+      payload: listing,
     };
-});
+  }
+);
 
 export const closeListing = createAction(ListingsActionTypes.CLOSE_LISTING);
 
