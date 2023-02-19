@@ -1,9 +1,9 @@
 "use client"
 import dynamic from 'next/dynamic'
-import { useAppDispatch, useAppSelector } from '@/hooks'
-import { closeListing } from '@/store/listings'
+import {useAppDispatch, useAppSelector} from '@/hooks'
+import {closeListing} from '@/store/listings'
 
-const DynamicListingPopUp = dynamic(() => import('./ListingPopUp'), { loading: () => null })
+const DynamicListingPopUp = dynamic(() => import('./ListingPopUp'), {loading: () => null})
 
 export const ListingPopUpContainer = () => {
     const listing = useAppSelector((state) => state.listings.opened)
@@ -15,5 +15,5 @@ export const ListingPopUpContainer = () => {
         return null
     }
 
-    return <DynamicListingPopUp onClose={handleClose} listing={listing} />
+    return <DynamicListingPopUp onClose={handleClose} listing={listing}/>
 }

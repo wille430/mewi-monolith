@@ -27,8 +27,9 @@ const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
             <section className="container card max-w-4xl">
                 <header className="flex justify-between">
                      <span className="space-x-2 spacers-arrow">
-                        <Link href="/sok">Allt</Link>
-                        <Link href={'/sok?categories=' + category}>{CategoryLabel[category]}</Link>
+                        <Link onClick={handleClose} href="/sok">Allt</Link>
+                        <Link onClick={handleClose}
+                              href={'/sok?categories=' + category}>{CategoryLabel[category]}</Link>
                     </span>
                     <Button onClick={handleClose} className="bg-transparent text-black ml-auto btn-lg"><FiX/></Button>
                 </header>

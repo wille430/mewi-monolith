@@ -7,7 +7,7 @@ import isFunction from 'lodash/isFunction'
 import fromPairs from 'lodash/fromPairs'
 import {ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {stringify} from 'query-string'
-import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
+import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from 'react'
 import {ObjectSchema} from 'yup'
 import {useDebounce} from '@/hooks/useDebounce'
 import {FormikProvider, useFormik} from 'formik'
@@ -48,7 +48,7 @@ const useSearch = <T extends Record<string, any>>(
      * the page value could be set page to 1 every time the keyword
      * changes.
      */
-    const setDefaults = (...args: Parameters<typeof setFilters>) => {
+    const setDefaults = useCallback((...args: Parameters<typeof setFilters>) => {
         const newFilters = isFunction(args[0]) ? args[0](filters) : args[0]
         const diff = fromPairs(differenceWith(toPairs(newFilters), toPairs(filters), isEqual))
         const diffKeys = Object.keys(diff)
@@ -57,24 +57,33 @@ const useSearch = <T extends Record<string, any>>(
             Object.assign(newFilters, defaultValue)
         }
         return newFilters
-    }
-
-    // Get filters from query
-    useEffect(() => {
-        params && setFilters(parseQuery(params))
-        setHasParsedQuery(true)
     }, [])
 
-    const castToSchema = (obj: T) => schema.cast(obj, {stripUnknown: true})
-    const parseQuery = (params: ReadonlyURLSearchParams | null): T => params ? flow(searchParamsToObject, castToSchema, setDefaults)(params) : defaultValue
+    const castToSchema = useCallback((obj: T) => schema.cast(obj, {stripUnknown: true}), [schema])
+    const parseQuery = useCallback((params: ReadonlyURLSearchParams | null): T => params ? flow(searchParamsToObject, validateFilters, setDefaults)(params) : defaultValue, [])
     const validateFilters = (filters: T) => flow(removeNullValues, castToSchema)(filters)
 
+    const [updateFromParams, setUpdateFromParams] = useState(true)
     useEffect(() => {
         if (!hasParsedQuery) return
         if (isEqual(parseQuery(params), filters)) return
 
         router.push(pathname + "?" + stringify(validateFilters(filters)))
+        setUpdateFromParams(false)
     }, [filters])
+
+    // Get filters from query
+    useEffect(() => {
+        if (!updateFromParams) {
+            setUpdateFromParams(true)
+            return
+        }
+        const parsed = parseQuery(params)
+        if (isEqual(parsed, filters)) return
+
+        params && setFilters(parseQuery(params))
+        setHasParsedQuery(true)
+    }, [params])
 
     /**
      * Debounced values
