@@ -20,7 +20,8 @@ module.exports = {
                 primary: '#253C4C',
                 secondary: '#4CEB74',
                 paper: '#ffffff',
-                error: '#cc0000'
+                error: '#cc0000',
+                muted: '#6b6b6b'
             },
             screens: {
                 xs: "540px"

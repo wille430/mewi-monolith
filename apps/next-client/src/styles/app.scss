@@ -6,6 +6,11 @@
 
 $layout-width: theme('screens.lg');
 
+@layer base {
+  hr {
+    @apply border border-gray-200;
+  }
+}
 
 @layer components {
 
@@ -198,3 +203,7 @@ body {
   }
 }
 
+.spacers-arrow > *:not(:last-child):after {
+  content: ">";
+  margin-left: 0.5rem;
+}

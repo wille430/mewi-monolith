@@ -1,6 +1,0 @@
-.categoryLinks {
-    & > * + *::before {
-        content: '>';
-        margin: 0 0.5rem;
-    }
-}

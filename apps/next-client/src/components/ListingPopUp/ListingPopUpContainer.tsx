@@ -1,3 +1,4 @@
+"use client"
 import dynamic from 'next/dynamic'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { closeListing } from '@/store/listings'

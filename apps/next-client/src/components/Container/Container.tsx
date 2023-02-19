@@ -1,16 +1,12 @@
 import clsx from 'clsx'
-import React, { DetailedHTMLProps, HTMLAttributes } from 'react'
+import React, {DetailedHTMLProps, HTMLAttributes} from 'react'
 import styles from './Container.module.scss'
 
 export type ContainerProps = HTMLAttributes<HTMLDivElement>
 
-export const Container = ({ className, children, ...rest }: ContainerProps) => (
+export const Container = ({className, children, ...rest}: ContainerProps) => (
     <section
-        className={clsx({
-            [styles.container]: true,
-            ["container card"]: true,
-            [className ?? '']: !!className,
-        })}
+        className={clsx(styles.container, "container card", className)}
         {...rest}
     >
         {children}

@@ -2,7 +2,6 @@ import {useRef} from 'react'
 import PageNav from '../PageNav/PageNav'
 import {ListingResultText} from '../ListingResultText/ListingResultText'
 import SortButton from '../SortButton/SortButton'
-import {ListingPopUpContainer} from '../ListingPopUp/ListingPopUpContainer'
 import ListingGrid from '@/components/ListingGrid/ListingGrid'
 import {useListingsSearch} from '@/hooks/useListingsResult'
 
@@ -20,7 +19,6 @@ export const SearchSection = () => {
             </div>
             <ListingGrid/>
             <PageNav anchorEle={scrollUpRef} totalHits={totalHits}/>
-            <ListingPopUpContainer/>
         </section>
     )
 }

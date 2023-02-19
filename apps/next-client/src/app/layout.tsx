@@ -6,6 +6,7 @@ import {Footer} from "@/app/Footer"
 import {Nav} from "@/app/Nav"
 import Script from "next/script"
 import {NextLayoutProps} from "@/lib/types/next"
+import {ListingPopUpContainer} from "@/components/ListingPopUp/ListingPopUpContainer"
 
 export const metadata = {
     viewport: "width=device-width, initial-scale=1",
@@ -55,6 +56,9 @@ const RootLayout = ({children}: NextLayoutProps) => {
                     {children}
                 </div>
             </div>
+
+            <ListingPopUpContainer/>
+
             <Footer/>
         </Providers>
 

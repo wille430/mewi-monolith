@@ -2,170 +2,80 @@ $content-padding: 1.5rem;
 $text-color: theme('colors.gray.800');
 
 .popUp {
-    overflow-y: scroll;
-    padding: 0.5rem;
-    min-height: 100vh;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  min-height: 100vh;
 
-    @screen md {
-        padding: 1rem;
-        padding-bottom: 12rem;
-    }
-
-    @screen sm {
-        min-height: none;
-    }
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 0.5rem;
+  @screen md {
+    padding: 1rem 1rem 12rem;
+  }
 }
 
 .image-wrapper {
-    @apply bg-gray-200;
-    height: 30vh;
-    overflow: hidden;
+  @apply bg-gray-200;
+  height: 30vh;
+  overflow: hidden;
 
-    @screen sm {
-        height: 32rem;
-    }
+  @screen sm {
+    height: 32rem;
+  }
 
-    & > img {
-        height: 100%;
-        object-fit: contain;
-        margin: 0 auto;
-    }
-}
-
-.content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.container {
-    max-width: theme('screens.lg');
+  & > img {
+    height: 100%;
+    object-fit: contain;
     margin: 0 auto;
-    min-height: min(64rem, 80vh);
-    margin-top: 6rem;
-}
-
-.info-header {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 1.5rem;
-
-    // Left side
-    div:nth-child(1) {
-        flex-grow: 1;
-    }
-
-    // Right side
-    div:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-}
-
-.info-body {
-    flex-grow: 1;
-
-    .description {
-        height: 100%;
-    }
+  }
 }
 
 .description > h4,
 .specs > h4 {
-    @apply text-lg;
-    padding-bottom: 0.75rem;
+  @apply text-lg;
+  padding-bottom: 0.75rem;
 }
 
 .description > p,
 .specs > table {
-    color: $text-color;
+  color: $text-color;
 }
 
 .description {
-    flex: 6;
-    min-height: 16rem;
+  flex: 6;
+  min-height: 16rem;
 
-    &[data-content-length='0'] {
-        min-height: auto;
-    }
+  &[data-content-length='0'] {
+    min-height: auto;
+  }
 }
 
 .specs {
-    flex: 3;
-    min-width: 16rem;
-    min-height: 8rem;
+  min-width: 16rem;
+  min-height: 8rem;
 }
 
 .specs-table {
-    width: 100%;
+  @apply table-auto;
+  width: 100%;
+
+  td {
+    @apply py-1;
+  }
+
+  & tr:not(:last-child) {
+    @apply border-b;
+  }
 }
 
-@screen md {
-    $content-padding: 2rem;
+@screen lg {
+  .specs {
+    height: min-content;
+  }
 
-    .info-body {
-        display: flex;
-        grid-gap: 0.5rem;
-    }
+  .specs-hidden {
+    @extend .specs;
+  }
 
-    .specs {
-        height: min-content;
-    }
-
-    .specs-hidden {
-        @extend .specs;
-    }
-
-    .specs {
-        max-width: 32rem;
-    }
+  .specs {
+    max-width: 24rem;
+  }
 }
 
-// $padding: 1.5rem;
-
-// @screen md {
-//     $padding: 2rem;
-// }
-
-// .categoryPath {
-//     font-size: 0.75rem;
-// }
-
-// .infoHeader {
-//     display: flex;
-//     justify-content: space-between;
-//     padding: 0.5rem $padding;
-//     padding-top: $padding;
-
-//     & > *:nth-child(2) {
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: space-between;
-//     }
-// }
-
-// .specifications {
-//     color: $text-color;
-//     border-collapse: separate;
-//     border-spacing: 0rem 0.75rem;
-//     width: 100%;
-//     table-layout: fixed;
-//     overflow: hidden;
-
-//     & tr > td:first-child {
-//         padding-right: 0.75rem;
-//     }
-
-//     & tr > td:last-child {
-//         word-wrap: break-word;
-//     }
-// }
