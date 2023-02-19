@@ -16,7 +16,8 @@ const SearchPage = () => (
             {
                 defaultValue: {
                     page: 1
-                }
+                },
+                paginationKeys: ["page", "sort"]
             }
         ]}
     >

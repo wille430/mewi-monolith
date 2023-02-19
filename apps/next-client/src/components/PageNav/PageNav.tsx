@@ -1,5 +1,5 @@
 import type {MutableRefObject, MouseEvent} from 'react'
-import {memo, useMemo} from 'react'
+import {useMemo} from 'react'
 import {FiArrowRight, FiArrowLeft} from 'react-icons/fi'
 import NavEndButton from './NavEndButton/NavEndButton'
 import {useSearchContext} from '@/context/SearchContext'
@@ -12,7 +12,7 @@ interface PageNavProps {
 }
 
 const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
-    const {setDebouncedFilters: setFilters, filters} = useSearchContext<ListingSearchFilters>()
+    const {setFilters, filters} = useSearchContext<ListingSearchFilters>()
 
     const totalPages = useMemo(() => Math.ceil(totalHits / DEFAULT_LIMIT) ?? 1, [totalHits])
     const maxNumButtons = 5
@@ -21,11 +21,11 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
     const scrollToAnchorEle = () =>
         anchorEle?.current?.scrollIntoView({behavior: 'auto', block: 'center'})
 
-    const RenderButtons = memo(() => {
+    const RenderButtons = () => {
 
         const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
             scrollToAnchorEle()
-            setFilters((prev) => ({...prev, page: args[1]}), true)
+            setFilters({...filters, page: args[1]})
         }
 
         let startNum = 1
@@ -94,7 +94,7 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
                     })}
             </>
         )
-    })
+    }
     RenderButtons.displayName = 'Buttons'
 
     const changePage = (increment: number) => {

@@ -1,21 +1,14 @@
 // eslint-disable-next-line lodash/import-scope
 import type {DebouncedFunc} from 'lodash'
 import debounce from 'lodash/debounce'
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-
-export type UseDebounceOptions<T> = {
-    nonDebouncedValues?: T extends Record<any, any> ? Partial<T> : undefined
-    setInputValue?: Dispatch<SetStateAction<T>>
-}
+import {SetStateAction, useEffect, useMemo, useState} from 'react'
 
 export function useDebounce<T>(
     value: T,
-    delay?: number,
-    options?: UseDebounceOptions<T>
+    delay?: number
 ): [T, DebouncedFunc<(value: SetStateAction<T>, force?: boolean) => void>]
 
-export function useDebounce<T>(value: T, delay = 1000, options: UseDebounceOptions<T> = {}) {
-    const {nonDebouncedValues} = options
+export function useDebounce<T>(value: T, delay = 1000) {
     const [realValue, setRealValue] = useState(value)
 
     const setValue = useMemo(() => {
@@ -26,13 +19,6 @@ export function useDebounce<T>(value: T, delay = 1000, options: UseDebounceOptio
 
     useEffect(() => {
         setValue(value)
-
-        if (nonDebouncedValues) {
-            setRealValue((prev) => ({
-                ...prev,
-                ...nonDebouncedValues,
-            }))
-        }
 
         return () => {
             setValue.cancel()

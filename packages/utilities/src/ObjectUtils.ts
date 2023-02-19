@@ -4,7 +4,17 @@ export const searchParamsToObject = (searchParams: URLSearchParams) => {
     const it = searchParams.entries()
     let next = it.next()
     while (next.done === false) {
-        map[next.value[0]] = next.value[1]
+        const key = next.value[0]
+        const val = next.value[1]
+        if (map[key] != null)  {
+            if (!Array.isArray(map[key])) {
+                map[key] = [map[key]]
+            }
+            map[key].push(val)
+        } else {
+            map[key] = val
+        }
+
         next = it.next()
     }
 
