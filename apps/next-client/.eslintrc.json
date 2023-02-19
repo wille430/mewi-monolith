@@ -1,42 +1,58 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint", "unused-imports", "prettier", "import", "lodash"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/recommended",
-        "plugin:@next/next/recommended",
-        "plugin:lodash/recommended"
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "unused-imports",
+    "import",
+    "lodash"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:lodash/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
     ],
-    "rules": {
-        "@typescript-eslint/no-explicit-any": "off",
-        "unused-imports/no-unused-imports": "error",
-        "unused-imports/no-unused-vars": [
-            "warn",
-            {
-                "vars": "all",
-                "varsIgnorePattern": "^_",
-                "args": "after-used",
-                "argsIgnorePattern": "^_"
-            }
-        ],
-        "react-hooks/exhaustive-deps": "off",
-        "no-control-regex": "off",
-        "semi": ["error", "never"],
-        "@typescript-eslint/ban-ts-comment": "off",
-        "no-case-declarations": "off",
-        "import/no-unresolved": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "lodash/prefer-lodash-method": "off",
-        "lodash/prefer-lodash-typecheck": "off",
-        "lodash/prefer-constant": "off"
-    },
-    "overrides": [
-        {
-            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-            "rules": {}
-        }
-    ],
-    "ignorePatterns": ["*-lock.json", "dist/*", "_isolated_", "*.js"]
+    "quotes": "warn",
+    "react-hooks/exhaustive-deps": "off",
+    "no-control-regex": "off",
+    "semi": "warn",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-case-declarations": "off",
+    "import/no-unresolved": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "lodash/prefer-lodash-method": "off",
+    "lodash/prefer-lodash-typecheck": "off",
+    "lodash/prefer-constant": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
+      "rules": {}
+    }
+  ],
+  "ignorePatterns": [
+    "*-lock.json",
+    "dist/*",
+    "_isolated_",
+    "*.js"
+  ]
 }
