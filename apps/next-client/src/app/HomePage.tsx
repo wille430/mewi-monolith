@@ -1,8 +1,8 @@
-"use client"
-import {ListingDto, ListingSort} from "@mewi/models"
-import {Hero} from "@/components/Hero/Hero"
-import {DecorativeWaves} from "@/components/DecorativeWaves/DecorativeWaves"
-import {DisplayListingsRow} from "@/components/DisplayListingsRow/DisplayListingsRow"
+"use client";
+import {ListingDto, ListingSort} from "@mewi/models";
+import {Hero} from "@/components/Hero/Hero";
+import {DecorativeWaves} from "@/components/DecorativeWaves/DecorativeWaves";
+import {DisplayListingsRow} from "@/components/DisplayListingsRow/DisplayListingsRow";
 
 interface HomePageProps {
     featuredListings: ListingDto[],
@@ -11,7 +11,7 @@ interface HomePageProps {
 
 // TODO: listing popup
 export const HomePage = (props: HomePageProps) => {
-    const {featuredListings, recentListings} = props
+    const {featuredListings, recentListings} = props;
     return (
         <main>
             <section>
@@ -28,5 +28,5 @@ export const HomePage = (props: HomePageProps) => {
 
             <div className="h-32"/>
         </main>
-    )
-}
+    );
+};

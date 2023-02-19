@@ -1,10 +1,10 @@
-import clsx from 'clsx'
-import type { Variants } from 'framer-motion'
-import { motion } from 'framer-motion'
-import type { HTMLAttributes } from 'react'
-import { useEffect, useRef } from 'react'
-import { FiX } from 'react-icons/fi'
-import styles from './Snackbar.module.scss'
+import clsx from "clsx";
+import type { Variants } from "framer-motion";
+import { motion } from "framer-motion";
+import type { HTMLAttributes } from "react";
+import { useEffect, useRef } from "react";
+import { FiX } from "react-icons/fi";
+import styles from "./Snackbar.module.scss";
 
 export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     title?: string
@@ -14,78 +14,78 @@ export interface SnackbarProps extends HTMLAttributes<HTMLDivElement> {
     open?: boolean
     animationDuration?: number
     onExited?: () => void
-    type?: 'error' | 'info'
+    type?: "error" | "info"
 }
 
 const Snackbar = ({ title, body, handleClose, autoHideDuration = 6000, type }: SnackbarProps) => {
-    const timerAutoHide = useRef<NodeJS.Timeout | null>()
-    const shouldCloseSnackbar = useRef(false)
-    const isInteractedWith = useRef(false)
+    const timerAutoHide = useRef<NodeJS.Timeout | null>();
+    const shouldCloseSnackbar = useRef(false);
+    const isInteractedWith = useRef(false);
 
     const closeSnackbar = () => {
-        handleClose && handleClose()
-    }
+        handleClose && handleClose();
+    };
 
-    const handleClick = () => closeSnackbar()
+    const handleClick = () => closeSnackbar();
 
     const handleMouseEnter = () => {
-        isInteractedWith.current = true
-    }
+        isInteractedWith.current = true;
+    };
 
     const handleMouseLeave = () => {
-        isInteractedWith.current = false
+        isInteractedWith.current = false;
         if (shouldCloseSnackbar.current) {
-            closeSnackbar()
+            closeSnackbar();
         }
-    }
+    };
 
     const setAutoHideTimeout = () => {
         if (autoHideDuration == null) {
-            return
+            return;
         }
 
         if (timerAutoHide.current) {
-            clearTimeout(timerAutoHide.current)
+            clearTimeout(timerAutoHide.current);
         }
 
         timerAutoHide.current = setTimeout(() => {
             if (!isInteractedWith.current) {
-                closeSnackbar()
+                closeSnackbar();
             } else {
-                shouldCloseSnackbar.current = true
+                shouldCloseSnackbar.current = true;
             }
-        }, autoHideDuration)
-    }
+        }, autoHideDuration);
+    };
 
     const snackbarVariants: Variants = {
         hidden: {
-            x: '-120%',
+            x: "-120%",
         },
         show: {
-            x: type === 'error' ? [-75, 75, -45, 45, -15, 15, 0] : 0,
+            x: type === "error" ? [-75, 75, -45, 45, -15, 15, 0] : 0,
         },
-    }
+    };
 
     useEffect(() => {
-        setAutoHideTimeout()
-    }, [])
+        setAutoHideTimeout();
+    }, []);
 
     return (
         <motion.div
             className={clsx({
                 [styles.snackbar]: true,
                 [styles.small]: !body,
-                [styles.error]: type === 'error',
+                [styles.error]: type === "error",
             })}
             data-testid='snackbarContainer'
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             variants={snackbarVariants}
-            initial={'hidden'}
-            animate={'show'}
-            exit={'hidden'}
-            transition={{ type: 'spring', damping: 18, stiffness: 90 }}
+            initial={"hidden"}
+            animate={"show"}
+            exit={"hidden"}
+            transition={{ type: "spring", damping: 18, stiffness: 90 }}
         >
             <header className={styles.header}>
                 <h4 className='flex-grow' data-testid='snackbarTitle'>
@@ -107,7 +107,7 @@ const Snackbar = ({ title, body, handleClose, autoHideDuration = 6000, type }: S
                 </p>
             )}
         </motion.div>
-    )
-}
+    );
+};
 
-export default Snackbar
+export default Snackbar;

@@ -1,5 +1,5 @@
-import {faker} from '@faker-js/faker'
-import {LoginStrategy, Role, UserDto} from "@mewi/models"
+import {faker} from "@faker-js/faker";
+import {LoginStrategy, Role, UserDto} from "@mewi/models";
 
 export const createFakeUser = (overrides: Partial<UserDto>): UserDto => ({
     id: faker.database.mongodbObjectId(),
@@ -12,4 +12,4 @@ export const createFakeUser = (overrides: Partial<UserDto>): UserDto => ({
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,
-})
+});

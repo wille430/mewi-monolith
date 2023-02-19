@@ -1,10 +1,10 @@
-import {IsNumber} from 'class-validator'
+import {IsNumber} from "class-validator";
 
 export class Pagination {
     @IsNumber()
-    limit?: number
+    limit?: number;
     @IsNumber()
-    skip?: number
+    skip?: number;
 
-    sort?: { [key: string]: -1 | 1 }
+    sort?: { [key: string]: -1 | 1 };
 }

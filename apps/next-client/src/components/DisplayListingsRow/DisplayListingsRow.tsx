@@ -1,10 +1,10 @@
-"use client"
-import style from './DisplayListingsRow.module.scss'
-import {Container} from '../Container/Container'
-import {ListingWidget} from '@/components/ListingWidget/ListingWidget'
-import {openListing} from '@/store/listings'
-import {useAppDispatch} from "@/hooks"
-import {ListingDto} from "@mewi/models"
+"use client";
+import style from "./DisplayListingsRow.module.scss";
+import {Container} from "../Container/Container";
+import {ListingWidget} from "@/components/ListingWidget/ListingWidget";
+import {openListing} from "@/store/listings";
+import {useAppDispatch} from "@/hooks";
+import {ListingDto} from "@mewi/models";
 
 interface DisplayListingsRowParams {
     listings?: ListingDto[],
@@ -13,8 +13,8 @@ interface DisplayListingsRowParams {
 }
 
 export const DisplayListingsRow = (params: DisplayListingsRowParams) => {
-    const dispatch = useAppDispatch()
-    const {listings, title, showMoreHref} = params
+    const dispatch = useAppDispatch();
+    const {listings, title, showMoreHref} = params;
 
     return (
         <Container className="container">
@@ -43,5 +43,5 @@ export const DisplayListingsRow = (params: DisplayListingsRowParams) => {
                 </div>
             )}
         </Container>
-    )
-}
+    );
+};

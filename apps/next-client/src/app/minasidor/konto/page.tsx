@@ -1,14 +1,14 @@
-"use client"
-import Head from 'next/head'
-import AccountDetails from '@/components/AccountDetails/AccountDetails'
-import {Container} from '@/components/Container/Container'
-import {HorizontalLine} from '@/components/HorizontalLine/HorizontalLine'
-import {useAppSelector} from "@/hooks"
+"use client";
+import Head from "next/head";
+import AccountDetails from "@/components/AccountDetails/AccountDetails";
+import {Container} from "@/components/Container/Container";
+import {HorizontalLine} from "@/components/HorizontalLine/HorizontalLine";
+import {useAppSelector} from "@/hooks";
 
 const Konto = () => {
 
     // user is never null on this page because of hoc used in layout under /minasidor
-    const {user} = useAppSelector(state => state.user)
+    const {user} = useAppSelector(state => state.user);
 
     return (
         <>
@@ -19,7 +19,7 @@ const Konto = () => {
             <main>
                 <Container
                     style={{
-                        minHeight: '50vh',
+                        minHeight: "50vh",
                     }}
                 >
                     <Container.Header>
@@ -34,7 +34,7 @@ const Konto = () => {
                 </Container>
             </main>
         </>
-    )
-}
+    );
+};
 
-export default Konto
+export default Konto;

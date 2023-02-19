@@ -1,10 +1,10 @@
-import {FiTrash} from 'react-icons/fi'
-import {Button} from '@/components/Button/Button'
-import {useSWRConfig} from 'swr'
-import {removeUserWatcher} from '@/client/user-watchers/mutations'
+import {FiTrash} from "react-icons/fi";
+import {Button} from "@/components/Button/Button";
+import {useSWRConfig} from "swr";
+import {removeUserWatcher} from "@/client/user-watchers/mutations";
 
 const RemoveWatcherButton = ({watcherId}: { watcherId: string }) => {
-    const {mutate} = useSWRConfig()
+    const {mutate} = useSWRConfig();
     return (
         <Button
             data-testid="removeWatcherButton"
@@ -13,7 +13,7 @@ const RemoveWatcherButton = ({watcherId}: { watcherId: string }) => {
         >
             <FiTrash color="white"/>
         </Button>
-    )
-}
+    );
+};
 
-export default RemoveWatcherButton
+export default RemoveWatcherButton;

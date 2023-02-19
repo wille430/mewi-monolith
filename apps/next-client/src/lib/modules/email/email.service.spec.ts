@@ -1,15 +1,15 @@
-import 'reflect-metadata'
-import { container } from 'tsyringe'
-import { EmailService } from './email.service'
+import "reflect-metadata";
+import { container } from "tsyringe";
+import { EmailService } from "./email.service";
 
-describe('EmailService', () => {
-    let service: EmailService
+describe("EmailService", () => {
+    let service: EmailService;
 
     beforeEach(async () => {
-        service = container.resolve(EmailService)
-    })
+        service = container.resolve(EmailService);
+    });
 
-    it('should be defined', () => {
-        expect(service).toBeDefined()
-    })
-})
+    it("should be defined", () => {
+        expect(service).toBeDefined();
+    });
+});

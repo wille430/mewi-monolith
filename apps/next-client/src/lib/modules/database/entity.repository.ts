@@ -1,8 +1,8 @@
-import type {AggregateOptions, UpdateResult} from 'mongodb'
-import {Document, FilterQuery, HydratedDocument, Model, PipelineStage, Query, UpdateQuery,} from 'mongoose'
-import {IPagination, ISortable} from "@mewi/models"
-import {dbConnection} from '@/lib/dbConnection'
-import {Ref} from '@typegoose/typegoose'
+import type {AggregateOptions, UpdateResult} from "mongodb";
+import {Document, FilterQuery, HydratedDocument, Model, PipelineStage, Query, UpdateQuery,} from "mongoose";
+import {IPagination, ISortable} from "@mewi/models";
+import {dbConnection} from "@/lib/dbConnection";
+import {Ref} from "@typegoose/typegoose";
 
 export type PopulationArg<T> = Partial<{
     [P in keyof T]: T[P] extends Ref<any> ? boolean : undefined
@@ -11,22 +11,22 @@ export type PopulationArg<T> = Partial<{
 export abstract class EntityRepository<T extends Document> {
     defaultProjection = {
         __v: 0,
-    }
+    };
 
     protected constructor(protected readonly entityModel: Model<T>) {
         return new Proxy(this, {
             get(target, prop) {
-                const method = target[prop]
-                if (typeof method === 'function') {
+                const method = target[prop];
+                if (typeof method === "function") {
                     return async (...args: any) => {
-                        await dbConnection()
-                        return method.apply(target, args)
-                    }
+                        await dbConnection();
+                        return method.apply(target, args);
+                    };
                 } else {
-                    return Reflect.get(target, prop)
+                    return Reflect.get(target, prop);
                 }
             },
-        })
+        });
     }
 
     private applyPagination<
@@ -35,14 +35,14 @@ export abstract class EntityRepository<T extends Document> {
             HydratedDocument<T> | HydratedDocument<T>[] | null
         >
     >(pagination: IPagination, query: R): R {
-        const {page, limit} = pagination
-        const skip = page ? (page - 1) * (limit ?? 0) : 0
+        const {page, limit} = pagination;
+        const skip = page ? (page - 1) * (limit ?? 0) : 0;
 
-        query.skip(skip)
+        query.skip(skip);
 
-        limit != null && query.limit(limit)
+        limit != null && query.limit(limit);
 
-        return query
+        return query;
     }
 
 
@@ -53,9 +53,9 @@ export abstract class EntityRepository<T extends Document> {
         >
     >({sort}: ISortable, query: R): R {
         if (sort) {
-            query.sort(sort)
+            query.sort(sort);
         }
-        return query
+        return query;
     }
 
     async findOne(
@@ -67,10 +67,10 @@ export abstract class EntityRepository<T extends Document> {
         const q = this.entityModel.findOne(entityFilterQuery, {
             ...this.defaultProjection,
             ...projection,
-        })
-        this.applyPagination(pagination, q)
-        this.applySorting(sorting, q)
-        return q.exec()
+        });
+        this.applyPagination(pagination, q);
+        this.applySorting(sorting, q);
+        return q.exec();
     }
 
     async findById(
@@ -81,10 +81,10 @@ export abstract class EntityRepository<T extends Document> {
         const q = this.entityModel.findById(id, {
             ...this.defaultProjection,
             ...projection,
-        })
+        });
 
-        this.applyPagination(pagination, q)
-        return q.exec()
+        this.applyPagination(pagination, q);
+        return q.exec();
     }
 
     async find(
@@ -94,37 +94,37 @@ export abstract class EntityRepository<T extends Document> {
     ): Promise<T[] | null> {
         const query = this.entityModel.find(entityFilterQuery, {
             ...this.defaultProjection,
-        })
+        });
 
         for (const key of Object.keys(populate)) {
             if (populate[key] === true) {
-                query.populate(key)
+                query.populate(key);
             }
         }
 
-        this.applyPagination(pagination, query)
-        this.applySorting(pagination, query)
+        this.applyPagination(pagination, query);
+        this.applySorting(pagination, query);
 
-        return await query.exec()
+        return await query.exec();
     }
 
     async create(createEntityData: unknown): Promise<T> {
-        const entity = new this.entityModel(createEntityData)
-        return entity.save()
+        const entity = new this.entityModel(createEntityData);
+        return entity.save();
     }
 
     async createMany(createEntityData: unknown[]): Promise<{ count: number }> {
-        const entities = await this.entityModel.create(...createEntityData)
+        const entities = await this.entityModel.create(...createEntityData);
 
         return {
             count: entities.length,
-        }
+        };
     }
 
     async findByIdAndUpdate(id: string, updateEntityData: UpdateQuery<T>): Promise<T | null> {
         return this.entityModel.findByIdAndUpdate(id, updateEntityData, {
             new: true,
-        })
+        });
     }
 
     async findOneAndUpdate(
@@ -133,54 +133,54 @@ export abstract class EntityRepository<T extends Document> {
     ): Promise<T | null> {
         return this.entityModel.findOneAndUpdate(entityFilterQuery, updateEntityData, {
             new: true,
-        })
+        });
     }
 
     async updateMany(
         entityFilterQuery: FilterQuery<T>,
         updateEntityData: UpdateQuery<T>
     ): Promise<UpdateResult> {
-        return this.entityModel.updateMany(entityFilterQuery, updateEntityData)
+        return this.entityModel.updateMany(entityFilterQuery, updateEntityData);
     }
 
     async findByIdAndDelete(id: string): Promise<T | null> {
-        return this.entityModel.findByIdAndDelete(id)
+        return this.entityModel.findByIdAndDelete(id);
     }
 
     async deleteMany(entityFilterQuery: FilterQuery<T>): Promise<number> {
-        const deleteResult = await this.entityModel.deleteMany(entityFilterQuery)
-        return deleteResult.deletedCount
+        const deleteResult = await this.entityModel.deleteMany(entityFilterQuery);
+        return deleteResult.deletedCount;
     }
 
     async count(entityFilterQuery: FilterQuery<T>): Promise<number> {
-        return this.entityModel.count(entityFilterQuery)
+        return this.entityModel.count(entityFilterQuery);
     }
 
     async aggregate(pipeline: PipelineStage[], options: AggregateOptions = {}): Promise<any> {
         // @ts-ignore
-        const agg = this.entityModel.aggregate(pipeline, options) as any
-        return await agg
+        const agg = this.entityModel.aggregate(pipeline, options) as any;
+        return await agg;
     }
 
     async sample(count: number, filterQuery: FilterQuery<T> = {}) {
-        const totalDocs = await this.entityModel.count(filterQuery)
+        const totalDocs = await this.entityModel.count(filterQuery);
 
         const randomNums = Array.from({length: Math.min(count, totalDocs)}, () =>
             Math.floor(Math.random() * (totalDocs - 1))
-        )
+        );
 
-        const randomDocs: T[] = []
-        const addedDocNums: number[] = []
+        const randomDocs: T[] = [];
+        const addedDocNums: number[] = [];
 
         for (const i of randomNums) {
             if (!addedDocNums.includes(i)) {
-                const entity = await this.entityModel.findOne().skip(i).exec()
+                const entity = await this.entityModel.findOne().skip(i).exec();
 
-                if (entity) randomDocs.push(entity)
-                addedDocNums.push(i)
+                if (entity) randomDocs.push(entity);
+                addedDocNums.push(i);
             }
         }
 
-        return randomDocs
+        return randomDocs;
     }
 }

@@ -1,38 +1,38 @@
-import {formatDistance} from 'date-fns'
-import sv from 'date-fns/locale/sv'
-import type {ListingOrigin} from '@mewi/models'
-import type {HTMLAttributes} from 'react'
-import style from './ListingWidget.module.scss'
-import DefaultImage from '@/components/DefaultImage/DefaultImage'
-import {useAppSelector} from '@/hooks'
-import {getColor, getTextColor} from '@mewi/utilities'
-import clsx from 'clsx'
-import Link from 'next/link'
-import {LikeButton, ListingLikeButton} from '../LikeButton/LikeButton'
-import {ListingDto} from "@mewi/models"
+import {formatDistance} from "date-fns";
+import sv from "date-fns/locale/sv";
+import type {ListingOrigin} from "@mewi/models";
+import type {HTMLAttributes} from "react";
+import style from "./ListingWidget.module.scss";
+import DefaultImage from "@/components/DefaultImage/DefaultImage";
+import {useAppSelector} from "@/hooks";
+import {getColor, getTextColor} from "@mewi/utilities";
+import clsx from "clsx";
+import Link from "next/link";
+import {LikeButton, ListingLikeButton} from "../LikeButton/LikeButton";
+import {ListingDto} from "@mewi/models";
 
 interface ListingProps extends HTMLAttributes<HTMLElement> {
     listing: ListingDto
 }
 
 export const ListingWidget = ({listing, onClick, ...rest}: ListingProps) => {
-    const {isLoggedIn} = useAppSelector((state) => state.user)
+    const {isLoggedIn} = useAppSelector((state) => state.user);
 
     return (
         <article
             {...rest}
             className={clsx({
-                [style['card']]: true,
-                [rest.className ?? '']: !!rest.className,
+                [style["card"]]: true,
+                [rest.className ?? ""]: !!rest.className,
             })}
             data-id={listing.id}
         >
             <div
-                className={style['overlay']}
+                className={style["overlay"]}
                 onClick={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
 
-                    onClick && onClick(e)
+                    onClick && onClick(e);
                 }}
             />
 
@@ -42,42 +42,42 @@ export const ListingWidget = ({listing, onClick, ...rest}: ListingProps) => {
                 <ListingLikeButton
                     listing={listing}
                     className={clsx({
-                        [style['like-button']]: true,
+                        [style["like-button"]]: true,
                     })}
                 />
             ) : (
-                <Link href="/loggain" className={style['like-button']}>
+                <Link href="/loggain" className={style["like-button"]}>
                     <LikeButton data-testid="like-button"/>
                 </Link>
             )}
 
-            <div className={clsx(style['image-wrapper'])}>
+            <div className={clsx(style["image-wrapper"])}>
                 <DefaultImage src={listing.imageUrl && listing.imageUrl[0]} alt={listing.title}/>
             </div>
 
-            <div className={style['details']}>
-                <div className={style['header']}>
-                    <span className={style['title']}>{listing.title}</span>
+            <div className={style["details"]}>
+                <div className={style["header"]}>
+                    <span className={style["title"]}>{listing.title}</span>
 
                     <div className="ml-1 text-right">
-                        <span className={style['region']}>{listing.region}</span>
+                        <span className={style["region"]}>{listing.region}</span>
                     </div>
                 </div>
-                <div className={style['bottom']}>
-                    <span className={style['price']}>
+                <div className={style["bottom"]}>
+                    <span className={style["price"]}>
                         {listing.price?.value} {listing.price?.currency}
                     </span>
-                    <span className={style['timestamp']}>
+                    <span className={style["timestamp"]}>
                         {formatDistance(new Date(listing.date), new Date(), {
                             addSuffix: true,
                             locale: sv,
-                        }).replace('ungefär', 'ca.')}
+                        }).replace("ungefär", "ca.")}
                     </span>
                 </div>
             </div>
         </article>
-    )
-}
+    );
+};
 
 const OriginTag = ({origin}: { origin: ListingOrigin }) => {
     return (
@@ -86,10 +86,10 @@ const OriginTag = ({origin}: { origin: ListingOrigin }) => {
             style={{
                 backgroundColor: getColor(origin),
                 color: getTextColor(origin),
-                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)',
+                clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)",
             }}
         >
             <span>{origin}</span>
         </div>
-    )
-}
+    );
+};

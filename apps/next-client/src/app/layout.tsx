@@ -1,12 +1,12 @@
-import {client} from "@/client"
-import Providers from "@/app/providers"
-import "../styles/app.scss"
-import "./Nav.module.scss"
-import {Footer} from "@/app/Footer"
-import {Nav} from "@/app/Nav"
-import Script from "next/script"
-import {NextLayoutProps} from "@/lib/types/next"
-import {ListingPopUpContainer} from "@/components/ListingPopUp/ListingPopUpContainer"
+import {client} from "@/client";
+import Providers from "@/app/providers";
+import "../styles/app.scss";
+import "./Nav.module.scss";
+import {Footer} from "@/app/Footer";
+import {Nav} from "@/app/Nav";
+import Script from "next/script";
+import {NextLayoutProps} from "@/lib/types/next";
+import {ListingPopUpContainer} from "@/components/ListingPopUp/ListingPopUpContainer";
 
 export const metadata = {
     viewport: "width=device-width, initial-scale=1",
@@ -17,15 +17,15 @@ export const metadata = {
     icon: "/facivon.ico",
     applicationName: "Mewi.se",
     title: {
-        default: 'Mewi.se',
-        template: '%s | Mewi.se'
+        default: "Mewi.se",
+        template: "%s | Mewi.se"
     }
-}
+};
 
 const RootLayout = ({children}: NextLayoutProps) => {
 
-    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-        window.axios = client
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+        window.axios = client;
     }
 
     return (
@@ -64,7 +64,7 @@ const RootLayout = ({children}: NextLayoutProps) => {
 
         </body>
         </html>
-    )
-}
+    );
+};
 
-export default RootLayout
+export default RootLayout;

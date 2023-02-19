@@ -1,5 +1,5 @@
-"use client"
-import style from './DecorativeWaves.module.scss'
+"use client";
+import style from "./DecorativeWaves.module.scss";
 
 export const DecorativeWaves = () => (
     <div className={style.wrapper}>
@@ -45,4 +45,4 @@ export const DecorativeWaves = () => (
             />
         </svg>
     </div>
-)
+);

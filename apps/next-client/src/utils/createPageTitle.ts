@@ -1,3 +1,3 @@
 export const createPageTitle = (title: string) => {
-    return `${title} | Mewi.se`
-}
+    return `${title} | Mewi.se`;
+};

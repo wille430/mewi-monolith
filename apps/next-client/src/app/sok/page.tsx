@@ -1,13 +1,13 @@
-"use client"
-import {SearchSection} from '@/components/SearchSection/SearchSection'
-import {SideFilters} from '@/components/SideFilters/SideFilters'
-import {SearchProvider, useSearchContext} from '@/context/SearchContext'
-import {searchListingsSchema} from '@/client/listings/schemas/search-listings.schema'
-import clsx from 'clsx'
-import {TextField} from '@/components/TextField/TextField'
-import {Field} from 'formik'
-import {ListingSearchFilters} from "@/common/types/ListingSearchFilters"
-import React from "react"
+"use client";
+import {SearchSection} from "@/components/SearchSection/SearchSection";
+import {SideFilters} from "@/components/SideFilters/SideFilters";
+import {SearchProvider, useSearchContext} from "@/context/SearchContext";
+import {searchListingsSchema} from "@/client/listings/schemas/search-listings.schema";
+import clsx from "clsx";
+import {TextField} from "@/components/TextField/TextField";
+import {Field} from "formik";
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
+import React from "react";
 
 const SearchPage = () => (
     <SearchProvider
@@ -30,7 +30,7 @@ const SearchPage = () => (
             <Field
                 as={TextField}
                 showLabel={false}
-                className={clsx('w-full max-w-sm border-2')}
+                className={clsx("w-full max-w-sm border-2")}
                 type="text"
                 name="keyword"
                 placeholder="Vad letar du efter?"
@@ -39,12 +39,12 @@ const SearchPage = () => (
             <SearchSection/>
         </main>
     </SearchProvider>
-)
+);
 
 
-export default SearchPage
+export default SearchPage;
 
 const KeywordTitle = () => {
-    const {filters} = useSearchContext<ListingSearchFilters>()
-    return <h2 className="mb-2">Du sökte på "{filters.keyword}"</h2>
-}
+    const {filters} = useSearchContext<ListingSearchFilters>();
+    return <h2 className="mb-2">Du sökte på "{filters.keyword}"</h2>;
+};

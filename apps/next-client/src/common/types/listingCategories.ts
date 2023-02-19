@@ -1,4 +1,4 @@
-import {Category, CategoryLabel} from '@mewi/models'
+import {Category, CategoryLabel} from "@mewi/models";
 
 export const listingCategories: {
     value: Category
@@ -11,4 +11,4 @@ export const listingCategories: {
     {value: Category.FRITID_HOBBY, label: CategoryLabel.FRITID_HOBBY},
     {value: Category.OVRIGT, label: CategoryLabel.OVRIGT},
     {value: Category.PERSONLIGT, label: CategoryLabel.PERSONLIGT},
-]
+];

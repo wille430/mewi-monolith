@@ -1,6 +1,6 @@
-import type { HTMLAttributes } from 'react'
-import type { DropDownMenuProps } from '../DropdownMenu/DropdownMenu'
-import DropdownMenu from '../DropdownMenu/DropdownMenu'
+import type { HTMLAttributes } from "react";
+import type { DropDownMenuProps } from "../DropdownMenu/DropdownMenu";
+import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 export type LabeledDropdownProps = DropDownMenuProps & {
     onChange?: (val: any) => void
@@ -8,10 +8,10 @@ export type LabeledDropdownProps = DropDownMenuProps & {
     closeMenuOnSelect?: boolean
     isMulti?: boolean
     label?: string
-} & Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>
+} & Omit<HTMLAttributes<HTMLDivElement>, "onChange">
 
 const LabeledDropdown = (props: LabeledDropdownProps) => {
-    const { closeMenuOnSelect, isMulti, label } = props
+    const { closeMenuOnSelect, isMulti, label } = props;
 
     return (
         <div className='flex flex-col'>
@@ -22,7 +22,7 @@ const LabeledDropdown = (props: LabeledDropdownProps) => {
                 closeMenuOnSelect={closeMenuOnSelect || !isMulti}
             />
         </div>
-    )
-}
+    );
+};
 
-export default LabeledDropdown
+export default LabeledDropdown;

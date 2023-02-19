@@ -1,6 +1,6 @@
-import clsx from 'clsx'
-import type { HTMLAttributes, ReactNode } from 'react'
-import styles from './NavEndButton.module.scss'
+import clsx from "clsx";
+import type { HTMLAttributes, ReactNode } from "react";
+import styles from "./NavEndButton.module.scss";
 
 const NavEndButton = ({
     onClick,
@@ -12,7 +12,7 @@ const NavEndButton = ({
         <button className={clsx(styles.button, className)} onClick={onClick} {...rest}>
             {icon}
         </button>
-    )
-}
+    );
+};
 
-export default NavEndButton
+export default NavEndButton;

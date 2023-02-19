@@ -1,51 +1,51 @@
-import type { NextApiRequest } from 'next'
-import { Body, Post, Req } from 'next-api-decorators'
-import { inject } from 'tsyringe'
-import { AuthService } from './auth.service'
-import { LoginDto } from './dto/login.dto'
-import SignUpDto from './dto/sign-up.dto'
-import { WithSession } from '@/lib/middlewares/SessionGuard'
-import { MyValidationPipe } from '@/lib/pipes/validation.pipe'
-import { Controller } from '@/lib/decorators/controller.decorator'
+import type { NextApiRequest } from "next";
+import { Body, Post, Req } from "next-api-decorators";
+import { inject } from "tsyringe";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import SignUpDto from "./dto/sign-up.dto";
+import { WithSession } from "@/lib/middlewares/SessionGuard";
+import { MyValidationPipe } from "@/lib/pipes/validation.pipe";
+import { Controller } from "@/lib/decorators/controller.decorator";
 
 @Controller()
 export class AuthController {
     constructor(@inject(AuthService) private authService: AuthService) {}
 
-    @Post('/signup')
+    @Post("/signup")
     @WithSession()
     async signUp(@Body(MyValidationPipe) signUpDto: SignUpDto, @Req() req: NextApiRequest) {
-        const user = await this.authService.signUp(signUpDto)
+        const user = await this.authService.signUp(signUpDto);
 
         req.session.user = {
             userId: user.id,
             email: user.email,
             roles: user.roles,
-        }
-        await req.session.save()
+        };
+        await req.session.save();
 
-        return true
+        return true;
     }
 
-    @Post('/login')
+    @Post("/login")
     @WithSession()
     async login(@Body(MyValidationPipe) loginDto: LoginDto, @Req() req: NextApiRequest) {
-        const user = await this.authService.login(loginDto)
+        const user = await this.authService.login(loginDto);
 
         req.session.user = {
             userId: user.id,
             email: user.email,
             roles: user.roles,
-        }
-        await req.session.save()
+        };
+        await req.session.save();
 
-        return true
+        return true;
     }
 
-    @Post('/logout')
+    @Post("/logout")
     @WithSession()
     async logout(@Req() req: NextApiRequest) {
-        req.session.destroy()
-        return true
+        req.session.destroy();
+        return true;
     }
 }

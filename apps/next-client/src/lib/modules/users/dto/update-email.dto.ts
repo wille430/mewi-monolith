@@ -1,30 +1,30 @@
-import { IsEmail, IsString, Validate, ValidateIf } from 'class-validator'
-import { Transform } from 'class-transformer'
-import { UniqueEmailRule } from '@/lib/rules/unique-email.rule'
+import { IsEmail, IsString, Validate, ValidateIf } from "class-validator";
+import { Transform } from "class-transformer";
+import { UniqueEmailRule } from "@/lib/rules/unique-email.rule";
 
 export class UpdateEmailDto {
     @Transform(({ value }) => value.toLowerCase())
     @ValidateIf((obj) => !obj.token)
     @IsEmail()
     @Validate(UniqueEmailRule)
-    newEmail?: string
+    newEmail?: string;
 
     @ValidateIf((obj) => obj.token)
     @IsString()
     @IsEmail()
-    oldEmail?: string
+    oldEmail?: string;
 
     @ValidateIf((obj) => obj.oldEmail)
-    token?: string
+    token?: string;
 }
 
 export class AuthorizedUpdateEmailDto {
     @IsString()
     @IsEmail()
-    oldEmail?: string
+    oldEmail?: string;
 
     @IsString()
-    token?: string
+    token?: string;
 }
 
 export class RequestEmailUpdateDto {
@@ -32,5 +32,5 @@ export class RequestEmailUpdateDto {
     @IsString()
     @IsEmail()
     @Validate(UniqueEmailRule)
-    newEmail!: string
+    newEmail!: string;
 }

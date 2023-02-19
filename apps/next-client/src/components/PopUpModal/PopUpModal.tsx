@@ -1,6 +1,6 @@
-import { Button } from '../Button/Button'
-import { Modal, ModalProps } from '../Modal/Modal'
-import { PopUp } from '../PopUp/PopUp'
+import { Button } from "../Button/Button";
+import { Modal, ModalProps } from "../Modal/Modal";
+import { PopUp } from "../PopUp/PopUp";
 
 export interface PopUpModalProps extends ModalProps {
     open?: boolean
@@ -34,4 +34,4 @@ export const PopUpModal = ({ open, onExit, onAccept, ...rest }: PopUpModalProps)
             </div>
         </div>
     </PopUp>
-)
+);

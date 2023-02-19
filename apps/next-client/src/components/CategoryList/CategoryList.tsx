@@ -1,5 +1,5 @@
-import {CategoryListItem} from './CategoryListItem/CategoryListItem'
-import {Category} from "@mewi/models"
+import {CategoryListItem} from "./CategoryListItem/CategoryListItem";
+import {Category} from "@mewi/models";
 
 export const CategoryList = () => (
     <div
@@ -10,4 +10,4 @@ export const CategoryList = () => (
             <CategoryListItem key={key} categoryKey={key as keyof typeof Category} index={i}/>
         ))}
     </div>
-)
+);

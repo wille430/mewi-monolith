@@ -1,28 +1,28 @@
-import {Category, ListingOrigin} from '@mewi/models'
-import {ErrorMessage, Field, useFormikContext} from 'formik'
-import LabeledDropdown from '../LabeledDropdown/LabeledDropdown'
-import {LabeledTextField} from '../LabeledTextField/LabeledTextField'
-import {TextField} from '../TextField/TextField'
-import {FormikCheckboxList} from '../FormikCheckboxList/FormikCheckboxList'
-import {useMemo} from 'react'
-import Checkbox from '../Checkbox/Checkbox'
-import {listingCategories} from "@/common/types/listingCategories"
-import {ListingSearchFilters} from "@/common/types/ListingSearchFilters"
+import {Category, ListingOrigin} from "@mewi/models";
+import {ErrorMessage, Field, useFormikContext} from "formik";
+import LabeledDropdown from "../LabeledDropdown/LabeledDropdown";
+import {LabeledTextField} from "../LabeledTextField/LabeledTextField";
+import {TextField} from "../TextField/TextField";
+import {FormikCheckboxList} from "../FormikCheckboxList/FormikCheckboxList";
+import {useMemo} from "react";
+import Checkbox from "../Checkbox/Checkbox";
+import {listingCategories} from "@/common/types/listingCategories";
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
 
 export type ListingSearchFormProps = {
-    fieldTypes?: Partial<Record<keyof ListingSearchFilters, 'LIST' | 'DROPDOWN' | boolean>>
+    fieldTypes?: Partial<Record<keyof ListingSearchFilters, "LIST" | "DROPDOWN" | boolean>>
 }
 
 export const ListingSearchForm = (props: ListingSearchFormProps) => {
-    const {fieldTypes = {categories: 'DROPDOWN', origins: 'DROPDOWN'}} = props
-    const {setFieldValue, values} = useFormikContext<ListingSearchFilters>()
+    const {fieldTypes = {categories: "DROPDOWN", origins: "DROPDOWN"}} = props;
+    const {setFieldValue, values} = useFormikContext<ListingSearchFilters>();
 
     const origins = useMemo(() => {
         return Object.keys(ListingOrigin).map((val) => ({
             label: val,
             value: val,
-        }))
-    }, [])
+        }));
+    }, []);
 
     return (
         <>
@@ -52,7 +52,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
             />
             <ErrorMessage name="region"/>
 
-            {fieldTypes.categories === 'LIST' ? (
+            {fieldTypes.categories === "LIST" ? (
                 <div>
                     <h4>Kategorier</h4>
                     <FormikCheckboxList name="categories" options={listingCategories}/>
@@ -63,7 +63,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                     as={LabeledDropdown}
                     name="categories"
                     onChange={(cats: Category[]) => {
-                        setFieldValue('categories', cats)
+                        setFieldValue("categories", cats);
                     }}
                     isMulti
                     options={listingCategories}
@@ -79,7 +79,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                     as={TextField}
                     name="priceRangeGte"
                     placeholder="Från (kr)"
-                    onReset={() => setFieldValue('priceRangeGte', undefined)}
+                    onReset={() => setFieldValue("priceRangeGte", undefined)}
                     showClearButton
                     fullWidth
                     type="number"
@@ -91,7 +91,7 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                     as={TextField}
                     name="priceRangeLte"
                     placeholder="Till (kr)"
-                    onReset={() => setFieldValue('priceRangeLte', undefined)}
+                    onReset={() => setFieldValue("priceRangeLte", undefined)}
                     showClearButton
                     fullWidth
                     type="number"
@@ -100,13 +100,13 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                 <ErrorMessage name="priceRangeLte"/>
             </div>
 
-            {fieldTypes.origins === 'DROPDOWN' ? (
+            {fieldTypes.origins === "DROPDOWN" ? (
                 <Field
                     label="Sajter"
                     as={LabeledDropdown}
                     name="origins"
                     onChange={(origins: ListingOrigin[]) => {
-                        setFieldValue('origins', origins)
+                        setFieldValue("origins", origins);
                     }}
                     isMulti
                     options={origins}
@@ -131,12 +131,12 @@ export const ListingSearchForm = (props: ListingSearchFormProps) => {
                     name="auction"
                     onClick={(val: any) =>
                         // TODO: use a tri-state checkbox instead
-                        setFieldValue('auction', val === false ? undefined : val)
+                        setFieldValue("auction", val === false ? undefined : val)
                     }
                     checked={values.auction}
                     data-testid="auctionCheckbox"
                 />
             </div>
         </>
-    )
-}
+    );
+};

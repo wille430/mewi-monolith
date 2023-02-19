@@ -15,5 +15,5 @@ export const createRepositoryMock = (stub: any) => {
         aggregate: jest.fn().mockResolvedValue([stub]),
         sample: jest.fn().mockResolvedValue([stub]),
         count: jest.fn().mockResolvedValue(1),
-    })
-}
+    });
+};

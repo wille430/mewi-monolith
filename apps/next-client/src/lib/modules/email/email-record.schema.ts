@@ -1,27 +1,27 @@
-import {getModelForClass, prop} from '@typegoose/typegoose'
-import mongoose from 'mongoose'
-import {EmailTemplate} from '@mewi/models'
-import {User} from '@mewi/entities'
+import {getModelForClass, prop} from "@typegoose/typegoose";
+import mongoose from "mongoose";
+import {EmailTemplate} from "@mewi/models";
+import {User} from "@mewi/entities";
 
 export class EmailRecord {
-    id!: string
+    id!: string;
 
     @prop({
         type: String,
         enum: EmailTemplate,
         required: true,
     })
-    template!: EmailTemplate
+    template!: EmailTemplate;
 
     @prop({
         type: mongoose.Schema.Types.ObjectId,
         ref: User.name,
         required: true,
     })
-    user!: User
+    user!: User;
 
     @prop()
-    arguments?: any
+    arguments?: any;
 }
 
 export const EmailRecordModel = getModelForClass(EmailRecord, {
@@ -30,4 +30,4 @@ export const EmailRecordModel = getModelForClass(EmailRecord, {
         toObject: {virtuals: true},
         toJSON: {virtuals: true},
     },
-})
+});

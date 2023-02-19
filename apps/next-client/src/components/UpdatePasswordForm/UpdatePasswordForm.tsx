@@ -1,19 +1,19 @@
-import type {ChangePasswordWithToken} from '@/lib/modules/users/dto/change-password.dto'
-import {ErrorMessage, Field, Form, Formik} from 'formik'
-import type {FormikHelpers, FormikErrors} from 'formik'
-import {updatePasswordMutation} from '@/client/users/mutations'
-import {PASSWORD_RESET_REDIRECT_TO} from '@/lib/constants/paths'
-import Router from 'next/router'
-import {Button} from '../Button/Button'
-import {handleError} from './handleError'
-import {TextField} from '../TextField/TextField'
+import type {ChangePasswordWithToken} from "@/lib/modules/users/dto/change-password.dto";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import type {FormikHelpers, FormikErrors} from "formik";
+import {updatePasswordMutation} from "@/client/users/mutations";
+import {PASSWORD_RESET_REDIRECT_TO} from "@/lib/constants/paths";
+import Router from "next/router";
+import {Button} from "../Button/Button";
+import {handleError} from "./handleError";
+import {TextField} from "../TextField/TextField";
 
 export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswordWithToken> }) => {
     const initialValues: ChangePasswordWithToken = {
         ...(props.initialValues as ChangePasswordWithToken),
-        password: '',
-        passwordConfirm: '',
-    }
+        password: "",
+        passwordConfirm: "",
+    };
 
     const handleSubmit = async (
         values: ChangePasswordWithToken,
@@ -23,12 +23,12 @@ export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswor
             await updatePasswordMutation({
                 ...values,
                 ...props.initialValues,
-            })
-            await Router.push(PASSWORD_RESET_REDIRECT_TO)
+            });
+            await Router.push(PASSWORD_RESET_REDIRECT_TO);
         } catch (error: any) {
-            setErrors(handleError(error))
+            setErrors(handleError(error));
         }
-    }
+    };
 
     return (
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -67,5 +67,5 @@ export const UpdatePasswordForm = (props: { initialValues: Partial<ChangePasswor
                 </Form>
             )}
         </Formik>
-    )
-}
+    );
+};

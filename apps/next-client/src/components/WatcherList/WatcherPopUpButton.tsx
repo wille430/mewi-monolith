@@ -1,13 +1,13 @@
-import {HTMLAttributes, useState} from 'react'
-import AddWatcherPopUp from './AddWatcherPopUp'
-import {Button} from '../Button/Button'
+import {HTMLAttributes, useState} from "react";
+import AddWatcherPopUp from "./AddWatcherPopUp";
+import {Button} from "../Button/Button";
 
 const WatcherPopUpButton = (props: HTMLAttributes<HTMLButtonElement>) => {
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
 
     const handleClick = () => {
-        setShow(true)
-    }
+        setShow(true);
+    };
 
     return (
         <>
@@ -16,7 +16,7 @@ const WatcherPopUpButton = (props: HTMLAttributes<HTMLButtonElement>) => {
                 Skapa bevakning
             </Button>
         </>
-    )
-}
+    );
+};
 
-export default WatcherPopUpButton
+export default WatcherPopUpButton;

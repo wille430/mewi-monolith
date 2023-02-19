@@ -1,16 +1,16 @@
-import omit from 'lodash/omit'
-import {NotFoundException} from 'next-api-decorators'
-import {autoInjectable, inject} from 'tsyringe'
-import type {CreateListingDto} from './dto/create-listing.dto'
-import type {FindAllListingsDto} from './dto/find-all-listing.dto'
-import type {UpdateListingDto} from './dto/update-listing.dto'
-import {ListingsRepository} from './listings.repository'
-import {UsersRepository} from '../users/users.repository'
-import {Listing} from '@mewi/entities'
-import {DeleteListingsDto} from './dto/delete-listings.dto'
-import {FindAllListingsReponse} from './dto/find-all-listings-response.dto'
-import {FilteringService} from "@mewi/business"
-import {ObjectId} from "mongodb"
+import omit from "lodash/omit";
+import {NotFoundException} from "next-api-decorators";
+import {autoInjectable, inject} from "tsyringe";
+import type {CreateListingDto} from "./dto/create-listing.dto";
+import type {FindAllListingsDto} from "./dto/find-all-listing.dto";
+import type {UpdateListingDto} from "./dto/update-listing.dto";
+import {ListingsRepository} from "./listings.repository";
+import {UsersRepository} from "../users/users.repository";
+import {Listing} from "@mewi/entities";
+import {DeleteListingsDto} from "./dto/delete-listings.dto";
+import {FindAllListingsReponse} from "./dto/find-all-listings-response.dto";
+import {FilteringService} from "@mewi/business";
+import {ObjectId} from "mongodb";
 
 @autoInjectable()
 export class ListingsService {
@@ -22,46 +22,46 @@ export class ListingsService {
     }
 
     async create(createListingDto: CreateListingDto) {
-        return this.listingsRepository.create(createListingDto)
+        return this.listingsRepository.create(createListingDto);
     }
 
     async findAll(dto: FindAllListingsDto): Promise<FindAllListingsReponse> {
-        const totalHitsPipeline = this.filteringService.convertToPipeline(omit(dto, 'page', 'limit'))
-        const hitsPipeline = this.filteringService.convertToPipeline(dto)
+        const totalHitsPipeline = this.filteringService.convertToPipeline(omit(dto, "page", "limit"));
+        const hitsPipeline = this.filteringService.convertToPipeline(dto);
 
         let totalHits: any = (await this.listingsRepository.aggregate([
             ...totalHitsPipeline,
-            {$count: 'totalHits'},
-        ])) as unknown as [{ totalHits: number }]
-        totalHits = totalHits[0]?.totalHits ?? 0
+            {$count: "totalHits"},
+        ])) as unknown as [{ totalHits: number }];
+        totalHits = totalHits[0]?.totalHits ?? 0;
 
-        let hits = await this.listingsRepository.aggregate(hitsPipeline)
-        hits ??= []
+        let hits = await this.listingsRepository.aggregate(hitsPipeline);
+        hits ??= [];
 
         // aggregation will not cast _id to id apparently
-        const hitDtos = hits?.map((o) => Listing.convertToDto(o))
+        const hitDtos = hits?.map((o) => Listing.convertToDto(o));
 
         return {
             filters: dto,
             totalHits,
             hits: hitDtos,
-        }
+        };
     }
 
     async findOne(id: string) {
-        return await this.listingsRepository.findById(id)
+        return await this.listingsRepository.findById(id);
     }
 
     async update(id: string, updateListingDto: UpdateListingDto): Promise<Listing | null> {
-        return await this.listingsRepository.findByIdAndUpdate(id, updateListingDto)
+        return await this.listingsRepository.findByIdAndUpdate(id, updateListingDto);
     }
 
     async remove(id: string) {
-        await this.listingsRepository.findByIdAndDelete(id)
+        await this.listingsRepository.findByIdAndDelete(id);
     }
 
     async sample(count = 1) {
-        return this.listingsRepository.sample(count)
+        return this.listingsRepository.sample(count);
     }
 
     async autocomplete(keyword: string) {
@@ -69,16 +69,16 @@ export class ListingsService {
             {
                 where: {
                     title: {
-                        $regex: new RegExp(keyword, 'i'),
+                        $regex: new RegExp(keyword, "i"),
                     },
                 },
                 limit: 5
             },
-        )
+        );
 
-        if (!response) return []
+        if (!response) return [];
 
-        return response.map((x) => x.title)
+        return response.map((x) => x.title);
     }
 
     deleteMany(dto: DeleteListingsDto) {
@@ -89,44 +89,44 @@ export class ListingsService {
                     $in: dto.origins,
                 }
                 : undefined,
-        })
+        });
     }
 
     async like(userId: string, listingId: string) {
         // Check if user already has liked the listing
-        const user = await this.usersRepository.findById(userId)
-        const listing = await this.listingsRepository.findById(listingId)
+        const user = await this.usersRepository.findById(userId);
+        const listing = await this.listingsRepository.findById(listingId);
 
-        if (!user) throw new NotFoundException('User not found')
-        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
+        if (!user) throw new NotFoundException("User not found");
+        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`);
 
         if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
                 $push: {
                     likedListings: listingId,
                 },
-            })
+            });
         }
 
-        return
+        return;
     }
 
     async unlike(userId: string, listingId: string) {
-        const user = await this.usersRepository.findById(userId)
-        const listing = await this.listingsRepository.findById(listingId)
+        const user = await this.usersRepository.findById(userId);
+        const listing = await this.listingsRepository.findById(listingId);
 
-        if (!user) throw new NotFoundException('User not found')
-        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`)
+        if (!user) throw new NotFoundException("User not found");
+        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`);
 
         if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
                 $pull: {
                     likedListings: listingId,
                 },
-            })
+            });
         }
 
-        return
+        return;
     }
 
     public async getFeatured() {
@@ -137,7 +137,7 @@ export class ListingsService {
                     $size: 0
                 }
             }
-        })
+        });
     }
 
     async getRecent() {
@@ -146,7 +146,7 @@ export class ListingsService {
                 date: -1
             },
             limit: 8
-        })
-        return listings ?? []
+        });
+        return listings ?? [];
     }
 }

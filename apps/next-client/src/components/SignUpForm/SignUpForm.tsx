@@ -1,40 +1,40 @@
-import {useRouter} from 'next/navigation'
-import {useFormik} from 'formik'
-import Link from 'next/link'
-import {handleSignUpError} from './handleSignUpError'
-import {TextField} from '../TextField/TextField'
-import {Button} from '../Button/Button'
-import {ON_AUTH_SUCCESS_GOTO} from '@/lib/constants/paths'
-import {signup} from '@/client'
-import type SignUpDto from '@/lib/modules/auth/dto/sign-up.dto'
-import {signUpSchema} from '@/client/auth/schemas/sign-up.schema'
-import {ValidationExceptionRes} from '@/lib/exceptions/validation.exception'
+import {useRouter} from "next/navigation";
+import {useFormik} from "formik";
+import Link from "next/link";
+import {handleSignUpError} from "./handleSignUpError";
+import {TextField} from "../TextField/TextField";
+import {Button} from "../Button/Button";
+import {ON_AUTH_SUCCESS_GOTO} from "@/lib/constants/paths";
+import {signup} from "@/client";
+import type SignUpDto from "@/lib/modules/auth/dto/sign-up.dto";
+import {signUpSchema} from "@/client/auth/schemas/sign-up.schema";
+import {ValidationExceptionRes} from "@/lib/exceptions/validation.exception";
 
 export const SignUpForm = () => {
-    const router = useRouter()
+    const router = useRouter();
 
     const formik = useFormik<SignUpDto>({
         initialValues: {
-            email: '',
-            password: '',
-            passwordConfirm: '',
+            email: "",
+            password: "",
+            passwordConfirm: "",
         },
         onSubmit: () => {
             signup(formik.values)
                 .then(async () => {
-                    await router.push(ON_AUTH_SUCCESS_GOTO)
+                    await router.push(ON_AUTH_SUCCESS_GOTO);
                 })
                 .catch((err: ValidationExceptionRes) => {
-                    formik.setErrors(handleSignUpError(err))
+                    formik.setErrors(handleSignUpError(err));
                 })
                 .finally(() => {
-                    formik.setSubmitting(false)
-                })
+                    formik.setSubmitting(false);
+                });
         },
         validationSchema: signUpSchema,
-    })
+    });
 
-    const errors = formik.errors as any
+    const errors = formik.errors as any;
 
     return (
         <form className="form" onSubmit={formik.handleSubmit}>
@@ -111,5 +111,5 @@ export const SignUpForm = () => {
                 </Link>
             </div>
         </form>
-    )
-}
+    );
+};

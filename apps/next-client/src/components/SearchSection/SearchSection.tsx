@@ -1,14 +1,14 @@
-import {useRef} from 'react'
-import PageNav from '../PageNav/PageNav'
-import {ListingResultText} from '../ListingResultText/ListingResultText'
-import SortButton from '../SortButton/SortButton'
-import ListingGrid from '@/components/ListingGrid/ListingGrid'
-import {useListingsSearch} from '@/hooks/useListingsResult'
+import {useRef} from "react";
+import PageNav from "../PageNav/PageNav";
+import {ListingResultText} from "../ListingResultText/ListingResultText";
+import SortButton from "../SortButton/SortButton";
+import ListingGrid from "@/components/ListingGrid/ListingGrid";
+import {useListingsSearch} from "@/hooks/useListingsResult";
 
 export const SearchSection = () => {
-    const scrollUpRef = useRef<HTMLDivElement | null>(null)
-    const {data} = useListingsSearch()
-    const {totalHits = 0} = data ?? {}
+    const scrollUpRef = useRef<HTMLDivElement | null>(null);
+    const {data} = useListingsSearch();
+    const {totalHits = 0} = data ?? {};
 
     return (
         <section>
@@ -20,5 +20,5 @@ export const SearchSection = () => {
             <ListingGrid/>
             <PageNav anchorEle={scrollUpRef} totalHits={totalHits}/>
         </section>
-    )
-}
+    );
+};

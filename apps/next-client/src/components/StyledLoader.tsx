@@ -1,6 +1,6 @@
-import * as Loader from 'react-loader-spinner'
+import * as Loader from "react-loader-spinner";
 
-const StyledLoader = (...props: Partial<Parameters<typeof Loader['TailSpin']>>) => {
+const StyledLoader = (...props: Partial<Parameters<typeof Loader["TailSpin"]>>) => {
     return (
         <Loader.TailSpin
             height='40px'
@@ -9,7 +9,7 @@ const StyledLoader = (...props: Partial<Parameters<typeof Loader['TailSpin']>>) 
             data-testid='spinner'
             {...props[0]}
         />
-    )
-}
+    );
+};
 
-export default StyledLoader
+export default StyledLoader;

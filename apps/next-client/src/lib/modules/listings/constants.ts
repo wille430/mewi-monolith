@@ -1,1 +1,1 @@
-export const DEFAULT_LIMIT = 36
+export const DEFAULT_LIMIT = 36;

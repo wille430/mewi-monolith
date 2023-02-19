@@ -1,31 +1,31 @@
-import { Category, ListingOrigin, Currency } from '@mewi/models'
-import { Transform } from 'class-transformer'
-import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
-import type { Listing } from '@mewi/entities'
+import { Category, ListingOrigin, Currency } from "@mewi/models";
+import { Transform } from "class-transformer";
+import { IsArray, IsBoolean, IsDate, IsEnum, IsObject, IsOptional, IsString } from "class-validator";
+import type { Listing } from "@mewi/entities";
 
 export class CreateListingDto implements Partial<Listing> {
     @IsString()
-    origin_id!: string
+    origin_id!: string;
 
     @IsString()
-    title!: string
+    title!: string;
 
     @IsOptional()
     @IsString()
-    body?: string
+    body?: string;
 
     @IsEnum(Category)
-    category!: Category
+    category!: Category;
 
     @Transform(({ value }) => new Date(value))
     @IsDate()
-    date!: Date
+    date!: Date;
 
     @IsString()
-    redirectUrl!: string
+    redirectUrl!: string;
 
     @IsString({ each: true })
-    imageUrl!: string[]
+    imageUrl!: string[];
 
     // TODO: check object props
     @IsOptional()
@@ -33,30 +33,30 @@ export class CreateListingDto implements Partial<Listing> {
     price?: {
         value: number
         currency: Currency
-    }
+    };
 
     @IsOptional()
     @IsString()
-    region?: string
+    region?: string;
 
     // TODO: check object props
     @IsOptional()
     @IsArray()
     @IsObject({ each: true })
-    parameters?: { label: string; value: string }[]
+    parameters?: { label: string; value: string }[];
 
     @IsEnum(ListingOrigin)
-    origin!: ListingOrigin
+    origin!: ListingOrigin;
 
     @IsBoolean()
     @IsOptional()
-    isAuction = false
+    isAuction = false;
 
     @IsOptional()
     @IsDate()
-    auctionEnd?: Date
+    auctionEnd?: Date;
 
     @IsOptional()
     @IsString()
-    entryPoint?: string
+    entryPoint?: string;
 }

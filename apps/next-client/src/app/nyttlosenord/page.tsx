@@ -1,38 +1,38 @@
-"use client"
-import {UpdatePasswordForm} from '@/components/UpdatePasswordForm/UpdatePasswordForm'
-import {useEffect} from 'react'
-import {useRouter, useSearchParams} from 'next/navigation'
-import {useUser} from '@/hooks/useUser'
-import {Container} from '@/components/Container/Container'
+"use client";
+import {UpdatePasswordForm} from "@/components/UpdatePasswordForm/UpdatePasswordForm";
+import {useEffect} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useUser} from "@/hooks/useUser";
+import {Container} from "@/components/Container/Container";
 
-const EMAIL_KEY = "email"
-const TOKEN_KEY = "token"
+const EMAIL_KEY = "email";
+const TOKEN_KEY = "token";
 
 const ForgottenPassword = () => {
     useUser({
         redirectIfFound: true,
-        redirectTo: '/minasidor',
-    })
+        redirectTo: "/minasidor",
+    });
 
-    const router = useRouter()
-    const params = useSearchParams()
+    const router = useRouter();
+    const params = useSearchParams();
 
 
     useEffect(() => {
-        const email = params?.get(EMAIL_KEY)
-        const token = params?.get(TOKEN_KEY)
+        const email = params?.get(EMAIL_KEY);
+        const token = params?.get(TOKEN_KEY);
         if (!email || !token) {
             // noinspection JSIgnoredPromiseFromCall
-            router.push('/')
+            router.push("/");
         }
-    }, [])
+    }, []);
 
     return (
         <main>
             <Container
                 className="mx-auto max-w-lg"
                 style={{
-                    marginTop: '15vh',
+                    marginTop: "15vh",
                 }}
             >
                 <Container.Header>
@@ -51,7 +51,7 @@ const ForgottenPassword = () => {
                 </Container.Footer>
             </Container>
         </main>
-    )
-}
+    );
+};
 
-export default ForgottenPassword
+export default ForgottenPassword;

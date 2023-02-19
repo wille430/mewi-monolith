@@ -1,21 +1,21 @@
-import {client, MutationArgs} from '../index'
-import {CURRENT_USER_SWR_KEY} from '../users/swr-keys'
-import {UserDto} from "@mewi/models"
+import {client, MutationArgs} from "../index";
+import {CURRENT_USER_SWR_KEY} from "../users/swr-keys";
+import {UserDto} from "@mewi/models";
 
 export const setLikeListing = (listingId: string, value: boolean): MutationArgs => {
-    const endpoint = value ? 'like' : 'unlike'
+    const endpoint = value ? "like" : "unlike";
     const updateFn = async (user: UserDto) => {
-        await client.put(`/listings/${listingId}/${endpoint}`)
+        await client.put(`/listings/${listingId}/${endpoint}`);
 
-        return user
-    }
+        return user;
+    };
 
     const optimisticData = async (user: UserDto | undefined) => {
         return {
             ...user,
             likedListings: [...(user?.likedListings ?? []), listingId],
-        }
-    }
+        };
+    };
 
     return [
         CURRENT_USER_SWR_KEY,
@@ -23,5 +23,5 @@ export const setLikeListing = (listingId: string, value: boolean): MutationArgs 
         {
             optimisticData,
         },
-    ]
-}
+    ];
+};

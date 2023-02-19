@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from "mongodb";
 
 export const seedWith = async <T = any>(
     count: number,
@@ -8,6 +8,6 @@ export const seedWith = async <T = any>(
 ) => {
     const entities = Array(count)
         .fill(null)
-        .map<T>(() => createEntity())
-    return collection.insertMany(entities as any)
-}
+        .map<T>(() => createEntity());
+    return collection.insertMany(entities as any);
+};

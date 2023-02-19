@@ -1,17 +1,17 @@
-import {autoInjectable} from 'tsyringe'
-import {SendEmailResultDto} from './dto/send-email-result.dto'
-import {User} from '@mewi/entities'
-import {EmailTemplate} from "@mewi/models"
-import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib"
-import {EmailRecordModel} from "@/lib/modules/email/email-record.schema"
+import {autoInjectable} from "tsyringe";
+import {SendEmailResultDto} from "./dto/send-email-result.dto";
+import {User} from "@mewi/entities";
+import {EmailTemplate} from "@mewi/models";
+import {MQQueues, SendEmailDto, MessageBroker} from "@mewi/mqlib";
+import {EmailRecordModel} from "@/lib/modules/email/email-record.schema";
 
 @autoInjectable()
 export class EmailService {
 
-    private readonly messageBroker: MessageBroker
+    private readonly messageBroker: MessageBroker;
 
     constructor() {
-        this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING)
+        this.messageBroker = new MessageBroker(process.env.MQ_CONNECTION_STRING);
     }
 
     async sendEmail<T>(
@@ -25,7 +25,7 @@ export class EmailService {
             template,
             arguments: locals,
             user: toUser,
-        })
+        });
 
         // send message to MQ
         const msg: SendEmailDto = {
@@ -34,13 +34,13 @@ export class EmailService {
             subject: subject,
             userId: toUser.id,
             locals: locals
-        }
-        await this.messageBroker.sendMessage(MQQueues.SendEmail, msg)
+        };
+        await this.messageBroker.sendMessage(MQQueues.SendEmail, msg);
 
         return {
             template,
             arguments: locals,
             emailRecordId: emailRecord.id,
-        }
+        };
     }
 }

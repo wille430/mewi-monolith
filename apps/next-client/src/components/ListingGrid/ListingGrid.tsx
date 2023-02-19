@@ -1,13 +1,13 @@
-import {ListingWidget} from '../ListingWidget/ListingWidget'
-import StyledLoader from '../StyledLoader'
-import {useAppDispatch} from '@/hooks'
-import {openListing} from '@/store/listings'
-import {useListingsSearch} from '@/hooks/useListingsResult'
+import {ListingWidget} from "../ListingWidget/ListingWidget";
+import StyledLoader from "../StyledLoader";
+import {useAppDispatch} from "@/hooks";
+import {openListing} from "@/store/listings";
+import {useListingsSearch} from "@/hooks/useListingsResult";
 
 const ListingGrid = () => {
-    const dispatch = useAppDispatch()
-    const {data, error} = useListingsSearch()
-    const {hits} = data ?? {}
+    const dispatch = useAppDispatch();
+    const {data, error} = useListingsSearch();
+    const {hits} = data ?? {};
 
     if (data == null) {
         return (
@@ -19,13 +19,13 @@ const ListingGrid = () => {
             >
                 <StyledLoader/>
             </section>
-        )
+        );
     } else if (error) {
         return (
             <section className="centered">
                 <span>Ett fel inträffade</span>
             </section>
-        )
+        );
     } else if (hits?.length) {
         return (
             <section style={{
@@ -45,7 +45,7 @@ const ListingGrid = () => {
                     </div>
                 </div>
             </section>
-        )
+        );
     } else {
         return (
             <section className="centered" style={{
@@ -53,8 +53,8 @@ const ListingGrid = () => {
             }}>
                 <span className="text-muted">Inga resultat hittades för din sökning</span>
             </section>
-        )
+        );
     }
-}
+};
 
-export default ListingGrid
+export default ListingGrid;

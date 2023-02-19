@@ -1,8 +1,8 @@
-"use client"
-import Link from 'next/link'
-import {Category, CategoryLabel} from "@mewi/models"
-import styles from "./Footer.module.scss"
-import clsx from "clsx"
+"use client";
+import Link from "next/link";
+import {Category, CategoryLabel} from "@mewi/models";
+import styles from "./Footer.module.scss";
+import clsx from "clsx";
 
 interface FooterLink {
     path: string
@@ -47,7 +47,7 @@ export const FooterLinks: FooterLink[] = [
             }
         ]
     }
-]
+];
 
 export const Footer = () => {
 
@@ -61,8 +61,8 @@ export const Footer = () => {
                     {link.children.map(renderLinks)}
                 </ul>}
             </ul>
-        )
-    }
+        );
+    };
 
     return (
         <footer className={clsx("bg-primary text-white pb-12", styles["arc"])}>
@@ -70,5 +70,5 @@ export const Footer = () => {
                 {FooterLinks.map(renderLinks)}
             </div>
         </footer>
-    )
-}
+    );
+};

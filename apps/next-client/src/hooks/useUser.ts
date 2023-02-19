@@ -1,21 +1,21 @@
-import router from 'next/router'
-import {useAppSelector} from './index'
-import {useEffect} from 'react'
+import router from "next/router";
+import {useAppSelector} from "./index";
+import {useEffect} from "react";
 
-export const useUser = ({redirectTo = '', redirectIfFound = false} = {}) => {
-    const {isLoggedIn, user, isReady} = useAppSelector((state) => state.user)
+export const useUser = ({redirectTo = "", redirectIfFound = false} = {}) => {
+    const {isLoggedIn, user, isReady} = useAppSelector((state) => state.user);
 
     useEffect(() => {
         if (!redirectTo || !isReady) {
-            return
+            return;
         }
 
         if ((!redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
             router.replace(redirectTo, undefined, {
                 shallow: true,
-            }).then()
+            }).then();
         }
-    }, [isLoggedIn, isReady])
+    }, [isLoggedIn, isReady]);
 
-    return {user}
-}
+    return {user};
+};

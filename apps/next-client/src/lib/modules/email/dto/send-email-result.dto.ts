@@ -1,8 +1,8 @@
-import {EmailTemplate} from '@mewi/models'
+import {EmailTemplate} from "@mewi/models";
 
 export class SendEmailResultDto<T> {
-    emailRecordId?: string
-    template!: EmailTemplate
+    emailRecordId?: string;
+    template!: EmailTemplate;
     // TODO: make type safe
-    arguments?: T
+    arguments?: T;
 }

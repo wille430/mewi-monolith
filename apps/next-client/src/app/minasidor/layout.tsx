@@ -1,7 +1,7 @@
-"use client"
-import SideNav from "@/components/SideNav/SideNav"
-import {withAuthorized} from "@/hocs/withAuthorized"
-import {NextLayoutProps} from "@/lib/types/next"
+"use client";
+import SideNav from "@/components/SideNav/SideNav";
+import {withAuthorized} from "@/hocs/withAuthorized";
+import {NextLayoutProps} from "@/lib/types/next";
 
 const MyPagesLayout = ({children}: NextLayoutProps) => {
     return (
@@ -12,7 +12,7 @@ const MyPagesLayout = ({children}: NextLayoutProps) => {
                 <SideNav/>
             </aside>
         </div>
-    )
-}
+    );
+};
 
-export default withAuthorized(MyPagesLayout)
+export default withAuthorized(MyPagesLayout);

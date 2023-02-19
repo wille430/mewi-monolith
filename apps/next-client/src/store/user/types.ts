@@ -1,4 +1,4 @@
-import {UserDto} from "@mewi/models"
+import {UserDto} from "@mewi/models";
 
 export interface UserState {
     isLoggedIn: boolean
@@ -7,8 +7,8 @@ export interface UserState {
 }
 
 export enum UserActionTypes {
-    LOGIN = 'user/login',
-    SIGNUP = 'user/signup',
-    LOGOUT = 'user/logout',
-    GET_USER = 'user/get',
+    LOGIN = "user/login",
+    SIGNUP = "user/signup",
+    LOGOUT = "user/logout",
+    GET_USER = "user/get",
 }

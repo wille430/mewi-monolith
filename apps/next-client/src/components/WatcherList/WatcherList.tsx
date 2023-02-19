@@ -1,20 +1,20 @@
-import type {ReactElement} from 'react'
-import {useState} from 'react'
-import dynamic from 'next/dynamic'
-import styles from './WatcherList.module.scss'
-import WatcherPopUpButton from './WatcherPopUpButton'
-import {Container} from '../Container/Container'
-import {HorizontalLine} from '../HorizontalLine/HorizontalLine'
-import useSWR from 'swr'
-import {MY_WATCHERS_KEY} from '@/client/user-watchers/swr-keys'
-import {UserWatcherDto} from "@mewi/models"
+import type {ReactElement} from "react";
+import {useState} from "react";
+import dynamic from "next/dynamic";
+import styles from "./WatcherList.module.scss";
+import WatcherPopUpButton from "./WatcherPopUpButton";
+import {Container} from "../Container/Container";
+import {HorizontalLine} from "../HorizontalLine/HorizontalLine";
+import useSWR from "swr";
+import {MY_WATCHERS_KEY} from "@/client/user-watchers/swr-keys";
+import {UserWatcherDto} from "@mewi/models";
 
-const WatcherCard = dynamic(() => import('./WatcherCard/WatcherCard'))
+const WatcherCard = dynamic(() => import("./WatcherCard/WatcherCard"));
 
 const WatcherList = () => {
-    const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
+    const [expandedId, setExpandedId] = useState<string | undefined>(undefined);
 
-    const {data = []} = useSWR<UserWatcherDto[]>(MY_WATCHERS_KEY)
+    const {data = []} = useSWR<UserWatcherDto[]>(MY_WATCHERS_KEY);
 
     const withWrapper = (component: ReactElement) => (
         <Container className={styles.watcherList}>
@@ -27,7 +27,7 @@ const WatcherList = () => {
                 <WatcherPopUpButton data-testid="createNewWatcherButton"/>
             </Container.Footer>
         </Container>
-    )
+    );
 
     if (data?.length === 0) {
         return withWrapper(
@@ -36,7 +36,7 @@ const WatcherList = () => {
                     <span className="text-sm">Du har inga bevakningar ännu</span>
                 </div>
             </div>
-        )
+        );
     }
 
     return withWrapper(
@@ -50,16 +50,16 @@ const WatcherList = () => {
                             expand={expandedId === watcherObj.id}
                             onExpand={(val?: boolean) => {
                                 if (val) {
-                                    setExpandedId(watcherObj.id)
+                                    setExpandedId(watcherObj.id);
                                 } else {
-                                    setExpandedId(undefined)
+                                    setExpandedId(undefined);
                                 }
                             }}
                         />
                     )
             )}
         </>
-    )
-}
+    );
+};
 
-export default WatcherList
+export default WatcherList;

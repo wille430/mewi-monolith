@@ -1,4 +1,4 @@
-import {Transform} from 'class-transformer'
+import {Transform} from "class-transformer";
 import {
     IsOptional,
     IsString,
@@ -8,67 +8,67 @@ import {
     Min,
     IsEnum,
     IsArray,
-} from 'class-validator'
-import isString from 'lodash/isString'
-import {DEFAULT_LIMIT} from '../constants'
-import {IPagination} from "@/lib/modules/filtering/IPagination"
-import {Category, ListingOrigin, ListingSort} from "@mewi/models"
+} from "class-validator";
+import isString from "lodash/isString";
+import {DEFAULT_LIMIT} from "../constants";
+import {IPagination} from "@/lib/modules/filtering/IPagination";
+import {Category, ListingOrigin, ListingSort} from "@mewi/models";
 
 export class FindAllListingsDto implements IPagination {
     @IsOptional()
     @IsNumber()
     @Transform(({value}) => Number.parseInt(value))
     @Min(0)
-    limit? = DEFAULT_LIMIT
+    limit? = DEFAULT_LIMIT;
 
     @IsOptional()
     @IsString()
-    keyword?: string
+    keyword?: string;
 
     @IsOptional()
     @IsString()
         // TODO: transform
-    region?: string
+    region?: string;
 
     @IsOptional()
     @IsArray()
     @IsEnum(Category, {each: true})
-    @Transform(({value}) => (isString(value) ? value.split(',') : value))
-    categories?: Category[]
+    @Transform(({value}) => (isString(value) ? value.split(",") : value))
+    categories?: Category[];
 
     @IsOptional()
     @IsNumber()
     @Transform(({value}) => Number.parseInt(value))
-    priceRangeGte?: number
+    priceRangeGte?: number;
 
     @IsOptional()
     @IsNumber()
     @Transform(({value}) => Number.parseInt(value))
-    priceRangeLte?: number
+    priceRangeLte?: number;
 
     @IsOptional()
     @IsBoolean()
-    @Transform(({value}) => (typeof value === 'string' ? value === 'true' : Boolean(value)))
-    auction?: boolean
+    @Transform(({value}) => (typeof value === "string" ? value === "true" : Boolean(value)))
+    auction?: boolean;
 
     @IsOptional()
     @IsDate()
     @Transform(({value}) => new Date(value))
-    dateGte?: Date
+    dateGte?: Date;
 
     @IsOptional()
     @IsNumber()
     @Transform(({value}) => Number.parseInt(value))
-    page?: number
+    page?: number;
 
     @IsOptional()
     @IsEnum(ListingSort)
     @Transform(({value}) => Number.parseInt(value))
-    sort?: ListingSort
+    sort?: ListingSort;
 
     @IsOptional()
     @IsArray()
     @IsEnum(ListingOrigin, {each: true})
-    @Transform(({value}) => (isString(value) ? value.split(',') : value))
-    origins?: ListingOrigin[]
+    @Transform(({value}) => (isString(value) ? value.split(",") : value))
+    origins?: ListingOrigin[];
 }

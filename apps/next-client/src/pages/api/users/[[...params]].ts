@@ -1,4 +1,4 @@
-import {createHandler} from '@/lib/middlewares/createHandler'
-import { UsersController } from '@/lib/modules/users/users.controller'
+import {createHandler} from "@/lib/middlewares/createHandler";
+import { UsersController } from "@/lib/modules/users/users.controller";
 
-export default createHandler(UsersController)
+export default createHandler(UsersController);

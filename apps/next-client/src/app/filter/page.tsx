@@ -1,17 +1,17 @@
-"use client"
-import {useRouter} from 'next/navigation'
-import {Button} from '@/components/Button/Button'
-import {stringifySearchPath} from '@/lib/utils/url'
-import {Container} from '@/components/Container/Container'
-import {ListingSearchForm} from '@/components/ListingSearchForm/ListingSearchForm'
-import {Form, Formik} from 'formik'
-import {ListingSearchFilters} from '@/common/types/ListingSearchFilters'
+"use client";
+import {useRouter} from "next/navigation";
+import {Button} from "@/components/Button/Button";
+import {stringifySearchPath} from "@/lib/utils/url";
+import {Container} from "@/components/Container/Container";
+import {ListingSearchForm} from "@/components/ListingSearchForm/ListingSearchForm";
+import {Form, Formik} from "formik";
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
 
 const Filter = () => {
-    const router = useRouter()
+    const router = useRouter();
 
     const handleSubmit = (values: ListingSearchFilters) =>
-        router.push(stringifySearchPath(values))
+        router.push(stringifySearchPath(values));
 
     return (
         <main>
@@ -30,7 +30,7 @@ const Filter = () => {
                 </Container>
             </Formik>
         </main>
-    )
-}
+    );
+};
 
-export default Filter
+export default Filter;

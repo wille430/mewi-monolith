@@ -1,5 +1,5 @@
-import {BiChevronDown, BiChevronUp} from 'react-icons/bi'
-import {Button} from '@/components/Button/Button'
+import {BiChevronDown, BiChevronUp} from "react-icons/bi";
+import {Button} from "@/components/Button/Button";
 
 interface ExpandedButtonProps {
     handleExpand: () => void
@@ -14,7 +14,7 @@ const ExpandButton = ({handleExpand, expand}: ExpandedButtonProps) => {
         >
             {expand ? <BiChevronUp size={24}/> : <BiChevronDown size={24}/>}
         </Button>
-    )
-}
+    );
+};
 
-export default ExpandButton
+export default ExpandButton;

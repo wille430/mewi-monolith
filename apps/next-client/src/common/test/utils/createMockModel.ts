@@ -9,18 +9,18 @@ export const createMockModel = <T>(entity: T) => {
         findOneAndUpdate: jest.fn().mockReturnValue(entity),
         create: jest.fn().mockReturnValue(entity),
         constructor: jest.fn().mockReturnValue(entity),
-    })
+    });
 
     Constructor.prototype = {
         save: jest.fn().mockResolvedValue(entity),
-    }
+    };
 
-    return Constructor
-}
+    return Constructor;
+};
 
 const createQuery = (entity: any) => ({
     exec: jest.fn().mockResolvedValue(entity),
     skip: jest.fn(),
     limit: jest.fn(),
     sort: jest.fn(),
-})
+});

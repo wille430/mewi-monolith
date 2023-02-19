@@ -1,4 +1,4 @@
-import Checkbox from '../Checkbox/Checkbox'
+import Checkbox from "../Checkbox/Checkbox";
 
 interface CheckboxListProps {
     list: {
@@ -14,7 +14,7 @@ export const CheckboxList = ({ list, prefix }: CheckboxListProps) => {
     return (
         <ul className='list-none'>
             {list.map((ele) => {
-                const name = `${prefix}-${list}`
+                const name = `${prefix}-${list}`;
                 return (
                     <li className='mx-2 hover:cursor-pointer' key={ele.value as string}>
                         <Checkbox
@@ -25,8 +25,8 @@ export const CheckboxList = ({ list, prefix }: CheckboxListProps) => {
                             onClick={ele.onClick as any}
                         />
                     </li>
-                )
+                );
             })}
         </ul>
-    )
-}
+    );
+};

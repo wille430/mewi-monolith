@@ -1,37 +1,37 @@
-import { ChangeEvent } from 'react'
-import { ListingSearchFilters } from '@/common/types/ListingSearchFilters'
-import { useSearchContext } from '@/context/SearchContext'
-import {ListingSort} from "@mewi/models"
+import { ChangeEvent } from "react";
+import { ListingSearchFilters } from "@/common/types/ListingSearchFilters";
+import { useSearchContext } from "@/context/SearchContext";
+import {ListingSort} from "@mewi/models";
 
 const SortButton = () => {
-    const { filters, setFilters } = useSearchContext<ListingSearchFilters>()
+    const { filters, setFilters } = useSearchContext<ListingSearchFilters>();
 
     const options: { label: string; value: ListingSort }[] = [
-        { label: 'Relevans', value: ListingSort.RELEVANCE },
+        { label: "Relevans", value: ListingSort.RELEVANCE },
         {
-            label: 'Högsta pris',
+            label: "Högsta pris",
             value: ListingSort.PRICE_DESC,
         },
         {
-            label: 'Lägsta pris',
+            label: "Lägsta pris",
             value: ListingSort.PRICE_ASC,
         },
         {
-            label: 'Äldsta',
+            label: "Äldsta",
             value: ListingSort.DATE_ASC,
         },
         {
-            label: 'Senaste',
+            label: "Senaste",
             value: ListingSort.DATE_DESC,
         },
-    ]
+    ];
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setFilters((prev) => ({
+        setFilters({
             ...prev,
             sort: parseInt(e.target.value as string) as ListingSort,
-        }))
-    }
+        });
+    };
 
     return (
         <select
@@ -45,7 +45,7 @@ const SortButton = () => {
                 </option>
             ))}
         </select>
-    )
-}
+    );
+};
 
-export default SortButton
+export default SortButton;

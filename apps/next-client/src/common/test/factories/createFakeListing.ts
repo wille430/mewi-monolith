@@ -1,9 +1,9 @@
-import {faker} from '@faker-js/faker'
-import { Listing } from '@mewi/entities'
-import {Category, ListingOrigin} from "@mewi/models"
+import {faker} from "@faker-js/faker";
+import { Listing } from "@mewi/entities";
+import {Category, ListingOrigin} from "@mewi/models";
 
 export const createFakeListing = (overrides: Partial<Listing> = {}): Listing => {
-    const origin = faker.helpers.arrayElement(Object.values(ListingOrigin))
+    const origin = faker.helpers.arrayElement(Object.values(ListingOrigin));
 
     return {
         id: faker.database.mongodbObjectId(),
@@ -19,5 +19,5 @@ export const createFakeListing = (overrides: Partial<Listing> = {}): Listing => 
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent(),
         ...overrides,
-    } as Listing
-}
+    } as Listing;
+};

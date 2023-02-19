@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes } from "react";
 
 export type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
     label?: string
@@ -7,8 +7,8 @@ export type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
 
 const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => {
     const handleClick = () => {
-        onClick && onClick(!checked)
-    }
+        onClick && onClick(!checked);
+    };
 
     return (
         <div className='space-x-2' onClick={handleClick}>
@@ -25,7 +25,7 @@ const Checkbox = ({ onClick, label, name, checked, ...rest }: CheckboxProps) => 
                 {label}
             </label>
         </div>
-    )
-}
+    );
+};
 
-export default Checkbox
+export default Checkbox;

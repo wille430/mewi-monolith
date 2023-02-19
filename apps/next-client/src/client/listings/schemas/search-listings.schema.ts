@@ -1,6 +1,6 @@
-import type {FindAllListingsDto} from '@/lib/modules/listings/dto/find-all-listing.dto'
-import {array, boolean, date, mixed, number, object, string} from 'yup'
-import {Category, ListingOrigin, ListingSort} from "@mewi/models"
+import type {FindAllListingsDto} from "@/lib/modules/listings/dto/find-all-listing.dto";
+import {array, boolean, date, mixed, number, object, string} from "yup";
+import {Category, ListingOrigin, ListingSort} from "@mewi/models";
 
 export const searchListingsSchema = object().shape<Record<keyof FindAllListingsDto, any>>({
     auction: boolean(),
@@ -14,4 +14,4 @@ export const searchListingsSchema = object().shape<Record<keyof FindAllListingsD
     priceRangeLte: number(),
     region: string(),
     sort: mixed().oneOf(Object.values(ListingSort)),
-})
+});

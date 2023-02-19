@@ -1,5 +1,5 @@
-import type { ResourceType } from '../index'
-import {ListingDto} from "@mewi/models"
+import type { ResourceType } from "../index";
+import {ListingDto} from "@mewi/models";
 
 export interface ListingsState {
     opened?: ListingDto
@@ -10,7 +10,7 @@ export interface ListingsState {
 }
 
 export enum ListingsActionTypes {
-    OPEN_LISTING = 'listings/open',
-    CLOSE_LISTING = 'listings/close',
-    FETCH_SEARCH = 'listings/search',
+    OPEN_LISTING = "listings/open",
+    CLOSE_LISTING = "listings/close",
+    FETCH_SEARCH = "listings/search",
 }

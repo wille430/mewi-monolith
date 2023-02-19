@@ -1,11 +1,11 @@
-import { Container } from '../Container/Container'
-import styles from './SideNav.module.scss'
-import SideNavButton from './SideNavButton/SideNavButton'
-import { useAppSelector } from '@/hooks'
-import {Role} from "@mewi/models"
+import { Container } from "../Container/Container";
+import styles from "./SideNav.module.scss";
+import SideNavButton from "./SideNavButton/SideNavButton";
+import { useAppSelector } from "@/hooks";
+import {Role} from "@mewi/models";
 
 const SideNav = () => {
-    const { user } = useAppSelector((state) => state.user)
+    const { user } = useAppSelector((state) => state.user);
 
     return (
         <Container className={styles.container} data-testid='side-nav'>
@@ -20,7 +20,7 @@ const SideNav = () => {
                 )}
             </ul>
         </Container>
-    )
-}
+    );
+};
 
-export default SideNav
+export default SideNav;

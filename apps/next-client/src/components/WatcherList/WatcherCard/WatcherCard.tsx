@@ -1,15 +1,15 @@
-import queryString from 'query-string'
-import type {Dispatch} from 'react'
-import {useEffect, useRef, useState} from 'react'
-import {AnimatePresence} from 'framer-motion'
-import {useRouter} from 'next/navigation'
-import omit from 'lodash/omit'
-import styles from './WatcherCard.module.scss'
-import NewItemsDrawer from './NewItemsDrawer/NewItemsDrawer'
-import RemoveButton from './RemoveWatcherButton'
-import ExpandButton from './ExpandButton/ExpandButton'
-import {Button} from '@/components/Button/Button'
-import {CategoryLabel, UserWatcherDto} from "@mewi/models"
+import queryString from "query-string";
+import type {Dispatch} from "react";
+import {useEffect, useRef, useState} from "react";
+import {AnimatePresence} from "framer-motion";
+import {useRouter} from "next/navigation";
+import omit from "lodash/omit";
+import styles from "./WatcherCard.module.scss";
+import NewItemsDrawer from "./NewItemsDrawer/NewItemsDrawer";
+import RemoveButton from "./RemoveWatcherButton";
+import ExpandButton from "./ExpandButton/ExpandButton";
+import {Button} from "@/components/Button/Button";
+import {CategoryLabel, UserWatcherDto} from "@mewi/models";
 
 const WatcherCard = ({
                          userWatcher,
@@ -20,32 +20,32 @@ const WatcherCard = ({
     expand?: boolean
     onExpand?: Dispatch<boolean>
 }) => {
-    const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false)
-    const {watcher} = userWatcher
+    const [_expand, _setExpand] = expand && onExpand ? [expand, onExpand] : useState(false);
+    const {watcher} = userWatcher;
 
-    const scrollRef = useRef<HTMLDivElement>(null)
-    const router = useRouter()
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
 
     const handleSearchButtonClick = async () => {
-        const filters = omit(watcher.metadata, ['category'])
-        const pathname = '/sok'
+        const filters = omit(watcher.metadata, ["category"]);
+        const pathname = "/sok";
 
-        await router.push(pathname + "?" + queryString.stringify(filters))
-    }
+        await router.push(pathname + "?" + queryString.stringify(filters));
+    };
 
     const handleExpand = () => {
-        _setExpand(!_expand)
-    }
+        _setExpand(!_expand);
+    };
 
     const regionsString = () => {
-        if (typeof watcher.metadata.region === 'string') return watcher.metadata.region
+        if (typeof watcher.metadata.region === "string") return watcher.metadata.region;
 
-        return watcher.metadata.region
-    }
+        return watcher.metadata.region;
+    };
 
     useEffect(() => {
-        if (_expand) scrollRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})
-    }, [_expand])
+        if (_expand) scrollRef.current?.scrollIntoView({behavior: "smooth", block: "start"});
+    }, [_expand]);
 
     return (
         <div className={styles.watcherCardContainer} ref={scrollRef}>
@@ -74,8 +74,8 @@ const WatcherCard = ({
                             <div className="mr-6">
                                 <label className="label">
                                     {watcher.metadata.categories.length > 1
-                                        ? 'Kategori:'
-                                        : 'Kategorier:'}
+                                        ? "Kategori:"
+                                        : "Kategorier:"}
                                 </label>
                                 {watcher.metadata.categories.map((cat) => (
                                     <span key={cat} className="mr-2">
@@ -90,11 +90,11 @@ const WatcherCard = ({
                             <div className="mr-6">
                                 <label className="label">Prisintervall:</label>
                                 <span>
-                                    {(watcher.metadata.priceRangeGte || '0') +
-                                        '-' +
+                                    {(watcher.metadata.priceRangeGte || "0") +
+                                        "-" +
                                         (watcher.metadata.priceRangeLte
-                                            ? watcher.metadata.priceRangeLte + 'kr'
-                                            : '')}
+                                            ? watcher.metadata.priceRangeLte + "kr"
+                                            : "")}
                                 </span>
                             </div>
                         ) : (
@@ -103,7 +103,7 @@ const WatcherCard = ({
                         {watcher.metadata.auction ? (
                             <div className="mr-6">
                                 <label className="label">Auktion:</label>
-                                <span>{watcher.metadata.auction ? 'Ja' : 'Nej'}</span>
+                                <span>{watcher.metadata.auction ? "Ja" : "Nej"}</span>
                             </div>
                         ) : (
                             <div></div>
@@ -113,7 +113,7 @@ const WatcherCard = ({
                 <footer className="mt-2 flex flex-col-reverse items-center justify-between sm:flex-row">
                     <div className="w-full text-sm opacity-70 sm:w-auto">
                         <label className="label">Lades till:</label>
-                        <span>{new Date(userWatcher.createdAt).toLocaleDateString('se-SV')}</span>
+                        <span>{new Date(userWatcher.createdAt).toLocaleDateString("se-SV")}</span>
                     </div>
                     <div className="flex w-full justify-end space-x-2 sm:w-auto sm:justify-start">
                         <Button
@@ -131,7 +131,7 @@ const WatcherCard = ({
             </article>
             <AnimatePresence>{_expand && <NewItemsDrawer watcher={userWatcher}/>}</AnimatePresence>
         </div>
-    )
-}
+    );
+};
 
-export default WatcherCard
+export default WatcherCard;

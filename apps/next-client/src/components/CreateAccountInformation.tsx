@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import React from 'react'
-import { AiFillHeart } from 'react-icons/ai'
-import { GiMagnifyingGlass } from 'react-icons/gi'
-import { InfoCard } from './InfoCard/InfoCard'
+import Link from "next/link";
+import React from "react";
+import { AiFillHeart } from "react-icons/ai";
+import { GiMagnifyingGlass } from "react-icons/gi";
+import { InfoCard } from "./InfoCard/InfoCard";
 
 export const CreateAccountInformation = () => (
     <div className='bg-primary'>
@@ -31,7 +31,7 @@ export const CreateAccountInformation = () => (
                     body={
                         <>
                             Hitta produkter du gillar och spara dem för senare. Dina gillade
-                            artiklar hittar du under{' '}
+                            artiklar hittar du under{" "}
                             <Link href='/minasidor/gillade'>
                                 <span className='text-secondary'>Mina Sidor</span>
                             </Link>
@@ -42,4 +42,4 @@ export const CreateAccountInformation = () => (
             </ul>
         </div>
     </div>
-)
+);

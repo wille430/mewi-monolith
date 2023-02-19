@@ -1,4 +1,4 @@
-import {ListingOrigin} from "@mewi/models"
+import {ListingOrigin} from "@mewi/models";
 
 export interface IScrapingLog {
     id: string

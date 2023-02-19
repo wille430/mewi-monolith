@@ -1,10 +1,10 @@
-import type {MutableRefObject, MouseEvent} from 'react'
-import {useMemo} from 'react'
-import {FiArrowRight, FiArrowLeft} from 'react-icons/fi'
-import NavEndButton from './NavEndButton/NavEndButton'
-import {useSearchContext} from '@/context/SearchContext'
-import {ListingSearchFilters} from '@/common/types/ListingSearchFilters'
-import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants"
+import type {MutableRefObject, MouseEvent} from "react";
+import {useMemo} from "react";
+import {FiArrowRight, FiArrowLeft} from "react-icons/fi";
+import NavEndButton from "./NavEndButton/NavEndButton";
+import {useSearchContext} from "@/context/SearchContext";
+import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
+import {DEFAULT_LIMIT} from "@/lib/modules/listings/constants";
 
 interface PageNavProps {
     anchorEle?: MutableRefObject<HTMLDivElement | null>
@@ -12,41 +12,41 @@ interface PageNavProps {
 }
 
 const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
-    const {setFilters, filters} = useSearchContext<ListingSearchFilters>()
+    const {setFilters, filters} = useSearchContext<ListingSearchFilters>();
 
-    const totalPages = useMemo(() => Math.ceil(totalHits / DEFAULT_LIMIT) ?? 1, [totalHits])
-    const maxNumButtons = 5
-    const numberOfButtons = totalPages < 5 ? totalPages : maxNumButtons
+    const totalPages = useMemo(() => Math.ceil(totalHits / DEFAULT_LIMIT) ?? 1, [totalHits]);
+    const maxNumButtons = 5;
+    const numberOfButtons = totalPages < 5 ? totalPages : maxNumButtons;
 
     const scrollToAnchorEle = () =>
-        anchorEle?.current?.scrollIntoView({behavior: 'auto', block: 'center'})
+        anchorEle?.current?.scrollIntoView({behavior: "auto", block: "center"});
 
     const RenderButtons = () => {
 
-        const handleClick = (...args: Parameters<NavButtonProps['onClick']>) => {
-            scrollToAnchorEle()
-            setFilters({...filters, page: args[1]})
-        }
+        const handleClick = (...args: Parameters<NavButtonProps["onClick"]>) => {
+            scrollToAnchorEle();
+            setFilters({...filters, page: args[1]});
+        };
 
-        let startNum = 1
+        let startNum = 1;
 
         if ((filters.page ?? 1) + 1 >= totalPages) {
-            startNum = totalPages - numberOfButtons + 1
+            startNum = totalPages - numberOfButtons + 1;
         } else if ((filters.page ?? 1) >= 3) {
-            startNum = (filters.page ?? 1) - 2
+            startNum = (filters.page ?? 1) - 2;
         }
 
-        const showFirstPageSkip = startNum > 1
-        const showLastPageSkip = totalPages > startNum + maxNumButtons - 1
+        const showFirstPageSkip = startNum > 1;
+        const showLastPageSkip = totalPages > startNum + maxNumButtons - 1;
 
-        if (!numberOfButtons) return null
+        if (!numberOfButtons) return null;
 
         return (
             <>
                 {Array(numberOfButtons)
                     .fill(startNum)
                     .map((num, i) => {
-                        const currentNumber = num + i
+                        const currentNumber = num + i;
 
                         if (i === numberOfButtons - 1 && showLastPageSkip) {
                             return (
@@ -64,7 +64,7 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
                                         onClick={handleClick}
                                     />
                                 </>
-                            )
+                            );
                         } else if (i === 0 && showFirstPageSkip) {
                             return (
                                 <>
@@ -78,7 +78,7 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
                                         ...
                                     </span>
                                 </>
-                            )
+                            );
                         }
                         return (
                             <NavButton
@@ -90,22 +90,22 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
                                 }
                                 onClick={handleClick}
                             />
-                        )
+                        );
                     })}
             </>
-        )
-    }
-    RenderButtons.displayName = 'Buttons'
+        );
+    };
+    RenderButtons.displayName = "Buttons";
 
     const changePage = (increment: number) => {
-        const newPage = (filters.page ?? 1) + increment
+        const newPage = (filters.page ?? 1) + increment;
         if (newPage <= totalPages && newPage >= 1) {
-            scrollToAnchorEle()
-            setFilters((prev) => ({...prev, page: newPage}))
+            scrollToAnchorEle();
+            setFilters({...filters, page: newPage});
         }
-    }
+    };
 
-    if (numberOfButtons === 0) return null
+    if (numberOfButtons === 0) return null;
 
     return (
         <div className="flex w-full max-w-full flex-wrap justify-center py-6" data-testid="pageNav">
@@ -123,8 +123,8 @@ const PageNav = ({anchorEle, totalHits = 0}: PageNavProps) => {
                 icon={<FiArrowRight color="black"/>}
             />
         </div>
-    )
-}
+    );
+};
 
 interface NavButtonProps {
     label: number
@@ -136,14 +136,14 @@ const NavButton = ({label, selected, onClick}: NavButtonProps) => {
     return (
         <button
             className={`mx-2 h-12 w-12 transform shadow hover:scale-110 hover:shadow-md ${
-                selected && 'border-b-2 border-black'
+                selected && "border-b-2 border-black"
             }`}
             onClick={(e) => onClick(e as any, label)}
-            data-testid={`pageNavButton`}
+            data-testid={"pageNavButton"}
         >
             <span className="font-bold">{label}</span>
         </button>
-    )
-}
+    );
+};
 
-export default PageNav
+export default PageNav;

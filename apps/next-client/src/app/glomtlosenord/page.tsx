@@ -1,43 +1,43 @@
-"use client"
-import {useState} from 'react'
-import {Formik} from 'formik'
-import Link from 'next/link'
-import {client} from '@/client'
-import {useUser} from '@/hooks/useUser'
-import {TextField} from '@/components/TextField/TextField'
-import {Button} from '@/components/Button/Button'
+"use client";
+import {useState} from "react";
+import {Formik} from "formik";
+import Link from "next/link";
+import {client} from "@/client";
+import {useUser} from "@/hooks/useUser";
+import {TextField} from "@/components/TextField/TextField";
+import {Button} from "@/components/Button/Button";
 
 const ForgottenPassword = () => {
     useUser({
         redirectIfFound: true,
-        redirectTo: '/minasidor',
-    })
+        redirectTo: "/minasidor",
+    });
 
-    const [success, setSuccess] = useState(false)
+    const [success, setSuccess] = useState(false);
 
     return (
         <main className="p-4">
             <section
                 className="section max-w-screen-sm py-16 pt-6"
-                style={{marginTop: '15vh'}}
+                style={{marginTop: "15vh"}}
             >
                 <Formik
-                    initialValues={{email: ''}}
+                    initialValues={{email: ""}}
                     onSubmit={({email}, actions) => {
                         client
-                            .put('/users/password', {email})
+                            .put("/users/password", {email})
                             .then(() => {
-                                setSuccess(true)
+                                setSuccess(true);
                             })
                             .catch(() => {
-                                actions.setFieldError('email', 'Ett fel inträffade')
-                            })
+                                actions.setFieldError("email", "Ett fel inträffade");
+                            });
                     }}
                     validate={(values) => {
                         if (!values.email) {
                             return {
-                                email: 'Fältet kan inte vara tomt',
-                            }
+                                email: "Fältet kan inte vara tomt",
+                            };
                         }
                     }}
                 >
@@ -53,13 +53,13 @@ const ForgottenPassword = () => {
                                         följ anvisningarna för att återställa lösenordet.
                                     </p>
                                 </>
-                            )
+                            );
 
                         return (
                             <>
                                 <div>
                                     <Link href="/loggain">
-                                        <span>{'<<'} Logga in istället</span>
+                                        <span>{"<<"} Logga in istället</span>
                                     </Link>
                                 </div>
                                 <div className="mb-8 pt-12">
@@ -96,12 +96,12 @@ const ForgottenPassword = () => {
                                     </Button>
                                 </form>
                             </>
-                        )
+                        );
                     }}
                 </Formik>
             </section>
         </main>
-    )
-}
+    );
+};
 
-    export default ForgottenPassword
+    export default ForgottenPassword;

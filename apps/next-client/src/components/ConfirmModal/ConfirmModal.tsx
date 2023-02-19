@@ -1,5 +1,5 @@
-import { ReactNode, useState } from 'react'
-import { PopUpModal, PopUpModalProps } from '../PopUpModal/PopUpModal'
+import { ReactNode, useState } from "react";
+import { PopUpModal, PopUpModalProps } from "../PopUpModal/PopUpModal";
 
 export type ConfirmModalProps = {
     children: (args: { showModal: () => void; hideModal: () => void }) => ReactNode
@@ -10,8 +10,8 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
     const {
         children,
         modalProps: { onAccept, ...modalProps },
-    } = props
-    const [showModal, setShowModal] = useState(false)
+    } = props;
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <>
@@ -21,13 +21,13 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
             })}
             <PopUpModal
                 onAccept={() => {
-                    setShowModal(false)
-                    onAccept && onAccept()
+                    setShowModal(false);
+                    onAccept && onAccept();
                 }}
                 onExit={() => setShowModal(false)}
                 open={showModal}
                 {...modalProps}
             />
         </>
-    )
-}
+    );
+};

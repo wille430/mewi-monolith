@@ -1,13 +1,13 @@
-import {FiX} from 'react-icons/fi'
-import clsx from 'clsx'
-import styles from './ListingPopUp.module.scss'
-import Description from './Description/Description'
-import {OriginLabel} from '../OriginLabel/OriginLabel'
-import {PopUp} from '../PopUp/PopUp'
-import DefaultImage from '../DefaultImage/DefaultImage'
-import {Button} from '../Button/Button'
-import {CategoryLabel, ListingDto} from "@mewi/models"
-import Link from "next/link"
+import {FiX} from "react-icons/fi";
+import clsx from "clsx";
+import styles from "./ListingPopUp.module.scss";
+import Description from "./Description/Description";
+import {OriginLabel} from "../OriginLabel/OriginLabel";
+import {PopUp} from "../PopUp/PopUp";
+import DefaultImage from "../DefaultImage/DefaultImage";
+import {Button} from "../Button/Button";
+import {CategoryLabel, ListingDto} from "@mewi/models";
+import Link from "next/link";
 
 interface ListingPopUp {
     onClose?: () => void
@@ -17,10 +17,10 @@ interface ListingPopUp {
 // TODO: disable scroll outside element
 const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
     const {category, imageUrl, title, body, region, price, origin, parameters, redirectUrl} =
-        listing
+        listing;
     const handleClose = () => {
-        onClose && onClose()
-    }
+        onClose && onClose();
+    };
 
     return (
         <PopUp onOutsideClick={onClose} className={styles.popUp}>
@@ -29,12 +29,12 @@ const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
                      <span className="space-x-2 spacers-arrow">
                         <Link onClick={handleClose} href="/sok">Allt</Link>
                         <Link onClick={handleClose}
-                              href={'/sok?categories=' + category}>{CategoryLabel[category]}</Link>
+                              href={"/sok?categories=" + category}>{CategoryLabel[category]}</Link>
                     </span>
                     <Button onClick={handleClose} className="bg-transparent text-black ml-auto btn-lg"><FiX/></Button>
                 </header>
                 <div>
-                    <div className={clsx(styles['image-wrapper'], 'relative')}>
+                    <div className={clsx(styles["image-wrapper"], "relative")}>
                         {/* TODO: Implement image carousel */}
                         <DefaultImage src={imageUrl[0]} alt={listing.title}/>
                     </div>
@@ -68,7 +68,7 @@ const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
                             <div data-content-length={body?.length ?? 0}
                                  className={clsx("box h-full flex-grow", styles.description)}>
                                 <h4>Beskrivning</h4>
-                                <Description text={body || ''}/>
+                                <Description text={body || ""}/>
                             </div>
 
                             <hr/>
@@ -79,16 +79,16 @@ const ListingPopUp = ({onClose, listing}: ListingPopUp) => {
                 </div>
             </section>
         </PopUp>
-    )
-}
+    );
+};
 
-export default ListingPopUp
+export default ListingPopUp;
 
 const SpecificationsView = ({parameters}) =>
     parameters.length ? (
-        <aside className={clsx('box', styles['specs'])}>
+        <aside className={clsx("box", styles["specs"])}>
             <h4>Specifikationer</h4>
-            <table className={styles['specs-table']}>
+            <table className={styles["specs-table"]}>
                 <tbody>
                 {parameters?.map(({label, value}) => (
                     <tr key={value}>
@@ -100,5 +100,5 @@ const SpecificationsView = ({parameters}) =>
             </table>
         </aside>
     ) : (
-        <aside className={styles['specs-hidden']}/>
-    )
+        <aside className={styles["specs-hidden"]}/>
+    );

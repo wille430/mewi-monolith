@@ -1,37 +1,37 @@
-import {useRouter} from 'next/navigation'
-import {useFormik} from 'formik'
-import Link from 'next/link'
-import type {EmailSignInDto} from './EmailSignInDto'
-import {handleSignInError} from './handleSignInError'
-import {TextField} from '../TextField/TextField'
-import {Button} from '../Button/Button'
-import {useAppDispatch} from '@/hooks'
-import {login} from '@/store/user'
-import {ON_AUTH_SUCCESS_GOTO} from '@/lib/constants/paths'
+import {useRouter} from "next/navigation";
+import {useFormik} from "formik";
+import Link from "next/link";
+import type {EmailSignInDto} from "./EmailSignInDto";
+import {handleSignInError} from "./handleSignInError";
+import {TextField} from "../TextField/TextField";
+import {Button} from "../Button/Button";
+import {useAppDispatch} from "@/hooks";
+import {login} from "@/store/user";
+import {ON_AUTH_SUCCESS_GOTO} from "@/lib/constants/paths";
 
-const initialValues = {email: '', password: ''}
+const initialValues = {email: "", password: ""};
 
 export const EmailSignInForm = () => {
-    const dispatch = useAppDispatch()
-    const router = useRouter()
+    const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const onSubmit = async () => {
-        setSubmitting(true)
+        setSubmitting(true);
         const [res] = await Promise.all([
             dispatch(login(values)),
             router.prefetch(ON_AUTH_SUCCESS_GOTO),
-        ])
+        ]);
 
-        if (res.meta.requestStatus === 'fulfilled') {
-            window.location.href = ON_AUTH_SUCCESS_GOTO
+        if (res.meta.requestStatus === "fulfilled") {
+            window.location.href = ON_AUTH_SUCCESS_GOTO;
         } else {
-            setFieldValue('password', '').then(() => {
-                const formErr = handleSignInError()
-                setErrors(formErr)
-            })
+            setFieldValue("password", "").then(() => {
+                const formErr = handleSignInError();
+                setErrors(formErr);
+            });
         }
-        setSubmitting(false)
-    }
+        setSubmitting(false);
+    };
 
     const {
         handleSubmit,
@@ -45,8 +45,8 @@ export const EmailSignInForm = () => {
     } = useFormik<EmailSignInDto>({
         initialValues,
         onSubmit: onSubmit,
-    })
-    const errors = _errors as any
+    });
+    const errors = _errors as any;
 
     return (
         <form className="form" onSubmit={handleSubmit}>
@@ -96,5 +96,5 @@ export const EmailSignInForm = () => {
                 </Link>
             </div>
         </form>
-    )
-}
+    );
+};

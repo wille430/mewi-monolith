@@ -1,28 +1,28 @@
-import { NextApiHandler } from 'next'
-import { apiResolver } from 'next/dist/server/api-utils/node'
-import isFunction from 'lodash/isFunction'
-import {createHandler} from '@/lib/middlewares/createHandler'
-import { RequestListener, createServer } from 'http'
-import { withSessionRoute } from '@/lib/session/withSessionRoute'
-import { UserPayload } from '@/lib/modules/common/types/UserPayload'
+import { NextApiHandler } from "next";
+import { apiResolver } from "next/dist/server/api-utils/node";
+import isFunction from "lodash/isFunction";
+import {createHandler} from "@/lib/middlewares/createHandler";
+import { RequestListener, createServer } from "http";
+import { withSessionRoute } from "@/lib/session/withSessionRoute";
+import { UserPayload } from "@/lib/modules/common/types/UserPayload";
 
 export const createTestClient = (
     handler: NextApiHandler | (new (...args) => any),
     userPayload: UserPayload | undefined = undefined
 ) => {
-    let handler2: NextApiHandler = isFunction(handler) ? handler : createHandler(handler)
+    let handler2: NextApiHandler = isFunction(handler) ? handler : createHandler(handler);
 
     if (userPayload) {
         handler2 = withSessionRoute(async (req, res) => {
-            req.session.user = userPayload
-            await req.session.save()
+            req.session.user = userPayload;
+            await req.session.save();
 
             if (isFunction(handler)) {
-                return handler(req, res)
+                return handler(req, res);
             } else {
-                return handler
+                return handler;
             }
-        })
+        });
     }
 
     const requestHandle: RequestListener = (request, response) =>
@@ -32,12 +32,12 @@ export const createTestClient = (
             undefined,
             handler2,
             {
-                previewModeId: '',
-                previewModeEncryptionKey: '',
-                previewModeSigningKey: '',
+                previewModeId: "",
+                previewModeEncryptionKey: "",
+                previewModeSigningKey: "",
             },
             false
-        )
+        );
 
-    return createServer(requestHandle)
-}
+    return createServer(requestHandle);
+};

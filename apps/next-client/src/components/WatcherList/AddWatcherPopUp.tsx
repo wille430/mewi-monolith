@@ -1,14 +1,14 @@
-import { Container } from '../Container/Container'
-import { HorizontalLine } from '../HorizontalLine/HorizontalLine'
-import { PopUp } from '@/components/PopUp/PopUp'
-import { CreateWatcherForm } from './CreateWatcherForm/CreateWatcherForm'
+import { Container } from "../Container/Container";
+import { HorizontalLine } from "../HorizontalLine/HorizontalLine";
+import { PopUp } from "@/components/PopUp/PopUp";
+import { CreateWatcherForm } from "./CreateWatcherForm/CreateWatcherForm";
 
 const AddWatcherPopUp = ({ useShow }: any) => {
-    const { show, setShow } = useShow
+    const { show, setShow } = useShow;
 
     const hidePopUp = () => {
-        setShow(false)
-    }
+        setShow(false);
+    };
 
     return (
         <PopUp onOutsideClick={hidePopUp} show={show}>
@@ -24,7 +24,7 @@ const AddWatcherPopUp = ({ useShow }: any) => {
                 </Container>
             </div>
         </PopUp>
-    )
-}
+    );
+};
 
-export default AddWatcherPopUp
+export default AddWatcherPopUp;
