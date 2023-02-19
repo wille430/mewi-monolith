@@ -28,7 +28,7 @@ const SortButton = () => {
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setFilters({
-            ...prev,
+            ...filters,
             sort: parseInt(e.target.value as string) as ListingSort,
         });
     };
