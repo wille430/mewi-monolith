@@ -8,7 +8,7 @@ import {ListingsRepository} from "./listings.repository";
 import {UsersRepository} from "../users/users.repository";
 import {Listing} from "@mewi/entities";
 import {DeleteListingsDto} from "./dto/delete-listings.dto";
-import {FindAllListingsReponse} from "./dto/find-all-listings-response.dto";
+import {FindAllListingsResponse} from "./dto/find-all-listings-response.dto";
 import {FilteringService} from "@mewi/business";
 import {ObjectId} from "mongodb";
 
@@ -25,7 +25,7 @@ export class ListingsService {
         return this.listingsRepository.create(createListingDto);
     }
 
-    async findAll(dto: FindAllListingsDto): Promise<FindAllListingsReponse> {
+    async findAll(dto: FindAllListingsDto): Promise<FindAllListingsResponse> {
         const totalHitsPipeline = this.filteringService.convertToPipeline(omit(dto, "page", "limit"));
         const hitsPipeline = this.filteringService.convertToPipeline(dto);
 

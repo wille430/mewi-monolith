@@ -1,4 +1,4 @@
-import type { FindAllListingsReponse } from "@/lib/modules/listings/dto/find-all-listings-response.dto";
+import type { FindAllListingsResponse } from "@/lib/modules/listings/dto/find-all-listings-response.dto";
 import { removeNullValues } from "@/lib/utils/removeNullValues";
 import { stringify } from "query-string";
 import { client } from "../index";
@@ -11,7 +11,7 @@ export const getWatcherItems = async (watcher: UserWatcherDto) => {
     ...removeNullValues(watcher.watcher.metadata),
   });
 
-  return client.get<never, FindAllListingsReponse>("/listings?" + query);
+  return client.get<never, FindAllListingsResponse>("/listings?" + query);
 };
 
 export const getLikedListings = () => {

@@ -1,15 +1,14 @@
 "use client";
-import {ListingDto, ListingSort} from "@mewi/models";
-import {Hero} from "@/components/Hero/Hero";
-import {DecorativeWaves} from "@/components/DecorativeWaves/DecorativeWaves";
-import {DisplayListingsRow} from "@/components/DisplayListingsRow/DisplayListingsRow";
+import { ListingDto, ListingSort } from "@mewi/models";
+import { Hero } from "@/components/Hero/Hero";
+import { DecorativeWaves } from "@/components/DecorativeWaves/DecorativeWaves";
+import { DisplayListingsRow } from "@/components/DisplayListingsRow/DisplayListingsRow";
 
 interface HomePageProps {
-    featuredListings: ListingDto[],
-    recentListings: ListingDto[]
+  featuredListings: ListingDto[];
+  recentListings: ListingDto[];
 }
 
-// TODO: listing popup
 export const HomePage = (props: HomePageProps) => {
     const {featuredListings, recentListings} = props;
     return (

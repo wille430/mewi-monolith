@@ -1,27 +1,29 @@
 "use client";
-import {Container} from "../Container/Container";
+import { Container } from "../Container/Container";
 import styles from "./SideNav.module.scss";
-import {BsFillBinocularsFill, FiHeart, FiUser} from "react-icons/all";
+import { FiHeart, FiUser } from "react-icons/fi";
+import { BsFillBinocularsFill } from "react-icons/bs";
 import Link from "next/link";
 import clsx from "clsx";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
+import { LinkType } from "@/lib/types/ui";
 
-const links = [
-    {
-        label: "Bevakningar",
-        path: "/minasidor/bevakningar",
-        icon: <BsFillBinocularsFill className="mr-2"/>,
-    },
-    {
-        label: "Konto",
-        path: "/minasidor/konto",
-        icon: <FiUser className="mr-2"/>,
-    },
-    {
-        label: "Gillade annonser",
-        path: "/minasidor/gillade",
-        icon: <FiHeart className="mr-2"/>,
-    },
+const links: LinkType[] = [
+  {
+    label: "Bevakningar",
+    path: "/minasidor/bevakningar",
+    icon: <BsFillBinocularsFill className="mr-2" />,
+  },
+  {
+    label: "Konto",
+    path: "/minasidor/konto",
+    icon: <FiUser className="mr-2" />,
+  },
+  {
+    label: "Gillade annonser",
+    path: "/minasidor/gillade",
+    icon: <FiHeart className="mr-2" />,
+  },
 ];
 
 const SideNav = () => {

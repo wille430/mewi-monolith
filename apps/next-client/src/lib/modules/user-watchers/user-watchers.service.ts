@@ -58,7 +58,7 @@ export class UserWatchersService {
     } else {
       return this.userWatchersRepository.create({
         user: user,
-        watcher: wather,
+        watcher: watcher,
       });
     }
   }

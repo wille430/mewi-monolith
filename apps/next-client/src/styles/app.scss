@@ -81,6 +81,20 @@ $layout-width: theme('screens.lg');
     display: grid !important;
     grid-template-columns: 275px 4fr;
   }
+
+  .dropdown-parent {
+    &:hover > .dropdown {
+      display: block !important;
+    }
+  }
+
+  .dropdown {
+    @apply hidden py-2 absolute bg-white rounded border border-gray-300;
+  }
+
+  .li-link {
+    @apply block py-1.5 px-2 hover:bg-gray-300 text-left w-full;
+  }
 }
 
 @layer utilities {

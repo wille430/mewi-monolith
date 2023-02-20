@@ -1,8 +1,8 @@
 import type { FindAllListingsDto } from "./find-all-listing.dto";
-import {ListingDto} from "@mewi/models";
+import { ListingDto } from "@mewi/models";
 
-export class FindAllListingsReponse {
-    filters!: FindAllListingsDto;
-    totalHits!: number;
-    hits!: ListingDto[];
+export class FindAllListingsResponse {
+  filters!: FindAllListingsDto;
+  totalHits!: number;
+  hits!: ListingDto[];
 }

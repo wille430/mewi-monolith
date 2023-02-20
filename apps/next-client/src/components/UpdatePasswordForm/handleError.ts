@@ -23,7 +23,7 @@ export const handleError = createValidationHandler<ChangePasswordWithToken>(
         }
       case "token":
         (errors as any).all =
-          "Länken är felaktig. Var vänlig be om en ny lösenordåterställning för att försöka igen.";
+          "Länken är felaktig. Var vänlig be om en ny lösenordsåterställning för att försöka igen.";
         break;
     }
   }

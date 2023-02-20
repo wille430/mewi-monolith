@@ -18,4 +18,4 @@ const Bevakningar = async () => {
   );
 };
 
-export default Bvakningar;
+export default Bevakningar;
