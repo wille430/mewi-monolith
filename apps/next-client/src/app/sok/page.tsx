@@ -7,7 +7,6 @@ import clsx from "clsx";
 import { TextField } from "@/components/TextField/TextField";
 import { Field } from "formik";
 import { ListingSearchFilters } from "@/common/types/ListingSearchFilters";
-import React from "react";
 
 const SearchPage = () => (
   <SearchProvider

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { InfoCard } from "./InfoCard/InfoCard";
