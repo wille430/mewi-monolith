@@ -10,7 +10,7 @@ import { useSWRConfig } from "swr";
 import { Button } from "../../Button/Button";
 import { ConfirmModal } from "../../ConfirmModal/ConfirmModal";
 import { handleError } from "./handleError";
-import { ListingSearchForm } from "../../ListingSearchForm/ListingSearchForm";
+import { ListingSearchFields } from "../../ListingSearchFields/ListingSearchFields";
 import clsx from "clsx";
 
 const initialValues: CreateUserWatcherDto["metadata"] = {};
@@ -52,7 +52,7 @@ export const CreateWatcherForm = (props: CreateWatcherFormProps) => {
             {({resetForm, submitForm, errors}) => (
                 <Form>
                     <div className={clsx("space-y-2", className)}>
-                        <ListingSearchForm/>
+                        <ListingSearchFields/>
                     </div>
 
                     <footer className="flex justify-end pt-4">

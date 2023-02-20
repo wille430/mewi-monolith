@@ -1,3 +1,4 @@
+"use client";
 import {Category, ListingOrigin} from "@mewi/models";
 import {ErrorMessage, Field, useFormikContext} from "formik";
 import LabeledDropdown from "../LabeledDropdown/LabeledDropdown";
@@ -13,7 +14,7 @@ export type ListingSearchFormProps = {
     fieldTypes?: Partial<Record<keyof ListingSearchFilters, "LIST" | "DROPDOWN" | boolean>>
 }
 
-export const ListingSearchForm = (props: ListingSearchFormProps) => {
+export const ListingSearchFields = (props: ListingSearchFormProps) => {
     const {fieldTypes = {categories: "DROPDOWN", origins: "DROPDOWN"}} = props;
     const {setFieldValue, values} = useFormikContext<ListingSearchFilters>();
 

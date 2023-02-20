@@ -132,7 +132,7 @@ interface NavButtonProps {
     onClick: (e: MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => void
 }
 
-const NavButton = ({label, selected, onClick}: NavButtonProps) => {
+const NavButton = ({label, selected, onClick, ...rest}: NavButtonProps) => {
     return (
         <button
             className={`mx-2 h-12 w-12 transform shadow hover:scale-110 hover:shadow-md ${
@@ -140,6 +140,7 @@ const NavButton = ({label, selected, onClick}: NavButtonProps) => {
             }`}
             onClick={(e) => onClick(e as any, label)}
             data-testid={"pageNavButton"}
+            {...rest}
         >
             <span className="font-bold">{label}</span>
         </button>

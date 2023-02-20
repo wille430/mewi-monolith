@@ -1,17 +1,17 @@
 "use client";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/Button/Button";
-import {stringifySearchPath} from "@/lib/utils/url";
 import {Container} from "@/components/Container/Container";
-import {ListingSearchForm} from "@/components/ListingSearchForm/ListingSearchForm";
 import {Form, Formik} from "formik";
 import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
+import {ListingSearchFields} from "@/components/ListingSearchFields/ListingSearchFields";
+import {createSearchUrl} from "@/utils/createSearchUrl";
 
 const Filter = () => {
     const router = useRouter();
 
     const handleSubmit = (values: ListingSearchFilters) =>
-        router.push(stringifySearchPath(values));
+        router.push(createSearchUrl(values));
 
     return (
         <main>
@@ -19,7 +19,7 @@ const Filter = () => {
                 <Container>
                     <Form>
                         <Container.Content className="grid gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3">
-                            <ListingSearchForm/>
+                            <ListingSearchFields/>
                         </Container.Content>
                         <Container.Footer className="flex justify-end space-x-2">
                             <Button type="submit">
