@@ -1,5 +1,5 @@
 
-export const logTimeTaken = async <T>(f: () => T): T => {
+export const logTimeTaken = async <T>(f: () => T): Promise<T> => {
     const start = Date.now();
     const res = await f();
     const duration = Date.now() - start;
