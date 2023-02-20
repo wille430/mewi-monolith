@@ -8,7 +8,7 @@ import { ListingDto } from "@mewi/models";
 import StyledLoader from "@/components/StyledLoader";
 
 interface NewItemsDrawerProps {
-  listings: ListingDto[] | null;
+  listings: ListingDto[] | null | undefined;
 }
 
 const NewItemsDrawer = ({ listings }: NewItemsDrawerProps) => {
