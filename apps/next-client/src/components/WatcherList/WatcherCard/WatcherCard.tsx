@@ -28,7 +28,10 @@ const WatcherCard = ({
     expand && onExpand ? [expand, onExpand] : useState(false);
   const { watcher } = userWatcher;
 
-  const {data} = useSWR(_expand ? [MY_WATCHERS_KEY, watcher.id] : undefined, () => getWatcherItems(userWatcher));
+  const {data} = useSWR(_expand ? [MY_WATCHERS_KEY, watcher.id] : undefined, () => getWatcherItems(userWatcher), {
+    revalidateOnMount: false,
+    revalidateOnFocus: false
+  });
   const { hits: listings } = data ?? {};
 
   const scrollRef = useRef<HTMLDivElement>(null);

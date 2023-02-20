@@ -13,6 +13,7 @@ import {Controller} from "@/lib/decorators/controller.decorator";
 import {MyValidationPipe} from "@/lib/pipes/validation.pipe";
 import cache from "memory-cache";
 import {ListingDto, Role} from "@mewi/models";
+import {logTimeTaken} from "@/utils/logTimeTaken";
 
 @Controller()
 export class ListingsController {
@@ -29,7 +30,7 @@ export class ListingsController {
     @Get()
     @Public()
     async findAll(@Query(MyValidationPipe) findAllListingsDto: FindAllListingsDto) {
-        return this.listingsService.findAll(findAllListingsDto);
+        return logTimeTaken(() => this.listingsService.findAll(findAllListingsDto));
     }
 
     @Delete()
