@@ -29,7 +29,6 @@ const WatcherCard = ({
   const { watcher } = userWatcher;
 
   const {data} = useSWR(_expand ? [MY_WATCHERS_KEY, watcher.id] : undefined, () => getWatcherItems(userWatcher), {
-    revalidateOnMount: false,
     revalidateOnFocus: false
   });
   const { hits: listings } = data ?? {};
