@@ -20,7 +20,7 @@ export const ListingRow = ({ listing, ...rest }: ListingRowProps) => {
         alt={listing.title}
       />
 
-      <div className="py-2 flex flex-col flex-shrink flex-basis">
+      <div className="py-2 flex flex-col flex-grow flex-basis">
         <span>{listing.title}</span>
       </div>
 
