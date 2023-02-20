@@ -4,24 +4,32 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import styles from "./WatcherCard.module.scss";
-import NewItemsDrawer from "./NewItemsDrawer/NewItemsDrawer";
 import RemoveButton from "./RemoveWatcherButton";
 import ExpandButton from "./ExpandButton/ExpandButton";
 import { Button } from "@/components/Button/Button";
-import { CategoryLabel, DetailedUserWatcherDto } from "@mewi/models";
+import {CategoryLabel, UserWatcherDto} from "@mewi/models";
+import useSWR from "swr";
+import {MY_WATCHERS_KEY} from "@/api-client/user-watchers/swr-keys";
+import {getWatcherItems} from "@/api-client/user-watchers/queries";
+import dynamic from "next/dynamic";
+
+const NewItemsDrawer = dynamic(() => import("./NewItemsDrawer/NewItemsDrawer"));
 
 const WatcherCard = ({
   userWatcher,
   expand,
   onExpand,
 }: {
-  userWatcher: DetailedUserWatcherDto;
+  userWatcher: UserWatcherDto;
   expand?: boolean;
   onExpand?: Dispatch<boolean>;
 }) => {
   const [_expand, _setExpand] =
     expand && onExpand ? [expand, onExpand] : useState(false);
   const { watcher } = userWatcher;
+
+  const {data} = useSWR(_expand ? [MY_WATCHERS_KEY, watcher.id] : undefined, () => getWatcherItems(userWatcher));
+  const { hits: listings } = data ?? {};
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -133,7 +141,7 @@ const WatcherCard = ({
         </footer>
       </article>
       <AnimatePresence>
-        {_expand && <NewItemsDrawer listings={userWatcher.newListings} />}
+        {_expand && <NewItemsDrawer listings={listings} />}
       </AnimatePresence>
     </div>
   );

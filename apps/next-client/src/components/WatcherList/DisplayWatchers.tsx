@@ -6,12 +6,12 @@ import styles from "./WatcherList.module.scss";
 import WatcherPopUpButton from "./WatcherPopUpButton";
 import { Container } from "../Container/Container";
 import { HorizontalLine } from "../HorizontalLine/HorizontalLine";
-import { DetailedUserWatcherDto } from "@mewi/models";
+import {UserWatcherDto} from "@mewi/models";
 
 const WatcherCard = dynamic(() => import("./WatcherCard/WatcherCard"));
 
 export interface DisplayWatchersProps {
-  watchers: DetailedUserWatcherDto[];
+  watchers: UserWatcherDto[];
 }
 
 const DisplayWatchers = (props: DisplayWatchersProps) => {

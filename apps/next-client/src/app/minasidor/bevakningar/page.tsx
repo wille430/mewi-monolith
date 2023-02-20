@@ -1,10 +1,10 @@
 import DisplayWatchers from "@/components/WatcherList/DisplayWatchers";
 import { redirect } from "next/navigation";
 import { UNAUTHORIZED_REDIRECT_TO } from "@/lib/constants/paths";
-import { getDetailedUserWatchers } from "@/app/minasidor/bevakningar/getDetailedUserWatchers";
+import { getUserWatchers } from "@/app/minasidor/bevakningar/getUserWatchers";
 
 const Bevakningar = async () => {
-  const watchers = await getDetailedUserWatchers();
+  const watchers = await getUserWatchers();
 
   if (watchers == null) {
     redirect(UNAUTHORIZED_REDIRECT_TO);

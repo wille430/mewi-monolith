@@ -11,12 +11,8 @@ import { UpdateUserWatcherDto } from "./dto/update-user-watcher.dto";
 import { WatchersRepository } from "../watchers/watchers.repository";
 import { WatchersService } from "../watchers/watchers.service";
 import { UsersRepository } from "../users/users.repository";
-import {
-  UserWatcher,
-  UserWatcherDocument,
-  WatcherDocument,
-} from "@mewi/entities";
-import { DetailedUserWatcherDto, IPagination, ListingDto } from "@mewi/models";
+import { UserWatcherModel, WatcherDocument } from "@mewi/entities";
+import { IPagination, ListingDto } from "@mewi/models";
 import assert from "assert";
 import { ListingsService } from "@/lib/modules/listings/listings.service";
 
@@ -75,31 +71,17 @@ export class UserWatchersService {
     );
   }
 
-  async getDetailedUserWatchers(
-    userId: string
-  ): Promise<DetailedUserWatcherDto[] | null> {
-    const userWatchers = await this.findAll(userId);
-    if (userWatchers == null) return null;
-
-    const pagination: IPagination = {
-      limit: 12,
-    };
-    return Promise.all(
-      userWatchers.map(async (o) => {
-        return {
-          ...UserWatcher.convertToDto(o),
-          newListings: await this.getNewItemsForWatcher(o, pagination),
-        } as DetailedUserWatcherDto;
-      })
-    );
-  }
-
-  private async getNewItemsForWatcher(
-    userWatcher: UserWatcherDocument,
+  public async getNewItemsForWatcher(
+    userWatcherId: string,
     pagination: IPagination
   ): Promise<ListingDto[]> {
+    const userWatcher = await UserWatcherModel.findById(userWatcherId);
+    if (userWatcher == null)
+      throw new Error(`User Watcher with id ${userWatcherId} was not found`);
+
     await userWatcher.populate("watcher");
     assert(userWatcher.watcher as WatcherDocument);
+
     const { _doc: metadata } = (userWatcher.watcher as WatcherDocument)
       .metadata as any;
 
@@ -110,6 +92,12 @@ export class UserWatchersService {
     });
 
     return listings;
+  }
+
+  public async getFromUser(userId: string) {
+    return UserWatcherModel.find({
+      user: new mongoose.Types.ObjectId(userId),
+    }).populate("watcher");
   }
 
   async findOne(id: string, userId: string) {
