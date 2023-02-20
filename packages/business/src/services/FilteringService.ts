@@ -116,9 +116,7 @@ export class FilteringService {
                 pipeline.push({
                     $match: {
                         date: {
-                            $gte: {
-                                $date: value,
-                            },
+                            $gte: new Date(value),
                         },
                     },
                 });
