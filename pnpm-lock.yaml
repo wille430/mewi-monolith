@@ -87,6 +87,7 @@ importers:
       jest-environment-jsdom: ^29.2.2
       lodash: ^4.17.21
       memory-cache: ^0.2.0
+      mongodb: ^5.0.1
       mongoose: ~6.9.2
       next: 13.1.7-canary.20
       next-api-decorators: ^2.0.0
@@ -140,6 +141,7 @@ importers:
       iron-session: 6.3.1_next@13.1.7-canary.20
       lodash: 4.17.21
       memory-cache: 0.2.0
+      mongodb: 5.0.1
       mongoose: 6.9.2
       next: 13.1.7-canary.20_5mhhrw5dq6gnbuirj2awdzvyuu
       next-api-decorators: 2.0.1_next@13.1.7-canary.20
@@ -4462,6 +4464,11 @@ packages:
       buffer: 5.7.1
     dev: false
 
+  /bson/5.0.1:
+    resolution: {integrity: sha512-y09gBGusgHtinMon/GVbv1J6FrXhnr/+6hqLlSmEFzkz6PodqF6TxjyvfvY3AfO+oG1mgUtbC86xSbOlwvM62Q==}
+    engines: {node: '>=14.20.1'}
+    dev: false
+
   /buffer-equal-constant-time/1.0.1:
     resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
     dev: false
@@ -8492,6 +8499,28 @@ packages:
       saslprep: 1.0.3
     transitivePeerDependencies:
       - aws-crt
+    dev: false
+
+  /mongodb/5.0.1:
+    resolution: {integrity: sha512-KpjtY+NWFmcic6UDYEdfn768ZTuKyv7CRaui7ZSd6q/0/o1AURMC7KygTUwB1Cl8V10Pe5NiP+Y2eBMCDs/ygQ==}
+    engines: {node: '>=14.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.201.0
+      mongodb-client-encryption: ^2.3.0
+      snappy: ^7.2.2
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+    dependencies:
+      bson: 5.0.1
+      mongodb-connection-string-url: 2.6.0
+      socks: 2.7.1
+    optionalDependencies:
+      saslprep: 1.0.3
     dev: false
 
   /mongoose/6.7.2:
