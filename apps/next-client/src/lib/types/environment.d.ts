@@ -6,7 +6,7 @@ declare global {
             DATABASE_URI: string
             SESSION_PASSWORD: string
             ADMIN_API_KEY?: string
-            VERCEL_URL?: string
+            NEXT_PUBLIC_URL?: string
             MQ_CONNECTION_STRING: string
 
             GOOGLE_CLIENT_ID: string

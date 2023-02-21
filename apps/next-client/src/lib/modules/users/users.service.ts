@@ -134,7 +134,7 @@ export class UsersService {
         const locals = {
             link: new URL(
                 `/nyttlosenord?email=${email}&token=${token}`,
-                process.env.VERCEL_URL
+                process.env.NEXT_PUBLIC_URL
             ).toString(),
         };
 
@@ -201,7 +201,7 @@ export class UsersService {
                     token,
                     oldEmail: user.email,
                 })}`,
-                process.env.VERCEL_URL
+                process.env.NEXT_PUBLIC_URL
             ).toString(),
         };
 
