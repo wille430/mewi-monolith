@@ -87,7 +87,6 @@ importers:
       jest-environment-jsdom: ^29.2.2
       lodash: ^4.17.21
       memory-cache: ^0.2.0
-      mongodb: ^4.11.0
       mongoose: ~6.9.2
       next: 13.1.7-canary.20
       next-api-decorators: ^2.0.0
@@ -141,7 +140,6 @@ importers:
       iron-session: 6.3.1_next@13.1.7-canary.20
       lodash: 4.17.21
       memory-cache: 0.2.0
-      mongodb: 4.14.0
       mongoose: 6.9.2
       next: 13.1.7-canary.20_5mhhrw5dq6gnbuirj2awdzvyuu
       next-api-decorators: 2.0.1_next@13.1.7-canary.20
@@ -8484,20 +8482,6 @@ packages:
 
   /mongodb/4.13.0:
     resolution: {integrity: sha512-+taZ/bV8d1pYuHL4U+gSwkhmDrwkWbH1l4aah4YpmpscMwgFBkufIKxgP/G7m87/NUuQzc2Z75ZTI7ZOyqZLbw==}
-    engines: {node: '>=12.9.0'}
-    dependencies:
-      bson: 4.7.2
-      mongodb-connection-string-url: 2.6.0
-      socks: 2.7.1
-    optionalDependencies:
-      '@aws-sdk/credential-providers': 3.272.0
-      saslprep: 1.0.3
-    transitivePeerDependencies:
-      - aws-crt
-    dev: false
-
-  /mongodb/4.14.0:
-    resolution: {integrity: sha512-coGKkWXIBczZPr284tYKFLg+KbGPPLlSbdgfKAb6QqCFt5bo5VFZ50O3FFzsw4rnkqjwT6D8Qcoo9nshYKM7Mg==}
     engines: {node: '>=12.9.0'}
     dependencies:
       bson: 4.7.2

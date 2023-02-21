@@ -86,10 +86,12 @@ export class AuthService {
 
     private getGoogleOauthClient() {
         if (this._googleOauth2Client == null) {
+            const protocol = process.env.NODE_ENV === "development" ? "http://" : "https://";
+            const redirectUri = new URL(googleConfig.redirectUriPaths[0], protocol + process.env.VERCEL_URL).toString();
             this._googleOauth2Client = new google.auth.OAuth2(
                 googleConfig.clientId,
                 googleConfig.clientSecret,
-                new URL(googleConfig.redirectUriPaths[0], process.env.VERCEL_URL).toString()
+                redirectUri
             );
         }
 
