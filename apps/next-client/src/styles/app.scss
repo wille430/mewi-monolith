@@ -95,6 +95,15 @@ $layout-width: theme('screens.lg');
   .li-link {
     @apply block py-1.5 px-2 hover:bg-gray-300 text-left w-full;
   }
+
+  .google-btn {
+    @apply border-2 border-gray-200 bg-white btn btn-lg text-gray-700 center-y;
+
+    // icon
+    & > svg {
+      @apply mr-2;
+    }
+  }
 }
 
 @layer utilities {

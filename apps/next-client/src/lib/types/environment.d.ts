@@ -8,6 +8,9 @@ declare global {
             ADMIN_API_KEY?: string
             VERCEL_URL?: string
             MQ_CONNECTION_STRING: string
+
+            GOOGLE_CLIENT_ID: string
+            GOOGLE_CLIENT_SECRET: string
         }
     }
 

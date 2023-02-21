@@ -1,9 +1,10 @@
 module.exports = {
     content: [
-        "./src/app/**/*.{js,ts,jsx,tsx}",
-        "./src/components/**/*.{js,ts,jsx,tsx}",
+        "./src/app/**/*.{jsx,tsx}",
+        "./src/components/**/*.{jsx,tsx}",
     ],
     plugins: [require('tailwind-scrollbar')],
+    mode: "jit",
     theme: {
         extend: {
             colors: {
@@ -21,7 +22,11 @@ module.exports = {
                 secondary: '#4CEB74',
                 paper: '#ffffff',
                 error: '#cc0000',
-                muted: '#6b6b6b'
+                muted: '#6b6b6b',
+                google: {
+                    blue: '#4285F4',
+                    red: '#DB4437'
+                }
             },
             screens: {
                 xs: "540px"
