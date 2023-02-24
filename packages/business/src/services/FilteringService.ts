@@ -52,6 +52,11 @@ export class FilteringService {
                 pipeline
             );
         } else if (!dto.keyword) {
+            // capping results to reduce number of documents sorted because of
+            // memory issue
+            pipeline.push({
+                $limit: 20000
+            })
             this.applySort(
                 {
                     sort: FilteringService.sortToSortObjMap[ListingSort.DATE_DESC],
