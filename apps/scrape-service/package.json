@@ -24,7 +24,7 @@
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
-    "mongoose": "6.7.2",
+    "mongoose": "^6.9.1",
     "vite": "^4.1.1"
   },
   "devDependencies": {

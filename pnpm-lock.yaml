@@ -243,7 +243,7 @@ importers:
       class-validator: ^0.14.0
       dotenv: ^16.0.3
       lodash: ^4.17.21
-      mongoose: 6.7.2
+      mongoose: ^6.9.1
       ts-node: ^10.9.1
       typescript: 4.8.4
       vite: ^4.1.1
@@ -259,7 +259,7 @@ importers:
       class-validator: 0.14.0
       dotenv: 16.0.3
       lodash: 4.17.21
-      mongoose: 6.7.2
+      mongoose: 6.9.2
       vite: 4.1.1_@types+node@18.11.9
     devDependencies:
       '@types/lodash': 4.14.191
@@ -7098,10 +7098,6 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /kareem/2.4.1:
-    resolution: {integrity: sha512-aJ9opVoXroQUPfovYP5kaj2lM7Jn02Gw13bL0lg9v0V7SaUc0qavPs0Eue7d2DcC3NjqI6QAUElXNsuZSeM+EA==}
-    dev: false
-
   /kareem/2.5.1:
     resolution: {integrity: sha512-7jFxRVm+jD+rkq3kY0iZDJfsO2/t4BBPeEb2qKn2lR/9KhuksYk5hxzfRYWMPV8P/x2d0kHD306YyWLzjjH+uA==}
     engines: {node: '>=12.0.0'}
@@ -7816,22 +7812,6 @@ packages:
       saslprep: 1.0.3
     transitivePeerDependencies:
       - aws-crt
-    dev: false
-
-  /mongoose/6.7.2:
-    resolution: {integrity: sha512-lrP2V5U1qhaf+z33fiIn7aYAZZ1fVDly+TkFRjTujNBF/FIHESATj2RbgAOSlWqv32fsZXkXejXzeVfjbv35Ow==}
-    engines: {node: '>=12.0.0'}
-    dependencies:
-      bson: 4.7.2
-      kareem: 2.4.1
-      mongodb: 4.11.0
-      mpath: 0.9.0
-      mquery: 4.0.3
-      ms: 2.1.3
-      sift: 16.0.1
-    transitivePeerDependencies:
-      - aws-crt
-      - supports-color
     dev: false
 
   /mongoose/6.9.1:
