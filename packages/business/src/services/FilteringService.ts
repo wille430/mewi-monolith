@@ -80,9 +80,7 @@ export class FilteringService {
 
         switch (field) {
             case "keyword":
-                pipeline.splice(
-                    0,
-                    0,
+                pipeline.unshift(
                     process.env.NODE_ENV === "development"
                         ? {
                             $match: {

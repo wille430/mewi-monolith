@@ -52,6 +52,14 @@ describe("WatchersNotificationService", () => {
                 await watchersNotificationService.notifyAll();
             });
 
+            it("then listings should have been aggregated", () => {
+                expect(ListingModel.aggregate).toHaveBeenCalledWith(expect.arrayContaining([
+                    {
+                        $search: expect.any(Object)
+                    }
+                ]));
+            })
+
             it("then message broker should be called", () => {
                 expect(messageBroker.sendMessage).toHaveBeenCalledOnce();
                 expect(messageBroker.sendMessage).toHaveBeenCalledWith(MQQueues.SendEmail, expect.objectContaining({
