@@ -1,21 +1,32 @@
-import DisplayWatchers from "@/components/WatcherList/DisplayWatchers";
-import { redirect } from "next/navigation";
-import { UNAUTHORIZED_REDIRECT_TO } from "@/lib/constants/paths";
-import { getUserWatchers } from "@/app/minasidor/bevakningar/getUserWatchers";
+import WatcherPopUpButton from "@/components/WatcherList/WatcherPopUpButton";
+import {DisplayWatchersSsr} from "@/app/minasidor/bevakningar/DisplayWatchersSsr";
+import {Suspense} from "react";
+import DisplayWatchersSkeleton from "@/components/WatcherList/DisplayWatchersSkeleton";
 
 const Bevakningar = async () => {
-  const watchers = await getUserWatchers();
-
-  if (watchers == null) {
-    redirect(UNAUTHORIZED_REDIRECT_TO);
-    return null;
-  }
-
-  return (
-    <main>
-      <DisplayWatchers watchers={watchers} />
-    </main>
-  );
+    return (
+        <main>
+            <section
+                className={"card flex flex-col"}
+                style={{
+                    minHeight: "36rem",
+                }}
+            >
+                <h3>Mina bevakningar</h3>
+                <hr/>
+                <div className="flex-grow space-y-2">
+                    <Suspense fallback={<DisplayWatchersSkeleton/>}>
+                        {/* @ts-expect-error */}
+                        <DisplayWatchersSsr/>
+                    </Suspense>
+                </div>
+                <hr/>
+                <div className="flex justify-end">
+                    <WatcherPopUpButton data-testid="createNewWatcherButton"/>
+                </div>
+            </section>
+        </main>
+    );
 };
 
 export default Bevakningar;

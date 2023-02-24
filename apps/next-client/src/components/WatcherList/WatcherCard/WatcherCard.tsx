@@ -3,34 +3,38 @@ import type { Dispatch } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import styles from "./WatcherCard.module.scss";
-import RemoveButton from "./RemoveWatcherButton";
 import ExpandButton from "./ExpandButton/ExpandButton";
 import { Button } from "@/components/Button/Button";
-import {CategoryLabel, UserWatcherDto} from "@mewi/models";
+import { CategoryLabel, UserWatcherDto } from "@mewi/models";
 import useSWR from "swr";
-import {MY_WATCHERS_KEY} from "@/api-client/user-watchers/swr-keys";
-import {getWatcherItems} from "@/api-client/user-watchers/queries";
+import { MY_WATCHERS_KEY } from "@/api-client/user-watchers/swr-keys";
+import { getWatcherItems } from "@/api-client/user-watchers/queries";
 import dynamic from "next/dynamic";
+import { FiTrash } from "react-icons/fi";
 
 const NewItemsDrawer = dynamic(() => import("./NewItemsDrawer/NewItemsDrawer"));
 
-const WatcherCard = ({
-  userWatcher,
-  expand,
-  onExpand,
-}: {
+interface WatcherCardProps {
   userWatcher: UserWatcherDto;
   expand?: boolean;
   onExpand?: Dispatch<boolean>;
-}) => {
-  const [_expand, _setExpand] =
-    expand && onExpand ? [expand, onExpand] : useState(false);
+  onDelete: () => any;
+}
+
+const WatcherCard = (props: WatcherCardProps) => {
+  const { userWatcher, expand, onExpand, onDelete } = props;
   const { watcher } = userWatcher;
 
-  const {data} = useSWR(_expand ? [MY_WATCHERS_KEY, watcher.id] : undefined, () => getWatcherItems(userWatcher), {
-    revalidateOnFocus: false
-  });
+  const [_expand, _setExpand] =
+    expand && onExpand ? [expand, onExpand] : useState(false);
+
+  const { data } = useSWR(
+    _expand ? [MY_WATCHERS_KEY, watcher.id] : undefined,
+    () => getWatcherItems(userWatcher),
+    {
+      revalidateOnFocus: false,
+    }
+  );
   const { hits: listings } = data ?? {};
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -45,20 +49,13 @@ const WatcherCard = ({
     _setExpand(!_expand);
   };
 
-  const regionsString = () => {
-    if (typeof watcher.metadata.region === "string")
-      return watcher.metadata.region;
-
-    return watcher.metadata.region;
-  };
-
   useEffect(() => {
     if (_expand)
       scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [_expand]);
 
   return (
-    <div className={styles.watcherCardContainer} ref={scrollRef}>
+    <div className="relative z-0" ref={scrollRef}>
       <article
         className="flex flex-col card shadow-sm"
         data-testid="watcherCard"
@@ -74,7 +71,7 @@ const WatcherCard = ({
             {watcher.metadata.region && watcher.metadata.region.length >= 1 ? (
               <div className="mr-6">
                 <label className="label">Regioner:</label>
-                <span>{regionsString()}</span>
+                <span>{watcher.metadata.region}</span>
               </div>
             ) : (
               <div></div>
@@ -136,7 +133,14 @@ const WatcherCard = ({
             >
               Sök på min bevakning
             </Button>
-            <RemoveButton watcherId={userWatcher.id} />
+
+            <Button
+              data-testid="removeWatcherButton"
+              className="bg-error centered btn-sm"
+              onClick={onDelete}
+            >
+              <FiTrash color="white" />
+            </Button>
 
             <ExpandButton handleExpand={handleExpand} expand={_expand} />
           </div>

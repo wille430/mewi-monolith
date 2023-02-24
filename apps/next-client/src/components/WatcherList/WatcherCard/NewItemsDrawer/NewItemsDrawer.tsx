@@ -40,7 +40,7 @@ const NewItemsDrawer = ({ listings }: NewItemsDrawerProps) => {
     <motion.div
       className={clsx({
         [styles.itemDrawer]: true,
-        [styles.empty]: !listings?.length,
+        [styles.empty]: !listings?.length
       })}
       variants={drawerVariants}
       initial="hidden"
@@ -61,7 +61,7 @@ const NewItemsDrawer = ({ listings }: NewItemsDrawerProps) => {
           {renderItems()}
         </ul>
       ) : (
-        <span className="py-2 text-center">Inga nya föremål hittades</span>
+        <span className="py-2 text-center text-muted">Inga nya föremål hittades</span>
       )}
     </motion.div>
   );

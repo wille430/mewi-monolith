@@ -5,7 +5,6 @@ import {Container} from "../Container/Container";
 import {Button} from "../Button/Button";
 import {ListingSearchFilters} from "@/common/types/ListingSearchFilters";
 import {ConfirmModal} from "../ConfirmModal/ConfirmModal";
-import {mutate} from "swr";
 import {createUserWatcher} from "@/api-client/user-watchers/mutations";
 import {useAppSelector} from "@/hooks";
 import {useRouter} from "next/navigation";
@@ -47,10 +46,7 @@ export const SideFilters = () => {
                         heading: "Är du säker att du vill lägga en bevakning på sökningen?",
                         bodyText:
                             "Genom att klicka på \"Ja\" godkänner du att ta emot e-post varje gång det kommer nya föremål som matchar din sökning.",
-                        onAccept: () =>
-                            mutate(...createUserWatcher({metadata: filters}))
-                                .then(() => setAddWatcherStatus(true))
-                                .catch(() => setAddWatcherStatus(false)),
+                        onAccept: () => createUserWatcher({metadata: filters}),
                     }}
                 >
                     {({showModal}) => (

@@ -1,5 +1,5 @@
 import { createServerSideFunc } from "@/lib/utils/createServerSideFunc";
-import {UserWatcherDto} from "@mewi/models";
+import { UserWatcherDto } from "@mewi/models";
 import { getUser } from "@/app/minasidor/getUser";
 import { container } from "tsyringe";
 import { UserWatchersService } from "@/lib/modules/user-watchers/user-watchers.service";

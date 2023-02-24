@@ -1,5 +1,4 @@
 import AccountDetails from "@/components/AccountDetails/AccountDetails";
-import { HorizontalLine } from "@/components/HorizontalLine/HorizontalLine";
 import { getUser } from "../getUser";
 import { LoginStrategy } from "@mewi/models";
 import capitalize from "lodash/capitalize";
@@ -15,11 +14,11 @@ const Konto = async () => {
       <section
         className="card"
         style={{
-          minHeight: "50vh",
+          minHeight: "36rem",
         }}
       >
         <h3>Mitt Konto</h3>
-        <HorizontalLine />
+        <hr />
 
         {user.loginStrategy === LoginStrategy.LOCAL ? (
           <AccountDetails user={user} />

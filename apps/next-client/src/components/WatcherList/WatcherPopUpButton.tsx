@@ -1,3 +1,4 @@
+"use client";
 import {HTMLAttributes, useState} from "react";
 import AddWatcherPopUp from "./AddWatcherPopUp";
 import {Button} from "../Button/Button";
@@ -12,7 +13,7 @@ const WatcherPopUpButton = (props: HTMLAttributes<HTMLButtonElement>) => {
     return (
         <>
             <AddWatcherPopUp useShow={{show, setShow}}/>
-            <Button onClick={handleClick} {...props} >
+            <Button onClick={handleClick} {...props}>
                 Skapa bevakning
             </Button>
         </>
