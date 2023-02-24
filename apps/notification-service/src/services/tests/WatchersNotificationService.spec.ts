@@ -1,12 +1,13 @@
 import {WatchersNotificationService} from "../WatchersNotificationService"
 import {FilteringService} from "@mewi/business"
-import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib"
+import {MessageBroker, MQQueues} from "@mewi/mqlib"
 import {ListingModel, UserModel, UserWatcherModel, WatcherModel} from "@mewi/entities"
 import {beforeEach, expect, vi} from "vitest"
 import {watcherStub} from "./stubs/watcherStub"
 import {userStub} from "./stubs/userStub"
 import {userWatcherStub} from "./stubs/userWatcherStub"
 import {listingStub} from "./stubs/listingStub,ts"
+import {EmailTemplate} from "@mewi/models"
 
 describe("WatchersNotificationService", () => {
 
@@ -53,7 +54,14 @@ describe("WatchersNotificationService", () => {
 
             it("then message broker should be called", () => {
                 expect(messageBroker.sendMessage).toHaveBeenCalledOnce();
-                expect(messageBroker.sendMessage).toHaveBeenCalledWith(MQQueues.SendEmail, expect.any(SendEmailDto))
+                expect(messageBroker.sendMessage).toHaveBeenCalledWith(MQQueues.SendEmail, expect.objectContaining({
+                    emailTemplate: EmailTemplate.NEW_ITEMS,
+                    locals: expect.objectContaining({
+                        listingCount: expect.any(Number),
+                        filters: watcherStub().metadata,
+                        listings: expect.arrayContaining([expect.objectContaining({id: listingStub().id})])
+                    }),
+                }))
             });
 
             it("then UserWatcher should be updated", () => {

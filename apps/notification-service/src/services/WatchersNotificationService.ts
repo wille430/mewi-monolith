@@ -76,7 +76,13 @@ export class WatchersNotificationService {
         const user = userWatcher.user as User;
 
         const pipeline = this.filteringService.convertToPipeline(watcher.metadata);
-        const newListings = await this.newListings(pipeline);
+        console.log({
+            metadata: watcher.metadata,
+            aggregationPipeline: pipeline,
+            userId: user.id,
+            watcherId: watcher.id
+        })
+        const newListings = await this.getNewListings(pipeline);
 
         if (
             newListings.length < this.config.notifications.minListings ||
@@ -115,11 +121,12 @@ export class WatchersNotificationService {
         watcher: Watcher,
         newListings: any[]
     ) {
+        const listingCount = await ListingModel.aggregate([
+            ...this.filteringService.convertToPipeline(watcher.metadata as any),
+            {$count: "totalHits"},
+        ]).then((res) => (res as any)[0]?.totalHits ?? 0);
         return {
-            listingsToShow: await ListingModel.aggregate([
-                ...this.filteringService.convertToPipeline(watcher.metadata as any),
-                {$count: "totalHits"},
-            ]).then((res) => (res as any)[0]?.totalHits ?? 0),
+            listingCount,
             filters: watcher.metadata,
             listings: newListings,
         };
@@ -133,7 +140,7 @@ export class WatchersNotificationService {
         );
     }
 
-    private async newListings(pipeline: any) {
+    private async getNewListings(pipeline: any) {
         return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
             (arr: any) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x))
         );
