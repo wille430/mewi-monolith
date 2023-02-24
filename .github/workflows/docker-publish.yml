@@ -74,3 +74,18 @@ jobs:
           build-args: |
             FOLDER=${{ matrix.folder }}
             SCOPE=${{ matrix.scope }}
+  deploy:
+    name: Deploy to virtual machine
+    needs: [build-and-push-images]
+    runs-on: ubuntu-latest
+    steps:
+      - name: pulling new images and restarting containers with remote script
+        users: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /root/Mewi
+            ./update-containers.sh
