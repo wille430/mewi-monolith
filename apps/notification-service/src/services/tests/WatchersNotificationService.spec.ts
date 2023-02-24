@@ -2,7 +2,7 @@ import {WatchersNotificationService} from "../WatchersNotificationService"
 import {FilteringService} from "@mewi/business"
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib"
 import {ListingModel, UserModel, UserWatcherModel, WatcherModel} from "@mewi/entities"
-import {expect, vi} from "vitest"
+import {beforeEach, expect, vi} from "vitest"
 import {watcherStub} from "./stubs/watcherStub"
 import {userStub} from "./stubs/userStub"
 import {userWatcherStub} from "./stubs/userWatcherStub"
@@ -43,21 +43,55 @@ describe("WatchersNotificationService", () => {
         beforeEach(async () => {
             currentTime = new Date();
             vi.useFakeTimers().setSystemTime(currentTime);
-            await watchersNotificationService.notifyAll();
         });
 
-        it("then message broker should be called", () => {
-            expect(messageBroker.sendMessage).toHaveBeenCalledOnce();
-            expect(messageBroker.sendMessage).toHaveBeenCalledWith(MQQueues.SendEmail, expect.any(SendEmailDto))
-        });
+        describe("and there are watchers that should be notified", () => {
 
-        it("then UserWatcher should be updated", () => {
-            expect(UserWatcherModel.findOneAndUpdate).toHaveBeenCalledWith({
-                userId: userStub().id,
-                watcherId: watcherStub().id
-            }, {
-                notifiedAt: currentTime
+            beforeEach(async () => {
+                await watchersNotificationService.notifyAll();
+            });
+
+            it("then message broker should be called", () => {
+                expect(messageBroker.sendMessage).toHaveBeenCalledOnce();
+                expect(messageBroker.sendMessage).toHaveBeenCalledWith(MQQueues.SendEmail, expect.any(SendEmailDto))
+            });
+
+            it("then UserWatcher should be updated", () => {
+                expect(UserWatcherModel.findOneAndUpdate).toHaveBeenCalledWith({
+                    userId: userStub().id,
+                    watcherId: watcherStub().id
+                }, {
+                    $set: {
+                        notifiedAt: currentTime
+                    }
+                })
             })
+        })
+
+        describe("and watchers has been notified recently", () => {
+
+            beforeEach(async () => {
+                await watchersNotificationService.notifyAll();
+            });
+
+            beforeEach(() => {
+                UserWatcherModel.find = vi.fn().mockReturnValue({
+                    populate: () => {
+                        return {
+                            populate: () => {
+                                return [{
+                                    ...userWatcherStub(),
+                                    notifiedAt: currentTime
+                                }]
+                            }
+                        }
+                    }
+                } as any);
+            });
+
+            it("then it should NOT send message to AMQP", () => {
+                expect(messageBroker.sendMessage).not.toHaveBeenCalled();
+            });
         })
     })
 

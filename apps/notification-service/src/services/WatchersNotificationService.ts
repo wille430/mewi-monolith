@@ -102,7 +102,9 @@ export class WatchersNotificationService {
                 watcherId: watcher.id,
             },
             {
-                notifiedAt: new Date(),
+                $set: {
+                    notifiedAt: new Date(),
+                },
             }
         );
 
