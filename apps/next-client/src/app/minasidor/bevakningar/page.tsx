@@ -14,7 +14,7 @@ const Bevakningar = async () => {
             >
                 <h3>Mina bevakningar</h3>
                 <hr/>
-                <div className="flex-grow space-y-2">
+                <div className="flex flex-col flex-grow space-y-4">
                     <Suspense fallback={<DisplayWatchersSkeleton/>}>
                         {/* @ts-expect-error */}
                         <DisplayWatchersSsr/>

@@ -1,5 +1,4 @@
 "use client";
-import { Container } from "../Container/Container";
 import styles from "./SideNav.module.scss";
 import { FiHeart, FiUser } from "react-icons/fi";
 import { BsFillBinocularsFill } from "react-icons/bs";
@@ -31,7 +30,7 @@ const SideNav = () => {
     const pathname = usePathname();
 
     return (
-        <Container className={styles.container} data-testid="side-nav">
+        <div className={clsx(styles.container, "card")} data-testid="side-nav">
             <h4>Mina Sidor</h4>
 
             <ul>
@@ -43,7 +42,7 @@ const SideNav = () => {
                     </li>
                 ))}
             </ul>
-        </Container>
+        </div>
     );
 };
 

@@ -81,7 +81,8 @@ $layout-width: theme('screens.lg');
   }
 
   .double-col-grid {
-    @apply container mx-auto gap-4 py-16 flex flex-col-reverse px-3 lg:grid lg:grid-cols-[1fr_4fr_1fr];
+    @apply grid-cols-[16rem_5fr_16rem];
+    display: grid !important;
   }
 
   .single-col-grid {

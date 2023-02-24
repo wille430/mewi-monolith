@@ -13,10 +13,9 @@ const MyPagesLayout = async ({children}: NextLayoutProps) => {
     }
 
     return (
-        <div className="double-col-grid">
-            <aside></aside>
-            <div className="flex-grow">{children}</div>
-            <aside>
+        <div className="container w-full mx-auto gap-4 py-16 flex flex-col-reverse xl:flex-row 2xl:double-col-grid">
+            <div className="flex-grow xl:col-start-2">{children}</div>
+            <aside className="w-full xl:w-64">
                 <SideNav/>
             </aside>
         </div>
