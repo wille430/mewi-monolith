@@ -38,6 +38,14 @@ $layout-width: theme('screens.lg');
     @apply px-3 py-2;
   }
 
+  .btn-link {
+    @apply bg-transparent text-black p-0;
+
+    &:hover {
+      @apply underline;
+    }
+  }
+
   .form {
     @apply mx-auto flex max-w-md flex-col space-y-8;
   }

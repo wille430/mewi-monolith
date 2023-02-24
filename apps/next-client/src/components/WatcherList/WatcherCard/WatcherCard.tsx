@@ -1,35 +1,48 @@
-import queryString from "query-string";
 import type { Dispatch } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import ExpandButton from "./ExpandButton/ExpandButton";
-import { Button } from "@/components/Button/Button";
-import { CategoryLabel, UserWatcherDto } from "@mewi/models";
+import { CategoryLabel, Currency, UserWatcherDto } from "@mewi/models";
 import useSWR from "swr";
 import { MY_WATCHERS_KEY } from "@/api-client/user-watchers/swr-keys";
 import { getWatcherItems } from "@/api-client/user-watchers/queries";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { createSearchUrl } from "@/utils/createSearchUrl";
+import { Button } from "@/components/Button/Button";
 import { FiTrash } from "react-icons/fi";
+import ExpandButton from "@/components/WatcherList/WatcherCard/ExpandButton/ExpandButton";
 
 const NewItemsDrawer = dynamic(() => import("./NewItemsDrawer/NewItemsDrawer"));
 
 interface WatcherCardProps {
   userWatcher: UserWatcherDto;
-  expand?: boolean;
-  onExpand?: Dispatch<boolean>;
+  expand: boolean;
+  onExpand: Dispatch<boolean>;
   onDelete: () => any;
 }
 
 const WatcherCard = (props: WatcherCardProps) => {
   const { userWatcher, expand, onExpand, onDelete } = props;
   const { watcher } = userWatcher;
+  const {
+    region,
+    categories,
+    origins,
+    keyword,
+    auction,
+    priceRangeLte,
+    priceRangeGte,
+  } = watcher.metadata;
 
-  const [_expand, _setExpand] =
-    expand && onExpand ? [expand, onExpand] : useState(false);
+  const listFormat = new Intl.ListFormat("sv-SE");
+  const currencyFormat = new Intl.NumberFormat("sv-SE", {
+    currency: Currency.SEK,
+    style: "currency",
+    maximumFractionDigits: 0,
+  });
 
   const { data } = useSWR(
-    _expand ? [MY_WATCHERS_KEY, watcher.id] : undefined,
+    expand ? [MY_WATCHERS_KEY, watcher.id] : undefined,
     () => getWatcherItems(userWatcher),
     {
       revalidateOnFocus: false,
@@ -38,21 +51,15 @@ const WatcherCard = (props: WatcherCardProps) => {
   const { hits: listings } = data ?? {};
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-
-  const handleSearchButtonClick = async () => {
-    const pathname = "/sok";
-    await router.push(pathname + "?" + queryString.stringify(watcher.metadata));
-  };
 
   const handleExpand = () => {
-    _setExpand(!_expand);
+    onExpand(!expand);
   };
 
   useEffect(() => {
-    if (_expand)
+    if (expand)
       scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [_expand]);
+  }, [expand]);
 
   return (
     <div className="relative z-0" ref={scrollRef}>
@@ -60,94 +67,53 @@ const WatcherCard = (props: WatcherCardProps) => {
         className="flex flex-col card shadow-sm"
         data-testid="watcherCard"
       >
-        {watcher.metadata.keyword && (
-          <header className="mb-4 flex-none">
-            <label className="label">Sökord:</label>
-            <span>{watcher.metadata.keyword}</span>
-          </header>
-        )}
-        <div className="flex flex-grow space-y-4">
-          <div className="grid flex-1 grid-cols-fit-12 gap-4">
-            {watcher.metadata.region && watcher.metadata.region.length >= 1 ? (
-              <div className="mr-6">
-                <label className="label">Regioner:</label>
-                <span>{watcher.metadata.region}</span>
-              </div>
-            ) : (
-              <div></div>
-            )}
-
-            {watcher.metadata.categories ? (
-              <div className="mr-6">
-                <label className="label">
-                  {watcher.metadata.categories.length > 1
-                    ? "Kategori:"
-                    : "Kategorier:"}
-                </label>
-                {watcher.metadata.categories.map((cat) => (
-                  <span key={cat} className="mr-2">
-                    {CategoryLabel[cat]}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {watcher.metadata.priceRangeGte ||
-            watcher.metadata.priceRangeLte ? (
-              <div className="mr-6">
-                <label className="label">Prisintervall:</label>
-                <span>
-                  {(watcher.metadata.priceRangeGte || "0") +
-                    "-" +
-                    (watcher.metadata.priceRangeLte
-                      ? watcher.metadata.priceRangeLte + "kr"
-                      : "")}
-                </span>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {watcher.metadata.auction ? (
-              <div className="mr-6">
-                <label className="label">Auktion:</label>
-                <span>{watcher.metadata.auction ? "Ja" : "Nej"}</span>
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </div>
-        </div>
-        <footer className="mt-2 flex flex-col-reverse items-center justify-between sm:flex-row">
-          <div className="w-full text-sm opacity-70 sm:w-auto">
-            <label className="label">Lades till:</label>
+        <div className="flex flex-col text-muted space-y-2">
+          <span className="font-semibold text-black">
+            Sökord: "{keyword ?? ""}"
+          </span>
+          {region && <span>Plats: {region}</span>}
+          {auction != null && <span>Auktion: {auction ? "Ja" : "Nej"}</span>}
+          {categories?.length && (
             <span>
-              {new Date(userWatcher.createdAt).toLocaleDateString("se-SV")}
+              Kategorier:{" "}
+              {listFormat.format(
+                categories.map((o) => CategoryLabel[o as any])
+              )}
             </span>
-          </div>
-          <div className="flex w-full justify-end space-x-2 sm:w-auto sm:justify-start">
-            <Button
-              onClick={handleSearchButtonClick}
-              data-testid="watcherSearchButton"
-              className="btn-sm"
-            >
-              Sök på min bevakning
-            </Button>
+          )}
+          {origins?.length && <span>Sajter: {listFormat.format(origins)}</span>}
 
-            <Button
-              data-testid="removeWatcherButton"
-              className="bg-error centered btn-sm"
-              onClick={onDelete}
-            >
-              <FiTrash color="white" />
-            </Button>
+          {(priceRangeGte || priceRangeLte) && (
+            <span>
+              Prisintervall:{" "}
+              {`${priceRangeGte ? currencyFormat.format(priceRangeGte) : ""}-${
+                priceRangeLte ? currencyFormat.format(priceRangeLte) : ""
+              }`}
+            </span>
+          )}
+        </div>
 
-            <ExpandButton handleExpand={handleExpand} expand={_expand} />
-          </div>
-        </footer>
+        <div className="flex flex-row justify-end center-y space-x-2 pt-2">
+          <Link
+            className="btn btn-link mr-4"
+            href={createSearchUrl(watcher.metadata)}
+          >
+            Sök med filter
+          </Link>
+
+          <Button
+            data-testid="removeWatcherButton"
+            className="bg-error centered rounded-full btn-sm h-6 w-6 p-0"
+            onClick={onDelete}
+          >
+            <FiTrash color="white" />
+          </Button>
+
+          <ExpandButton handleExpand={handleExpand} expand={expand} />
+        </div>
       </article>
       <AnimatePresence>
-        {_expand && <NewItemsDrawer listings={listings} />}
+        {expand && <NewItemsDrawer listings={listings} />}
       </AnimatePresence>
     </div>
   );
