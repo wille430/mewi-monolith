@@ -14,10 +14,12 @@ import {ObjectId} from "mongodb";
 
 @autoInjectable()
 export class ListingsService {
+    private readonly filteringService: FilteringService = new FilteringService();
+
     constructor(
-        @inject(ListingsRepository) private readonly listingsRepository: ListingsRepository,
-        @inject(UsersRepository) private readonly usersRepository: UsersRepository,
-        @inject(FilteringService) private readonly filteringService: FilteringService
+        @inject(ListingsRepository)
+        private readonly listingsRepository: ListingsRepository,
+        @inject(UsersRepository) private readonly usersRepository: UsersRepository
     ) {
     }
 
@@ -26,7 +28,9 @@ export class ListingsService {
     }
 
     async findAll(dto: FindAllListingsDto): Promise<FindAllListingsResponse> {
-        const totalHitsPipeline = this.filteringService.convertToPipeline(omit(dto, "page", "limit"));
+        const totalHitsPipeline = this.filteringService.convertToPipeline(
+            omit(dto, "page", "limit")
+        );
         const hitsPipeline = this.filteringService.convertToPipeline(dto);
 
         let totalHits: any = (await this.listingsRepository.aggregate([
@@ -52,8 +56,14 @@ export class ListingsService {
         return await this.listingsRepository.findById(id);
     }
 
-    async update(id: string, updateListingDto: UpdateListingDto): Promise<Listing | null> {
-        return await this.listingsRepository.findByIdAndUpdate(id, updateListingDto);
+    async update(
+        id: string,
+        updateListingDto: UpdateListingDto
+    ): Promise<Listing | null> {
+        return await this.listingsRepository.findByIdAndUpdate(
+            id,
+            updateListingDto
+        );
     }
 
     async remove(id: string) {
@@ -65,16 +75,14 @@ export class ListingsService {
     }
 
     async autocomplete(keyword: string) {
-        const response = await this.listingsRepository.find(
-            {
-                where: {
-                    title: {
-                        $regex: new RegExp(keyword, "i"),
-                    },
+        const response = await this.listingsRepository.find({
+            where: {
+                title: {
+                    $regex: new RegExp(keyword, "i"),
                 },
-                limit: 5
             },
-        );
+            limit: 5,
+        });
 
         if (!response) return [];
 
@@ -98,7 +106,8 @@ export class ListingsService {
         const listing = await this.listingsRepository.findById(listingId);
 
         if (!user) throw new NotFoundException("User not found");
-        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`);
+        if (!listing)
+            throw new NotFoundException(`Listing with id ${listingId} not found`);
 
         if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
@@ -116,7 +125,8 @@ export class ListingsService {
         const listing = await this.listingsRepository.findById(listingId);
 
         if (!user) throw new NotFoundException("User not found");
-        if (!listing) throw new NotFoundException(`Listing with id ${listingId} not found`);
+        if (!listing)
+            throw new NotFoundException(`Listing with id ${listingId} not found`);
 
         if (!(user.likedListings as ObjectId[]).includes(listing.id)) {
             await this.usersRepository.findByIdAndUpdate(userId, {
@@ -134,19 +144,22 @@ export class ListingsService {
             imageUrl: {
                 $exists: true,
                 $not: {
-                    $size: 0
-                }
-            }
+                    $size: 0,
+                },
+            },
         });
     }
 
     async getRecent() {
-        const listings = await this.listingsRepository.find({}, {
-            sort: {
-                date: -1
-            },
-            limit: 8
-        });
+        const listings = await this.listingsRepository.find(
+            {},
+            {
+                sort: {
+                    date: -1,
+                },
+                limit: 8,
+            }
+        );
         return listings ?? [];
     }
 }

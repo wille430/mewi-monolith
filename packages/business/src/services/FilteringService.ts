@@ -74,7 +74,7 @@ export class FilteringService {
 
         this.applyPagination(dto, pipeline);
 
-        this.logger.info(
+        this.logger?.info(
             `filters (${prettyStringify(dto)}) resulted in (${prettyStringify(
                 pipeline
             )})`
@@ -85,7 +85,7 @@ export class FilteringService {
     private applyFieldsFilter(dto: Partial<FindAllListingsDto>, pipeline: any[]) {
         for (const kv of Object.entries(dto)) {
             const [key, value] = kv;
-            this.logger.info(`Applying filter ${key}=${value}`);
+            this.logger?.info(`Applying filter ${key}=${value}`);
             this.applyFieldFilter(key, value, pipeline);
         }
     }
