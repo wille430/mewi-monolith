@@ -12,6 +12,7 @@ import {EJSON} from "bson";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
 import * as winston from "winston";
 import {prettyStringify} from "@mewi/utilities";
+import {Document} from "mongoose"
 
 export class WatchersNotificationService {
     private readonly config = {
@@ -93,7 +94,7 @@ export class WatchersNotificationService {
         const watcher = userWatcher.watcher as Watcher;
         const user = userWatcher.user as User;
 
-        const pipeline = this.filteringService.convertToPipeline(watcher.metadata);
+        const pipeline = this.filteringService.convertToPipeline((watcher.metadata as Document).toJSON());
         WatchersNotificationService.logger.info(
             "notifyUser: " +
             prettyStringify({
