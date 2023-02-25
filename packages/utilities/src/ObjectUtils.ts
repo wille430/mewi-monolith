@@ -20,3 +20,14 @@ export const searchParamsToObject = (searchParams: URLSearchParams) => {
 
     return map
 }
+
+export const prettyStringify = (obj: Record<any, any>) => {
+    let str = "";
+
+    for (const kv of Object.values(obj)) {
+        str += `${kv[0]}=${kv[1]}`;
+        str += " ";
+    }
+
+    return str.trim();
+}

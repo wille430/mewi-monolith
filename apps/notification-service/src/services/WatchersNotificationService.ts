@@ -10,6 +10,8 @@ import {FilteringService} from "@mewi/business";
 import {EmailTemplate} from "@mewi/models";
 import {EJSON} from "bson";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
+import * as winston from "winston";
+import {prettyStringify} from "@mewi/utilities";
 
 export class WatchersNotificationService {
     private readonly config = {
@@ -20,6 +22,19 @@ export class WatchersNotificationService {
             minListings: 1,
         },
     };
+
+    private static readonly logger = winston.createLogger({
+        level: "info",
+        format: winston.format.json(),
+        defaultMeta: {service: "WatcherNotificationService"},
+        transports: [
+            new winston.transports.File({filename: "error.log", level: "error"}),
+            new winston.transports.File({filename: "combined.log"}),
+            new winston.transports.Console({
+                format: winston.format.simple(),
+            }),
+        ],
+    });
 
     private readonly filteringService: FilteringService;
     private readonly messageBroker: MessageBroker;
@@ -43,7 +58,10 @@ export class WatchersNotificationService {
         }
 
         const elapsedTime = (Date.now() - start) / 1000;
-        console.log(`Notified ${usersNotified} users after ${elapsedTime}s`);
+        WatchersNotificationService.logger.log({
+            level: "info",
+            message: `Notified ${usersNotified} users after ${elapsedTime}s`,
+        });
     }
 
     /**
@@ -76,12 +94,15 @@ export class WatchersNotificationService {
         const user = userWatcher.user as User;
 
         const pipeline = this.filteringService.convertToPipeline(watcher.metadata);
-        console.log({
-            metadata: watcher.metadata,
-            aggregationPipeline: pipeline,
-            userId: user.id,
-            watcherId: watcher.id
-        })
+        WatchersNotificationService.logger.info(
+            "notifyUser: " +
+            prettyStringify({
+                userId: user.id,
+                watcherId: watcher.id,
+                metadata: watcher.metadata,
+                aggregationPipeline: pipeline,
+            })
+        );
         const newListings = await this.getNewListings(pipeline);
 
         if (
@@ -102,16 +123,22 @@ export class WatchersNotificationService {
         await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
 
         // Update notifiedAt property of user watcher
-        await UserWatcherModel.findOneAndUpdate(
+        const newWatcher = await UserWatcherModel.findOneAndUpdate(
             {
                 userId: user.id,
                 watcherId: watcher.id,
             },
             {
                 $set: {
-                    notifiedAt: new Date(),
+                    notifiedAt: new Date().toISOString(),
                 },
             }
+        );
+
+        WatchersNotificationService.logger.info(
+            `Updated user watcher (id=${newWatcher.id}). From (${prettyStringify({
+                notifiedAt: watcher.notifiedAt,
+            })}) to (${prettyStringify({notifiedAt: watcher.notifiedAt})})`
         );
 
         return true;
@@ -125,11 +152,19 @@ export class WatchersNotificationService {
             ...this.filteringService.convertToPipeline(watcher.metadata as any),
             {$count: "totalHits"},
         ]).then((res) => (res as any)[0]?.totalHits ?? 0);
-        return {
+
+        const obj = {
             listingCount,
             filters: watcher.metadata,
             listings: newListings,
         };
+
+        WatchersNotificationService.logger.info(
+            `Created locals for watcher with metadata ${watcher.metadata}: ` +
+            JSON.stringify(obj)
+        );
+
+        return obj;
     }
 
     private async shouldNotifyUser(userWatcher: UserWatcher) {

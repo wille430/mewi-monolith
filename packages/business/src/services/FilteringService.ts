@@ -1,6 +1,8 @@
 import {IPagination, ISortable, ListingSort} from "@mewi/models";
 import {FindAllListingsDto} from "@mewi/models/dist/FindAllListingsDto";
 import * as process from "process";
+import * as winston from "winston";
+import {prettyStringify} from "@mewi/utilities";
 
 export class FilteringService {
     private static readonly sortToSortObjMap: Record<ListingSort, any> = {
@@ -19,6 +21,11 @@ export class FilteringService {
         [ListingSort.RELEVANCE]: undefined,
     };
     private readonly MIN_SEARCH_SCORE = 1;
+    private readonly logger: winston.Logger | null;
+
+    constructor(logger: winston.Logger | null = null) {
+        this.logger = logger;
+    }
 
     public applySort(obj: ISortable, pipeline: any[]): void {
         if (obj.sort) {
@@ -55,8 +62,8 @@ export class FilteringService {
             // capping results to reduce number of documents sorted because of
             // memory issue
             pipeline.push({
-                $limit: 20000
-            })
+                $limit: 20000,
+            });
             this.applySort(
                 {
                     sort: FilteringService.sortToSortObjMap[ListingSort.DATE_DESC],
@@ -66,12 +73,20 @@ export class FilteringService {
         }
 
         this.applyPagination(dto, pipeline);
+
+        this.logger.info(
+            `filters (${prettyStringify(dto)}) resulted in (${prettyStringify(
+                pipeline
+            )})`
+        );
         return pipeline;
     }
 
     private applyFieldsFilter(dto: Partial<FindAllListingsDto>, pipeline: any[]) {
         for (const kv of Object.entries(dto)) {
-            this.applyFieldFilter(kv[0], kv[1], pipeline);
+            const [key, value] = kv;
+            this.logger.info(`Applying filter ${key}=${value}`);
+            this.applyFieldFilter(key, value, pipeline);
         }
     }
 
