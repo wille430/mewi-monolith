@@ -1,5 +1,5 @@
 import { Listing } from "@mewi/entities";
-import mongoose from "mongoose";
+import { mongoose } from "@typegoose/typegoose";
 import { Category, Currency, ListingDto, ListingOrigin } from "@mewi/models";
 
 const id = "63f8b1e71a7bf14780f5c238";

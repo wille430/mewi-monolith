@@ -15,7 +15,11 @@
     "@mewi/models": "workspace:^1.0.0",
     "@mewi/utilities": "workspace:^1.0.0",
     "@types/node": "18.11.9",
+    "lodash": "^4.17.21",
     "typescript": "4.8.4",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.187"
   }
 }

@@ -276,15 +276,20 @@ importers:
     specifiers:
       '@mewi/models': workspace:^1.0.0
       '@mewi/utilities': workspace:^1.0.0
+      '@types/lodash': ^4.14.187
       '@types/node': 18.11.9
+      lodash: ^4.17.21
       typescript: 4.8.4
       winston: ^3.8.2
     dependencies:
       '@mewi/models': link:../models
       '@mewi/utilities': link:../utilities
       '@types/node': 18.11.9
+      lodash: 4.17.21
       typescript: 4.8.4
       winston: 3.8.2
+    devDependencies:
+      '@types/lodash': 4.14.191
 
   packages/email-templates:
     specifiers:

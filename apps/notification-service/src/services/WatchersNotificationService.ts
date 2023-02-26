@@ -12,7 +12,6 @@ import {EmailTemplate} from "@mewi/models";
 import {EJSON} from "bson";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
 import * as winston from "winston";
-import {prettyStringify} from "@mewi/utilities";
 import {isDocument} from "@typegoose/typegoose";
 
 export class WatchersNotificationService {
@@ -135,22 +134,14 @@ export class WatchersNotificationService {
         await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
 
         // Update notifiedAt property of user watcher
-        const newWatcher = await UserWatcherModel.findOneAndUpdate(
-            {
-                userId: user.id,
-                watcherId: watcher.id,
-            },
-            {
-                $set: {
-                    notifiedAt: new Date().toISOString(),
-                },
-            }
-        );
+        let oldNotifiedAt = userWatcher.notifiedAt;
+        userWatcher.notifiedAt = new Date();
+        await userWatcher.save();
 
         WatchersNotificationService.logger.info(
-            `Updated user watcher (id=${newWatcher.id}). From (${prettyStringify({
-                notifiedAt: watcher.notifiedAt,
-            })}) to (${prettyStringify({notifiedAt: watcher.notifiedAt})})`
+            `Updated user watcher (id=${
+                userWatcher.id
+            }). From notifiedAt ${oldNotifiedAt.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
         );
 
         return true;

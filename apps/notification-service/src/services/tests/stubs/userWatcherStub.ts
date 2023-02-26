@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { mongoose } from "@typegoose/typegoose";
 import { UserWatcher } from "@mewi/entities";
 import { watcherStub } from "./watcherStub";
 import { userStub } from "./userStub";

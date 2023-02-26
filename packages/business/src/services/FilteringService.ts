@@ -1,8 +1,8 @@
-import {IPagination, ISortable, ListingSort} from "@mewi/models";
-import {FindAllListingsDto} from "@mewi/models/dist/FindAllListingsDto";
-import * as process from "process";
-import * as winston from "winston";
-import {prettyStringify} from "@mewi/utilities";
+import {IPagination, ListingSort} from "@mewi/models"
+import {FindAllListingsDto} from "@mewi/models/dist/FindAllListingsDto"
+import * as process from "process"
+import * as winston from "winston"
+import {curry, flow} from "lodash"
 
 export class FilteringService {
     private static readonly sortToSortObjMap: Record<ListingSort, any> = {
@@ -19,79 +19,78 @@ export class FilteringService {
             "price.value": -1,
         },
         [ListingSort.RELEVANCE]: undefined,
-    };
-    private readonly MIN_SEARCH_SCORE = 1;
-    private readonly logger: winston.Logger | null;
+    }
+    private readonly MIN_SEARCH_SCORE = 1
+    private readonly logger: winston.Logger | null
 
     constructor(logger: winston.Logger | null = null) {
-        this.logger = logger;
+        this.logger = logger
     }
 
-    public applySort(obj: ISortable, pipeline: any[]): void {
+    public applySort(obj: Partial<FindAllListingsDto>, pipeline: any[]): any[] {
         if (obj.sort) {
             pipeline.push({
-                $sort: obj.sort,
-            });
+                $sort: FilteringService.sortToSortObjMap[obj.sort],
+            })
         }
+        return pipeline
     }
 
-    public applyPagination(obj: IPagination, pipeline: any[]): void {
+    public applyPagination(obj: IPagination, pipeline: any[]): any[] {
         if (obj.limit != null) {
             pipeline.push({
                 $skip: ((obj.page ?? 1) - 1) * obj.limit,
-            });
+            })
             pipeline.push({
                 $limit: obj.limit,
-            });
+            })
         }
+        return pipeline
     }
 
     public convertToPipeline(dto: Partial<FindAllListingsDto>): any[] {
-        const pipeline: any[] = [];
+        const pipeline: any[] = []
 
-        this.applyFieldsFilter(dto, pipeline);
-
-        if (dto.sort) {
-            this.applySort(
-                {
-                    sort: FilteringService.sortToSortObjMap[dto.sort],
-                },
-                pipeline
-            );
-        } else if (!dto.keyword) {
-            // capping results to reduce number of documents sorted because of
-            // memory issue
-            pipeline.push({
-                $limit: 20000,
-            });
-            this.applySort(
-                {
-                    sort: FilteringService.sortToSortObjMap[ListingSort.DATE_DESC],
-                },
-                pipeline
-            );
-        }
-
-        this.applyPagination(dto, pipeline);
-
-        this.logger?.info(
-            `filters (${prettyStringify(dto)}) resulted in (${prettyStringify(
-                pipeline
-            )})`
+        const applyStages = flow(
+            // @ts-ignore
+            ...[
+                this.applyFieldsFilter,
+                this.applySort,
+                this.applyPagination
+            ].map(f => curry(f.bind(this))(dto))
         );
-        return pipeline;
+
+        applyStages(pipeline)
+
+        this.logger?.info(`Created pipeline stages from filters`, {
+            filters: dto,
+            pipeline,
+        })
+        return pipeline
     }
 
-    private applyFieldsFilter(dto: Partial<FindAllListingsDto>, pipeline: any[]) {
+    private applyFieldsFilter(
+        dto: Partial<FindAllListingsDto>,
+        pipeline: any[]
+    ): any[] {
         for (const kv of Object.entries(dto)) {
-            const [key, value] = kv;
-            this.logger?.info(`Applying filter ${key}=${value}`);
-            this.applyFieldFilter(key, value, pipeline);
+            const [key, value] = kv
+            this.logger?.info(`Applying filter ${key}=${value}`)
+            this.applyFieldFilter(key, value, pipeline)
         }
+
+        // to reduce memory usage
+        if (!dto.keyword) {
+            pipeline.push({
+                $limit: 20000,
+            })
+        }
+
+        return pipeline
     }
 
     private applyFieldFilter(field: string, value: any, pipeline: any[]) {
-        if (!value) return;
+        if (!value) return
 
         switch (field) {
             case "keyword":
@@ -122,14 +121,14 @@ export class FilteringService {
                         },
                     },
                     {$match: {score: {$gte: this.MIN_SEARCH_SCORE}}}
-                );
-                break;
+                )
+                break
             case "auction":
-                pipeline.push({$match: {auction: value}});
-                break;
+                pipeline.push({$match: {auction: value}})
+                break
             case "categories":
-                pipeline.push({$match: {category: {$in: value}}});
-                break;
+                pipeline.push({$match: {category: {$in: value}}})
+                break
             case "dateGte":
                 pipeline.push({
                     $match: {
@@ -137,19 +136,19 @@ export class FilteringService {
                             $gte: new Date(value),
                         },
                     },
-                });
-                break;
+                })
+                break
             case "priceRangeGte":
-                pipeline.push({$match: {"price.value": {$gte: value}}});
-                break;
+                pipeline.push({$match: {"price.value": {$gte: value}}})
+                break
             case "priceRangeLte":
-                pipeline.push({$match: {"price.value": {$lte: value}}});
-                break;
+                pipeline.push({$match: {"price.value": {$lte: value}}})
+                break
             case "region":
                 const regions = value
                     .split(/([., ])? /i)
                     .filter((x: string) => !!x && !new RegExp(/^,$/).test(x))
-                    .map((x: string) => x.trim());
+                    .map((x: string) => x.trim())
 
                 pipeline.push({
                     $match: {
@@ -160,13 +159,13 @@ export class FilteringService {
                             $options: "i",
                         },
                     },
-                });
-                break;
+                })
+                break
             case "origins":
-                pipeline.push({$match: {origin: {$in: value}}});
-                break;
+                pipeline.push({$match: {origin: {$in: value}}})
+                break
             default:
-                break;
+                break
         }
     }
 }
