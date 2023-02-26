@@ -25,7 +25,7 @@ export const prettyStringify = (obj: Record<any, any>) => {
     let str = "";
 
     for (const kv of Object.entries(obj)) {
-        str += `${kv[0]}=${kv[1]}`;
+        str += `${kv[0]}=${JSON.stringify(obj)}`;
         str += " ";
     }
 

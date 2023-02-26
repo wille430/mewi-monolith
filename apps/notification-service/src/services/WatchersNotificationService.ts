@@ -1,7 +1,7 @@
 import {
     ListingModel,
-    User,
     UserWatcher,
+    UserWatcherDocument,
     UserWatcherModel,
     Watcher,
     WatcherMetadata,
@@ -13,6 +13,7 @@ import {EJSON} from "bson";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
 import * as winston from "winston";
 import {prettyStringify} from "@mewi/utilities";
+import {isDocument} from "@typegoose/typegoose";
 
 export class WatchersNotificationService {
     private readonly config = {
@@ -74,9 +75,9 @@ export class WatchersNotificationService {
     private async notifyUsers(watcher: Watcher): Promise<number> {
         let usersNotified = 0;
 
-        for await (const userWatcher of UserWatcherModel.find({watcher: watcher})
-            .populate("watcher")
-            .populate("user")) {
+        for await (const userWatcher of UserWatcherModel.find({
+            watcher: watcher,
+        })) {
             if (await this.notifyUser(userWatcher)) {
                 usersNotified++;
             }
@@ -87,26 +88,34 @@ export class WatchersNotificationService {
 
     /**
      * Notify a user of watcher
-     * @param userWatcher - {@link UserWatcher}
+     * @param userWatcher - {@link UserWatcherDocument}
      * @returns true if user was notified, else false
      */
-    private async notifyUser(userWatcher: UserWatcher): Promise<boolean> {
-        const watcher = userWatcher.watcher as Watcher;
-        const user = userWatcher.user as User;
+    private async notifyUser(userWatcher: UserWatcherDocument): Promise<boolean> {
+        await userWatcher.populate("watcher");
+        await userWatcher.populate("user");
+
+        if (!isDocument(userWatcher.user) || !isDocument(userWatcher.watcher)) {
+            throw new Error(
+                `Fields of user watcher must be populated with watcher and user.`
+            );
+        }
+
+        const {watcher, user} = userWatcher;
 
         const pipeline = this.filteringService.convertToPipeline(
             WatcherMetadata.convertToDto(watcher.metadata)
         );
         WatchersNotificationService.logger.info(
-            "notifyUser: " +
-            prettyStringify({
+            `Notifying ${user.email} of new listings if necessary`,
+            {
                 userId: user.id,
                 watcherId: watcher.id,
                 metadata: watcher.metadata,
                 aggregationPipeline: pipeline,
-            })
+            }
         );
-        const newListings = await this.getNewListings(pipeline);
+        const newListings = await this.aggregateListings(pipeline);
 
         if (
             newListings.length < this.config.notifications.minListings ||
@@ -163,8 +172,11 @@ export class WatchersNotificationService {
         };
 
         WatchersNotificationService.logger.info(
-            `Created locals for watcher with metadata ${watcher.metadata}: ` +
-            JSON.stringify(obj)
+            `Created notification email locals for watcher ${watcher.id} and ${newListings.length} new listings`,
+            {
+                ...obj,
+                listings: obj.listings.map(({id}) => id),
+            }
         );
 
         return obj;
@@ -178,7 +190,7 @@ export class WatchersNotificationService {
         );
     }
 
-    private async getNewListings(pipeline: any) {
+    private async aggregateListings(pipeline: any) {
         return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
             (arr: any) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x))
         );

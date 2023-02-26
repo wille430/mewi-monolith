@@ -41,11 +41,11 @@ export class UserWatcher extends Entity {
 }
 
 export const UserWatcherModel: ReturnModelType<typeof UserWatcher> =
-    getModelForClass(UserWatcher, {
-        schemaOptions: {
-            id: true,
-            timestamps: true,
-            toObject: {virtuals: true},
-            toJSON: {virtuals: true},
-        },
-    });
+  getModelForClass(UserWatcher, {
+    schemaOptions: {
+      id: true,
+      timestamps: true,
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  });
