@@ -20,12 +20,17 @@ const Login = () => {
                 <div className="flex-grow p-4 py-16">
                     <h3 className="mb-8 text-center text-primary">Logga in</h3>
 
-                    <EmailSignInForm/>
+                    <div className="max-w-md mx-auto space-y-6">
+                        <EmailSignInForm/>
 
-                    <Link className="google-btn w-full mt-4" href="/api/auth/google-signin">
-                        <FcGoogle/>
-                        Logga in med Google
-                    </Link>
+                        <Link
+                            className="google-btn w-full mt-4"
+                            href="/api/auth/google-signin"
+                        >
+                            <FcGoogle/>
+                            Logga in med Google
+                        </Link>
+                    </div>
                 </div>
                 <CreateAccountInformation/>
             </section>

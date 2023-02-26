@@ -37,7 +37,7 @@ export const EmailSignInForm = () => {
   return (
     <Formik initialValues={initialValues as EmailSignInDto} onSubmit={onSubmit}>
       {({ errors, isSubmitting }) => (
-        <Form className="form">
+        <Form className="flex flex-col space-y-8">
           <div className="w-full">
             <Field
               id="email"
@@ -69,20 +69,23 @@ export const EmailSignInForm = () => {
           {errors.password && (
             <span className="text-red-400">{errors.password}</span>
           )}
-          <div className="btn-group">
+
+          <div className="flex flex-col">
             <Button
               type="submit"
               data-testid="formSubmitButton"
               disabled={isSubmitting}
-              className="flex-grow md:flex-none"
+              className="btn-lg"
             >
               Logga in
             </Button>
-            <Link href="/nyttkonto">
-              <Button className="flex-grow md:flex-none btn-outlined">
-                Nytt konto
-              </Button>
-            </Link>
+
+            <span className="mt-0.5 text-muted">
+              Har du inget konto?{" "}
+              <Link href="/nyttkonto" className="underline">
+                Skapa ett här
+              </Link>
+            </span>
           </div>
         </Form>
       )}

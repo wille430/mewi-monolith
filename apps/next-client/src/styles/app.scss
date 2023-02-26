@@ -106,7 +106,8 @@ $layout-width: theme('screens.lg');
   }
 
   .google-btn {
-    @apply border-2 border-gray-200 bg-white btn btn-lg text-gray-700 center-y;
+    @apply border-2 border-gray-200 bg-white btn btn-lg text-gray-700 center-y center-x
+            hover:bg-gray-100;
 
     // icon
     & > svg {
