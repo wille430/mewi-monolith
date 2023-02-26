@@ -141,7 +141,7 @@ export class WatchersNotificationService {
         WatchersNotificationService.logger.info(
             `Updated user watcher (id=${
                 userWatcher.id
-            }). From notifiedAt ${oldNotifiedAt.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
+            }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
         );
 
         return true;
