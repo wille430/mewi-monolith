@@ -1,5 +1,7 @@
 import {
+    Listing,
     ListingModel,
+    User,
     UserWatcher,
     UserWatcherDocument,
     UserWatcherModel,
@@ -8,8 +10,7 @@ import {
     WatcherModel,
 } from "@mewi/entities";
 import {FilteringService} from "@mewi/business";
-import {EmailTemplate} from "@mewi/models";
-import {EJSON} from "bson";
+import {EmailTemplate, ListingDto} from "@mewi/models";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
 import * as winston from "winston";
 import {isDocument} from "@typegoose/typegoose";
@@ -102,20 +103,20 @@ export class WatchersNotificationService {
 
         const {watcher, user} = userWatcher;
 
-        const pipeline = this.filteringService.convertToPipeline(
-            WatcherMetadata.convertToDto(watcher.metadata)
-        );
+        const metadata = WatcherMetadata.convertToDto(watcher.metadata);
+        const pipeline = this.filteringService.convertToPipeline(metadata);
+
         WatchersNotificationService.logger.info(
             `Notifying ${user.email} of new listings if necessary`,
             {
                 userId: user.id,
                 watcherId: watcher.id,
-                metadata: watcher.metadata,
+                metadata: metadata,
                 aggregationPipeline: pipeline,
             }
         );
-        const newListings = await this.aggregateListings(pipeline);
 
+        const newListings = await this.aggregateListings(pipeline);
         if (
             newListings.length < this.config.notifications.minListings ||
             !(await this.shouldNotifyUser(userWatcher))
@@ -123,18 +124,10 @@ export class WatchersNotificationService {
             return false;
         }
 
-        const locals = await this.getNotificationEmailLocals(watcher, newListings);
-
-        const sendEmailDto = new SendEmailDto();
-        sendEmailDto.userId = user.id;
-        sendEmailDto.locals = locals;
-        sendEmailDto.userEmail = user.email;
-        sendEmailDto.subject = "Nya begagnade annonser";
-        sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
-        await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
+        await this.sendNotificationEmail(user, watcher, pipeline, newListings);
 
         // Update notifiedAt property of user watcher
-        let oldNotifiedAt = userWatcher.notifiedAt;
+        const oldNotifiedAt = userWatcher.notifiedAt;
         userWatcher.notifiedAt = new Date();
         await userWatcher.save();
 
@@ -147,16 +140,32 @@ export class WatchersNotificationService {
         return true;
     }
 
+    private async sendNotificationEmail(
+        user: User,
+        watcher: Watcher,
+        pipeline: any,
+        newListings: ListingDto[]
+    ) {
+        const emailLocals = await this.getNotificationEmailLocals(
+            watcher,
+            pipeline,
+            newListings
+        );
+        const sendEmailDto = this.createEmailDto(user, emailLocals);
+        await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
+    }
+
     private async getNotificationEmailLocals(
         watcher: Watcher,
+        pipeline: any[],
         newListings: any[]
     ) {
         const listingCount = await ListingModel.aggregate([
-            ...this.filteringService.convertToPipeline(watcher.metadata as any),
+            ...pipeline,
             {$count: "totalHits"},
         ]).then((res) => (res as any)[0]?.totalHits ?? 0);
 
-        const obj = {
+        const locals = {
             listingCount,
             filters: watcher.metadata,
             listings: newListings,
@@ -165,12 +174,12 @@ export class WatchersNotificationService {
         WatchersNotificationService.logger.info(
             `Created notification email locals for watcher ${watcher.id} and ${newListings.length} new listings`,
             {
-                ...obj,
-                listings: obj.listings.map(({id}) => id),
+                ...locals,
+                listings: locals.listings.map(({id}) => id),
             }
         );
 
-        return obj;
+        return locals;
     }
 
     private async shouldNotifyUser(userWatcher: UserWatcher) {
@@ -183,7 +192,19 @@ export class WatchersNotificationService {
 
     private async aggregateListings(pipeline: any) {
         return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
-            (arr: any) => (arr as unknown as any[]).map((x) => EJSON.deserialize(x))
+            (arr: any) =>
+                (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
         );
+    }
+
+    private createEmailDto(user: User, locals: any) {
+        const sendEmailDto = new SendEmailDto();
+        sendEmailDto.userId = user.id;
+        sendEmailDto.locals = locals;
+        sendEmailDto.userEmail = user.email;
+        sendEmailDto.subject = "Nya begagnade annonser";
+        sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
+
+        return sendEmailDto;
     }
 }
