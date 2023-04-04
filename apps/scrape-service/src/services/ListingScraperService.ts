@@ -13,8 +13,9 @@ import {TraderaScraper} from "../scrapers/Tradera/TraderaScraper";
 import {Scraper} from "../scrapers/Scraper";
 import {floor} from "lodash";
 import {ScrapeQtyService} from "./ScrapeQtyService";
-import {inject} from "tsyringe";
+import {autoInjectable, inject} from "tsyringe"
 
+@autoInjectable()
 export class ListingScraperService {
     // 14 days
     private DELETE_OLDER_THAN = 14 * 24 * 60 * 60 * 1000;
