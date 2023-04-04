@@ -104,7 +104,14 @@ export class WatchersNotificationService {
         const {watcher, user} = userWatcher;
 
         const metadata = WatcherMetadata.convertToDto(watcher.metadata);
-        const pipeline = this.filteringService.convertToPipeline(metadata);
+        const pipeline = this.filteringService.convertToPipeline({
+            ...metadata,
+            dateGte:
+                userWatcher.notifiedAt ??
+                userWatcher.updatedAt ??
+                userWatcher.createdAt ??
+                undefined,
+        });
 
         WatchersNotificationService.logger.info(
             `Notifying ${user.email} of new listings if necessary`,
