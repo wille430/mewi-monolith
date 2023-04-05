@@ -1,217 +1,232 @@
 import {
-    Listing,
-    ListingModel,
-    User,
-    UserWatcher,
-    UserWatcherDocument,
-    UserWatcherModel,
-    Watcher,
-    WatcherMetadata,
-    WatcherModel,
+  Listing,
+  ListingModel,
+  User,
+  UserWatcher,
+  UserWatcherDocument,
+  UserWatcherModel,
+  Watcher,
+  WatcherMetadata,
+  WatcherModel,
 } from "@mewi/entities";
 import {FilteringService} from "@mewi/business";
-import {EmailTemplate, ListingDto} from "@mewi/models";
+import {EmailTemplate, ListingDto, ListingSort} from "@mewi/models";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
 import * as winston from "winston";
 import {isDocument} from "@typegoose/typegoose";
 
 export class WatchersNotificationService {
-    private readonly config = {
-        notifications: {
-            interval:
-                process.env.NODE_ENV === "development" ? 0 : 2.5 * 24 * 60 * 60 * 1000,
-            listingsToShow: 7,
-            minListings: 1,
-        },
-    };
+  private readonly config = {
+    notifications: {
+      interval:
+          process.env.NODE_ENV === "development" ? 0 : 2.5 * 24 * 60 * 60 * 1000,
+      listingsToShow: 7,
+      minListings: 1,
+    },
+  };
 
-    private static readonly logger = winston.createLogger({
-        level: "info",
-        format: winston.format.json(),
-        defaultMeta: {service: "WatcherNotificationService"},
-        transports: [
-            new winston.transports.File({filename: "error.log", level: "error"}),
-            new winston.transports.File({filename: "combined.log"}),
-            new winston.transports.Console({
-                format: winston.format.simple(),
-            }),
-        ],
+  private static readonly logger = winston.createLogger({
+    level: "info",
+    format: winston.format.json(),
+    defaultMeta: {service: "WatcherNotificationService"},
+    transports: [
+      new winston.transports.File({filename: "error.log", level: "error"}),
+      new winston.transports.File({filename: "combined.log"}),
+      new winston.transports.Console({
+        format: winston.format.simple(),
+      }),
+    ],
+  });
+
+  private readonly filteringService: FilteringService;
+  private readonly messageBroker: MessageBroker;
+
+  constructor(
+      filteringService: FilteringService,
+      messageBroker: MessageBroker
+  ) {
+    this.filteringService = filteringService;
+    this.messageBroker = messageBroker;
+  }
+
+  public async notifyAll(): Promise<void> {
+    let usersNotified = 0;
+    const start = Date.now();
+    /**
+     * Streaming query results to reduce memory usage potentially (?)
+     */
+    for await (const watcher of WatcherModel.find()) {
+      usersNotified += await this.notifyUsers(watcher);
+    }
+
+    const elapsedTime = (Date.now() - start) / 1000;
+    WatchersNotificationService.logger.log({
+      level: "info",
+      message: `Notified ${usersNotified} users after ${elapsedTime}s`,
+    });
+  }
+
+  /**
+   * Notify all users that subscribes to a watcher
+   * @param watcher - {@link Watcher}
+   * @private
+   * @return number - number of users that were notified
+   */
+  private async notifyUsers(watcher: Watcher): Promise<number> {
+    let usersNotified = 0;
+
+    const filters = WatcherMetadata.convertToDto(watcher.metadata);
+    const resultPipeline = this.filteringService.convertToPipeline({
+      ...filters,
+      sort: ListingSort.DATE_DESC,
+      limit: this.config.notifications.listingsToShow,
     });
 
-    private readonly filteringService: FilteringService;
-    private readonly messageBroker: MessageBroker;
+    const pipeline = this.filteringService.convertToPipeline(filters);
+    const totalHitsCount = await ListingModel.aggregate([
+      ...pipeline,
+      {$count: "totalHits"},
+    ]).then((res) => (res as any)[0]?.totalHits ?? 0);
 
-    constructor(
-        filteringService: FilteringService,
-        messageBroker: MessageBroker
+    const listings = await this.aggregateListings(resultPipeline);
+
+    for await (const userWatcher of UserWatcherModel.find({
+      watcher: watcher,
+    })) {
+      if (await this.notifyUser(userWatcher, listings, totalHitsCount)) {
+        usersNotified++;
+      }
+    }
+
+    return usersNotified;
+  }
+
+  /**
+   * Notify a user of watcher
+   * @param userWatcher {@link UserWatcherDocument}
+   * @param listings {@link ListingDo}
+   * @param listingCount Total hits
+   * @returns true if user was notified, else false
+   */
+  private async notifyUser(
+      userWatcher: UserWatcherDocument,
+      listings: ListingDto[],
+      listingCount: number
+  ): Promise<boolean> {
+    await userWatcher.populate("watcher");
+    await userWatcher.populate("user");
+
+    if (!isDocument(userWatcher.user) || !isDocument(userWatcher.watcher)) {
+      throw new Error(
+          `Fields of user watcher must be populated with watcher and user.`
+      );
+    }
+
+    const {watcher, user} = userWatcher;
+
+    const metadata = WatcherMetadata.convertToDto(watcher.metadata);
+    WatchersNotificationService.logger.info(
+        `Notifying ${user.email} of new listings if necessary`,
+        {
+          userId: user.id,
+          watcherId: watcher.id,
+          metadata: metadata,
+        }
+    );
+
+    const filterByDate =
+        userWatcher.notifiedAt ??
+        userWatcher.updatedAt ??
+        userWatcher.createdAt ??
+        undefined;
+    let newListings = listings;
+    if (filterByDate) {
+      newListings = listings.filter((o) => o.date > filterByDate);
+    }
+
+    if (
+        newListings.length < this.config.notifications.minListings ||
+        !(await this.shouldNotifyUser(userWatcher))
     ) {
-        this.filteringService = filteringService;
-        this.messageBroker = messageBroker;
+      return false;
     }
 
-    public async notifyAll(): Promise<void> {
-        let usersNotified = 0;
-        const start = Date.now();
-        /**
-         * Streaming query results to reduce memory usage potentially (?)
-         */
-        for await (const watcher of WatcherModel.find()) {
-            usersNotified += await this.notifyUsers(watcher);
+    await this.sendNotificationEmail(user, watcher, listingCount, newListings);
+
+    // Update notifiedAt property of user watcher
+    const oldNotifiedAt = userWatcher.notifiedAt;
+    userWatcher.notifiedAt = new Date();
+    await userWatcher.save();
+
+    WatchersNotificationService.logger.info(
+        `Updated user watcher (id=${
+            userWatcher.id
+        }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
+    );
+
+    return true;
+  }
+
+  private async sendNotificationEmail(
+      user: User,
+      watcher: Watcher,
+      listingCount: number,
+      newListings: ListingDto[]
+  ) {
+    const emailLocals = await this.getNotificationEmailLocals(
+        watcher,
+        listingCount,
+        newListings
+    );
+    const sendEmailDto = this.createEmailDto(user, emailLocals);
+    await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
+  }
+
+  private async getNotificationEmailLocals(
+      watcher: Watcher,
+      listingCount: number,
+      newListings: any[]
+  ) {
+    const locals = {
+      listingCount,
+      filters: watcher.metadata,
+      listings: newListings,
+    };
+
+    WatchersNotificationService.logger.info(
+        `Created notification email locals for watcher ${watcher.id} and ${newListings.length} new listings`,
+        {
+          ...locals,
+          listings: locals.listings.map(({id}) => id),
         }
+    );
 
-        const elapsedTime = (Date.now() - start) / 1000;
-        WatchersNotificationService.logger.log({
-            level: "info",
-            message: `Notified ${usersNotified} users after ${elapsedTime}s`,
-        });
-    }
+    return locals;
+  }
 
-    /**
-     * Notify all users that subscribes to a watcher
-     * @param watcher - {@link Watcher}
-     * @private
-     * @return number - number of users that were notified
-     */
-    private async notifyUsers(watcher: Watcher): Promise<number> {
-        let usersNotified = 0;
+  private async shouldNotifyUser(userWatcher: UserWatcher) {
+    return (
+        Date.now() -
+        new Date(userWatcher.notifiedAt ?? userWatcher.createdAt).getTime() >=
+        this.config.notifications.interval
+    );
+  }
 
-        for await (const userWatcher of UserWatcherModel.find({
-            watcher: watcher,
-        })) {
-            if (await this.notifyUser(userWatcher)) {
-                usersNotified++;
-            }
-        }
+  private async aggregateListings(pipeline: any) {
+    return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
+        (arr: any) =>
+            (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
+    );
+  }
 
-        return usersNotified;
-    }
+  private createEmailDto(user: User, locals: any) {
+    const sendEmailDto = new SendEmailDto();
+    sendEmailDto.userId = user.id;
+    sendEmailDto.locals = locals;
+    sendEmailDto.userEmail = user.email;
+    sendEmailDto.subject = "Nya begagnade annonser";
+    sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
 
-    /**
-     * Notify a user of watcher
-     * @param userWatcher - {@link UserWatcherDocument}
-     * @returns true if user was notified, else false
-     */
-    private async notifyUser(userWatcher: UserWatcherDocument): Promise<boolean> {
-        await userWatcher.populate("watcher");
-        await userWatcher.populate("user");
-
-        if (!isDocument(userWatcher.user) || !isDocument(userWatcher.watcher)) {
-            throw new Error(
-                `Fields of user watcher must be populated with watcher and user.`
-            );
-        }
-
-        const {watcher, user} = userWatcher;
-
-        const metadata = WatcherMetadata.convertToDto(watcher.metadata);
-        const pipeline = this.filteringService.convertToPipeline({
-            ...metadata,
-            dateGte:
-                userWatcher.notifiedAt ??
-                userWatcher.updatedAt ??
-                userWatcher.createdAt ??
-                undefined,
-        });
-
-        WatchersNotificationService.logger.info(
-            `Notifying ${user.email} of new listings if necessary`,
-            {
-                userId: user.id,
-                watcherId: watcher.id,
-                metadata: metadata,
-                aggregationPipeline: pipeline,
-            }
-        );
-
-        const newListings = await this.aggregateListings(pipeline);
-        if (
-            newListings.length < this.config.notifications.minListings ||
-            !(await this.shouldNotifyUser(userWatcher))
-        ) {
-            return false;
-        }
-
-        await this.sendNotificationEmail(user, watcher, pipeline, newListings);
-
-        // Update notifiedAt property of user watcher
-        const oldNotifiedAt = userWatcher.notifiedAt;
-        userWatcher.notifiedAt = new Date();
-        await userWatcher.save();
-
-        WatchersNotificationService.logger.info(
-            `Updated user watcher (id=${
-                userWatcher.id
-            }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
-        );
-
-        return true;
-    }
-
-    private async sendNotificationEmail(
-        user: User,
-        watcher: Watcher,
-        pipeline: any,
-        newListings: ListingDto[]
-    ) {
-        const emailLocals = await this.getNotificationEmailLocals(
-            watcher,
-            pipeline,
-            newListings
-        );
-        const sendEmailDto = this.createEmailDto(user, emailLocals);
-        await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
-    }
-
-    private async getNotificationEmailLocals(
-        watcher: Watcher,
-        pipeline: any[],
-        newListings: any[]
-    ) {
-        const listingCount = await ListingModel.aggregate([
-            ...pipeline,
-            {$count: "totalHits"},
-        ]).then((res) => (res as any)[0]?.totalHits ?? 0);
-
-        const locals = {
-            listingCount,
-            filters: watcher.metadata,
-            listings: newListings,
-        };
-
-        WatchersNotificationService.logger.info(
-            `Created notification email locals for watcher ${watcher.id} and ${newListings.length} new listings`,
-            {
-                ...locals,
-                listings: locals.listings.map(({id}) => id),
-            }
-        );
-
-        return locals;
-    }
-
-    private async shouldNotifyUser(userWatcher: UserWatcher) {
-        return (
-            Date.now() -
-            new Date(userWatcher.notifiedAt ?? userWatcher.createdAt).getTime() >=
-            this.config.notifications.interval
-        );
-    }
-
-    private async aggregateListings(pipeline: any) {
-        return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
-            (arr: any) =>
-                (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
-        );
-    }
-
-    private createEmailDto(user: User, locals: any) {
-        const sendEmailDto = new SendEmailDto();
-        sendEmailDto.userId = user.id;
-        sendEmailDto.locals = locals;
-        sendEmailDto.userEmail = user.email;
-        sendEmailDto.subject = "Nya begagnade annonser";
-        sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
-
-        return sendEmailDto;
-    }
+    return sendEmailDto;
+  }
 }
