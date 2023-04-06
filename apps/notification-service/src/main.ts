@@ -18,7 +18,9 @@ const startup = async () => {
     });
     const watchersNotificationService = new WatchersNotifService(
         new FilteringService(logger),
-        new NotifFactory()
+        new NotifFactory(
+            new MessageBroker(process.env.MQ_CONNECTION_STRING)
+        )
     );
 
     await mb.consume<SendEmailDto>(MQQueues.NotifyWatchers, async (_) => {

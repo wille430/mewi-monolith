@@ -12,6 +12,7 @@ import { userStub } from "./stubs/userStub";
 import { userWatcherStub } from "./stubs/userWatcherStub";
 import { listingStub } from "./stubs/listingStub,ts";
 import { NotifFactory } from "../NotifFactory";
+import { MessageBroker } from "@mewi/mqlib";
 
 vi.mock("@typegoose/typegoose", async () => {
   const actual: any = await vi.importActual("@typegoose/typegoose");
@@ -28,7 +29,9 @@ describe("WatchersNotificationService", () => {
 
   beforeEach(() => {
     filteringService = new FilteringService();
-    notifFactory = new NotifFactory();
+    notifFactory = new NotifFactory(
+      new MessageBroker(process.env.MQ_CONNECTION_STRING)
+    );
 
     WatcherModel.find = vi.fn().mockImplementation(() => [watcherStub()]);
     UserModel.find = vi.fn().mockResolvedValue([userStub()]);
