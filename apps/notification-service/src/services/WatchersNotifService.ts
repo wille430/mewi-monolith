@@ -142,7 +142,7 @@ export class WatchersNotifService {
           `${user.email} should not be notified.`,
           {
             tooFewListings,
-            tooSoon: shouldNotify,
+            tooSoon: !shouldNotify,
           }
       );
       return false;
