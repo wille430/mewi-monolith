@@ -158,9 +158,15 @@ export class WatchersNotifService {
     );
     try {
       await notification.send();
-    } catch (e) {
+    } catch (e: any) {
+
+      let msg = e;
+      if (e instanceof Error) {
+        msg = e.message
+      }
+
       WatchersNotifService.logger.error("Failed to send notification", {
-        error: e,
+        error: msg,
       });
       return false;
     }
