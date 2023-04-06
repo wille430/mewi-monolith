@@ -75,7 +75,6 @@ export class FilteringService {
     ): any[] {
         for (const kv of Object.entries(dto)) {
             const [key, value] = kv
-            this.logger?.info(`Applying filter ${key}=${value}`)
             this.applyFieldFilter(key, value, pipeline)
         }
 
