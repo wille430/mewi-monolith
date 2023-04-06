@@ -34,6 +34,7 @@ export class MailNotification implements WatcherNotifStrategy {
     }
 
     this.user = userWatcher.user;
+    this.userWatcher = userWatcher;
     this.totalListings = totalListings;
     this.listings = listings;
   }
