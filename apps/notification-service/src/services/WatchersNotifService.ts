@@ -13,17 +13,9 @@ import {ListingDto, ListingSort} from "@mewi/models";
 import * as winston from "winston";
 import {isDocument} from "@typegoose/typegoose";
 import {NotifFactory} from "./NotifFactory";
+import {WatcherNotificationConfig} from "./WatcherNotificationConfig"
 
 export class WatchersNotifService {
-  private readonly config = {
-    notifications: {
-      interval:
-          process.env.NODE_ENV === "development" ? 0 : 2.5 * 24 * 60 * 60 * 1000,
-      listingsToShow: 7,
-      minListings: 1,
-    },
-  };
-
   private static readonly logger = winston.createLogger({
     level: "info",
     format: winston.format.json(),
@@ -39,10 +31,12 @@ export class WatchersNotifService {
 
   private readonly filteringService: FilteringService;
   private readonly notifFactory: NotifFactory;
+  private readonly config: WatcherNotificationConfig;
 
-  constructor(filteringService: FilteringService, notifFactory: NotifFactory) {
+  constructor(filteringService: FilteringService, notifFactory: NotifFactory, config: WatcherNotificationConfig = new WatcherNotificationConfig()) {
     this.filteringService = filteringService;
     this.notifFactory = notifFactory;
+    this.config = config
   }
 
   public async notifyAll(): Promise<void> {
@@ -75,7 +69,7 @@ export class WatchersNotifService {
     const resultPipeline = this.filteringService.convertToPipeline({
       ...filters,
       sort: ListingSort.DATE_DESC,
-      limit: this.config.notifications.listingsToShow,
+      limit: this.config.maxListings,
     });
 
     const pipeline = this.filteringService.convertToPipeline(filters);
@@ -141,7 +135,7 @@ export class WatchersNotifService {
     }
 
     const tooFewListings =
-        newListings.length < this.config.notifications.minListings;
+        newListings.length < this.config.minListings;
     const shouldNotify = await this.shouldNotifyUser(userWatcher);
     if (tooFewListings || !shouldNotify) {
       WatchersNotifService.logger.info(
@@ -191,7 +185,7 @@ export class WatchersNotifService {
     return (
         Date.now() -
         new Date(userWatcher.notifiedAt ?? userWatcher.createdAt).getTime() >=
-        this.config.notifications.interval
+        this.config.notifInterval
     );
   }
 
