@@ -13,7 +13,7 @@ import {ListingDto, ListingSort} from "@mewi/models";
 import * as winston from "winston";
 import {isDocument} from "@typegoose/typegoose";
 import {NotifFactory} from "./NotifFactory";
-import {WatcherNotificationConfig} from "./WatcherNotificationConfig"
+import {WatcherNotificationConfig} from "./WatcherNotificationConfig";
 
 export class WatchersNotifService {
   private static readonly logger = winston.createLogger({
@@ -33,10 +33,14 @@ export class WatchersNotifService {
   private readonly notifFactory: NotifFactory;
   private readonly config: WatcherNotificationConfig;
 
-  constructor(filteringService: FilteringService, notifFactory: NotifFactory, config: WatcherNotificationConfig = new WatcherNotificationConfig()) {
+  constructor(
+      filteringService: FilteringService,
+      notifFactory: NotifFactory,
+      config: WatcherNotificationConfig = new WatcherNotificationConfig()
+  ) {
     this.filteringService = filteringService;
     this.notifFactory = notifFactory;
-    this.config = config
+    this.config = config;
   }
 
   public async notifyAll(): Promise<void> {
@@ -134,8 +138,7 @@ export class WatchersNotifService {
       newListings = listings.filter((o) => o.date > filterByDate);
     }
 
-    const tooFewListings =
-        newListings.length < this.config.minListings;
+    const tooFewListings = newListings.length < this.config.minListings;
     const shouldNotify = await this.shouldNotifyUser(userWatcher);
     if (tooFewListings || !shouldNotify) {
       WatchersNotifService.logger.info(

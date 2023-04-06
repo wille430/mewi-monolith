@@ -43,10 +43,16 @@ export class MailNotification implements WatcherNotifStrategy {
       throw new Error("Email has already been sent!");
     }
 
-    await this.messageBroker.sendMessage(
-      MQQueues.SendEmail,
-      this.createSendEmailDto()
-    );
+    try {
+      await this.messageBroker.sendMessage(
+        MQQueues.SendEmail,
+        this.createSendEmailDto()
+      );
+    } catch (e) {
+      throw new Error(
+        `Could not send message to ${MQQueues.SendEmail} message queue. Reason: ${e}`
+      );
+    }
 
     this.hasSent = true;
   }

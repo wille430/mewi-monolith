@@ -1,3 +1,5 @@
+import { UserWatcher } from "@mewi/entities";
+
 export class WatcherNotificationConfig {
   private static readonly TWO_AND_A_HALF_DAYS = 2.5 * 24 * 60 * 60 * 1000;
   /**
