@@ -1,9 +1,10 @@
 import * as dotenv from "dotenv";
 import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
-import {WatchersNotificationService} from "./services/WatchersNotificationService";
+import {WatchersNotifService} from "./services/WatchersNotifService";
 import {connectMongoose} from "./dbConnection";
 import {FilteringService} from "@mewi/business";
 import * as winston from "winston";
+import {NotifFactory} from "./services/NotifFactory";
 
 const startup = async () => {
     dotenv.config();
@@ -15,9 +16,9 @@ const startup = async () => {
         level: "info",
         transports: [new winston.transports.Console()],
     });
-    const watchersNotificationService = new WatchersNotificationService(
+    const watchersNotificationService = new WatchersNotifService(
         new FilteringService(logger),
-        new MessageBroker(process.env.MQ_CONNECTION_STRING)
+        new NotifFactory()
     );
 
     await mb.consume<SendEmailDto>(MQQueues.NotifyWatchers, async (_) => {

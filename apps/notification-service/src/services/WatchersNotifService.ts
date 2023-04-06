@@ -1,7 +1,6 @@
 import {
   Listing,
   ListingModel,
-  User,
   UserWatcher,
   UserWatcherDocument,
   UserWatcherModel,
@@ -10,12 +9,12 @@ import {
   WatcherModel,
 } from "@mewi/entities";
 import {FilteringService} from "@mewi/business";
-import {EmailTemplate, ListingDto, ListingSort} from "@mewi/models";
-import {MessageBroker, MQQueues, SendEmailDto} from "@mewi/mqlib";
+import {ListingDto, ListingSort} from "@mewi/models";
 import * as winston from "winston";
 import {isDocument} from "@typegoose/typegoose";
+import {NotifFactory} from "./NotifFactory";
 
-export class WatchersNotificationService {
+export class WatchersNotifService {
   private readonly config = {
     notifications: {
       interval:
@@ -39,14 +38,11 @@ export class WatchersNotificationService {
   });
 
   private readonly filteringService: FilteringService;
-  private readonly messageBroker: MessageBroker;
+  private readonly notifFactory: NotifFactory;
 
-  constructor(
-      filteringService: FilteringService,
-      messageBroker: MessageBroker
-  ) {
+  constructor(filteringService: FilteringService, notifFactory: NotifFactory) {
     this.filteringService = filteringService;
-    this.messageBroker = messageBroker;
+    this.notifFactory = notifFactory;
   }
 
   public async notifyAll(): Promise<void> {
@@ -60,7 +56,7 @@ export class WatchersNotificationService {
     }
 
     const elapsedTime = (Date.now() - start) / 1000;
-    WatchersNotificationService.logger.log({
+    WatchersNotifService.logger.log({
       level: "info",
       message: `Notified ${usersNotified} users after ${elapsedTime}s`,
     });
@@ -125,7 +121,7 @@ export class WatchersNotificationService {
     const {watcher, user} = userWatcher;
 
     const metadata = WatcherMetadata.convertToDto(watcher.metadata);
-    WatchersNotificationService.logger.info(
+    WatchersNotifService.logger.info(
         `Notifying ${user.email} of new listings if necessary`,
         {
           userId: user.id,
@@ -144,64 +140,51 @@ export class WatchersNotificationService {
       newListings = listings.filter((o) => o.date > filterByDate);
     }
 
-    if (
-        newListings.length < this.config.notifications.minListings ||
-        !(await this.shouldNotifyUser(userWatcher))
-    ) {
+    const tooFewListings =
+        newListings.length < this.config.notifications.minListings;
+    const shouldNotify = await this.shouldNotifyUser(userWatcher);
+    if (tooFewListings || !shouldNotify) {
+      WatchersNotifService.logger.info(
+          `${user.email} should not be notified.`,
+          {
+            tooFewListings,
+            tooSoon: shouldNotify,
+          }
+      );
       return false;
     }
 
-    await this.sendNotificationEmail(user, watcher, listingCount, newListings);
+    const notification = this.notifFactory.createNotif(
+        userWatcher,
+        newListings,
+        listingCount
+    );
+    try {
+      await notification.send();
+    } catch (e) {
+      WatchersNotifService.logger.error("Failed to send notification", {
+        error: e,
+      });
+      return false;
+    }
+
+    WatchersNotifService.logger.info("User notified", {
+      userId: user.id,
+      userWatcherId: userWatcher.id,
+    });
 
     // Update notifiedAt property of user watcher
     const oldNotifiedAt = userWatcher.notifiedAt;
     userWatcher.notifiedAt = new Date();
     await userWatcher.save();
 
-    WatchersNotificationService.logger.info(
+    WatchersNotifService.logger.info(
         `Updated user watcher (id=${
             userWatcher.id
         }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
     );
 
     return true;
-  }
-
-  private async sendNotificationEmail(
-      user: User,
-      watcher: Watcher,
-      listingCount: number,
-      newListings: ListingDto[]
-  ) {
-    const emailLocals = await this.getNotificationEmailLocals(
-        watcher,
-        listingCount,
-        newListings
-    );
-    const sendEmailDto = this.createEmailDto(user, emailLocals);
-    await this.messageBroker.sendMessage(MQQueues.SendEmail, sendEmailDto);
-  }
-
-  private async getNotificationEmailLocals(
-      watcher: Watcher,
-      listingCount: number,
-      newListings: any[]
-  ) {
-    const locals = {
-      listingCount,
-      filters: watcher.metadata,
-      listings: newListings,
-    };
-
-    WatchersNotificationService.logger.info(
-        `Created notification email locals for watcher ${watcher.id} and ${newListings.length} new listings`,
-        {
-          ...locals,
-          listings: locals.listings.map(({id}) => id),
-        }
-    );
-
-    return locals;
   }
 
   private async shouldNotifyUser(userWatcher: UserWatcher) {
@@ -217,16 +200,5 @@ export class WatchersNotificationService {
         (arr: any) =>
             (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
     );
-  }
-
-  private createEmailDto(user: User, locals: any) {
-    const sendEmailDto = new SendEmailDto();
-    sendEmailDto.userId = user.id;
-    sendEmailDto.locals = locals;
-    sendEmailDto.userEmail = user.email;
-    sendEmailDto.subject = "Nya begagnade annonser";
-    sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
-
-    return sendEmailDto;
   }
 }

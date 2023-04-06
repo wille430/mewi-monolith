@@ -1,6 +1,5 @@
-import { WatchersNotificationService } from "../WatchersNotificationService";
+import { WatchersNotifService } from "../WatchersNotifService";
 import { FilteringService } from "@mewi/business";
-import { MessageBroker, MQQueues } from "@mewi/mqlib";
 import {
   ListingModel,
   UserModel,
@@ -12,7 +11,7 @@ import { watcherStub } from "./stubs/watcherStub";
 import { userStub } from "./stubs/userStub";
 import { userWatcherStub } from "./stubs/userWatcherStub";
 import { listingStub } from "./stubs/listingStub,ts";
-import { EmailTemplate } from "@mewi/models";
+import { NotifFactory } from "../NotifFactory";
 
 vi.mock("@typegoose/typegoose", async () => {
   const actual: any = await vi.importActual("@typegoose/typegoose");
@@ -23,13 +22,13 @@ vi.mock("@typegoose/typegoose", async () => {
 });
 
 describe("WatchersNotificationService", () => {
-  let watchersNotificationService: WatchersNotificationService;
+  let watchersNotificationService: WatchersNotifService;
   let filteringService: FilteringService;
-  let messageBroker: MessageBroker;
+  let notifFactory: NotifFactory;
 
   beforeEach(() => {
-    messageBroker = new MessageBroker("https://localhost:5000");
     filteringService = new FilteringService();
+    notifFactory = new NotifFactory();
 
     WatcherModel.find = vi.fn().mockImplementation(() => [watcherStub()]);
     UserModel.find = vi.fn().mockResolvedValue([userStub()]);
@@ -47,11 +46,13 @@ describe("WatchersNotificationService", () => {
       .fn()
       .mockResolvedValue(new Array(10).fill(null).map(listingStub));
 
-    messageBroker.sendMessage = vi.fn();
+    notifFactory.createNotif = vi.fn().mockReturnValue({
+      send: vi.fn(),
+    });
 
-    watchersNotificationService = new WatchersNotificationService(
+    watchersNotificationService = new WatchersNotifService(
       filteringService,
-      messageBroker
+      notifFactory
     );
   });
 
@@ -77,21 +78,8 @@ describe("WatchersNotificationService", () => {
         );
       });
 
-      it("then message broker should be called", () => {
-        expect(messageBroker.sendMessage).toHaveBeenCalledOnce();
-        expect(messageBroker.sendMessage).toHaveBeenCalledWith(
-          MQQueues.SendEmail,
-          expect.objectContaining({
-            emailTemplate: EmailTemplate.NEW_ITEMS,
-            locals: expect.objectContaining({
-              listingCount: expect.any(Number),
-              filters: watcherStub().metadata,
-              listings: expect.arrayContaining([
-                expect.objectContaining({ id: listingStub().id }),
-              ]),
-            }),
-          })
-        );
+      it("then notifFactory.createNotif() should have been called", () => {
+        expect(notifFactory.createNotif).toHaveBeenCalledOnce();
       });
     });
 
@@ -110,8 +98,8 @@ describe("WatchersNotificationService", () => {
         ]);
       });
 
-      it("then it should NOT send message to AMQP", () => {
-        expect(messageBroker.sendMessage).not.toHaveBeenCalled();
+      it("then it should not call notifFactory", () => {
+        expect(notifFactory.createNotif).not.toHaveBeenCalled();
       });
     });
   });
