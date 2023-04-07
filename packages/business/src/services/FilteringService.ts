@@ -78,12 +78,14 @@ export class FilteringService {
             this.applyFieldFilter(key, value, pipeline)
         }
 
+        /*
         // to reduce memory usage
         if (!dto.keyword) {
             pipeline.push({
                 $limit: 20000,
             })
         }
+        */
 
         return pipeline
     }
