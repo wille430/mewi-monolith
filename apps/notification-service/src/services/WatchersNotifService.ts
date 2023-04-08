@@ -1,7 +1,6 @@
 import {
   Listing,
   ListingModel,
-  UserWatcher,
   UserWatcherDocument,
   UserWatcherModel,
   Watcher,
@@ -127,18 +126,13 @@ export class WatchersNotifService {
         }
     );
 
-    const filterByDate =
-        userWatcher.notifiedAt ??
-        userWatcher.updatedAt ??
-        userWatcher.createdAt ??
-        undefined;
-    let newListings = listings;
-    if (filterByDate) {
-      newListings = listings.filter((o) => o.date > filterByDate);
-    }
+    const filterByDate = userWatcher.lastNotified();
+    let newListings = filterByDate
+        ? listings.filter((o) => o.date > filterByDate)
+        : listings;
 
     const tooFewListings = newListings.length < this.config.minListings;
-    const shouldNotify = await this.shouldNotifyUser(userWatcher);
+    const shouldNotify = userWatcher.shouldNotify();
     if (tooFewListings || !shouldNotify) {
       WatchersNotifService.logger.info(
           `${user.email} should not be notified.`,
@@ -186,16 +180,6 @@ export class WatchersNotifService {
     );
 
     return true;
-  }
-
-  private async shouldNotifyUser(userWatcher: UserWatcher) {
-    const notifInterval =
-        userWatcher.getNotifyIntervalMs() ?? this.config.defaultNotifInterval;
-    return (
-        Date.now() -
-        new Date(userWatcher.notifiedAt ?? userWatcher.createdAt).getTime() >=
-        notifInterval
-    );
   }
 
   private async aggregateListings(pipeline: any) {

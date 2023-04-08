@@ -70,6 +70,17 @@ export class UserWatcher extends Entity {
         return UserWatcher.WEEK_MS;
     }
   }
+
+  public lastNotified(): Date | undefined {
+    return this.notifiedAt ?? this.updatedAt ?? this.createdAt ?? undefined;
+  }
+
+  public shouldNotify(): boolean {
+    return (
+      Date.now() - new Date(this.notifiedAt ?? this.createdAt).getTime() >=
+      this.getNotifyIntervalMs()
+    );
+  }
 }
 
 export const UserWatcherModel: ReturnModelType<typeof UserWatcher> =
