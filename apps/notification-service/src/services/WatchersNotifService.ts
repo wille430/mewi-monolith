@@ -5,6 +5,7 @@ import {
   UserWatcherDocument,
   UserWatcherModel,
   Watcher,
+  WatcherDocument,
   WatcherMetadata,
   WatcherModel,
 } from "@mewi/entities";
@@ -49,7 +50,9 @@ export class WatchersNotifService {
     /**
      * Streaming query results to reduce memory usage potentially (?)
      */
-    for await (const watcher of WatcherModel.find()) {
+    const cursor = WatcherModel.find().cursor();
+    let watcher: WatcherDocument;
+    while ((watcher = await cursor.next())) {
       usersNotified += await this.notifyUsers(watcher);
     }
 
@@ -84,14 +87,13 @@ export class WatchersNotifService {
 
     const listings = await this.aggregateListings(resultPipeline);
 
-    for await (const userWatcher of UserWatcherModel.find({
-      watcher: watcher,
-    })) {
+    const cursor = UserWatcherModel.find({watcher: watcher}).cursor();
+    let userWatcher: UserWatcherDocument;
+    while ((userWatcher = await cursor.next())) {
       if (await this.notifyUser(userWatcher, listings, totalHitsCount)) {
         usersNotified++;
       }
     }
-
     return usersNotified;
   }
 
@@ -190,10 +192,12 @@ export class WatchersNotifService {
   }
 
   private async shouldNotifyUser(userWatcher: UserWatcher) {
+    const notifInterval =
+        userWatcher.getNotifyIntervalMs() ?? this.config.defaultNotifInterval;
     return (
         Date.now() -
         new Date(userWatcher.notifiedAt ?? userWatcher.createdAt).getTime() >=
-        this.config.notifInterval
+        notifInterval
     );
   }
 
