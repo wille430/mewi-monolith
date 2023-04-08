@@ -5,7 +5,6 @@ import {
   UserWatcherDocument,
   UserWatcherModel,
   Watcher,
-  WatcherDocument,
   WatcherMetadata,
   WatcherModel,
 } from "@mewi/entities";
@@ -50,9 +49,7 @@ export class WatchersNotifService {
     /**
      * Streaming query results to reduce memory usage potentially (?)
      */
-    const cursor = WatcherModel.find().cursor();
-    let watcher: WatcherDocument;
-    while ((watcher = await cursor.next())) {
+    for await (const watcher of WatcherModel.find()) {
       usersNotified += await this.notifyUsers(watcher);
     }
 
@@ -87,9 +84,9 @@ export class WatchersNotifService {
 
     const listings = await this.aggregateListings(resultPipeline);
 
-    const cursor = UserWatcherModel.find({watcher: watcher}).cursor();
-    let userWatcher: UserWatcherDocument;
-    while ((userWatcher = await cursor.next())) {
+    for await (const userWatcher of UserWatcherModel.find({
+      watcher: watcher,
+    })) {
       if (await this.notifyUser(userWatcher, listings, totalHitsCount)) {
         usersNotified++;
       }

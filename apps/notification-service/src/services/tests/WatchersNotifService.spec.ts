@@ -13,7 +13,6 @@ import { userWatcherStub } from "./stubs/userWatcherStub";
 import { listingStub } from "./stubs/listingStub,ts";
 import { NotifFactory } from "../NotifFactory";
 import { MessageBroker } from "@mewi/mqlib";
-import { CursorIterator } from "./CursorIterator";
 
 vi.mock("@typegoose/typegoose", async () => {
   const actual: any = await vi.importActual("@typegoose/typegoose");
@@ -34,19 +33,14 @@ describe("WatchersNotificationService", () => {
       new MessageBroker("https://localhost:5000")
     );
 
-    WatcherModel.find = vi.fn().mockReturnValue({
-      cursor: () => new CursorIterator([watcherStub()]),
-    });
+    WatcherModel.find = vi.fn().mockReturnValue([watcherStub()]);
     UserModel.find = vi.fn().mockResolvedValue([userStub()]);
-    UserWatcherModel.find = vi.fn().mockReturnValue({
-      cursor: () =>
-        new CursorIterator([
-          Object.assign(userWatcherStub(), {
-            populate: vi.fn(),
-            save: vi.fn(),
-          }),
-        ]),
-    });
+    UserWatcherModel.find = vi.fn().mockReturnValue([
+      Object.assign(userWatcherStub(), {
+        populate: vi.fn(),
+        save: vi.fn(),
+      }),
+    ]);
     UserWatcherModel.findOneAndUpdate = vi
       .fn()
       .mockResolvedValue(userWatcherStub());
@@ -97,15 +91,12 @@ describe("WatchersNotificationService", () => {
       });
 
       beforeEach(() => {
-        UserWatcherModel.find = vi.fn().mockReturnValue({
-          cursor: () =>
-            new CursorIterator([
-              Object.assign(userWatcherStub(), {
-                notifiedAt: currentTime,
-                populate: vi.fn(),
-              }),
-            ]),
-        });
+        UserWatcherModel.find = vi.fn().mockReturnValue([
+          Object.assign(userWatcherStub(), {
+            notifiedAt: currentTime,
+            populate: vi.fn(),
+          }),
+        ]);
       });
 
       it("then it should not call notifFactory", () => {
