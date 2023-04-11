@@ -52,7 +52,7 @@ export class TraderaConfig
 
   public static readonly baseUrl = "https://www.tradera.com/";
 
-  private category: string;
+  private readonly category: string;
 
   constructor(category: string) {
     if (category.at(0) !== "/")

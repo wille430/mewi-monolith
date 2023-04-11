@@ -47,7 +47,7 @@ export class LimitIsLessStrategy implements IFetchDoneStrategy {
 }
 
 export class NeverDoneStrategy implements IFetchDoneStrategy {
-  isDone(pagination: IPagination, result: any[]): boolean | Promise<boolean> {
+  isDone(): boolean | Promise<boolean> {
     return false;
   }
 }

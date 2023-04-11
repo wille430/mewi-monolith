@@ -7,7 +7,7 @@ import {WebScraper} from "../WebScraper";
 export class BytbilParseStrategy extends AbstractListingParseStrategy<
     Cheerio<any>
 > {
-    private baseUrl: string;
+    private readonly baseUrl: string;
 
     constructor(baseUrl: string, webScraper: WebScraper<any>) {
         super(ListingOrigin.Bytbil, webScraper);

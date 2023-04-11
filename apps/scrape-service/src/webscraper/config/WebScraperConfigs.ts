@@ -9,7 +9,7 @@ export interface IWebScraperConfig<FetchConfig> {
 export class WebScraperConfigs<
   T extends IWebScraperConfig<any> = IWebScraperConfig<any>
 > {
-  private configs: T[];
+  private readonly configs: T[];
   private selected: T;
 
   constructor(configs: T[]) {

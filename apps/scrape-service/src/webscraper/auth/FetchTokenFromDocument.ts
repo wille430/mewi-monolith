@@ -7,9 +7,9 @@ export interface IFetchAuthTokenStrategy {
 }
 
 export class FetchTokenFromDocument implements IFetchAuthTokenStrategy {
-  private querySelector: string;
-  private jsonPath: string | null;
-  private url: string;
+  private readonly querySelector: string;
+  private readonly jsonPath: string | null;
+  private readonly url: string;
 
   constructor(
     url: string,

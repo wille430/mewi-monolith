@@ -12,7 +12,7 @@ export class ListingParseStrategyWrapper<T>
   implements IParseStrategy<T, Listing>
 {
   private parseStrategy: IParseStrategy<T, Listing>;
-  private origin: ListingOrigin;
+  private readonly origin: ListingOrigin;
 
   constructor(
     parseStrategy: IParseStrategy<T, Listing>,

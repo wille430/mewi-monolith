@@ -6,7 +6,7 @@ import { set } from "lodash";
 export class NextAuthInBodyStrategy implements IAuthStrategy {
   private fetchAuthTokenStrategy: IFetchAuthTokenStrategy;
 
-  private tokenJsonPath: string;
+  private readonly tokenJsonPath: string;
 
   constructor(
     fetchAuthTokenStrategy: IFetchAuthTokenStrategy,
