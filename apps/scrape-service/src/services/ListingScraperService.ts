@@ -1,72 +1,80 @@
 import {Listing, ListingModel} from "@mewi/entities";
-import {RunScrapeDto} from "@mewi/mqlib";
+import {
+    RunScrapeDto,
+    ScrapeAllArgs,
+    ScrapeByIdArgs,
+    ScrapeByOriginArgs,
+} from "@mewi/mqlib";
 import {ListingOrigin} from "@mewi/models";
-import {BlocketScraper} from "../scrapers/Blocket/BlocketScraper";
-import {BilwebScraper} from "../scrapers/Bilweb/BilwebScraper";
-import {BlippScraper} from "../scrapers/Blipp/BlippScraper";
-import {BytbilScraper} from "../scrapers/Bytbil/BytbilScraper";
-import {CitiboardScraper} from "../scrapers/Citiboard/CitiboardScraper";
-import {KvdBilScraper} from "../scrapers/KvdBil/KvdBilScraper";
-import {SellpyScraper} from "../scrapers/Sellpy/SellpyScraper";
-import {ShpockScraper} from "../scrapers/Shpock/ShpockScraper";
-import {TraderaScraper} from "../scrapers/Tradera/TraderaScraper";
-import {Scraper} from "../scrapers/Scraper";
-import {floor} from "lodash";
+import {floor, max} from "lodash";
 import {ScrapeQtyService} from "./ScrapeQtyService";
-import {autoInjectable, inject} from "tsyringe"
+import {autoInjectable, inject} from "tsyringe";
+import {ConfiguredWebScraper} from "../webscraper/WebScraper";
+import {WebscraperFactory} from "../webscraper/WebscraperFactory";
 
 @autoInjectable()
 export class ListingScraperService {
     // 14 days
     private DELETE_OLDER_THAN = 14 * 24 * 60 * 60 * 1000;
 
+    private readonly webScraperFactory: WebscraperFactory;
+
     constructor(
         @inject(ScrapeQtyService)
         private readonly scrapeQtyService: ScrapeQtyService
     ) {
+        this.webScraperFactory = new WebscraperFactory();
     }
 
     async scrape(args: RunScrapeDto) {
         const {origin, endpoint, scrapeAmount} = args;
+        if (origin != null && !Object.values(ListingOrigin).includes(origin))
+            throw new Error(`${origin} is not a valid origin`);
+
         if (
-            origin == null &&
-            endpoint == null &&
             scrapeAmount != null &&
-            Number.isInteger(scrapeAmount)
-        ) {
-            return this.scrapeAll(args);
+            (!Number.isInteger(scrapeAmount) || scrapeAmount < 0)
+        )
+            throw new Error(`scrapeAmount must be a valid number`);
+
+        if (origin == null && endpoint == null) {
+            if (scrapeAmount == null) {
+                throw new Error("scrapeAmount must be a non-null number");
+            }
+
+            return this.scrapeAll({scrapeAmount});
         }
 
-        // validate args
-        if (scrapeAmount != null && !Number.isInteger(scrapeAmount))
-            throw Error(`scrapeAmount must be a non-null number`);
-        if (!Object.values(ListingOrigin).includes(origin))
-            throw Error(`origin must be a valid enum value`);
-
         if (endpoint == null) {
-            return this.scrapeOrigin(origin, scrapeAmount);
+            return this.scrapeByOrigin({
+                scrapeAmount,
+                origin,
+            });
         }
 
         if (typeof endpoint != "string")
             throw Error(`endpoint must be a non-null string`);
-        await this.scrapeEndpoint(args);
+        await this.scrapeById({scrapeAmount, origin, configId: endpoint});
     }
 
-    private async scrapeOrigin(origin: ListingOrigin, scrapeAmount?: number) {
+    private async scrapeByOrigin(args: ScrapeByOriginArgs) {
+        const {scrapeAmount: _scrapeAmount, origin} = args;
         const scraper = this.getScraper(origin);
-        const endpoints = scraper.getEndpoints();
+        const configs = scraper.getConfigs();
+        let scrapeAmount = _scrapeAmount;
 
         if (scrapeAmount == null) {
             scrapeAmount = await this.scrapeQtyService.getScrapeQuantity(origin);
         }
-        const scrapeAmountEndpoint = floor(scrapeAmount / endpoints.length);
+        const scrapeAmountEndpoint = max([floor(scrapeAmount / configs.length), 1]);
 
         console.log(`Scraping ${scrapeAmount} listings from ${origin}...`);
 
         const listings = [];
-        for (const endpoint of endpoints) {
+        for (const config of configs) {
             try {
-                const {entities} = await endpoint.scrape(scrapeAmountEndpoint);
+                scraper.setConfig(config);
+                const {entities} = await scraper.scrape(scrapeAmountEndpoint);
                 listings.push(...entities);
             } catch (e) {
                 console.error(e);
@@ -79,21 +87,29 @@ export class ListingScraperService {
         await this.createListings(listings);
     }
 
-    private async scrapeEndpoint(args: RunScrapeDto) {
-        const {origin, endpoint, scrapeAmount: _scrapeAmount} = args;
-        let scrapeAmount = _scrapeAmount;
+    private async scrapeById(args: ScrapeByIdArgs) {
+        const {origin, configId, scrapeAmount: _scrapeAmount} = args;
 
+        let scrapeAmount = _scrapeAmount;
         if (scrapeAmount == null) {
             scrapeAmount = await this.scrapeQtyService.getScrapeQuantity(origin);
         }
 
         console.log(
-            `Scraping ${scrapeAmount} listings from ${origin} (${endpoint})...`
+            `Scraping ${scrapeAmount} listings from ${origin} (${configId})...`
         );
 
         // run scraper
         const scraper = this.getScraper(origin);
-        const {entities} = await scraper.scrapeEndpoint(endpoint, scrapeAmount);
+
+        try {
+            scraper.setConfigById(configId);
+        } catch (e) {
+            console.log(e);
+            return;
+        }
+
+        const {entities} = await scraper.scrape(scrapeAmount);
         await this.createListings(entities);
 
         console.log(
@@ -109,7 +125,7 @@ export class ListingScraperService {
         await ListingModel.create(entities);
     }
 
-    private async scrapeAll(args: RunScrapeDto) {
+    private async scrapeAll(args: ScrapeAllArgs) {
         const start = Date.now();
         const {scrapeAmount} = args;
 
@@ -122,14 +138,15 @@ export class ListingScraperService {
 
         for (const origin of Object.values(ListingOrigin)) {
             const scraper = this.getScraper(origin);
-            const endpoints = scraper.getEndpoints();
+            const configs = scraper.getConfigs();
 
-            const scrapeAmountEndpoint = scrapeAmountScraper / endpoints.length;
+            const scrapeAmountEndpoint = scrapeAmountScraper / configs.length;
             const listings = [];
 
-            for (const endpoint of endpoints) {
+            for (const config of configs) {
                 try {
-                    const {entities} = await endpoint.scrape(scrapeAmountEndpoint);
+                    scraper.setConfig(config);
+                    const {entities} = await scraper.scrape(scrapeAmountEndpoint);
                     listings.push(...entities);
                 } catch (e) {
                     console.error(e);
@@ -159,28 +176,7 @@ export class ListingScraperService {
         });
     }
 
-    private getScraper(origin: ListingOrigin): Scraper<Listing> {
-        switch (origin) {
-            case ListingOrigin.Blocket:
-                return new BlocketScraper();
-            case ListingOrigin.Bilweb:
-                return new BilwebScraper();
-            case ListingOrigin.Blipp:
-                return new BlippScraper();
-            case ListingOrigin.Bytbil:
-                return new BytbilScraper();
-            case ListingOrigin.Citiboard:
-                return new CitiboardScraper();
-            case ListingOrigin.Kvdbil:
-                return new KvdBilScraper();
-            case ListingOrigin.Sellpy:
-                return new SellpyScraper();
-            case ListingOrigin.Shpock:
-                return new ShpockScraper();
-            case ListingOrigin.Tradera:
-                return new TraderaScraper();
-            default:
-                throw new Error(`${origin} is not a valid enum value`);
-        }
+    private getScraper(origin: ListingOrigin): ConfiguredWebScraper<Listing> {
+        return this.webScraperFactory.createScraper(origin);
     }
 }
