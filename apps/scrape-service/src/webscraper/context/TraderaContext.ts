@@ -79,6 +79,6 @@ export class TraderaConfig
   }
 
   getUrl(): string {
-    return `https://www.tradera.com${this.getIdentifier()}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&sortBy=AddedOn`;
+    return `https://www.tradera.com${this.getIdentifier()}.json?sortBy=AddedOn`;
   }
 }

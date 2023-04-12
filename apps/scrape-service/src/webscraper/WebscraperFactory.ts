@@ -1,5 +1,5 @@
 import { ListingOrigin } from "@mewi/models";
-import { WebScraperManager, WebScraper } from "./WebScraper";
+import { WebScraper, WebScraperManager } from "./WebScraper";
 import {
   IParseStrategy,
   ListingParseStrategyWrapper,
@@ -11,39 +11,39 @@ import { HtmlFetchStrategy } from "./fetchers/HtmlFetchStrategy";
 import { BlocketParseStrategy } from "./parsers/BlocketParseStrategy";
 import { BytbilParseStrategy } from "./parsers/BytbilParseStrategy";
 import { UrlQueryParamsPaginationStrategy } from "./pagination/UrlQueryParamsPaginationStrategy";
-import { BlocketContext } from "./config/BlocketContext";
-import { BytbilConfig, BytbilContext } from "./config/BytbilContext";
+import { BlocketContext } from "./context/BlocketContext";
+import { BytbilConfig, BytbilContext } from "./context/BytbilContext";
 import {
+  EmptyResultStrategy,
   HasNextPageStrategy,
   LimitIsLessStrategy,
-} from "./fetchers/FetchDoneStrategy";
-import { WebScraperContext } from "./config/WebScraperContext";
+} from "./fetchers/FetchDoneStrategy"
+import {IWebScraperConfig, WebScraperContext} from "./context/WebScraperContext"
 import { IPaginationStrategy } from "./pagination/PaginationStrategy";
 import { IAuthStrategy } from "./auth/AuthStrategy";
 import { TraderaParseStrategy } from "./parsers/TraderaParseStrategy";
-import { TraderaConfig, TraderaContext } from "./config/TraderaContext";
-import { SellpyContext } from "./config/SellpyContext";
+import { TraderaConfig, TraderaContext } from "./context/TraderaContext";
+import { SellpyContext } from "./context/SellpyContext";
 import { SellpyParseStrategy } from "./parsers/SellpyParseStrategy";
 import { SellpyPaginationStrategy } from "./pagination/SellpyPaginationStrategy";
-import { BlippContext } from "./config/BlippContext";
+import { BlippContext } from "./context/BlippContext";
 import { BlippParseStrategy } from "./parsers/BlippParseStrategy";
 import { BlippPaginationStrategy } from "./pagination/BlippPaginationStrategy";
-import { ShpockContext } from "./config/ShpockContext";
+import { ShpockContext } from "./context/ShpockContext";
 import { NextAuthInBodyStrategy } from "./auth/NextAuthInBodyStrategy";
 import { FetchTokenFromDocument } from "./auth/FetchTokenFromDocument";
 import { ShpockParseStrategy } from "./parsers/ShpockParseStrategy";
 import { RequestBodyPaginationStrategy } from "./pagination/RequestBodyPaginationStrategy";
-import { KvdBilContext } from "./config/KvdBilContext";
+import { KvdBilContext } from "./context/KvdBilContext";
 import { KvdBilParseStrategy } from "./parsers/KvdBilParseStrategy";
-import { CitiboardContext } from "./config/CitiboardContext";
+import { CitiboardContext } from "./context/CitiboardContext";
 import { CitiboardParseStrategy } from "./parsers/CitiboardParseStrategy";
-import { BilwebConfig, BilwebContext } from "./config/BilwebContext";
+import { BilwebConfig, BilwebContext } from "./context/BilwebContext";
 import { BilwebParseStrategy } from "./parsers/BilwebParseStrategy";
-import { NeverStopStrategy } from "./stoppages/NeverStopStrategy";
-import { IStopScrapeStrategy } from "./stoppages/StopScrapeStrategy";
-import { Listing } from "@mewi/entities";
-import { StopAtOldListingStrategy } from "./stoppages/StopAtOldListingStrategy";
 import { createClassLogger } from "./logging/logger";
+import { IFetchStrategy } from "./fetchers/FetchStrategy";
+import { AbstractAxiosFetchStrategy } from "./fetchers/AbstractAxiosFetchStrategy";
+import {TraderaPaginationStrategy} from "./pagination/TraderaPaginationStrategy"
 
 export class WebscraperFactory {
   public createScraper(origin: ListingOrigin): WebScraperManager<any> {
@@ -67,7 +67,7 @@ export class WebscraperFactory {
     return contextSwitchedWebScraper;
   }
 
-  private createPaginationStrategy(origin: ListingOrigin) {
+  private createPaginationStrategy(origin: ListingOrigin, config: IWebScraperConfig<any>) {
     switch (origin) {
       case ListingOrigin.Blocket:
         return new UrlQueryParamsPaginationStrategy({
@@ -80,10 +80,7 @@ export class WebscraperFactory {
           pageStartNumber: 1,
         });
       case ListingOrigin.Tradera:
-        return new UrlQueryParamsPaginationStrategy({
-          pageStartNumber: 1,
-          pageParam: "spage",
-        });
+        return new TraderaPaginationStrategy(config);
       case ListingOrigin.Sellpy:
         return new SellpyPaginationStrategy();
       case ListingOrigin.Blipp:
@@ -129,7 +126,7 @@ export class WebscraperFactory {
     webScraper: WebScraper<any>
   ) {
     const args: [IPaginationStrategy<any>, IAuthStrategy, WebScraper<any>] = [
-      this.createPaginationStrategy(origin),
+      this.createPaginationStrategy(origin, webScraper.getConfig()),
       this.createAuthStrategy(origin),
       // this.createUrlStrategy(origin),
       webScraper,
@@ -138,8 +135,8 @@ export class WebscraperFactory {
     switch (origin) {
       case ListingOrigin.Bytbil:
       case ListingOrigin.Bilweb:
-        return new HtmlFetchStrategy(...args).setFetchDoneStrategy(
-          (o) => new HasNextPageStrategy(o)
+        return new HtmlFetchStrategy(...args).setFetchDoneStrategy((o) =>
+          this.createFetchDoneStrategy(origin, o)
         );
       case ListingOrigin.Blocket:
       case ListingOrigin.Tradera:
@@ -148,11 +145,39 @@ export class WebscraperFactory {
       case ListingOrigin.Kvdbil:
       case ListingOrigin.Shpock:
       case ListingOrigin.Citiboard:
-        return new JsonFetchStrategy(...args).setFetchDoneStrategy(
-          (o) => new LimitIsLessStrategy(o)
+        return new JsonFetchStrategy(...args).setFetchDoneStrategy((o) =>
+          this.createFetchDoneStrategy(origin, o)
         );
       default:
         throw new Error(`No FetchStrategy has been implemented for ${origin}`);
+    }
+  }
+
+  private createFetchDoneStrategy(
+    origin: ListingOrigin,
+    fetchStrategy: IFetchStrategy<any>
+  ) {
+    switch (origin) {
+      case ListingOrigin.Blocket:
+        if (!(fetchStrategy instanceof AbstractAxiosFetchStrategy))
+          throw new Error(
+            `${HasNextPageStrategy.name} must be initialized with a FetchStrategy of type ${AbstractAxiosFetchStrategy.name}`
+          );
+        return new HasNextPageStrategy(fetchStrategy);
+      case ListingOrigin.Bilweb:
+      case ListingOrigin.Citiboard:
+        return new EmptyResultStrategy();
+      case ListingOrigin.Tradera:
+      case ListingOrigin.Sellpy:
+      case ListingOrigin.Blipp:
+      case ListingOrigin.Shpock:
+      case ListingOrigin.Bytbil:
+      case ListingOrigin.Kvdbil:
+        return new LimitIsLessStrategy();
+      default:
+        throw new Error(
+          `No FetchDoneStrategy has been implemented for ${origin}`
+        );
     }
   }
 
@@ -226,18 +251,6 @@ export class WebscraperFactory {
         return new BilwebContext();
       default:
         return new WebScraperContext([]);
-    }
-  }
-
-  private createStopStrategy(
-    origin: ListingOrigin
-  ): IStopScrapeStrategy<Listing[]> {
-    switch (origin) {
-      case ListingOrigin.Blocket:
-      case ListingOrigin.Tradera:
-        return new StopAtOldListingStrategy(origin);
-      default:
-        return new NeverStopStrategy();
     }
   }
 }

@@ -1,7 +1,7 @@
 import { IPaginationStrategy } from "../pagination/PaginationStrategy";
 import { AxiosRequestConfig } from "axios";
 import { IAuthStrategy } from "../auth/AuthStrategy";
-import { IWebScraperConfig } from "../config/WebScraperContext";
+import { IWebScraperConfig } from "../context/WebScraperContext";
 import { IPagination } from "@mewi/models";
 import { FetchResult, IFetchStrategy } from "./FetchStrategy";
 import { IFetchDoneStrategy, NeverDoneStrategy } from "./FetchDoneStrategy";
@@ -49,7 +49,7 @@ export abstract class AbstractAxiosFetchStrategy<TRet>
     pagination: IPagination
   ): Promise<AxiosRequestConfig> {
     const paginationConfig =
-      this.paginationStrategy.getPaginationConfig(pagination);
+      await this.paginationStrategy.getPaginationConfig(pagination);
 
     const defaultConfig: AxiosRequestConfig = {
       url: this.config.url,

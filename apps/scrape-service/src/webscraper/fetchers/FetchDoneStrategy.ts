@@ -8,7 +8,6 @@ export interface IFetchDoneStrategy {
 
 export class HasNextPageStrategy implements IFetchDoneStrategy {
   private fetchStrategy: AbstractAxiosFetchStrategy<any>;
-
   constructor(fetchStrategy: AbstractAxiosFetchStrategy<any>) {
     this.fetchStrategy = fetchStrategy;
   }
@@ -28,11 +27,7 @@ export class HasNextPageStrategy implements IFetchDoneStrategy {
 }
 
 export class LimitIsLessStrategy implements IFetchDoneStrategy {
-  private readonly fetchStrategy: AbstractAxiosFetchStrategy<any>;
-
-  constructor(fetchStrategy: AbstractAxiosFetchStrategy<any>) {
-    this.fetchStrategy = fetchStrategy;
-  }
+  constructor() {}
 
   isDone(pagination: IPagination, res: any[]): boolean | Promise<boolean> {
     if (pagination.limit == null) {
@@ -43,6 +38,12 @@ export class LimitIsLessStrategy implements IFetchDoneStrategy {
     }
 
     return res.length < pagination.limit;
+  }
+}
+
+export class EmptyResultStrategy implements IFetchDoneStrategy {
+  isDone(pagination: IPagination, result: any[]): boolean | Promise<boolean> {
+    return result.length === 0;
   }
 }
 

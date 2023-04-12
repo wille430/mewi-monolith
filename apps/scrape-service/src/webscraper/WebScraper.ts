@@ -4,7 +4,7 @@ import { IParseStrategy } from "./parsers/ParseStrategy";
 import {
   IWebScraperConfig,
   WebScraperContext,
-} from "./config/WebScraperContext";
+} from "./context/WebScraperContext";
 import { IStopScrapeStrategy } from "./stoppages/StopScrapeStrategy";
 import { NeverStopStrategy } from "./stoppages/NeverStopStrategy";
 import { createLogger, Logger, transports } from "winston";
@@ -73,7 +73,7 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
       "info",
       `Fetched ${
         objs.data.length
-      } objects from ${this.config.getUrl()} with config ${this.config.getIdentifier()}`
+      } objects from ${this.config.getUrl()} at page ${pagination.page} with config ${this.config.getIdentifier()}`
     );
 
     let entities = await this.parseStrategy.parseAll(objs.data);

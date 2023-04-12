@@ -2,7 +2,7 @@ import {Listing} from "@mewi/entities";
 import {AbstractListingParseStrategy} from "./AbstractListingParseStrategy";
 import {Category, Currency, ListingOrigin} from "@mewi/models";
 import {WebScraper} from "../WebScraper";
-import {TraderaConfig} from "../config/TraderaContext"
+import {TraderaConfig} from "../context/TraderaContext"
 
 export class TraderaParseStrategy extends AbstractListingParseStrategy<
     Record<any, any>

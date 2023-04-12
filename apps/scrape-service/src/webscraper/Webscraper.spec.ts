@@ -13,7 +13,7 @@ describe("WebScrapers", () => {
 
     beforeAll(() => {
       factory = new WebscraperFactory();
-      scraper = factory.createScraper(origin);
+      scraper = factory.createScraper(origin).getScraper();
     });
 
     describe("#hasMore", () => {
