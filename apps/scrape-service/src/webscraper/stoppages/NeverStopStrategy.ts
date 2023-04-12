@@ -8,4 +8,13 @@ export class NeverStopStrategy implements IStopScrapeStrategy<any> {
     shouldStop(): boolean | Promise<boolean> {
         return false;
     }
+
+    update(res: any): void | Promise<void> {
+    }
+
+    start(): void | Promise<void> {
+    }
+
+    stop(): void | Promise<void> {
+    }
 }

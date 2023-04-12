@@ -16,6 +16,18 @@ describe("WebScrapers", () => {
       scraper = factory.createScraper(origin);
     });
 
+    describe("#hasMore", () => {
+      let ret: boolean;
+
+      beforeEach(async () => {
+        ret = await scraper.hasMore();
+      })
+
+      it("should return boolean", () => {
+        expect(ret).toBe(true);
+      })
+    })
+
     describe("#scrape", () => {
       let entities: ListingDto[];
 

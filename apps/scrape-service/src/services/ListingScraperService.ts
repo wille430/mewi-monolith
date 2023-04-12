@@ -10,20 +10,20 @@ import {floor, max} from "lodash";
 import {ScrapeQtyService} from "./ScrapeQtyService";
 import {autoInjectable, inject} from "tsyringe";
 import {ConfiguredWebScraper} from "../webscraper/WebScraper";
-import {WebscraperFactory} from "../webscraper/WebscraperFactory";
+import {ListingScraperPool} from "./ListingScraperPool";
 
 @autoInjectable()
 export class ListingScraperService {
     // 14 days
     private DELETE_OLDER_THAN = 14 * 24 * 60 * 60 * 1000;
 
-    private readonly webScraperFactory: WebscraperFactory;
+    private readonly scraperPool: ListingScraperPool;
 
     constructor(
         @inject(ScrapeQtyService)
         private readonly scrapeQtyService: ScrapeQtyService
     ) {
-        this.webScraperFactory = new WebscraperFactory();
+        this.scraperPool = new ListingScraperPool();
     }
 
     async scrape(args: RunScrapeDto) {
@@ -177,6 +177,6 @@ export class ListingScraperService {
     }
 
     private getScraper(origin: ListingOrigin): ConfiguredWebScraper<Listing> {
-        return this.webScraperFactory.createScraper(origin);
+        return this.scraperPool.getScraper(origin);
     }
 }

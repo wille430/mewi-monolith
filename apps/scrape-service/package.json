@@ -27,9 +27,11 @@
     "mongoose": "^6.9.1",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0",
-    "vite": "^4.1.1"
+    "vite": "^4.1.1",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/lodash": "^4.14.187",
     "@types/node": "18.11.9",
     "ts-node": "^10.9.1",

@@ -39,10 +39,19 @@ import { CitiboardConfigs } from "./config/CitiboardConfigs";
 import { CitiboardParseStrategy } from "./parsers/CitiboardParseStrategy";
 import { BilwebConfig, BilwebConfigs } from "./config/BilwebConfigs";
 import { BilwebParseStrategy } from "./parsers/BilwebParseStrategy";
+import { NeverStopStrategy } from "./stoppages/NeverStopStrategy";
+import { IStopScrapeStrategy } from "./stoppages/StopScrapeStrategy";
+import { Listing } from "@mewi/entities";
+import { StopAtOldListingStrategy } from "./stoppages/StopAtOldListingStrategy";
+import { createClassLogger } from "./logging/logger";
 
 export class WebscraperFactory {
   public createScraper(origin: ListingOrigin): ConfiguredWebScraper<any> {
-    const webScraper = new ConfiguredWebScraper(this.createConfig(origin));
+    const logger = createClassLogger(origin + "Scraper");
+    const webScraper = new ConfiguredWebScraper(
+      this.createConfig(origin),
+      logger
+    );
 
     const parseStrategy = this.createParseStrategy(origin, webScraper);
     const parseStrategyWrapper = new ListingParseStrategyWrapper(
@@ -51,8 +60,11 @@ export class WebscraperFactory {
     );
     const fetchStrategy = this.createFetchStrategy(origin, webScraper);
 
+    const stopScrapeStrategy = this.createStopStrategy(origin);
+
     webScraper.setParseStrategy(parseStrategyWrapper);
     webScraper.setFetchStrategy(fetchStrategy);
+    webScraper.setStopScrapeStrategy(stopScrapeStrategy);
 
     return webScraper;
   }
@@ -216,6 +228,17 @@ export class WebscraperFactory {
         return new BilwebConfigs();
       default:
         return new WebScraperConfigs([]);
+    }
+  }
+
+  private createStopStrategy(
+    origin: ListingOrigin
+  ): IStopScrapeStrategy<Listing[]> {
+    switch (origin) {
+      case ListingOrigin.Blocket:
+        return new StopAtOldListingStrategy(origin);
+      default:
+        return new NeverStopStrategy();
     }
   }
 }

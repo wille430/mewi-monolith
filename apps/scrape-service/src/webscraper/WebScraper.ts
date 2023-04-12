@@ -7,6 +7,7 @@ import {
 } from "./config/WebScraperConfigs";
 import { IStopScrapeStrategy } from "./stoppages/StopScrapeStrategy";
 import { NeverStopStrategy } from "./stoppages/NeverStopStrategy";
+import { createLogger, Logger, transports } from "winston";
 
 export interface WebScraperResult<T> {
   entities: T;
@@ -19,15 +20,39 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
   private stopScrapeStrategy: IStopScrapeStrategy<R[]>;
   protected config: IWebScraperConfig<any>;
 
+  private readonly logger: Logger;
+
+  constructor(logger: Logger = null) {
+    this.logger = logger;
+
+    if (this.logger == null) {
+      this.logger = createLogger({
+        transports: [new transports.Console()],
+      });
+    }
+  }
+
   public async scrape(amount: number): Promise<WebScraperResult<R[]>> {
     const res: WebScraperResult<R[]> = { entities: [], shouldContinue: true };
     let page = 1;
+
+    await this.stopScrapeStrategy.start();
+
     while (res.shouldContinue !== false && res.entities.length < amount) {
       const { entities, shouldContinue } = await this.scrapePage({ page });
       res.entities.push(...entities);
       res.shouldContinue = res.shouldContinue && shouldContinue;
       page++;
+
+      this.logger.log(
+        "info",
+        `${
+          res.entities.length
+        }/${amount} entities scraped from ${this.config.getUrl()}`
+      );
     }
+
+    await this.stopScrapeStrategy.stop();
 
     return {
       ...res,
@@ -38,21 +63,46 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
   public async scrapePage(
     pagination: IPagination
   ): Promise<WebScraperResult<R[]>> {
-    if (this.parseStrategy == null)
-      throw new Error(`A ParseStrategy has not been initialized`);
-    if (this.fetchStrategy == null)
-      throw new Error(`A FetchStrategy has not been initialized`);
-    if (this.stopScrapeStrategy == null)
-      this.stopScrapeStrategy = new NeverStopStrategy();
-    // throw new Error(`A StopScrapeStrategy has not been initialized`);
+    this.validateInitialization();
 
     const objs = await this.fetchStrategy.fetch(pagination);
+
+    this.logger.log(
+      "info",
+      `Fetched ${
+        objs.data.length
+      } objects from ${this.config.getUrl()} with config ${this.config.getIdentifier()}`
+    );
+
     const entities = await this.parseStrategy.parseAll(objs.data);
+
+    await this.stopScrapeStrategy.update(entities);
+
+    const shouldStop = await this.stopScrapeStrategy.shouldStop(entities);
+
+    if (shouldStop) {
+      this.logger.log("info", `Reached stop. Stopping scraping...`);
+    }
 
     return {
       entities,
-      shouldContinue: await this.stopScrapeStrategy.shouldStop(entities),
+      shouldContinue: !shouldStop,
     };
+  }
+
+  /**
+   * Returns true if there are more to scrape
+   */
+  public async hasMore(): Promise<boolean> {
+    this.validateInitialization();
+
+    const { data, done } = await this.fetchStrategy.fetch({
+      page: 1,
+      limit: 1,
+    });
+    const entity = await this.parseStrategy.parse(data[0]);
+
+    return !(await this.stopScrapeStrategy.shouldStop([entity])) || done;
   }
 
   public setParseStrategy(parseStrategy: IParseStrategy<T, R>) {
@@ -74,6 +124,15 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
   public getConfig() {
     return this.config;
   }
+
+  private validateInitialization() {
+    if (this.parseStrategy == null)
+      throw new Error(`A ParseStrategy has not been initialized`);
+    if (this.fetchStrategy == null)
+      throw new Error(`A FetchStrategy has not been initialized`);
+    if (this.stopScrapeStrategy == null)
+      this.stopScrapeStrategy = new NeverStopStrategy();
+  }
 }
 
 export class ConfiguredWebScraper<
@@ -83,8 +142,8 @@ export class ConfiguredWebScraper<
 > extends WebScraper<R, T, M> {
   private configs: WebScraperConfigs;
 
-  constructor(configs: WebScraperConfigs) {
-    super();
+  constructor(configs: WebScraperConfigs, logger: Logger = null) {
+    super(logger);
     this.configs = configs;
     this.setInitialConfig();
   }
