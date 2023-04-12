@@ -1,12 +1,13 @@
 import {IWebScraperConfig, WebScraperContext} from "./WebScraperContext";
 import {HttpFetchStrategyConfig} from "../fetchers/AbstractAxiosFetchStrategy";
 import {HtmlFetchStrategyConfig} from "../fetchers/HtmlFetchStrategy";
+import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy"
 
 export class BytbilContext extends WebScraperContext<BytbilConfig> {
     constructor() {
         const categories = BytbilConfig.vehicleTypes;
         const configs = categories.map((cat) => new BytbilConfig(cat));
-        super(configs);
+        super(configs, new StopAtExistingOriginIdStrategy());
     }
 }
 

@@ -16,7 +16,7 @@ export class CitiboardParseStrategy extends AbstractListingParseStrategy<
             origin_id: this.conversions.origin_id.convert(obj.annons_id),
             title: obj.rubrik,
             category: Category.OVRIGT,
-            date: safeToDate(obj.skapad) ?? new Date(),
+            date: safeToDate(obj.skapad * 1000) ?? new Date(),
             imageUrl: obj.thumb
                 ? [
                     `https://citiboard-media.s3.eu-north-1.amazonaws.com/a/medium/${obj.thumb}`,

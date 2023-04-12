@@ -1,10 +1,15 @@
 import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
+import { ListingOrigin } from "@mewi/models";
 
 export class SellpyContext extends WebScraperContext<SellpyConfig> {
   constructor() {
-    super([new SellpyConfig()]);
+    super(
+      [new SellpyConfig()],
+      new StopAtOldListingStrategy(ListingOrigin.Sellpy)
+    );
   }
 }
 

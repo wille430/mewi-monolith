@@ -69,21 +69,35 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
 
     const objs = await this.fetchStrategy.fetch(pagination);
 
+    if (objs.error) {
+      this.logger.warn(
+        `Fetch from ${this.config.getUrl()}, page ${
+          pagination.page
+        } resulted in an error. Returning...`
+      );
+      return {
+        entities: [],
+        shouldContinue: false,
+      };
+    }
+
     this.logger.log(
       "info",
       `Fetched ${
         objs.data.length
-      } objects from ${this.config.getUrl()} at page ${pagination.page} with config ${this.config.getIdentifier()}`
+      } objects from ${this.config.getUrl()} at page ${
+        pagination.page
+      } with config ${this.config.getIdentifier()}`
     );
 
     let entities = await this.parseStrategy.parseAll(objs.data);
-
-    await this.stopScrapeStrategy.update(entities);
 
     const shouldStop = await this.stopScrapeStrategy.shouldStop(entities);
     const stopAtIndex = await this.stopScrapeStrategy.indexOfFirstInvalid(
       entities
     );
+
+    await this.stopScrapeStrategy.update(entities);
 
     if (stopAtIndex >= 0) {
       entities = entities.slice(0, stopAtIndex);

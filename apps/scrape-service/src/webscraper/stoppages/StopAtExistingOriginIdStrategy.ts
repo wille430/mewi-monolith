@@ -10,7 +10,8 @@ export class StopAtExistingOriginIdStrategy
     }
 
     indexOfFirstInvalid(res: Listing[]): number {
-        return -1;
+        const ids = Object.keys(this.ids);
+        return res.findIndex((o) => ids.includes(o.origin_id));
     }
 
     public async shouldStop(res: Listing[]): Promise<boolean> {

@@ -4,10 +4,11 @@ import {
 } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy"
 
 export class KvdBilContext extends WebScraperContext {
   constructor() {
-    super([new KvdBilConfig()]);
+    super([new KvdBilConfig()], new StopAtExistingOriginIdStrategy());
   }
 }
 

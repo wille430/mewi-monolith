@@ -29,21 +29,14 @@ export class RequestBodyPaginationStrategy
   }
 
   getPaginationConfig(pagination: IPagination): AxiosRequestConfig {
+    const limit = pagination.limit ?? this.config.defaultLimit;
     const config = { data: this.config.data ?? {} };
 
-    if (pagination.limit && this.config.limitPath)
-      set(config, this.config.limitPath, pagination.limit);
+    if (limit != null && this.config.limitPath)
+      set(config, this.config.limitPath, limit);
 
-    if (
-      this.config.offsetPath != null &&
-      this.config.defaultLimit &&
-      pagination.page
-    ) {
-      set(
-        config,
-        this.config.offsetPath,
-        (pagination.page - 1) * this.config.defaultLimit
-      );
+    if (this.config.offsetPath != null && limit != null && pagination.page) {
+      set(config, this.config.offsetPath, (pagination.page - 1) * limit);
     } else if (this.config.pagePath != null && pagination.page) {
       set(config, this.config.pagePath, pagination.page);
     }

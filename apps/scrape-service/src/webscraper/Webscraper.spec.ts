@@ -1,6 +1,6 @@
 import { beforeAll, expect } from "vitest";
 import { WebScraper } from "./WebScraper";
-import { WebscraperFactory } from "./WebscraperFactory";
+import { WebScraperFactory } from "./WebScraperFactory";
 import { ListingDto, ListingOrigin } from "@mewi/models";
 import { validate } from "class-validator";
 import { plainToInstance } from "class-transformer";
@@ -8,11 +8,11 @@ import { ListingValidator } from "../models/ListingValidator";
 
 describe("WebScrapers", () => {
   describe.each(Object.values(ListingOrigin))("%s", (origin) => {
-    let factory: WebscraperFactory;
+    let factory: WebScraperFactory;
     let scraper: WebScraper<any>;
 
     beforeAll(() => {
-      factory = new WebscraperFactory();
+      factory = new WebScraperFactory();
       scraper = factory.createScraper(origin).getScraper();
     });
 

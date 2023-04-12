@@ -1,16 +1,16 @@
 import {Listing} from "@mewi/entities";
 import {ListingOrigin} from "@mewi/models";
-import {WebscraperFactory} from "../webscraper/WebscraperFactory";
+import {WebScraperFactory} from "../webscraper/WebScraperFactory";
 import {WebScraperManager} from "../webscraper/WebScraper";
 
 export class ListingScraperPool {
     private readonly scraperMap: Partial<
         Record<ListingOrigin, WebScraperManager<Listing>>
     >;
-    private readonly webScraperFactory: WebscraperFactory;
+    private readonly webScraperFactory: WebScraperFactory;
 
     constructor() {
-        this.webScraperFactory = new WebscraperFactory();
+        this.webScraperFactory = new WebScraperFactory();
         this.scraperMap = {};
     }
 

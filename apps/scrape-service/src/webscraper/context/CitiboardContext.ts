@@ -1,13 +1,15 @@
-import {
-  IWebScraperConfig,
-  WebScraperContext,
-} from "./WebScraperContext";
+import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
+import { ListingOrigin } from "@mewi/models";
 
 export class CitiboardContext extends WebScraperContext {
   constructor() {
-    super([new CitiboardConfig()]);
+    super(
+      [new CitiboardConfig()],
+      new StopAtOldListingStrategy(ListingOrigin.Citiboard)
+    );
   }
 }
 

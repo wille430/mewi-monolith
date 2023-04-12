@@ -3,6 +3,7 @@ import { IPagination } from "@mewi/models";
 export interface FetchResult<T> {
   data: T;
   done: boolean;
+  error: boolean
 }
 
 export interface IFetchStrategy<TRet> {

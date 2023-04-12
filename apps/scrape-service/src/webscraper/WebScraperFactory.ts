@@ -17,8 +17,11 @@ import {
   EmptyResultStrategy,
   HasNextPageStrategy,
   LimitIsLessStrategy,
-} from "./fetchers/FetchDoneStrategy"
-import {IWebScraperConfig, WebScraperContext} from "./context/WebScraperContext"
+} from "./fetchers/FetchDoneStrategy";
+import {
+  IWebScraperConfig,
+  WebScraperContext,
+} from "./context/WebScraperContext";
 import { IPaginationStrategy } from "./pagination/PaginationStrategy";
 import { IAuthStrategy } from "./auth/AuthStrategy";
 import { TraderaParseStrategy } from "./parsers/TraderaParseStrategy";
@@ -29,7 +32,7 @@ import { SellpyPaginationStrategy } from "./pagination/SellpyPaginationStrategy"
 import { BlippContext } from "./context/BlippContext";
 import { BlippParseStrategy } from "./parsers/BlippParseStrategy";
 import { BlippPaginationStrategy } from "./pagination/BlippPaginationStrategy";
-import { ShpockContext } from "./context/ShpockContext";
+import { ShpockConfig, ShpockContext } from "./context/ShpockContext";
 import { NextAuthInBodyStrategy } from "./auth/NextAuthInBodyStrategy";
 import { FetchTokenFromDocument } from "./auth/FetchTokenFromDocument";
 import { ShpockParseStrategy } from "./parsers/ShpockParseStrategy";
@@ -43,9 +46,12 @@ import { BilwebParseStrategy } from "./parsers/BilwebParseStrategy";
 import { createClassLogger } from "./logging/logger";
 import { IFetchStrategy } from "./fetchers/FetchStrategy";
 import { AbstractAxiosFetchStrategy } from "./fetchers/AbstractAxiosFetchStrategy";
-import {TraderaPaginationStrategy} from "./pagination/TraderaPaginationStrategy"
+import { TraderaPaginationStrategy } from "./pagination/TraderaPaginationStrategy";
+import { ShpockErrorHandler } from "./error/ShpockErrorHandler";
+import { NoErrorHandler } from "./error/NoErrorHandler";
+import { IErrorHandler } from "./error/ErrorHandler";
 
-export class WebscraperFactory {
+export class WebScraperFactory {
   public createScraper(origin: ListingOrigin): WebScraperManager<any> {
     const logger = createClassLogger(origin + "Scraper");
     const webScraper = new WebScraper(logger);
@@ -67,7 +73,10 @@ export class WebscraperFactory {
     return contextSwitchedWebScraper;
   }
 
-  private createPaginationStrategy(origin: ListingOrigin, config: IWebScraperConfig<any>) {
+  private createPaginationStrategy(
+    origin: ListingOrigin,
+    config: IWebScraperConfig<any>
+  ) {
     switch (origin) {
       case ListingOrigin.Blocket:
         return new UrlQueryParamsPaginationStrategy({
@@ -89,6 +98,7 @@ export class WebscraperFactory {
         return new RequestBodyPaginationStrategy({
           limitPath: "data.variables.pagination.limit",
           offsetPath: "data.variables.pagination.offset",
+          defaultLimit: ShpockConfig.limit,
           data: {
             operationName: "ItemSearch",
             variables: {
@@ -125,11 +135,17 @@ export class WebscraperFactory {
     origin: ListingOrigin,
     webScraper: WebScraper<any>
   ) {
-    const args: [IPaginationStrategy<any>, IAuthStrategy, WebScraper<any>] = [
+    const args: [
+      IPaginationStrategy<any>,
+      IAuthStrategy,
+      WebScraper<any>,
+      IErrorHandler<any>
+    ] = [
       this.createPaginationStrategy(origin, webScraper.getConfig()),
       this.createAuthStrategy(origin),
       // this.createUrlStrategy(origin),
       webScraper,
+      this.createErrorHandler(origin),
     ];
 
     switch (origin) {
@@ -166,10 +182,10 @@ export class WebscraperFactory {
         return new HasNextPageStrategy(fetchStrategy);
       case ListingOrigin.Bilweb:
       case ListingOrigin.Citiboard:
+      case ListingOrigin.Blipp:
         return new EmptyResultStrategy();
       case ListingOrigin.Tradera:
       case ListingOrigin.Sellpy:
-      case ListingOrigin.Blipp:
       case ListingOrigin.Shpock:
       case ListingOrigin.Bytbil:
       case ListingOrigin.Kvdbil:
@@ -251,6 +267,15 @@ export class WebscraperFactory {
         return new BilwebContext();
       default:
         return new WebScraperContext([]);
+    }
+  }
+
+  private createErrorHandler(origin: ListingOrigin) {
+    switch (origin) {
+      case ListingOrigin.Shpock:
+        return new ShpockErrorHandler();
+      default:
+        return new NoErrorHandler();
     }
   }
 }

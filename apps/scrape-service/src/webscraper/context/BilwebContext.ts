@@ -4,10 +4,11 @@ import {
 } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { HtmlFetchStrategyConfig } from "../fetchers/HtmlFetchStrategy";
+import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy"
 
 export class BilwebContext extends WebScraperContext {
   constructor() {
-    super([new BilwebConfig()]);
+    super([new BilwebConfig()], new StopAtExistingOriginIdStrategy());
   }
 }
 

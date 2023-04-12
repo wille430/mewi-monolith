@@ -1,11 +1,13 @@
 import { IPaginationStrategy } from "../pagination/PaginationStrategy";
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { IAuthStrategy } from "../auth/AuthStrategy";
 import { IWebScraperConfig } from "../context/WebScraperContext";
 import { IPagination } from "@mewi/models";
 import { FetchResult, IFetchStrategy } from "./FetchStrategy";
 import { IFetchDoneStrategy, NeverDoneStrategy } from "./FetchDoneStrategy";
 import { merge } from "lodash";
+import { IErrorHandler } from "../error/ErrorHandler";
+import { NoErrorHandler } from "../error/NoErrorHandler";
 
 export interface HttpFetchStrategyConfig {
   url: string;
@@ -19,6 +21,7 @@ export abstract class AbstractAxiosFetchStrategy<TRet>
   protected paginationStrategy: IPaginationStrategy<AxiosRequestConfig>;
   protected fetchDoneStrategy: IFetchDoneStrategy;
   protected authStrategy: IAuthStrategy;
+  protected errorHandler: IErrorHandler<AxiosResponse>;
   protected config: HttpFetchStrategyConfig;
   private static readonly defaultConfig: HttpFetchStrategyConfig = {
     url: null,
@@ -28,10 +31,12 @@ export abstract class AbstractAxiosFetchStrategy<TRet>
   protected constructor(
     paginationStrategy: IPaginationStrategy<AxiosRequestConfig>,
     authStrategy: IAuthStrategy,
-    webScraperConfig: IWebScraperConfig<Partial<HttpFetchStrategyConfig> & any>
+    webScraperConfig: IWebScraperConfig<Partial<HttpFetchStrategyConfig> & any>,
+    errorHandler: IErrorHandler<AxiosResponse> = new NoErrorHandler()
   ) {
     this.paginationStrategy = paginationStrategy;
     this.authStrategy = authStrategy;
+    this.errorHandler = errorHandler;
     this.setConfig(webScraperConfig);
 
     if (this.config.url == null)
@@ -48,8 +53,9 @@ export abstract class AbstractAxiosFetchStrategy<TRet>
   public async getAxiosConfig(
     pagination: IPagination
   ): Promise<AxiosRequestConfig> {
-    const paginationConfig =
-      await this.paginationStrategy.getPaginationConfig(pagination);
+    const paginationConfig = await this.paginationStrategy.getPaginationConfig(
+      pagination
+    );
 
     const defaultConfig: AxiosRequestConfig = {
       url: this.config.url,

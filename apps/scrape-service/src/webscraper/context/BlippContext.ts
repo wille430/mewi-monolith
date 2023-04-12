@@ -1,10 +1,15 @@
 import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
+import { ListingOrigin } from "@mewi/models";
 
 export class BlippContext extends WebScraperContext {
   constructor() {
-    super([new BlippConfig()]);
+    super(
+      [new BlippConfig()],
+      new StopAtOldListingStrategy(ListingOrigin.Blipp)
+    );
   }
 }
 
