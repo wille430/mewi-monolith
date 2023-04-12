@@ -13,13 +13,13 @@ export class StopAtOldListingStrategy
         this.origin = origin;
     }
 
-    indexOfLastValid(res: Listing[]): number | Promise<number> {
-        return -1;
+    indexOfFirstInvalid(res: Listing[]): number | Promise<number> {
+        if (this.currentOldDate == null) return -1;
+        return res.findIndex((listing) => listing.date <= this.currentOldDate);
     }
 
     public async shouldStop(res: Listing[]): Promise<boolean> {
-        if (this.oldDate == null) return false;
-        return res.findIndex((listing) => listing.date <= this.currentOldDate) >= 0;
+        return this.indexOfFirstInvalid(res) >= 0;
     }
 
     update(res: Listing[]): void | Promise<void> {
@@ -31,5 +31,9 @@ export class StopAtOldListingStrategy
 
     stop(): void | Promise<void> {
         this.currentOldDate = this.oldDate;
+    }
+
+    getStatusMsg(): string {
+        return `Stopping at listings older than ${this.currentOldDate.toLocaleString()} next`;
     }
 }

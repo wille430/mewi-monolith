@@ -1,11 +1,11 @@
 import {
   IWebScraperConfig,
-  WebScraperConfigs,
-} from "./WebScraperConfigs";
+  WebScraperContext,
+} from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
 
-export class KvdBilConfigs extends WebScraperConfigs {
+export class KvdBilContext extends WebScraperContext {
   constructor() {
     super([new KvdBilConfig()]);
   }

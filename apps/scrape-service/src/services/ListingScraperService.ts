@@ -9,8 +9,8 @@ import {ListingOrigin} from "@mewi/models";
 import {floor, max} from "lodash";
 import {ScrapeQtyService} from "./ScrapeQtyService";
 import {autoInjectable, inject} from "tsyringe";
-import {ConfiguredWebScraper} from "../webscraper/WebScraper";
 import {ListingScraperPool} from "./ListingScraperPool";
+import {WebScraperManager} from "../webscraper/WebScraper";
 
 @autoInjectable()
 export class ListingScraperService {
@@ -59,8 +59,8 @@ export class ListingScraperService {
 
     private async scrapeByOrigin(args: ScrapeByOriginArgs) {
         const {scrapeAmount: _scrapeAmount, origin} = args;
-        const scraper = this.getScraper(origin);
-        const configs = scraper.getConfigs();
+        const context = this.getContextSwitchScraper(origin);
+        const configs = context.getConfigs();
         let scrapeAmount = _scrapeAmount;
 
         if (scrapeAmount == null) {
@@ -70,10 +70,11 @@ export class ListingScraperService {
 
         console.log(`Scraping ${scrapeAmount} listings from ${origin}...`);
 
+        const scraper = context.getScraper();
         const listings = [];
         for (const config of configs) {
             try {
-                scraper.setConfig(config);
+                context.setConfig(config.getIdentifier());
                 const {entities} = await scraper.scrape(scrapeAmountEndpoint);
                 listings.push(...entities);
             } catch (e) {
@@ -100,10 +101,11 @@ export class ListingScraperService {
         );
 
         // run scraper
-        const scraper = this.getScraper(origin);
+        const context = this.getContextSwitchScraper(origin);
+        const scraper = context.getScraper();
 
         try {
-            scraper.setConfigById(configId);
+            context.setConfig(configId);
         } catch (e) {
             console.log(e);
             return;
@@ -137,8 +139,9 @@ export class ListingScraperService {
         );
 
         for (const origin of Object.values(ListingOrigin)) {
-            const scraper = this.getScraper(origin);
-            const configs = scraper.getConfigs();
+            const context = this.getContextSwitchScraper(origin);
+            const scraper = context.getScraper();
+            const configs = context.getConfigs();
 
             const scrapeAmountEndpoint = scrapeAmountScraper / configs.length;
             const listings = [];
@@ -176,7 +179,9 @@ export class ListingScraperService {
         });
     }
 
-    private getScraper(origin: ListingOrigin): ConfiguredWebScraper<Listing> {
+    private getContextSwitchScraper(
+        origin: ListingOrigin
+    ): WebScraperManager<Listing> {
         return this.scraperPool.getScraper(origin);
     }
 }

@@ -1,7 +1,7 @@
 import { IPaginationStrategy } from "./PaginationStrategy";
 import { AxiosRequestConfig } from "axios";
 import { IPagination } from "@mewi/models";
-import { BlippConfig } from "../config/BlippConfigs";
+import { BlippConfig } from "../config/BlippContext";
 
 export class BlippPaginationStrategy
   implements IPaginationStrategy<AxiosRequestConfig>

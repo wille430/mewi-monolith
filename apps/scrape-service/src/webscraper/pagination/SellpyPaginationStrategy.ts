@@ -1,7 +1,7 @@
 import { IPaginationStrategy } from "./PaginationStrategy";
 import { AxiosRequestConfig } from "axios";
 import { IPagination } from "@mewi/models";
-import { SellpyConfig } from "../config/SellpyConfigs";
+import { SellpyConfig } from "../config/SellpyContext";
 
 export class SellpyPaginationStrategy
   implements IPaginationStrategy<AxiosRequestConfig>

@@ -1,24 +1,26 @@
-import { IWebScraperConfig, WebScraperConfigs } from "./WebScraperConfigs";
+import {
+  IWebScraperConfig,
+  WebScraperContext,
+} from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
 
-export class BlippConfigs extends WebScraperConfigs {
+export class CitiboardContext extends WebScraperContext {
   constructor() {
-    super([new BlippConfig()]);
+    super([new CitiboardConfig()]);
   }
 }
 
-export class BlippConfig
+class CitiboardConfig
   implements
     IWebScraperConfig<
       Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig
     >
 {
-  public static limit = 20;
-
   getFetchConfig(): Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig {
     return {
-      dataJsonPath: "body.payload.items",
+      dataJsonPath: "annonser",
+      url: "https://api42.citiboard.se/cb/annonslista?url=/&sort=&sok=",
     };
   }
 
@@ -27,6 +29,6 @@ export class BlippConfig
   }
 
   getUrl(): string {
-    return "https://blipp.se/api/proxy";
+    return this.getFetchConfig().url;
   }
 }

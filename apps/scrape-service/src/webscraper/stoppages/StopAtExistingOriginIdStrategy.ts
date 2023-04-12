@@ -9,7 +9,7 @@ export class StopAtExistingOriginIdStrategy
         this.ids = {};
     }
 
-    indexOfLastValid(res: Listing[]): number {
+    indexOfFirstInvalid(res: Listing[]): number {
         return -1;
     }
 
@@ -32,5 +32,11 @@ export class StopAtExistingOriginIdStrategy
     }
 
     stop(): void | Promise<void> {
+    }
+
+    getStatusMsg(): string {
+        return `Stopping when listing origin_id matches one of ${
+            Object.keys(this.ids).length
+        } origin_ids`;
     }
 }

@@ -3,8 +3,8 @@ import { IFetchStrategy } from "./fetchers/FetchStrategy";
 import { IParseStrategy } from "./parsers/ParseStrategy";
 import {
   IWebScraperConfig,
-  WebScraperConfigs,
-} from "./config/WebScraperConfigs";
+  WebScraperContext,
+} from "./config/WebScraperContext";
 import { IStopScrapeStrategy } from "./stoppages/StopScrapeStrategy";
 import { NeverStopStrategy } from "./stoppages/NeverStopStrategy";
 import { createLogger, Logger, transports } from "winston";
@@ -54,6 +54,8 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
 
     await this.stopScrapeStrategy.stop();
 
+    this.logger.log("info", this.stopScrapeStrategy.getStatusMsg());
+
     return {
       ...res,
       entities: res.entities.slice(0, amount),
@@ -74,14 +76,28 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
       } objects from ${this.config.getUrl()} with config ${this.config.getIdentifier()}`
     );
 
-    const entities = await this.parseStrategy.parseAll(objs.data);
+    let entities = await this.parseStrategy.parseAll(objs.data);
 
     await this.stopScrapeStrategy.update(entities);
 
     const shouldStop = await this.stopScrapeStrategy.shouldStop(entities);
+    const stopAtIndex = await this.stopScrapeStrategy.indexOfFirstInvalid(
+      entities
+    );
+
+    if (stopAtIndex >= 0) {
+      entities = entities.slice(0, stopAtIndex);
+    }
 
     if (shouldStop) {
-      this.logger.log("info", `Reached stop. Stopping scraping...`);
+      if (stopAtIndex < 0) {
+        this.logger.log("info", `Reached stop. Stopping scraping...`);
+      } else {
+        this.logger.log(
+          "info",
+          `Reached stop. Stopping scraping with ${entities.length} remaining entities...`
+        );
+      }
     }
 
     return {
@@ -135,33 +151,34 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
   }
 }
 
-export class ConfiguredWebScraper<
-  R,
-  T = any,
-  M = Record<any, any>
-> extends WebScraper<R, T, M> {
-  private configs: WebScraperConfigs;
+export class WebScraperManager<R, T = any, M = Record<any, any>> {
+  private readonly webScraper: WebScraper<R, T, M>;
+  private readonly context: WebScraperContext;
 
-  constructor(configs: WebScraperConfigs, logger: Logger = null) {
-    super(logger);
-    this.configs = configs;
-    this.setInitialConfig();
+  constructor(webScraper: WebScraper<R, T, M>, context: WebScraperContext) {
+    this.webScraper = webScraper;
+    this.context = context;
+
+    this.updateWebScraper();
   }
 
-  private setInitialConfig() {
-    this.config = this.configs.currentConfig();
-  }
-
-  public nextConfig() {
-    this.configs.nextConfig();
-    this.config = this.configs.currentConfig();
-  }
-
-  public setConfigById(id: string) {
-    return this.configs.setConfigById(id);
+  public getScraper() {
+    return this.webScraper;
   }
 
   public getConfigs() {
-    return this.configs.getConfigs();
+    return this.context.getConfigs();
+  }
+
+  public setConfig(configId: string) {
+    this.context.setConfig(configId);
+    this.updateWebScraper();
+  }
+
+  private updateWebScraper() {
+    const config = this.context.getConfig();
+
+    this.webScraper.setConfig(config);
+    this.webScraper.setStopScrapeStrategy(this.context.getStopStrategy());
   }
 }

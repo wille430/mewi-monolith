@@ -1,10 +1,15 @@
-import { IWebScraperConfig, WebScraperConfigs } from "./WebScraperConfigs";
+import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
+import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
+import { ListingOrigin } from "@mewi/models";
 
-export class BlocketConfigs extends WebScraperConfigs<BlocketConfig> {
+export class BlocketContext extends WebScraperContext<BlocketConfig> {
   constructor() {
-    super([new BlocketConfig()]);
+    super(
+      [new BlocketConfig()],
+      new StopAtOldListingStrategy(ListingOrigin.Blocket)
+    );
   }
 }
 

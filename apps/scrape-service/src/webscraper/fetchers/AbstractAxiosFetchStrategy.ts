@@ -1,7 +1,7 @@
 import { IPaginationStrategy } from "../pagination/PaginationStrategy";
 import { AxiosRequestConfig } from "axios";
 import { IAuthStrategy } from "../auth/AuthStrategy";
-import { IWebScraperConfig } from "../config/WebScraperConfigs";
+import { IWebScraperConfig } from "../config/WebScraperContext";
 import { IPagination } from "@mewi/models";
 import { FetchResult, IFetchStrategy } from "./FetchStrategy";
 import { IFetchDoneStrategy, NeverDoneStrategy } from "./FetchDoneStrategy";

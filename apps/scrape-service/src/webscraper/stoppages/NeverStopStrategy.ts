@@ -1,7 +1,10 @@
 import {IStopScrapeStrategy} from "./StopScrapeStrategy";
 
 export class NeverStopStrategy implements IStopScrapeStrategy<any> {
-    indexOfLastValid(): number | Promise<number> {
+    getStatusMsg(): string {
+        return "No stoppage"
+    }
+    indexOfFirstInvalid(): number | Promise<number> {
         return -1;
     }
 

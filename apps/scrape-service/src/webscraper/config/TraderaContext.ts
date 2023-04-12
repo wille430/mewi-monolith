@@ -1,12 +1,14 @@
-import { IWebScraperConfig, WebScraperConfigs } from "./WebScraperConfigs";
+import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
+import { ListingOrigin } from "@mewi/models";
 
-export class TraderaConfigs extends WebScraperConfigs<TraderaConfig> {
+export class TraderaContext extends WebScraperContext<TraderaConfig> {
   constructor() {
     const categories = TraderaConfig.categories.map((o) => o.href);
     const configs = categories.map((cat) => new TraderaConfig(cat));
-    super(configs);
+    super(configs, new StopAtOldListingStrategy(ListingOrigin.Tradera));
   }
 }
 
@@ -77,6 +79,6 @@ export class TraderaConfig
   }
 
   getUrl(): string {
-    return `https://www.tradera.com${this.getIdentifier()}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.`;
+    return `https://www.tradera.com${this.getIdentifier()}.json?paging=MjpBdWN0aW9ufDM5fDE4Nzg0OlNob3BJdGVtfDl8NDMzNTg.&sortBy=AddedOn`;
   }
 }

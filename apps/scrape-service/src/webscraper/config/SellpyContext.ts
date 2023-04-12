@@ -1,8 +1,8 @@
-import { IWebScraperConfig, WebScraperConfigs } from "./WebScraperConfigs";
+import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
 import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
 
-export class SellpyConfigs extends WebScraperConfigs<SellpyConfig> {
+export class SellpyContext extends WebScraperContext<SellpyConfig> {
   constructor() {
     super([new SellpyConfig()]);
   }
