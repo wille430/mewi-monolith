@@ -1,7 +1,5 @@
-import {IWebScraperConfig, WebScraperContext} from "./WebScraperContext";
-import {HttpFetchStrategyConfig} from "../fetchers/AbstractAxiosFetchStrategy";
-import {HtmlFetchStrategyConfig} from "../fetchers/HtmlFetchStrategy";
-import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy"
+import {WebScraperConfig, WebScraperContext} from "./WebScraperContext"
+import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy";
 
 export class BytbilContext extends WebScraperContext<BytbilConfig> {
     constructor() {
@@ -12,7 +10,7 @@ export class BytbilContext extends WebScraperContext<BytbilConfig> {
 }
 
 
-export class BytbilConfig implements IWebScraperConfig<Partial<HttpFetchStrategyConfig> & HtmlFetchStrategyConfig> {
+export class BytbilConfig extends WebScraperConfig {
     public static readonly vehicleTypes = [
         "bil",
         "transportbil",
@@ -27,23 +25,15 @@ export class BytbilConfig implements IWebScraperConfig<Partial<HttpFetchStrategy
 
     public static readonly baseUrl = "https://bytbil.com/";
 
-    public static readonly fetchConfig: Partial<HttpFetchStrategyConfig> &
-        HtmlFetchStrategyConfig = {
-        selector: ".result-list > .result-list-item",
-    };
-
     private readonly category: string;
 
     constructor(category: typeof BytbilConfig["vehicleTypes"][number]) {
-        this.category = category;
+      super();
+      this.category = category;
     }
 
     getUrl(): string {
         return `${BytbilConfig.baseUrl}${this.category}`;
-    }
-
-    getFetchConfig(): Partial<HttpFetchStrategyConfig> & HtmlFetchStrategyConfig {
-        return BytbilConfig.fetchConfig;
     }
 
     getIdentifier(): string {

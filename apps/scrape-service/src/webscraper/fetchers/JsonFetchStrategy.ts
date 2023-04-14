@@ -1,13 +1,15 @@
-import { AbstractAxiosFetchStrategy } from "./AbstractAxiosFetchStrategy";
+import {
+  AbstractAxiosFetchStrategy,
+  HttpFetchStrategyConfig,
+} from "./AbstractAxiosFetchStrategy";
 import { IPaginationStrategy } from "../pagination/PaginationStrategy";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { IAuthStrategy } from "../auth/AuthStrategy";
-import { WebScraper } from "../WebScraper";
 import { IPagination } from "@mewi/models";
 import get from "lodash/get";
 import { FetchResult } from "./FetchStrategy";
 import { IErrorHandler } from "../error/ErrorHandler";
-import { NoErrorHandler } from "../error/NoErrorHandler";
+import { WebScraperConfig } from "../context/WebScraperContext";
 
 export interface JsonFetchStrategyConfig {
   dataJsonPath: string;
@@ -21,27 +23,30 @@ export class JsonFetchStrategy extends AbstractAxiosFetchStrategy<
   constructor(
     paginationStrategy: IPaginationStrategy<AxiosRequestConfig>,
     authStrategy: IAuthStrategy,
-    webScraper: WebScraper<any>,
-    errorHandler: IErrorHandler<AxiosResponse> = new NoErrorHandler()
+    errorHandler: IErrorHandler<AxiosResponse>,
+    fetchConfig: Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig
   ) {
-    super(paginationStrategy, authStrategy, webScraper.getConfig(), errorHandler);
+    super(paginationStrategy, authStrategy, errorHandler);
+
     this.fetchConfig = {
-      dataJsonPath: webScraper.getConfig().getFetchConfig().dataJsonPath,
+      dataJsonPath: fetchConfig.dataJsonPath,
     };
   }
 
   public async fetch(
-    pagination: IPagination
+    pagination: IPagination,
+    config: WebScraperConfig
   ): Promise<FetchResult<Record<any, any>[]>> {
-    const axiosConfig = await this.getAxiosConfig(pagination);
+    const axiosConfig = await this.getAxiosConfig(pagination, config);
     const res = await axios(axiosConfig);
     const { data } = res;
 
     const result = get(data, this.fetchConfig.dataJsonPath);
     return {
       data: result,
-      done: await this.fetchDoneStrategy.isDone(pagination, result),
+      done: await this.fetchDoneStrategy.isDone(pagination, result, config),
       error: await this.errorHandler.isError(res),
+      url: axios.getUri(axiosConfig),
     };
   }
 }

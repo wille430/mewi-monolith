@@ -50,7 +50,9 @@ describe("WebScrapers", () => {
             invalidListings++;
           }
 
-          if (listing.imageUrl.length == 0) hasNoImage++;
+          if (listing.imageUrl.length === 0) {
+            hasNoImage++;
+          }
         }
         expect(invalidListings).toBe(0);
         // Some listings must at least have an image
@@ -61,22 +63,23 @@ describe("WebScrapers", () => {
         "should return different listings on pagination",
         async () => {
           // Scraping page 2 before page 1 to not get duplicates
-          const page2 = await scraper.scrapePage({
+          const secondPage = await scraper.scrapePage({
             page: 2,
             limit: 20,
           });
-          const page1 = await scraper.scrapePage({
+          const firstPage = await scraper.scrapePage({
             page: 1,
             limit: 20,
           });
 
-          const sameListing: ListingDto[] = page1.entities.filter(
+          const sameListing: ListingDto[] = firstPage.entities.filter(
             (l1) =>
-              page2.entities.find((l2) => l2.origin_id === l1.origin_id) != null
+              secondPage.entities.find((l2) => l2.origin_id === l1.origin_id) !=
+              null
           );
 
           expect(sameListing.length).toBeLessThanOrEqual(
-            page2.entities.length / 2
+            secondPage.entities.length / 2
           );
         },
         {

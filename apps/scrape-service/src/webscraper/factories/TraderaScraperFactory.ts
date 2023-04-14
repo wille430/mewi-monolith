@@ -23,18 +23,16 @@ export class TraderaScraperFactory extends AbstractListingScraperFactory<
     return new TraderaContext();
   }
 
-  createFetchDoneStrategy(
-    fetchStrategy: IFetchStrategy<Record<any, any>>
-  ): IFetchDoneStrategy<Listing[]> {
+  createFetchDoneStrategy(): IFetchDoneStrategy<Listing[]> {
     return new LimitIsLessStrategy();
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Record<any, any>>
   ): IFetchStrategy<Record<any, any>> {
-    return new JsonFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy(this.createFetchDoneStrategy);
+    return new JsonFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      dataJsonPath: "items",
+    });
   }
 
   createPaginationStrategy(

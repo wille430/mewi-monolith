@@ -20,16 +20,16 @@ export class KvdBilScraperFactory extends AbstractListingScraperFactory<
     return new KvdBilContext();
   }
 
-  createFetchDoneStrategy(fetchStrategy: IFetchStrategy<Record<any, any>>) {
+  createFetchDoneStrategy() {
     return new LimitIsLessStrategy();
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Record<any, any>>
   ): IFetchStrategy<Record<any, any>> {
-    return new JsonFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy((o) => this.createFetchDoneStrategy(o));
+    return new JsonFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      dataJsonPath: "auctions",
+    });
   }
 
   createPaginationStrategy(): IPaginationStrategy<AxiosRequestConfig> {

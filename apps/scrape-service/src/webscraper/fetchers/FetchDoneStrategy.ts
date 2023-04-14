@@ -1,9 +1,10 @@
 import { IPagination } from "@mewi/models";
 import { AbstractAxiosFetchStrategy } from "./AbstractAxiosFetchStrategy";
 import axios from "axios";
+import {IWebScraperConfig} from "../context/WebScraperContext"
 
 export interface IFetchDoneStrategy<T = any[]> {
-  isDone(pagination: IPagination, result: T): boolean | Promise<boolean>;
+  isDone(pagination: IPagination, result: T, config: IWebScraperConfig): boolean | Promise<boolean>;
 }
 
 export class HasNextPageStrategy implements IFetchDoneStrategy {
@@ -13,13 +14,13 @@ export class HasNextPageStrategy implements IFetchDoneStrategy {
     this.fetchStrategy = fetchStrategy;
   }
 
-  public async isDone(pagination: IPagination): Promise<boolean> {
+  public async isDone(pagination: IPagination, result: any, config: IWebScraperConfig): Promise<boolean> {
     pagination.page++;
 
-    const config = await this.fetchStrategy.getAxiosConfig(pagination);
+    const axiosConfig = await this.fetchStrategy.getAxiosConfig(pagination, config);
     try {
       // axios will throw for 404 status code
-      await axios(config);
+      await axios(axiosConfig);
       return false;
     } catch (e) {
       return true;
@@ -44,7 +45,9 @@ export class LimitIsLessStrategy implements IFetchDoneStrategy {
 
 export class EmptyResultStrategy implements IFetchDoneStrategy {
   isDone(pagination: IPagination, result: any[]): boolean | Promise<boolean> {
-    if (result == null) return true;
+    if (result == null) {
+      return true;
+    }
     return result.length === 0;
   }
 }

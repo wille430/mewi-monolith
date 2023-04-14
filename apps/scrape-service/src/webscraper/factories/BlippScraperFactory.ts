@@ -14,23 +14,22 @@ import { BlippParseStrategy } from "../parsers/BlippParseStrategy";
 import { ListingOrigin } from "@mewi/models";
 
 export class BlippScraperFactory extends AbstractListingScraperFactory<
-  Record<any, any>,
-  AxiosRequestConfig
+  Record<any, any>
 > {
   createContext(): WebScraperContext {
     return new BlippContext();
   }
 
-  createFetchDoneStrategy(fetchStrategy: IFetchStrategy<Record<any, any>>) {
+  createFetchDoneStrategy() {
     return new EmptyResultStrategy();
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Record<any, any>>
   ): IFetchStrategy<Record<any, any>> {
-    return new JsonFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy(this.createFetchDoneStrategy);
+    return new JsonFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      dataJsonPath: "body.payload.items",
+    });
   }
 
   createPaginationStrategy(): IPaginationStrategy<AxiosRequestConfig> {

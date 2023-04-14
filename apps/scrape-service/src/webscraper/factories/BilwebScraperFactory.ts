@@ -24,23 +24,19 @@ export class BilwebScraperFactory extends AbstractListingScraperFactory<
     return new BilwebContext();
   }
 
-  createFetchDoneStrategy(
-    fetchStrategy: IFetchStrategy<Cheerio<any>>
-  ): IFetchDoneStrategy<Listing[]> {
+  createFetchDoneStrategy(): IFetchDoneStrategy<Listing[]> {
     return new EmptyResultStrategy();
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Cheerio<any>>
   ): IFetchStrategy<Cheerio<any>> {
-    return new HtmlFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy(this.createFetchDoneStrategy);
+    return new HtmlFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      selector: ".Card-Wrapper > .Card",
+    });
   }
 
-  createPaginationStrategy(
-    webScraper: WebScraper<Listing, Cheerio<any>>
-  ): IPaginationStrategy<AxiosRequestConfig> {
+  createPaginationStrategy(): IPaginationStrategy<AxiosRequestConfig> {
     return new UrlQueryParamsPaginationStrategy({
       limitParam: "limit",
       offsetParam: "offset",

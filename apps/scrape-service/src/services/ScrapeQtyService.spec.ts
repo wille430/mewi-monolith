@@ -22,10 +22,10 @@ describe("ScrapeQtyService", () => {
     });
 
     it("should return a valid decimal number", () => {
-      expect(res).toBeGreaterThan(ScrapeQtyService.MIN_SCRAPE_QUANTITY);
-      expect(res).toBeLessThan(ScrapeQtyService.TOTAL_SCRAPE_QUANTITY);
+      expect(res).toBeGreaterThan(ScrapeQtyService.minScrapeQuantity);
+      expect(res).toBeLessThan(ScrapeQtyService.totalScrapeQuantity);
 
-      expect(res).toBe(ScrapeQtyService.TOTAL_SCRAPE_QUANTITY / 2);
+      expect(res).toBe(ScrapeQtyService.totalScrapeQuantity / 2);
     });
   });
 });

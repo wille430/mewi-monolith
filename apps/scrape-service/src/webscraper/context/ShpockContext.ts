@@ -1,10 +1,5 @@
-import {
-  IWebScraperConfig,
-  WebScraperContext,
-} from "./WebScraperContext";
-import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
-import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
-import {StopAtExistingOriginIdStrategy} from "../stoppages/StopAtExistingOriginIdStrategy"
+import {WebScraperConfig, WebScraperContext} from "./WebScraperContext"
+import { StopAtExistingOriginIdStrategy } from "../stoppages/StopAtExistingOriginIdStrategy";
 
 export class ShpockContext extends WebScraperContext {
   constructor() {
@@ -12,28 +7,15 @@ export class ShpockContext extends WebScraperContext {
   }
 }
 
-export class ShpockConfig
-  implements
-    IWebScraperConfig<
-      Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig
-    >
-{
-
+export class ShpockConfig extends WebScraperConfig {
   public static limit = 30;
-
-  getFetchConfig(): Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig {
-    return {
-      dataJsonPath: "data.itemSearch.itemResults[0].items",
-      method: "POST",
-      url: "https://www.shpock.com/graphql",
-    };
-  }
-
-  getIdentifier(): string {
-    return null;
-  }
+  public static apiUrl = "https://www.shpock.com/graphql";
 
   getUrl(): string {
-    return this.getFetchConfig().url;
+    return ShpockConfig.apiUrl;
+  }
+
+  getMethod(): string {
+    return "POST"
   }
 }

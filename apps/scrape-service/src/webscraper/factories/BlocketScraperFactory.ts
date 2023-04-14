@@ -1,3 +1,5 @@
+// noinspection LongLine
+
 import { WebScraperContext } from "../context/WebScraperContext";
 import { BlocketContext } from "../context/BlocketContext";
 import { IFetchStrategy } from "../fetchers/FetchStrategy";
@@ -17,27 +19,28 @@ import { AbstractListingScraperFactory } from "./AbstractListingScraperFactory";
 import { AxiosRequestConfig } from "axios";
 
 export class BlocketScraperFactory extends AbstractListingScraperFactory<
-  Record<any, any>,
-  AxiosRequestConfig
+  Record<any, any>
 > {
   createContext(): WebScraperContext {
     return new BlocketContext();
   }
 
   createFetchDoneStrategy(fetchStrategy: IFetchStrategy<Record<any, any>>) {
-    if (!(fetchStrategy instanceof AbstractAxiosFetchStrategy))
+    if (!(fetchStrategy instanceof AbstractAxiosFetchStrategy)) {
       throw new Error(
-        `${HasNextPageStrategy.name} must be initialized with a FetchStrategy of type ${AbstractAxiosFetchStrategy.name}`
+        `${HasNextPageStrategy.name} must be initialized with a FetchStrategy
+           of type ${AbstractAxiosFetchStrategy.name}`
       );
+    }
     return new HasNextPageStrategy(fetchStrategy);
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Record<any, any>>
   ): IFetchStrategy<any> {
-    return new JsonFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy((o) => this.createFetchDoneStrategy(o));
+    return new JsonFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      dataJsonPath: "data",
+    });
   }
 
   createPaginationStrategy(): IPaginationStrategy<AxiosRequestConfig> {

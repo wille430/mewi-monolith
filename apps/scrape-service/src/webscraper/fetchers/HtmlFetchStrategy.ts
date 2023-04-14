@@ -3,11 +3,11 @@ import { Cheerio, load } from "cheerio";
 import { IPaginationStrategy } from "../pagination/PaginationStrategy";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { IAuthStrategy } from "../auth/AuthStrategy";
-import { WebScraper } from "../WebScraper";
 import { IPagination } from "@mewi/models";
 import { FetchResult } from "./FetchStrategy";
 import { IErrorHandler } from "../error/ErrorHandler";
 import { NoErrorHandler } from "../error/NoErrorHandler";
+import { WebScraperConfig } from "../context/WebScraperContext";
 
 export interface HtmlFetchStrategyConfig {
   selector: string;
@@ -21,32 +21,30 @@ export class HtmlFetchStrategy extends AbstractAxiosFetchStrategy<
   constructor(
     paginationStrategy: IPaginationStrategy<AxiosRequestConfig>,
     authStrategy: IAuthStrategy,
-    webScraper: WebScraper<any>,
-    errorHandler: IErrorHandler<AxiosResponse> = new NoErrorHandler()
+    errorHandler: IErrorHandler<AxiosResponse> = new NoErrorHandler(),
+    config: HtmlFetchStrategyConfig
   ) {
-    const { selector } = webScraper.getConfig().getFetchConfig();
-    super(
-      paginationStrategy,
-      authStrategy,
-      webScraper.getConfig(),
-      errorHandler
-    );
-    this.htmlConfig = { selector };
+    super(paginationStrategy, authStrategy, errorHandler);
+
+    this.htmlConfig = { ...config };
   }
 
   public async fetch(
-    pagination: IPagination
+    pagination: IPagination,
+    config: WebScraperConfig
   ): Promise<FetchResult<Cheerio<any>[]>> {
-    const res = await axios(await this.getAxiosConfig(pagination));
-    const $ = load(res.data);
+    const axiosConfig = await this.getAxiosConfig(pagination, config);
+    const res = await axios(axiosConfig);
+    const cheerio = load(res.data);
 
-    const result = $(this.htmlConfig.selector)
+    const result = cheerio(this.htmlConfig.selector)
       .toArray()
-      .map((node) => $(node));
+      .map((node) => cheerio(node));
     return {
       data: result,
-      done: await this.fetchDoneStrategy.isDone(pagination, result),
+      done: await this.fetchDoneStrategy.isDone(pagination, result, config),
       error: await this.errorHandler.isError(res),
+      url: axios.getUri(axiosConfig),
     };
   }
 }

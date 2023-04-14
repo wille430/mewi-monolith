@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import "reflect-metadata";
 import {autoInjectable} from "tsyringe";
 import {ListingOrigin} from "@mewi/models";
 import sum from "lodash/sum";
@@ -7,8 +7,8 @@ import {max} from "lodash";
 
 @autoInjectable()
 export class ScrapeQtyService {
-    public static TOTAL_SCRAPE_QUANTITY = 10000;
-    public static MIN_SCRAPE_QUANTITY = 40;
+    public static totalScrapeQuantity = 10000;
+    public static minScrapeQuantity = 40;
     private originToFractionMap: Record<ListingOrigin, number> | null;
 
     private async getWeights() {
@@ -42,8 +42,9 @@ export class ScrapeQtyService {
         }
 
         return max([
-            (this.originToFractionMap[origin] ?? 0) * ScrapeQtyService.TOTAL_SCRAPE_QUANTITY,
-            ScrapeQtyService.MIN_SCRAPE_QUANTITY,
+            (this.originToFractionMap[origin] ?? 0) *
+            ScrapeQtyService.totalScrapeQuantity,
+            ScrapeQtyService.minScrapeQuantity,
         ]);
     }
 }

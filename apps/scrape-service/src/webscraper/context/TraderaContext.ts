@@ -1,6 +1,4 @@
-import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
-import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
-import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import { WebScraperConfig, WebScraperContext } from "./WebScraperContext";
 import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
 import { ListingOrigin } from "@mewi/models";
 
@@ -12,12 +10,7 @@ export class TraderaContext extends WebScraperContext<TraderaConfig> {
   }
 }
 
-export class TraderaConfig
-  implements
-    IWebScraperConfig<
-      Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig
-    >
-{
+export class TraderaConfig extends WebScraperConfig {
   public static categories = [
     { href: "/category/1612", title: "Accessoarer" },
     { href: "/category/20", title: "Antikt & Design" },
@@ -57,21 +50,18 @@ export class TraderaConfig
   private readonly category: string;
 
   constructor(category: string) {
-    if (category.at(0) !== "/")
+    super();
+    if (category.at(0) !== "/") {
       throw new Error("Tradera categories must start with character '/'");
+    }
 
-    if (TraderaConfig.categories.find((o) => o.href === category) == null)
+    if (TraderaConfig.categories.find((o) => o.href === category) == null) {
       throw new Error(
         `Could not find ${category} in category map. ${category} is not a valid category`
       );
+    }
 
     this.category = category;
-  }
-
-  getFetchConfig(): Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig {
-    return {
-      dataJsonPath: "items",
-    };
   }
 
   getIdentifier(): string {

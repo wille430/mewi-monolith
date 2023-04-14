@@ -23,23 +23,19 @@ export class CitiboardScraperFactory extends AbstractListingScraperFactory<
     return new CitiboardContext();
   }
 
-  createFetchDoneStrategy(
-    fetchStrategy: IFetchStrategy<Record<any, any>>
-  ): IFetchDoneStrategy<Listing[]> {
+  createFetchDoneStrategy(): IFetchDoneStrategy<Listing[]> {
     return new EmptyResultStrategy();
   }
 
   createFetchStrategy(
     webScraper: WebScraper<Listing, Record<any, any>>
   ): IFetchStrategy<Record<any, any>> {
-    return new JsonFetchStrategy(
-      ...this.getFetchStrategyArgs(webScraper)
-    ).setFetchDoneStrategy(this.createFetchDoneStrategy);
+    return new JsonFetchStrategy(...this.getFetchStrategyArgs(webScraper), {
+      dataJsonPath: "annonser",
+    });
   }
 
-  createPaginationStrategy(
-    webScraper: WebScraper<Listing, Record<any, any>>
-  ): IPaginationStrategy<AxiosRequestConfig> {
+  createPaginationStrategy(): IPaginationStrategy<AxiosRequestConfig> {
     return new UrlQueryParamsPaginationStrategy({
       pageStartNumber: 1,
       pageParam: "sida",

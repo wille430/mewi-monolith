@@ -18,7 +18,7 @@ export class WebScraper<TEntity, TRes = any> {
   private fetchStrategy: IFetchStrategy<TRes>;
   private parseStrategy: IParseStrategy<TRes, TEntity>;
   private stopScrapeStrategy: IStopScrapeStrategy<TEntity[]>;
-  protected config: IWebScraperConfig<any>;
+  protected config: IWebScraperConfig;
 
   private readonly logger: Logger;
 
@@ -70,9 +70,12 @@ export class WebScraper<TEntity, TRes = any> {
   ): Promise<WebScraperResult<TEntity[]>> {
     this.validateInitialization();
 
-    const objs = await this.fetchStrategy.fetch({ ...pagination });
+    const response = await this.fetchStrategy.fetch(
+      { ...pagination },
+      this.config
+    );
 
-    if (objs.error) {
+    if (response.error) {
       this.logger.warn(
         `Fetch from ${this.config.getUrl()}, page ${
           pagination.page
@@ -86,14 +89,12 @@ export class WebScraper<TEntity, TRes = any> {
 
     this.logger.log(
       "info",
-      `Fetched ${
-        objs.data.length
-      } objects from ${this.config.getUrl()} at page ${
+      `Fetched ${response.data.length} objects from ${response.url} at page ${
         pagination.page
       } with config ${this.config.getIdentifier()}`
     );
 
-    let entities = await this.parseStrategy.parseAll(objs.data);
+    let entities = await this.parseStrategy.parseAll(response.data);
 
     const shouldStop = await this.stopScrapeStrategy.shouldStop(entities);
     const stopAtIndex = await this.stopScrapeStrategy.indexOfFirstInvalid(
@@ -129,10 +130,13 @@ export class WebScraper<TEntity, TRes = any> {
   public async hasMore(): Promise<boolean> {
     this.validateInitialization();
 
-    const { data, done } = await this.fetchStrategy.fetch({
-      page: 1,
-      limit: 1,
-    });
+    const { data, done } = await this.fetchStrategy.fetch(
+      {
+        page: 1,
+        limit: 1,
+      },
+      this.config
+    );
     const entity = await this.parseStrategy.parse(data[0]);
 
     return !(await this.stopScrapeStrategy.shouldStop([entity])) || done;
@@ -152,7 +156,7 @@ export class WebScraper<TEntity, TRes = any> {
     this.stopScrapeStrategy = stopScrapeStrategy;
   }
 
-  public setConfig(webScraperConfig: IWebScraperConfig<any>) {
+  public setConfig(webScraperConfig: IWebScraperConfig) {
     this.config = webScraperConfig;
   }
 
@@ -161,12 +165,15 @@ export class WebScraper<TEntity, TRes = any> {
   }
 
   private validateInitialization() {
-    if (this.parseStrategy == null)
+    if (this.parseStrategy == null) {
       throw new Error(`A ParseStrategy has not been initialized`);
-    if (this.fetchStrategy == null)
+    }
+    if (this.fetchStrategy == null) {
       throw new Error(`A FetchStrategy has not been initialized`);
-    if (this.stopScrapeStrategy == null)
+    }
+    if (this.stopScrapeStrategy == null) {
       this.stopScrapeStrategy = new NeverStopStrategy();
+    }
   }
 }
 

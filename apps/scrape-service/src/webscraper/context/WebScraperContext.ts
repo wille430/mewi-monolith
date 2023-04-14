@@ -2,12 +2,30 @@ import { IStopScrapeStrategy } from "../stoppages/StopScrapeStrategy";
 import { clone } from "lodash";
 import { NeverStopStrategy } from "../stoppages/NeverStopStrategy";
 
-export interface IWebScraperConfig<FetchConfig> {
-  getFetchConfig(): FetchConfig;
-
+export interface IWebScraperConfig {
   getUrl(): string;
 
-  getIdentifier(): string;
+  getIdentifier(): string | null;
+
+  getRequestBody(): Record<any, any> | string | null | undefined;
+
+  getMethod(): string;
+}
+
+export abstract class WebScraperConfig implements IWebScraperConfig {
+  getIdentifier(): string | null {
+    return null;
+  }
+
+  getRequestBody(): Record<any, any> | string | null | undefined {
+    return undefined;
+  }
+
+  abstract getUrl(): string;
+
+  getMethod(): string {
+    return "GET";
+  }
 }
 
 export class StopStrategyManager<T> {
@@ -19,7 +37,7 @@ export class StopStrategyManager<T> {
   }
 
   public setStopStrategy(
-    config: IWebScraperConfig<T>,
+    config: IWebScraperConfig,
     strategy: IStopScrapeStrategy<T> = this.defaultStopStrategy
   ) {
     const id = config.getIdentifier();
@@ -33,19 +51,20 @@ export class StopStrategyManager<T> {
     }
   }
 
-  public getStopStrategy(config: IWebScraperConfig<T>): IStopScrapeStrategy<T> {
+  public getStopStrategy(config: IWebScraperConfig): IStopScrapeStrategy<T> {
     const id = config.getIdentifier();
     let stopStrategy = this.stopStrategies[id];
 
     if (stopStrategy == null) {
-      stopStrategy = this.stopStrategies[id] = new NeverStopStrategy();
+      this.stopStrategies[id] = new NeverStopStrategy();
+      stopStrategy = this.stopStrategies[id];
     }
 
     return stopStrategy;
   }
 }
 
-export class ConfigurationManager<T extends IWebScraperConfig<any>> {
+export class ConfigurationManager<T extends IWebScraperConfig> {
   private selectedConfig: T;
   private readonly configs: T[];
 
@@ -62,7 +81,9 @@ export class ConfigurationManager<T extends IWebScraperConfig<any>> {
   }
 
   public currentConfig() {
-    if (this.selectedConfig == null) this.selectConfig(0);
+    if (this.selectedConfig == null) {
+      this.selectConfig(0);
+    }
     return this.selectedConfig;
   }
 
@@ -83,7 +104,7 @@ export class ConfigurationManager<T extends IWebScraperConfig<any>> {
 }
 
 export class WebScraperContext<
-  T extends IWebScraperConfig<any> = IWebScraperConfig<any>,
+  T extends IWebScraperConfig = IWebScraperConfig,
   R = any
 > {
   private readonly configManager: ConfigurationManager<T>;
@@ -115,7 +136,7 @@ export class WebScraperContext<
     return this.configManager.currentConfig();
   }
 
-  public setConfig(configId: string): IWebScraperConfig<T> {
+  public setConfig(configId: string): IWebScraperConfig {
     this.configManager.setConfigById(configId);
     const config = this.getConfig();
     this.stopStrategyManager.setStopStrategy(config);

@@ -1,6 +1,4 @@
-import { IWebScraperConfig, WebScraperContext } from "./WebScraperContext";
-import { HttpFetchStrategyConfig } from "../fetchers/AbstractAxiosFetchStrategy";
-import { JsonFetchStrategyConfig } from "../fetchers/JsonFetchStrategy";
+import {WebScraperConfig, WebScraperContext} from "./WebScraperContext"
 import { StopAtOldListingStrategy } from "../stoppages/StopAtOldListingStrategy";
 import { ListingOrigin } from "@mewi/models";
 
@@ -13,23 +11,8 @@ export class BlippContext extends WebScraperContext {
   }
 }
 
-export class BlippConfig
-  implements
-    IWebScraperConfig<
-      Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig
-    >
-{
+export class BlippConfig extends WebScraperConfig {
   public static limit = 20;
-
-  getFetchConfig(): Partial<HttpFetchStrategyConfig> & JsonFetchStrategyConfig {
-    return {
-      dataJsonPath: "body.payload.items",
-    };
-  }
-
-  getIdentifier(): string {
-    return null;
-  }
 
   getUrl(): string {
     return "https://blipp.se/api/proxy";
