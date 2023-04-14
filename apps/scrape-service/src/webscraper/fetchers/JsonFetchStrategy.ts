@@ -33,7 +33,8 @@ export class JsonFetchStrategy extends AbstractAxiosFetchStrategy<
   public async fetch(
     pagination: IPagination
   ): Promise<FetchResult<Record<any, any>[]>> {
-    const res = await axios(await this.getAxiosConfig(pagination));
+    const axiosConfig = await this.getAxiosConfig(pagination);
+    const res = await axios(axiosConfig);
     const { data } = res;
 
     const result = get(data, this.fetchConfig.dataJsonPath);

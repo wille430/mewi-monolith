@@ -17,7 +17,6 @@ export class UrlQueryParamsPaginationStrategy
   private static readonly defaultConfig: UrlQueryParamsPaginationStrategyConfig =
     {
       pageParam: "page",
-      limitParam: "limit",
       pageStartNumber: 1,
     };
 
@@ -32,7 +31,7 @@ export class UrlQueryParamsPaginationStrategy
     const paramObj = {};
 
     paramObj[this.config.pageParam] =
-      pagination.page - (this.config.pageStartNumber + 1);
+      pagination.page - (1 - this.config.pageStartNumber);
 
     if (this.config.limitParam)
       paramObj[this.config.limitParam] = pagination.limit;
@@ -41,7 +40,7 @@ export class UrlQueryParamsPaginationStrategy
       paramObj[this.config.offsetParam] =
         (pagination.page - 1) * pagination.limit;
 
-    const params = new URLSearchParams({});
+    const params = new URLSearchParams(paramObj);
     return { params };
   }
 }

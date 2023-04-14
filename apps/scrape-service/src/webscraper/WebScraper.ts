@@ -14,10 +14,10 @@ export interface WebScraperResult<T> {
   shouldContinue: boolean;
 }
 
-export class WebScraper<R, T = any, M = Record<any, any>> {
-  private fetchStrategy: IFetchStrategy<T>;
-  private parseStrategy: IParseStrategy<T, R>;
-  private stopScrapeStrategy: IStopScrapeStrategy<R[]>;
+export class WebScraper<TEntity, TRes = any> {
+  private fetchStrategy: IFetchStrategy<TRes>;
+  private parseStrategy: IParseStrategy<TRes, TEntity>;
+  private stopScrapeStrategy: IStopScrapeStrategy<TEntity[]>;
   protected config: IWebScraperConfig<any>;
 
   private readonly logger: Logger;
@@ -32,8 +32,11 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
     }
   }
 
-  public async scrape(amount: number): Promise<WebScraperResult<R[]>> {
-    const res: WebScraperResult<R[]> = { entities: [], shouldContinue: true };
+  public async scrape(amount: number): Promise<WebScraperResult<TEntity[]>> {
+    const res: WebScraperResult<TEntity[]> = {
+      entities: [],
+      shouldContinue: true,
+    };
     let page = 1;
 
     await this.stopScrapeStrategy.start();
@@ -64,10 +67,10 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
 
   public async scrapePage(
     pagination: IPagination
-  ): Promise<WebScraperResult<R[]>> {
+  ): Promise<WebScraperResult<TEntity[]>> {
     this.validateInitialization();
 
-    const objs = await this.fetchStrategy.fetch(pagination);
+    const objs = await this.fetchStrategy.fetch({ ...pagination });
 
     if (objs.error) {
       this.logger.warn(
@@ -135,15 +138,17 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
     return !(await this.stopScrapeStrategy.shouldStop([entity])) || done;
   }
 
-  public setParseStrategy(parseStrategy: IParseStrategy<T, R>) {
+  public setParseStrategy(parseStrategy: IParseStrategy<TRes, TEntity>) {
     this.parseStrategy = parseStrategy;
   }
 
-  public setFetchStrategy(fetchStrategy: IFetchStrategy<T>) {
+  public setFetchStrategy(fetchStrategy: IFetchStrategy<TRes>) {
     this.fetchStrategy = fetchStrategy;
   }
 
-  public setStopScrapeStrategy(stopScrapeStrategy: IStopScrapeStrategy<R[]>) {
+  public setStopScrapeStrategy(
+    stopScrapeStrategy: IStopScrapeStrategy<TEntity[]>
+  ) {
     this.stopScrapeStrategy = stopScrapeStrategy;
   }
 
@@ -165,11 +170,11 @@ export class WebScraper<R, T = any, M = Record<any, any>> {
   }
 }
 
-export class WebScraperManager<R, T = any, M = Record<any, any>> {
-  private readonly webScraper: WebScraper<R, T, M>;
+export class WebScraperManager<R, T = any> {
+  private readonly webScraper: WebScraper<R, T>;
   private readonly context: WebScraperContext;
 
-  constructor(webScraper: WebScraper<R, T, M>, context: WebScraperContext) {
+  constructor(webScraper: WebScraper<R, T>, context: WebScraperContext) {
     this.webScraper = webScraper;
     this.context = context;
 

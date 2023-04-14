@@ -1,18 +1,18 @@
 import {IPaginationStrategy} from "./PaginationStrategy";
 import axios, {AxiosRequestConfig} from "axios";
 import {IPagination} from "@mewi/models";
-import {IWebScraperConfig} from "../context/WebScraperContext";
 import get from "lodash/get";
 import {max} from "lodash";
+import {WebScraper} from "../WebScraper";
 
 export class TraderaPaginationStrategy
     implements IPaginationStrategy<AxiosRequestConfig> {
     private readonly pagings: Record<number, string> = {};
-    private readonly config: IWebScraperConfig<any>;
     private static readonly pageLinksJsonPath = "pagination.pageLinks";
+    private webScraper: WebScraper<any>;
 
-    constructor(config: IWebScraperConfig<any>) {
-        this.config = config;
+    constructor(webScraper: WebScraper<any>) {
+        this.webScraper = webScraper;
     }
 
     public async getPaginationConfig(
@@ -31,18 +31,21 @@ export class TraderaPaginationStrategy
     }
 
     public async getPagingValue(page: number) {
-        if (page < 10) {
-            return null;
-        }
         await this.getPagingValuesUpTo(page);
         return this.pagings[page];
     }
 
     private async getPagingValuesUpTo(page: number): Promise<void> {
+
+        // fetching the first page requires no paging param
+        if (page <= 1) {
+            return;
+        }
+
         let maxPage: number;
         while ((maxPage = this.getMaxPagingKey(page)) < page) {
             const res = await axios({
-                url: this.config.getUrl(),
+                url: this.webScraper.getConfig().getUrl(),
                 params: {paging: this.pagings[maxPage], spage: maxPage},
             });
 

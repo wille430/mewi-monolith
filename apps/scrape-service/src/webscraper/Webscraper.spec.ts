@@ -1,6 +1,6 @@
 import { beforeAll, expect } from "vitest";
 import { WebScraper } from "./WebScraper";
-import { WebScraperFactory } from "./WebScraperFactory";
+import { WebScraperFactory } from "./factories/WebScraperFactory";
 import { ListingDto, ListingOrigin } from "@mewi/models";
 import { validate } from "class-validator";
 import { plainToInstance } from "class-transformer";
@@ -21,25 +21,21 @@ describe("WebScrapers", () => {
 
       beforeEach(async () => {
         ret = await scraper.hasMore();
-      })
+      });
 
       it("should return boolean", () => {
         expect(ret).toBe(true);
-      })
-    })
+      });
+    });
 
     describe("#scrape", () => {
-      let entities: ListingDto[];
-
-      beforeEach(async () => {
+      it("should return listings", async () => {
         const res = await scraper.scrapePage({
           page: 1,
           limit: 20,
         });
-        entities = res.entities;
-      });
+        const entities = res.entities;
 
-      it("should return listings", async () => {
         expect(entities).toBeInstanceOf(Array);
         expect(entities.length).toBeGreaterThan(1);
 
@@ -60,6 +56,33 @@ describe("WebScrapers", () => {
         // Some listings must at least have an image
         expect(hasNoImage).toBeLessThan(entities.length);
       });
+
+      it(
+        "should return different listings on pagination",
+        async () => {
+          // Scraping page 2 before page 1 to not get duplicates
+          const page2 = await scraper.scrapePage({
+            page: 2,
+            limit: 20,
+          });
+          const page1 = await scraper.scrapePage({
+            page: 1,
+            limit: 20,
+          });
+
+          const sameListing: ListingDto[] = page1.entities.filter(
+            (l1) =>
+              page2.entities.find((l2) => l2.origin_id === l1.origin_id) != null
+          );
+
+          expect(sameListing.length).toBeLessThanOrEqual(
+            page2.entities.length / 2
+          );
+        },
+        {
+          timeout: 30000,
+        }
+      );
     });
   });
 });

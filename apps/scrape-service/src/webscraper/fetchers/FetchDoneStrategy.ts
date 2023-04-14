@@ -2,12 +2,13 @@ import { IPagination } from "@mewi/models";
 import { AbstractAxiosFetchStrategy } from "./AbstractAxiosFetchStrategy";
 import axios from "axios";
 
-export interface IFetchDoneStrategy {
-  isDone(pagination: IPagination, result: any[]): boolean | Promise<boolean>;
+export interface IFetchDoneStrategy<T = any[]> {
+  isDone(pagination: IPagination, result: T): boolean | Promise<boolean>;
 }
 
 export class HasNextPageStrategy implements IFetchDoneStrategy {
   private fetchStrategy: AbstractAxiosFetchStrategy<any>;
+
   constructor(fetchStrategy: AbstractAxiosFetchStrategy<any>) {
     this.fetchStrategy = fetchStrategy;
   }
@@ -43,6 +44,7 @@ export class LimitIsLessStrategy implements IFetchDoneStrategy {
 
 export class EmptyResultStrategy implements IFetchDoneStrategy {
   isDone(pagination: IPagination, result: any[]): boolean | Promise<boolean> {
+    if (result == null) return true;
     return result.length === 0;
   }
 }

@@ -1,6 +1,6 @@
 import {Listing} from "@mewi/entities";
 import {ListingOrigin} from "@mewi/models";
-import {WebScraperFactory} from "../webscraper/WebScraperFactory";
+import {WebScraperFactory} from "../webscraper/factories/WebScraperFactory";
 import {WebScraperManager} from "../webscraper/WebScraper";
 
 export class ListingScraperPool {
