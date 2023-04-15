@@ -7,6 +7,7 @@ export interface UrlQueryParamsPaginationStrategyConfig {
   pageStartNumber: number;
   limitParam?: string;
   offsetParam?: string;
+  defaultLimit?: number;
 }
 
 export class UrlQueryParamsPaginationStrategy
@@ -18,6 +19,7 @@ export class UrlQueryParamsPaginationStrategy
     {
       pageParam: "page",
       pageStartNumber: 1,
+      defaultLimit: 60,
     };
 
   constructor(config: Partial<UrlQueryParamsPaginationStrategyConfig> = {}) {
@@ -30,18 +32,21 @@ export class UrlQueryParamsPaginationStrategy
   getPaginationConfig(pagination: IPagination): AxiosRequestConfig {
     const paramObj = {};
 
+    pagination.limit ??= this.config.defaultLimit;
+
     paramObj[this.config.pageParam] =
       pagination.page - (1 - this.config.pageStartNumber);
 
-    if (this.config.limitParam)
+    if (this.config.limitParam) {
       paramObj[this.config.limitParam] = pagination.limit;
+    }
 
-    if (this.config.offsetParam)
+    if (this.config.offsetParam) {
       paramObj[this.config.offsetParam] =
         (pagination.page - 1) * pagination.limit;
+    }
 
     const params = new URLSearchParams(paramObj);
     return { params };
   }
 }
-
