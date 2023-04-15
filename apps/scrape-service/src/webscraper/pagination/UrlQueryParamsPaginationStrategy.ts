@@ -24,6 +24,7 @@ export class UrlQueryParamsPaginationStrategy
 
   constructor(config: Partial<UrlQueryParamsPaginationStrategyConfig> = {}) {
     this.config = Object.assign(
+      {},
       UrlQueryParamsPaginationStrategy.defaultConfig,
       config
     );
