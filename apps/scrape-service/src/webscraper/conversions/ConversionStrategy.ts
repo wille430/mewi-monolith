@@ -1,3 +1,3 @@
-export interface IConversionStrategy<T = any, R = any> {
+export interface IConversionStrategy<T = any, R = T> {
   convert(from: T): R | Promise<R>;
 }

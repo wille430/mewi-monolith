@@ -1,11 +1,12 @@
 declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
-            MQ_CONNECTION_STRING?: string,
-            NODE_ENV: 'development' | 'production',
-            MONGO_URI: string
-        }
+  namespace NodeJS {
+    interface ProcessEnv {
+      MQ_CONNECTION_STRING?: string;
+      OPENAI_API_KEY: string;
+      NODE_ENV: "development" | "production";
+      MONGO_URI: string;
     }
+  }
 }
 
-export {}
+export {};

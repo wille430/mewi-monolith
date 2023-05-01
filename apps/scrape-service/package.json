@@ -25,6 +25,7 @@
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "mongoose": "^6.9.1",
+    "openai": "^3.2.1",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0",
     "vite": "^4.1.1",

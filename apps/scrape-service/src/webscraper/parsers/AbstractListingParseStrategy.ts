@@ -1,41 +1,47 @@
-import {Listing} from "@mewi/entities";
-import {IConversionStrategy} from "../conversions/ConversionStrategy";
-import {ListingOrigin} from "@mewi/models";
-import {IParseStrategy} from "./ParseStrategy";
-import {GuessCategoryConversionStrategy} from "../conversions/GuessCategoryConversionStrategy";
-import {OriginIdConversionStrategy} from "../conversions/OriginIdConversionStrategy";
-import {WebScraper} from "../WebScraper";
+import { Listing } from "@mewi/entities";
+import { IConversionStrategy } from "../conversions/ConversionStrategy";
+import { ListingOrigin } from "@mewi/models";
+import { IParseStrategy } from "./ParseStrategy";
+import { GuessCategoryConversionStrategy } from "../conversions/GuessCategoryConversionStrategy";
+import { OriginIdConversionStrategy } from "../conversions/OriginIdConversionStrategy";
+import { WebScraper } from "../WebScraper";
+import { FallbackConversionStrategies } from "../conversions/FallbackConversionStrategies";
+import { OpenAICategoryConversionStrategy } from "../conversions/OpenAICategoryConversionStrategy";
 
 export abstract class AbstractListingParseStrategy<T>
-    implements IParseStrategy<T, Listing> {
-    protected conversions: Partial<Record<keyof Listing, IConversionStrategy>> = {
-        origin_id: null,
-        category: null,
-    };
-    private webScraper: WebScraper<Listing>;
+  implements IParseStrategy<T, Listing>
+{
+  protected conversions: Partial<Record<keyof Listing, IConversionStrategy>> = {
+    origin_id: null,
+    category: null,
+  };
+  private webScraper: WebScraper<Listing>;
 
-    protected constructor(
-        origin: ListingOrigin,
-        webScraper: WebScraper<Listing>,
-        conversions: Partial<Record<keyof Listing, IConversionStrategy>> = {}
-    ) {
-        Object.assign(this.conversions, conversions);
+  protected constructor(
+    origin: ListingOrigin,
+    webScraper: WebScraper<Listing>,
+    conversions: Partial<Record<keyof Listing, IConversionStrategy>> = {}
+  ) {
+    Object.assign(this.conversions, conversions);
 
-        if (this.conversions.category == null)
-            this.conversions.category = new GuessCategoryConversionStrategy();
-        if (this.conversions.origin_id == null)
-            this.conversions.origin_id = new OriginIdConversionStrategy(origin);
+    if (this.conversions.category == null)
+      this.conversions.category = new FallbackConversionStrategies(
+        OpenAICategoryConversionStrategy.getInstance(),
+        new GuessCategoryConversionStrategy()
+      );
+    if (this.conversions.origin_id == null)
+      this.conversions.origin_id = new OriginIdConversionStrategy(origin);
 
-        this.webScraper = webScraper;
-    }
+    this.webScraper = webScraper;
+  }
 
-    protected getCategory() {
-        return this.webScraper.getConfig().getIdentifier();
-    }
+  protected getCategory() {
+    return this.webScraper.getConfig().getIdentifier();
+  }
 
-    abstract parse(obj: T): Promise<Listing> | Listing;
+  abstract parse(obj: T): Promise<Listing> | Listing;
 
-    parseAll(objs: T[]): Promise<Listing[]> | Listing[] {
-        return Promise.all(objs.map((o) => this.parse(o)));
-    }
+  parseAll(objs: T[]): Promise<Listing[]> | Listing[] {
+    return Promise.all(objs.map((o) => this.parse(o)));
+  }
 }

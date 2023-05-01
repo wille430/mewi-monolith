@@ -79,13 +79,15 @@ jobs:
     needs: [build-and-push-images]
     runs-on: ubuntu-latest
     steps:
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: pulling new images and restarting containers with remote script
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
           script: |
             cd /root/Mewi
             ./update-containers.sh
