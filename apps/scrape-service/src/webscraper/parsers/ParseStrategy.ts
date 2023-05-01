@@ -22,7 +22,7 @@ export class ListingParseStrategyWrapper<T>
     this.origin = origin;
   }
 
-  parse(obj: T): Promise<Listing> | Listing {
+  async parse(obj: T): Promise<Listing> {
     const defaultProps: Partial<Listing> = {
       origin: this.origin,
       date: new Date(),
@@ -30,7 +30,7 @@ export class ListingParseStrategyWrapper<T>
       imageUrl: [],
     };
 
-    return merge({}, defaultProps, this.parseStrategy.parse(obj));
+    return merge({}, defaultProps, await this.parseStrategy.parse(obj));
   }
 
   parseAll(objs: T[]): Promise<Listing[]> | Listing[] {

@@ -30,9 +30,11 @@ export class OpenAICategoryConversionStrategy
           model: "gpt-3.5-turbo",
           messages: [
             {
-              content: `Map ${category} to most suitable category one of the following ${Object.values(
+              content: `Map "${category}" to most suitable category of one of the following categories: ${Object.values(
                 Category
-              ).join(",")}`,
+              ).join(
+                ","
+              )}. Only give me the answer, no additional text or period`,
               role: "system",
             },
           ],
