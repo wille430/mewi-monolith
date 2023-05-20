@@ -10,7 +10,7 @@ export class SmtpConfig {
   public static smtpConfig = new SmtpConfig();
 
   constructor(test = !(process.env.NODE_ENV === "production")) {
-    if (test) {
+    if (!test) {
       assert(process.env.SMTP_USERNAME);
       assert(process.env.SMTP_PASSWORD);
       assert(process.env.SMTP_HOST);
