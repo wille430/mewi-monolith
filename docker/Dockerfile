@@ -11,7 +11,7 @@ ENV SCOPE=${SCOPE}
 ARG FOLDER
 ENV FOLDER=${FOLDER}
 
-RUN npm --no-update-notifier --no-fund --global install pnpm
+RUN npm --no-update-notifier --no-fund --global install pnpm@7.8.0
 
 # Deps
 FROM pnpm AS builder
@@ -30,7 +30,7 @@ RUN pnpm i -F ./${FOLDER} --virtual-store-dir ${FOLDER}/node_modules/.pnpm --pro
 # Production
 FROM pnpm as production
 WORKDIR /app
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 
 # Copy from the build artifacts and the locks and package.json, hash.txt.
 COPY --from=builder /app/${FOLDER}/dist ./dist
