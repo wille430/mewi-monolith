@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@mewi/business": "workspace:^1.0.0",
+    "@mewi/email-templates": "workspace:^1.0.0",
     "@mewi/entities": "workspace:^1.0.0",
     "@mewi/models": "workspace:^1.0.0",
     "@mewi/mqlib": "workspace:^1.0.0",

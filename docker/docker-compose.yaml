@@ -13,24 +13,6 @@ services:
       - 5672:5672
     networks:
       - rabbitmq_go_net
-
-  email-service:
-    container_name: email-service
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
-      args:
-        FOLDER: apps/email-service
-        SCOPE: email-service
-    environment:
-      - "MQ_CONNECTION_STRING=amqp://username:password@rabbitmq:5672"
-      - "CLIENT_URL=http://localhost:3000"
-      - "NODE_ENV=development"
-    depends_on:
-      - rabbitmq
-    networks:
-      - rabbitmq_go_net
-
   scrape-service:
     container_name: scrape-service
     build:

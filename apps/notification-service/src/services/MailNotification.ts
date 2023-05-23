@@ -2,6 +2,7 @@ import { MessageBroker, MQQueues, SendEmailDto } from "@mewi/mqlib";
 import { User, UserWatcher, WatcherMetadata } from "@mewi/entities";
 import { isDocument } from "@typegoose/typegoose";
 import { EmailTemplate, ListingDto, WatcherMetadataDto } from "@mewi/models";
+import { sendEmailTemplate } from "@mewi/email-templates/dist/src";
 
 export interface WatcherNotifStrategy {
   send(): Promise<void>;
@@ -48,6 +49,27 @@ export class MailNotification implements WatcherNotifStrategy {
       await this.messageBroker.sendMessage(
         MQQueues.SendEmail,
         this.createSendEmailDto()
+      );
+
+      await sendEmailTemplate(
+        EmailTemplate.NEW_ITEMS,
+        {
+          to: this.user.email,
+          locals: {
+            listingCount: this.totalListings,
+            filters: this.getFilters(),
+            listings: this.listings,
+            clientUrl: process.env.CLIENT_URL,
+          },
+          subject: `${this.totalListings} nya annonser matchade din sökning!`,
+        },
+        {
+          host: process.env.SMTP_HOST,
+          secure: true,
+          port: 465,
+          username: process.env.SMTP_USERNAME,
+          password: process.env.SMTP_PASSWORD,
+        }
       );
     } catch (e) {
       throw new Error(
