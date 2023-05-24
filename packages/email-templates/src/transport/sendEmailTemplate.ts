@@ -1,7 +1,7 @@
 import { EmailTemplate } from "@mewi/models";
 import { getEmailTemplate } from "../getEmailTemplate";
 import { createSmtpTransport, TransportConfig } from "./smtpTransport";
-import * as Email from "email-templates";
+import Email from "email-templates";
 import * as nodeMailer from "nodemailer";
 import { defaultTransportConfig } from "./configureSMTP";
 

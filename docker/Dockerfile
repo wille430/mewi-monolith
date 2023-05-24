@@ -25,7 +25,7 @@ RUN pnpm install --no-frozen-lockfile
 RUN pnpm -F ./${FOLDER} build
 
 COPY docker/.pnpmfile.cjs .pnpmfile.cjs
-RUN pnpm i -F ./${FOLDER} --virtual-store-dir ${FOLDER}/node_modules/.pnpm --prod --no-frozen-lockfile
+RUN pnpm i -F ./${FOLDER} --virtual-store-dir ${FOLDER}/node_modules/.pnpm --prod --no-frozen-lockfile || :
 
 # Production
 FROM pnpm as production

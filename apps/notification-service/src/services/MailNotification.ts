@@ -1,7 +1,7 @@
 import { User, UserWatcher, WatcherMetadata } from "@mewi/entities";
 import { isDocument } from "@typegoose/typegoose";
 import { EmailTemplate, ListingDto, WatcherMetadataDto } from "@mewi/models";
-import { sendEmailTemplate } from "@mewi/email-templates/dist/src";
+import { sendEmailTemplate } from "@mewi/email-templates";
 
 export interface WatcherNotifStrategy {
   send(): Promise<void>;
