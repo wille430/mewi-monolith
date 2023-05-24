@@ -3,7 +3,7 @@ import { SendEmailResultDto } from "./dto/send-email-result.dto";
 import { User } from "@mewi/entities";
 import { EmailTemplate } from "@mewi/models";
 import { EmailRecordModel } from "@/lib/modules/email/email-record.schema";
-import { sendEmailTemplate } from "@mewi/email-templates/dist/src";
+import { sendEmailTemplate } from "@mewi/email-templates";
 
 @autoInjectable()
 export class EmailService {
