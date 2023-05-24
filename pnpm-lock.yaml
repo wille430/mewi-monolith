@@ -43,7 +43,6 @@ importers:
       '@mewi/email-templates': workspace:^1.0.0
       '@mewi/entities': workspace:^1.0.0
       '@mewi/models': workspace:^1.0.0
-      '@mewi/mqlib': workspace:^1.0.0
       '@mewi/utilities': workspace:^1.0.0
       '@nestjs/common': ^9.1.6
       '@nestjs/mapped-types': ^1.2.0
@@ -127,7 +126,6 @@ importers:
       '@mewi/email-templates': link:../../packages/email-templates
       '@mewi/entities': link:../../packages/entities
       '@mewi/models': link:../../packages/models
-      '@mewi/mqlib': link:../../packages/mqlib
       '@mewi/utilities': link:../../packages/utilities
       '@nestjs/common': 9.3.5_welcnyot5bzd5wa2aovbkxpi4i
       '@nestjs/mapped-types': 1.2.2_5tewpzxlrtgeyainkxd5jajukm

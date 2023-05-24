@@ -20,7 +20,7 @@ const startup = async () => {
     new NotifFactory()
   );
 
-  const job = new CronJob("*/15 * * * * *", async () => {
+  const job = new CronJob("* */15 * * * *", async () => {
     try {
       await watchersNotificationService.notifyAll();
     } catch (e) {

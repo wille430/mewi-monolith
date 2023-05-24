@@ -12,7 +12,7 @@ const startup = async () => {
   await connectMongoose();
 
   const listingScraper = container.resolve(ListingScraperService);
-  const job = new CronJob("*/5 * * * * *", () => {
+  const job = new CronJob("* */5 * * * *", () => {
     const config = new RunScrapeDto();
     config.scrapeAmount = 500;
     return listingScraper.scrape(config).catch(console.log);
