@@ -1,20 +1,24 @@
 import * as dotenv from "dotenv";
-import { MessageBroker, MQQueues, RunScrapeDto } from "@mewi/mqlib";
 import { ListingScraperService } from "./services/ListingScraperService";
 import { connectMongoose } from "./dbConnection";
 import "reflect-metadata";
 import { container } from "tsyringe";
+import { CronJob } from "cron";
+import { RunScrapeDto } from "./services/RunScrapeDto";
 
 const startup = async () => {
   dotenv.config();
 
   await connectMongoose();
 
-  const mb = new MessageBroker(process.env.MQ_CONNECTION_STRING);
   const listingScraper = container.resolve(ListingScraperService);
-  await mb.consume<RunScrapeDto>(MQQueues.RunScrape, (msg) => {
-    return listingScraper.scrape(msg).catch(console.log);
+  const job = new CronJob("*/5 * * * * *", () => {
+    const config = new RunScrapeDto();
+    config.scrapeAmount = 500;
+    return listingScraper.scrape(config).catch(console.log);
   });
+
+  job.start();
 };
 
 // noinspection JSIgnoredPromiseFromCall

@@ -22,7 +22,10 @@ export class EmailService {
     await sendEmailTemplate(
       template,
       {
-        locals: locals,
+        locals: {
+          ...locals,
+          clientUrl: process.env.NEXT_PUBLIC_URL,
+        },
         subject: subject,
         to: toUser.email,
       },

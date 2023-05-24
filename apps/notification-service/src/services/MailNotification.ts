@@ -1,4 +1,3 @@
-import { MessageBroker, MQQueues, SendEmailDto } from "@mewi/mqlib";
 import { User, UserWatcher, WatcherMetadata } from "@mewi/entities";
 import { isDocument } from "@typegoose/typegoose";
 import { EmailTemplate, ListingDto, WatcherMetadataDto } from "@mewi/models";
@@ -17,7 +16,6 @@ export class MailNotification implements WatcherNotifStrategy {
   private hasSent = false;
 
   constructor(
-    private readonly messageBroker: MessageBroker,
     userWatcher: UserWatcher,
     listings: ListingDto[],
     totalListings: number
@@ -46,11 +44,6 @@ export class MailNotification implements WatcherNotifStrategy {
     }
 
     try {
-      await this.messageBroker.sendMessage(
-        MQQueues.SendEmail,
-        this.createSendEmailDto()
-      );
-
       await sendEmailTemplate(
         EmailTemplate.NEW_ITEMS,
         {
@@ -72,28 +65,10 @@ export class MailNotification implements WatcherNotifStrategy {
         }
       );
     } catch (e) {
-      throw new Error(
-        `Could not send message to ${MQQueues.SendEmail} message queue. Reason: ${e}`
-      );
+      throw new Error(`Failed to send email template mail: ${e}`);
     }
 
     this.hasSent = true;
-  }
-
-  private createSendEmailDto(): SendEmailDto {
-    const sendEmailDto = new SendEmailDto();
-
-    sendEmailDto.userEmail = this.user.email;
-    sendEmailDto.userId = this.user.id;
-    sendEmailDto.locals = {
-      listingCount: this.totalListings,
-      filters: this.getFilters(),
-      listings: this.listings,
-    };
-    sendEmailDto.subject = `${this.totalListings} nya annonser matchade din sökning!`;
-    sendEmailDto.emailTemplate = EmailTemplate.NEW_ITEMS;
-
-    return sendEmailDto;
   }
 
   private getFilters(): WatcherMetadataDto {
