@@ -44,26 +44,16 @@ export class MailNotification implements WatcherNotifStrategy {
     }
 
     try {
-      await sendEmailTemplate(
-        EmailTemplate.NEW_ITEMS,
-        {
-          to: this.user.email,
-          locals: {
-            listingCount: this.totalListings,
-            filters: this.getFilters(),
-            listings: this.listings,
-            clientUrl: process.env.CLIENT_URL,
-          },
-          subject: `${this.totalListings} nya annonser matchade din sökning!`,
+      await sendEmailTemplate(EmailTemplate.NEW_ITEMS, {
+        to: this.user.email,
+        locals: {
+          listingCount: this.totalListings,
+          filters: this.getFilters(),
+          listings: this.listings,
+          clientUrl: process.env.CLIENT_URL,
         },
-        {
-          host: process.env.SMTP_HOST,
-          secure: true,
-          port: 465,
-          username: process.env.SMTP_USERNAME,
-          password: process.env.SMTP_PASSWORD,
-        }
-      );
+        subject: `${this.totalListings} nya annonser matchade din sökning!`,
+      });
     } catch (e) {
       throw new Error(`Failed to send email template mail: ${e}`);
     }

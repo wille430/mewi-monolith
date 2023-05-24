@@ -3,6 +3,7 @@ import { getEmailTemplate } from "../getEmailTemplate";
 import { createSmtpTransport, TransportConfig } from "./smtpTransport";
 import * as Email from "email-templates";
 import * as nodeMailer from "nodemailer";
+import { defaultTransportConfig } from "./configureSMTP";
 
 export type EmailConfig = {
   to: string;
@@ -24,7 +25,7 @@ export const validateEmailConfig = (emailConfig: EmailConfig) => {
 export const sendEmailTemplate = async (
   templateStr: EmailTemplate,
   emailConfig: EmailConfig,
-  transportConfig: TransportConfig
+  transportConfig: TransportConfig = defaultTransportConfig
 ): Promise<void> => {
   validateEmailConfig(emailConfig);
 

@@ -3,11 +3,19 @@ import { WatchersNotifService } from "./services/WatchersNotifService";
 import { connectMongoose } from "./dbConnection";
 import { FilteringService } from "@mewi/business";
 import * as winston from "winston";
-import { NotifFactory } from "./services/NotifFactory";
 import { CronJob } from "cron";
+import { configureSMTP } from "@mewi/email-templates/dist/src";
 
 const startup = async () => {
   dotenv.config();
+
+  configureSMTP({
+    host: process.env.SMTP_HOST,
+    secure: true,
+    port: 465,
+    username: process.env.SMTP_USERNAME,
+    password: process.env.SMTP_PASSWORD,
+  });
 
   await connectMongoose();
 
@@ -16,8 +24,7 @@ const startup = async () => {
     transports: [new winston.transports.Console()],
   });
   const watchersNotificationService = new WatchersNotifService(
-    new FilteringService(logger),
-    new NotifFactory()
+    new FilteringService(logger)
   );
 
   const job = new CronJob("* */15 * * * *", async () => {

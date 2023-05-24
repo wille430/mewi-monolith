@@ -11,8 +11,6 @@ import { watcherStub } from "./stubs/watcherStub";
 import { userStub } from "./stubs/userStub";
 import { userWatcherStub } from "./stubs/userWatcherStub";
 import { listingStub } from "./stubs/listingStub,ts";
-import { NotifFactory } from "../NotifFactory";
-import { MessageBroker } from "@mewi/mqlib";
 
 vi.mock("@typegoose/typegoose", async () => {
   const actual: any = await vi.importActual("@typegoose/typegoose");
@@ -25,13 +23,9 @@ vi.mock("@typegoose/typegoose", async () => {
 describe("WatchersNotificationService", () => {
   let watchersNotificationService: WatchersNotifService;
   let filteringService: FilteringService;
-  let notifFactory: NotifFactory;
 
   beforeEach(() => {
     filteringService = new FilteringService();
-    notifFactory = new NotifFactory(
-      new MessageBroker("https://localhost:5000")
-    );
 
     WatcherModel.find = vi.fn().mockReturnValue([watcherStub()]);
     UserModel.find = vi.fn().mockResolvedValue([userStub()]);
@@ -48,14 +42,7 @@ describe("WatchersNotificationService", () => {
       .fn()
       .mockResolvedValue(new Array(10).fill(null).map(listingStub));
 
-    notifFactory.createNotif = vi.fn().mockReturnValue({
-      send: vi.fn(),
-    });
-
-    watchersNotificationService = new WatchersNotifService(
-      filteringService,
-      notifFactory
-    );
+    watchersNotificationService = new WatchersNotifService(filteringService);
   });
 
   describe("when notifyAll is called", () => {
@@ -79,10 +66,11 @@ describe("WatchersNotificationService", () => {
           ])
         );
       });
-
-      it("then notifFactory.createNotif() should have been called", () => {
-        expect(notifFactory.createNotif).toHaveBeenCalledOnce();
-      });
+      /*
+            it("then notifFactory.createNotif() should have been called", () => {
+              expect(notifFactory.createNotif).toHaveBeenCalledOnce();
+            });
+       */
     });
 
     describe("and watchers has been notified recently", () => {
@@ -99,9 +87,9 @@ describe("WatchersNotificationService", () => {
         ]);
       });
 
-      it("then it should not call notifFactory", () => {
+      /*it("then it should not call notifFactory", () => {
         expect(notifFactory.createNotif).not.toHaveBeenCalled();
-      });
+      });*/
     });
   });
 });

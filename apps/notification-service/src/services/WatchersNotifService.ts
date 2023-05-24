@@ -7,21 +7,21 @@ import {
   WatcherMetadata,
   WatcherModel,
 } from "@mewi/entities";
-import {FilteringService} from "@mewi/business";
-import {ListingDto, ListingSort} from "@mewi/models";
+import { FilteringService } from "@mewi/business";
+import { ListingDto, ListingSort } from "@mewi/models";
 import * as winston from "winston";
-import {isDocument} from "@typegoose/typegoose";
-import {NotifFactory} from "./NotifFactory";
-import {WatcherNotificationConfig} from "./WatcherNotificationConfig";
+import { isDocument } from "@typegoose/typegoose";
+import { WatcherNotificationConfig } from "./WatcherNotificationConfig";
+import { MailNotification } from "./MailNotification";
 
 export class WatchersNotifService {
   private static readonly logger = winston.createLogger({
     level: "info",
     format: winston.format.json(),
-    defaultMeta: {service: "WatcherNotificationService"},
+    defaultMeta: { service: "WatcherNotificationService" },
     transports: [
-      new winston.transports.File({filename: "error.log", level: "error"}),
-      new winston.transports.File({filename: "combined.log"}),
+      new winston.transports.File({ filename: "error.log", level: "error" }),
+      new winston.transports.File({ filename: "combined.log" }),
       new winston.transports.Console({
         format: winston.format.simple(),
       }),
@@ -29,16 +29,13 @@ export class WatchersNotifService {
   });
 
   private readonly filteringService: FilteringService;
-  private readonly notifFactory: NotifFactory;
   private readonly config: WatcherNotificationConfig;
 
   constructor(
-      filteringService: FilteringService,
-      notifFactory: NotifFactory,
-      config: WatcherNotificationConfig = new WatcherNotificationConfig()
+    filteringService: FilteringService,
+    config: WatcherNotificationConfig = new WatcherNotificationConfig()
   ) {
     this.filteringService = filteringService;
-    this.notifFactory = notifFactory;
     this.config = config;
   }
 
@@ -78,7 +75,7 @@ export class WatchersNotifService {
     const pipeline = this.filteringService.convertToPipeline(filters);
     const totalHitsCount = await ListingModel.aggregate([
       ...pipeline,
-      {$count: "totalHits"},
+      { $count: "totalHits" },
     ]).then((res) => (res as any)[0]?.totalHits ?? 0);
 
     const listings = await this.aggregateListings(resultPipeline);
@@ -101,53 +98,53 @@ export class WatchersNotifService {
    * @returns true if user was notified, else false
    */
   private async notifyUser(
-      userWatcher: UserWatcherDocument,
-      listings: ListingDto[],
-      listingCount: number
+    userWatcher: UserWatcherDocument,
+    listings: ListingDto[],
+    listingCount: number
   ): Promise<boolean> {
     await userWatcher.populate("watcher");
     await userWatcher.populate("user");
 
     if (!isDocument(userWatcher.user) || !isDocument(userWatcher.watcher)) {
       throw new Error(
-          `Fields of user watcher must be populated with watcher and user.`
+        `Fields of user watcher must be populated with watcher and user.`
       );
     }
 
-    const {watcher, user} = userWatcher;
+    const { watcher, user } = userWatcher;
 
     const metadata = WatcherMetadata.convertToDto(watcher.metadata);
     WatchersNotifService.logger.info(
-        `Notifying ${user.email} of new listings if necessary`,
-        {
-          userId: user.id,
-          watcherId: watcher.id,
-          metadata: metadata,
-        }
+      `Notifying ${user.email} of new listings if necessary`,
+      {
+        userId: user.id,
+        watcherId: watcher.id,
+        metadata: metadata,
+      }
     );
 
     const filterByDate = userWatcher.lastNotified();
     let newListings = filterByDate
-        ? listings.filter((o) => o.date > filterByDate)
-        : listings;
+      ? listings.filter((o) => o.date > filterByDate)
+      : listings;
 
     const tooFewListings = newListings.length < this.config.minListings;
     const shouldNotify = userWatcher.shouldNotify();
     if (tooFewListings || !shouldNotify) {
       WatchersNotifService.logger.info(
-          `${user.email} should not be notified.`,
-          {
-            tooFewListings,
-            tooSoon: !shouldNotify,
-          }
+        `${user.email} should not be notified.`,
+        {
+          tooFewListings,
+          tooSoon: !shouldNotify,
+        }
       );
       return false;
     }
 
-    const notification = this.notifFactory.createNotif(
-        userWatcher,
-        newListings,
-        listingCount
+    const notification = new MailNotification(
+      userWatcher,
+      newListings,
+      listingCount
     );
     try {
       await notification.send();
@@ -174,18 +171,18 @@ export class WatchersNotifService {
     await userWatcher.save();
 
     WatchersNotifService.logger.info(
-        `Updated user watcher (id=${
-            userWatcher.id
-        }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
+      `Updated user watcher (id=${
+        userWatcher.id
+      }). From notifiedAt ${oldNotifiedAt?.toISOString()} to ${userWatcher.notifiedAt.toISOString()}`
     );
 
     return true;
   }
 
   private async aggregateListings(pipeline: any) {
-    return await ListingModel.aggregate([...pipeline, {$limit: 7}]).then(
-        (arr: any) =>
-            (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
+    return await ListingModel.aggregate([...pipeline, { $limit: 7 }]).then(
+      (arr: any) =>
+        (arr as unknown as any[]).map((x) => Listing.convertToDto(x))
     );
   }
 }

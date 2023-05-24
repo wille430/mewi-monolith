@@ -1,4 +1,6 @@
 import * as nodeMailer from "nodemailer";
+import { validateTransportConfig } from "./validateTransportConfig";
+import { defaultTransportConfig } from "./configureSMTP";
 
 export type TransportConfig = {
   host: string;
@@ -8,21 +10,12 @@ export type TransportConfig = {
   password?: string;
 };
 
-export const validateTransportConfig = (transportConfig: TransportConfig) => {
-  if (transportConfig.host == null)
-    throw new Error(
-      `transportConfig.host must be a valid SMTP host domain name`
-    );
-  if (transportConfig.port == null)
-    throw new Error(`transportConfig.port must be a valid number`);
-  if (transportConfig.secure == null)
-    throw new Error(`transportConfig.secure must be a valid boolean`);
-};
-
 export const createSmtpTransport = async (
-  transportConfig: TransportConfig,
+  transportConfig: TransportConfig = null,
   testAccount = process.env.NODE_ENV !== "production"
 ) => {
+  // noinspection AssignmentToFunctionParameterJS
+  transportConfig ??= defaultTransportConfig;
   validateTransportConfig(transportConfig);
 
   if (testAccount) {
