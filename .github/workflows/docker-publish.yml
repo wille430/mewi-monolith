@@ -28,9 +28,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: ghcr.io/wille430/email-service
-            folder: apps/email-service
-            scope: email-service
           - image: ghcr.io/wille430/scrape-service
             folder: apps/scrape-service
             scope: scrape-service
