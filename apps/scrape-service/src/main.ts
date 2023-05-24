@@ -5,9 +5,12 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import { CronJob } from "cron";
 import { RunScrapeDto } from "./services/RunScrapeDto";
+import { checkRequiredEnvVars } from "@mewi/utilities/dist/checkRequiredEnvVars";
 
 const startup = async () => {
   dotenv.config();
+
+  checkRequiredEnvVars(["MONGO_URI", "OPENAI_API_KEY"]);
 
   await connectMongoose();
 

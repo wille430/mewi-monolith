@@ -5,9 +5,18 @@ import { FilteringService } from "@mewi/business";
 import * as winston from "winston";
 import { CronJob } from "cron";
 import { configureSMTP } from "@mewi/email-templates/dist/src";
+import { checkRequiredEnvVars } from "@mewi/utilities/dist/checkRequiredEnvVars";
 
 const startup = async () => {
   dotenv.config();
+
+  checkRequiredEnvVars([
+    "MONGO_URI",
+    "SMTP_HOST",
+    "SMTP_USERNAME",
+    "SMTP_PASSWORD",
+    "CLIENT_URL",
+  ]);
 
   configureSMTP({
     host: process.env.SMTP_HOST,
