@@ -1,169 +1,183 @@
 import {
-    Post,
-    Get,
-    Body,
-    Query,
-    Put,
-    Res,
-    UnprocessableEntityException,
-    Param,
-    Delete,
-    HttpCode,
-    BadRequestException,
+  Post,
+  Get,
+  Body,
+  Query,
+  Put,
+  Res,
+  UnprocessableEntityException,
+  Param,
+  Delete,
+  HttpCode,
+  BadRequestException,
 } from "next-api-decorators";
-import {inject} from "tsyringe";
-import type {NextApiResponse} from "next";
-import {UsersService} from "./users.service";
-import {CreateUserDto} from "./dto/create-user.dto";
-import {FindAllUserDto} from "./dto/find-all-user.dto";
+import { inject } from "tsyringe";
+import type { NextApiResponse } from "next";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { FindAllUserDto } from "./dto/find-all-user.dto";
 import {
-    AuthorizedUpdateEmailDto,
-    RequestEmailUpdateDto,
-    UpdateEmailDto,
+  AuthorizedUpdateEmailDto,
+  RequestEmailUpdateDto,
+  UpdateEmailDto,
 } from "./dto/update-email.dto";
-import ChangePasswordDto, {ChangePasswordWithToken} from "./dto/change-password.dto";
-import {UpdateUserDto} from "./dto/update-user.dto";
-import type {UserPayload} from "../common/types/UserPayload";
-import {SessionGuard} from "@/lib/middlewares/SessionGuard";
-import {Roles} from "@/lib/middlewares/roles.guard";
-import {SuccessParam} from "../common/enum/successParam";
-import {GetUser} from "@/lib/decorators/user.decorator";
-import {Controller} from "@/lib/decorators/controller.decorator";
-import {MyValidationPipe} from "@/lib/pipes/validation.pipe";
-import {OptionalSessionGuard} from "@/lib/middlewares/optional-session.guard";
-import {Role} from "@mewi/models";
-import {User} from "@mewi/entities";
+import ChangePasswordDto, {
+  ChangePasswordWithToken,
+} from "./dto/change-password.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import type { UserPayload } from "../common/types/UserPayload";
+import { SessionGuard } from "@/lib/middlewares/SessionGuard";
+import { Roles } from "@/lib/middlewares/roles.guard";
+import { SuccessParam } from "../common/enum/successParam";
+import { GetUser } from "@/lib/decorators/user.decorator";
+import { Controller } from "@/lib/decorators/controller.decorator";
+import { MyValidationPipe } from "@/lib/pipes/validation.pipe";
+import { OptionalSessionGuard } from "@/lib/middlewares/optional-session.guard";
+import { Role } from "@mewi/models";
+import { User } from "@mewi/entities";
 
 @Controller()
 export class UsersController {
-    constructor(@inject(UsersService) private readonly usersService: UsersService) {
+  constructor(
+    @inject(UsersService) private readonly usersService: UsersService
+  ) {}
+
+  @Post()
+  @HttpCode(201)
+  @Roles(Role.ADMIN)
+  create(@Body(MyValidationPipe) createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Get()
+  @Roles(Role.ADMIN)
+  findAll(@Query(MyValidationPipe) findAllUserDto: FindAllUserDto = {}) {
+    return this.usersService
+      .findAll(findAllUserDto)
+      .then((arr) => arr?.map(User.convertToDto));
+  }
+
+  @Get("/me")
+  @SessionGuard()
+  async getMe(@GetUser() user: UserPayload) {
+    return this.usersService.findOne(user.userId).then((o) => {
+      return o ? User.convertToDto(o) : null;
+    });
+  }
+
+  @Get("/me/likes")
+  @SessionGuard()
+  async getMyLikes(@GetUser() user: UserPayload) {
+    return this.usersService
+      .getLikedListings(user.userId)
+      .then((arr) => arr.map((o) => o.convertToDto()));
+  }
+
+  @Put("/email")
+  @OptionalSessionGuard()
+  async updateEmail(
+    @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
+    @GetUser() user: UserPayload | undefined = undefined
+  ) {
+    if (updateEmailDto.newEmail && user) {
+      await this.usersService.requestEmailUpdate(
+        updateEmailDto as RequestEmailUpdateDto,
+        user.userId
+      );
+    } else if (updateEmailDto.token) {
+      await this.usersService.updateEmail(updateEmailDto);
+    }
+    return { message: "OK" };
+  }
+
+  @Post("/email")
+  @OptionalSessionGuard()
+  async updateEmailPost(
+    @GetUser() user: UserPayload,
+    @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
+    @Res() res: NextApiResponse
+  ) {
+    if (updateEmailDto.newEmail && user) {
+      await this.usersService.requestEmailUpdate(
+        updateEmailDto as RequestEmailUpdateDto,
+        user.userId
+      );
+      return { message: "OK" };
+    } else if (updateEmailDto.token) {
+      await this.usersService.updateEmail(updateEmailDto);
+
+      res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`);
+    }
+  }
+
+  @Get("/email/verify")
+  async verifyEmail(
+    @Query() dto: AuthorizedUpdateEmailDto,
+    @Res() res: NextApiResponse
+  ) {
+    try {
+      await this.usersService.updateEmail(dto);
+    } catch (e) {
+      if (e instanceof BadRequestException) {
+        return res.redirect(`/?success=${SuccessParam.VERIFY_EMAIL_FAILED}`);
+      } else {
+        throw e;
+      }
     }
 
-    @Post()
-    @HttpCode(201)
-    @Roles(Role.ADMIN)
-    create(@Body(MyValidationPipe) createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+    return res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`);
+  }
+
+  @Put("/password")
+  @OptionalSessionGuard()
+  async changePassword(
+    @Body(MyValidationPipe) dto: ChangePasswordDto,
+    @GetUser() user: UserPayload | undefined = undefined
+  ) {
+    console.log();
+    if (dto.password != null && dto.passwordConfirm != null) {
+      if (dto.token && dto.email) {
+        await this.usersService.changePasswordWithToken(
+          dto as ChangePasswordWithToken
+        );
+      } else if (user?.userId) {
+        await this.usersService.changePassword(
+          {
+            password: dto.password,
+            passwordConfirm: dto.passwordConfirm,
+          },
+          user.userId
+        );
+      }
+      return { message: "OK" };
+    } else if (dto.email) {
+      await this.usersService.sendPasswordResetEmail({
+        email: dto.email,
+      });
+      return { message: "OK" };
     }
 
-    @Get()
-    @Roles(Role.ADMIN)
-    findAll(@Query(MyValidationPipe) findAllUserDto: FindAllUserDto = {}) {
-        return this.usersService
-            .findAll(findAllUserDto)
-            .then(arr => arr?.map(User.convertToDto));
-    }
+    throw new UnprocessableEntityException();
+  }
 
-    @Get("/me")
-    @SessionGuard()
-    async getMe(@GetUser() user: UserPayload) {
-        return this.usersService.findOne(user.userId).then((o) => {
-            return o ? User.convertToDto(o) : null;
-        });
-    }
+  @Get("/:id")
+  @Roles(Role.ADMIN)
+  findOne(@Param("id") id: string) {
+    return this.usersService.findOne(id);
+  }
 
-    @Get("/me/likes")
-    @SessionGuard()
-    async getMyLikes(@GetUser() user: UserPayload) {
-        return this.usersService.getLikedListings(user.userId).then(arr => arr.map(o => o.convertToDto()));
-    }
+  @Put("/:id")
+  @Roles(Role.ADMIN)
+  update(
+    @Param("id") id: string,
+    @Body(MyValidationPipe) updateUserDto: UpdateUserDto
+  ) {
+    return this.usersService.update(id, updateUserDto);
+  }
 
-    @Put("/email")
-    @OptionalSessionGuard()
-    async updateEmail(
-        @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
-        @GetUser() user: UserPayload | undefined = undefined
-    ) {
-        if (updateEmailDto.newEmail && user) {
-            await this.usersService.requestEmailUpdate(
-                updateEmailDto as RequestEmailUpdateDto,
-                user.userId
-            );
-        } else if (updateEmailDto.token) {
-            await this.usersService.updateEmail(updateEmailDto);
-        }
-        return {message: "OK"};
-    }
-
-    @Post("/email")
-    @OptionalSessionGuard()
-    async updateEmailPost(
-        @GetUser() user: UserPayload,
-        @Body(MyValidationPipe) updateEmailDto: UpdateEmailDto,
-        @Res() res: NextApiResponse
-    ) {
-        if (updateEmailDto.newEmail && user) {
-            await this.usersService.requestEmailUpdate(
-                updateEmailDto as RequestEmailUpdateDto,
-                user.userId
-            );
-            return {message: "OK"};
-        } else if (updateEmailDto.token) {
-            await this.usersService.updateEmail(updateEmailDto);
-
-            res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`);
-        }
-    }
-
-    @Get("/email/verify")
-    async verifyEmail(@Query() dto: AuthorizedUpdateEmailDto, @Res() res: NextApiResponse) {
-        try {
-            await this.usersService.updateEmail(dto);
-        } catch (e) {
-            if (e instanceof BadRequestException) {
-                return res.redirect(`/?success=${SuccessParam.VERIFY_EMAIL_FAILED}`);
-            } else {
-                throw e;
-            }
-        }
-
-        return res.redirect(`/?success=${SuccessParam.UPDATED_EMAIL}`);
-    }
-
-    @Put("/password")
-    @OptionalSessionGuard()
-    async changePassword(
-        @Body(MyValidationPipe) dto: ChangePasswordDto,
-        @GetUser() user: UserPayload | undefined = undefined
-    ) {
-        if (dto.password != null && dto.passwordConfirm != null) {
-            if (dto.token && dto.email) {
-                await this.usersService.changePasswordWithToken(dto as ChangePasswordWithToken);
-            } else if (user?.userId) {
-                await this.usersService.changePassword(
-                    {
-                        password: dto.password,
-                        passwordConfirm: dto.passwordConfirm,
-                    },
-                    user.userId
-                );
-            }
-            return {message: "OK"};
-        } else if (dto.email) {
-            await this.usersService.sendPasswordResetEmail({
-                email: dto.email,
-            });
-            return {message: "OK"};
-        }
-
-        throw new UnprocessableEntityException();
-    }
-
-    @Get("/:id")
-    @Roles(Role.ADMIN)
-    findOne(@Param("id") id: string) {
-        return this.usersService.findOne(id);
-    }
-
-    @Put("/:id")
-    @Roles(Role.ADMIN)
-    update(@Param("id") id: string, @Body(MyValidationPipe) updateUserDto: UpdateUserDto) {
-        return this.usersService.update(id, updateUserDto);
-    }
-
-    @Delete("/:id")
-    @Roles(Role.ADMIN)
-    remove(@Param("id") id: string) {
-        return this.usersService.remove(id);
-    }
+  @Delete("/:id")
+  @Roles(Role.ADMIN)
+  remove(@Param("id") id: string) {
+    return this.usersService.remove(id);
+  }
 }

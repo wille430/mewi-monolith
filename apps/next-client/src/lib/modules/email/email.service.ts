@@ -1,10 +1,10 @@
-import "server-only";
 import { autoInjectable } from "tsyringe";
 import { SendEmailResultDto } from "./dto/send-email-result.dto";
 import { User } from "@mewi/entities";
 import { EmailTemplate } from "@mewi/models";
 import { EmailRecordModel } from "@/lib/modules/email/email-record.schema";
 import { sendEmailTemplate } from "@mewi/email-templates";
+import path from "path";
 
 @autoInjectable()
 export class EmailService {
@@ -36,7 +36,8 @@ export class EmailService {
         port: 465,
         username: process.env.SMTP_USERNAME,
         password: process.env.SMTP_PASSWORD,
-      }
+      },
+      path.resolve(process.cwd(), "emails")
     );
 
     return {

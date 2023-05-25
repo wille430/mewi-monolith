@@ -1,8 +1,8 @@
 import { EmailTemplate } from "@mewi/models";
-import { getEmailTemplate } from "../getEmailTemplate";
 import { createSmtpTransport, TransportConfig } from "./smtpTransport";
-import * as nodeMailer from "nodemailer";
 import { defaultTransportConfig } from "./configureSMTP";
+import { getTestMessageUrl } from "nodemailer";
+import { renderTemplate } from "../renderTemplate";
 
 export type EmailConfig = {
   to: string;
@@ -24,23 +24,20 @@ export const validateEmailConfig = (emailConfig: EmailConfig) => {
 export const sendEmailTemplate = async (
   templateStr: EmailTemplate,
   emailConfig: EmailConfig,
-  transportConfig: TransportConfig = defaultTransportConfig
+  transportConfig: TransportConfig = defaultTransportConfig,
+  templatesPath: string = undefined
 ): Promise<void> => {
   validateEmailConfig(emailConfig);
-
-  const template = getEmailTemplate(templateStr);
   const transport = await createSmtpTransport(transportConfig);
 
   const info = await transport.sendMail({
     from: transportConfig.username,
     to: emailConfig.to,
     subject: emailConfig.subject,
-    html: template(emailConfig.locals).html,
+    ...renderTemplate(templateStr, emailConfig.locals, templatesPath),
   });
 
   if (process.env.NODE_ENV === "development") {
-    console.log(
-      `Development email preview: ${nodeMailer.getTestMessageUrl(info)}`
-    );
+    console.log(`Development email preview: ${getTestMessageUrl(info)}`);
   }
 };

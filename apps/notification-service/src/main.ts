@@ -4,8 +4,9 @@ import { connectMongoose } from "./dbConnection";
 import { FilteringService } from "@mewi/business";
 import * as winston from "winston";
 import { CronJob } from "cron";
-import { configureSMTP } from "@mewi/email-templates";
+import { configureSMTP, sendEmailTemplate } from "@mewi/email-templates";
 import { checkRequiredEnvVars } from "@mewi/utilities/dist/checkRequiredEnvVars";
+import { EmailTemplate } from "@mewi/models";
 
 const startup = async () => {
   dotenv.config();
@@ -35,6 +36,14 @@ const startup = async () => {
   const watchersNotificationService = new WatchersNotifService(
     new FilteringService(logger)
   );
+
+  await sendEmailTemplate(EmailTemplate.FORGOTTEN_PASSWORD, {
+    to: "williamwig@hotmail.se",
+    subject: "test",
+    locals: {
+      clientUrl: "www.mewi.se",
+    },
+  });
 
   const job = new CronJob("* */15 * * * *", async () => {
     try {
