@@ -1,3 +1,4 @@
+import "server-only";
 import { container } from "tsyringe";
 import { getUserFromCookies } from "@/lib/session/getUserFromCookies";
 import { cookies } from "next/headers";

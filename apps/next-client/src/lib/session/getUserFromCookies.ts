@@ -1,15 +1,14 @@
 import "server-only";
-import { ReadonlyRequestCookies } from "next/dist/server/app-render";
 import { UserPayload } from "@/lib/modules/common/types/UserPayload";
 import { SESSION_COOKIE } from "@/lib/constants/cookies";
 import { unsealData } from "iron-session";
 import { sessionOptions } from "@/lib/session/sessionOptions";
-import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
+import { cookies } from "next/headers";
 
 export const getUserFromCookies = async (
-  cookies: ReadonlyRequestCookies | RequestCookies
+  cookiesList: ReturnType<typeof cookies>
 ): Promise<UserPayload | null> => {
-  const found = cookies.get(SESSION_COOKIE);
+  const found = cookiesList.get(SESSION_COOKIE);
 
   if (!found) return null;
 

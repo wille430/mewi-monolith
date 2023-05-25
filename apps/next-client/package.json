@@ -42,7 +42,7 @@
     "memory-cache": "^0.2.0",
     "mongodb": "4.11",
     "mongoose": "~6.9.2",
-    "next": "13.1.7-canary.20",
+    "next": "13.4.3",
     "next-api-decorators": "^2.0.0",
     "next-redux-wrapper": "^8.0.0",
     "path-to-regexp": "^6.2.1",

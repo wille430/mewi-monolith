@@ -1,7 +1,6 @@
 import { EmailTemplate } from "@mewi/models";
 import { getEmailTemplate } from "../getEmailTemplate";
 import { createSmtpTransport, TransportConfig } from "./smtpTransport";
-import Email from "email-templates";
 import * as nodeMailer from "nodemailer";
 import { defaultTransportConfig } from "./configureSMTP";
 
@@ -32,22 +31,11 @@ export const sendEmailTemplate = async (
   const template = getEmailTemplate(templateStr);
   const transport = await createSmtpTransport(transportConfig);
 
-  const email = new Email({
-    message: {
-      from: transportConfig.username,
-    },
-    transport,
-  });
-
-  const info = await email.send({
-    message: {
-      to: emailConfig.to,
-      subject: emailConfig.subject,
-      html: template({
-        ...emailConfig.locals,
-      }).html,
-    },
-    locals: emailConfig.locals,
+  const info = await transport.sendMail({
+    from: transportConfig.username,
+    to: emailConfig.to,
+    subject: emailConfig.subject,
+    html: template(emailConfig.locals).html,
   });
 
   if (process.env.NODE_ENV === "development") {

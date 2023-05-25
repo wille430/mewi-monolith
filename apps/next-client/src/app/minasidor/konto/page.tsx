@@ -24,8 +24,8 @@ const Konto = async () => {
           <AccountDetails user={user} />
         ) : (
           <p className="text-sm text-muted">
-            Du har loggat in med {capitalize(user.loginStrategy)}. För att hantera ditt
-            konto, var vänlig hänvisa till deras hemsida.
+            Du har loggat in med {capitalize(user.loginStrategy)}. För att
+            hantera ditt konto, var vänlig hänvisa till deras hemsida.
           </p>
         )}
       </section>
