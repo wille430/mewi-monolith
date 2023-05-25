@@ -1,3 +1,4 @@
+import "server-only";
 import { autoInjectable } from "tsyringe";
 import { SendEmailResultDto } from "./dto/send-email-result.dto";
 import { User } from "@mewi/entities";
