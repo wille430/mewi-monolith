@@ -1,1 +1,16 @@
-a(href=link) #{link}
+extends ../layout.pug
+
+block content
+    div.center
+        p En lösenordsåterställning har gjorts på ditt Mewi konto. Klicka på länken nedan för att fortsätta:
+        a(href=link).link #{link}
+
+        p Om det inte var du kan du ignorera detta meddelande.
+    style.
+        .center {
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .link {
+            margin: auto 0;
+        }

@@ -3,22 +3,12 @@ import { createSmtpTransport, TransportConfig } from "./smtpTransport";
 import { defaultTransportConfig } from "./configureSMTP";
 import { getTestMessageUrl } from "nodemailer";
 import { renderTemplate } from "../renderTemplate";
+import { validateEmailConfig } from "./validateEmailConfig";
 
 export type EmailConfig = {
   to: string;
   subject: string;
-  locals: { clientUrl: string } & Record<any, any>;
-};
-
-export const validateEmailConfig = (emailConfig: EmailConfig) => {
-  if (emailConfig.to == null)
-    throw new Error(`emailConfig.to must be a valid email address`);
-  if (emailConfig.subject == null)
-    throw new Error(`emailConfig.subject must be a valid string`);
-  if (emailConfig.locals == null || emailConfig.locals.clientUrl == null)
-    throw new Error(
-      `emailConfig.locals must be a non-null object and contain clientUrl`
-    );
+  locals: { clientUrl: string; logoUrl: string } & Record<any, any>;
 };
 
 export const sendEmailTemplate = async (
@@ -29,6 +19,12 @@ export const sendEmailTemplate = async (
 ): Promise<void> => {
   validateEmailConfig(emailConfig);
   const transport = await createSmtpTransport(transportConfig);
+
+  console.log(
+    `Rendering email with following locals: ${JSON.stringify(
+      emailConfig.locals
+    )}`
+  );
 
   const info = await transport.sendMail({
     from: transportConfig.username,

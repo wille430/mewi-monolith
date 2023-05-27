@@ -37,7 +37,11 @@ export class EmailService {
         username: process.env.SMTP_USERNAME,
         password: process.env.SMTP_PASSWORD,
       },
-      path.resolve(process.cwd(), "emails")
+      path.resolve(
+        process.cwd(),
+        "node_modules/@mewi/email-templates/dist",
+        "emails"
+      )
     );
 
     return {

@@ -1,2 +1,2 @@
-export * from "./transport/sendEmailTemplate";
+export { sendEmailTemplate } from "./transport/sendEmailTemplate";
 export * from "./transport/configureSMTP";

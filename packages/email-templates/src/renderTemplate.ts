@@ -4,7 +4,7 @@ import pug from "pug";
 
 const getTemplatePath = (
   template: EmailTemplate,
-  templatesPath = __dirname + "./emails"
+  templatesPath = path.join(__dirname, "./emails")
 ) => {
   const templateToPathMap = {
     [EmailTemplate.FORGOTTEN_PASSWORD]: "forgottenPassword",
@@ -38,14 +38,9 @@ export const renderTemplate = (
   templatesPath: string = undefined
 ): RenderTemplateResult => {
   const templatePath = getTemplatePath(template, templatesPath);
-  console.log(`Rendering ${path.join(templatePath, "html.pug")}`);
-  const html = pug.renderFile(getHtmlFile(templatePath), {
-    locals: locals,
-  });
 
-  const subject = pug.renderFile(getSubjectFile(templatePath), {
-    locals: locals,
-  });
+  const html = pug.renderFile(getHtmlFile(templatePath), locals);
+  const subject = pug.renderFile(getSubjectFile(templatePath), locals);
 
   return {
     html,
