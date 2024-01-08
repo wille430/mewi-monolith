@@ -3,7 +3,7 @@
 
 # base node image
 # https://github.com/prisma/prisma/issues/861#issuecomment-881992292
-FROM node:lts-alpine3.17 AS pnpm
+FROM node:lts-alpine3.19 AS pnpm
 
 ARG SCOPE
 ENV SCOPE=${SCOPE}
@@ -11,7 +11,7 @@ ENV SCOPE=${SCOPE}
 ARG FOLDER
 ENV FOLDER=${FOLDER}
 
-RUN npm --no-update-notifier --no-fund --global install pnpm@7.8.0
+RUN npm --no-update-notifier --no-fund --global install pnpm@8.8.0
 
 # Deps
 FROM pnpm AS builder
@@ -20,7 +20,7 @@ WORKDIR /app
 COPY . .
 
 # Install everything
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --force
 # Build the package
 RUN pnpm -F ./${FOLDER} build
 
