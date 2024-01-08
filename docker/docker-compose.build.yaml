@@ -6,6 +6,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
+      target: app1
       args:
         FOLDER: apps/scrape-service
         SCOPE: scrape-service
@@ -14,6 +15,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
+      target: app2
       args:
         FOLDER: apps/notification-service
         SCOPE: notification-service

@@ -1,42 +1,23 @@
-# ./docker/Dockerfile.node
-# base node image
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-# base node image
-# https://github.com/prisma/prisma/issues/861#issuecomment-881992292
-FROM node:lts-alpine3.19 AS pnpm
+FROM base AS build
+COPY . /usr/src/app
+WORKDIR /usr/src/app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --force 
+RUN pnpm run --filter=scrape-service build
+RUN pnpm run --filter=notification-service build
+RUN pnpm deploy --filter=scrape-service --prod /prod/scrape-service
+RUN pnpm deploy --filter=notification-service --prod /prod/notification-service
 
-ARG SCOPE
-ENV SCOPE=${SCOPE}
+FROM base AS app1
+COPY --from=build /prod/scrape-service /prod/scrape-service
+WORKDIR /prod/scrape-service
+CMD [ "pnpm", "start" ]
 
-ARG FOLDER
-ENV FOLDER=${FOLDER}
-
-RUN npm --no-update-notifier --no-fund --global install pnpm@8.8.0
-
-# Deps
-FROM pnpm AS builder
-WORKDIR /app
-
-COPY . .
-
-# Install everything
-RUN pnpm install --no-frozen-lockfile --force
-# Build the package
-RUN pnpm -F ./${FOLDER} build
-
-COPY docker/.pnpmfile.cjs .pnpmfile.cjs
-RUN pnpm i -F ./${FOLDER} --virtual-store-dir ${FOLDER}/node_modules/.pnpm --prod --no-frozen-lockfile || :
-
-# Production
-FROM pnpm as production
-WORKDIR /app
-# ENV NODE_ENV=production
-
-# Copy from the build artifacts and the locks and package.json, hash.txt.
-COPY --from=builder /app/${FOLDER}/dist ./dist
-COPY --from=builder /app/${FOLDER}/package.json ./package.json
-COPY --from=builder /app/${FOLDER}/node_modules ./node_modules
-
-USER node
-
-CMD ["node", "./dist/main.js"]
+FROM base AS app2
+COPY --from=build /prod/notification-service /prod/notification-service
+WORKDIR /prod/notification-service
+CMD [ "pnpm", "start" ]
