@@ -6,7 +6,6 @@ import * as winston from "winston";
 import { CronJob } from "cron";
 import { configureSMTP, sendEmailTemplate } from "@mewi/email-templates";
 import { checkRequiredEnvVars } from "@mewi/utilities/dist/checkRequiredEnvVars";
-import { EmailTemplate } from "@mewi/models";
 
 const startup = async () => {
   dotenv.config();
@@ -37,13 +36,6 @@ const startup = async () => {
     new FilteringService(logger)
   );
 
-  await sendEmailTemplate(EmailTemplate.FORGOTTEN_PASSWORD, {
-    to: "williamwig@hotmail.se",
-    subject: "test",
-    locals: {
-      clientUrl: "www.mewi.se",
-    },
-  });
 
   const job = new CronJob("* */15 * * * *", async () => {
     try {
