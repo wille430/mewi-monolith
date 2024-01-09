@@ -64,6 +64,7 @@ jobs:
             SCOPE=${{ matrix.scope }}
   deploy:
     name: Deploy to virtual machine
+    environment: Production
     needs: [build-and-push-images]
     runs-on: ubuntu-latest
     steps:
