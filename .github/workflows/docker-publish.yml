@@ -21,11 +21,9 @@ jobs:
       matrix:
         include:
           - image: wille430/mewi-scrape-service
-            folder: apps/scrape-service
-            scope: scrape-service
+            target: app1
           - image: wille430/mewi-notification-service
-            folder: apps/notification-service
-            scope: notification-service
+            target: app2
     permissions:
       contents: read
       packages: write
@@ -59,6 +57,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: "docker/Dockerfile"
-          build-args: |
-            FOLDER=${{ matrix.folder }}
-            SCOPE=${{ matrix.scope }}
+          target: ${{ matrix.target }}
